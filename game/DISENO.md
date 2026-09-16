@@ -82,11 +82,27 @@ ambas llevan al menos una semana. **Máximo 1,60.**
 Base diaria: entreno 100 XP / 50 monedas, comida 40 XP / 20 monedas, escalado por el
 cumplimiento y por el multiplicador de rachas.
 
+Un día que alcanza el umbral de cumplido cobra proporcionalmente a su cumplimiento; uno que
+se queda por debajo cobra **la mitad**. Así, dejar la sesión a medias cuesta de verdad,
+mientras que quien cumple al 80 % —el que empieza y le cuesta— cobra entero.
+
 ### Actividades del juego (talar, cocinar, combates opcionales)
 
-Solo se desbloquean si ese día el entreno **o** la comida alcanzan el 85 %, y en conjunto no
-pueden aportar más del **30 %** de lo ganado ese día con actividad real. Sin actividad real
-registrada no hay extras.
+En conjunto no pueden aportar más del **30 %** de lo ganado ese día con actividad real, y
+se desbloquean por tres vías:
+
+| Vía | Condición |
+| --- | --- |
+| `excelente` | El día alcanza el 85 % en entreno o en comida |
+| `constancia` | El día está cumplido y la racha correspondiente sigue viva |
+| `mejora` | El día está cumplido y supera la media reciente propia en 2 puntos o más |
+
+La vía de constancia existe porque quien se estabiliza en un 80 % no supera nunca su propia
+media: sin ella, el contenido del juego le quedaría vedado de forma permanente. La de mejora
+cubre a quien todavía no tiene racha pero progresa.
+
+Las tres exigen haber hecho las cosas bien ese día, y el suelo nunca baja del umbral de día
+cumplido: dejarse ir para rebajar la media no abre nada.
 
 ## Niveles
 
@@ -95,10 +111,23 @@ registrada no hay extras.
 Con una constancia buena (~190 XP/día): nivel 2 el primer día, nivel 5 a las 2 semanas,
 nivel 10 a los ~2 meses, nivel 15 a los ~7 meses.
 
+## Balance a 12 semanas
+
+Salida de `tools/simular.js`, en XP respecto al perfil constante:
+
+| Perfil | XP | Nivel | Multiplicador final |
+| --- | --- | --- | --- |
+| Constante, 4 sesiones/semana | 100 % | 9 | 1,60 |
+| Principiante plano al 80 % | 73 % | 8 | 1,60 |
+| Principiante, 3 sesiones/semana | 66 % | 7 | 1,55 |
+| Irregular, falla 1 de cada 3 | 51 % | 7 | 1,00 |
+
+El irregular progresa a la mitad de velocidad y pierde el multiplicador entero, pero sigue
+avanzando. La distancia se nota más en monedas que en nivel, porque la curva de niveles
+comprime las diferencias de XP a medida que sube.
+
 ## Pendiente de decidir
 
-- Umbral de extras: con 85 % un perfil principiante que cumple al 80 % no accede nunca a las
-  actividades del juego. Ver `tools/simular.js`.
 - Dónde caen exactamente los desbloqueos de RPG y construcción por nivel.
 - Exenciones de entreno (6 al año × 3 días): falta la capa que las administra.
 - Índice de rendimiento (progresión personal), separado de la XP de constancia.

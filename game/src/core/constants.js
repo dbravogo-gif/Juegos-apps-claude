@@ -23,8 +23,21 @@ export const UMBRAL_DIA_CUMPLIDO = {
   comida: 0.7,
 };
 
+// Un día por debajo del umbral de cumplido rinde la mitad. Esfuerzo justo por encima del
+// umbral (el principiante al 80 %) cobra entero; abandonar la sesión a medias no.
+export const FACTOR_DIA_FALLADO = 0.5;
+
 // Cumplimiento mínimo del día para desbloquear actividades extra (talar, cocinar, combates opcionales).
 export const UMBRAL_EXTRAS = 0.85;
+
+// Vías alternativas a ese 85 %: cumplir el día teniendo la racha viva, o cumplirlo
+// mejorando la propia media reciente.
+export const VENTANA_MEDIA_RECIENTE = 14;
+export const MIN_REGISTROS_PARA_MEDIA = 3;
+
+// La mejora sobre la media debe ser real: sin este margen, una diferencia de milésimas
+// (ruido de coma flotante) decidiría si hay extras o no.
+export const MARGEN_MEJORA = 0.02;
 
 // Los extras no pueden superar esta fracción de lo ganado ese día con actividad real.
 export const TOPE_EXTRAS = 0.3;

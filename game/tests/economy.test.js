@@ -8,12 +8,32 @@ import {
   valorReventa,
 } from '../src/core/economy/rewards.js';
 import { xpParaSubirDe, nivelDesdeXp } from '../src/core/economy/levels.js';
+import { mediaReciente } from '../src/core/day.js';
 import { TOPE_EXTRAS } from '../src/core/constants.js';
 
-test('la recompensa es proporcional al cumplimiento', () => {
+test('un día cumplido cobra proporcionalmente al cumplimiento', () => {
   const pleno = recompensaDelDia({ cumplimientoEntreno: 1, puntuacionComida: 1 });
-  const medio = recompensaDelDia({ cumplimientoEntreno: 0.5, puntuacionComida: 0.5 });
-  assert.equal(medio.total.xp, pleno.total.xp / 2);
+  const justo = recompensaDelDia({ cumplimientoEntreno: 0.8, puntuacionComida: 0.8 });
+  assert.equal(justo.entreno.xp, Math.round(pleno.entreno.xp * 0.8));
+  assert.equal(justo.comida.xp, Math.round(pleno.comida.xp * 0.8));
+});
+
+test('un día por debajo del umbral rinde la mitad', () => {
+  const fallado = recompensaDelDia({ cumplimientoEntreno: 0.4, puntuacionComida: null });
+  assert.equal(fallado.entreno.xp, Math.round(100 * 0.4 * 0.5));
+});
+
+test('el salto de penalización cae justo en el umbral del día cumplido', () => {
+  const cumplido = recompensaDelDia({ cumplimientoEntreno: 0.75, puntuacionComida: null });
+  const fallado = recompensaDelDia({ cumplimientoEntreno: 0.74, puntuacionComida: null });
+  assert.equal(cumplido.entreno.xp, 75);
+  assert.equal(fallado.entreno.xp, 37);
+});
+
+test('al que empieza y cumple al 80 % no se le penaliza', () => {
+  const principiante = recompensaDelDia({ cumplimientoEntreno: 0.8, puntuacionComida: 0.8 });
+  assert.equal(principiante.entreno.xp, 80);
+  assert.equal(principiante.comida.xp, 32);
 });
 
 test('un día sin registro no da recompensa', () => {
@@ -55,6 +75,59 @@ test('los extras no superan el 30 % de lo ganado ese día', () => {
   const presupuesto = presupuestoExtras({ cumplimientoEntreno: 1, puntuacionComida: 1 }, total);
   assert.equal(presupuesto.xp, total.xp * TOPE_EXTRAS);
   assert.ok(presupuesto.xp < total.xp);
+});
+
+test('superar la propia media reciente también abre los extras', () => {
+  const total = { xp: 100, monedas: 50 };
+  const dia = { cumplimientoEntreno: 0.8, puntuacionComida: 0.6, mediaEntreno: 0.7, mediaComida: 0.6 };
+  const presupuesto = presupuestoExtras(dia, total);
+  assert.equal(presupuesto.desbloqueado, true);
+  assert.equal(presupuesto.via, 'mejora');
+});
+
+test('la constancia abre los extras aunque el cumplimiento no mejore nunca', () => {
+  const total = { xp: 100, monedas: 50 };
+  const estable = {
+    cumplimientoEntreno: 0.8,
+    puntuacionComida: 0.8,
+    mediaEntreno: 0.8,
+    mediaComida: 0.8,
+    rachaEntrenoActiva: true,
+    rachaComidaActiva: true,
+  };
+  const presupuesto = presupuestoExtras(estable, total);
+  assert.equal(presupuesto.desbloqueado, true);
+  assert.equal(presupuesto.via, 'constancia');
+
+  // Sin racha viva, ese mismo día estable no abre nada.
+  assert.equal(
+    presupuestoExtras({ ...estable, rachaEntrenoActiva: false, rachaComidaActiva: false }, total)
+      .desbloqueado,
+    false,
+  );
+});
+
+test('la mejora sobre la media exige un margen real, no milésimas', () => {
+  const total = { xp: 100, monedas: 50 };
+  const porPelos = { cumplimientoEntreno: 0.8, mediaEntreno: 0.7999, puntuacionComida: null };
+  assert.equal(presupuestoExtras(porPelos, total).desbloqueado, false);
+
+  const deVerdad = { cumplimientoEntreno: 0.8, mediaEntreno: 0.75, puntuacionComida: null };
+  assert.equal(presupuestoExtras(deVerdad, total).desbloqueado, true);
+});
+
+test('mejorar la media no basta si el día no llega a cumplido', () => {
+  const total = { xp: 100, monedas: 50 };
+  const dia = { cumplimientoEntreno: 0.6, puntuacionComida: 0.4, mediaEntreno: 0.3, mediaComida: 0.2 };
+  assert.equal(presupuestoExtras(dia, total).desbloqueado, false);
+});
+
+test('la media reciente no cuenta el propio día y exige historial suficiente', () => {
+  const historial = [0.9, 0.9, 0.9, 0.5].map((c) => ({ entreno: { cumplimiento: c } }));
+  const extraer = (d) => (d.entreno ? d.entreno.cumplimiento : null);
+
+  assert.equal(mediaReciente(historial, 2, extraer), null, 'con 2 registros previos aún no hay media');
+  assert.equal(mediaReciente(historial, 3, extraer), 0.9);
 });
 
 test('explotación: encadenar extras se recorta al llegar al tope', () => {
