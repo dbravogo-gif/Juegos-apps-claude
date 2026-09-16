@@ -132,9 +132,35 @@ comprime las diferencias de XP a medida que sube.
 - Exenciones de entreno (6 al año × 3 días): falta la capa que las administra.
 - Índice de rendimiento (progresión personal), separado de la XP de constancia.
 
+## La app
+
+PWA sin paso de build: se sirve la carpeta tal cual y se instala desde el navegador con
+«Añadir a pantalla de inicio». Los datos viven en `localStorage` de ese dispositivo, con
+copia manual a archivo JSON desde Ajustes.
+
+| Capa | Dónde | Qué hace |
+| --- | --- | --- |
+| Núcleo | `src/core` | Puntuación, rachas y economía. Sin DOM ni almacenamiento |
+| Datos | `src/data` | Persistencia, migraciones y reconstrucción del historial |
+| Interfaz | `src/ui` | Cuatro pantallas: Hoy, Registrar, Progreso y Ajustes |
+
+El núcleo no importa nada de las otras dos capas, para que la lógica siga siendo probable
+sin navegador y reutilizable si algún día hay servidor o app nativa.
+
+### Reglas contra la explotación
+
+Además del tope de justificados y del mínimo de días cumplidos por ventana:
+
+- Solo se puede registrar **hoy y ayer**. Si no, se podrían rellenar semanas enteras a
+  posteriori y reconstruir rachas que nunca ocurrieron.
+- Las exenciones de entreno no se pueden pedir con fecha pasada ni solapadas.
+- Los días en los que no se abre la app no son huecos: el historial se reconstruye continuo
+  y esos días cuentan como fallados si estaban planificados.
+
 ## Comprobar
 
 ```
-npm test              # motor de puntuación y economía, incluidos casos de explotación
-node tools/simular.js # balance a 12 semanas con tres perfiles
+npm test                      # motor, datos y casos de explotación
+node tools/simular.js         # balance a 12 semanas con cuatro perfiles
+python3 -m http.server 8777   # y abrir http://localhost:8777
 ```

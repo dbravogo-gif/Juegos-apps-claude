@@ -1,3 +1,5 @@
+import { rutinasPorDefecto } from './defaults.js';
+
 const CLAVE = 'juego_habitos_db';
 export const VERSION_ESQUEMA = 1;
 
@@ -5,7 +7,8 @@ export function estadoInicial() {
   return {
     version: VERSION_ESQUEMA,
     perfil: { nombre: '', creado: new Date().toISOString().slice(0, 10) },
-    plan: { diasEntreno: [0, 1, 3, 4] },
+    plan: { diasEntreno: [0, 1, 3, 4], rutinaPorDia: { 0: 'r_torso', 1: 'r_pierna', 3: 'r_torso', 4: 'r_pierna' } },
+    rutinas: rutinasPorDefecto(),
     dias: {},
     exenciones: [],
     monedasGastadas: 0,

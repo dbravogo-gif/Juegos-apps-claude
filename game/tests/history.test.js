@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { construirHistorial, planDelDia, diaDeLaSemana, evaluarDia } from '../src/data/history.js';
+import { construirHistorial, planDelDia, diaDeLaSemana, evaluarDia, esEditable } from '../src/data/history.js';
 import { estadoInicial, migrar, importar, exportar, VERSION_ESQUEMA } from '../src/data/storage.js';
 import { clasificarEntreno } from '../src/core/scoring/streaks.js';
 
@@ -89,4 +89,11 @@ test('la copia de seguridad va y vuelve', () => {
 test('una copia corrupta se rechaza en lugar de romper la app', () => {
   assert.equal(importar('no es json').motivo, 'json');
   assert.equal(importar('{"algo":1}').motivo, 'formato');
+});
+
+test('explotación: solo se puede registrar hoy y ayer', () => {
+  assert.equal(esEditable('2026-09-16', '2026-09-16'), true);
+  assert.equal(esEditable('2026-09-15', '2026-09-16'), true);
+  assert.equal(esEditable('2026-09-14', '2026-09-16'), false, 'no se rellenan semanas a posteriori');
+  assert.equal(esEditable('2026-09-17', '2026-09-16'), false, 'ni se registra el futuro');
 });

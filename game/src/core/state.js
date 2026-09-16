@@ -47,6 +47,7 @@ export function estadoDesdeHistorial(historial, { exenciones = [], monedasGastad
 
   return {
     xp,
+    dias,
     nivel: nivelDesdeXp(xp),
     monedas: { ganadas: monedasGanadas, gastadas: monedasGastadas, disponibles: monedasGanadas - monedasGastadas },
     rachas: hoy ? hoy.rachas : null,

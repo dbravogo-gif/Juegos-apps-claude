@@ -3,6 +3,15 @@ import { puntuarDiaComida } from '../core/scoring/nutrition.js';
 import { sumarDias, diasEntre } from '../core/scoring/exemptions.js';
 
 /** Índice del día de la semana con el lunes como 0, igual que `plan.diasEntreno`. */
+/**
+ * Solo se puede registrar hoy y ayer. Sin ese límite se podrían rellenar semanas enteras a
+ * posteriori y reconstruir rachas que nunca ocurrieron.
+ */
+export function esEditable(fecha, hoy) {
+  const desfase = diasEntre(fecha, hoy);
+  return desfase >= 0 && desfase <= 1;
+}
+
 export function diaDeLaSemana(fechaISO) {
   return (new Date(`${fechaISO}T00:00:00Z`).getUTCDay() + 6) % 7;
 }
