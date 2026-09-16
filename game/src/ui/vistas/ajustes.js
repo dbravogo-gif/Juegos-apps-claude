@@ -178,7 +178,7 @@ export const acciones = {
     const blob = new Blob([exportar(ctx.db)], { type: 'application/json' });
     const enlace = document.createElement('a');
     enlace.href = URL.createObjectURL(blob);
-    enlace.download = `constancia-${ctx.hoy}.json`;
+    enlace.download = `constant-${ctx.hoy}.json`;
     enlace.click();
     URL.revokeObjectURL(enlace.href);
   },

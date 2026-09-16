@@ -1,5 +1,5 @@
 const VERSION = 'v0.1.0';
-const CACHE = `constancia-${VERSION}`;
+const CACHE = `constant-${VERSION}`;
 const ESENCIALES = [
   '.',
   'index.html',

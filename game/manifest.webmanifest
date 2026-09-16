@@ -1,6 +1,6 @@
 {
-  "name": "Constancia",
-  "short_name": "Constancia",
+  "name": "Constant",
+  "short_name": "Constant",
   "start_url": ".",
   "scope": ".",
   "display": "standalone",
