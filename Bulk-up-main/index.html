@@ -1,0 +1,3439 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F4F6FA">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Bulk Up">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<title>Bulk Up</title>
+<style>
+:root{
+  color-scheme: light only;
+  --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Avenir Next", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --bg:#F4F6FA;
+  --surface:#FFFFFF;
+  --surface-2:#EAEEF5;
+  --line:#DCE3ED;
+  --accent:#1F3A5F;
+  --accent-dim:#B7C4D8;
+  --text:#1A2331;
+  --muted:#5C6675;
+  --danger:#C0504D;
+  --good:#2E8B57;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;height:100%;background:var(--bg);color:var(--text);
+  font-family:var(--font-ui); overscroll-behavior:none; user-select:none;
+  -webkit-text-size-adjust:100%;}
+body{padding-bottom:env(safe-area-inset-bottom);}
+h1,h2,h3{font-family:var(--font-display); margin:0; letter-spacing:-0.01em;}
+.num{font-family:var(--font-mono);}
+button{font-family:inherit; cursor:pointer; border:none; background:none; color:inherit;}
+input{font-family:inherit; background:var(--surface-2); border:1px solid var(--line); color:var(--text);
+  border-radius:10px; padding:10px 12px; font-size:16px; width:100%;}
+input:focus{outline:1.5px solid var(--accent);}
+#app{max-width:520px; margin:0 auto; min-height:100vh; position:relative;
+  padding:calc(18px + env(safe-area-inset-top)) 16px 90px;}
+body.resting #app{padding-bottom:150px;}
+.topbar{display:flex; align-items:center; justify-content:space-between; margin-bottom:18px;}
+.back{font-size:15px; color:var(--muted); display:flex; align-items:center; gap:6px; padding:6px 0;}
+.back:active{color:var(--accent);}
+.eyebrow{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-bottom:4px;}
+.title{font-size:26px; font-weight:600;}
+
+/* HOME */
+.routine-card{background:var(--surface); border:1px solid var(--line); border-radius:16px;
+  padding:20px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between;}
+.routine-card:active{border-color:var(--accent);}
+.routine-name{font-size:21px; font-weight:600;}
+.routine-tags{color:#4A5568; font-size:13.5px; margin-top:4px;}
+.routine-arrow{font-size:22px; color:var(--accent);}
+.homefoot{display:flex; gap:10px; margin-top:22px;}
+.pill-btn{flex:1; text-align:center; padding:14px; border-radius:12px; background:var(--surface-2);
+  border:1px solid var(--line); font-size:14px; color:var(--muted);}
+.pill-btn:active{color:var(--text); border-color:var(--accent);}
+
+/* WORKOUT LIST */
+.ex-row{background:var(--surface); border:1px solid var(--line); border-radius:14px;
+  padding:16px 16px; margin-bottom:10px; display:flex; align-items:center; gap:14px;}
+.ex-row:active{border-color:var(--accent);}
+.chk{width:24px; height:24px; border-radius:7px; border:2px solid var(--muted); flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; font-size:15px;}
+.chk.done{border-color:var(--good); background:var(--good); color:var(--bg);}
+.ex-row-body{flex:1;}
+.ex-row-name{font-size:17px; font-weight:500;}
+.ex-row-meta{font-size:12.5px; color:var(--muted); margin-top:2px;}
+
+/* EXERCISE DETAIL */
+.section{margin-bottom:22px;}
+.section-label{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin-bottom:10px; font-weight:600;}
+.set-row{display:grid; grid-template-columns:34px 1fr 1fr 44px; gap:8px; align-items:center; margin-bottom:8px;}
+.set-idx{color:var(--muted); font-size:14px; text-align:center;}
+.set-check{width:36px; height:36px; border-radius:10px; border:2px solid var(--muted);
+  display:flex; align-items:center; justify-content:center; font-size:17px; margin:0 auto;}
+.set-check.done{background:var(--good); border-color:var(--good); color:var(--bg);}
+.field-label{font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; margin-bottom:3px;}
+.set-input{text-align:center; font-size:17px;}
+.add-set{width:100%; padding:12px; border-radius:10px; border:1.5px dashed var(--line); color:var(--muted); font-size:14px; margin-top:4px;}
+.add-set:active{border-color:var(--accent); color:var(--accent);}
+
+.history-block{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:14px 16px; margin-bottom:10px;}
+.history-date{font-size:13px; color:var(--accent); font-weight:600; margin-bottom:8px;}
+.history-set{font-size:15.5px; color:var(--text); display:flex; justify-content:space-between; padding:2px 0;}
+.history-set span:last-child{color:var(--muted);}
+.empty-note{color:#4A5568; font-size:14px; font-style:italic;}
+
+.progress-card{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px; margin-bottom:10px;}
+.progress-goal{font-size:15px; margin-bottom:12px;}
+.progress-goal b{color:var(--accent);}
+.progress-rule{display:flex; gap:10px; margin-bottom:10px; align-items:flex-start;}
+.progress-rule:last-child{margin-bottom:0;}
+.rule-dot{width:8px; height:8px; border-radius:50%; margin-top:6px; flex-shrink:0;}
+.rule-up .rule-dot{background:var(--good);}
+.rule-keep .rule-dot{background:var(--accent);}
+.rule-down .rule-dot{background:var(--danger);}
+.rule-text b{display:block; font-size:13.5px; margin-bottom:2px;}
+.rule-text span{font-size:13.5px; color:var(--muted); line-height:1.4;}
+
+.info-item{margin-bottom:16px;}
+.info-item:last-child{margin-bottom:0;}
+.info-h{font-size:13px; font-weight:600; color:var(--accent); margin-bottom:5px;}
+.info-p{font-size:14.5px; line-height:1.55; color:#3A4454;}
+.muscle-tags{display:flex; flex-wrap:wrap; gap:6px;}
+.mtag{background:var(--surface-2); border:1px solid var(--line); border-radius:20px; padding:5px 12px; font-size:12.5px;}
+.mtag.primary{border-color:var(--accent); color:var(--accent);}
+
+/* HISTORY SCREEN */
+.hist-day{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px; margin-bottom:10px;}
+.hist-day-top{display:flex; justify-content:space-between; margin-bottom:6px;}
+.hist-day-date{font-weight:600; font-size:16px;}
+.hist-day-routine{color:var(--accent); font-size:13px;}
+.hist-ex{font-size:13.5px; color:var(--muted); margin-top:4px;}
+
+/* EDITOR */
+.edit-row{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:12px 14px; margin-bottom:8px; display:flex; align-items:center; gap:10px;}
+.edit-drag{color:var(--muted); font-size:15px;}
+.edit-name{flex:1; font-size:15px;}
+.edit-del{color:var(--danger); font-size:13px; padding:4px 8px;}
+.field-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;}
+.field{margin-bottom:10px;}
+.save-btn{width:100%; background:var(--accent); color:#FFFFFF; font-weight:700; padding:15px; border-radius:12px; font-size:16px; margin-top:8px;}
+.save-btn:active{opacity:.85;}
+.add-ex-btn{width:100%; padding:14px; border-radius:12px; border:1.5px dashed var(--line); color:var(--accent); font-size:14.5px; margin-top:6px; margin-bottom:20px;}
+
+/* TIMER */
+.fab{position:fixed; bottom:20px; right:20px; width:54px; height:54px; border-radius:50%;
+  background:var(--accent); color:#FFFFFF; font-size:20px; display:flex; align-items:center; justify-content:center;
+  box-shadow:0 6px 18px rgba(0,0,0,.45); z-index:50;}
+
+.checkbox-box{position:relative; display:flex; align-items:center; gap:8px; margin-bottom:10px;}
+.toast{position:fixed; bottom:100px; left:50%; transform:translateX(-50%); background:var(--surface-2);
+  border:1px solid var(--accent); padding:10px 18px; border-radius:20px; font-size:13.5px; z-index:80; opacity:0; transition:opacity .25s;}
+.toast.show{opacity:1;}
+
+/* EXTENDER SERIES */
+.extend-btn{width:100%; padding:11px; border-radius:10px; background:var(--surface-2); border:1px solid var(--accent-dim);
+  color:var(--accent); font-size:13.5px; margin-top:2px; margin-bottom:10px; display:flex; align-items:center; justify-content:center; gap:6px;}
+.extend-btn:active{border-color:var(--accent); background:rgba(232,163,61,.12);}
+
+/* MODALES (sustituyen a confirm/prompt del navegador) */
+.modal-overlay{position:fixed; inset:0; background:rgba(20,28,40,.5); z-index:200; display:flex; align-items:flex-end; justify-content:center;}
+.modal-box{background:var(--surface); border:1px solid var(--line); border-radius:18px 18px 0 0; width:100%; max-width:520px;
+  padding:22px 20px calc(22px + env(safe-area-inset-bottom)); box-shadow:0 -10px 30px rgba(0,0,0,.5); max-height:78vh; overflow-y:auto;}
+.modal-title{font-family:var(--font-display); font-size:19px; font-weight:600; margin-bottom:6px;}
+.modal-msg{font-size:15px; color:#3A4454; line-height:1.5; margin-bottom:18px;}
+.modal-btns{display:flex; gap:10px;}
+.modal-btn{flex:1; text-align:center; padding:14px; border-radius:12px; font-size:15px; font-weight:600;}
+.modal-btn-cancel{background:var(--surface-2); border:1px solid var(--line); color:var(--muted);}
+.modal-btn-cancel:active{color:var(--text);}
+.modal-btn-ok{background:var(--accent); color:#FFFFFF;}
+.modal-btn-ok:active{opacity:.85;}
+.modal-list-item{background:var(--surface-2); border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:8px; font-size:15px;}
+.modal-list-item:active{border-color:var(--accent);}
+.modal-list-item.new{color:var(--accent); border-style:dashed; text-align:center;}
+.modal-search{margin-bottom:14px;}
+
+.move-badge{display:inline-block; font-size:10.5px; font-weight:700; letter-spacing:.03em; padding:2px 7px; border-radius:6px; border:1px solid; white-space:nowrap;}
+.legend-item{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px; margin-bottom:10px;}
+.legend-desc{font-size:14px; color:#3A4454; line-height:1.5; margin-top:8px;}
+
+.rest-bar{position:fixed; left:0; right:0; bottom:0; background:var(--accent); color:#fff; z-index:90;
+  padding:14px 18px calc(14px + env(safe-area-inset-bottom)); box-shadow:0 -6px 20px rgba(0,0,0,.2);
+  display:flex; align-items:center; gap:14px;}
+.rest-bar-label{font-size:11px; text-transform:uppercase; letter-spacing:.08em; opacity:.85;}
+.rest-bar-time{font-family:var(--font-mono); font-size:26px; font-weight:700;}
+.rest-bar-btns{display:flex; gap:8px; margin-left:auto;}
+.rest-bar-btn{background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.35); color:#fff;
+  border-radius:9px; padding:8px 11px; font-size:13px; font-weight:600;}
+.rest-bar-btn:active{background:rgba(255,255,255,.32);}
+
+/* PLANIFICACIÓN */
+.act-chip{display:inline-flex; align-items:center; gap:6px; background:var(--surface); border:1.5px solid var(--line);
+  border-radius:12px; padding:9px 12px; font-size:13.5px; font-weight:600; white-space:nowrap; touch-action:none; cursor:grab;}
+.act-dot{width:10px; height:10px; border-radius:50%; flex-shrink:0;}
+.bank-grid{display:flex; flex-wrap:wrap; gap:7px; margin-bottom:10px;}
+.act-chip{font-size:12.5px; padding:7px 10px;}
+.week-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:5px; margin:6px 0 18px;}
+.day-col{background:var(--surface); border:1.5px solid var(--line); border-radius:10px;
+  padding:8px 4px; display:flex; flex-direction:column; align-items:center; gap:6px; min-height:120px;}
+.day-col.over{border-color:var(--accent); background:rgba(31,58,95,.08);}
+.day-col.awaiting{border-style:dashed; border-color:var(--accent);}
+.act-chip.selected{background:var(--accent); color:#fff; border-width:2px;}
+.plan-hint{background:var(--surface-2); border:1px solid var(--accent); border-radius:10px;
+  padding:9px 12px; font-size:12.5px; color:var(--accent); font-weight:600; margin-bottom:10px;}
+
+/* PANEL DE ESTADO (últimas 2 semanas) */
+.status-card{border:1.5px solid; border-radius:16px; padding:16px; margin-bottom:16px;}
+.status-head{display:flex; align-items:center; gap:14px;}
+.status-icon{font-size:44px; line-height:1; flex-shrink:0;}
+.status-text{flex:1;}
+.status-title{font-family:var(--font-display); font-size:19px; font-weight:700; margin-bottom:3px;}
+.status-msg{font-size:13.5px; line-height:1.45; color:#3A4454;}
+.status-strip{display:flex; gap:4px; margin-top:14px;}
+.status-dot{flex:1; height:9px; border-radius:3px; background:rgba(0,0,0,.10);}
+.status-dot.today{outline:2px solid rgba(0,0,0,.28); outline-offset:1px;}
+.status-stats{display:flex; gap:14px; margin-top:10px; font-size:12px; color:#4A5568;}
+.status-stats b{font-size:13.5px;}
+
+.backup-help{background:var(--surface-2); border-radius:10px; padding:11px 13px;
+  font-size:12.5px; line-height:1.5; color:#3A4454; margin-bottom:12px;}
+.backup-toggle{font-size:12.5px; color:var(--accent); font-weight:600; padding:6px 0;}
+
+.brand{display:flex; align-items:center; gap:12px;}
+.brand-logo{width:52px; height:52px; border-radius:13px; flex-shrink:0; object-fit:cover;}
+
+/* ÚLTIMOS ENTRENAMIENTOS (ficha de ejercicio) */
+.prev-card{background:var(--surface); border:1px solid var(--line); border-radius:14px;
+  padding:13px 15px; margin-bottom:9px;}
+.prev-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;}
+.prev-date{font-size:14px; font-weight:700; color:var(--text);}
+.prev-tag{font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.06em;
+  color:#fff; background:var(--accent); border-radius:5px; padding:2px 7px;}
+.prev-tag.muted{background:var(--surface-2); color:var(--muted);}
+.prev-sets{display:flex; flex-wrap:wrap; gap:6px;}
+.prev-set{background:var(--surface-2); border-radius:9px; padding:7px 10px;
+  display:flex; align-items:center; gap:8px;}
+.prev-set-n{font-size:10.5px; font-weight:700; color:var(--muted);}
+.prev-set-val{display:flex; align-items:baseline; gap:4px;}
+.prev-reps{font-size:14.5px; font-weight:700; color:var(--text);}
+.prev-x{font-size:11px; color:var(--muted);}
+.prev-peso{font-size:14.5px; font-weight:700; color:var(--accent);}
+.prev-foot{font-size:12px; color:var(--muted); margin-top:10px;}
+.prev-foot b{color:var(--text);}
+.prev-trend{font-size:12.5px; font-weight:600; border-radius:9px; padding:9px 12px; margin-top:4px;}
+.prev-trend.up{background:#EAF6EE; color:#2E8B57;}
+.prev-trend.down{background:#FDF1E5; color:#B4661F;}
+.prev-trend.same{background:var(--surface-2); color:#4A5568;}
+
+/* HISTORIAL */
+.hist-summary{display:flex; gap:8px; margin:16px 0 20px;}
+.hist-sum-box{flex:1; background:var(--surface); border:1px solid var(--line);
+  border-radius:13px; padding:13px 8px; text-align:center;}
+.hist-sum-val{font-family:var(--font-display); font-size:22px; font-weight:700; color:var(--accent);}
+.hist-sum-key{font-size:10.5px; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); margin-top:3px;}
+.hist-month{font-size:11px; letter-spacing:.13em; text-transform:uppercase; font-weight:700;
+  color:var(--muted); margin:20px 0 9px;}
+.hist-card{background:var(--surface); border:1px solid var(--line); border-radius:14px;
+  padding:14px 16px; margin-bottom:9px;}
+.hist-card:active{border-color:var(--accent);}
+.hist-card-head{display:flex; align-items:flex-start; justify-content:space-between;}
+.hist-card-routine{font-size:16px; font-weight:700;}
+.hist-card-date{font-size:12.5px; color:var(--muted); margin-top:1px;}
+.hist-card-arrow{font-size:22px; color:var(--accent); line-height:1;}
+.hist-chips{display:flex; flex-wrap:wrap; gap:6px; margin-top:10px;}
+.hist-chip{background:var(--surface-2); border-radius:20px; padding:4px 11px;
+  font-size:11.5px; font-weight:600; color:#4A5568;}
+.hist-chip.strong{background:var(--accent); color:#fff;}
+.hist-card-list{font-size:12px; color:var(--muted); margin-top:9px; line-height:1.45;}
+
+/* DETALLE DE UN DÍA */
+.hd-card{background:var(--surface); border:1px solid var(--line); border-radius:14px;
+  padding:14px 16px; margin-bottom:10px;}
+.hd-head{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+.hd-name{font-size:15.5px; font-weight:700;}
+.hd-summary{font-size:12.5px; color:var(--accent); font-weight:600; margin-top:3px;}
+.hd-sets{display:flex; flex-direction:column; gap:5px; margin-top:11px;}
+.hd-set{display:flex; align-items:center; gap:12px; background:var(--surface-2);
+  border-radius:9px; padding:7px 11px;}
+.hd-set-n{font-size:10.5px; font-weight:700; color:var(--muted); min-width:20px;}
+.hd-set-val{display:flex; align-items:baseline; gap:5px;}
+.hd-note{font-size:11.5px; color:var(--muted); font-style:italic; margin-top:9px;}
+.day-letter{font-size:13px; font-weight:700; color:var(--text);}
+.day-meter{width:9px; height:52px; border-radius:5px; background:var(--surface-2);
+  overflow:hidden; display:flex; flex-direction:column-reverse;}
+.day-meter-fill{width:100%; border-radius:5px; transition:height .2s;}
+.day-col-blocks{display:flex; flex-wrap:wrap; gap:3px; justify-content:center;}
+.day-mini{width:11px; height:11px; border-radius:3px; border:1px solid rgba(0,0,0,.12);}
+.day-col-warn{font-size:11px;}
+.day-detail{background:var(--surface); border:1px solid var(--line); border-radius:11px; padding:10px 12px; margin-bottom:7px;}
+.day-detail-name{font-size:12px; font-weight:700; color:var(--accent); text-transform:uppercase; letter-spacing:.06em; margin-bottom:7px;}
+.day-blocks{display:flex; flex-wrap:wrap; gap:6px;}
+.day-block{display:flex; align-items:center; gap:6px; border-radius:10px; padding:6px 9px; font-size:12.5px; font-weight:600; color:#fff;}
+.day-block-x{opacity:.85; font-weight:700; padding-left:2px;}
+.day-warning{font-size:12px; color:#B8860B; margin-top:8px;}
+.plan-alert{background:#FDEDEC; border:1px solid #E6A39C; color:#8B3A32; border-radius:12px; padding:12px 14px; font-size:13.5px; margin-bottom:14px;}
+.drag-ghost{position:fixed; z-index:300; pointer-events:none; opacity:.9; transform:translate(-50%,-50%);}
+.color-swatch{display:inline-block; width:22px; height:22px; border-radius:50%; margin-right:6px; border:2px solid transparent;}
+.color-swatch.selected{border-color:var(--accent);}
+
+/* SUPLEMENTACIÓN */
+.sup-moment{font-size:11px; letter-spacing:.12em; text-transform:uppercase; font-weight:700;
+  color:#fff; background:var(--accent); border-radius:7px; padding:5px 10px;
+  display:inline-block; margin:16px 0 8px;}
+.sup-card{position:relative; background:var(--surface); border:1px solid var(--line); border-radius:11px;
+  padding:10px 34px 10px 12px; margin-bottom:7px;}
+.sup-head{display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;}
+.sup-name{font-size:14.5px; font-weight:600; line-height:1.3;}
+.sup-dose{font-size:12.5px; color:var(--accent); font-weight:600;}
+.sup-note{font-size:12.5px; color:#3A4454; line-height:1.45; margin-top:6px;
+  background:var(--surface-2); border-radius:7px; padding:7px 9px;}
+.sup-del{position:absolute; top:8px; right:10px; color:var(--muted); font-size:13px; padding:2px 4px;}
+.sup-del:active{color:var(--danger);}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="rest-timer-root"></div>
+<div id="toast" class="toast"></div>
+
+<script>
+/* ---------- Datos base (rutina) ---------- */
+// Los ejercicios "legacy" (esquema antiguo) se normalizan automáticamente
+// al nuevo esquema (grupo[], rirMin/rirMax, ejecucion[], errores[], consejos[], progresion[], observaciones[])
+// para que convivan como biblioteca "en la sombra" junto a los nuevos.
+function splitSentences(s){
+  return (s||"").split(/\.\s+/).map(x=>x.trim().replace(/\.$/,"")).filter(Boolean);
+}
+function parseDescansoSeg(str){
+  if(!str) return 90;
+  const m = String(str).match(/(\d+)/g);
+  if(!m) return 90;
+  if(m.length>=2) return Math.round((parseInt(m[0])+parseInt(m[1]))/2*60); // "2-3 min" -> media en seg
+  const n = parseInt(m[0]);
+  return /min/i.test(str) ? n*60 : n;
+}
+function normalizeExercise(e){
+  if(e.ficha===false || e.grupo) return e; // ya está en el esquema nuevo, o es un ejercicio "sin ficha" del catálogo
+  return {
+    id:e.id, nombre:e.nombre,
+    grupo:[e.muscPrimario, ...(e.muscSecundario||[])].filter(Boolean),
+    series:e.series, repMin:e.repMin, repMax:e.repMax, unidad:"reps", repNota:"",
+    rirMin:e.rir, rirMax:e.rir,
+    descansoSeg: parseDescansoSeg(e.descanso),
+    tipo: (e.muscSecundario && e.muscSecundario.length) ? "compuesto" : "aislamiento",
+    descripcion: e.objetivo || "",
+    ejecucion: splitSentences(e.tecnica),
+    errores: splitSentences(e.errores),
+    consejos: splitSentences(e.consejos),
+    progresion: [`Cuando completes ${e.repMax} repeticiones en todas las series con buena técnica, sube peso la siguiente sesión y vuelve a ${e.repMin} repeticiones.`],
+    observaciones: e.notas ? [e.notas] : []
+  };
+}
+
+/* ---------- Taxonomía de tipo de movimiento (cómo ejecutar cada grupo) ---------- */
+const MOVEMENT_TYPES = {
+  FUE:  {label:"Fuerza",                  color:"#B23B3B", desc:"Concéntrica fuerte y relativamente rápida, sin perder técnica. Excéntrica controlada (2-3 s). Las últimas repeticiones deben costar, manteniendo buena ejecución."},
+  HIP:  {label:"Hipertrofia",             color:"#C97A2B", desc:"Concéntrica controlada/normal, con intención de mover el peso con fuerza. Excéntrica ~2-3 s. Recorrido amplio y controlado, sin convertir cada repetición en una tortura de 5 segundos."},
+  POT:  {label:"Potencia",                color:"#6B3FA0", desc:"Concéntrica EXPLOSIVA, máxima intención de velocidad. Vuelta/recuperación controlada. Descanso suficiente entre series; si empiezas a perder velocidad, para. Prioriza pocas repeticiones buenas sobre muchas agotado."},
+  MOV:  {label:"Movilidad",               color:"#2E8B57", desc:"Lento y controlado, buscando progresivamente el rango disponible, sin rebotes violentos. Respiración tranquila. No debería doler."},
+  UNI:  {label:"Unilateral",              color:"#C9A227", desc:"No tiene una velocidad propia: se ejecuta según su objetivo principal (fuerza, potencia o estabilidad), trabajando cada lado de forma independiente."},
+  EST:  {label:"Estabilidad / Equilibrio",color:"#B58B00", desc:"Lento y preciso. Prioridad absoluta a la técnica, sin buscar fatiga. Si empiezas a tambalearte demasiado, la serie ha terminado."},
+  COR:  {label:"Core",                    color:"#2F5D9F", desc:"El tronco resiste un movimiento indeseado (rotación, inclinación lateral, extensión lumbar...). Generalmente lento y muy controlado."},
+  CAR:  {label:"Carry",                   color:"#2F5D9F", desc:"Transportar carga manteniendo una postura sólida: caminar de forma natural, tronco estable, sin balancearse, respiración controlada."},
+  COND: {label:"Condicionamiento",        color:"#7A5230", desc:"Ritmo alto y cierto grado de fatiga buscado, con recuperación suficiente entre esfuerzos. No es hipertrofia ni potencia pura."},
+  COOR: {label:"Coordinación / Locomoción",color:"#2F5D9F", desc:"Controlado al inicio; después puede aumentar la velocidad manteniendo la coordinación. Prioridad: calidad del patrón, no agotamiento."},
+  ADU:  {label:"Aductores",               color:"#8A4B6E", desc:"Trabajo específico de aductores, generalmente isométrico o de baja carga. Progresión muy gradual: debe sentirse como trabajo muscular, nunca como dolor en la zona."}
+};
+function movementBadge(code){
+  const info = MOVEMENT_TYPES[code];
+  if(!info) return null;
+  const b = el("span","move-badge", code);
+  b.style.background = info.color+"1f";
+  b.style.color = info.color;
+  b.style.borderColor = info.color+"66";
+  return b;
+}
+const DEFAULT_EXERCISES = {
+  press_banca: {
+    id:"press_banca", nombre:"Press banca",
+    series:3, repMin:8, repMax:10, rir:2, descanso:"2-3 min",
+    objetivo:"Desarrollar fuerza y masa en el pectoral, con ayuda de tríceps y deltoides anterior.",
+    tecnica:"Escápulas retraídas y fijas contra el banco. Baja la barra de forma controlada hasta rozar el pecho, a la altura de la línea del pezón. Empuja en línea recta hacia arriba sin bloquear violentamente el codo.",
+    errores:"Rebotar la barra en el pecho. Despegar los glúteos del banco. Codos totalmente abiertos a 90°.",
+    consejos:"Empuja el suelo con los pies para generar estabilidad. Aprieta la barra con fuerza aunque no muevas más peso.",
+    muscPrimario:"Pectoral mayor", muscSecundario:["Tríceps","Deltoides anterior"],
+    notas:""
+  },
+  press_inclinado: {
+    id:"press_inclinado", nombre:"Press inclinado",
+    series:3, repMin:8, repMax:10, rir:2, descanso:"2 min",
+    objetivo:"Enfatizar la porción clavicular (superior) del pectoral.",
+    tecnica:"Banco a 30-45°. Baja la barra o mancuernas hasta la parte alta del pecho, controlando la trayectoria, y empuja hacia arriba y ligeramente atrás.",
+    errores:"Inclinar el banco demasiado (se convierte en press de hombro). Arquear excesivamente la zona lumbar.",
+    consejos:"Si usas mancuernas, gira ligeramente las muñecas al final del recorrido para mayor contracción.",
+    muscPrimario:"Pectoral superior", muscSecundario:["Deltoides anterior","Tríceps"],
+    notas:""
+  },
+  aperturas: {
+    id:"aperturas", nombre:"Aperturas",
+    series:3, repMin:10, repMax:12, rir:1, descanso:"90 seg",
+    objetivo:"Aislar el pectoral trabajando su función de aducción horizontal.",
+    tecnica:"Con ligera flexión de codo fija, abre los brazos en arco controlado hasta sentir estiramiento del pecho y vuelve juntando las mancuernas arriba sin chocarlas con fuerza.",
+    errores:"Flexionar y extender el codo como si fuera un press. Bajar demasiado y forzar el hombro.",
+    consejos:"Piensa en 'abrazar un tronco de árbol' para mantener el arco correcto.",
+    muscPrimario:"Pectoral mayor", muscSecundario:["Deltoides anterior"],
+    notas:""
+  },
+  elev_laterales: {
+    id:"elev_laterales", nombre:"Elevaciones laterales",
+    series:3, repMin:12, repMax:15, rir:1, descanso:"60-90 seg",
+    objetivo:"Desarrollar el deltoides lateral (anchura de hombro).",
+    tecnica:"Eleva los brazos hacia los lados hasta la altura del hombro, codos ligeramente flexionados, liderando el movimiento con el codo, no con la mano.",
+    errores:"Usar impulso con la espalda. Subir por encima de la línea del hombro. Rotar la muñeca en exceso.",
+    consejos:"Controla mucho más la bajada que la subida; ahí está gran parte del estímulo.",
+    muscPrimario:"Deltoides lateral", muscSecundario:["Trapecio"],
+    notas:""
+  },
+  triceps_cuerda: {
+    id:"triceps_cuerda", nombre:"Tríceps cuerda",
+    series:3, repMin:10, repMax:12, rir:1, descanso:"60-90 seg",
+    objetivo:"Aislar el tríceps en su función de extensión de codo.",
+    tecnica:"Codos pegados al torso y fijos. Extiende separando ligeramente la cuerda al final del recorrido para mayor contracción.",
+    errores:"Mover los codos hacia delante o los hombros hacia arriba para ayudarse.",
+    consejos:"Aguanta una fracción de segundo en la extensión completa.",
+    muscPrimario:"Tríceps", muscSecundario:[],
+    notas:""
+  },
+  dominadas: {
+    id:"dominadas", nombre:"Dominadas",
+    series:4, repMin:6, repMax:10, rir:2, descanso:"2-3 min",
+    objetivo:"Desarrollar la espalda en anchura, con fuerte implicación de bíceps.",
+    tecnica:"Cuelga con escápulas activas, tira llevando el pecho hacia la barra, controla la bajada completa hasta extensión total del brazo.",
+    errores:"No completar el rango de bajada. Balancear el cuerpo para generar impulso.",
+    consejos:"Si no llegas a las repeticiones objetivo, usa banda elástica de asistencia antes que hacer trampa.",
+    muscPrimario:"Dorsal ancho", muscSecundario:["Bíceps","Romboides"],
+    notas:""
+  },
+  remo_barra: {
+    id:"remo_barra", nombre:"Remo con barra",
+    series:3, repMin:8, repMax:10, rir:2, descanso:"2 min",
+    objetivo:"Desarrollar grosor de espalda media.",
+    tecnica:"Torso inclinado unos 45°, espalda neutra. Tira de la barra hacia el abdomen bajo, llevando codos atrás, sin usar impulso lumbar.",
+    errores:"Redondear la espalda baja. Usar el 'tirón' de cadera como impulso principal.",
+    consejos:"Piensa en llevar los codos hacia los bolsillos traseros.",
+    muscPrimario:"Dorsal ancho", muscSecundario:["Romboides","Bíceps"],
+    notas:""
+  },
+  curl_biceps: {
+    id:"curl_biceps", nombre:"Curl de bíceps",
+    series:3, repMin:10, repMax:12, rir:1, descanso:"60-90 seg",
+    objetivo:"Aislar el bíceps braquial.",
+    tecnica:"Codos pegados al cuerpo y fijos. Flexiona sin balancear el torso ni usar los hombros como impulso.",
+    errores:"Balanceo de cadera/tronco. Bajar la barra a medias.",
+    consejos:"Controla la fase excéntrica 2-3 segundos.",
+    muscPrimario:"Bíceps braquial", muscSecundario:["Braquial anterior"],
+    notas:""
+  },
+  sentadilla: {
+    id:"sentadilla", nombre:"Sentadilla",
+    series:4, repMin:6, repMax:8, rir:2, descanso:"3 min",
+    objetivo:"Ejercicio base de pierna: cuádriceps, glúteo e isquios como estabilizadores.",
+    tecnica:"Pies a la anchura de hombros, baja controlando la cadera hacia atrás y abajo hasta rango completo, mantén el pecho arriba y rodillas en línea con los pies.",
+    errores:"Rodillas colapsando hacia dentro (valgo). Perder la curvatura lumbar neutra. Talones que se despegan del suelo.",
+    consejos:"Empuja el suelo 'separándolo' con los pies para activar el glúteo.",
+    muscPrimario:"Cuádriceps", muscSecundario:["Glúteo","Isquiotibiales"],
+    notas:""
+  },
+  peso_muerto_rumano: {
+    id:"peso_muerto_rumano", nombre:"Peso muerto rumano",
+    series:3, repMin:8, repMax:10, rir:2, descanso:"2-3 min",
+    objetivo:"Trabajar isquiotibiales y glúteo en un patrón de bisagra de cadera.",
+    tecnica:"Rodillas con flexión mínima y fija. Lleva la cadera hacia atrás manteniendo la barra pegada a las piernas, hasta sentir estiramiento en isquios, y vuelve extendiendo cadera.",
+    errores:"Flexionar demasiado las rodillas (se convierte en sentadilla). Redondear la espalda baja.",
+    consejos:"Imagina que cierras una puerta con el glúteo al subir.",
+    muscPrimario:"Isquiotibiales", muscSecundario:["Glúteo","Lumbar"],
+    notas:""
+  },
+  extension_cuadriceps: {
+    id:"extension_cuadriceps", nombre:"Extensión de cuádriceps",
+    series:3, repMin:12, repMax:15, rir:1, descanso:"60-90 seg",
+    objetivo:"Aislar el cuádriceps.",
+    tecnica:"Extiende la rodilla en un arco completo y controlado, aguantando un instante arriba.",
+    errores:"Usar impulso subiendo de golpe. Despegar la espalda del respaldo.",
+    consejos:"Aprieta el cuádriceps con fuerza en el punto más alto.",
+    muscPrimario:"Cuádriceps", muscSecundario:[],
+    notas:""
+  },
+  press_militar: {
+    id:"press_militar", nombre:"Press militar",
+    series:3, repMin:6, repMax:8, rir:2, descanso:"2-3 min",
+    objetivo:"Desarrollar fuerza y volumen en el deltoides anterior y medio.",
+    tecnica:"De pie o sentado, empuja la barra desde los hombros en línea recta hacia arriba, sin arquear excesivamente la lumbar.",
+    errores:"Arquear la espalda para compensar falta de movilidad de hombro. Empujar hacia delante en vez de arriba.",
+    consejos:"Aprieta glúteos y abdomen para estabilizar el tronco.",
+    muscPrimario:"Deltoides anterior", muscSecundario:["Tríceps","Trapecio"],
+    notas:""
+  },
+
+  /* ---- Rutina Upper / Lower 4 días — Upper A (Lunes) ---- */
+  UA01: {
+    id:"UA01", nombre:"Press de banca con barra",
+    grupo:["Pectoral mayor","Tríceps","Deltoides anterior"],
+    series:4, repMin:6, repMax:8, rirMin:1, rirMax:2, descansoSeg:180, tipo:"compuesto",
+    descripcion:"Principal ejercicio de fuerza del día. Debe hacerse fresco.",
+    ejecucion:["Escápulas retraídas y deprimidas.","Pies completamente apoyados.","Glúteos siempre en el banco.","Barra baja al esternón.","Antebrazos verticales.","Empujar ligeramente hacia atrás formando una \"J\"."],
+    errores:["Rebotar la barra.","Separar glúteos del banco.","Abrir demasiado los codos.","Perder tensión escapular.","Acortar recorrido."],
+    consejos:["Aprieta el banco con la espalda.","Mantén el pecho alto.","Baja controlando 2-3 segundos.","Empuja con intención explosiva."],
+    progresion:["Mantener peso hasta lograr 8-8-8-8.","Entonces aumentar peso.","Volver a 6 repeticiones."],
+    observaciones:["Prioridad absoluta del entrenamiento."]
+  },
+  UA02: {
+    id:"UA02", nombre:"Dominadas asistidas / Jalón al pecho",
+    grupo:["Dorsal ancho","Romboides","Bíceps"],
+    series:4, repMin:8, repMax:10, rirMin:1, rirMax:2, descansoSeg:120, tipo:"compuesto",
+    descripcion:"Movimiento principal de tracción vertical.",
+    ejecucion:["Sacar pecho.","Iniciar bajando las escápulas.","Llevar los codos hacia las costillas.","No tirar con los brazos únicamente.","Subida completamente controlada."],
+    errores:["Balancearse.","Tirar detrás de la nuca.","Encoger hombros.","Recorrido incompleto."],
+    consejos:["Piensa en llevar los codos al bolsillo.","Mantén tensión constante.","Controla toda la subida."],
+    progresion:["Completar 10 repeticiones en todas las series.","Reducir asistencia o aumentar peso."],
+    observaciones:["Buscar sentir el dorsal más que el bíceps."]
+  },
+  UA03: {
+    id:"UA03", nombre:"Press inclinado con mancuernas",
+    grupo:["Pectoral superior","Deltoides anterior","Tríceps"],
+    series:3, repMin:8, repMax:10, rirMin:1, rirMax:2, descansoSeg:120, tipo:"compuesto",
+    descripcion:"Complemento del press plano para desarrollar el pectoral superior.",
+    ejecucion:["Banco a unos 30°.","Escápulas retraídas.","Mancuernas bajan ligeramente por fuera del pecho.","Subir sin chocar mancuernas."],
+    errores:["Banco demasiado vertical.","Perder estabilidad.","Recorrido corto.","Rebotar."],
+    consejos:["Mantén tensión constante.","Baja despacio.","No bloquees violentamente los codos."],
+    progresion:["Alcanzar 10 repeticiones en todas las series.","Subir peso."],
+    observaciones:["Priorizar recorrido completo."]
+  },
+  UA04: {
+    id:"UA04", nombre:"Remo pecho apoyado",
+    grupo:["Dorsal","Romboides","Trapecio medio","Bíceps"],
+    series:3, repMin:8, repMax:10, rirMin:1, rirMax:2, descansoSeg:120, tipo:"compuesto",
+    descripcion:"Remo estable para minimizar el impulso.",
+    ejecucion:["Pecho siempre apoyado.","Iniciar con escápulas.","Llevar codos atrás.","Bajar lentamente."],
+    errores:["Tirones.","Encoger hombros.","Acortar recorrido."],
+    consejos:["Mantén el pecho pegado al banco.","Aprieta la espalda un segundo arriba."],
+    progresion:["Llegar a 10 repeticiones.","Aumentar carga."],
+    observaciones:["Evitar impulso."]
+  },
+  UA05: {
+    id:"UA05", nombre:"Elevaciones laterales en polea",
+    grupo:["Deltoides lateral"],
+    series:3, repMin:12, repMax:15, rirMin:0, rirMax:1, descansoSeg:75, tipo:"aislamiento",
+    descripcion:"Ejercicio para desarrollar anchura de hombros.",
+    ejecucion:["Brazo ligeramente flexionado.","Elevar hasta la altura del hombro.","Descender lentamente."],
+    errores:["Balancearse.","Encoger trapecios.","Subir demasiado."],
+    consejos:["Lidera el movimiento con el codo.","Movimiento limpio.","Peso moderado."],
+    progresion:["Alcanzar 15 repeticiones.","Subir ligeramente el peso."],
+    observaciones:["Debe sentirse el deltoides, nunca el cuello."]
+  },
+  UA06: {
+    id:"UA06", nombre:"Curl inclinado con mancuernas",
+    grupo:["Bíceps"],
+    series:3, repMin:10, repMax:12, rirMin:0, rirMax:1, descansoSeg:75, tipo:"aislamiento",
+    descripcion:"Excelente para trabajar el bíceps en posición estirada.",
+    ejecucion:["Hombros atrás.","Codos quietos.","Subir sin balanceo.","Bajar completamente."],
+    errores:["Balancearse.","Adelantar hombros.","Recorrido parcial."],
+    consejos:["Mantén tensión continua.","No uses impulso."],
+    progresion:["Llegar a 12 repeticiones.","Aumentar peso."],
+    observaciones:["Buscar máxima amplitud."]
+  },
+  UA07: {
+    id:"UA07", nombre:"Extensión de tríceps en cuerda",
+    grupo:["Tríceps"],
+    series:3, repMin:10, repMax:12, unidad:"reps", repNota:"", rirMin:0, rirMax:1, descansoSeg:75, tipo:"aislamiento",
+    descripcion:"Aislamiento final para tríceps.",
+    ejecucion:["Codos pegados al cuerpo.","Separar ligeramente la cuerda al final.","Controlar toda la subida."],
+    errores:["Abrir los codos.","Balancear el cuerpo.","Usar demasiado peso."],
+    consejos:["Aprieta un segundo abajo.","Mantén tensión constante."],
+    progresion:["Alcanzar 12 repeticiones.","Aumentar carga."],
+    observaciones:["No convertirlo en un press."]
+  },
+
+  /* ---- Lower A (Martes) ---- */
+  LA01: {
+    id:"LA01", nombre:"Sentadilla Hack",
+    grupo:["Cuádriceps","Glúteos"],
+    series:4, repMin:6, repMax:8, unidad:"reps", repNota:"", rirMin:1, rirMax:2, descansoSeg:180, tipo:"compuesto",
+    descripcion:"Principal ejercicio de fuerza del entrenamiento de pierna. La prioridad es un recorrido completo y controlado.",
+    ejecucion:["Espalda completamente apoyada.","Pies ligeramente adelantados.","Rodillas siguiendo la dirección de los pies.","Bajar hasta donde permita la movilidad sin perder la postura.","Empujar con todo el pie."],
+    errores:["Levantar los talones.","Acortar el recorrido.","Rebotar abajo.","Juntar las rodillas.","Despegar la espalda."],
+    consejos:["Mantén el abdomen firme.","Baja despacio.","Empuja pensando en el suelo.","No bloquees las rodillas arriba."],
+    progresion:["Completar 8 repeticiones en las cuatro series.","Aumentar peso."],
+    observaciones:["Ejercicio prioritario del día."]
+  },
+  LA02: {
+    id:"LA02", nombre:"Peso muerto rumano",
+    grupo:["Isquiotibiales","Glúteos","Erectores espinales"],
+    series:4, repMin:8, repMax:10, unidad:"reps", repNota:"", rirMin:1, rirMax:2, descansoSeg:150, tipo:"compuesto",
+    descripcion:"Movimiento dominante de cadera. Debe sentirse el estiramiento de los isquiotibiales.",
+    ejecucion:["Rodillas ligeramente flexionadas.","Espalda neutra.","Cadera hacia atrás.","Barra pegada al cuerpo.","Subir empujando la cadera hacia delante."],
+    errores:["Redondear la espalda.","Convertirlo en una sentadilla.","Alejar la barra.","Flexionar demasiado las rodillas."],
+    consejos:["Mantén el pecho abierto.","Piensa en cerrar una puerta con los glúteos.","Baja solo hasta mantener la espalda neutra."],
+    progresion:["Completar 10 repeticiones.","Subir peso."],
+    observaciones:["Nunca sacrificar técnica por carga."]
+  },
+  LA03: {
+    id:"LA03", nombre:"Prensa inclinada",
+    grupo:["Cuádriceps","Glúteos"],
+    series:3, repMin:10, repMax:12, unidad:"reps", repNota:"", rirMin:1, rirMax:2, descansoSeg:120, tipo:"compuesto",
+    descripcion:"Ejercicio para aumentar volumen de trabajo tras la Hack.",
+    ejecucion:["Espalda completamente apoyada.","Recorrido amplio.","Rodillas alineadas con los pies.","No bloquear completamente."],
+    errores:["Acortar recorrido.","Levantar la cadera.","Juntar rodillas.","Rebotar abajo."],
+    consejos:["Controla especialmente la bajada.","Empuja con todo el pie."],
+    progresion:["Llegar a 12 repeticiones.","Aumentar peso."],
+    observaciones:["No despegar la espalda del respaldo."]
+  },
+  LA04: {
+    id:"LA04", nombre:"Curl femoral sentado",
+    grupo:["Isquiotibiales"],
+    series:3, repMin:10, repMax:12, unidad:"reps", repNota:"", rirMin:0, rirMax:1, descansoSeg:90, tipo:"aislamiento",
+    descripcion:"Trabajo específico de isquiotibiales.",
+    ejecucion:["Ajustar correctamente el respaldo.","Flexionar completamente.","Descender lentamente."],
+    errores:["Impulsarse.","Recorrido corto.","Soltar el peso en la bajada."],
+    consejos:["Aprieta un segundo abajo.","Controla toda la fase excéntrica."],
+    progresion:["Completar 12 repeticiones.","Subir peso."],
+    observaciones:["Buscar sensación de trabajo, no mover mucho peso."]
+  },
+  LA05: {
+    id:"LA05", nombre:"Gemelo sentado",
+    grupo:["Sóleo"],
+    series:4, repMin:12, repMax:15, unidad:"reps", repNota:"", rirMin:0, rirMax:1, descansoSeg:60, tipo:"aislamiento",
+    descripcion:"Desarrollo del sóleo mediante recorrido completo.",
+    ejecucion:["Bajar completamente el talón.","Subir al máximo.","Pausa breve arriba."],
+    errores:["Hacer rebotes.","Medio recorrido.","Exceso de velocidad."],
+    consejos:["Movimiento lento.","Sentir el estiramiento abajo.","Mantener tensión constante."],
+    progresion:["Llegar a 15 repeticiones.","Aumentar peso."],
+    observaciones:["No sacrificar recorrido."]
+  },
+  LA06: {
+    id:"LA06", nombre:"Crunch en polea",
+    grupo:["Recto abdominal"],
+    series:3, repMin:12, repMax:15, unidad:"reps", repNota:"", rirMin:1, rirMax:1, descansoSeg:60, tipo:"aislamiento",
+    descripcion:"Trabajo principal del abdomen mediante flexión de columna.",
+    ejecucion:["Mantener la pelvis estable.","Flexionar el tronco.","Subir lentamente."],
+    errores:["Tirar con los brazos.","Mover la cadera.","Recorrido corto."],
+    consejos:["Piensa en acercar costillas y pelvis.","Exhala al bajar."],
+    progresion:["Llegar a 15 repeticiones.","Aumentar ligeramente el peso."],
+    observaciones:["Priorizar la contracción abdominal."]
+  },
+  LA07: {
+    id:"LA07", nombre:"Plancha frontal",
+    grupo:["Core"],
+    series:3, repMin:45, repMax:60, unidad:"segundos", repNota:"", rirMin:null, rirMax:null, descansoSeg:60, tipo:"isométrico",
+    descripcion:"Trabajo de estabilidad del core.",
+    ejecucion:["Cuerpo completamente alineado.","Abdomen contraído.","Glúteos activos."],
+    errores:["Hundir la espalda.","Elevar demasiado la cadera.","Aguantar sin tensión abdominal."],
+    consejos:["Respira con normalidad.","Aprieta abdomen y glúteos durante toda la serie."],
+    progresion:["Alcanzar 60 segundos.","Añadir peso sobre la espalda si resulta fácil."],
+    observaciones:["La calidad es más importante que el tiempo."]
+  },
+
+  /* ---- Upper B (Jueves) ---- */
+  UB01: {
+    id:"UB01", nombre:"Press militar sentado con mancuernas",
+    grupo:["Deltoides anterior","Deltoides lateral","Tríceps"],
+    series:4, repMin:6, repMax:8, unidad:"reps", repNota:"", rirMin:1, rirMax:2, descansoSeg:150, tipo:"compuesto",
+    descripcion:"Principal ejercicio de hombro de la semana. Debe ejecutarse con recorrido completo y sin impulso.",
+    ejecucion:["Espalda apoyada.","Abdomen contraído.","Mancuernas a la altura de las orejas.","Empujar verticalmente.","Descender controladamente."],
+    errores:["Arquear la espalda.","Impulsarse con el cuerpo.","Recorrido incompleto.","Chocar las mancuernas arriba."],
+    consejos:["Mantén tensión en el abdomen.","Baja lentamente.","Movimiento vertical."],
+    progresion:["Alcanzar 8 repeticiones en todas las series.","Aumentar peso."],
+    observaciones:["Principal ejercicio del día."]
+  },
+  UB02: {
+    id:"UB02", nombre:"Jalón unilateral en polea",
+    grupo:["Dorsal ancho","Redondo mayor","Bíceps"],
+    series:3, repMin:8, repMax:10, unidad:"reps", repNota:"", rirMin:1, rirMax:2, descansoSeg:90, tipo:"compuesto",
+    descripcion:"Trabajo unilateral para mejorar la activación del dorsal.",
+    ejecucion:["Iniciar con depresión escapular.","Llevar el codo hacia la cadera.","Subir lentamente."],
+    errores:["Girar el tronco.","Tirar con el bíceps.","Encoger el hombro."],
+    consejos:["Piensa en mover el codo.","Mantén el pecho alto."],
+    progresion:["Completar 10 repeticiones.","Incrementar peso."],
+    observaciones:["Buscar máxima contracción del dorsal."]
+  },
+  UB03: {
+    id:"UB03", nombre:"Press en máquina convergente",
+    grupo:["Pectoral","Tríceps"],
+    series:3, repMin:8, repMax:10, unidad:"reps", repNota:"", rirMin:1, rirMax:2, descansoSeg:120, tipo:"compuesto",
+    descripcion:"Press estable para trabajar el pectoral con menor demanda de estabilización.",
+    ejecucion:["Escápulas apoyadas.","Recorrido completo.","Controlar la bajada."],
+    errores:["Bloquear violentamente los codos.","Medio recorrido.","Separar la espalda del respaldo."],
+    consejos:["Mantén tensión continua.","Baja lentamente."],
+    progresion:["Llegar a 10 repeticiones.","Subir peso."],
+    observaciones:["Buscar congestión del pectoral."]
+  },
+  UB04: {
+    id:"UB04", nombre:"Remo unilateral en polea",
+    grupo:["Dorsal","Romboides","Trapecio medio"],
+    series:3, repMin:10, repMax:12, unidad:"reps", repNota:"", rirMin:1, rirMax:1, descansoSeg:90, tipo:"compuesto",
+    descripcion:"Remo unilateral para mejorar equilibrio entre ambos lados.",
+    ejecucion:["Tronco estable.","Llevar el codo hacia atrás.","Controlar toda la bajada."],
+    errores:["Girar el cuerpo.","Tirar con el bíceps.","Encoger el hombro."],
+    consejos:["Mantén el pecho abierto.","Aprieta la espalda un segundo."],
+    progresion:["Completar 12 repeticiones.","Aumentar peso."],
+    observaciones:["Priorizar técnica sobre carga."]
+  },
+  UB05: {
+    id:"UB05", nombre:"Face Pull",
+    grupo:["Deltoides posterior","Trapecio medio","Manguito rotador"],
+    series:3, repMin:12, repMax:15, unidad:"reps", repNota:"", rirMin:0, rirMax:1, descansoSeg:75, tipo:"aislamiento",
+    descripcion:"Ejercicio fundamental para la salud del hombro y la estabilidad escapular.",
+    ejecucion:["Llevar la cuerda hacia la cara.","Codos altos.","Separar las manos al finalizar."],
+    errores:["Tirar hacia el pecho.","Encoger hombros.","Balancearse."],
+    consejos:["Piensa en abrir los codos.","Movimiento lento y limpio."],
+    progresion:["Alcanzar 15 repeticiones.","Incrementar ligeramente el peso."],
+    observaciones:["No utilizar cargas altas."]
+  },
+  UB06: {
+    id:"UB06", nombre:"Curl Bayesian en polea",
+    grupo:["Bíceps"],
+    series:3, repMin:10, repMax:12, unidad:"reps", repNota:"", rirMin:0, rirMax:1, descansoSeg:75, tipo:"aislamiento",
+    descripcion:"Curl realizado con el brazo retrasado para enfatizar el estiramiento del bíceps.",
+    ejecucion:["Mantener el brazo ligeramente detrás del cuerpo.","Codo fijo.","Bajar completamente."],
+    errores:["Balancearse.","Adelantar el hombro.","Acortar recorrido."],
+    consejos:["Mantén tensión constante.","Movimiento suave."],
+    progresion:["Llegar a 12 repeticiones.","Aumentar peso."],
+    observaciones:["Buscar máxima amplitud."]
+  },
+  UB07: {
+    id:"UB07", nombre:"Extensión de tríceps por encima de la cabeza en polea",
+    grupo:["Tríceps (cabeza larga)"],
+    series:3, repMin:10, repMax:12, unidad:"reps", repNota:"", rirMin:0, rirMax:1, descansoSeg:75, tipo:"aislamiento",
+    descripcion:"Trabajo específico de la cabeza larga del tríceps.",
+    ejecucion:["Brazos fijos.","Extender completamente.","Regresar lentamente."],
+    errores:["Abrir los codos.","Mover los hombros.","Balancear el cuerpo."],
+    consejos:["Mantén los codos apuntando al frente.","Aprieta un instante al extender."],
+    progresion:["Completar 12 repeticiones.","Aumentar peso."],
+    observaciones:["Mantener tensión durante todo el recorrido."]
+  },
+
+  /* ---- Lower B (Viernes) ---- */
+  LB01: {
+    id:"LB01", nombre:"Sentadilla búlgara con mancuernas",
+    grupo:["Cuádriceps","Glúteos","Aductores","Core"],
+    series:3, repMin:8, repMax:10, unidad:"reps", repNota:"por pierna", rirMin:1, rirMax:2, descansoSeg:120, tipo:"compuesto",
+    descripcion:"Ejercicio unilateral para desarrollar fuerza, estabilidad y corregir desequilibrios entre piernas.",
+    ejecucion:["Pie trasero apoyado sobre banco.","Tronco ligeramente inclinado.","Rodilla delantera siguiendo la punta del pie.","Descender hasta notar un buen estiramiento.","Empujar con el pie delantero."],
+    errores:["Impulsarse con la pierna trasera.","Perder el equilibrio por falta de tensión.","Rodilla colapsando hacia dentro.","Medio recorrido."],
+    consejos:["Mira siempre un punto fijo.","Mantén el abdomen contraído.","Controla especialmente la bajada."],
+    progresion:["Completar las tres series de 10.","Aumentar peso."],
+    observaciones:["La estabilidad es más importante que el peso."]
+  },
+  LB02: {
+    id:"LB02", nombre:"Hip Thrust",
+    grupo:["Glúteo mayor","Isquiotibiales"],
+    series:4, repMin:8, repMax:10, unidad:"reps", repNota:"", rirMin:1, rirMax:1, descansoSeg:120, tipo:"compuesto",
+    descripcion:"Principal ejercicio para el desarrollo de glúteos.",
+    ejecucion:["Espalda alta apoyada en banco.","Barbilla ligeramente recogida.","Subir extendiendo completamente la cadera.","Pausa de un segundo arriba."],
+    errores:["Hiperextender la espalda.","Empujar con la zona lumbar.","Recorrido incompleto."],
+    consejos:["Piensa en empujar con los glúteos.","Mantén la pelvis neutra.","Baja lentamente."],
+    progresion:["Alcanzar 10 repeticiones.","Incrementar peso."],
+    observaciones:["Buscar máxima contracción arriba."]
+  },
+  LB03: {
+    id:"LB03", nombre:"Extensión de cuádriceps",
+    grupo:["Cuádriceps"],
+    series:3, repMin:12, repMax:15, unidad:"reps", repNota:"", rirMin:0, rirMax:1, descansoSeg:75, tipo:"aislamiento",
+    descripcion:"Trabajo específico de cuádriceps buscando máxima contracción.",
+    ejecucion:["Ajustar correctamente el respaldo.","Extender completamente.","Bajar lentamente."],
+    errores:["Impulsarse.","Soltar el peso.","Medio recorrido."],
+    consejos:["Pausa un segundo arriba.","Movimiento completamente controlado."],
+    progresion:["Llegar a 15 repeticiones.","Subir peso."],
+    observaciones:["No bloquear violentamente la rodilla."]
+  },
+  LB04: {
+    id:"LB04", nombre:"Curl femoral tumbado",
+    grupo:["Isquiotibiales"],
+    series:3, repMin:10, repMax:12, unidad:"reps", repNota:"", rirMin:0, rirMax:1, descansoSeg:75, tipo:"aislamiento",
+    descripcion:"Trabajo específico del femoral con especial atención al control.",
+    ejecucion:["Cadera pegada al banco.","Flexionar completamente.","Descender lentamente."],
+    errores:["Separar la pelvis.","Balancearse.","Soltar el peso."],
+    consejos:["Aprieta un segundo arriba.","Mantén tensión continua."],
+    progresion:["Alcanzar 12 repeticiones.","Incrementar peso."],
+    observaciones:["Buscar sensación muscular, no mover más peso."]
+  },
+  LB05: {
+    id:"LB05", nombre:"Gemelo de pie",
+    grupo:["Gastrocnemio"],
+    series:4, repMin:12, repMax:15, unidad:"reps", repNota:"", rirMin:0, rirMax:1, descansoSeg:60, tipo:"aislamiento",
+    descripcion:"Desarrollo del gemelo mediante recorrido completo.",
+    ejecucion:["Descender completamente.","Subir al máximo.","Pausa breve arriba."],
+    errores:["Rebotar.","Medio recorrido.","Exceso de velocidad."],
+    consejos:["Movimiento lento.","Mantén tensión continua.","Estira completamente abajo."],
+    progresion:["Alcanzar 15 repeticiones.","Aumentar peso."],
+    observaciones:["No sacrificar recorrido por carga."]
+  },
+  LB06: {
+    id:"LB06", nombre:"Pallof Press",
+    grupo:["Core","Oblicuos"],
+    series:3, repMin:10, repMax:12, unidad:"reps", repNota:"por lado", rirMin:1, rirMax:1, descansoSeg:60, tipo:"estabilidad",
+    descripcion:"Ejercicio anti-rotacional para desarrollar estabilidad del core.",
+    ejecucion:["Sujetar la polea frente al pecho.","Extender los brazos lentamente.","Evitar cualquier giro del tronco.","Volver controladamente."],
+    errores:["Girar el torso.","Perder la postura.","Doblar los brazos durante la extensión."],
+    consejos:["Mantén abdomen y glúteos contraídos.","Respira con normalidad."],
+    progresion:["Completar 12 repeticiones.","Aumentar ligeramente el peso."],
+    observaciones:["El movimiento debe ser completamente estable."]
+  },
+  LB07: {
+    id:"LB07", nombre:"Dead Bug",
+    grupo:["Core profundo","Transverso abdominal"],
+    series:3, repMin:10, repMax:12, unidad:"reps", repNota:"por lado", rirMin:null, rirMax:null, descansoSeg:45, tipo:"estabilidad",
+    descripcion:"Ejercicio de control lumbo-pélvico para mejorar la estabilidad del core.",
+    ejecucion:["Zona lumbar pegada al suelo.","Extender brazo y pierna opuestos.","Regresar lentamente.","Alternar lados."],
+    errores:["Separar la zona lumbar.","Hacer el movimiento demasiado rápido.","Perder coordinación."],
+    consejos:["Exhala al extender.","Prioriza el control sobre la velocidad."],
+    progresion:["Llegar a 12 repeticiones por lado.","Añadir una pausa de 2 segundos con las extremidades extendidas antes de aumentar la dificultad."],
+    observaciones:["Si la espalda se despega del suelo, reducir el rango de movimiento."]
+  },
+
+  /* ---- Ejercicios nuevos para la rutina de preparación física general (día 1-4) ---- */
+  d_press_pecho_maquina: {
+    id:"d_press_pecho_maquina", nombre:"Press pecho máquina",
+    grupo:["Pectoral"], series:3, repMin:8, repMax:8, unidad:"reps", repNota:"", rirMin:2, rirMax:2,
+    descansoSeg:90, tipo:"compuesto", descripcion:"",
+    ejecucion:["Subida explosiva.","Bajada controlada."],
+    errores:[], consejos:[], progresion:[], observaciones:[]
+  },
+  d_remo_sentado: {
+    id:"d_remo_sentado", nombre:"Remo sentado",
+    grupo:["Espalda"], series:3, repMin:8, repMax:8, unidad:"reps", repNota:"", rirMin:2, rirMax:2,
+    descansoSeg:90, tipo:"compuesto", descripcion:"",
+    ejecucion:[], errores:[], consejos:[], progresion:[], observaciones:[]
+  },
+  d_jalon_al_pecho: {
+    id:"d_jalon_al_pecho", nombre:"Jalón al pecho",
+    grupo:["Dorsal ancho"], series:3, repMin:8, repMax:8, unidad:"reps", repNota:"", rirMin:2, rirMax:2,
+    descansoSeg:90, tipo:"compuesto", descripcion:"",
+    ejecucion:[], errores:[], consejos:[], progresion:[], observaciones:[]
+  },
+  d_press_hombro_maquina: {
+    id:"d_press_hombro_maquina", nombre:"Press hombro máquina",
+    grupo:["Deltoides"], series:2, repMin:8, repMax:8, unidad:"reps", repNota:"", rirMin:2, rirMax:2,
+    descansoSeg:90, tipo:"compuesto", descripcion:"",
+    ejecucion:[], errores:[], consejos:[], progresion:[], observaciones:[]
+  },
+  d_prensa: {
+    id:"d_prensa", nombre:"Prensa",
+    grupo:["Cuádriceps","Glúteos"], series:3, repMin:8, repMax:8, unidad:"reps", repNota:"", rirMin:null, rirMax:null,
+    descansoSeg:90, tipo:"compuesto", descripcion:"",
+    ejecucion:[], errores:[], consejos:[], progresion:[], observaciones:[]
+  },
+  d_box_jump: {
+    id:"d_box_jump", nombre:"Box Jump",
+    grupo:["Pierna"], series:3, repMin:6, repMax:6, unidad:"reps", repNota:"", rirMin:null, rirMax:null,
+    descansoSeg:120, tipo:"potencia", descripcion:"",
+    ejecucion:["Priorizar velocidad y explosividad sobre la altura del cajón."],
+    errores:[], consejos:[], progresion:[], observaciones:[]
+  },
+  d_step_up_explosivo: {
+    id:"d_step_up_explosivo", nombre:"Step Up explosivo con rodilla",
+    grupo:["Pierna"], series:3, repMin:8, repMax:8, unidad:"reps", repNota:"por pierna", rirMin:null, rirMax:null,
+    descansoSeg:90, tipo:"potencia", descripcion:"",
+    ejecucion:[], errores:[], consejos:[], progresion:[], observaciones:[]
+  }
+};
+
+/* ---- Catálogo ampliado: ejercicios SIN ficha técnica ----
+   Solo sirven como alternativas/sustitutos. Únicamente se muestran
+   nombre + (grupoMuscular · subgrupo · tipoEntrenamiento). */
+function slugify(s){
+  return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/[^a-z0-9]+/g,"_").replace(/^_+|_+$/g,"");
+}
+const LITE_CATALOG_RAW = [
+  ["Press Inclinado Máquina","Pecho","Superior","Hipertrofia","Pecho"],
+  ["Press Plano Máquina","Pecho","Medio","Hipertrofia","Pecho"],
+  ["Fondos Asistidos","Pecho","Inferior","Fuerza","Pecho"],
+  ["Aperturas Máquina","Pecho","Aislamiento","Hipertrofia","Pecho"],
+  ["Jalón al Pecho","Espalda","Dorsal","Hipertrofia","Espalda"],
+  ["Remo Pecho Apoyado","Espalda","Media","Hipertrofia","Espalda"],
+  ["Pullover Polea","Espalda","Dorsal","Estiramiento","Espalda"],
+  ["Face Pull","Espalda/Hombro","Trapecio inferior y deltoide posterior","Salud articular","Espalda"],
+  ["Dominadas Asistidas","Espalda","Global","Fuerza","Espalda"],
+  ["Press Militar Máquina","Hombro","Deltoide anterior","Fuerza","Hombros"],
+  ["Elevaciones Laterales","Hombro","Deltoide lateral","Hipertrofia","Hombros"],
+  ["Pájaros Máquina","Hombro","Deltoide posterior","Hipertrofia","Hombros"],
+  ["Y Raise","Hombro","Manguito rotador","Estabilidad","Hombros"],
+  ["Curl Inclinado","Bíceps","Cabeza larga","Hipertrofia","Bíceps"],
+  ["Curl Martillo","Braquial/Antebrazo","Global","Hipertrofia","Bíceps"],
+  ["Curl Scott Máquina","Bíceps","Cabeza corta","Hipertrofia","Bíceps"],
+  ["Jalón Cuerda","Tríceps","Lateral","Hipertrofia","Tríceps"],
+  ["Extensión Sobre Cabeza","Tríceps","Cabeza larga","Hipertrofia","Tríceps"],
+  ["Fondos en Banco","Tríceps","Global","Fuerza","Tríceps"],
+  ["Hack Squat","Cuádriceps","Global","Fuerza","Pierna"],
+  ["Bulgarian Split Squat","Cuádriceps/Glúteo","Unilateral","Estabilidad","Pierna"],
+  ["Peso Muerto Rumano","Isquios/Glúteo","Cadena posterior","Fuerza","Pierna"],
+  ["Curl Femoral Sentado","Isquios","Aislamiento","Hipertrofia","Pierna"],
+  ["Hip Thrust","Glúteo","Principal","Fuerza","Pierna"],
+  ["Elevación de Gemelos","Gemelos","Global","Hipertrofia","Pierna"],
+  ["Tibialis Raise","Tibial anterior","Prevención","Resistencia","Pierna"],
+  ["Dead Bug","Core","Anti-extensión","Estabilidad","Core"],
+  ["Pallof Press","Core","Anti-rotación","Estabilidad","Core"],
+  ["Crunch en Polea","Core","Recto abdominal","Hipertrofia","Core"],
+  ["Hanging Knee Raise","Core","Inferior","Control","Core"],
+  ["Side Plank","Core","Oblicuos","Estabilidad","Core"],
+  ["Copenhagen Plank","Core","Aductores/Core","Prevención","Core"],
+  ["Farmer Walk","Cuerpo completo","Agarre/Core","Funcional","Funcional"],
+  ["Suitcase Carry","Core","Anti-inclinación","Funcional","Funcional"],
+  ["Battle Rope","Cuerpo completo","Potencia","Resistencia","Funcional"],
+  ["Landmine Press","Cuerpo completo","Empuje","Funcional","Funcional"],
+  ["Turkish Get Up","Cuerpo completo","Coordinación","Estabilidad","Funcional"],
+  ["Bear Crawl","Cuerpo completo","Coordinación","Control","Funcional"],
+  ["Box Jump","Pierna","Potencia","Pliometría","Pliometría"],
+  ["Broad Jump","Pierna","Potencia horizontal","Pliometría","Pliometría"],
+  ["Drop Jump","Pierna","Reactividad","Pliometría","Pliometría"],
+  ["Skater Jump","Pierna","Potencia lateral","Pliometría","Pliometría"],
+  ["Slam Ball","Tren superior/Core","Potencia","Explosividad","Pliometría"],
+  ["Single Leg RDL","Pierna","Equilibrio","Estabilidad","Equilibrio"],
+  ["BOSU Single Leg","Pierna","Tobillo/Rodilla","Equilibrio","Equilibrio"],
+  ["Star Excursion","Pierna","Control motor","Equilibrio","Equilibrio"],
+  ["90/90 Hip Switch","Cadera","Rotación","Movilidad","Movilidad"],
+  ["World's Greatest Stretch","Cuerpo completo","Movilidad global","Calentamiento","Movilidad"],
+  ["Open Book","Columna torácica","Rotación","Movilidad","Movilidad"],
+  ["Wall Slides","Hombro","Escápulas","Movilidad","Movilidad"],
+  ["Cat Camel","Columna","Flexión/Extensión","Movilidad","Movilidad"],
+  ["Knee to Wall","Tobillo","Dorsiflexión","Movilidad","Movilidad"],
+  ["Pec Stretch","Pecho","Estiramiento","Movilidad","Movilidad"],
+  ["Lat Stretch","Dorsal","Estiramiento","Movilidad","Movilidad"],
+  ["Hip Flexor Stretch","Cadera","Flexores","Movilidad","Movilidad"],
+  ["Deep Squat Hold","Cadera/Tobillo","Sentadilla profunda","Movilidad","Movilidad"],
+  ["Bird Dog","Core","Anti-rotación/Extensión","Estabilidad","Core"],
+  ["Saltos Laterales","Pierna","Potencia lateral","Pliometría","Pliometría"],
+  ["Step Rápido Alternando Piernas","Pierna","Coordinación","Coordinación","Coordinación"],
+  ["Caminata Lateral con Banda","Glúteo medio","Lateral de cadera","Estabilidad","Equilibrio"],
+  ["Farmer Carry Unilateral","Core","Anti-inclinación","Funcional","Funcional"],
+  ["Flexiones","Pecho/Tríceps/Core","Empuje horizontal","Fuerza funcional","Funcional"]
+];
+LITE_CATALOG_RAW.forEach(([nombre,grupoMuscular,subgrupo,tipoEntrenamiento,categoria])=>{
+  const id = "cat_"+slugify(nombre);
+  DEFAULT_EXERCISES[id] = {
+    id, nombre, grupoMuscular, subgrupo, categoria, tipoEntrenamiento,
+    material:"", dificultad:null, sustituyeA:[], videoURL:"", ficha:false
+  };
+});
+
+/* ---- Rutina "4 días — Fuerza + potencia + movilidad + atletismo" (v2) ----
+   Cada ejercicio incluye tipoMovimiento (códigos de MOVEMENT_TYPES, puede ser compuesto
+   p.ej. ["FUE","UNI"]) y objetivo (frase corta de qué busca ese ejercicio). */
+function defaultDescansoPorTipo(code){
+  const map = {FUE:120, POT:120, HIP:90, COND:90, COR:60, EST:60, MOV:60, UNI:90, CAR:90, COOR:60};
+  return map[code] || 90;
+}
+const RUTINA2_RAW = [
+  // id, nombre, series, repMin, repMax, unidad, repNota, tipoMovimiento[], objetivo, grupo[]
+  ["e2_prensa_piernas","Prensa de piernas",3,8,10,"reps","",["FUE"],"Fuerza de piernas",["Piernas"]],
+  ["e2_dominadas_asistidas","Dominadas asistidas",3,8,10,"reps","",["HIP"],"Espalda + bíceps",["Espalda","Bíceps"]],
+  ["e2_press_pecho_maquina","Press de pecho en máquina",3,8,10,"reps","",["HIP"],"Pectoral + tríceps",["Pectoral","Tríceps"]],
+  ["e2_remo_maquina","Remo en máquina",3,8,10,"reps","",["HIP"],"Espalda + bíceps",["Espalda","Bíceps"]],
+  ["e2_salto_al_cajon","Salto al cajón",3,4,5,"reps","",["POT"],"Potencia de piernas",["Piernas"]],
+  ["e2_lanzamiento_balon_frente","Lanzamiento de balón medicinal al frente",3,6,6,"reps","",["POT"],"Potencia de tren superior + core",["Tren superior","Core"]],
+  ["e2_landmine_push_press_rot","Landmine Push Press rotacional",3,6,6,"reps","por lado",["POT"],"Potencia explosiva frontal y vertical, transfiriendo fuerza desde las piernas y la cadera hacia el tren superior",["Tren superior","Core","Piernas"]],
+  ["e2_zancada_atras_elevacion_rodilla","Zancada atrás + elevación de rodilla",3,8,8,"reps","por pierna",["UNI"],"Fuerza unilateral + equilibrio",["Piernas"]],
+  ["e2_pallof_press","Pallof press",3,10,10,"reps","por lado",["COR"],"Resistencia a la rotación",["Core"]],
+  ["e2_dead_bug","Dead bug",3,8,10,"reps","por lado",["COR"],"Control lumbo-pélvico",["Core"]],
+  ["e2_thread_the_needle","Thread the needle",2,8,8,"reps","por lado",["MOV"],"Movilidad torácica + hombro",[]],
+
+  ["e2_movilidad_tobillo","Movilidad de tobillo",2,10,10,"reps","por lado",["MOV"],"Rango de dorsiflexión",[]],
+  ["e2_90_90_hip_switches","90/90 hip switches",2,8,8,"reps","por lado",["MOV"],"Rotación interna/externa de cadera",[]],
+  ["e2_rotacion_toracica","Rotación torácica",2,8,8,"reps","por lado",["MOV"],"Movilidad de columna torácica",[]],
+  ["e2_movilidad_hombro","Movilidad de hombro",2,10,10,"reps","",["MOV"],"Rango de movimiento del hombro",[]],
+  ["e2_equilibrio_unipodal_bosu","Equilibrio unipodal sobre BOSU",3,30,40,"segundos","por lado",["EST"],"Propiocepción + estabilidad de tobillo/cadera",[]],
+  ["e2_single_leg_reach","Single-leg reach",3,6,8,"reps","por lado",["EST"],"Equilibrio dinámico + control de cadera",[]],
+  ["e2_bosu_squat_reach","BOSU squat + reach",2,8,10,"reps","",["EST"],"Control corporal + equilibrio dinámico",[]],
+  ["e2_bird_dog","Bird dog",3,8,8,"reps","por lado",["COR"],"Estabilidad lumbo-pélvica",["Core"]],
+  ["e2_side_plank","Side plank",3,25,40,"segundos","por lado",["COR"],"Estabilidad lateral",["Core"]],
+  ["e2_copenhagen_plank_corto","Copenhagen plank corto",2,20,30,"segundos","por lado",["COR","ADU"],"Core + aductores",["Core","Aductores"]],
+  ["e2_gemelo_unilateral_pie","Elevación de gemelo unilateral de pie",3,12,15,"reps","por lado",["HIP"],"Gemelo + estabilidad de tobillo",["Gemelo"]],
+  ["e2_estiramiento_flexor_cadera","Estiramiento activo de flexor de cadera",2,30,30,"segundos","por lado",["MOV"],"Movilidad de cadera",[]],
+
+  ["e2_goblet_squat","Goblet squat",3,10,12,"reps","",["HIP"],"Piernas + core",["Piernas","Core"]],
+  ["e2_flexiones_inclinadas","Flexiones inclinadas",3,10,15,"reps","",["HIP"],"Pectoral + tríceps",["Pectoral","Tríceps"]],
+  ["e2_remo_trx","Remo TRX",3,10,12,"reps","",["HIP"],"Espalda + estabilidad",["Espalda"]],
+  ["e2_hip_thrust","Hip thrust",3,10,12,"reps","",["HIP"],"Glúteos + cadena posterior",["Glúteos"]],
+  ["e2_face_pull","Face pull",3,12,15,"reps","",["HIP"],"Deltoides posterior + espalda alta",["Deltoides posterior","Espalda alta"]],
+  ["e2_rdl_unilateral","Peso muerto rumano unilateral",3,8,8,"reps","por lado",["FUE","UNI"],"Cadena posterior + equilibrio",["Isquiotibiales","Glúteo"]],
+  ["e2_step_up_cajon","Step-up al cajón",3,8,8,"reps","por lado",["FUE","UNI"],"Fuerza unilateral de pierna",["Piernas"]],
+  ["e2_farmer_carry","Farmer carry",3,30,40,"m","",["CAR"],"Core + agarre + estabilidad",["Core"]],
+  ["e2_plank_shoulder_taps","Plank + shoulder taps",3,8,12,"reps","por lado",["COR"],"Anti-rotación + estabilidad",["Core"]],
+
+  ["e2_skater_jumps","Skater jumps",3,5,6,"reps","por lado",["POT"],"Potencia lateral + estabilidad",["Piernas"]],
+  ["e2_lanzamiento_rotacional_balon","Lanzamiento rotacional de balón medicinal",3,6,6,"reps","por lado",["POT"],"Potencia rotacional",["Core"]],
+  ["e2_salto_horizontal","Salto horizontal",3,4,4,"reps","",["POT"],"Potencia horizontal",["Piernas"]],
+  ["e2_split_squat","Split squat",3,8,8,"reps","por lado",["FUE","UNI"],"Fuerza unilateral",["Piernas"]],
+  ["e2_press_unilateral_mancuerna","Press unilateral con mancuerna/cable",3,8,10,"reps","por lado",["HIP","UNI"],"Empuje + estabilidad",["Hombro"]],
+  ["e2_zancada_lateral","Zancada lateral",3,8,8,"reps","por lado",["FUE","UNI"],"Fuerza lateral + movilidad",["Piernas"]],
+  ["e2_suitcase_carry","Suitcase carry",3,30,40,"m","por lado",["CAR"],"Core anti-inclinación + estabilidad",["Core"]],
+  ["e2_sled_push","Sled push",4,15,20,"m","",["COND"],"Fuerza-resistencia + capacidad anaeróbica",["Piernas"]],
+  ["e2_bear_crawl_d4","Bear crawl",3,20,30,"segundos","",["COR","COOR"],"Core + coordinación + locomoción",["Core"]],
+  ["e2_pallof_press_zancada","Pallof press en zancada",3,8,10,"reps","por lado",["COR"],"Anti-rotación + estabilidad",["Core"]],
+  ["e2_worlds_greatest_stretch","World's Greatest Stretch",2,5,5,"reps","por lado",["MOV"],"Cadera + isquios + columna torácica",[]],
+  ["e2_90_90_rotacion","90/90 + rotación",2,6,6,"reps","por lado",["MOV"],"Movilidad de cadera + control",[]]
+];
+RUTINA2_RAW.forEach(([id,nombre,series,repMin,repMax,unidad,repNota,tipoMovimiento,objetivo,grupo])=>{
+  DEFAULT_EXERCISES[id] = {
+    id, nombre, grupo, series, repMin, repMax, unidad, repNota, rirMin:null, rirMax:null,
+    descansoSeg: defaultDescansoPorTipo(tipoMovimiento[0]), tipo:"", descripcion:"",
+    ejecucion:[], errores:[], consejos:[], progresion:[], observaciones:[],
+    tipoMovimiento, objetivo
+  };
+});
+
+/* ---- Ficha técnica completa del Día 2 (movilidad + equilibrio + estabilidad) ---- */
+const DIA2_DETAIL = {
+  e2_movilidad_tobillo: {
+    ejecucion:["Pie completamente apoyado.","Lleva lentamente la rodilla hacia delante, en dirección a los dedos del pie.","Mantén el talón pegado al suelo.","La rodilla puede avanzar por encima de los dedos si no aparece dolor.","Vuelve lentamente a la posición inicial.","Mantén el arco del pie activo; evita que el tobillo colapse hacia dentro."],
+    errores:["Levantar el talón.","Dejar que el pie se colapse hacia dentro.","Mover la cadera en lugar del tobillo.","Forzar el rango con dolor.","Hacer rebotes."],
+    consejos:["Busca progresivamente más recorrido, no más velocidad.","La sensación debe ser de movilidad/tensión, no de dolor.","Mantén el pie en contacto completo con el suelo."],
+    progresion:["Aumentar progresivamente el rango.","Después se puede añadir una ligera carga si la variante lo permite.","No progresar buscando dolor ni rebotes."]
+  },
+  e2_90_90_hip_switches: {
+    ejecucion:["Siéntate con ambas piernas flexionadas aproximadamente a 90°.","Mantén el tronco relativamente erguido.","Gira ambas rodillas de un lado al otro de forma controlada.","Intenta que el movimiento proceda principalmente de las caderas.","Llega al límite cómodo del rango y vuelve."],
+    errores:["Dejarse caer de un lado a otro.","Utilizar impulso.","Compensar excesivamente con el tronco.","Forzar la rodilla.","Buscar profundidad sacrificando control."],
+    consejos:["Prioriza control sobre amplitud.","Puedes apoyar las manos detrás al principio.","Con el tiempo intenta realizarlo con menos apoyo."],
+    progresion:["Mayor amplitud manteniendo control.","Menos apoyo de manos.","Añadir pausas al final del rango."]
+  },
+  e2_rotacion_toracica: {
+    ejecucion:["Colócate en cuadrupedia.","Apoya una mano detrás de la cabeza.","Mantén estable la pelvis.","Gira el codo hacia el techo.","Sigue el movimiento con el torso.","Vuelve lentamente."],
+    errores:["Rotar principalmente desde la zona lumbar.","Mover la pelvis.","Hacer el movimiento rápidamente.","Intentar alcanzar un rango excesivo."],
+    consejos:["Piensa en \"abrir el pecho\", no simplemente levantar el codo.","Mantén la respiración tranquila.","Busca sensación de movimiento en la zona torácica."],
+    progresion:["Mayor rango manteniendo pelvis estable.","Añadir una pausa de 1-2 s en la posición abierta."]
+  },
+  e2_movilidad_hombro: {
+    ejecucion:["Realiza círculos controlados de hombro o la variante específica seleccionada.","Mantén el cuello relajado.","Utiliza un rango amplio pero cómodo.","Controla todo el recorrido."],
+    errores:["Hacer círculos rápidos.","Elevar excesivamente los hombros hacia las orejas.","Forzar posiciones dolorosas.","Compensar arqueando demasiado la espalda."],
+    consejos:["El movimiento debe ser fluido.","No necesitas buscar el máximo rango desde la primera repetición."],
+    progresion:["Mayor rango y control.","Posteriormente se pueden utilizar variantes más exigentes."]
+  },
+  e2_equilibrio_unipodal_bosu: {
+    ejecucion:["Colócate sobre una pierna en el centro del BOSU.","Mantén una ligera flexión de rodilla.","Mantén pelvis y tronco estables.","Mira a un punto fijo.","Intenta mantener el pie activo y estable.","Utiliza la otra pierna únicamente si pierdes el equilibrio."],
+    errores:["Bloquear completamente la rodilla.","Inclinar excesivamente el tronco.","Dejar que la rodilla colapse hacia dentro.","Mirar continuamente al suelo.","Convertirlo en un ejercicio de \"sobrevivir\" al BOSU."],
+    consejos:["El objetivo no es tambalearse lo máximo posible, sino controlar el cuerpo.","Empieza cerca de un apoyo.","Mantén el pie activo."],
+    progresion:["Más tiempo.","Menos apoyo externo.","Movimientos de brazos.","Mayor inestabilidad.","Ojos cerrados únicamente cuando la variante anterior sea completamente segura."]
+  },
+  e2_single_leg_reach: {
+    tipoMovimiento:["EST","UNI"],
+    ejecucion:["Apóyate sobre una pierna.","Flexiona ligeramente rodilla y cadera.","Inclina el tronco mientras llevas la pierna libre hacia atrás.","Alcanza con la mano hacia delante o hacia un punto determinado.","Vuelve a la posición inicial manteniendo el equilibrio.","La rodilla debe seguir aproximadamente la línea del segundo/tercer dedo del pie."],
+    errores:["Colapsar la rodilla hacia dentro.","Girar la pelvis.","Abrir la cadera para compensar.","Hacerlo demasiado rápido.","Perder la postura del pie."],
+    consejos:["Prioriza estabilidad sobre profundidad.","Si pierdes el equilibrio constantemente, reduce el rango.","Mantén el abdomen ligeramente activo."],
+    progresion:["Mayor alcance.","Mayor control.","Añadir una ligera carga.","Realizarlo sobre una superficie algo menos estable."]
+  },
+  e2_bosu_squat_reach: {
+    tipoMovimiento:["EST","UNI"],
+    ejecucion:["Colócate sobre el BOSU con ambos pies.","Realiza una sentadilla controlada.","Al subir, realiza el alcance con los brazos indicado.","Mantén rodillas alineadas con los pies.","Mantén el tronco estable."],
+    errores:["Buscar profundidad a costa de perder estabilidad.","Rodillas hacia dentro.","Utilizar rebote.","Mover excesivamente el tronco.","Hacer el ejercicio rápido para \"sobrevivir\"."],
+    consejos:["La calidad es más importante que la profundidad.","Si el BOSU dificulta demasiado una buena sentadilla, reduce el rango."],
+    progresion:["Mayor rango.","Mayor control.","Alcances más amplios.","Posteriormente ligera carga."]
+  },
+  e2_bird_dog: {
+    ejecucion:["Colócate en cuadrupedia.","Manos debajo de hombros y rodillas debajo de caderas.","Activa ligeramente el abdomen.","Extiende simultáneamente brazo y pierna contrarios.","Mantén pelvis y columna estables.","Haz una breve pausa.","Regresa lentamente."],
+    errores:["Girar la pelvis.","Arquear la zona lumbar.","Elevar demasiado la pierna.","Hacerlo deprisa.","Mover el tronco al extender las extremidades."],
+    consejos:["Imagina que tienes un vaso de agua sobre la zona lumbar.","No necesitas levantar mucho brazo/pierna.","La estabilidad es más importante que la amplitud."],
+    progresion:["Pausa más larga.","Mayor control.","Añadir resistencia ligera.","Variantes más difíciles."]
+  },
+  e2_side_plank: {
+    ejecucion:["Apoya antebrazo directamente debajo del hombro.","Mantén cuerpo alineado.","Eleva la pelvis.","Contrae abdomen y glúteos.","Mantén la posición sin rotar hacia delante o atrás."],
+    errores:["Hundir la cadera.","Rotar el tronco.","Adelantar el hombro.","Aguantar demasiado tiempo perdiendo técnica."],
+    consejos:["Es preferible 25 s perfectos que 60 s deformado.","Mantén respiración normal."],
+    progresion:["Más tiempo.","Piernas más juntas/posición más exigente.","Elevación de pierna.","Carga adicional."]
+  },
+  e2_copenhagen_plank_corto: {
+    ejecucion:["Apoya la rodilla de la pierna superior sobre un banco.","Apoya el antebrazo debajo del hombro.","Eleva la pelvis.","Mantén cuerpo alineado.","La pierna inferior permanece relajada o ligeramente separada.","Mantén la posición sin dejar caer la pelvis."],
+    errores:["Dejar caer la pelvis.","Rotar el tronco.","Colocar mal el hombro.","Utilizar una variante demasiado difícil.","Continuar pese a dolor agudo en el aductor."],
+    consejos:["Especialmente interesante como complemento del trabajo específico de aductores.","Debe sentirse como trabajo muscular, no como dolor en la zona.","Empieza conservador."],
+    progresion:["Aumentar tiempo.","Aumentar altura/longitud de apoyo.","Pasar de rodilla a tobillo cuando tengas buena tolerancia."]
+  },
+  e2_gemelo_unilateral_pie: {
+    tipoMovimiento:["HIP","EST"],
+    rirMin:2, rirMax:3,
+    ejecucion:["Apoya la parte delantera del pie en un escalón si está disponible.","Mantén la rodilla ligeramente flexionada.","Baja el talón de forma controlada.","Sube hasta la máxima elevación cómoda.","Haz una breve pausa arriba.","Mantén el tobillo alineado y evita que se vaya hacia dentro o fuera."],
+    errores:["Hacer rebotes.","Recorrido corto.","Bajar demasiado rápido.","Dejar que el tobillo se desplace lateralmente.","Utilizar demasiado impulso."],
+    consejos:["El recorrido completo importa mucho.","Puedes sujetarte con una mano para concentrarte en el gemelo y no en el equilibrio.","Si el equilibrio limita el ejercicio, apóyate más."],
+    progresion:["Primero llegar cómodamente a 15 repeticiones con 2-3 RIR.","Después añadir peso.","También puedes aumentar progresivamente el rango."]
+  },
+  e2_estiramiento_flexor_cadera: {
+    ejecucion:["Colócate en posición de zancada con una rodilla en el suelo.","Realiza una ligera retroversión pélvica.","Aprieta el glúteo de la pierna atrasada.","Avanza ligeramente la pelvis sin arquear la zona lumbar.","Mantén la posición.","Vuelve y repite."],
+    errores:["Arquear la zona lumbar.","Avanzar demasiado la pelvis.","No activar el glúteo.","Convertirlo en un estiramiento lumbar."],
+    consejos:["Piensa en \"meter el culo hacia dentro\" antes de avanzar.","Debes notar principalmente tensión delante de la cadera/muslo.","No debe provocar dolor."],
+    progresion:["Mayor control y rango.","Añadir elevación del brazo del lado que se estira.","No hace falta añadir carga."]
+  }
+};
+Object.keys(DIA2_DETAIL).forEach(id=>{ Object.assign(DEFAULT_EXERCISES[id], DIA2_DETAIL[id]); });
+
+/* ---- Ficha técnica completa del Día 1 (fuerza + potencia) ---- */
+const DIA1_DETAIL = {
+  e2_prensa_piernas: {
+    rirMin:2, rirMax:3,
+    ejecucion:["Coloca los pies aproximadamente al ancho de hombros.","Baja la plataforma de forma controlada hasta conseguir una profundidad cómoda manteniendo la pelvis estable.","Las rodillas deben seguir la dirección de los pies.","Empuja con fuerza la plataforma hasta casi extender completamente las rodillas, sin bloquearlas agresivamente."],
+    errores:["Levantar la pelvis del respaldo.","Dejar que las rodillas colapsen hacia dentro.","Bajar tanto que pierdas la posición de la pelvis.","Hacer rebote en la parte inferior.","Bloquear las rodillas violentamente."],
+    consejos:["No necesitas buscar el máximo peso posible: queremos fuerza con recorrido y control."],
+    progresion:["Cuando completes 3×10 con RIR ≈2 y buena técnica, aumenta ligeramente el peso."]
+  },
+  e2_dominadas_asistidas: {
+    rirMin:1, rirMax:2,
+    ejecucion:["Agarra la barra con una anchura cómoda.","Comienza con los brazos extendidos sin perder el control de los hombros.","Lleva los codos hacia abajo y atrás mientras subes.","Busca llevar el pecho hacia la barra.","Baja controladamente hasta casi extender completamente los brazos."],
+    errores:["Balancear las piernas.","Tirar únicamente con los bíceps.","Acortar demasiado el recorrido.","Subir los hombros hacia las orejas."],
+    consejos:["Piensa en \"llevar los codos hacia los bolsillos\" en lugar de intentar tirar de la barra con las manos."],
+    progresion:["Cuando hagas 3×10 con buena técnica y RIR 1-2, reduce ligeramente la asistencia."]
+  },
+  e2_press_pecho_maquina: {
+    rirMin:1, rirMax:2,
+    ejecucion:["Ajusta el asiento para que las asas queden aproximadamente a la altura del pecho.","Escápulas apoyadas y pecho estable.","Empuja hacia delante sin despegar la espalda.","Regresa lentamente hasta conseguir un buen estiramiento del pectoral, sin perder la posición."],
+    errores:["Despegar los hombros del respaldo.","Acortar demasiado el recorrido.","Bloquear los codos agresivamente.","Utilizar impulso del torso."],
+    progresion:["Cuando completes 3×10 con RIR 1-2, aumenta un nivel de peso."]
+  },
+  e2_remo_maquina: {
+    rirMin:1, rirMax:2,
+    ejecucion:["Pecho estable contra el apoyo si la máquina lo tiene.","Comienza con los brazos extendidos.","Lleva los codos hacia atrás manteniendo los hombros bajos.","Junta las escápulas de forma natural al final.","Regresa lentamente hasta extender los brazos."],
+    errores:["Tirar con el cuerpo hacia atrás.","Encoger los hombros.","Utilizar impulso.","No completar el recorrido."],
+    progresion:["3×10 con RIR 1-2 y técnica limpia → aumenta ligeramente el peso."]
+  },
+  e2_salto_al_cajon: {
+    ejecucion:["Colócate frente al cajón con los pies aproximadamente al ancho de hombros.","Haz una pequeña flexión de cadera y rodillas.","Salta lo más explosivamente posible.","Aterriza encima del cajón con ambos pies y rodillas ligeramente flexionadas.","Estabiliza la posición antes de bajar.","Baja caminando, no saltando hacia atrás."],
+    errores:["Elegir un cajón demasiado alto.","Buscar altura sacrificando la técnica.","Aterrizar con las rodillas hacia dentro.","Saltar del cajón para ahorrar tiempo."],
+    consejos:["Si la altura o potencia disminuye claramente, termina la serie: la calidad es más importante que completar repeticiones."],
+    progresion:["Primero mejora la altura/calidad del salto, no añadas peso. El cajón debe permitir aterrizar con control."]
+  },
+  e2_lanzamiento_balon_frente: {
+    ejecucion:["Colócate con la pelota medicinal delante del pecho.","Adopta una posición atlética, con rodillas ligeramente flexionadas.","Lleva la pelota ligeramente hacia atrás.","Genera fuerza desde piernas y cadera y lanza hacia delante explosivamente.","Deja que brazos y tronco transmitan la fuerza.","Recupera la pelota y repite."],
+    errores:["Hacer el lanzamiento únicamente con los brazos.","Realizarlo demasiado lento.","Perder estabilidad del tronco.","Utilizar una pelota demasiado pesada."],
+    consejos:["Utiliza un peso que permita lanzar la pelota rápido. Si el lanzamiento empieza a parecer un press pesado, es demasiado peso."]
+  },
+  e2_zancada_atras_elevacion_rodilla: {
+    tipoMovimiento:["FUE","UNI"], rirMin:2, rirMax:3,
+    ejecucion:["Desde posición erguida, lleva una pierna hacia atrás.","Desciende manteniendo el peso principalmente sobre la pierna delantera.","Empuja el suelo para volver arriba.","Al subir, lleva la rodilla trasera hacia delante hasta una posición estable.","Mantén el tronco controlado durante todo el movimiento."],
+    errores:["Perder el equilibrio al subir.","Dejar que la rodilla delantera colapse hacia dentro.","Dar un paso demasiado corto.","Utilizar demasiado impulso con la pierna trasera."],
+    consejos:["Si el knee drive hace que pierdas mucha estabilidad, primero domina el reverse lunge y después añade velocidad al subir."],
+    progresion:["Cuando completes 3×8/lado con estabilidad y RIR 2-3, aumenta ligeramente la carga."]
+  },
+  e2_pallof_press: {
+    rirMin:2, rirMax:3,
+    ejecucion:["Colócate perpendicular al cable/banda.","Lleva las manos al pecho.","Empuja los brazos hacia delante sin permitir que el torso rote hacia el cable.","Mantén 1-2 s y vuelve."],
+    errores:["Girar el tronco.","Inclinarse hacia el cable.","Utilizar demasiado peso."],
+    progresion:["Aumenta ligeramente la resistencia cuando puedas mantener perfectamente la posición."]
+  },
+  e2_dead_bug: {
+    ejecucion:["Túmbate boca arriba con caderas y rodillas a 90°.","Mantén la zona lumbar estable contra el suelo.","Extiende brazo y pierna contrarios lentamente.","Vuelve al centro y cambia de lado."],
+    errores:["Arquear la zona lumbar.","Hacerlo demasiado rápido.","Extender demasiado las extremidades si pierdes el control."]
+  },
+  e2_thread_the_needle: {
+    ejecucion:["A cuatro apoyos, pasa un brazo por debajo del cuerpo.","Después realiza la rotación hacia el techo.","Movimiento lento y controlado, buscando amplitud sin forzar."]
+  }
+};
+DIA1_DETAIL.e2_landmine_push_press_rot = {
+  descansoSeg: 120,
+  ejecucion:[
+    "Colócate frente al extremo de la barra en una postura atlética (pies al ancho de los hombros).",
+    "Sujeta la barra con una mano bajándola hacia la cadera del lado opuesto.",
+    "Realiza una rápida y ligera flexión de rodillas y cadera.",
+    "Extiende las piernas y empuja la cadera de forma explosiva para darle inercia a la barra hacia arriba.",
+    "Justo a la altura del pecho, realiza el cambio rápido soltando la barra con la primera mano y recogiéndola con la contraria.",
+    "Remata el movimiento con un press potente hacia arriba y adelante, pivotando ligeramente el pie del mismo lado que empuja.",
+    "Baja la barra de forma controlada y repite."
+  ],
+  errores:[
+    "Levantar el peso únicamente a base de fuerza de brazo y hombro, sin usar las piernas.",
+    "Utilizar demasiada carga, lo que convierte el ejercicio en un press lento y elimina el componente de potencia.",
+    "Hacer una pausa o frenar la barra a la altura del pecho, perdiendo toda la inercia generada desde el suelo.",
+    "Mantener los pies completamente rígidos y pegados al suelo en lugar de acompañar el empuje pivotando el pie trasero."
+  ],
+  consejos:[
+    "En el cambio de mano a la altura del pecho, la barra debe sentirse momentáneamente \"sin gravedad\" gracias al impulso de tus piernas.",
+    "El movimiento debe fluir como un solo bloque: las piernas arrancan, el core estabiliza, se hace el cambio y el brazo finaliza como un látigo.",
+    "Respeta los 2 minutos de descanso entre series: al ser potencia, el sistema nervioso necesita recuperarse para no perder velocidad."
+  ],
+  progresion:[
+    "Aumenta la carga solo si mantienes la misma velocidad y calidad de movimiento.",
+    "En potencia, más peso no significa mejor estímulo."
+  ],
+  observaciones:["Sustituye al lanzamiento de balón medicinal (sin espacio para lanzar)."]
+};
+Object.keys(DIA1_DETAIL).forEach(id=>{ Object.assign(DEFAULT_EXERCISES[id], DIA1_DETAIL[id]); });
+
+/* ---- Ficha técnica completa del Día 3 (fuerza funcional + unilateral) ---- */
+const DIA3_DETAIL = {
+  e2_goblet_squat: {
+    rirMin:2, rirMax:3,
+    ejecucion:["Sujeta la mancuerna delante del pecho.","Pies aproximadamente al ancho de hombros.","Desciende flexionando cadera y rodillas, manteniendo el pecho estable.","Rodillas siguiendo la dirección de los pies.","Baja hasta el rango que puedas controlar sin perder postura.","Sube empujando el suelo con los pies."],
+    errores:["Rodillas colapsando hacia dentro.","Levantar los talones.","Inclinar excesivamente el tronco.","Perder tensión abdominal.","Utilizar una carga que obliga a acortar demasiado el recorrido."],
+    consejos:["Mantén la mancuerna pegada al pecho.","Prioriza profundidad y técnica antes que peso.","No necesitas hacer la subida deliberadamente lenta."],
+    progresion:["Cuando completes 3×12 con buena técnica y 2-3 RIR, aumenta ligeramente el peso y vuelve hacia 8-10 repeticiones."]
+  },
+  e2_flexiones_inclinadas: {
+    rirMin:2, rirMax:3,
+    ejecucion:["Manos sobre una superficie elevada, ligeramente más anchas que los hombros.","Cuerpo formando una línea recta desde cabeza hasta pies.","Desciende llevando el pecho hacia el apoyo.","Codos aproximadamente a 30-45° respecto al tronco.","Empuja hasta extender los brazos sin perder la posición corporal."],
+    errores:["Hundir la cadera.","Sacar demasiado el culo.","Abrir excesivamente los codos.","Hacer medias repeticiones.","Adelantar la cabeza para llegar antes al apoyo."],
+    consejos:["Cuanto más bajo esté el apoyo, más difícil.","Mantén abdomen y glúteos activos."],
+    progresion:["Aumentar repeticiones hasta 15.","Bajar progresivamente la altura del apoyo.","Pasar a flexiones normales.","Posteriormente añadir carga si fuera necesario."]
+  },
+  e2_remo_trx: {
+    nombre:"Remo invertido en barra",
+    tipoMovimiento:["HIP","EST"], rirMin:2, rirMax:3,
+    ejecucion:["Colócate debajo de una barra fija y agárrala.","Cuerpo alineado desde hombros hasta pies.","Mantén abdomen y glúteos activos.","Tira del pecho hacia la barra llevando los codos hacia atrás.","Acerca el pecho a la barra sin perder la alineación corporal.","Baja lentamente hasta extender los brazos."],
+    errores:["Hundir la cadera.","Sacar la cabeza hacia la barra.","Tirar principalmente con los brazos.","Utilizar impulso.","No completar el recorrido."],
+    consejos:["Cuanto más horizontal esté tu cuerpo, más difícil.","Para hacerlo más fácil, flexiona las rodillas.","Piensa en llevar el pecho hacia la barra, no simplemente los brazos hacia atrás."],
+    progresion:["Primero aumenta hasta 12 repeticiones manteniendo 2 RIR.","Después aumenta la horizontalidad.","Posteriormente puedes añadir carga si la instalación lo permite."],
+    observaciones:["Sustituye al remo TRX (no disponible en tu gimnasio)."]
+  },
+  e2_hip_thrust: {
+    rirMin:2, rirMax:3,
+    ejecucion:["Apoya la parte superior de la espalda en un banco.","Pies aproximadamente al ancho de caderas.","Coloca la carga sobre la pelvis con protección.","Baja la pelvis de forma controlada.","Empuja el suelo y eleva la pelvis.","Arriba, termina con la cadera extendida y glúteos contraídos.","Evita hiperextender la zona lumbar."],
+    errores:["Hiperextender la espalda al final.","Colocar los pies demasiado lejos/cerca.","Hacer rebotes.","No alcanzar extensión completa de cadera.","Utilizar más peso del que permite controlar la pelvis."],
+    consejos:["La posición final debería ser una extensión de cadera, no una extensión lumbar.","Mantén ligeramente la barbilla hacia el pecho.","La pausa arriba puede ayudarte a sentir y controlar el glúteo."],
+    progresion:["Cuando completes 3×12 con 2 RIR y técnica sólida, aumenta la carga. Vuelve a 8-10 repeticiones y vuelve a progresar."]
+  },
+  e2_face_pull: {
+    rirMin:2, rirMax:3,
+    ejecucion:["Coloca el cable aproximadamente a la altura de la cara.","Tira de la cuerda hacia la cara/separándola hacia ambos lados.","Los codos se mantienen elevados pero cómodos.","Termina con las manos aproximadamente a ambos lados de la cabeza.","Regresa lentamente."],
+    errores:["Utilizar demasiado peso.","Convertirlo en un remo.","Arquear la espalda.","Encoger los hombros.","Hacer el movimiento con impulso."],
+    consejos:["Es un ejercicio de calidad, no para levantar grandes cargas.","Si tienes que balancearte, reduce peso."],
+    progresion:["Aumentar repeticiones hasta 15 manteniendo técnica. Después subir ligeramente la carga."]
+  },
+  e2_rdl_unilateral: {
+    rirMin:2, rirMax:3,
+    ejecucion:["Apóyate sobre una pierna con ligera flexión de rodilla.","Lleva la cadera hacia atrás mientras el torso se inclina.","La pierna libre se extiende hacia atrás como contrapeso.","Mantén espalda neutra.","Baja hasta sentir tensión en isquios sin perder la posición.","Empuja el suelo y lleva la cadera hacia delante para volver."],
+    errores:["Girar la pelvis.","Redondear la espalda.","Doblar demasiado la rodilla y convertirlo en una sentadilla.","Buscar tocar el suelo a cualquier precio.","Perder el equilibrio por utilizar demasiado peso."],
+    consejos:["La prioridad es el movimiento de la cadera, no llegar bajo.","Puedes utilizar una mano para apoyarte ligeramente si el equilibrio limita el trabajo muscular."],
+    progresion:["Primero domina el movimiento sin carga.","Después aumenta gradualmente la carga.","Cuando completes 3×10/lado con 2 RIR y control, aumenta peso."]
+  },
+  e2_step_up_cajon: {
+    rirMin:2, rirMax:3,
+    ejecucion:["Coloca un pie completamente sobre el cajón.","Inclina ligeramente el tronco hacia delante.","Empuja principalmente con la pierna que está sobre el cajón.","Sube hasta quedar completamente erguido.","Baja de forma controlada.","Completa todas las repeticiones de un lado antes de cambiar."],
+    errores:["Impulsarse excesivamente con la pierna que está abajo.","Utilizar un cajón demasiado alto.","Rodilla colapsando hacia dentro.","Caer al bajar.","Perder el equilibrio por exceso de carga."],
+    consejos:["El cajón no tiene que ser altísimo.","Si tienes que saltar para llegar arriba, es demasiado alto.","Prioriza controlar especialmente la bajada."],
+    progresion:["Aumentar primero repeticiones.","Después añadir mancuernas.","También puedes aumentar ligeramente la altura si mantienes buena técnica."]
+  },
+  e2_farmer_carry: {
+    ejecucion:["Sujeta una carga pesada en cada mano.","Mantén el tronco erguido.","Hombros abajo y ligeramente atrás.","Abdomen activo.","Camina con pasos controlados.","Evita balancearte lateralmente."],
+    errores:["Inclinarse hacia delante o atrás.","Balancearse lateralmente.","Encoger los hombros.","Dar pasos excesivamente largos.","Utilizar una carga que rompe la postura."],
+    consejos:["Piensa en \"caminar alto\".","No necesitas caminar lentamente; necesitas caminar estable.","La carga debe ser exigente sin deformar la técnica."],
+    progresion:["Aumentar distancia hasta ~40-50 m.","Después aumentar ligeramente la carga.","También puedes utilizar más peso manteniendo la misma distancia."]
+  },
+  e2_plank_shoulder_taps: {
+    ejecucion:["Posición de plancha alta.","Pies algo separados para facilitar estabilidad.","Toca el hombro contrario con una mano.","Alterna lados.","Mantén la pelvis lo más quieta posible."],
+    errores:["Balancear la pelvis.","Abrir demasiado los pies para compensar.","Elevar o hundir la cadera.","Hacer los toques rápidamente."],
+    consejos:["El objetivo no es tocar muchas veces, sino evitar que el tronco rote.","Si es demasiado difícil, aumenta la separación de los pies."],
+    progresion:["Menor separación de pies.","Más repeticiones manteniendo control.","Variantes más exigentes posteriormente."]
+  }
+};
+Object.keys(DIA3_DETAIL).forEach(id=>{ Object.assign(DEFAULT_EXERCISES[id], DIA3_DETAIL[id]); });
+
+/* ---- Ficha técnica completa del Día 4 (atlético + potencia + coordinación) ----
+   Sustituciones por material real: lanzamiento de balón medicinal → Landmine rotation,
+   Sled push → caminata en cinta con alta inclinación. */
+const DIA4_DETAIL = {
+  e2_skater_jumps: {
+    ejecucion:["Apóyate sobre una pierna.","Salta lateralmente hacia la pierna contraria.","Aterriza con control sobre una sola pierna.","Flexiona ligeramente cadera y rodilla para absorber el impacto.","Estabiliza 1-2 s antes del siguiente salto.","Mantén la rodilla alineada con el pie."],
+    errores:["Saltar demasiado lejos y no poder controlar el aterrizaje.","La rodilla se mete hacia dentro.","Aterrizar rígidamente.","Encadenar saltos sin estabilizar.","Priorizar distancia sobre calidad."],
+    consejos:["La fase de aterrizaje es tan importante como el salto.","Empieza con saltos relativamente cortos.","Si pierdes estabilidad, reduce distancia."],
+    progresion:["Primero aumentar distancia manteniendo control.","Después aumentar explosividad.","No añadir carga salvo que exista una razón concreta."]
+  },
+  e2_lanzamiento_rotacional_balon: {
+    nombre:"Landmine rotation",
+    tipoMovimiento:["POT","COOR"], repMin:6, repMax:8,
+    objetivo:"Potencia rotacional, core y coordinación entre piernas, cadera y tronco",
+    ejecucion:["Coloca el extremo de la barra en el landmine y sujeta el otro extremo con ambas manos.","Pies aproximadamente al ancho de hombros y rodillas ligeramente flexionadas.","Empieza con la barra hacia un lado del cuerpo.","Rota explosivamente desde pies → cadera → tronco → brazos, llevando la barra hacia el lado contrario.","Deja que los pies y la cadera acompañen la rotación; no intentes girar únicamente la espalda.","Vuelve de forma controlada y repite hacia el otro lado."],
+    errores:["Girar únicamente con la zona lumbar.","Mover principalmente los brazos.","Hacerlo demasiado lento: aquí buscamos potencia.","Mantener los pies completamente clavados al suelo.","Perder el control del tronco al finalizar la rotación."],
+    consejos:["Piensa en \"lanzar la barra con la cadera\", aunque obviamente la barra permanece sujeta."],
+    progresion:["Aumenta el peso únicamente si puedes mantener la misma velocidad y calidad de movimiento. En potencia, más peso no siempre significa mejor estímulo."],
+    observaciones:["Sustituye al lanzamiento de balón medicinal (sin espacio para lanzar)."]
+  },
+  e2_salto_horizontal: {
+    ejecucion:["Pies aproximadamente al ancho de caderas.","Realiza una pequeña flexión de cadera y rodillas.","Balancea los brazos.","Salta hacia delante explosivamente.","Aterriza con ambos pies.","Flexiona cadera y rodillas para absorber el impacto.","Mantén el equilibrio antes de repetir."],
+    errores:["Buscar distancia sacrificando el aterrizaje.","Aterrizar con las piernas rígidas.","Rodillas hacia dentro.","Encadenar saltos sin recuperar.","Hacerlo fatigado."],
+    consejos:["Cada salto debe ser de alta calidad.","Descansa aproximadamente 60-90 s si lo necesitas para mantener potencia."],
+    progresion:["Aumentar progresivamente distancia.","Después mejorar la calidad/velocidad.","No necesitas añadir peso."]
+  },
+  e2_split_squat: {
+    rirMin:2, rirMax:3,
+    ejecucion:["Coloca un pie delante y otro detrás.","Mantén la mayor parte del peso en la pierna delantera.","Desciende verticalmente.","La rodilla delantera sigue la línea del pie.","Baja hasta un rango cómodo y controlado.","Empuja el suelo para subir."],
+    errores:["Separación de pies demasiado corta.","Rodilla colapsando hacia dentro.","Impulsarse excesivamente con la pierna trasera.","Perder estabilidad.","Utilizar demasiado peso."],
+    consejos:["Puedes sujetarte ligeramente a un apoyo si mejora la ejecución.","No necesitas hacer la variante elevada para que sea efectiva.","Prioriza estabilidad y recorrido."],
+    progresion:["Primero dominar el peso corporal.","Después añadir mancuernas.","Cuando hagas 3×10 con 2 RIR y buena técnica, aumenta ligeramente la carga."]
+  },
+  e2_press_unilateral_mancuerna: {
+    rirMin:2, rirMax:3,
+    ejecucion:["Utiliza una mancuerna o cable.","Trabaja un brazo cada vez.","Mantén abdomen y pelvis estables.","Empuja la carga sin girar el torso.","Regresa de forma controlada."],
+    errores:["Girar el tronco hacia el lado que empuja.","Arquear la espalda.","Utilizar demasiado peso.","Perder posición del hombro."],
+    consejos:["El objetivo secundario es que el core impida que el cuerpo rote.","Si utilizas cable, una posición de split stance puede facilitar la estabilidad."],
+    progresion:["Completar 3×10 con 2 RIR.","Aumentar ligeramente la carga.","Volver a 8 repeticiones."]
+  },
+  e2_zancada_lateral: {
+    rirMin:2, rirMax:3,
+    ejecucion:["Da un paso amplio hacia un lado.","Flexiona la pierna que recibe el peso llevando la cadera hacia atrás.","La otra pierna permanece extendida.","Mantén el pie completamente apoyado.","Empuja el suelo para volver al centro."],
+    errores:["La rodilla colapsa hacia dentro.","El pie se despega del suelo.","Flexionar ambas piernas como una sentadilla normal.","Dar un paso demasiado corto.","Caer lateralmente sin controlar."],
+    consejos:["Piensa en llevar la cadera hacia atrás, no simplemente bajar.","Empieza sin peso si la movilidad lateral es limitada."],
+    progresion:["Primero aumentar profundidad y control.","Después añadir mancuerna/kettlebell.","Progresar carga manteniendo el mismo rango."]
+  },
+  e2_suitcase_carry: {
+    tipoMovimiento:["CAR","COR"],
+    ejecucion:["Sujeta una carga pesada en una sola mano.","Mantén el torso completamente vertical.","Camina sin inclinarte hacia el lado de la carga.","Mantén hombro y pelvis estables.","Cambia de lado."],
+    errores:["Inclinarse hacia la carga.","Inclinarse hacia el lado contrario.","Encoger el hombro.","Caminar demasiado rápido.","Utilizar una carga que rompe la postura."],
+    consejos:["Imagina que llevas un vaso lleno de agua sobre la cabeza.","Aquí menos carga con buena postura es mejor que más carga deformándote."],
+    progresion:["Aumentar distancia hasta ~50 m.","Después aumentar ligeramente la carga.","También puedes aumentar el tiempo bajo tensión."]
+  },
+  e2_sled_push: {
+    nombre:"Caminata en cinta con alta inclinación",
+    unidad:"segundos", repMin:30, repMax:45, repNota:"", descansoSeg:75,
+    objetivo:"Acondicionamiento de piernas, glúteos y capacidad anaeróbica, con bastante menor impacto que correr",
+    ejecucion:["Configura una inclinación alta.","Camina a una velocidad exigente pero que puedas mantener durante los 30-45 s.","Mantén el tronco relativamente erguido y da pasos firmes.","Empuja el suelo con cada paso, intentando utilizar activamente glúteos y piernas.","Evita apoyarte excesivamente en las barras de la cinta.","Descansa 60-90 s entre series."],
+    errores:["Sujetarse con fuerza a las barras.","Inclinar demasiado el cuerpo hacia delante.","Convertirlo en una caminata demasiado cómoda.","Empezar demasiado rápido y no poder mantener la intensidad en las últimas series."],
+    consejos:["Busca terminar cada intervalo con esfuerzo alto pero controlado, aproximadamente 7-8/10.","Como ya haces bastante actividad deportiva, esta parte es modulable: si esa semana ha habido bastante squash/fútbol/pádel, puedes reducirla o eliminarla."],
+    progresion:["Primero aumenta el tiempo o la inclinación manteniendo la técnica.","Después aumenta ligeramente la velocidad."],
+    observaciones:["Sustituye al Sled push (no disponible en tu gimnasio)."]
+  },
+  e2_bear_crawl_d4: {
+    ejecucion:["Posición de cuadrupedia con rodillas ligeramente separadas del suelo.","Espalda neutra.","Avanza moviendo mano y pierna contraria.","Mantén las caderas relativamente bajas y estables.","Realiza pasos cortos y controlados."],
+    errores:["Elevar demasiado la cadera.","Balancear excesivamente el tronco.","Mover mano y pierna del mismo lado.","Dar pasos demasiado grandes.","Aguantar la respiración."],
+    consejos:["Empieza despacio.","La calidad de coordinación importa más que recorrer mucha distancia.","Mantén abdomen activo."],
+    progresion:["Aumentar distancia/tiempo.","Aumentar ligeramente velocidad.","Variantes hacia atrás o laterales."]
+  },
+  e2_pallof_press_zancada: {
+    tipoMovimiento:["COR","EST"],
+    ejecucion:["Colócate en posición de zancada frente al cable/banda.","La resistencia debe intentar girarte hacia un lado.","Sujeta el cable delante del pecho.","Extiende los brazos lentamente.","Evita que el tronco rote.","Vuelve al pecho manteniendo control."],
+    errores:["Girar el torso hacia el cable.","Mover las caderas.","Utilizar demasiada resistencia.","Hacer las repeticiones rápidamente."],
+    consejos:["El objetivo no es mover mucho peso.","Piensa en mantener pecho y pelvis apuntando al frente."],
+    progresion:["Aumentar ligeramente la resistencia.","Aumentar el tiempo de extensión.","Utilizar una posición de zancada más exigente."]
+  },
+  e2_worlds_greatest_stretch: {
+    ejecucion:["Realiza la secuencia lentamente, buscando amplitud y control.","No rebotes ni fuerces posiciones dolorosas."]
+  },
+  e2_90_90_rotacion: {
+    ejecucion:["Desde 90/90, realiza la rotación de cadera de forma controlada.","Añade la rotación del tronco según la variante.","Prioriza amplitud controlada."]
+  }
+};
+Object.keys(DIA4_DETAIL).forEach(id=>{ Object.assign(DEFAULT_EXERCISES[id], DIA4_DETAIL[id]); });
+
+const DEFAULT_ROUTINES = {
+  dia1: {id:"dia1", nombre:"Día 1", tags:"Fuerza + Potencia",
+      ejercicios:["e2_salto_al_cajon","e2_landmine_push_press_rot","e2_prensa_piernas","e2_dominadas_asistidas","e2_press_pecho_maquina","e2_remo_maquina","e2_zancada_atras_elevacion_rodilla","e2_pallof_press","e2_dead_bug","e2_thread_the_needle"]},
+  dia2: {id:"dia2", nombre:"Día 2", tags:"Movilidad + Equilibrio + Estabilidad",
+      ejercicios:["e2_movilidad_tobillo","e2_90_90_hip_switches","e2_rotacion_toracica","e2_movilidad_hombro","e2_equilibrio_unipodal_bosu","e2_single_leg_reach","e2_bosu_squat_reach","e2_bird_dog","e2_side_plank","e2_copenhagen_plank_corto","e2_gemelo_unilateral_pie","e2_estiramiento_flexor_cadera"]},
+  dia3: {id:"dia3", nombre:"Día 3", tags:"Fuerza funcional + Unilateral",
+      ejercicios:["e2_goblet_squat","e2_flexiones_inclinadas","e2_remo_trx","e2_hip_thrust","e2_face_pull","e2_rdl_unilateral","e2_step_up_cajon","e2_farmer_carry","e2_plank_shoulder_taps","e2_estiramiento_flexor_cadera"]},
+  dia4: {id:"dia4", nombre:"Día 4", tags:"Atlético + Potencia + Coordinación",
+      ejercicios:["e2_skater_jumps","e2_lanzamiento_rotacional_balon","e2_salto_horizontal","e2_split_squat","e2_press_unilateral_mancuerna","e2_zancada_lateral","e2_suitcase_carry","e2_sled_push","e2_bear_crawl_d4","e2_pallof_press_zancada","e2_worlds_greatest_stretch","e2_90_90_rotacion"]}
+};
+
+/* ---------- Cronómetro inteligente de descanso: category / body_part ---------- */
+// Descansos entre series (s). POT/FUE a 120: el SNC se recupera lo suficiente para
+// mantener explosividad y técnica, sin enfriarse ni alargar la sesión.
+const REST_DICT = {POT:120, FUE:120, HIP:90, COND:90, COR:60, EST:60, MOV:60};
+function categoryOf(ex){
+  if(ex.category) return ex.category;
+  const order = ["POT","FUE","HIP","COND","COR","EST","MOV"];
+  const codes = ex.tipoMovimiento || [];
+  return order.find(c=>codes.includes(c)) || "HIP";
+}
+function bodyPartOf(ex){
+  if(ex.body_part) return ex.body_part;
+  const text = ((ex.grupo||[]).join(" ")+" "+ex.nombre).toLowerCase();
+  const lower = /(pierna|cuádricep|cuadricep|isquio|glúte|glute|gemelo|sóleo|soleo|cadera|rodilla|tobillo|zancada|sentadilla|squat|salto|jump)/;
+  const upper = /(pecho|pectoral|espalda|dorsal|hombro|deltoid|bícep|bicep|trícep|tricep|trapecio|brazo|press militar|dominada|remo|jalón|jalon)/;
+  const hasLower = lower.test(text), hasUpper = upper.test(text);
+  if(hasLower && !hasUpper) return "Tren Inferior";
+  if(hasUpper && !hasLower) return "Tren Superior";
+  return "Core/FullBody";
+}
+Object.values(DEFAULT_EXERCISES).forEach(e=>{
+  e.category = categoryOf(e);
+  e.body_part = bodyPartOf(e);
+});
+
+/* ---------- Planificación semanal: actividades y reglas por defecto ---------- */
+const WEEK_DAYS = ["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"];
+const DAY_LETTERS = ["L","M","X","J","V","S","D"];
+const DEFAULT_ACTIVITIES = [
+  {id:"act_squash", nombre:"Squash (Intenso)", color:"rojo", puntos:8, plyo:false},
+  {id:"act_dia4", nombre:"Día 4 (Atlético y Potencia)", color:"rojo", puntos:8, plyo:true},
+  {id:"act_futbol", nombre:"Fútbol (Intermedio)", color:"naranja", puntos:6, plyo:false},
+  {id:"act_dia1", nombre:"Día 1 (Fuerza y Potencia)", color:"naranja", puntos:6, plyo:false},
+  {id:"act_dia3", nombre:"Día 3 (Fuerza Funcional)", color:"naranja", puntos:6, plyo:false},
+  {id:"act_padel", nombre:"Pádel (Intermedio)", color:"amarillo", puntos:4, plyo:false},
+  {id:"act_dia2", nombre:"Día 2 (Movilidad y Estabilidad)", color:"verde", puntos:2, plyo:false},
+  {id:"act_descanso", nombre:"Descanso Absoluto", color:"blanco", puntos:0, plyo:false}
+];
+const DEFAULT_PLAN_RULES = {dailyLimit:10, noConsecutiveRed:true, redConsecutiveLimit:6, requireRestDay:true};
+function emptyWeekPlan(){
+  const wp = {};
+  WEEK_DAYS.forEach(d=> wp[d]=[]);
+  return wp;
+}
+
+/* ---------- Suplementación: datos estáticos iniciales ---------- */
+const DEFAULT_SUPPLEMENTS = [
+  {id:"sup_1", nombre:"Vitamina D3+K2", dosis:"1 cápsula", momento:"Mañana", tipoDia:"entreno", notas:"Consumir siempre con algo de grasa (aceite, aguacate, yema) para asegurar su absorción."},
+  {id:"sup_2", nombre:"Beta-Alanina + Colágeno + Vitamina C", dosis:"3-4g + 10-15g + 1 cápsula", momento:"Pre-Gym (30-45 min antes)", tipoDia:"entreno", notas:"La Beta-Alanina dará cosquilleo (parestesia), es normal. Tomar el colágeno + Vit C antes de moverte multiplica su asimilación en tendones."},
+  {id:"sup_3", nombre:"Proteína Evolate + Creatina", dosis:"30g + 3-5g", momento:"Post-Gym", tipoDia:"entreno", notas:"Mezclar la creatina dentro del batido de proteínas."},
+  {id:"sup_4", nombre:"Bisglicinato de Magnesio", dosis:"1 dosis", momento:"Noche", tipoDia:"entreno", notas:"Tomar 1 hora antes de dormir. Fundamental para bajar pulsaciones, evitar calambres y recuperar el sistema nervioso central."},
+  {id:"sup_5", nombre:"Vitamina D3+K2 + Vitamina C", dosis:"1 cápsula (con grasa) + 1 cápsula", momento:"Mañana", tipoDia:"descanso", notas:""},
+  {id:"sup_6", nombre:"Creatina + Beta-Alanina + Colágeno", dosis:"3-5g + 3-4g + 10-15g", momento:"Cualquier momento", tipoDia:"descanso", notas:"Junta los tres polvos en un vaso grande de agua, zumo o yogur para no complicarte (funcionan por acumulación)."},
+  {id:"sup_7", nombre:"Proteína Evolate", dosis:"1 dosis", momento:"Post-Gym / Comida", tipoDia:"descanso", notas:"Tomar solo si ese día te quedas corto comiendo carne/pescado/huevos."},
+  {id:"sup_8", nombre:"Bisglicinato de Magnesio", dosis:"1 dosis", momento:"Noche", tipoDia:"descanso", notas:"1 hora antes de dormir."}
+];
+// La clave mantiene el nombre antiguo a propósito: cambiarla haría que la app no
+// encontrara los datos ya guardados en dispositivos que venían de la versión anterior.
+const STORAGE_KEY = "gymlog_db";
+const SCHEMA_VERSION = 7; // subir este número cuando se actualice el catálogo/rutina por defecto
+
+/* ---------- Capa de almacenamiento ----------
+   window.storage solo existe dentro del entorno de artifacts de Claude. Si la app se abre
+   como archivo suelto, desde una URL propia o en cualquier navegador normal, no está,
+   así que usamos localStorage. Ambos caminos guardan exactamente lo mismo. */
+const Storage = (function(){
+  const hasArtifactStorage = typeof window !== "undefined" && window.storage
+    && typeof window.storage.get === "function" && typeof window.storage.set === "function";
+
+  function localAvailable(){
+    try{
+      const k="__gymlog_test__";
+      window.localStorage.setItem(k,"1");
+      window.localStorage.removeItem(k);
+      return true;
+    }catch(e){ return false; }
+  }
+  const hasLocal = !hasArtifactStorage && localAvailable();
+  const memory = {}; // último recurso: la sesión actual no se pierde aunque no haya disco
+
+  return {
+    mode: hasArtifactStorage ? "artifact" : (hasLocal ? "local" : "memoria"),
+    persistent: hasArtifactStorage || hasLocal,
+    async get(key){
+      if(hasArtifactStorage){
+        const r = await window.storage.get(key, false);
+        return (r && r.value !== undefined) ? r.value : null;
+      }
+      if(hasLocal) return window.localStorage.getItem(key);
+      return memory[key] !== undefined ? memory[key] : null;
+    },
+    async set(key, value){
+      if(hasArtifactStorage){ await window.storage.set(key, value, false); return; }
+      if(hasLocal){
+        try{
+          window.localStorage.setItem(key, value);
+        }catch(e){
+          // Cuota llena: liberamos copias de seguridad antiguas y reintentamos una vez.
+          // Si aun así falla, propagamos para que el usuario reciba el aviso.
+          try{
+            Object.keys(window.localStorage)
+              .filter(k=> k!==key && k.indexOf("gymlog_db")===0)
+              .forEach(k=> window.localStorage.removeItem(k));
+            window.localStorage.setItem(key, value);
+            return;
+          }catch(e2){ throw e; }
+        }
+        return;
+      }
+      memory[key] = value;
+    }
+  };
+})();
+
+function freshDB(){
+  const exercises = {};
+  Object.values(DEFAULT_EXERCISES).forEach(e=> exercises[e.id]=normalizeExercise(JSON.parse(JSON.stringify(e))));
+  return {
+    routines:JSON.parse(JSON.stringify(DEFAULT_ROUTINES)), exercises, sessions:[], draftSession:null,
+    schemaVersion:SCHEMA_VERSION,
+    activities:JSON.parse(JSON.stringify(DEFAULT_ACTIVITIES)), weekPlan:emptyWeekPlan(),
+    planRules:JSON.parse(JSON.stringify(DEFAULT_PLAN_RULES)),
+    supplements:JSON.parse(JSON.stringify(DEFAULT_SUPPLEMENTS))
+  };
+}
+
+// Rellena lo que falte sin destruir nunca lo que ya existe. Cada bloque va por separado,
+// de modo que un fallo puntual no puede tirar abajo el resto de los datos guardados.
+function reconcileDB(db){
+  const base = freshDB();
+  if(!db || typeof db !== "object") return base;
+
+  if(!db.exercises || typeof db.exercises !== "object") db.exercises = base.exercises;
+  else {
+    Object.keys(db.exercises).forEach(k=>{
+      try{ db.exercises[k] = normalizeExercise(db.exercises[k]); }
+      catch(e){ delete db.exercises[k]; }
+    });
+  }
+  if(!db.routines || typeof db.routines !== "object") db.routines = base.routines;
+  if(!Array.isArray(db.sessions)) db.sessions = [];
+  if(db.draftSession === undefined) db.draftSession = null;
+  if(!Array.isArray(db.activities) || db.activities.length===0) db.activities = base.activities;
+  if(!Array.isArray(db.supplements)) db.supplements = base.supplements;
+  if(!db.planRules || typeof db.planRules !== "object") db.planRules = base.planRules;
+  else Object.keys(base.planRules).forEach(k=>{ if(db.planRules[k]===undefined) db.planRules[k]=base.planRules[k]; });
+
+  // El plan semanal se preserva siempre; solo se completan los días que falten.
+  if(!db.weekPlan || typeof db.weekPlan !== "object") db.weekPlan = emptyWeekPlan();
+  else WEEK_DAYS.forEach(d=>{ if(!Array.isArray(db.weekPlan[d])) db.weekPlan[d] = []; });
+
+  if(!db.schemaVersion) db.schemaVersion = 1;
+  if(db.schemaVersion < SCHEMA_VERSION){
+    // Refresca SOLO el catálogo de ejercicios de fábrica y las rutinas. Nunca toca
+    // sessions, draftSession, weekPlan, activities, planRules ni supplements.
+    Object.values(DEFAULT_EXERCISES).forEach(e=>{
+      db.exercises[e.id] = normalizeExercise(JSON.parse(JSON.stringify(e)));
+    });
+    db.routines = JSON.parse(JSON.stringify(DEFAULT_ROUTINES));
+    db.schemaVersion = SCHEMA_VERSION;
+  }
+
+  // GARANTÍA DE HISTORIAL: cualquier ejercicio que aparezca en una sesión pasada debe
+  // seguir existiendo en el catálogo, aunque ya no forme parte de ninguna rutina. Así,
+  // al cambiar ejercicios de la rutina, el historial antiguo sigue mostrando su nombre
+  // y sus datos en lugar de "Ejercicio eliminado".
+  const usados = new Set();
+  (db.sessions||[]).forEach(s=> (s.ejercicios||[]).forEach(e=> usados.add(e.exId)));
+  if(db.draftSession) (db.draftSession.ejercicios||[]).forEach(e=> usados.add(e.exId));
+  usados.forEach(id=>{
+    if(db.exercises[id]) return;
+    if(DEFAULT_EXERCISES[id]){
+      db.exercises[id] = normalizeExercise(JSON.parse(JSON.stringify(DEFAULT_EXERCISES[id])));
+    } else {
+      // Ni siquiera está en el catálogo de fábrica: creamos una ficha mínima para no
+      // perder la referencia en el historial.
+      db.exercises[id] = {
+        id, nombre:"Ejercicio anterior", grupo:[], series:3, repMin:8, repMax:10,
+        unidad:"reps", repNota:"", rirMin:null, rirMax:null, descansoSeg:90, tipo:"",
+        descripcion:"", ejecucion:[], errores:[], consejos:[], progresion:[],
+        observaciones:["Conservado para que tu historial siga siendo legible."],
+        tipoMovimiento:[], objetivo:"", category:"HIP", body_part:"Core/FullBody", archivado:true
+      };
+    }
+    db.exercises[id].archivado = true;
+  });
+
+  return db;
+}
+
+async function loadDB(){
+  let raw = null;
+  try{
+    raw = await Storage.get(STORAGE_KEY);
+  }catch(e){
+    // No hay nada guardado todavía (o el almacenamiento falló): arrancamos de fábrica.
+    return freshDB();
+  }
+  if(!raw) return freshDB();
+
+  let parsed = null;
+  try{ parsed = JSON.parse(raw); }
+  catch(e){
+    // Datos corruptos: guardamos una copia por si acaso antes de empezar de cero.
+    console.error("Datos corruptos, se conserva copia de seguridad", e);
+    try{ await Storage.set(STORAGE_KEY+"_backup_corrupto", raw); }catch(_){}
+    return freshDB();
+  }
+  // Si la reconciliación fallara por algo inesperado, preferimos devolver los datos
+  // tal cual estaban antes que descartarlos.
+  try{ return reconcileDB(parsed); }
+  catch(e){ console.error("Error reconciliando datos, se usan tal cual", e); return parsed; }
+}
+// Guardado con "debounce": agrupa ráfagas de cambios (teclear, marcar series) en una sola
+// escritura, en vez de una por pulsación. Evita saturar el almacenamiento y va mucho más fluido.
+let _saveTimer = null, _savePending = false, _saveInFlight = false, _saveQueued = false;
+async function saveNow(){
+  if(!DB) return;
+  if(_saveInFlight){ _saveQueued = true; return; } // evita escrituras solapadas
+  _saveInFlight = true;
+  _savePending = false;
+  if(_saveTimer){ clearTimeout(_saveTimer); _saveTimer = null; }
+  try{
+    await Storage.set(STORAGE_KEY, JSON.stringify(DB));
+  }catch(e){
+    console.error("Error guardando datos:", e);
+    _savePending = true; // se reintentará en el próximo cambio o al ocultar la app
+    toast(Storage.persistent ? "No se pudo guardar, se reintentará" : "Sin almacenamiento disponible");
+  }finally{
+    _saveInFlight = false;
+    if(_saveQueued){ _saveQueued = false; saveNow(); }
+  }
+}
+function saveDB(){
+  _savePending = true;
+  if(_saveTimer) clearTimeout(_saveTimer);
+  _saveTimer = setTimeout(saveNow, 400);
+}
+// En móvil la app puede "morir" sin previo aviso al cambiar de aplicación, así que en cuanto
+// se oculta forzamos el guardado pendiente en lugar de esperar al debounce.
+document.addEventListener("visibilitychange", ()=>{ if(document.hidden && _savePending) saveNow(); });
+window.addEventListener("pagehide", ()=>{ if(_savePending) saveNow(); });
+window.addEventListener("blur", ()=>{ if(_savePending) saveNow(); });
+let DB = null;
+
+/* ---------- Estado de navegación ---------- */
+let VIEW = {screen:"home"}; // home | workout | exercise | history | historyDay | editor | editExercise
+let ACTIVE_SESSION = null; // sesión en curso (no persistida hasta terminar o guardar como borrador)
+function saveDraft(){
+  if(!ACTIVE_SESSION) return;
+  DB.draftSession = ACTIVE_SESSION;
+  saveDB();
+}
+
+function uid(){ return Math.random().toString(36).slice(2,10); }
+function todayStr(){
+  const d = new Date();
+  return String(d.getDate()).padStart(2,"0")+"/"+String(d.getMonth()+1).padStart(2,"0");
+}
+function fullDateStr(){
+  const d = new Date();
+  return String(d.getDate()).padStart(2,"0")+"/"+String(d.getMonth()+1).padStart(2,"0")+"/"+d.getFullYear();
+}
+function isoDateStr(d){
+  d = d || new Date();
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+// Las sesiones antiguas solo guardaban "DD/MM/YYYY"; lo convertimos para poder comparar.
+function sessionISO(s){
+  if(s.iso) return s.iso;
+  const m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(s.fecha||"");
+  return m ? (m[3]+"-"+m[2]+"-"+m[1]) : null;
+}
+function daysAgoISO(n){
+  const d = new Date();
+  d.setDate(d.getDate()-n);
+  return isoDateStr(d);
+}
+
+/* ---------- Formato legible de una serie ---------- */
+// Devuelve las dos mitades por separado para poder darles estilo distinto.
+function setParts(def, set){
+  const unidad = (def && def.unidad) || "reps";
+  const carga = (set.peso===""||set.peso==null) ? null : set.peso;
+  let repTxt;
+  if(unidad==="segundos") repTxt = set.reps+" s";
+  else if(unidad==="m")   repTxt = set.reps+" m";
+  else                    repTxt = set.reps+" rep";
+  const cargaTxt = carga===null ? null : (carga+" kg");
+  return {repTxt, cargaTxt};
+}
+function setText(def, set){
+  const p = setParts(def, set);
+  return p.cargaTxt ? (p.repTxt+" × "+p.cargaTxt) : p.repTxt;
+}
+// Resumen de una lista de series: "3×8 rep · 100 kg" o "8, 8, 7 rep · 100 kg"
+function seriesSummary(def, series){
+  if(!series.length) return "";
+  const reps = series.map(s=>s.reps);
+  const pesos = series.map(s=>s.peso).filter(p=>p!==""&&p!=null);
+  const unidad = (def && def.unidad) || "reps";
+  const uTxt = unidad==="segundos" ? "s" : unidad==="m" ? "m" : "rep";
+  const mismasReps = reps.every(r=>r===reps[0]);
+  const repPart = mismasReps ? (series.length+"×"+reps[0]+" "+uTxt) : (reps.join(", ")+" "+uTxt);
+  if(!pesos.length) return repPart;
+  const mismoPeso = pesos.every(p=>p===pesos[0]);
+  const pesoPart = mismoPeso ? (pesos[0]+" kg") : (pesos.join("/")+" kg");
+  return repPart+" · "+pesoPart;
+}
+// Acepta lo que escriba el usuario y lo deja en un número válido.
+// Convierte la coma decimal española en punto y descarta cualquier otro carácter.
+function cleanNumberInput(valor, permitirDecimales){
+  let v = String(valor).replace(",", ".");
+  v = permitirDecimales ? v.replace(/[^0-9.]/g, "") : v.replace(/[^0-9]/g, "");
+  if(permitirDecimales){
+    const partes = v.split(".");
+    if(partes.length > 2) v = partes[0] + "." + partes.slice(1).join(""); // un solo punto
+  }
+  return v;
+}
+// Parseo tolerante: nunca devuelve NaN, acepta coma o punto.
+function num(valor){
+  const n = parseFloat(String(valor).replace(",", "."));
+  return isFinite(n) ? n : 0;
+}
+function volumenSerie(set){
+  const p = num(set.peso), r = num(set.reps);
+  return p*r;
+}
+
+/* ---------- Análisis de las últimas 2 semanas ---------- */
+function analyzeLastTwoWeeks(){
+  // dias[0] es el más antiguo y dias[13] es hoy. Calculamos las fechas UNA vez
+  // y usamos conjuntos para las búsquedas, en vez de recorrer listas por cada sesión.
+  const dias = [];
+  for(let i=13; i>=0; i--) dias.push(daysAgoISO(i));
+  const ventana = new Set(dias);
+  const hace = (i)=> dias[13-i]; // i días atrás (0 = hoy)
+
+  const entrenados = new Set();
+  (DB.sessions||[]).forEach(s=>{
+    const iso = sessionISO(s);
+    if(iso && ventana.has(iso)) entrenados.add(iso);
+  });
+
+  const total = entrenados.size;
+
+  // Racha actual de días seguidos entrenando (hasta hoy o ayer)
+  let seguidos = 0;
+  for(let i=0; i<14; i++){
+    if(entrenados.has(hace(i))) seguidos++;
+    else break;
+  }
+  // Días consecutivos SIN entrenar
+  let sinEntrenar = 0;
+  for(let i=0; i<14; i++){
+    if(!entrenados.has(hace(i))) sinEntrenar++;
+    else break;
+  }
+  // Entrenamientos en los últimos 7 días
+  let ultimos7 = 0;
+  for(let i=0; i<7; i++) if(entrenados.has(hace(i))) ultimos7++;
+
+  // ¿Descansos bien repartidos? Nunca más de 3 días seguidos entrenando en las 2 semanas
+  let maxSeguidos = 0, run = 0;
+  dias.forEach(d=>{ if(entrenados.has(d)){ run++; maxSeguidos = Math.max(maxSeguidos, run); } else run = 0; });
+  const descansosOk = maxSeguidos <= 3;
+
+  // Constancia: al menos un entrenamiento en cada una de las dos semanas
+  const sem1 = dias.slice(0,7).filter(d=>entrenados.has(d)).length;
+  const sem2 = dias.slice(7).filter(d=>entrenados.has(d)).length;
+  const constante = sem1>0 && sem2>0;
+
+  // --- Decidir el estado ---
+  let estado;
+  if(seguidos >= 4 || ultimos7 >= 6){
+    estado = {
+      clave:"descanso", icono:"🛌", titulo:"Toca descansar",
+      mensaje: seguidos>=4
+        ? "Llevas "+seguidos+" días seguidos entrenando. Un día de descanso ahora te hará rendir más, no menos."
+        : "Has entrenado "+ultimos7+" de los últimos 7 días. Meter un día en blanco protege tendones y sistema nervioso.",
+      color:"#C0504D", fondo:"#FDEDEC"
+    };
+  } else if(total >= 7 && descansosOk && constante){
+    estado = {
+      clave:"copa", icono:"🏆", titulo:"¡Estás en racha!",
+      mensaje: total+" entrenamientos en 2 semanas, con los descansos bien repartidos. Esto es exactamente lo que buscabas.",
+      color:"#B8860B", fondo:"#FFF8E1"
+    };
+  } else if(total >= 5 && constante){
+    estado = {
+      clave:"estrella", icono:"⭐", titulo:"Muy buen ritmo",
+      mensaje: total+" entrenamientos en 2 semanas. Mantén esta constancia y llegas a la copa.",
+      color:"#2E8B57", fondo:"#EAF6EE"
+    };
+  } else if(total >= 2){
+    estado = {
+      clave:"progreso", icono:"💪", titulo:"Vas avanzando",
+      mensaje: total+" entrenamientos en 2 semanas. Con uno o dos más por semana entras en zona buena.",
+      color:"#1F3A5F", fondo:"#EAEEF5"
+    };
+  } else if(total === 0 && (DB.sessions||[]).length > 0){
+    estado = {
+      clave:"vuelta", icono:"🔄", titulo:"Hora de volver",
+      mensaje: sinEntrenar>=14 ? "Han pasado más de 2 semanas. Empieza suave: el Día 2 de movilidad es un buen reenganche."
+                               : "Llevas "+sinEntrenar+" días sin entrenar. Retomar hoy cuesta menos que mañana.",
+      color:"#D97B29", fondo:"#FDF1E5"
+    };
+  } else {
+    estado = {
+      clave:"empezar", icono:"👟", titulo:"Empecemos",
+      mensaje:"Registra tu primer entrenamiento y aquí verás tu progreso de las últimas 2 semanas.",
+      color:"#1F3A5F", fondo:"#EAEEF5"
+    };
+  }
+
+  return {dias, entrenados, total, seguidos, sinEntrenar, ultimos7, maxSeguidos, descansosOk, constante, estado};
+}
+
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  clearTimeout(toast._t);
+  toast._t = setTimeout(()=>t.classList.remove("show"), 1600);
+}
+
+/* ---------- Modales propios (no dependemos de confirm/prompt del navegador) ---------- */
+function closeModal(overlay){ overlay.remove(); }
+
+function showConfirmModal(title, msg, okLabel, onConfirm){
+  const overlay = el("div","modal-overlay");
+  overlay.onclick = (e)=>{ if(e.target===overlay) closeModal(overlay); };
+  const box = el("div","modal-box");
+  if(title) box.appendChild(el("div","modal-title", title));
+  box.appendChild(el("div","modal-msg", msg));
+  const btns = el("div","modal-btns");
+  const cancel = el("div","modal-btn modal-btn-cancel","Cancelar");
+  cancel.onclick = ()=> closeModal(overlay);
+  const ok = el("div","modal-btn modal-btn-ok", okLabel||"Aceptar");
+  ok.onclick = ()=>{ closeModal(overlay); onConfirm(); };
+  btns.appendChild(cancel); btns.appendChild(ok);
+  box.appendChild(btns);
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+}
+
+function exerciseMuscles(e){
+  if(e.ficha===false) return [e.grupoMuscular].filter(Boolean);
+  return e.grupo || [];
+}
+function exerciseMoveTypes(e){
+  return e.tipoMovimiento || [];
+}
+function exerciseMetaLabel(e){
+  if(e.ficha===false) return `${e.grupoMuscular} · ${e.subgrupo} · ${e.tipoEntrenamiento}`;
+  const parts = [];
+  if(e.grupo && e.grupo[0]) parts.push(e.grupo[0]);
+  if(e.tipoMovimiento && e.tipoMovimiento.length) parts.push(e.tipoMovimiento.join("/"));
+  return parts.join(" · ");
+}
+
+function showExercisePickerModal(title, candidates, onPick, onCreateNew){
+  let searchTerm = "";
+  let muscleFilter = "";
+  let moveFilter = "";
+
+  const muscles = Array.from(new Set(candidates.flatMap(exerciseMuscles))).sort((a,b)=>a.localeCompare(b));
+  const moveTypes = Array.from(new Set(candidates.flatMap(exerciseMoveTypes))).sort();
+
+  const overlay = el("div","modal-overlay");
+  overlay.onclick = (e)=>{ if(e.target===overlay) closeModal(overlay); };
+  const box = el("div","modal-box");
+  box.appendChild(el("div","modal-title", title));
+
+  const searchInput = el("input","modal-search");
+  searchInput.placeholder = "Buscar por nombre…";
+  box.appendChild(searchInput);
+
+  const filterRow = el("div");
+  filterRow.style.cssText = "display:flex; gap:8px; margin-bottom:14px;";
+  const muscleSelect = document.createElement("select");
+  muscleSelect.style.cssText = "flex:1; background:var(--surface-2); border:1px solid var(--line); color:var(--text); border-radius:10px; padding:10px 8px; font-size:14px;";
+  muscleSelect.appendChild(new Option("Todos los músculos",""));
+  muscles.forEach(m=> muscleSelect.appendChild(new Option(m,m)));
+  const moveSelect = document.createElement("select");
+  moveSelect.style.cssText = muscleSelect.style.cssText;
+  moveSelect.appendChild(new Option("Todos los tipos",""));
+  moveTypes.forEach(t=> moveSelect.appendChild(new Option((MOVEMENT_TYPES[t]?MOVEMENT_TYPES[t].label:t)+" ("+t+")", t)));
+  filterRow.appendChild(muscleSelect);
+  filterRow.appendChild(moveSelect);
+  box.appendChild(filterRow);
+
+  const listBox = el("div");
+  listBox.style.cssText = "max-height:38vh; overflow-y:auto;";
+  box.appendChild(listBox);
+
+  function renderResults(){
+    listBox.innerHTML = "";
+    const term = searchTerm.trim().toLowerCase();
+    const filtered = candidates.filter(e=>{
+      if(term && !e.nombre.toLowerCase().includes(term)) return false;
+      if(muscleFilter && !exerciseMuscles(e).includes(muscleFilter)) return false;
+      if(moveFilter && !exerciseMoveTypes(e).includes(moveFilter)) return false;
+      return true;
+    });
+    if(filtered.length===0){
+      listBox.appendChild(el("div","modal-msg","No hay ejercicios que coincidan con la búsqueda."));
+      return;
+    }
+    filtered.forEach(e=>{
+      const meta = exerciseMetaLabel(e);
+      const row = el("div","modal-list-item", e.nombre + (meta ? " · "+meta : ""));
+      row.onclick = ()=>{ closeModal(overlay); onPick(e.id); };
+      listBox.appendChild(row);
+    });
+  }
+  searchInput.oninput = (e)=>{ searchTerm = e.target.value; renderResults(); };
+  muscleSelect.onchange = (e)=>{ muscleFilter = e.target.value; renderResults(); };
+  moveSelect.onchange = (e)=>{ moveFilter = e.target.value; renderResults(); };
+  renderResults();
+
+  if(onCreateNew){
+    const newRow = el("div","modal-list-item new","+ Crear ejercicio nuevo");
+    newRow.onclick = ()=>{ closeModal(overlay); onCreateNew(); };
+    box.appendChild(newRow);
+  }
+  const btns = el("div","modal-btns");
+  const cancel = el("div","modal-btn modal-btn-cancel","Cerrar");
+  cancel.onclick = ()=> closeModal(overlay);
+  btns.appendChild(cancel);
+  box.appendChild(btns);
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+  setTimeout(()=>searchInput.focus(), 50);
+}
+
+function showTextInputModal(title, placeholder, onSubmit){
+  const overlay = el("div","modal-overlay");
+  const box = el("div","modal-box");
+  box.appendChild(el("div","modal-title", title));
+  const input = el("input","modal-search");
+  input.placeholder = placeholder||"";
+  box.appendChild(input);
+  const btns = el("div","modal-btns");
+  const cancel = el("div","modal-btn modal-btn-cancel","Cancelar");
+  cancel.onclick = ()=> closeModal(overlay);
+  const ok = el("div","modal-btn modal-btn-ok","Crear");
+  ok.onclick = ()=>{
+    const v = input.value.trim();
+    if(!v){ input.focus(); return; }
+    closeModal(overlay); onSubmit(v);
+  };
+  btns.appendChild(cancel); btns.appendChild(ok);
+  box.appendChild(btns);
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+  setTimeout(()=>input.focus(), 50);
+}
+
+/* ---------- Helpers de sesión activa ---------- */
+function getOrCreateSessionExercise(exId){
+  if(!ACTIVE_SESSION) return null;
+  let se = ACTIVE_SESSION.ejercicios.find(e=>e.exId===exId);
+  if(!se){
+    const def = DB.exercises[exId];
+    const seriesCount = def.series || 3;
+    se = {exId, series: Array.from({length:seriesCount}, ()=>({peso:"",reps:"",done:false}))};
+    ACTIVE_SESSION.ejercicios.push(se);
+  }
+  return se;
+}
+
+function getLastSessionsFor(exId, excludeSessionId, n){
+  const found = [];
+  for(let i=DB.sessions.length-1; i>=0 && found.length<n; i--){
+    const s = DB.sessions[i];
+    if(s.id===excludeSessionId) continue;
+    const se = s.ejercicios.find(e=>e.exId===exId);
+    if(se && se.series.some(x=>x.done)){
+      found.push({fecha:s.fecha, series:se.series.filter(x=>x.done)});
+    }
+  }
+  return found;
+}
+
+function isExerciseDoneInSession(exId){
+  if(!ACTIVE_SESSION) return false;
+  const se = ACTIVE_SESSION.ejercicios.find(e=>e.exId===exId);
+  return !!se && se.series.length>0 && se.series.every(s=>s.done);
+}
+
+/* ---------- Render raíz ---------- */
+const SCREENS = {
+  home: ()=>renderHome(), workout: ()=>renderWorkout(), exercise: ()=>renderExercise(),
+  history: ()=>renderHistory(), historyDay: ()=>renderHistoryDay(), editor: ()=>renderEditor(),
+  editExercise: ()=>renderEditExercise(), legend: ()=>renderLegend(),
+  planning: ()=>renderPlanning(), supplements: ()=>renderSupplements()
+};
+let _rendering = false;
+function render(){
+  const app = document.getElementById("app");
+  if(!app || !DB) return;
+  // Evita reentradas: si una acción dentro de un render vuelve a llamar a render(),
+  // el DOM se quedaría a medio construir.
+  if(_rendering) return;
+  _rendering = true;
+  try{
+    const fn = SCREENS[VIEW.screen] || SCREENS.home;
+    const view = fn();
+    app.innerHTML = "";
+    app.appendChild(view);
+  }catch(err){
+    // Un fallo al pintar una pantalla no debe dejar la app en blanco ni perder datos:
+    // avisamos y volvemos al inicio, que siempre es seguro.
+    console.error("Error al renderizar", VIEW, err);
+    app.innerHTML = "";
+    const box = el("div");
+    box.appendChild(el("div","plan-alert","Ha ocurrido un error mostrando esta pantalla. Tus datos están a salvo."));
+    const btn = el("div","save-btn","Volver al inicio");
+    btn.onclick = ()=>{ VIEW={screen:"home"}; render(); };
+    box.appendChild(btn);
+    app.appendChild(box);
+  }finally{
+    _rendering = false;
+  }
+  renderRestTimer();
+}
+
+function el(tag, cls, html){
+  const e = document.createElement(tag);
+  if(cls) e.className = cls;
+  if(html!==undefined) e.innerHTML = html;
+  return e;
+}
+
+/* ---------- HOME ---------- */
+function renderHome(){
+  const wrap = el("div");
+  const top = el("div","topbar");
+  const brand = el("div","brand");
+  const logo = document.createElement("img");
+  logo.src = "icons/logo-header.png";
+  logo.alt = "";
+  logo.className = "brand-logo";
+  logo.onerror = ()=>{ logo.style.display = "none"; };
+  brand.appendChild(logo);
+  const t = el("div");
+  t.appendChild(el("div","eyebrow","Bulk Up"));
+  t.appendChild(el("h1","title","Tu rutina"));
+  brand.appendChild(t);
+  top.appendChild(brand);
+  wrap.appendChild(top);
+
+  /* Panel de estado de las últimas 2 semanas */
+  const a = analyzeLastTwoWeeks();
+  const st = a.estado;
+  const card = el("div","status-card");
+  card.style.background = st.fondo;
+  card.style.borderColor = st.color+"55";
+
+  const head = el("div","status-head");
+  head.appendChild(el("div","status-icon", st.icono));
+  const txt = el("div","status-text");
+  const h = el("div","status-title", st.titulo);
+  h.style.color = st.color;
+  txt.appendChild(h);
+  txt.appendChild(el("div","status-msg", st.mensaje));
+  head.appendChild(txt);
+  card.appendChild(head);
+
+  // Calendario compacto de los 14 días
+  const strip = el("div","status-strip");
+  a.dias.forEach((d,i)=>{
+    const dot = el("div","status-dot"+(a.entrenados.has(d)?" on":""));
+    if(a.entrenados.has(d)) dot.style.background = st.color;
+    if(i===13) dot.classList.add("today");
+    strip.appendChild(dot);
+  });
+  card.appendChild(strip);
+
+  const stats = el("div","status-stats");
+  stats.appendChild(el("div",null,"<b>"+a.total+"</b> entrenos / 14 días"));
+  if(a.seguidos>0) stats.appendChild(el("div",null,"<b>"+a.seguidos+"</b> día"+(a.seguidos>1?"s":"")+" seguido"+(a.seguidos>1?"s":"")));
+  else if(a.sinEntrenar>0) stats.appendChild(el("div",null,"<b>"+a.sinEntrenar+"</b> día"+(a.sinEntrenar>1?"s":"")+" de descanso"));
+  card.appendChild(stats);
+  wrap.appendChild(card);
+
+  if(DB.draftSession){
+    const draftCard = el("div","routine-card");
+    draftCard.style.borderColor = "var(--accent)";
+    const left = el("div");
+    left.appendChild(el("div","routine-name","Entrenamiento en curso"));
+    left.appendChild(el("div","routine-tags", DB.draftSession.routineName+" · "+DB.draftSession.fecha));
+    draftCard.appendChild(left);
+    const actions = el("div");
+    actions.style.cssText = "display:flex; flex-direction:column; align-items:flex-end; gap:6px;";
+    const continueBtn = el("div","routine-arrow","Continuar →");
+    continueBtn.style.fontSize = "14px";
+    continueBtn.onclick = (ev)=>{
+      ev.stopPropagation();
+      ACTIVE_SESSION = DB.draftSession;
+      DB.draftSession = null;
+      VIEW = {screen:"workout"};
+      render();
+    };
+    const discardBtn = el("div","back","Descartar");
+    discardBtn.style.fontSize = "12.5px";
+    discardBtn.onclick = (ev)=>{
+      ev.stopPropagation();
+      DB.draftSession = null; saveDB(); render();
+    };
+    actions.appendChild(continueBtn); actions.appendChild(discardBtn);
+    draftCard.appendChild(actions);
+    draftCard.onclick = continueBtn.onclick;
+    wrap.appendChild(draftCard);
+  }
+
+  Object.values(DB.routines).forEach(r=>{
+    const card = el("div","routine-card");
+    const left = el("div");
+    left.appendChild(el("div","routine-name",r.nombre));
+    left.appendChild(el("div","routine-tags",r.tags));
+    card.appendChild(left);
+    card.appendChild(el("div","routine-arrow","→"));
+    card.onclick = ()=>{
+      ACTIVE_SESSION = {id:uid(), fecha: fullDateStr(), iso: isoDateStr(), routineId:r.id, routineName:r.nombre, ejercicios:[]};
+      VIEW = {screen:"workout"};
+      render();
+    };
+    wrap.appendChild(card);
+  });
+
+  const foot = el("div","homefoot");
+  const histBtn = el("div","pill-btn","Historial");
+  histBtn.onclick = ()=>{ HISTORY_LIMIT = HISTORY_PAGE; VIEW={screen:"history"}; render(); };
+  const editBtn = el("div","pill-btn","Editar rutina");
+  editBtn.onclick = ()=>{ VIEW={screen:"editor"}; render(); };
+  const legendBtn = el("div","pill-btn","Leyenda");
+  legendBtn.onclick = ()=>{ VIEW={screen:"legend"}; render(); };
+  const backupBtn = el("div","pill-btn","Copia de seguridad");
+  backupBtn.onclick = ()=> showBackupModal();
+  const planBtn = el("div","pill-btn","Planificación");
+  planBtn.onclick = ()=>{ VIEW={screen:"planning"}; render(); };
+  const supBtn = el("div","pill-btn","Suplementos");
+  supBtn.onclick = ()=>{ VIEW={screen:"supplements"}; render(); };
+  foot.style.flexWrap = "wrap";
+  foot.appendChild(histBtn); foot.appendChild(editBtn); foot.appendChild(legendBtn); foot.appendChild(planBtn); foot.appendChild(supBtn); foot.appendChild(backupBtn);
+  foot.querySelectorAll(".pill-btn").forEach(b=> b.style.minWidth = "45%");
+  wrap.appendChild(foot);
+  return wrap;
+}
+
+/* ---------- WORKOUT ---------- */
+function renderWorkout(){
+  const wrap = el("div");
+  const top = el("div","topbar");
+  const back = el("div","back","‹ Guardar y salir");
+  back.onclick = ()=>{
+    saveDraft();
+    toast("Entrenamiento guardado, puedes continuarlo luego");
+    ACTIVE_SESSION=null; VIEW={screen:"home"}; render();
+  };
+  top.appendChild(back);
+  const saveNowBtn = el("div","back","Guardar");
+  saveNowBtn.style.marginLeft = "auto";
+  saveNowBtn.onclick = ()=>{ saveDraft(); toast("Progreso guardado"); };
+  top.appendChild(saveNowBtn);
+  wrap.appendChild(top);
+
+  const head = el("div");
+  head.appendChild(el("div","eyebrow", ACTIVE_SESSION.fecha));
+  head.appendChild(el("h1","title", ACTIVE_SESSION.routineName));
+  wrap.appendChild(head);
+  wrap.appendChild(el("div",null,"<div style='height:16px'></div>"));
+
+  const routine = DB.routines[ACTIVE_SESSION.routineId];
+  routine.ejercicios.forEach(exId=>{
+    const def = DB.exercises[exId];
+    if(!def) return;
+    const row = el("div","ex-row");
+    const done = isExerciseDoneInSession(exId);
+    const chk = el("div","chk"+(done?" done":""), done?"✓":"");
+    row.appendChild(chk);
+    const body = el("div","ex-row-body");
+    const nameRow = el("div");
+    nameRow.style.cssText = "display:flex;align-items:center;gap:6px;flex-wrap:wrap;";
+    nameRow.appendChild(el("div","ex-row-name", def.nombre));
+    if(def.tipoMovimiento && def.tipoMovimiento.length){
+      def.tipoMovimiento.forEach(code=>{ const b=movementBadge(code); if(b){ b.style.fontSize="9.5px"; b.style.padding="1px 6px"; nameRow.appendChild(b);} });
+    }
+    body.appendChild(nameRow);
+    if(def.ficha===false){
+      body.appendChild(el("div","ex-row-meta", `${def.grupoMuscular} · ${def.subgrupo} · ${def.tipoEntrenamiento}`));
+    } else {
+      const rirTxt = (def.rirMin!=null && def.rirMax!=null) ? ` · RIR ${def.rirMin}-${def.rirMax}` : "";
+      const notaTxt = def.repNota ? " "+def.repNota : "";
+      body.appendChild(el("div","ex-row-meta", `${def.series} series · ${def.repMin}-${def.repMax} ${def.unidad||'reps'}${notaTxt}${rirTxt}`));
+    }
+    row.appendChild(body);
+    row.onclick = ()=>{ VIEW = {screen:"exercise", exId}; render(); };
+    wrap.appendChild(row);
+  });
+
+  const finishBtn = el("div","pill-btn","Terminar entrenamiento");
+  finishBtn.style.marginTop = "18px";
+  finishBtn.style.background = "var(--accent)";
+  finishBtn.style.color = "#FFFFFF";
+  finishBtn.style.fontWeight = "700";
+  finishBtn.style.borderColor = "var(--accent)";
+  finishBtn.onclick = ()=>{
+    const anySet = ACTIVE_SESSION.ejercicios.some(e=>e.series.some(s=>s.done));
+    if(!anySet){ toast("Registra al menos una serie"); return; }
+    DB.sessions.push(ACTIVE_SESSION);
+    if(DB.draftSession && DB.draftSession.id===ACTIVE_SESSION.id) DB.draftSession = null;
+    saveDB();
+    toast("Entrenamiento guardado");
+    ACTIVE_SESSION = null;
+    VIEW = {screen:"home"};
+    render();
+  };
+  wrap.appendChild(finishBtn);
+  return wrap;
+}
+
+/* ---------- EXERCISE DETAIL ---------- */
+function renderExercise(){
+  const def = DB.exercises[VIEW.exId];
+  if(!def){
+    const wrap = el("div");
+    const back = el("div","back","‹ Volver");
+    back.onclick = ()=>{ VIEW={screen: ACTIVE_SESSION ? "workout" : "home"}; render(); };
+    wrap.appendChild(back);
+    wrap.appendChild(el("div","empty-note","Este ejercicio ya no existe en el catálogo."));
+    return wrap;
+  }
+  const wrap = el("div");
+  const top = el("div","topbar");
+  const back = el("div","back","‹ Entrenamiento");
+  back.onclick = ()=>{ VIEW={screen:"workout"}; render(); };
+  top.appendChild(back);
+  wrap.appendChild(top);
+
+  wrap.appendChild(el("h1","title", def.nombre));
+  if(def.ficha===false){
+    wrap.appendChild(el("div","routine-tags", `${def.grupoMuscular} · ${def.subgrupo} · ${def.tipoEntrenamiento}`));
+  }
+  if(def.tipoMovimiento && def.tipoMovimiento.length){
+    const typeRow = el("div");
+    typeRow.style.cssText = "display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;";
+    def.tipoMovimiento.forEach(code=>{ const b=movementBadge(code); if(b) typeRow.appendChild(b); });
+    wrap.appendChild(typeRow);
+  }
+  if(def.objetivo){
+    wrap.appendChild(el("div","routine-tags", "Objetivo: "+def.objetivo));
+  }
+  wrap.appendChild(el("div",null,"<div style='height:18px'></div>"));
+
+  /* Explicación de cómo ejecutar según el/los tipo(s) de movimiento */
+  if(def.tipoMovimiento && def.tipoMovimiento.length){
+    const execSec = el("div","section");
+    execSec.appendChild(el("div","section-label","Cómo ejecutarlo"));
+    const execCard = el("div","progress-card");
+    def.tipoMovimiento.forEach(code=>{
+      const info = MOVEMENT_TYPES[code];
+      if(!info) return;
+      const item = el("div","info-item");
+      const head = el("div","info-h", code+" — "+info.label);
+      head.style.color = info.color;
+      item.appendChild(head);
+      item.appendChild(el("div","info-p", info.desc));
+      execCard.appendChild(item);
+    });
+    execSec.appendChild(execCard);
+    wrap.appendChild(execSec);
+  }
+
+  /* 1. Entrenamiento actual */
+  const sec1 = el("div","section");
+  sec1.appendChild(el("div","section-label","Entrenamiento de hoy"));
+  const se = getOrCreateSessionExercise(def.id);
+  se.series.forEach((s,i)=>{
+    const row = el("div","set-row");
+    row.appendChild(el("div","set-idx","S"+(i+1)));
+
+    const wField = el("div");
+    wField.appendChild(el("div","field-label","Peso (kg)"));
+    const wInput = el("input","set-input");
+    // type=text + inputmode: con type=number, escribir "82,5" (coma del teclado español)
+    // devuelve cadena vacía y se perdía el peso. Aquí lo aceptamos y lo normalizamos.
+    wInput.type="text"; wInput.inputMode="decimal"; wInput.autocomplete="off";
+    wInput.value=s.peso;
+    wInput.oninput = (e)=>{ s.peso = cleanNumberInput(e.target.value, true); };
+    wInput.onblur = (e)=>{ e.target.value = s.peso; };
+    wField.appendChild(wInput);
+    row.appendChild(wField);
+
+    const rField = el("div");
+    rField.appendChild(el("div","field-label", def.unidad==="segundos" ? "Segundos" : def.unidad==="m" ? "Metros" : "Reps"));
+    const rInput = el("input","set-input");
+    rInput.type="text"; rInput.inputMode="numeric"; rInput.autocomplete="off";
+    rInput.value=s.reps;
+    rInput.oninput = (e)=>{ s.reps = cleanNumberInput(e.target.value, false); };
+    rInput.onblur = (e)=>{ e.target.value = s.reps; };
+    rField.appendChild(rInput);
+    row.appendChild(rField);
+
+    const chk = el("div","set-check"+(s.done?" done":""), s.done?"✓":"");
+    chk.onclick = ()=>{
+      if(!s.done && (s.peso===""||s.reps==="")){ toast("Introduce peso y reps"); return; }
+      const turningOn = !s.done;
+      s.done = !s.done;
+      saveDraft();
+      if(turningOn){
+        const allDone = se.series.every(x=>x.done);
+        if(allDone){
+          showNextExerciseModal(def);
+        } else {
+          const cat = categoryOf(def);
+          startRestTimer(REST_DICT[cat] || 90, "Descanso");
+        }
+      }
+      render();
+    };
+    row.appendChild(chk);
+    sec1.appendChild(row);
+  });
+  if(se.series.length>1){
+    const extendBtn = el("div","extend-btn","⇣ Repetir peso y reps en todas las series");
+    extendBtn.onclick = ()=>{
+      const first = se.series[0];
+      if(first.peso===""||first.reps===""){ toast("Rellena primero la serie 1"); return; }
+      se.series.forEach((s,i)=>{ if(i>0){ s.peso=first.peso; s.reps=first.reps; } });
+      render();
+    };
+    sec1.appendChild(extendBtn);
+  }
+  const addSet = el("div","add-set","+ Añadir serie");
+  addSet.onclick = ()=>{ se.series.push({peso:"",reps:"",done:false}); render(); };
+  sec1.appendChild(addSet);
+  wrap.appendChild(sec1);
+
+  /* 2. Últimos entrenamientos */
+  const sec2 = el("div","section");
+  sec2.appendChild(el("div","section-label","Últimos entrenamientos"));
+  const last = getLastSessionsFor(def.id, ACTIVE_SESSION.id, 2);
+  if(last.length===0){
+    sec2.appendChild(el("div","empty-note","Todavía no hay historial para este ejercicio. Lo que registres hoy aparecerá aquí la próxima vez."));
+  } else {
+    last.forEach((h,idx)=>{
+      const block = el("div","prev-card");
+      const head = el("div","prev-head");
+      const fechaTxt = el("div","prev-date", h.fecha);
+      head.appendChild(fechaTxt);
+      const tag = el("div","prev-tag", idx===0 ? "Última vez" : "Anterior");
+      if(idx>0) tag.classList.add("muted");
+      head.appendChild(tag);
+      block.appendChild(head);
+
+      const grid = el("div","prev-sets");
+      h.series.forEach((s,i)=>{
+        const p = setParts(def, s);
+        const cell = el("div","prev-set");
+        cell.appendChild(el("div","prev-set-n","S"+(i+1)));
+        const val = el("div","prev-set-val");
+        val.appendChild(el("span","prev-reps", p.repTxt));
+        if(p.cargaTxt){
+          val.appendChild(el("span","prev-x","×"));
+          val.appendChild(el("span","prev-peso", p.cargaTxt));
+        }
+        cell.appendChild(val);
+        grid.appendChild(cell);
+      });
+      block.appendChild(grid);
+
+      const vol = h.series.reduce((a,s)=>a+volumenSerie(s),0);
+      if(vol>0){
+        block.appendChild(el("div","prev-foot","Volumen total: <b>"+Math.round(vol)+" kg</b>"));
+      }
+      sec2.appendChild(block);
+    });
+
+    // Comparativa rápida entre las dos últimas sesiones
+    if(last.length===2){
+      const v0 = last[0].series.reduce((a,s)=>a+volumenSerie(s),0);
+      const v1 = last[1].series.reduce((a,s)=>a+volumenSerie(s),0);
+      if(v0>0 && v1>0){
+        const diff = v0 - v1;
+        const pct = Math.round(Math.abs(diff)/v1*100);
+        let txt, cls;
+        if(diff>0){ txt = "↗ Subiste un "+pct+"% de volumen respecto a la sesión anterior"; cls="up"; }
+        else if(diff<0){ txt = "↘ Bajaste un "+pct+"% de volumen respecto a la sesión anterior"; cls="down"; }
+        else { txt = "→ Mismo volumen que la sesión anterior"; cls="same"; }
+        sec2.appendChild(el("div","prev-trend "+cls, txt));
+      }
+    }
+  }
+  wrap.appendChild(sec2);
+
+  /* 3. Progresión (solo si el ejercicio tiene ficha) */
+  if(def.ficha!==false){
+  const sec3 = el("div","section");
+  sec3.appendChild(el("div","section-label","Progresión"));
+  const pcard = el("div","progress-card");
+  const rirGoalTxt = (def.rirMin!=null && def.rirMax!=null) ? ` · RIR ${def.rirMin}-${def.rirMax}` : "";
+  const notaGoalTxt = def.repNota ? " "+def.repNota : "";
+  pcard.appendChild(el("div","progress-goal", `Objetivo: <b>${def.repMin}–${def.repMax} ${def.unidad||'reps'}${notaGoalTxt}</b>${rirGoalTxt} · descanso ${Math.round(def.descansoSeg/60*10)/10 >= 1 ? Math.round(def.descansoSeg/60*10)/10+" min" : def.descansoSeg+" s"}`));
+  (def.progresion||[]).forEach(txt=>{
+    const rule = el("div","progress-rule rule-up");
+    rule.appendChild(el("div","rule-dot"));
+    rule.appendChild(el("div","rule-text","<span>"+txt+"</span>"));
+    pcard.appendChild(rule);
+  });
+  sec3.appendChild(pcard);
+  wrap.appendChild(sec3);
+
+  /* 4. Información */
+  const sec4 = el("div","section");
+  sec4.appendChild(el("div","section-label","Información del ejercicio"));
+  const info = el("div","progress-card");
+  function listBlock(h, arr){
+    if(!arr || arr.length===0) return null;
+    const it = el("div","info-item");
+    it.appendChild(el("div","info-h",h));
+    it.appendChild(el("div","info-p", arr.map(x=>"• "+x).join("<br>")));
+    return it;
+  }
+  if(def.tipo){
+    const it = el("div","info-item");
+    it.appendChild(el("div","info-h","Tipo"));
+    it.appendChild(el("div","info-p", def.tipo.charAt(0).toUpperCase()+def.tipo.slice(1)));
+    info.appendChild(it);
+  }
+  if(def.descripcion){
+    const it = el("div","info-item");
+    it.appendChild(el("div","info-h","Descripción"));
+    it.appendChild(el("div","info-p", def.descripcion));
+    info.appendChild(it);
+  }
+  [["Cómo colocarse / ejecutar", def.ejecucion], ["Errores comunes", def.errores], ["Consejos", def.consejos]].forEach(([h,arr])=>{
+    const block = listBlock(h, arr);
+    if(block) info.appendChild(block);
+  });
+  const musc = el("div","info-item");
+  musc.appendChild(el("div","info-h","Músculos implicados"));
+  const tags = el("div","muscle-tags");
+  (def.grupo||[]).forEach((m,i)=> tags.appendChild(el("div","mtag"+(i===0?" primary":""), m)));
+  musc.appendChild(tags);
+  info.appendChild(musc);
+  const obsBlock = listBlock("Observaciones", def.observaciones);
+  if(obsBlock) info.appendChild(obsBlock);
+  sec4.appendChild(info);
+  wrap.appendChild(sec4);
+  } // fin if(def.ficha!==false)
+
+  return wrap;
+}
+
+/* ---------- PLANIFICACIÓN SEMANAL (drag & drop táctil propio) ---------- */
+const COLOR_HEX = {rojo:"#C0504D", naranja:"#D97B29", amarillo:"#D4AC0D", verde:"#2E8B57", blanco:"#B7BEC9"};
+
+function pointsForDay(day){
+  return (DB.weekPlan[day]||[]).reduce((sum,b)=>{ const act=DB.activities.find(a=>a.id===b.activityId); return sum+(act?act.puntos:0); },0);
+}
+function dayHasColor(day, color){
+  return (DB.weekPlan[day]||[]).some(b=>{ const act=DB.activities.find(a=>a.id===b.activityId); return act && act.color===color; });
+}
+function dayHasPlyo(day){
+  return (DB.weekPlan[day]||[]).some(b=>{ const act=DB.activities.find(a=>a.id===b.activityId); return act && act.plyo; });
+}
+function effectiveLimitForDay(dayIdx){
+  if(DB.planRules.noConsecutiveRed && dayIdx>0 && dayHasColor(WEEK_DAYS[dayIdx-1], "rojo")){
+    return DB.planRules.redConsecutiveLimit;
+  }
+  return DB.planRules.dailyLimit;
+}
+function weekNeedsRestWarning(){
+  if(!DB.planRules.requireRestDay) return false;
+  return WEEK_DAYS.every(d=> pointsForDay(d) > 0);
+}
+function tendonWarning(dayIdx){
+  if(dayIdx===0) return false;
+  return dayHasColor(WEEK_DAYS[dayIdx-1], "naranja") && dayHasPlyo(WEEK_DAYS[dayIdx]);
+}
+function addActivityToDay(day, activityId){
+  const act = DB.activities.find(a=>a.id===activityId);
+  if(!act) return;
+  const dayIdx = WEEK_DAYS.indexOf(day);
+  const current = pointsForDay(day);
+  const limit = effectiveLimitForDay(dayIdx);
+  if(current + act.puntos > limit){
+    toast("Sobrecarga: "+day+" supera el límite de "+limit+" puntos");
+    return;
+  }
+  DB.weekPlan[day].push({instanceId:uid(), activityId});
+  saveDB(); render();
+}
+function removeFromDay(day, instanceId){
+  DB.weekPlan[day] = DB.weekPlan[day].filter(b=>b.instanceId!==instanceId);
+  saveDB(); render();
+}
+
+// Drag táctil propio (el drag&drop nativo de HTML5 no funciona en Safari iOS)
+let PLAN_DRAG = {active:false, activityId:null, ghostEl:null, moved:false};
+let PLAN_SELECTED = null; // alternativa al arrastre: tocar actividad y luego un día
+function planDragStart(activityId, clientX, clientY){
+  const act = DB.activities.find(a=>a.id===activityId);
+  if(!act) return;
+  PLAN_DRAG.active = true; PLAN_DRAG.activityId = activityId; PLAN_DRAG.moved = false;
+  const ghost = document.createElement("div");
+  ghost.className = "act-chip drag-ghost";
+  ghost.style.left = clientX+"px"; ghost.style.top = clientY+"px";
+  ghost.style.borderColor = COLOR_HEX[act.color];
+  ghost.innerHTML = "<span class='act-dot' style='background:"+COLOR_HEX[act.color]+"'></span>"+act.nombre;
+  document.body.appendChild(ghost);
+  PLAN_DRAG.ghostEl = ghost;
+}
+function dayColAt(clientX, clientY){
+  if(typeof document.elementFromPoint !== "function") return null;
+  const elAt = document.elementFromPoint(clientX, clientY);
+  return (elAt && elAt.closest) ? elAt.closest(".day-col") : null;
+}
+function planDragMove(clientX, clientY){
+  if(!PLAN_DRAG.active) return;
+  PLAN_DRAG.moved = true;
+  if(PLAN_DRAG.ghostEl){ PLAN_DRAG.ghostEl.style.left=clientX+"px"; PLAN_DRAG.ghostEl.style.top=clientY+"px"; }
+  const target = dayColAt(clientX, clientY);
+  document.querySelectorAll(".day-col").forEach(c=> c.classList.toggle("over", c===target));
+}
+function planDragEnd(clientX, clientY){
+  if(!PLAN_DRAG.active) return;
+  const activityId = PLAN_DRAG.activityId;
+  const moved = PLAN_DRAG.moved;
+  let target = null;
+  try{ target = dayColAt(clientX, clientY); }catch(e){ /* ignorado: soltamos sin destino */ }
+  // Limpiamos SIEMPRE el estado, pase lo que pase, para no dejar el arrastre colgado.
+  if(PLAN_DRAG.ghostEl && PLAN_DRAG.ghostEl.remove) PLAN_DRAG.ghostEl.remove();
+  document.querySelectorAll(".day-col").forEach(c=>c.classList.remove("over"));
+  PLAN_DRAG.active=false; PLAN_DRAG.activityId=null; PLAN_DRAG.ghostEl=null; PLAN_DRAG.moved=false;
+  if(target && activityId){ PLAN_SELECTED=null; addActivityToDay(target.dataset.day, activityId); return; }
+  // Si fue un toque sin arrastrar (o el arrastre no encontró destino), lo tratamos como
+  // "seleccionar actividad": luego basta con tocar el día donde quieres ponerla.
+  if(!moved && activityId){
+    PLAN_SELECTED = (PLAN_SELECTED===activityId) ? null : activityId;
+    render();
+    if(PLAN_SELECTED){
+      const act = DB.activities.find(a=>a.id===PLAN_SELECTED);
+      toast("Ahora toca el día para "+(act?act.nombre:"la actividad"));
+    }
+  }
+}
+// Si el gesto se cancela (llamada entrante, gesto del sistema...), no dejamos basura en pantalla.
+document.addEventListener("touchcancel", ()=>{
+  if(!PLAN_DRAG.active) return;
+  if(PLAN_DRAG.ghostEl && PLAN_DRAG.ghostEl.remove) PLAN_DRAG.ghostEl.remove();
+  document.querySelectorAll(".day-col").forEach(c=>c.classList.remove("over"));
+  PLAN_DRAG.active=false; PLAN_DRAG.activityId=null; PLAN_DRAG.ghostEl=null;
+});
+document.addEventListener("mousemove", (e)=> planDragMove(e.clientX, e.clientY));
+document.addEventListener("mouseup", (e)=> planDragEnd(e.clientX, e.clientY));
+document.addEventListener("touchmove", (e)=>{ if(PLAN_DRAG.active){ e.preventDefault(); const t=e.touches[0]; planDragMove(t.clientX,t.clientY); } }, {passive:false});
+document.addEventListener("touchend", (e)=>{ if(PLAN_DRAG.active){ const t=e.changedTouches[0]; planDragEnd(t.clientX,t.clientY); } });
+
+function showActivityFormModal(){
+  let name="", color="verde", points=4;
+  const overlay = el("div","modal-overlay");
+  const box = el("div","modal-box");
+  box.appendChild(el("div","modal-title","Nueva actividad"));
+  const nameInput = el("input","modal-search"); nameInput.placeholder="Nombre";
+  nameInput.oninput = (e)=> name=e.target.value;
+  box.appendChild(nameInput);
+  const swatchRow = el("div"); swatchRow.style.cssText="display:flex; gap:10px; margin-bottom:14px;";
+  Object.keys(COLOR_HEX).forEach(c=>{
+    const sw = el("div","color-swatch"+(c===color?" selected":""));
+    sw.style.background = COLOR_HEX[c];
+    sw.onclick = ()=>{ color=c; swatchRow.querySelectorAll(".color-swatch").forEach(x=>x.classList.remove("selected")); sw.classList.add("selected"); };
+    swatchRow.appendChild(sw);
+  });
+  box.appendChild(swatchRow);
+  const ptsInput = el("input"); ptsInput.type="number"; ptsInput.value=points; ptsInput.placeholder="Puntos";
+  ptsInput.style.marginBottom="14px";
+  ptsInput.oninput = (e)=> points=parseInt(e.target.value)||0;
+  box.appendChild(ptsInput);
+  const btns = el("div","modal-btns");
+  const cancel = el("div","modal-btn modal-btn-cancel","Cancelar");
+  cancel.onclick = ()=> closeModal(overlay);
+  const save = el("div","modal-btn modal-btn-ok","Crear");
+  save.onclick = ()=>{
+    if(!name.trim()){ toast("Ponle un nombre"); return; }
+    DB.activities.push({id:"act_"+uid(), nombre:name.trim(), color, puntos:points, plyo:false});
+    saveDB(); closeModal(overlay); render();
+  };
+  btns.appendChild(cancel); btns.appendChild(save);
+  box.appendChild(btns);
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+}
+
+function showPlanRulesModal(){
+  const overlay = el("div","modal-overlay");
+  const box = el("div","modal-box");
+  box.appendChild(el("div","modal-title","Reglas de planificación"));
+
+  function numField(labelTxt, value, onChange){
+    const f = el("div","field");
+    f.appendChild(el("div","field-label", labelTxt));
+    const input = el("input"); input.type="number"; input.value=value;
+    input.oninput=(e)=>{ onChange(parseInt(e.target.value)||0); saveDB(); };
+    f.appendChild(input);
+    return f;
+  }
+  box.appendChild(numField("Límite de puntos diario", DB.planRules.dailyLimit, v=>DB.planRules.dailyLimit=v));
+  box.appendChild(numField("Límite si ayer hubo Rojo", DB.planRules.redConsecutiveLimit, v=>DB.planRules.redConsecutiveLimit=v));
+
+  const toggleRow = (labelTxt, checked, onChange)=>{
+    const row = el("div","checkbox-box");
+    const cb = document.createElement("input"); cb.type="checkbox"; cb.checked=checked;
+    cb.onchange=(e)=>{ onChange(e.target.checked); saveDB(); };
+    row.appendChild(cb); row.appendChild(el("div",null,labelTxt));
+    return row;
+  };
+  box.appendChild(toggleRow("No permitir dos días Rojos seguidos", DB.planRules.noConsecutiveRed, v=>DB.planRules.noConsecutiveRed=v));
+  box.appendChild(toggleRow("Exigir al menos un día de descanso/semana", DB.planRules.requireRestDay, v=>DB.planRules.requireRestDay=v));
+
+  box.appendChild(el("div","section-label","Actividades"));
+  DB.activities.forEach(act=>{
+    const row = el("div","edit-row");
+    row.appendChild(el("div","act-dot", "")).style.background = COLOR_HEX[act.color];
+    const name = el("div","edit-name", act.nombre);
+    row.appendChild(name);
+    const ptsInput = el("input"); ptsInput.type="number"; ptsInput.value=act.puntos;
+    ptsInput.style.cssText = "width:60px; text-align:center;";
+    ptsInput.oninput = (e)=>{ act.puntos = parseInt(e.target.value)||0; saveDB(); };
+    row.appendChild(ptsInput);
+    const del = el("div","edit-del","Borrar");
+    del.onclick = ()=>{
+      DB.activities = DB.activities.filter(a=>a.id!==act.id);
+      WEEK_DAYS.forEach(d=>{ DB.weekPlan[d] = DB.weekPlan[d].filter(b=>b.activityId!==act.id); });
+      saveDB(); closeModal(overlay); showPlanRulesModal();
+    };
+    row.appendChild(del);
+    box.appendChild(row);
+  });
+
+  const btns = el("div","modal-btns");
+  const close = el("div","modal-btn modal-btn-ok","Hecho");
+  close.onclick = ()=>{ closeModal(overlay); render(); };
+  btns.appendChild(close);
+  box.appendChild(btns);
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+}
+
+function renderPlanning(){
+  const wrap = el("div");
+  const top = el("div","topbar");
+  const back = el("div","back","‹ Volver");
+  back.onclick = ()=>{ VIEW={screen:"home"}; render(); };
+  top.appendChild(back);
+  const gear = el("div","back","⚙️ Reglas");
+  gear.onclick = ()=> showPlanRulesModal();
+  top.appendChild(gear);
+  wrap.appendChild(top);
+  wrap.appendChild(el("h1","title","Planificación"));
+  wrap.appendChild(el("div","routine-tags","Arrastra una actividad a un día"));
+  wrap.appendChild(el("div",null,"<div style='height:12px'></div>"));
+
+  if(weekNeedsRestWarning()){
+    wrap.appendChild(el("div","plan-alert","⚠️ Falta descanso: los 7 días tienen actividad. Deja al menos uno vacío."));
+  }
+
+  /* Banco de actividades: rejilla que envuelve, para verlas todas sin scroll lateral */
+  const bank = el("div","bank-grid");
+  DB.activities.forEach(act=>{
+    const chip = el("div","act-chip"+(PLAN_SELECTED===act.id?" selected":""));
+    chip.style.borderColor = COLOR_HEX[act.color];
+    chip.innerHTML = "<span class='act-dot' style='background:"+COLOR_HEX[act.color]+"'></span>"+act.nombre;
+    chip.onmousedown = (e)=> planDragStart(act.id, e.clientX, e.clientY);
+    chip.addEventListener("touchstart", (e)=>{ e.preventDefault(); const t=e.touches[0]; planDragStart(act.id, t.clientX, t.clientY); }, {passive:false});
+    bank.appendChild(chip);
+  });
+  wrap.appendChild(bank);
+  if(PLAN_SELECTED){
+    const hint = el("div","plan-hint","👆 Toca el día donde quieres añadirla (o toca la actividad otra vez para cancelar)");
+    wrap.appendChild(hint);
+  }
+  const addActBtn = el("div","add-ex-btn","+ Crear nueva actividad");
+  addActBtn.onclick = ()=> showActivityFormModal();
+  wrap.appendChild(addActBtn);
+
+  /* 7 columnas compactas: L M X J V S D */
+  const grid = el("div","week-grid");
+  WEEK_DAYS.forEach((day,idx)=>{
+    const col = el("div","day-col"+(PLAN_SELECTED?" awaiting":""));
+    col.dataset.day = day;
+    col.onclick = ()=>{
+      if(!PLAN_SELECTED) return;
+      const chosen = PLAN_SELECTED;
+      PLAN_SELECTED = null;
+      addActivityToDay(day, chosen);
+    };
+    const limit = effectiveLimitForDay(idx);
+    const pts = pointsForDay(day);
+    col.appendChild(el("div","day-letter", DAY_LETTERS[idx]));
+
+    const meter = el("div","day-meter");
+    const fill = el("div","day-meter-fill");
+    const ratio = Math.min(1, limit>0 ? pts/limit : 0);
+    fill.style.height = (ratio*100)+"%";
+    fill.style.background = pts>limit ? "var(--danger)" : (ratio>=1 ? "var(--danger)" : "var(--accent)");
+    meter.appendChild(fill);
+    col.appendChild(meter);
+
+    const blocks = el("div","day-col-blocks");
+    (DB.weekPlan[day]||[]).forEach(b=>{
+      const act = DB.activities.find(a=>a.id===b.activityId);
+      if(!act) return;
+      const dot = el("div","day-mini");
+      dot.style.background = COLOR_HEX[act.color];
+      dot.title = act.nombre;
+      dot.onclick = (ev)=>{ ev.stopPropagation(); removeFromDay(day, b.instanceId); };
+      blocks.appendChild(dot);
+    });
+    col.appendChild(blocks);
+
+    if(tendonWarning(idx)) col.appendChild(el("div","day-col-warn","⚠️"));
+    grid.appendChild(col);
+  });
+  wrap.appendChild(grid);
+
+  /* Detalle por día, debajo: qué hay exactamente y poder quitarlo */
+  WEEK_DAYS.forEach((day,idx)=>{
+    const blocks = DB.weekPlan[day]||[];
+    if(blocks.length===0) return;
+    const row = el("div","day-detail");
+    row.appendChild(el("div","day-detail-name", day));
+    const list = el("div","day-blocks");
+    blocks.forEach(b=>{
+      const act = DB.activities.find(a=>a.id===b.activityId);
+      if(!act) return;
+      const block = el("div","day-block");
+      block.style.background = COLOR_HEX[act.color];
+      if(act.color==="blanco" || act.color==="amarillo") block.style.color = "#2b2b2b";
+      block.appendChild(el("span",null, act.nombre));
+      const x = el("span","day-block-x","✕");
+      x.onclick = ()=> removeFromDay(day, b.instanceId);
+      block.appendChild(x);
+      list.appendChild(block);
+    });
+    row.appendChild(list);
+    if(tendonWarning(idx)){
+      row.appendChild(el("div","day-warning","⚠️ Tendones: ayer hubo Naranja y hoy hay potencia/pliometría. Considera intercalar un día Verde o Blanco."));
+    }
+    wrap.appendChild(row);
+  });
+
+  return wrap;
+}
+
+/* ---------- COPIA DE SEGURIDAD (archivo para iCloud Drive) ---------- */
+function backupFileName(){
+  const d = new Date();
+  const p = n=> String(n).padStart(2,"0");
+  return "BulkUp-"+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+"-"+p(d.getHours())+p(d.getMinutes())+".json";
+}
+
+function exportBackupFile(){
+  try{
+    const datos = JSON.stringify(DB, null, 2);
+    const blob = new Blob([datos], {type:"application/json"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = backupFileName();
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(()=> URL.revokeObjectURL(url), 2000);
+    toast("Elige \"Guardar en Archivos\" → iCloud Drive");
+  }catch(e){
+    console.error(e);
+    toast("No se pudo crear el archivo");
+  }
+}
+
+function importBackupFile(onDone){
+  const input = document.createElement("input");
+  input.type = "file";
+  // .json y también genéricos, porque iOS a veces no reconoce la extensión
+  input.accept = "application/json,.json,text/plain";
+  input.style.display = "none";
+  input.onchange = ()=>{
+    const file = input.files && input.files[0];
+    if(!file){ input.remove(); return; }
+    const reader = new FileReader();
+    reader.onload = ()=>{
+      let parsed;
+      try{ parsed = JSON.parse(String(reader.result)); }
+      catch(e){ toast("Ese archivo no es una copia válida"); input.remove(); return; }
+      if(!parsed || typeof parsed !== "object" || (!parsed.exercises && !parsed.sessions && !parsed.weekPlan)){
+        toast("Ese archivo no parece una copia de Bulk Up"); input.remove(); return;
+      }
+      const nSes = Array.isArray(parsed.sessions) ? parsed.sessions.length : 0;
+      showConfirmModal("Restaurar copia",
+        "El archivo contiene "+nSes+" entrenamiento"+(nSes===1?"":"s")+". Se sustituirán TODOS los datos actuales. ¿Continuar?",
+        "Restaurar", ()=>{
+          try{
+            DB = reconcileDB(parsed);
+            saveNow();
+            VIEW = {screen:"home"};
+            render();
+            toast("Copia restaurada");
+            if(onDone) onDone();
+          }catch(e){ console.error(e); toast("No se pudo restaurar"); }
+        });
+      input.remove();
+    };
+    reader.onerror = ()=>{ toast("No se pudo leer el archivo"); input.remove(); };
+    reader.readAsText(file);
+  };
+  document.body.appendChild(input);
+  input.click();
+}
+
+function showBackupModal(){
+  const overlay = el("div","modal-overlay");
+  overlay.onclick = (e)=>{ if(e.target===overlay) closeModal(overlay); };
+  const box = el("div","modal-box");
+  box.appendChild(el("div","modal-title","Copia de seguridad"));
+
+  const nSes = (DB.sessions||[]).length;
+  const modoTxt = Storage.mode==="artifact" ? "en tu cuenta de Claude"
+                : Storage.mode==="local" ? "en este dispositivo"
+                : "solo en memoria (no se conservarán al cerrar)";
+  box.appendChild(el("div","modal-msg",
+    "Tienes <b>"+nSes+"</b> entrenamiento"+(nSes===1?"":"s")+" registrado"+(nSes===1?"":"s")+
+    ", guardados "+modoTxt+". Exporta un archivo y guárdalo en iCloud Drive para no perderlo nunca."));
+
+  const expBtn = el("div","modal-btn modal-btn-ok","⬇︎  Exportar archivo");
+  expBtn.style.marginBottom = "10px";
+  expBtn.onclick = ()=> exportBackupFile();
+  box.appendChild(expBtn);
+
+  const impBtn = el("div","modal-btn modal-btn-cancel","⬆︎  Restaurar desde archivo");
+  impBtn.style.marginBottom = "14px";
+  impBtn.onclick = ()=> importBackupFile(()=> closeModal(overlay));
+  box.appendChild(impBtn);
+
+  const help = el("div","backup-help");
+  help.innerHTML = "<b>Cómo guardarlo en iCloud:</b> pulsa Exportar, y en el menú que sale elige "+
+    "<i>Guardar en Archivos</i> → <i>iCloud Drive</i>. Para recuperarlo en otro móvil, instala la app "+
+    "ahí, pulsa Restaurar y elige ese archivo.";
+  box.appendChild(help);
+
+  // Alternativa por texto, por si el navegador no permite descargar archivos
+  const toggle = el("div","backup-toggle","Ver copia como texto ▾");
+  box.appendChild(toggle);
+  const ta = document.createElement("textarea");
+  ta.rows = 5;
+  ta.readOnly = false;
+  ta.style.cssText = "display:none;width:100%;background:var(--surface-2);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:10px 12px;font-size:11px;font-family:monospace;margin-top:10px;";
+  ta.value = JSON.stringify(DB);
+  box.appendChild(ta);
+  const textRestore = el("div","modal-btn modal-btn-cancel","Restaurar desde el texto");
+  textRestore.style.cssText += "display:none;margin-top:10px;";
+  textRestore.onclick = ()=>{
+    let parsed;
+    try{ parsed = JSON.parse(ta.value); }
+    catch(e){ toast("El texto no es una copia válida"); return; }
+    showConfirmModal("Restaurar copia","Se sustituirán TODOS los datos actuales. ¿Continuar?","Restaurar", ()=>{
+      try{ DB = reconcileDB(parsed); saveNow(); closeModal(overlay); VIEW={screen:"home"}; render(); toast("Copia restaurada"); }
+      catch(e){ toast("No se pudo restaurar"); }
+    });
+  };
+  box.appendChild(textRestore);
+  toggle.onclick = ()=>{
+    const abierto = ta.style.display !== "none";
+    ta.style.display = abierto ? "none" : "block";
+    textRestore.style.display = abierto ? "none" : "block";
+    toggle.textContent = abierto ? "Ver copia como texto ▾" : "Ocultar texto ▴";
+    if(!abierto){ ta.focus(); ta.select(); }
+  };
+
+  const btns = el("div","modal-btns");
+  const close = el("div","modal-btn modal-btn-cancel","Cerrar");
+  close.onclick = ()=> closeModal(overlay);
+  btns.appendChild(close);
+  box.appendChild(btns);
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+}
+
+/* ---------- LEYENDA (tipos de movimiento) ---------- */
+function renderLegend(){
+  const wrap = el("div");
+  const top = el("div","topbar");
+  const back = el("div","back","‹ Volver");
+  back.onclick = ()=>{ VIEW={screen:"home"}; render(); };
+  top.appendChild(back);
+  wrap.appendChild(top);
+  wrap.appendChild(el("h1","title","Leyenda"));
+  wrap.appendChild(el("div","routine-tags","Cómo ejecutar cada tipo de movimiento"));
+  wrap.appendChild(el("div",null,"<div style='height:16px'></div>"));
+
+  Object.entries(MOVEMENT_TYPES).forEach(([code,info])=>{
+    const item = el("div","legend-item");
+    const head = el("div");
+    head.style.cssText = "display:flex;align-items:center;gap:8px;";
+    const b = movementBadge(code);
+    head.appendChild(b);
+    head.appendChild(el("div",null,"<b>"+info.label+"</b>"));
+    item.appendChild(head);
+    item.appendChild(el("div","legend-desc", info.desc));
+    wrap.appendChild(item);
+  });
+
+  wrap.appendChild(el("div","empty-note","Regla general: POT → rápido al producir fuerza, lento/controlado al volver · FUE → fuerte al producir fuerza, controlado al volver · HIP → tensión constante, concéntrica natural, excéntrica ~2-3 s · EST/COR → lento, preciso y estable · MOV → controlado, amplio y sin rebotes."));
+  return wrap;
+}
+
+/* ---------- SUPLEMENTACIÓN ---------- */
+let SUP_TAB = "entreno";
+const MOMENTOS_ORDEN = ["Mañana","Comida","Pre-Gym (30-45 min antes)","Pre-Gym","Post-Gym","Post-Gym / Comida","Cualquier momento","Noche"];
+
+function showAddSupplementModal(){
+  let nombre="", dosis="", momento="Mañana", tipoDia="entreno", notas="";
+  const overlay = el("div","modal-overlay");
+  const box = el("div","modal-box");
+  box.appendChild(el("div","modal-title","Añadir suplemento"));
+  const nInput = el("input","modal-search"); nInput.placeholder="Nombre"; nInput.oninput=(e)=>nombre=e.target.value;
+  box.appendChild(nInput);
+  const dInput = el("input"); dInput.placeholder="Dosis (p.ej. 3-5g)"; dInput.style.marginBottom="12px";
+  dInput.oninput=(e)=>dosis=e.target.value;
+  box.appendChild(dInput);
+  const mInput = el("input"); mInput.placeholder="Momento del día (p.ej. Mañana)"; mInput.style.marginBottom="12px";
+  mInput.value = momento; mInput.oninput=(e)=>momento=e.target.value;
+  box.appendChild(mInput);
+  const tSelect = document.createElement("select");
+  tSelect.style.cssText = "width:100%; background:var(--surface-2); border:1px solid var(--line); color:var(--text); border-radius:10px; padding:10px 12px; font-size:15px; margin-bottom:12px;";
+  [["entreno","Días de entreno"],["descanso","Días de descanso"],["ambos","Ambos"]].forEach(([v,l])=> tSelect.appendChild(new Option(l,v)));
+  tSelect.onchange=(e)=>tipoDia=e.target.value;
+  box.appendChild(tSelect);
+  const notaTa = document.createElement("textarea");
+  notaTa.placeholder = "Notas / consejo de uso"; notaTa.rows=3;
+  notaTa.style.cssText = "width:100%;background:var(--surface-2);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:10px 12px;font-size:15px;font-family:inherit;margin-bottom:4px;";
+  notaTa.oninput=(e)=>notas=e.target.value;
+  box.appendChild(notaTa);
+  const btns = el("div","modal-btns");
+  const cancel = el("div","modal-btn modal-btn-cancel","Cancelar");
+  cancel.onclick = ()=> closeModal(overlay);
+  const save = el("div","modal-btn modal-btn-ok","Añadir");
+  save.onclick = ()=>{
+    if(!nombre.trim()){ toast("Ponle un nombre"); return; }
+    DB.supplements.push({id:"sup_"+uid(), nombre:nombre.trim(), dosis, momento, tipoDia, notas});
+    saveDB(); closeModal(overlay); render();
+  };
+  btns.appendChild(cancel); btns.appendChild(save);
+  box.appendChild(btns);
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+}
+
+function renderSupplements(){
+  const wrap = el("div");
+  const top = el("div","topbar");
+  const back = el("div","back","‹ Volver");
+  back.onclick = ()=>{ VIEW={screen:"home"}; render(); };
+  top.appendChild(back);
+  wrap.appendChild(top);
+  wrap.appendChild(el("h1","title","Suplementación"));
+  wrap.appendChild(el("div",null,"<div style='height:14px'></div>"));
+
+  const tabs = el("div","homefoot");
+  const t1 = el("div","pill-btn"+(SUP_TAB==="entreno"?"":""), "Días de entreno");
+  t1.style.cssText = SUP_TAB==="entreno" ? "flex:1;text-align:center;padding:14px;border-radius:12px;background:var(--accent);color:#fff;font-size:14px;" : "flex:1;text-align:center;padding:14px;border-radius:12px;background:var(--surface-2);border:1px solid var(--line);font-size:14px;color:var(--muted);";
+  t1.onclick = ()=>{ SUP_TAB="entreno"; render(); };
+  const t2 = el("div","pill-btn", "Días de descanso");
+  t2.style.cssText = SUP_TAB==="descanso" ? "flex:1;text-align:center;padding:14px;border-radius:12px;background:var(--accent);color:#fff;font-size:14px;" : "flex:1;text-align:center;padding:14px;border-radius:12px;background:var(--surface-2);border:1px solid var(--line);font-size:14px;color:var(--muted);";
+  t2.onclick = ()=>{ SUP_TAB="descanso"; render(); };
+  tabs.appendChild(t1); tabs.appendChild(t2);
+  wrap.appendChild(tabs);
+  wrap.appendChild(el("div",null,"<div style='height:10px'></div>"));
+
+  const items = DB.supplements.filter(s=> s.tipoDia===SUP_TAB || s.tipoDia==="ambos");
+  const momentos = Array.from(new Set(items.map(s=>s.momento)));
+  momentos.sort((a,b)=>{
+    const ia = MOMENTOS_ORDEN.indexOf(a), ib = MOMENTOS_ORDEN.indexOf(b);
+    return (ia===-1?99:ia) - (ib===-1?99:ib);
+  });
+  if(items.length===0){
+    wrap.appendChild(el("div","empty-note","Todavía no hay suplementos en esta categoría."));
+  }
+  momentos.forEach(momento=>{
+    const label = el("div","sup-moment", momento);
+    wrap.appendChild(label);
+    items.filter(s=>s.momento===momento).forEach(s=>{
+      const card = el("div","sup-card");
+      const head = el("div","sup-head");
+      head.appendChild(el("div","sup-name", s.nombre));
+      if(s.dosis) head.appendChild(el("div","sup-dose", s.dosis));
+      card.appendChild(head);
+      if(s.notas){
+        const noteBox = el("div","sup-note", "ℹ️ "+s.notas);
+        card.appendChild(noteBox);
+      }
+      const del = el("div","sup-del","✕");
+      del.onclick = ()=>{
+        DB.supplements = DB.supplements.filter(x=>x.id!==s.id);
+        saveDB(); render();
+      };
+      card.appendChild(del);
+      wrap.appendChild(card);
+    });
+  });
+
+  const addBtn = el("div","fab","+");
+  addBtn.style.left = "20px"; addBtn.style.right = "auto"; addBtn.style.bottom = "20px";
+  addBtn.onclick = ()=> showAddSupplementModal();
+  wrap.appendChild(addBtn);
+
+  return wrap;
+}
+
+/* ---------- HISTORY ---------- */
+const HISTORY_PAGE = 30;
+let HISTORY_LIMIT = HISTORY_PAGE;
+let _histTotals = {firma:null, series:0, vol:0};
+
+function sessionStats(s){
+  let series=0, vol=0, ejercicios=0;
+  (s.ejercicios||[]).forEach(e=>{
+    const hechas = (e.series||[]).filter(x=>x.done);
+    if(hechas.length) ejercicios++;
+    series += hechas.length;
+    hechas.forEach(x=> vol += volumenSerie(x));
+  });
+  return {series, vol:Math.round(vol), ejercicios};
+}
+
+function renderHistory(){
+  const wrap = el("div");
+  const top = el("div","topbar");
+  const back = el("div","back","‹ Volver");
+  back.onclick = ()=>{ VIEW={screen:"home"}; render(); };
+  top.appendChild(back);
+  wrap.appendChild(top);
+  wrap.appendChild(el("h1","title","Historial"));
+
+  if(!DB.sessions.length){
+    wrap.appendChild(el("div",null,"<div style='height:16px'></div>"));
+    wrap.appendChild(el("div","empty-note","Todavía no has completado ningún entrenamiento."));
+    return wrap;
+  }
+
+  // Resumen global (memorizado: recalcularlo en cada render es caro con muchas sesiones)
+  const totalSes = DB.sessions.length;
+  const firma = totalSes + ":" + (totalSes ? DB.sessions[totalSes-1].id : "");
+  if(_histTotals.firma !== firma){
+    let ts=0, tv=0;
+    DB.sessions.forEach(s=>{ const st=sessionStats(s); ts+=st.series; tv+=st.vol; });
+    _histTotals = {firma, series:ts, vol:tv};
+  }
+  const totalSeries = _histTotals.series, totalVol = _histTotals.vol;
+  const resumen = el("div","hist-summary");
+  [["Entrenamientos", totalSes], ["Series", totalSeries], ["Volumen", Math.round(totalVol/1000)+" t"]]
+    .forEach(([k,v])=>{
+      const b = el("div","hist-sum-box");
+      b.appendChild(el("div","hist-sum-val", String(v)));
+      b.appendChild(el("div","hist-sum-key", k));
+      resumen.appendChild(b);
+    });
+  wrap.appendChild(resumen);
+
+  // Agrupado por mes. Solo pintamos un bloque cada vez: con muchos entrenamientos
+  // acumulados, dibujar cientos de tarjetas de golpe ralentiza la apertura.
+  const MESES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+  const visibles = HISTORY_LIMIT;
+  const porMes = new Map();
+  [...DB.sessions].reverse().slice(0, visibles).forEach(s=>{
+    const iso = sessionISO(s);
+    let clave = "Sin fecha";
+    if(iso){
+      const [y,m] = iso.split("-");
+      clave = MESES[parseInt(m,10)-1]+" "+y;
+    }
+    if(!porMes.has(clave)) porMes.set(clave, []);
+    porMes.get(clave).push(s);
+  });
+
+  porMes.forEach((sesiones, mes)=>{
+    wrap.appendChild(el("div","hist-month", mes));
+    sesiones.forEach(s=>{
+      const st = sessionStats(s);
+      const card = el("div","hist-card");
+      const head = el("div","hist-card-head");
+      const izq = el("div");
+      izq.appendChild(el("div","hist-card-routine", s.routineName));
+      izq.appendChild(el("div","hist-card-date", s.fecha));
+      head.appendChild(izq);
+      head.appendChild(el("div","hist-card-arrow","›"));
+      card.appendChild(head);
+
+      const chips = el("div","hist-chips");
+      chips.appendChild(el("div","hist-chip", st.ejercicios+" ejercicios"));
+      chips.appendChild(el("div","hist-chip", st.series+" series"));
+      if(st.vol>0) chips.appendChild(el("div","hist-chip strong", st.vol+" kg"));
+      card.appendChild(chips);
+
+      const nombres = (s.ejercicios||[])
+        .filter(e=>e.series.some(x=>x.done))
+        .map(e=> (DB.exercises[e.exId] && DB.exercises[e.exId].nombre) || "Ejercicio eliminado");
+      if(nombres.length){
+        card.appendChild(el("div","hist-card-list", nombres.join(" · ")));
+      }
+      card.onclick = ()=>{ VIEW={screen:"historyDay", sessionId:s.id}; render(); };
+      wrap.appendChild(card);
+    });
+  });
+
+  const restantes = DB.sessions.length - visibles;
+  if(restantes > 0){
+    const more = el("div","add-ex-btn","Ver "+Math.min(restantes, HISTORY_PAGE)+" entrenamientos más ("+restantes+" restantes)");
+    more.onclick = ()=>{ HISTORY_LIMIT += HISTORY_PAGE; render(); };
+    wrap.appendChild(more);
+  }
+  return wrap;
+}
+
+function renderHistoryDay(){
+  const s = DB.sessions.find(x=>x.id===VIEW.sessionId);
+  if(!s){ VIEW={screen:"history"}; return renderHistory(); }
+  const wrap = el("div");
+  const top = el("div","topbar");
+  const back = el("div","back","‹ Historial");
+  back.onclick = ()=>{ VIEW={screen:"history"}; render(); };
+  top.appendChild(back);
+  wrap.appendChild(top);
+  wrap.appendChild(el("div","eyebrow", s.fecha));
+  wrap.appendChild(el("h1","title", s.routineName));
+
+  const st = sessionStats(s);
+  const chips = el("div","hist-chips");
+  chips.appendChild(el("div","hist-chip", st.ejercicios+" ejercicios"));
+  chips.appendChild(el("div","hist-chip", st.series+" series"));
+  if(st.vol>0) chips.appendChild(el("div","hist-chip strong", st.vol+" kg de volumen"));
+  chips.style.margin = "12px 0 18px";
+  wrap.appendChild(chips);
+
+  s.ejercicios.forEach(e=>{
+    const doneSeries = (e.series||[]).filter(x=>x.done);
+    if(doneSeries.length===0) return;
+    const def = DB.exercises[e.exId];
+    const block = el("div","hd-card");
+
+    const head = el("div","hd-head");
+    const nombre = el("div","hd-name", (def && def.nombre) || "Ejercicio eliminado");
+    head.appendChild(nombre);
+    if(def && def.tipoMovimiento && def.tipoMovimiento.length){
+      const b = movementBadge(def.tipoMovimiento[0]);
+      if(b) head.appendChild(b);
+    }
+    block.appendChild(head);
+
+    block.appendChild(el("div","hd-summary", seriesSummary(def, doneSeries)));
+
+    const list = el("div","hd-sets");
+    doneSeries.forEach((set,i)=>{
+      const p = setParts(def, set);
+      const row = el("div","hd-set");
+      row.appendChild(el("div","hd-set-n","S"+(i+1)));
+      const val = el("div","hd-set-val");
+      val.appendChild(el("span","prev-reps", p.repTxt));
+      if(p.cargaTxt){
+        val.appendChild(el("span","prev-x","×"));
+        val.appendChild(el("span","prev-peso", p.cargaTxt));
+      }
+      row.appendChild(val);
+      list.appendChild(row);
+    });
+    block.appendChild(list);
+
+    if(!def){
+      block.appendChild(el("div","hd-note","Este ejercicio ya no está en tu rutina, pero tu registro se conserva."));
+    }
+    wrap.appendChild(block);
+  });
+  return wrap;
+}
+
+/* ---------- EDITOR DE RUTINA ---------- */
+function renderEditor(){
+  const wrap = el("div");
+  const top = el("div","topbar");
+  const back = el("div","back","‹ Volver");
+  back.onclick = ()=>{ VIEW={screen:"home"}; render(); };
+  top.appendChild(back);
+  wrap.appendChild(top);
+  wrap.appendChild(el("h1","title","Editar rutina"));
+  wrap.appendChild(el("div",null,"<div style='height:16px'></div>"));
+
+  Object.values(DB.routines).forEach(r=>{
+    wrap.appendChild(el("div","section-label", r.nombre+" · "+r.tags));
+    r.ejercicios.forEach((exId,idx)=>{
+      const def = DB.exercises[exId];
+      const row = el("div","edit-row");
+      const up = el("div","edit-drag","▲");
+      up.onclick = ()=>{ if(idx>0){ [r.ejercicios[idx-1],r.ejercicios[idx]]=[r.ejercicios[idx],r.ejercicios[idx-1]]; saveDB(); render(); } };
+      const down = el("div","edit-drag","▼");
+      down.onclick = ()=>{ if(idx<r.ejercicios.length-1){ [r.ejercicios[idx+1],r.ejercicios[idx]]=[r.ejercicios[idx],r.ejercicios[idx+1]]; saveDB(); render(); } };
+      row.appendChild(up); row.appendChild(down);
+      const name = el("div","edit-name", def?def.nombre:exId);
+      name.onclick = ()=>{ VIEW={screen:"editExercise", exId, routineId:r.id}; render(); };
+      row.appendChild(name);
+      const del = el("div","edit-del","Quitar");
+      del.onclick = ()=>{ r.ejercicios.splice(idx,1); saveDB(); render(); };
+      row.appendChild(del);
+      wrap.appendChild(row);
+    });
+    const addBtn = el("div","add-ex-btn","+ Añadir ejercicio a "+r.nombre);
+    addBtn.onclick = ()=>{
+      const already = new Set(r.ejercicios);
+      const candidates = Object.values(DB.exercises)
+        .filter(e=>!already.has(e.id))
+        .sort((a,b)=>a.nombre.localeCompare(b.nombre));
+      showExercisePickerModal("Añadir ejercicio a "+r.nombre, candidates,
+        (exId)=>{ r.ejercicios.push(exId); saveDB(); render(); },
+        ()=>{
+          showTextInputModal("Nombre del ejercicio nuevo","p. ej. Curl martillo",(name)=>{
+            const newId = "ex_"+uid();
+            DB.exercises[newId] = {
+              id:newId, nombre:name, grupo:[], series:3, repMin:8, repMax:10, unidad:"reps", repNota:"", rirMin:1, rirMax:2,
+              descansoSeg:90, tipo:"compuesto", descripcion:"", ejecucion:[], errores:[], consejos:[], progresion:[], observaciones:[]
+            };
+            r.ejercicios.push(newId);
+            saveDB();
+            VIEW = {screen:"editExercise", exId:newId, routineId:r.id};
+            render();
+          });
+        });
+    };
+    wrap.appendChild(addBtn);
+  });
+  return wrap;
+}
+
+function renderEditExercise(){
+  const def = DB.exercises[VIEW.exId];
+  if(!def){ VIEW={screen:"editor"}; return renderEditor(); }
+  const wrap = el("div");
+  const top = el("div","topbar");
+  const back = el("div","back","‹ Rutina");
+  back.onclick = ()=>{ VIEW={screen:"editor"}; render(); };
+  top.appendChild(back);
+  wrap.appendChild(top);
+  wrap.appendChild(el("h1","title","Editar ejercicio"));
+  wrap.appendChild(el("div",null,"<div style='height:14px'></div>"));
+
+  function field(labelTxt, value, onChange, type){
+    const f = el("div","field");
+    f.appendChild(el("div","field-label", labelTxt));
+    const input = el("input");
+    input.type = type||"text";
+    input.value = value;
+    input.oninput = (e)=> onChange(e.target.value);
+    f.appendChild(input);
+    return f;
+  }
+
+  if(def.ficha===false){
+    wrap.appendChild(field("Nombre", def.nombre, v=>{def.nombre=v; saveDB();}));
+    const grid = el("div","field-grid");
+    grid.appendChild(field("Grupo muscular", def.grupoMuscular, v=>{def.grupoMuscular=v; saveDB();}));
+    grid.appendChild(field("Subgrupo", def.subgrupo, v=>{def.subgrupo=v; saveDB();}));
+    grid.appendChild(field("Categoría", def.categoria, v=>{def.categoria=v; saveDB();}));
+    grid.appendChild(field("Tipo de entrenamiento", def.tipoEntrenamiento, v=>{def.tipoEntrenamiento=v; saveDB();}));
+    wrap.appendChild(grid);
+    wrap.appendChild(el("div","empty-note","Este ejercicio pertenece al catálogo ampliado: no tiene ficha técnica (sin ejecución, errores, consejos ni progresión), solo sirve como alternativa/sustituto."));
+    const saveBtn2 = el("div","save-btn","Guardar y volver");
+    saveBtn2.style.marginTop = "18px";
+    saveBtn2.onclick = ()=>{ VIEW={screen:"editor"}; render(); };
+    wrap.appendChild(saveBtn2);
+    return wrap;
+  }
+  function textarea(labelTxt, value, onChange){
+    const f = el("div","field");
+    f.appendChild(el("div","field-label", labelTxt));
+    const ta = document.createElement("textarea");
+    ta.value = value; ta.rows = 3;
+    ta.style.cssText = "width:100%;background:var(--surface-2);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:10px 12px;font-size:15px;font-family:inherit;";
+    ta.oninput = (e)=> onChange(e.target.value);
+    f.appendChild(ta);
+    return f;
+  }
+
+  wrap.appendChild(field("Nombre", def.nombre, v=>{def.nombre=v; saveDB();}));
+
+  const grid = el("div","field-grid");
+  grid.appendChild(field("Series", def.series, v=>{def.series=parseInt(v)||1; saveDB();}, "number"));
+  grid.appendChild(field("Tipo (compuesto/aislamiento)", def.tipo, v=>{def.tipo=v; saveDB();}));
+  grid.appendChild(field("Reps mínimo", def.repMin, v=>{def.repMin=parseInt(v)||1; saveDB();}, "number"));
+  grid.appendChild(field("Reps máximo", def.repMax, v=>{def.repMax=parseInt(v)||1; saveDB();}, "number"));
+  grid.appendChild(field("Unidad (reps/segundos)", def.unidad||"reps", v=>{def.unidad=v; saveDB();}));
+  grid.appendChild(field("Nota (p.ej. por pierna/lado)", def.repNota||"", v=>{def.repNota=v; saveDB();}));
+  grid.appendChild(field("RIR mínimo", def.rirMin, v=>{def.rirMin=v===""?null:parseInt(v); saveDB();}, "number"));
+  grid.appendChild(field("RIR máximo", def.rirMax, v=>{def.rirMax=v===""?null:parseInt(v); saveDB();}, "number"));
+  wrap.appendChild(grid);
+  wrap.appendChild(field("Descanso (segundos)", def.descansoSeg, v=>{def.descansoSeg=parseInt(v)||60; saveDB();}, "number"));
+  wrap.appendChild(field("Grupo muscular (separado por comas)", (def.grupo||[]).join(", "), v=>{def.grupo=v.split(",").map(s=>s.trim()).filter(Boolean); saveDB();}));
+  wrap.appendChild(textarea("Descripción", def.descripcion, v=>{def.descripcion=v; saveDB();}));
+  wrap.appendChild(textarea("Cómo colocarse / ejecutar (una línea por punto)", (def.ejecucion||[]).join("\n"), v=>{def.ejecucion=v.split("\n").map(s=>s.trim()).filter(Boolean); saveDB();}));
+  wrap.appendChild(textarea("Errores comunes (una línea por punto)", (def.errores||[]).join("\n"), v=>{def.errores=v.split("\n").map(s=>s.trim()).filter(Boolean); saveDB();}));
+  wrap.appendChild(textarea("Consejos (una línea por punto)", (def.consejos||[]).join("\n"), v=>{def.consejos=v.split("\n").map(s=>s.trim()).filter(Boolean); saveDB();}));
+  wrap.appendChild(textarea("Progresión (una línea por punto)", (def.progresion||[]).join("\n"), v=>{def.progresion=v.split("\n").map(s=>s.trim()).filter(Boolean); saveDB();}));
+  wrap.appendChild(textarea("Observaciones (una línea por punto)", (def.observaciones||[]).join("\n"), v=>{def.observaciones=v.split("\n").map(s=>s.trim()).filter(Boolean); saveDB();}));
+
+  const saveBtn = el("div","save-btn","Guardar y volver");
+  saveBtn.onclick = ()=>{ VIEW={screen:"editor"}; render(); };
+  wrap.appendChild(saveBtn);
+  return wrap;
+}
+
+/* ---------- CRONÓMETRO INTELIGENTE DE DESCANSO ---------- */
+let REST_TIMER = {active:false, endTime:null, duration:0, label:"", interval:null};
+
+function playBeep(){
+  try{
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    const ctx = new Ctx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.frequency.value = 880;
+    osc.connect(gain); gain.connect(ctx.destination);
+    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.35);
+    osc.onended = ()=> ctx.close();
+  }catch(e){ /* audio no disponible */ }
+}
+
+function startRestTimer(seconds, label){
+  REST_TIMER.active = true;
+  REST_TIMER.duration = seconds;
+  REST_TIMER.endTime = Date.now() + seconds*1000;
+  REST_TIMER.label = label || "Descanso";
+  if(REST_TIMER.interval) clearInterval(REST_TIMER.interval);
+  REST_TIMER.interval = setInterval(tickRestTimer, 250);
+  renderRestTimer();
+}
+function tickRestTimer(){
+  if(!REST_TIMER.active) return;
+  const remaining = Math.round((REST_TIMER.endTime - Date.now())/1000);
+  if(remaining<=0){
+    clearInterval(REST_TIMER.interval);
+    REST_TIMER.interval = null;
+    REST_TIMER.active = false;
+    playBeep();
+    if(navigator.vibrate) navigator.vibrate([300,100,300]);
+    toast("¡Descanso terminado!");
+    renderRestTimer();
+    return;
+  }
+  // Solo repintamos el número, no toda la barra: mucho más ligero cada 250 ms.
+  const timeEl = document.querySelector(".rest-bar-time");
+  if(timeEl){
+    const mm = String(Math.floor(remaining/60)).padStart(2,"0");
+    const ss = String(remaining%60).padStart(2,"0");
+    const txt = mm+":"+ss;
+    if(timeEl.textContent !== txt) timeEl.textContent = txt;
+  } else {
+    renderRestTimer();
+  }
+}
+function adjustRestTimer(deltaSeconds){
+  if(!REST_TIMER.active) return;
+  REST_TIMER.endTime += deltaSeconds*1000;
+  tickRestTimer();
+}
+function skipRestTimer(){
+  if(REST_TIMER.interval){ clearInterval(REST_TIMER.interval); REST_TIMER.interval = null; }
+  REST_TIMER.active = false;
+  renderRestTimer();
+}
+// Al volver a la pestaña/desbloquear, recalculamos desde el timestamp real (el intervalo
+// puede haberse pausado en segundo plano, pero el tiempo restante se autocorrige).
+document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) tickRestTimer(); });
+
+function renderRestTimer(){
+  const root = document.getElementById("rest-timer-root");
+  if(!root) return;
+  root.innerHTML = "";
+  document.body.classList.toggle("resting", REST_TIMER.active);
+  if(!REST_TIMER.active) return;
+  const remaining = Math.max(0, Math.round((REST_TIMER.endTime - Date.now())/1000));
+  const mm = String(Math.floor(remaining/60)).padStart(2,"0");
+  const ss = String(remaining%60).padStart(2,"0");
+  const bar = el("div","rest-bar");
+  const info = el("div");
+  info.appendChild(el("div","rest-bar-label", "⏳ "+REST_TIMER.label));
+  info.appendChild(el("div","rest-bar-time", mm+":"+ss));
+  bar.appendChild(info);
+  const btns = el("div","rest-bar-btns");
+  const minus = el("div","rest-bar-btn","-15s");
+  minus.onclick = ()=> adjustRestTimer(-15);
+  const plus = el("div","rest-bar-btn","+15s");
+  plus.onclick = ()=> adjustRestTimer(15);
+  const skip = el("div","rest-bar-btn","✕");
+  skip.onclick = ()=> skipRestTimer();
+  btns.appendChild(minus); btns.appendChild(plus); btns.appendChild(skip);
+  bar.appendChild(btns);
+  root.appendChild(bar);
+}
+
+function showNextExerciseModal(currentDef){
+  if(!ACTIVE_SESSION) return;
+  const routine = DB.routines[ACTIVE_SESSION.routineId];
+  const others = routine.ejercicios.filter(id=>id!==currentDef.id).map(id=>DB.exercises[id]).filter(Boolean);
+  const overlay = el("div","modal-overlay");
+  overlay.onclick = (e)=>{ if(e.target===overlay) closeModal(overlay); };
+  const box = el("div","modal-box");
+  box.appendChild(el("div","modal-title","¿Siguiente ejercicio?"));
+  box.appendChild(el("div","modal-msg","Elige el siguiente ejercicio y calculo el descanso adecuado."));
+  others.forEach(nextDef=>{
+    const row = el("div","modal-list-item", nextDef.nombre);
+    row.onclick = ()=>{
+      closeModal(overlay);
+      const nextCat = categoryOf(nextDef);
+      let secs;
+      if(nextCat==="POT" || nextCat==="FUE") secs = 120;
+      else if(["COR","EST","MOV"].includes(nextCat)) secs = 60;
+      else if(["HIP","COND"].includes(nextCat)) secs = (bodyPartOf(currentDef)===bodyPartOf(nextDef)) ? 120 : 90;
+      else secs = REST_DICT[nextCat] || 90;
+      startRestTimer(secs, "Antes de "+nextDef.nombre);
+      VIEW = {screen:"exercise", exId:nextDef.id};
+      render();
+    };
+    box.appendChild(row);
+  });
+  const btns = el("div","modal-btns");
+  const cancel = el("div","modal-btn modal-btn-cancel","Cerrar sin descanso");
+  cancel.onclick = ()=> closeModal(overlay);
+  btns.appendChild(cancel);
+  box.appendChild(btns);
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+}
+
+/* ---------- Init ---------- */
+async function init(){
+  document.getElementById("app").innerHTML = "<div style='padding:60px 20px;text-align:center;color:var(--muted);font-size:15px;'>Cargando Bulk Up…</div>";
+  try{
+    DB = await loadDB();
+    await saveNow(); // consolida la migración/reconciliación en disco de una vez
+  }catch(e){
+    console.error(e);
+    document.getElementById("app").innerHTML = "<div style='padding:60px 20px;text-align:center;color:var(--danger);font-size:15px;'>No se pudieron cargar los datos. Recarga la página.</div>";
+    return;
+  }
+  render();
+  if(!Storage.persistent){
+    toast("Aviso: este navegador no permite guardar datos");
+  }
+}
+init();
+
+/* ---------- PWA: registro del service worker y actualizaciones ---------- */
+if("serviceWorker" in navigator){
+  window.addEventListener("load", ()=>{
+    navigator.serviceWorker.register("sw.js").then(reg=>{
+      // Si hay una versión nueva esperando, avisamos en vez de aplicarla
+      // a mitad de un entrenamiento sin avisar.
+      function notifyUpdate(worker){
+        const bar = document.createElement("div");
+        bar.style.cssText = "position:fixed;left:12px;right:12px;bottom:16px;z-index:400;"+
+          "background:#1F3A5F;color:#fff;border-radius:12px;padding:13px 16px;display:flex;"+
+          "align-items:center;gap:12px;font-size:14px;box-shadow:0 6px 20px rgba(0,0,0,.25);";
+        bar.innerHTML = "<span style='flex:1'>Hay una versión nueva de Bulk Up</span>";
+        const btn = document.createElement("button");
+        btn.textContent = "Actualizar";
+        btn.style.cssText = "background:#fff;color:#1F3A5F;border-radius:9px;padding:8px 14px;font-weight:700;font-size:13.5px;";
+        btn.onclick = ()=>{ worker.postMessage("SKIP_WAITING"); bar.remove(); };
+        const later = document.createElement("button");
+        later.textContent = "Luego";
+        later.style.cssText = "color:#cbd5e1;font-size:13px;";
+        later.onclick = ()=> bar.remove();
+        bar.appendChild(btn); bar.appendChild(later);
+        document.body.appendChild(bar);
+      }
+      if(reg.waiting) notifyUpdate(reg.waiting);
+      reg.addEventListener("updatefound", ()=>{
+        const nw = reg.installing;
+        if(!nw) return;
+        nw.addEventListener("statechange", ()=>{
+          if(nw.state === "installed" && navigator.serviceWorker.controller) notifyUpdate(nw);
+        });
+      });
+      // Comprueba si hay actualizaciones cada vez que vuelves a la app.
+      document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) reg.update(); });
+    }).catch(err=> console.warn("SW no registrado:", err));
+
+    let refreshing = false;
+    navigator.serviceWorker.addEventListener("controllerchange", ()=>{
+      if(refreshing) return;
+      refreshing = true;
+      window.location.reload();
+    });
+  });
+}
+</script>
+</body>
+</html>
