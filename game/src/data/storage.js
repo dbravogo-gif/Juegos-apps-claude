@@ -66,12 +66,21 @@ export function migrar(db) {
     plan.comidasPorDia = base.plan.comidasPorDia;
   }
 
+  // Lo colocado se guardaba por número de casilla y ahora va por id de sitio. Los números
+  // sueltos ya no apuntan a nada, así que se devuelven al inventario en vez de desaparecer.
+  const colocados = Object.fromEntries(
+    Object.entries(db.colocados ?? {}).map(([espacio, puestos]) => [
+      espacio,
+      Object.fromEntries(Object.entries(puestos).filter(([sitio]) => Number.isNaN(Number(sitio)))),
+    ]),
+  );
+
   const rutinas = (db.rutinas ?? base.rutinas).map((rutina) => ({
     ...rutina,
     ejercicios: (rutina.ejercicios ?? []).map((e) => ({ series: 3, repMin: 8, repMax: 12, ...e })),
   }));
 
-  return { ...base, ...db, plan, rutinas, version: VERSION_ESQUEMA };
+  return { ...base, ...db, plan, rutinas, colocados, version: VERSION_ESQUEMA };
 }
 
 export function cargar() {

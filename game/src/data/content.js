@@ -123,12 +123,60 @@ export const MASCOTAS = [
   { id: 'cabra', nombre: 'Cabra terca', hito: { tipo: 'racha_entreno', valor: 30 }, pista: 'Un mes de racha de entreno' },
 ];
 
+/**
+ * Superficie sobre la que se apoya cada tipo de mueble. La cuadrícula anterior trataba a
+ * todos por igual, y por eso un tapiz podía acabar en el suelo y un banco en el aire.
+ */
+export const SUPERFICIE = {
+  pared: 'pared',
+  suelo: 'suelo',
+};
+export const superficieDe = (categoria) => SUPERFICIE[categoria] ?? 'mueble';
+
+/**
+ * Sitios de un espacio, descritos por filas de profundidad. Cada fila tiene su altura en la
+ * escena (`y`, donde se apoya la base del objeto) y su escala: lo que está más atrás se ve
+ * más pequeño, que es lo que faltaba para que la vista frontal no pareciera un collage.
+ *
+ * El orden de dibujo sale de la propia `y`, así que nunca hay que mantenerlo a mano.
+ */
+function filas(...definiciones) {
+  return definiciones.flatMap(({ superficie, y, escala, huecos }) =>
+    Array.from({ length: huecos }, (_, i) => ({
+      id: `${superficie[0]}${y}_${i}`,
+      superficie,
+      // Repartidos a lo ancho dejando aire en los bordes.
+      x: Math.round(((i + 1) / (huecos + 1)) * 100),
+      y,
+      escala,
+    })),
+  );
+}
+
+// Las filas van separadas lo suficiente para que las marcas de hueco vacío no se pisen: si
+// se solapan, el dedo acaba tocando la de delante y la de atrás queda inalcanzable.
+const INTERIOR = () =>
+  filas(
+    { superficie: 'pared', y: 38, escala: 0.8, huecos: 3 },
+    { superficie: 'mueble', y: 62, escala: 0.62, huecos: 4 },
+    { superficie: 'suelo', y: 78, escala: 0.85, huecos: 1 },
+    { superficie: 'mueble', y: 99, escala: 1, huecos: 3 },
+  );
+
+const EXTERIOR = () =>
+  filas(
+    { superficie: 'mueble', y: 54, escala: 0.55, huecos: 4 },
+    { superficie: 'mueble', y: 70, escala: 0.72, huecos: 3 },
+    { superficie: 'suelo', y: 84, escala: 0.9, huecos: 1 },
+    { superficie: 'mueble', y: 99, escala: 1.05, huecos: 3 },
+  );
+
 export const ESPACIOS = [
-  { id: 'patio', nombre: 'El patio', nivel: 1, casillas: 12 },
-  { id: 'habitacion', nombre: 'La habitación', nivel: 3, casillas: 12 },
-  { id: 'huerto', nombre: 'El huerto', nivel: 6, casillas: 16 },
-  { id: 'taller', nombre: 'El taller', nivel: 8, casillas: 16 },
-  { id: 'terraza', nombre: 'La terraza', nivel: 12, casillas: 20 },
+  { id: 'patio', nombre: 'El patio', nivel: 1, sitios: EXTERIOR() },
+  { id: 'habitacion', nombre: 'La habitación', nivel: 3, sitios: INTERIOR() },
+  { id: 'huerto', nombre: 'El huerto', nivel: 6, sitios: EXTERIOR() },
+  { id: 'taller', nombre: 'El taller', nivel: 8, sitios: INTERIOR() },
+  { id: 'terraza', nombre: 'La terraza', nivel: 12, sitios: EXTERIOR() },
 ];
 
 export const TIENDAS = [

@@ -311,3 +311,60 @@ test('un nivel de más se nota sin volver trivial el combate', () => {
   assert.ok(tasas[0] < tasas[1] && tasas[1] < tasas[2], `sin gradiente: ${tasas.join(', ')}`);
   assert.ok(tasas[1] > 0 && tasas[1] < 1, 'el nivel intermedio debería ser una pelea reñida');
 });
+
+// --- La parcela ---
+
+import { ESPACIOS, superficieDe } from '../src/data/content.js';
+
+test('todo lo que se vende cabe en algún sitio de algún espacio', () => {
+  const superficies = new Set(ESPACIOS.flatMap((e) => e.sitios.map((s) => s.superficie)));
+
+  MUEBLES.forEach((mueble) => {
+    assert.ok(
+      superficies.has(superficieDe(mueble.categoria)),
+      `${mueble.id} no se puede colocar en ninguna parte`,
+    );
+  });
+});
+
+test('cada espacio tiene sitios de pared, de suelo y de mueble donde toca', () => {
+  ESPACIOS.forEach((espacio) => {
+    const superficies = new Set(espacio.sitios.map((s) => s.superficie));
+    assert.ok(superficies.has('mueble'), `${espacio.id} no tiene dónde poner un mueble`);
+    assert.ok(superficies.has('suelo'), `${espacio.id} no tiene dónde poner una alfombra`);
+    assert.ok(espacio.sitios.length >= 8, `${espacio.id} se queda corto de sitios`);
+  });
+});
+
+test('las marcas de sitio libre no se pisan entre ellas', () => {
+  // Si dos huecos vacíos se solapan, el dedo toca el de delante y el de atrás queda
+  // inalcanzable. Las filas tienen que ir separadas lo suficiente en vertical.
+  const SEPARACION = 11; // puntos porcentuales; la marca mide unos 34 px sobre 300
+
+  ESPACIOS.forEach((espacio) => {
+    espacio.sitios.forEach((a) => {
+      espacio.sitios.forEach((b) => {
+        if (a === b || Math.abs(a.x - b.x) > 12) return;
+        assert.ok(
+          Math.abs(a.y - b.y) >= SEPARACION,
+          `${espacio.id}: ${a.id} y ${b.id} se solapan`,
+        );
+      });
+    });
+  });
+});
+
+test('los objetos se dibujan de atrás hacia delante', () => {
+  ESPACIOS.forEach((espacio) => {
+    const suelo = espacio.sitios.filter((s) => s.superficie !== 'pared');
+    const porAltura = [...suelo].sort((a, b) => a.y - b.y);
+
+    porAltura.forEach((sitio, i) => {
+      if (i === 0) return;
+      assert.ok(
+        sitio.escala >= porAltura[i - 1].escala,
+        `${espacio.id}: ${sitio.id} está más cerca pero se ve más pequeño`,
+      );
+    });
+  });
+});

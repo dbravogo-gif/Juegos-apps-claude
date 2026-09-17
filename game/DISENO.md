@@ -195,6 +195,25 @@ Sin este tope se vacía una zona entera en una tarde, que es exactamente lo que 
 El vigor se gasta **al entrar al combate**, no al ganarlo: si solo costara perder, reintentar
 hasta que la tirada saliera bien sería gratis. Vive en `dias[fecha].combates`.
 
+### La parcela
+
+La decoración no es una cuadrícula sino una **escena**. Cada espacio define sus sitios en
+cuatro franjas de profundidad; cada sitio tiene su punto del suelo (`x`, `y`) y su `escala`.
+El objeto se ancla por la **base**, no por el centro, y el orden de dibujo sale de la propia
+altura: lo que está más abajo está más cerca y tapa a lo de atrás.
+
+Con la cuadrícula todo medía igual y quedaba flotando; hacerlo cenital lo habría arreglado
+a costa de tirar el estilo frontal y toda la ilustración ya pedida. Esto conserva el dibujo
+frontal y resuelve las dos cosas que fallaban: cada objeto se apoya en un suelo de verdad y
+cambia de tamaño según lo lejos que esté.
+
+Cada sitio tiene además una **superficie** —pared, suelo o mueble— y solo acepta lo que le
+corresponde, que es lo que evita un tapiz tirado en el suelo o un banco colgado del techo.
+Sale de la `categoria` que el mueble ya tenía.
+
+Las marcas de sitio libre se dibujan por encima de lo colocado: si no, un mueble de primer
+plano dejaría sin tocar el hueco que tiene detrás.
+
 ### Ritmo de las zonas
 
 Cada zona cuesta un par de niveles al llegar: sus enemigos normales caen uno o dos niveles

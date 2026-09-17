@@ -55,7 +55,14 @@ CÓMO ORIENTAR CADA COSA
 - Enemigos y criaturas: de frente, mirando a cámara, cuerpo entero, apoyados sobre una línea
   de suelo imaginaria.
 - Muebles, decoración y plantas: de frente con esa ligera altura, apoyados, con la base
-  visible y horizontal.
+  visible y horizontal. La base tiene que tocar el borde inferior del encuadre, sin aire
+  debajo: el juego ancla cada objeto por ahí a un punto del suelo, y un margen inferior lo
+  deja flotando. El objeto se escala según lo lejos que esté, así que debe leerse bien
+  también a la mitad de tamaño: nada de detalles finos que se pierdan.
+- Alfombras y esteras: vistas desde más arriba que el resto, casi tumbadas, como una lámina
+  apoyada en el suelo. Van en su propio sitio de la escena y nunca llevan nada encima.
+- Cuadros, tapices, mosaicos e iconos de pared: de frente y planos, sin perspectiva, como si
+  los miraras de cara. Estos no se apoyan en el suelo; cuelgan.
 - Mascotas: de frente, cuerpo entero, en pose tranquila.
 - Armas: en diagonal a 45 grados, empuñadura abajo a la izquierda y punta arriba a la
   derecha, de perfil limpio, como icono de inventario.
@@ -87,6 +94,11 @@ Reglas:
   que la mitad inferior sea suelo.
 - La mitad inferior tiene que quedar DESPEJADA: ahí se colocan encima los personajes y los
   muebles. Nada de objetos importantes en primer plano.
+- En los fondos de espacio, además: el suelo tiene que ocupar de la mitad de la imagen hacia
+  abajo y verse continuo, sin escalones ni muebles pintados. Los objetos que el jugador
+  coloca se reparten en cuatro franjas de profundidad, así que ese suelo debe leerse como un
+  plano que se aleja. En los interiores, deja la pared del fondo libre en su tercio superior
+  para los tapices y los cuadros.
 - Sin personajes ni criaturas.
 - Profundidad suave: el fondo algo más desvaído y con menos contraste que el primer plano.
 

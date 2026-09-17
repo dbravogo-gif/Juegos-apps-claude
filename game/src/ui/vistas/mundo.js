@@ -1,6 +1,6 @@
 import { esc, plural } from '../util.js';
 import { figura } from '../sprite.js';
-import { MUEBLES, EQUIPO, MASCOTAS } from '../../data/content.js';
+import { MUEBLES, EQUIPO, MASCOTAS, superficieDe } from '../../data/content.js';
 import {
   espaciosAbiertos,
   tiendasAbiertas,
@@ -13,7 +13,13 @@ import { otorgarExtra, sumaExtras } from '../../core/economy/rewards.js';
 
 let pestana = 'parcela';
 let espacioActivo = null;
-let casillaSeleccionada = null;
+let sitioSeleccionado = null;
+
+const ETIQUETA_SUPERFICIE = {
+  pared: 'En la pared',
+  suelo: 'En el suelo',
+  mueble: 'Sobre el suelo',
+};
 
 const PESTANAS = [
   ['parcela', 'Parcela'],
@@ -42,54 +48,67 @@ function vistaParcela(ctx) {
   const espacios = espaciosAbiertos(nivel);
   const espacio = espacios.find((e) => e.id === espacioActivo) ?? espacios[0];
   const colocados = ctx.db.colocados?.[espacio.id] ?? {};
+  const sitio = espacio.sitios.find((s) => s.id === sitioSeleccionado) ?? null;
 
-  const casillas = Array.from({ length: espacio.casillas }, (_, i) => {
-    const id = colocados[i];
-    const mueble = id ? articuloPorId(id) : null;
-    const activa = casillaSeleccionada === i;
+  // Cada objeto se ancla por su base al suelo del sitio y se escala con la profundidad.
+  // El orden de dibujo sale de la altura: lo que está más abajo está más cerca y tapa.
+  const piezas = espacio.sitios
+    .map((s) => {
+      const id = colocados[s.id];
+      const mueble = id ? articuloPorId(id) : null;
+      const activo = sitioSeleccionado === s.id;
+      const estilo = `left:${s.x}%;top:${s.y}%;z-index:${Math.round(s.y)};--escala:${s.escala}`;
 
-    return `
-    <div class="casilla ${mueble ? 'ocupada' : ''}" style="${activa ? 'border-color:var(--acento)' : ''}"
-      data-accion="casilla" data-indice="${i}">
-      ${mueble ? figura('muebles', id, mueble.nombre, { clase: 'objeto' }) : '<span class="mini">+</span>'}
-    </div>`;
-  }).join('');
+      if (!mueble) {
+        return `<button class="hueco ${s.superficie} ${activo ? 'activo' : ''}" style="${estilo}"
+          data-accion="sitio" data-sitio="${esc(s.id)}" aria-label="Sitio libre"></button>`;
+      }
+
+      return `<button class="puesto ${activo ? 'activo' : ''}" style="${estilo}"
+        data-accion="sitio" data-sitio="${esc(s.id)}">
+        ${figura('muebles', id, mueble.nombre, { clase: 'objeto' })}
+      </button>`;
+    })
+    .join('');
 
   const enInventario = ctx.db.inventario.filter((id) => !ranuraDe(id));
   const yaPuestos = new Set(
     Object.values(ctx.db.colocados ?? {}).flatMap((espacioActual) => Object.values(espacioActual)),
   );
-  const disponibles = enInventario.filter((id) => !yaPuestos.has(id));
+  // Solo se ofrece lo que encaja en esa superficie: un tapiz no va al suelo ni un banco a la pared.
+  const disponibles = enInventario
+    .filter((id) => !yaPuestos.has(id))
+    .filter((id) => !sitio || superficieDe(articuloPorId(id).categoria) === sitio.superficie);
 
-  const seleccion =
-    casillaSeleccionada === null
-      ? ''
-      : colocados[casillaSeleccionada]
-        ? `<div class="tarjeta">
-             <div class="entre">
-               <b>${esc(articuloPorId(colocados[casillaSeleccionada]).nombre)}</b>
-               <button class="mini" data-accion="quitar" data-indice="${casillaSeleccionada}">Guardar</button>
-             </div>
-           </div>`
-        : `<div class="tarjeta">
-             <div class="mini" style="margin-bottom:10px">Elige qué poner aquí</div>
-             ${
-               disponibles.length
-                 ? `<div class="catalogo">
-                     ${disponibles
-                       .map((id) => {
-                         const mueble = articuloPorId(id);
-                         return `<div class="articulo">
-                           ${figura('muebles', id, mueble.nombre, { clase: 'objeto' })}
-                           <div class="nom">${esc(mueble.nombre)}</div>
-                           <button data-accion="colocar" data-articulo="${esc(id)}">Poner</button>
-                         </div>`;
-                       })
-                       .join('')}
-                   </div>`
-                 : '<div class="mini">No te queda nada por colocar. Pásate por la tienda.</div>'
-             }
-           </div>`;
+  const puesto = sitio ? colocados[sitio.id] : null;
+  const seleccion = !sitio
+    ? '<div class="mini" style="text-align:center">Toca un hueco para poner algo ahí.</div>'
+    : puesto
+      ? `<div class="tarjeta">
+           <div class="entre">
+             <b>${esc(articuloPorId(puesto).nombre)}</b>
+             <button class="mini" data-accion="quitar" data-sitio="${esc(sitio.id)}">Guardar</button>
+           </div>
+         </div>`
+      : `<div class="tarjeta">
+           <div class="mini" style="margin-bottom:10px">${ETIQUETA_SUPERFICIE[sitio.superficie]}</div>
+           ${
+             disponibles.length
+               ? `<div class="catalogo">
+                   ${disponibles
+                     .map((id) => {
+                       const mueble = articuloPorId(id);
+                       return `<div class="articulo">
+                         ${figura('muebles', id, mueble.nombre, { clase: 'objeto' })}
+                         <div class="nom">${esc(mueble.nombre)}</div>
+                         <button data-accion="colocar" data-articulo="${esc(id)}">Poner</button>
+                       </div>`;
+                     })
+                     .join('')}
+                 </div>`
+               : '<div class="mini">No te queda nada que encaje aquí. Pásate por la tienda.</div>'
+           }
+         </div>`;
 
   return `
   ${
@@ -105,7 +124,7 @@ function vistaParcela(ctx) {
       : ''
   }
   <div class="escenario" style="background-image:url('assets/espacios/${esc(espacio.id)}.png')">
-    <div class="rejilla-casillas">${casillas}</div>
+    ${piezas}
   </div>
   ${seleccion}`;
 }
@@ -232,31 +251,31 @@ function espacioActual(ctx) {
 export const acciones = {
   pestana: (el, ctx) => {
     pestana = el.dataset.pestana;
-    casillaSeleccionada = null;
+    sitioSeleccionado = null;
     ctx.refrescar();
   },
 
   espacio: (el, ctx) => {
     espacioActivo = el.dataset.espacio;
-    casillaSeleccionada = null;
+    sitioSeleccionado = null;
     ctx.refrescar();
   },
 
-  casilla: (el, ctx) => {
-    const indice = Number(el.dataset.indice);
-    casillaSeleccionada = casillaSeleccionada === indice ? null : indice;
+  sitio: (el, ctx) => {
+    const id = el.dataset.sitio;
+    sitioSeleccionado = sitioSeleccionado === id ? null : id;
     ctx.refrescar();
   },
 
   colocar: (el, ctx) => {
     const espacio = espacioActual(ctx);
-    const indice = casillaSeleccionada;
+    const sitio = sitioSeleccionado;
 
     ctx.actualizar((db) => {
       const actual = db.colocados[espacio.id] ?? {};
-      db.colocados = { ...db.colocados, [espacio.id]: { ...actual, [indice]: el.dataset.articulo } };
+      db.colocados = { ...db.colocados, [espacio.id]: { ...actual, [sitio]: el.dataset.articulo } };
     });
-    casillaSeleccionada = null;
+    sitioSeleccionado = null;
     ctx.refrescar();
   },
 
@@ -265,10 +284,10 @@ export const acciones = {
 
     ctx.actualizar((db) => {
       const actual = { ...(db.colocados[espacio.id] ?? {}) };
-      delete actual[el.dataset.indice];
+      delete actual[el.dataset.sitio];
       db.colocados = { ...db.colocados, [espacio.id]: actual };
     });
-    casillaSeleccionada = null;
+    sitioSeleccionado = null;
     ctx.refrescar();
   },
 
@@ -308,9 +327,9 @@ export const acciones = {
       }
 
       db.colocados = Object.fromEntries(
-        Object.entries(db.colocados).map(([espacio, casillas]) => [
+        Object.entries(db.colocados).map(([espacio, sitios]) => [
           espacio,
-          Object.fromEntries(Object.entries(casillas).filter(([, id]) => id !== venta.articulo.id)),
+          Object.fromEntries(Object.entries(sitios).filter(([, id]) => id !== venta.articulo.id)),
         ]),
       );
     });
