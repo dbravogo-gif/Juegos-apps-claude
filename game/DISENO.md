@@ -153,6 +153,20 @@ lo recorre.
 El combate por turnos usa un generador con semilla (`generador(n)`) para que las partidas
 sean reproducibles en los tests sin renunciar al azar en el juego real.
 
+### Ritmo de las zonas
+
+Cada zona cuesta un par de niveles al llegar: sus enemigos normales caen uno o dos niveles
+después de abrirla y el jefe tres o cuatro. Una zona que se pasa el día que se abre no
+aporta nada, y una que tarda cinco niveles es un muro.
+
+| Zona | Se abre | Normales | Jefe |
+| --- | --- | --- | --- |
+| Las Murallas | 1 | 2-3 | 4 |
+| El Puerto | 5 | 6 | 9 |
+| El Gran Bazar | 10 | 12 | 14 |
+
+`tools/simular-combate.js` mide esto de verdad peleando, y dos tests lo fijan.
+
 ## Imágenes
 
 `ASSETS.md` lista los archivos exactos, y se regenera con `node tools/assets.js`.

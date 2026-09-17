@@ -30,19 +30,19 @@ export const ZONAS = [
 
 /** `patron` decide el comportamiento en combate: ver `src/core/combat/battle.js`. */
 export const ENEMIGOS = {
-  rata_murallas: { nombre: 'Rata de las murallas', vida: 14, ataque: 4, defensa: 1, patron: 'agresivo' },
-  bandido_harapiento: { nombre: 'Bandido harapiento', vida: 17, ataque: 4, defensa: 1, patron: 'cauto' },
-  gargola_agrietada: { nombre: 'Gárgola agrietada', vida: 24, ataque: 4, defensa: 2, patron: 'defensivo' },
+  rata_murallas: { nombre: 'Rata de las murallas', vida: 20, ataque: 5, defensa: 1, patron: 'agresivo' },
+  bandido_harapiento: { nombre: 'Bandido harapiento', vida: 26, ataque: 5, defensa: 2, patron: 'cauto' },
+  gargola_agrietada: { nombre: 'Gárgola agrietada', vida: 32, ataque: 5, defensa: 3, patron: 'defensivo' },
   guardian_puerta: { nombre: 'Guardián de la Puerta Dorada', vida: 60, ataque: 10, defensa: 4, patron: 'jefe', jefe: true },
 
-  cangrejo_coloso: { nombre: 'Cangrejo coloso', vida: 50, ataque: 11, defensa: 5, patron: 'defensivo' },
-  marinero_espectral: { nombre: 'Marinero espectral', vida: 45, ataque: 15, defensa: 3, patron: 'agresivo' },
-  anguila_abisal: { nombre: 'Anguila abisal', vida: 48, ataque: 13, defensa: 5, patron: 'cauto' },
-  bestia_cuerno: { nombre: 'Bestia del Cuerno de Oro', vida: 95, ataque: 18, defensa: 8, patron: 'jefe', jefe: true },
+  cangrejo_coloso: { nombre: 'Cangrejo coloso', vida: 75, ataque: 16, defensa: 8, patron: 'defensivo' },
+  marinero_espectral: { nombre: 'Marinero espectral', vida: 65, ataque: 20, defensa: 4, patron: 'agresivo' },
+  anguila_abisal: { nombre: 'Anguila abisal', vida: 70, ataque: 18, defensa: 6, patron: 'cauto' },
+  bestia_cuerno: { nombre: 'Bestia del Cuerno de Oro', vida: 120, ataque: 22, defensa: 9, patron: 'jefe', jefe: true },
 
-  ladron_bazar: { nombre: 'Ladrón del bazar', vida: 110, ataque: 32, defensa: 14, patron: 'agresivo' },
-  automata_especias: { nombre: 'Autómata de especias', vida: 125, ataque: 26, defensa: 18, patron: 'defensivo' },
-  serpiente_seda: { nombre: 'Serpiente de seda', vida: 115, ataque: 34, defensa: 12, patron: 'cauto' },
+  ladron_bazar: { nombre: 'Ladrón del bazar', vida: 135, ataque: 35, defensa: 14, patron: 'agresivo' },
+  automata_especias: { nombre: 'Autómata de especias', vida: 165, ataque: 30, defensa: 18, patron: 'defensivo' },
+  serpiente_seda: { nombre: 'Serpiente de seda', vida: 140, ataque: 38, defensa: 13, patron: 'cauto' },
   el_coleccionista: { nombre: 'El Coleccionista', vida: 200, ataque: 38, defensa: 20, patron: 'jefe', jefe: true },
 };
 

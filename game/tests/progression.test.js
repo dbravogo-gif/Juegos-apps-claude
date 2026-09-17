@@ -220,25 +220,30 @@ function tasaDeVictoria(nivel, enemigoId, intentos = 30) {
   return ganadas / intentos;
 }
 
-test('los enemigos normales se pueden ganar nada más abrir su zona', () => {
+/** Primer nivel en el que el combate se gana con holgura, con el equipo de ese momento. */
+function nivelDeCaida(enemigoId) {
+  for (let nivel = 1; nivel <= 25; nivel += 1) {
+    if (tasaDeVictoria(nivel, enemigoId) >= 0.85) return nivel;
+  }
+  return Infinity;
+}
+
+test('cada zona cuesta un par de niveles al llegar, y no más', () => {
   ZONAS.forEach((zona) => {
     zona.enemigos.forEach((id) => {
-      const tasa = tasaDeVictoria(zona.nivel, id);
-      assert.ok(tasa > 0.8, `${id} solo se gana el ${Math.round(tasa * 100)} % en ${zona.nombre}`);
+      const cae = nivelDeCaida(id) - zona.nivel;
+      assert.ok(cae >= 1, `${id} ya se gana al abrir ${zona.nombre}: la zona no ofrece reto`);
+      assert.ok(cae <= 3, `${id} tarda ${cae} niveles en caer: demasiado muro`);
     });
   });
 });
 
-test('los jefes no caen el mismo día que se abre la zona', () => {
+test('los jefes cuestan más que los enemigos de su zona, pero acaban cayendo', () => {
   ZONAS.forEach((zona) => {
-    const tasa = tasaDeVictoria(zona.nivel, zona.jefe);
-    assert.ok(tasa < 0.5, `${zona.jefe} se gana demasiado pronto: ${Math.round(tasa * 100)} %`);
-  });
-});
+    const jefe = nivelDeCaida(zona.jefe);
+    const ultimoNormal = Math.max(...zona.enemigos.map(nivelDeCaida));
 
-test('pero todos los jefes acaban siendo alcanzables', () => {
-  ZONAS.forEach((zona) => {
-    const tasa = tasaDeVictoria(zona.nivel + 5, zona.jefe);
-    assert.ok(tasa > 0.7, `${zona.jefe} sigue imposible cinco niveles después: ${Math.round(tasa * 100)} %`);
+    assert.ok(jefe > ultimoNormal, `${zona.jefe} no cuesta más que los normales de su zona`);
+    assert.ok(jefe - zona.nivel <= 6, `${zona.jefe} tarda ${jefe - zona.nivel} niveles en caer`);
   });
 });
