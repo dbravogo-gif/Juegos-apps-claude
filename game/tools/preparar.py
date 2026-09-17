@@ -20,7 +20,7 @@ no caber.
 import argparse
 import sys
 
-from PIL import Image
+from PIL import Image, ImageDraw
 
 # En pantalla la figura no pasa de unos 180 píxeles de alto; incluso en pantallas de alta
 # densidad esto va sobrado, y cada píxel de más es peso que la app tiene que guardar.
@@ -45,6 +45,32 @@ def quitar_verde(imagen):
             elif g > max(r, b):
                 # Borde contaminado: baja el verde al nivel del canal vecino más alto.
                 pixeles[x, y] = (r, max(r, b), b, 255)
+
+    return imagen
+
+
+def quitar_damero(imagen):
+    """Borra el tablero de cuadros gris claro que algunos visores pintan como si fuera
+    transparencia. Se rellena desde los bordes, no por color: así los blancos del interior
+    de la figura (una túnica, un escudo claro) se conservan aunque sean casi del mismo tono.
+    """
+    imagen = imagen.convert('RGB')
+    marca = (255, 0, 255)
+    ancho, alto = imagen.size
+
+    for punto in [(0, 0), (ancho - 1, 0), (0, alto - 1), (ancho - 1, alto - 1)]:
+        ImageDraw.floodfill(imagen, punto, marca, thresh=60)
+
+    imagen = imagen.convert('RGBA')
+    pixeles = imagen.load()
+    for y in range(alto):
+        for x in range(ancho):
+            r, g, b, _ = pixeles[x, y]
+            gris_neutro = max(r, g, b) - min(r, g, b) <= 5 and min(r, g, b) >= 228
+            # Además del relleno, caen las líneas de separación de los cuadros: gris neutro
+            # y muy claro. Los blancos de la figura tiran a crema y no son neutros.
+            if (r, g, b) == marca or gris_neutro:
+                pixeles[x, y] = (0, 0, 0, 0)
 
     return imagen
 
@@ -114,7 +140,11 @@ def limpiar_restos(trozo):
     mayor = max(len(isla) for isla, _ in islas)
     pixeles = trozo.load()
     for isla, toca_lado in islas:
-        if toca_lado and len(isla) < mayor * 0.5:
+        # Se va lo que el corte arrastra de la pose vecina, y también las motas sueltas que
+        # deja el recorte del fondo: si no, inflan el recuadro y descuadran la alineación.
+        resto_del_vecino = toca_lado and len(isla) < mayor * 0.5
+        mota = len(isla) < mayor * 0.004
+        if resto_del_vecino or mota:
             for x, y in isla:
                 pixeles[x, y] = (0, 0, 0, 0)
 
@@ -178,6 +208,7 @@ def main():
     parser.add_argument('salida')
     parser.add_argument('--poses', type=int, default=3)
     parser.add_argument('--sin-croma', action='store_true', help='la imagen ya tiene alfa')
+    parser.add_argument('--damero', action='store_true', help='el fondo es el tablero de cuadros')
     parser.add_argument('--fondo', action='store_true', help='escenario: ni recorte ni alfa')
     args = parser.parse_args()
 
@@ -186,7 +217,12 @@ def main():
         return 0
 
     imagen = Image.open(args.entrada)
-    imagen = imagen.convert('RGBA') if args.sin_croma else quitar_verde(imagen)
+    if args.damero:
+        imagen = quitar_damero(imagen)
+    elif args.sin_croma:
+        imagen = imagen.convert('RGBA')
+    else:
+        imagen = quitar_verde(imagen)
 
     grupos = separar_figuras(imagen, args.poses)
     figuras = [recortar(imagen, desde, hasta) for desde, hasta in grupos]
