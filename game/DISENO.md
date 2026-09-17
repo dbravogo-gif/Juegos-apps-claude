@@ -126,11 +126,38 @@ El irregular progresa a la mitad de velocidad y pierde el multiplicador entero, 
 avanzando. La distancia se nota más en monedas que en nivel, porque la curva de niveles
 comprime las diferencias de XP a medida que sube.
 
+## Progresión y contenido
+
+El nivel abre la **categoría**; las monedas compran las **piezas**. Subir de nivel sin
+monedas te deja sitios vacíos que llenar, y ahorrar sin subir de nivel no adelanta el
+contenido: las dos vías avanzan de verdad y ninguna anula a la otra.
+
+Del nivel 1 al 10 cae algo casi cada nivel, que es donde se juega la retención; a partir
+del 12 se espacia. Todo el calendario vive en `src/data/content.js` y `calendarioDesbloqueos()`
+lo recorre.
+
+- **Personaje**: cambia de aspecto en los niveles 1, 5, 10 y 15. Va con el nivel, que sale de
+  la constancia, y **nunca con el peso levantado**: atar la imagen del cuerpo al rendimiento
+  castigaría a quien se estanca o se lesiona, justo lo contrario de lo que persigue la app.
+- **Equipo**: suma estadísticas pero no se ve encima del personaje. Si se viera, cada
+  combinación de arma y armadura necesitaría su propia ilustración.
+- **Mascotas**: solo por hito (rachas largas, jefes). No se compran, así que acumular monedas
+  no las acerca.
+- **Combates y trabajos**: pagan a través del presupuesto diario de extras, con su tope del
+  30 % y su exigencia de día cumplido. Ganar peleas nunca sustituye a entrenar.
+
+El combate por turnos usa un generador con semilla (`generador(n)`) para que las partidas
+sean reproducibles en los tests sin renunciar al azar en el juego real.
+
+## Imágenes
+
+`ASSETS.md` lista los archivos exactos, y se regenera con `node tools/assets.js`. Mientras
+un archivo no existe se ve un marcador de color; al añadirlo con su nombre aparece solo.
+
 ## Pendiente de decidir
 
-- Dónde caen exactamente los desbloqueos de RPG y construcción por nivel.
-- Exenciones de entreno (6 al año × 3 días): falta la capa que las administra.
 - Índice de rendimiento (progresión personal), separado de la XP de constancia.
+- Qué ocurre al llegar al final del contenido (nivel 20 en adelante).
 
 ## La app
 
