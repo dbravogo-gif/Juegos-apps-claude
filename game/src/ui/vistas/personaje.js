@@ -126,11 +126,16 @@ function pantallaCombate(ctx) {
   return `
   <div class="combate">
     <div class="escena" style="${zona ? `background-image:url('assets/zonas/${esc(zona.id)}.png')` : ''}">
+      <div class="placa placa-rival">
+        <b>${esc(enemigo.nombre)}</b>
+        ${barra(enemigo.vida, enemigo.vidaMax, 'enemiga')}
+      </div>
+      <div class="placa placa-heroe">
+        <b>Tú · ${jugador.energia}⚡</b>
+        ${barra(jugador.vida, jugador.vidaMax)}
+      </div>
+
       <div class="combatiente rival">
-        <div class="placa">
-          <b>${esc(enemigo.nombre)}</b>
-          ${barra(enemigo.vida, enemigo.vidaMax, 'enemiga')}
-        </div>
         ${
           estado === 'victoria'
             ? ''
@@ -142,13 +147,7 @@ function pantallaCombate(ctx) {
         }
       </div>
 
-      <div class="combatiente heroe">
-        ${figuraHeroe(ctx)}
-        <div class="placa">
-          <b>Tú · ${jugador.energia}⚡</b>
-          ${barra(jugador.vida, jugador.vidaMax)}
-        </div>
-      </div>
+      <div class="combatiente heroe">${figuraHeroe(ctx)}</div>
     </div>
 
     <div class="diario">${registro.map((l) => `<div>${esc(l)}</div>`).join('')}</div>
