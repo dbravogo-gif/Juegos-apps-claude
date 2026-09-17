@@ -6,6 +6,7 @@ el hueco de al lado, y recortar en tres partes iguales parte las figuras. Esto d
 pose por separado, la recorta por su silueta y la recompone en una hoja de tercios exactos
 con todas apoyadas en la misma línea de suelo.
 
+    python3 tools/preparar.py --auto                                        # todo lo pendiente
     python3 tools/preparar.py entrada.jpg assets/enemigos/id.png            # hoja de 3 poses
     python3 tools/preparar.py entrada.jpg assets/muebles/id.png --poses 1   # objeto suelto
     python3 tools/preparar.py entrada.jpg assets/zonas/id.png --fondo       # escenario
@@ -19,6 +20,7 @@ no caber.
 
 import argparse
 import sys
+from pathlib import Path
 
 from PIL import Image, ImageDraw
 
@@ -223,16 +225,93 @@ def preparar_fondo(entrada, salida):
     print(f'{salida}: fondo {ANCHO_FONDO}×{alto}')
 
 
+# Qué hacer con cada carpeta de `assets/originales/`. El nombre del archivo es el id de
+# destino; varios ids separados por `+` cuando la imagen trae varias piezas juntas.
+MODO_POR_CARPETA = {
+    'personaje': 'hoja',
+    'enemigos': 'hoja',
+    'zonas': 'fondo',
+    'espacios': 'fondo',
+    'muebles': 'objetos',
+    'equipo': 'objetos',
+    'mascotas': 'objetos',
+}
+
+ORIGINALES = Path('assets/originales')
+
+
+def detectar_fondo(entrada):
+    """Verde de croma, tablero de cuadros o transparencia de verdad."""
+    imagen = Image.open(entrada)
+    if imagen.mode in ('RGBA', 'LA') and imagen.convert('RGBA').getchannel('A').getextrema()[0] < 250:
+        return 'alfa'
+
+    muestra = imagen.convert('RGB')
+    r, g, b = muestra.getpixel((2, 2))
+    if g > 90 and g - max(r, b) > 25:
+        return 'verde'
+    return 'damero'
+
+
+def procesar_pendientes():
+    """Convierte todo lo que haya en `assets/originales/` y lo deja en su sitio."""
+    if not ORIGINALES.is_dir():
+        print(f'No existe {ORIGINALES}. Crea la carpeta y mete ahí las imágenes sin procesar.')
+        return 1
+
+    hechos = 0
+    for entrada in sorted(ORIGINALES.rglob('*')):
+        if entrada.is_dir() or entrada.suffix.lower() not in ('.png', '.jpg', '.jpeg'):
+            continue
+
+        carpeta = entrada.parent.name
+        modo = MODO_POR_CARPETA.get(carpeta)
+        if not modo:
+            print(f'{entrada}: no sé qué hacer con la carpeta "{carpeta}"')
+            continue
+
+        ids = entrada.stem.split('+')
+        destinos = [f'assets/{carpeta}/{id_}.png' for id_ in ids]
+        Path(f'assets/{carpeta}').mkdir(parents=True, exist_ok=True)
+        fondo = detectar_fondo(entrada)
+
+        if modo == 'fondo':
+            preparar_fondo(entrada, destinos[0])
+        elif modo == 'objetos':
+            preparar_objetos(entrada, destinos, fondo == 'verde')
+        else:
+            imagen = Image.open(entrada)
+            if fondo == 'verde':
+                imagen = quitar_verde(imagen)
+            elif fondo == 'damero':
+                imagen = quitar_damero(imagen)
+            else:
+                imagen = imagen.convert('RGBA')
+
+            figuras = [recortar(imagen, a, b) for a, b in separar_figuras(imagen, 3)]
+            guardar(componer(figuras), destinos[0], 128)
+            print(f'{destinos[0]}: 3 poses (fondo {fondo})')
+
+        hechos += 1
+
+    print(f'\n{hechos} imágenes procesadas.' if hechos else '\nNada pendiente.')
+    return 0
+
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('entrada')
-    parser.add_argument('salida', nargs='+', help='una ruta, o varias con --objetos')
+    parser.add_argument('entrada', nargs='?')
+    parser.add_argument('salida', nargs='*', help='una ruta, o varias con --objetos')
     parser.add_argument('--poses', type=int, default=3)
     parser.add_argument('--sin-croma', action='store_true', help='la imagen ya tiene alfa')
     parser.add_argument('--damero', action='store_true', help='el fondo es el tablero de cuadros')
     parser.add_argument('--fondo', action='store_true', help='escenario: ni recorte ni alfa')
     parser.add_argument('--objetos', action='store_true', help='varios objetos sueltos en una imagen')
+    parser.add_argument('--auto', action='store_true', help='procesa assets/originales/ entera')
     args = parser.parse_args()
+
+    if args.auto:
+        return procesar_pendientes()
 
     if args.fondo:
         preparar_fondo(args.entrada, args.salida[0])
