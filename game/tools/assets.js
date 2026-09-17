@@ -7,8 +7,18 @@ import {
   MUEBLES,
   EQUIPO,
   MASCOTAS,
+  ESPACIOS,
   ETAPAS_PERSONAJE,
 } from '../src/data/content.js';
+
+// Cada etapa del personaje necesita cuatro archivos: la ficha, la hoja de combate y los
+// dos remates. Victoria y derrota van de frente aunque en combate se vea de espaldas.
+const ARCHIVOS_PERSONAJE = [
+  ['', 'De frente, para la ficha', '1 pose'],
+  ['_combate', 'De espaldas en diagonal', '3 poses: quieto, atacando, recibiendo daño'],
+  ['_victoria', 'Celebrando, de frente', '1 pose'],
+  ['_derrota', 'Arrodillado, de frente', '1 pose'],
+];
 
 const linea = (carpeta, id, nombre, nota = '') =>
   `| \`assets/${carpeta}/${id}.png\` | ${nombre} |${nota ? ` ${nota} |` : ' |'}`;
@@ -29,17 +39,22 @@ nombre exacto, aparece sola sin tocar código.
 - **PNG con fondo transparente**, salvo los fondos de zona.
 - **Perspectiva frontal con algo de altura**, nunca a ras de suelo. La misma en todo.
 - Iconos (muebles, equipo, mascotas): **512 × 512**, el objeto centrado y con aire alrededor.
-- Personajes y enemigos: **hoja con tres poses en fila** (en guardia, atacando, recibiendo
-  daño) sobre fondo plano. Salen de una sola generación para que sean el mismo personaje;
-  las recorto yo.
-- Fondos de zona: **1536 × 1024**, sin personajes.
+- Hojas de tres poses: las tres en fila, misma generación, para que sean el mismo personaje.
+  Las recorto yo por código.
+- **En combate el héroe se ve de espaldas** (abajo a la izquierda) y el enemigo **de frente**
+  (arriba a la derecha), como en un combate de Pokémon. Por eso el héroe necesita la hoja de
+  espaldas además de la de frente para su ficha.
+- Fondos: **1536 × 1024**, sin personajes.
 
 Empieza por el personaje de la etapa 1: fija el estilo del resto.
 
 ## Personaje
 
-${tabla('Cuándo aparece', ETAPAS_PERSONAJE.map((e) =>
-  linea('personaje', e.id, `Etapa ${e.id.slice(-1)}`, `Nivel ${e.nivel}`)))}
+Empieza por las cuatro de la etapa 1: con eso el combate ya se ve entero.
+
+${tabla('Poses', ETAPAS_PERSONAJE.flatMap((e) =>
+  ARCHIVOS_PERSONAJE.map(([sufijo, que, poses]) =>
+    linea('personaje', `${e.id}${sufijo}`, `${que} (nivel ${e.nivel})`, poses))))}
 
 ## Enemigos
 
@@ -47,9 +62,19 @@ ${tabla('Zona', ZONAS.flatMap((zona) =>
   [...zona.enemigos, zona.jefe].map((id) =>
     linea('enemigos', id, ENEMIGOS[id].nombre + (ENEMIGOS[id].jefe ? ' (jefe)' : ''), zona.nombre))))}
 
-## Fondos de zona
+## Fondos de zona (combate)
+
+Apaisados y sin transparencia. El héroe se dibuja abajo a la izquierda y el enemigo arriba
+a la derecha, así que la mitad inferior debe quedar despejada.
 
 ${tabla('Descripción', ZONAS.map((z) => linea('zonas', z.id, z.nombre, z.descripcion)))}
+
+## Fondos de los espacios (construcción)
+
+Apaisados y sin transparencia. Son el telón de fondo sobre el que se colocan los muebles,
+así que necesitan mucho suelo libre y ningún mueble ya dibujado.
+
+${tabla('Se abre en', ESPACIOS.map((e) => linea('espacios', e.id, e.nombre, `Nivel ${e.nivel}`)))}
 
 ## Muebles y decoración
 
@@ -67,9 +92,10 @@ ${tabla('Cómo se gana', MASCOTAS.map((m) => linea('mascotas', m.id, m.nombre, m
 
 | Categoría | Imágenes |
 | --- | --- |
-| Personaje (hojas de 3 poses) | ${ETAPAS_PERSONAJE.length} |
+| Personaje (4 archivos por etapa) | ${ETAPAS_PERSONAJE.length * ARCHIVOS_PERSONAJE.length} |
 | Enemigos (hojas de 3 poses) | ${ZONAS.reduce((t, z) => t + z.enemigos.length + 1, 0)} |
 | Fondos de zona | ${ZONAS.length} |
+| Fondos de espacios | ${ESPACIOS.length} |
 | Muebles | ${MUEBLES.length} |
 | Equipo | ${EQUIPO.length} |
 | Mascotas | ${MASCOTAS.length} |

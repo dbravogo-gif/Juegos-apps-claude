@@ -74,3 +74,8 @@ export function mascotasGanadas({ rachaEntreno = 0, rachaComida = 0, jefesDerrot
 
   return MASCOTAS.filter((m) => alcanzado[m.hito.tipo] >= m.hito.valor);
 }
+
+/** Zona a la que pertenece un enemigo, para saber qué fondo pintar tras él. */
+export function zonaDeEnemigo(enemigoId) {
+  return ZONAS.find((z) => z.enemigos.includes(enemigoId) || z.jefe === enemigoId) ?? null;
+}

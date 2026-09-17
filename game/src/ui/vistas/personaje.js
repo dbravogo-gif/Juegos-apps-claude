@@ -1,5 +1,5 @@
 import { esc } from '../util.js';
-import { sprite } from '../sprite.js';
+import { sprite, figura } from '../sprite.js';
 import { ENEMIGOS } from '../../data/content.js';
 import { statsPersonaje } from '../../core/progression/character.js';
 import {
@@ -7,6 +7,7 @@ import {
   habilidadesAbiertas,
   etapaPersonaje,
   proximoDesbloqueo,
+  zonaDeEnemigo,
 } from '../../core/progression/unlocks.js';
 import { iniciarCombate, turno, recompensaEnemigo } from '../../core/combat/battle.js';
 import { otorgarExtra, sumaExtras } from '../../core/economy/rewards.js';
@@ -14,6 +15,52 @@ import { articuloPorId, ranuraDe } from '../../core/economy/shop.js';
 
 /** Un combate a medias no se guarda: si cierras la app, se pierde. */
 let combate = null;
+
+// Estado de la animación. Vive aparte del combate porque es solo representación: el
+// resultado del turno ya está calculado antes de que se mueva nada.
+let escena = { heroe: 0, rival: 0, golpeado: null };
+let temporizadores = [];
+
+const POSES = { quieto: 0, atacando: 1, dolor: 2 };
+
+function pararAnimacion() {
+  temporizadores.forEach(clearTimeout);
+  temporizadores = [];
+  escena = { heroe: POSES.quieto, rival: POSES.quieto, golpeado: null };
+}
+
+/**
+ * Encadena el vaivén del turno: primero pega quien ha actuado, después responde el otro.
+ * Los tiempos son de puro ritmo visual, el daño ya está aplicado.
+ */
+function animarTurno(ctx, antes, despues) {
+  pararAnimacion();
+
+  const rivalHerido = despues.enemigo.vida < antes.enemigo.vida;
+  const heroeHerido = despues.jugador.vida < antes.jugador.vida;
+
+  escena = { heroe: POSES.atacando, rival: rivalHerido ? POSES.dolor : POSES.quieto, golpeado: rivalHerido ? 'rival' : null };
+
+  const paso = (retraso, siguiente) => {
+    temporizadores.push(
+      setTimeout(() => {
+        escena = siguiente;
+        ctx.refrescar();
+      }, retraso),
+    );
+  };
+
+  if (despues.estado === 'en_curso') {
+    paso(420, {
+      heroe: heroeHerido ? POSES.dolor : POSES.quieto,
+      rival: POSES.atacando,
+      golpeado: heroeHerido ? 'heroe' : null,
+    });
+    paso(900, { heroe: POSES.quieto, rival: POSES.quieto, golpeado: null });
+  } else {
+    paso(500, { heroe: POSES.quieto, rival: POSES.quieto, golpeado: null });
+  }
+}
 
 const RANURAS = [
   ['arma', 'Arma'],
@@ -39,9 +86,22 @@ function quedaPresupuesto(ctx) {
   return presupuesto.desbloqueado && (gastado.xp < presupuesto.xp || gastado.monedas < presupuesto.monedas);
 }
 
+function figuraHeroe(ctx) {
+  const etapa = etapaPersonaje(ctx.estado.nivel.nivel).id;
+  const golpeado = escena.golpeado === 'heroe' ? 'golpeado' : '';
+
+  // Al acabar el combate el personaje se gira hacia cámara: la cara es lo que cuenta en
+  // el momento de ganar o perder.
+  if (combate.estado === 'victoria') return figura('personaje', `${etapa}_victoria`, 'Tú', { clase: golpeado });
+  if (combate.estado === 'derrota') return figura('personaje', `${etapa}_derrota`, 'Tú', { clase: golpeado });
+
+  return figura('personaje', `${etapa}_combate`, 'Tú', { pose: escena.heroe, poses: 3, clase: golpeado });
+}
+
 function pantallaCombate(ctx) {
   const { jugador, enemigo, registro, estado } = combate;
   const habilidades = habilidadesAbiertas(ctx.estado.nivel.nivel);
+  const zona = zonaDeEnemigo(combate.enemigoId);
 
   const acciones =
     estado === 'en_curso'
@@ -60,29 +120,33 @@ function pantallaCombate(ctx) {
 
   return `
   <div class="combate">
-    <div class="tarjeta">
-      <div class="luchador">
-        ${sprite('enemigos', combate.enemigoId, enemigo.nombre)}
-        <div>
+    <div class="escena" style="${zona ? `background-image:url('assets/zonas/${esc(zona.id)}.png')` : ''}">
+      <div class="combatiente rival">
+        <div class="placa">
           <b>${esc(enemigo.nombre)}</b>
           ${barra(enemigo.vida, enemigo.vidaMax, 'enemiga')}
-          <div class="mini">${enemigo.vida} / ${enemigo.vidaMax}</div>
+        </div>
+        ${
+          estado === 'victoria'
+            ? ''
+            : figura('enemigos', combate.enemigoId, enemigo.nombre, {
+                pose: escena.rival,
+                poses: 3,
+                clase: escena.golpeado === 'rival' ? 'golpeado' : '',
+              })
+        }
+      </div>
+
+      <div class="combatiente heroe">
+        ${figuraHeroe(ctx)}
+        <div class="placa">
+          <b>Tú · ${jugador.energia}⚡</b>
+          ${barra(jugador.vida, jugador.vidaMax)}
         </div>
       </div>
     </div>
 
     <div class="diario">${registro.map((l) => `<div>${esc(l)}</div>`).join('')}</div>
-
-    <div class="tarjeta">
-      <div class="luchador">
-        ${sprite('personaje', etapaPersonaje(ctx.estado.nivel.nivel).id, 'Tú')}
-        <div>
-          <b>Tú</b>
-          ${barra(jugador.vida, jugador.vidaMax)}
-          <div class="mini">${jugador.vida} / ${jugador.vidaMax} · ${jugador.energia}⚡</div>
-        </div>
-      </div>
-    </div>
 
     ${estado === 'victoria' ? '<div class="aviso">¡Victoria!</div>' : ''}
     ${estado === 'derrota' ? '<div class="aviso ojo">Esta vez no ha podido ser. Vuelve a intentarlo.</div>' : ''}
@@ -208,13 +272,16 @@ export function render(ctx) {
 
 export const acciones = {
   luchar: (el, ctx) => {
+    pararAnimacion();
     combate = iniciarCombate(statsPersonaje(ctx.estado.nivel.nivel, ctx.db.equipado), el.dataset.enemigo);
     ctx.refrescar();
   },
 
   golpe: (el, ctx) => {
     const { tipo, habilidad } = el.dataset;
+    const antes = combate;
     combate = turno(combate, { tipo, habilidad });
+    animarTurno(ctx, antes, combate);
 
     if (combate.estado !== 'victoria') {
       ctx.refrescar();
@@ -242,6 +309,7 @@ export const acciones = {
   },
 
   salirCombate: (_, ctx) => {
+    pararAnimacion();
     combate = null;
     ctx.refrescar();
   },

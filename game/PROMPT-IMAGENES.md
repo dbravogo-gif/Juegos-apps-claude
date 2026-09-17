@@ -42,7 +42,7 @@ Azules y morados solo como toques puntuales. Evita colores fríos saturados, neo
 cualquier cosa que desentone con una paleta cálida y natural.
 
 REGLAS TÉCNICAS (siempre)
-- Fondo completamente transparente (PNG con canal alfa), EXCEPTO los fondos de zona.
+- Fondo completamente transparente (PNG con canal alfa), EXCEPTO los fondos de escenario.
   Si no puedes generar transparencia real, usa un fondo de color plano y uniforme de un
   verde puro (#00FF00) que no aparezca en la imagen, para poder recortarlo después.
 - Sin sombra proyectada en el suelo, sin plataforma, sin peana, sin base.
@@ -69,10 +69,29 @@ CÓMO ORIENTAR CADA COSA
   invisible. Sin torsión ni perspectiva.
 - Accesorios (amuletos, anillos, reliquias): de frente y rectos, centrados, presentados como
   una pieza de joyería sobre fondo vacío.
-- Personajes y enemigos: de frente, mirando a cámara, cuerpo entero, con los pies apoyados
-  en una línea de suelo imaginaria.
+- Enemigos: de frente, mirando a cámara, cuerpo entero, con los pies apoyados en una línea
+  de suelo imaginaria.
+- Personaje jugable: depende de para qué sea la imagen, y te lo diré cada vez. Ver abajo.
 
-FONDOS DE ZONA (única excepción al fondo transparente)
+EL PERSONAJE JUGABLE Y EL COMBATE
+El combate se ve como en Pokémon: tu personaje abajo a la izquierda visto POR DETRÁS, y el
+enemigo arriba a la derecha visto de frente, los dos mirándose. Por eso el personaje
+necesita varias versiones y te pediré cada una por separado:
+- Para su ficha: de frente, mirando a cámara, quieto.
+- Para el combate: de espaldas, en tres cuartos desde atrás, girado hacia arriba a la
+  derecha (hacia donde estaría el enemigo). Se le ve la espalda y algo del perfil.
+- Al ganar y al perder: OTRA VEZ DE FRENTE, en tres cuartos frontal. Son los momentos en
+  los que hay que verle la cara, así que aquí la cámara se pone delante aunque el resto del
+  combate se vea de espaldas.
+Cuando te pida varias versiones del mismo personaje, tienen que ser reconociblemente la
+misma persona: misma ropa, mismo pelo, mismos colores, misma altura.
+
+Si el personaje lleva un arma, que la lleve en TODAS las poses de la hoja, envainada o en la
+mano. Si aparece solo en una, al alternar entre poses el arma parpadea.
+
+FONDOS DE ESCENARIO (única excepción al fondo transparente)
+Hay dos tipos: los de zona, donde ocurren los combates, y los de los espacios que el
+jugador decora (patio, habitación, huerto, taller, terraza). Las reglas son las mismas.
 - Formato apaisado, 1536 × 1024 píxeles, imagen completa sin transparencia.
 - Misma cámara: frontal y ligeramente elevada. La línea del horizonte va alta, en el tercio
   superior, de modo que se vea bastante suelo en la mitad inferior.
@@ -85,7 +104,7 @@ HOJAS DE PERSONAJE (personajes y enemigos)
 No me des las poses en imágenes separadas: salen personajes distintos cada vez. Dame
 SIEMPRE una sola imagen con las tres poses en fila horizontal, mismo personaje, mismo
 tamaño, misma ropa, mismos colores, alineados sobre la misma línea de suelo:
-  1. En guardia: quieto, de frente, postura de espera.
+  1. En guardia: quieto, postura de espera.
   2. Atacando: el gesto de ataque más claro que tenga.
   3. Recibiendo daño: echado hacia atrás, encogido.
 Formato 1536 × 768 píxeles, cada pose centrada en su tercio, separadas entre sí, fondo
@@ -94,7 +113,7 @@ transparente y sin nada que las divida (ni líneas, ni cajas, ni texto).
 TAMAÑOS
 - Objetos sueltos (muebles, armas, armaduras, accesorios, mascotas): 512 × 512.
 - Hojas de personaje y enemigo: 1536 × 768.
-- Fondos de zona: 1536 × 1024.
+- Fondos de escenario: 1536 × 1024.
 
 QUÉ NO QUIERO
 Nada de estilo píxel art, ni anime, ni cómic americano, ni 3D, ni fotorrealismo, ni acuarela

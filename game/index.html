@@ -136,13 +136,46 @@ header.barra .interior{max-width:620px;margin:0 auto;display:flex;align-items:ce
 .articulo button[disabled]{opacity:.5;pointer-events:none}
 
 .vida{height:9px;border-radius:99px;background:var(--superficie-2);overflow:hidden;margin-top:5px}
-.vida > i{display:block;height:100%;background:var(--acento);transition:width .3s}
+.vida > i{display:block;height:100%;background:var(--acento);transition:width .35s ease}
 .vida.enemiga > i{background:var(--alerta)}
-.combate{display:grid;gap:14px}
+.combate{display:grid;gap:12px}
 .luchador{display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:center}
 .luchador .sprite{width:64px}
-.diario{background:var(--superficie-2);border-radius:12px;padding:11px;font-size:13px;display:grid;gap:4px;max-height:150px;overflow-y:auto}
+.diario{background:var(--superficie-2);border-radius:12px;padding:11px;font-size:13px;display:grid;gap:4px;max-height:118px;overflow-y:auto}
 .acciones{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+
+/* Escena de combate: el héroe de espaldas abajo a la izquierda, el rival de frente
+   arriba a la derecha, los dos mirando hacia dentro. */
+.escena{
+  position:relative;aspect-ratio:4/3;border-radius:var(--r);overflow:hidden;
+  border:1px solid var(--linea);background:linear-gradient(#cfe0d8 0%,#e8e0cd 62%,#d4c5a6 100%);
+  background-size:cover;background-position:center
+}
+.escena > .telon{position:absolute;inset:0;background-size:cover;background-position:center}
+.combatiente{position:absolute;display:flex;flex-direction:column;gap:5px;align-items:center}
+/* La altura manda y el ancho sale de la proporción: así el de delante se ve claramente
+   más grande que el del fondo sin descuadrar la escena. */
+.combatiente.rival{right:5%;top:7%;height:44%}
+.combatiente.heroe{left:4%;bottom:3%;height:60%}
+
+.figura{position:relative;flex:1;min-height:0;aspect-ratio:2/3;overflow:hidden;display:grid;place-items:center}
+.figura > b{
+  font-size:13px;font-weight:700;color:hsl(var(--tono) 45% 32%);
+  background:hsl(var(--tono) 45% 88%);border-radius:10px;padding:14px 10px
+}
+.figura > img{position:absolute;left:0;top:0;height:100%;width:auto;max-width:none}
+.figura.golpeado{animation:sacudida .38s}
+.figura.golpeado::after{content:"";position:absolute;inset:0;background:var(--alerta);opacity:.32;mix-blend-mode:multiply}
+@keyframes sacudida{
+  0%,100%{transform:translateX(0)}
+  25%{transform:translateX(-7px)}
+  60%{transform:translateX(5px)}
+}
+
+.placa{background:color-mix(in srgb,var(--superficie) 88%,transparent);border:1px solid var(--linea);
+  border-radius:11px;padding:6px 9px;backdrop-filter:blur(3px)}
+.placa b{font-size:12.5px;display:block;line-height:1.3}
+.placa .mini{font-size:11px}
 .rejilla-casillas{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .casilla{aspect-ratio:1;border-radius:12px;border:1px dashed var(--linea);display:grid;place-items:center;background:var(--superficie)}
 .casilla.ocupada{border-style:solid}

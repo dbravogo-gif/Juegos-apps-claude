@@ -9,21 +9,37 @@ nombre exacto, aparece sola sin tocar código.
 - **PNG con fondo transparente**, salvo los fondos de zona.
 - **Perspectiva frontal con algo de altura**, nunca a ras de suelo. La misma en todo.
 - Iconos (muebles, equipo, mascotas): **512 × 512**, el objeto centrado y con aire alrededor.
-- Personajes y enemigos: **hoja con tres poses en fila** (en guardia, atacando, recibiendo
-  daño) sobre fondo plano. Salen de una sola generación para que sean el mismo personaje;
-  las recorto yo.
-- Fondos de zona: **1536 × 1024**, sin personajes.
+- Hojas de tres poses: las tres en fila, misma generación, para que sean el mismo personaje.
+  Las recorto yo por código.
+- **En combate el héroe se ve de espaldas** (abajo a la izquierda) y el enemigo **de frente**
+  (arriba a la derecha), como en un combate de Pokémon. Por eso el héroe necesita la hoja de
+  espaldas además de la de frente para su ficha.
+- Fondos: **1536 × 1024**, sin personajes.
 
 Empieza por el personaje de la etapa 1: fija el estilo del resto.
 
 ## Personaje
 
-| Archivo | Qué es | Cuándo aparece |
+Empieza por las cuatro de la etapa 1: con eso el combate ya se ve entero.
+
+| Archivo | Qué es | Poses |
 | --- | --- | --- |
-| `assets/personaje/etapa1.png` | Etapa 1 | Nivel 1 |
-| `assets/personaje/etapa2.png` | Etapa 2 | Nivel 5 |
-| `assets/personaje/etapa3.png` | Etapa 3 | Nivel 10 |
-| `assets/personaje/etapa4.png` | Etapa 4 | Nivel 15 |
+| `assets/personaje/etapa1.png` | De frente, para la ficha (nivel 1) | 1 pose |
+| `assets/personaje/etapa1_combate.png` | De espaldas en diagonal (nivel 1) | 3 poses: quieto, atacando, recibiendo daño |
+| `assets/personaje/etapa1_victoria.png` | Celebrando, de frente (nivel 1) | 1 pose |
+| `assets/personaje/etapa1_derrota.png` | Arrodillado, de frente (nivel 1) | 1 pose |
+| `assets/personaje/etapa2.png` | De frente, para la ficha (nivel 5) | 1 pose |
+| `assets/personaje/etapa2_combate.png` | De espaldas en diagonal (nivel 5) | 3 poses: quieto, atacando, recibiendo daño |
+| `assets/personaje/etapa2_victoria.png` | Celebrando, de frente (nivel 5) | 1 pose |
+| `assets/personaje/etapa2_derrota.png` | Arrodillado, de frente (nivel 5) | 1 pose |
+| `assets/personaje/etapa3.png` | De frente, para la ficha (nivel 10) | 1 pose |
+| `assets/personaje/etapa3_combate.png` | De espaldas en diagonal (nivel 10) | 3 poses: quieto, atacando, recibiendo daño |
+| `assets/personaje/etapa3_victoria.png` | Celebrando, de frente (nivel 10) | 1 pose |
+| `assets/personaje/etapa3_derrota.png` | Arrodillado, de frente (nivel 10) | 1 pose |
+| `assets/personaje/etapa4.png` | De frente, para la ficha (nivel 15) | 1 pose |
+| `assets/personaje/etapa4_combate.png` | De espaldas en diagonal (nivel 15) | 3 poses: quieto, atacando, recibiendo daño |
+| `assets/personaje/etapa4_victoria.png` | Celebrando, de frente (nivel 15) | 1 pose |
+| `assets/personaje/etapa4_derrota.png` | Arrodillado, de frente (nivel 15) | 1 pose |
 
 ## Enemigos
 
@@ -42,13 +58,29 @@ Empieza por el personaje de la etapa 1: fija el estilo del resto.
 | `assets/enemigos/serpiente_seda.png` | Serpiente de seda | El Gran Bazar |
 | `assets/enemigos/el_coleccionista.png` | El Coleccionista (jefe) | El Gran Bazar |
 
-## Fondos de zona
+## Fondos de zona (combate)
+
+Apaisados y sin transparencia. El héroe se dibuja abajo a la izquierda y el enemigo arriba
+a la derecha, así que la mitad inferior debe quedar despejada.
 
 | Archivo | Qué es | Descripción |
 | --- | --- | --- |
 | `assets/zonas/murallas.png` | Las Murallas | Piedra vieja y hiedra. Lo que se cuela por las grietas. |
 | `assets/zonas/puerto.png` | El Puerto | Cuerdas, sal y algo que respira bajo el agua. |
 | `assets/zonas/bazar.png` | El Gran Bazar | Mil puestos, mil tratos, y ninguno del todo honesto. |
+
+## Fondos de los espacios (construcción)
+
+Apaisados y sin transparencia. Son el telón de fondo sobre el que se colocan los muebles,
+así que necesitan mucho suelo libre y ningún mueble ya dibujado.
+
+| Archivo | Qué es | Se abre en |
+| --- | --- | --- |
+| `assets/espacios/patio.png` | El patio | Nivel 1 |
+| `assets/espacios/habitacion.png` | La habitación | Nivel 3 |
+| `assets/espacios/huerto.png` | El huerto | Nivel 6 |
+| `assets/espacios/taller.png` | El taller | Nivel 8 |
+| `assets/espacios/terraza.png` | La terraza | Nivel 12 |
 
 ## Muebles y decoración
 
@@ -118,9 +150,10 @@ Empieza por el personaje de la etapa 1: fija el estilo del resto.
 
 | Categoría | Imágenes |
 | --- | --- |
-| Personaje (hojas de 3 poses) | 4 |
+| Personaje (4 archivos por etapa) | 16 |
 | Enemigos (hojas de 3 poses) | 12 |
 | Fondos de zona | 3 |
+| Fondos de espacios | 5 |
 | Muebles | 30 |
 | Equipo | 15 |
 | Mascotas | 4 |
