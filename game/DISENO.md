@@ -151,7 +151,8 @@ sean reproducibles en los tests sin renunciar al azar en el juego real.
 
 ## Imágenes
 
-`ASSETS.md` lista los archivos exactos, y se regenera con `node tools/assets.js`. Mientras
+`ASSETS.md` lista los archivos exactos, y se regenera con `node tools/assets.js`.
+`PROMPT-IMAGENES.md` tiene el prompt de estilo que se le pasa al generador. Mientras
 un archivo no existe se ve un marcador de color; al añadirlo con su nombre aparece solo.
 
 ## Fuera del alcance
