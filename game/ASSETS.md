@@ -24,22 +24,14 @@ Empieza por las cuatro de la etapa 1: con eso el combate ya se ve entero.
 
 | Archivo | Qué es | Poses |
 | --- | --- | --- |
-| `assets/personaje/etapa1.png` | De frente, para la ficha (nivel 1) | 1 pose |
+| `assets/personaje/etapa1.png` | De frente (nivel 1) | 3 poses: quieto (ficha), celebrando, arrodillado |
 | `assets/personaje/etapa1_combate.png` | De espaldas en diagonal (nivel 1) | 3 poses: quieto, atacando, recibiendo daño |
-| `assets/personaje/etapa1_victoria.png` | Celebrando, de frente (nivel 1) | 1 pose |
-| `assets/personaje/etapa1_derrota.png` | Arrodillado, de frente (nivel 1) | 1 pose |
-| `assets/personaje/etapa2.png` | De frente, para la ficha (nivel 5) | 1 pose |
+| `assets/personaje/etapa2.png` | De frente (nivel 5) | 3 poses: quieto (ficha), celebrando, arrodillado |
 | `assets/personaje/etapa2_combate.png` | De espaldas en diagonal (nivel 5) | 3 poses: quieto, atacando, recibiendo daño |
-| `assets/personaje/etapa2_victoria.png` | Celebrando, de frente (nivel 5) | 1 pose |
-| `assets/personaje/etapa2_derrota.png` | Arrodillado, de frente (nivel 5) | 1 pose |
-| `assets/personaje/etapa3.png` | De frente, para la ficha (nivel 10) | 1 pose |
+| `assets/personaje/etapa3.png` | De frente (nivel 10) | 3 poses: quieto (ficha), celebrando, arrodillado |
 | `assets/personaje/etapa3_combate.png` | De espaldas en diagonal (nivel 10) | 3 poses: quieto, atacando, recibiendo daño |
-| `assets/personaje/etapa3_victoria.png` | Celebrando, de frente (nivel 10) | 1 pose |
-| `assets/personaje/etapa3_derrota.png` | Arrodillado, de frente (nivel 10) | 1 pose |
-| `assets/personaje/etapa4.png` | De frente, para la ficha (nivel 15) | 1 pose |
+| `assets/personaje/etapa4.png` | De frente (nivel 15) | 3 poses: quieto (ficha), celebrando, arrodillado |
 | `assets/personaje/etapa4_combate.png` | De espaldas en diagonal (nivel 15) | 3 poses: quieto, atacando, recibiendo daño |
-| `assets/personaje/etapa4_victoria.png` | Celebrando, de frente (nivel 15) | 1 pose |
-| `assets/personaje/etapa4_derrota.png` | Arrodillado, de frente (nivel 15) | 1 pose |
 
 ## Enemigos
 
@@ -150,7 +142,7 @@ así que necesitan mucho suelo libre y ningún mueble ya dibujado.
 
 | Categoría | Imágenes |
 | --- | --- |
-| Personaje (4 archivos por etapa) | 16 |
+| Personaje (2 hojas por etapa) | 8 |
 | Enemigos (hojas de 3 poses) | 12 |
 | Fondos de zona | 3 |
 | Fondos de espacios | 5 |

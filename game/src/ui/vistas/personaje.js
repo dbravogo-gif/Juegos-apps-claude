@@ -1,5 +1,5 @@
 import { esc } from '../util.js';
-import { sprite, figura } from '../sprite.js';
+import { figura } from '../sprite.js';
 import { ENEMIGOS } from '../../data/content.js';
 import { statsPersonaje } from '../../core/progression/character.js';
 import {
@@ -21,7 +21,10 @@ let combate = null;
 let escena = { heroe: 0, rival: 0, golpeado: null };
 let temporizadores = [];
 
+// Dos hojas de tres poses por etapa. Las de frente y las de espaldas se generan cada una
+// de una sola vez, que es lo único que garantiza que sea el mismo personaje.
 const POSES = { quieto: 0, atacando: 1, dolor: 2 };
+const FRENTE = { ficha: 0, victoria: 1, derrota: 2 };
 
 function pararAnimacion() {
   temporizadores.forEach(clearTimeout);
@@ -92,8 +95,10 @@ function figuraHeroe(ctx) {
 
   // Al acabar el combate el personaje se gira hacia cámara: la cara es lo que cuenta en
   // el momento de ganar o perder.
-  if (combate.estado === 'victoria') return figura('personaje', `${etapa}_victoria`, 'Tú', { clase: golpeado });
-  if (combate.estado === 'derrota') return figura('personaje', `${etapa}_derrota`, 'Tú', { clase: golpeado });
+  const remate = { victoria: FRENTE.victoria, derrota: FRENTE.derrota }[combate.estado];
+  if (remate !== undefined) {
+    return figura('personaje', etapa, 'Tú', { pose: remate, poses: 3, clase: golpeado });
+  }
 
   return figura('personaje', `${etapa}_combate`, 'Tú', { pose: escena.heroe, poses: 3, clase: golpeado });
 }
@@ -187,7 +192,7 @@ export function render(ctx) {
           const premio = recompensaEnemigo(id);
           return `
           <div class="articulo">
-            ${sprite('enemigos', id, ficha.nombre)}
+            ${figura('enemigos', id, ficha.nombre, { pose: 0, poses: 3, clase: 'retrato' })}
             <div class="nom">${esc(ficha.nombre)}</div>
             <div class="precio">${premio.xp} XP${derrotado ? ' · vencido' : ''}</div>
             <button data-accion="luchar" data-enemigo="${esc(id)}" ${abierto ? '' : 'disabled'}>Luchar</button>
@@ -205,7 +210,7 @@ export function render(ctx) {
   return `
   <div class="tarjeta">
     <div class="luchador" style="grid-template-columns:84px 1fr">
-      ${sprite('personaje', etapaPersonaje(nivel).id, 'Héroe', 'alto')}
+      ${figura('personaje', etapaPersonaje(nivel).id, 'Héroe', { pose: FRENTE.ficha, poses: 3, clase: 'ficha' })}
       <div>
         <div class="mini">Nivel ${nivel}</div>
         <div class="entre" style="margin-top:6px"><span class="mini">Vida</span><b>${stats.vidaMax}</b></div>
@@ -228,7 +233,7 @@ export function render(ctx) {
                 const puesto = ctx.db.equipado[ranuraDe(id)] === id;
                 return `
                 <div class="articulo">
-                  ${sprite('equipo', id, pieza.nombre)}
+                  ${figura('equipo', id, pieza.nombre, { clase: 'objeto' })}
                   <div class="nom">${esc(pieza.nombre)}</div>
                   <button class="${puesto ? 'gris' : ''}" data-accion="equipar" data-articulo="${esc(id)}" ${puesto ? 'disabled' : ''}>
                     ${puesto ? 'Puesto' : 'Equipar'}

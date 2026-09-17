@@ -11,13 +11,11 @@ import {
   ETAPAS_PERSONAJE,
 } from '../src/data/content.js';
 
-// Cada etapa del personaje necesita cuatro archivos: la ficha, la hoja de combate y los
-// dos remates. Victoria y derrota van de frente aunque en combate se vea de espaldas.
+// Dos hojas por etapa, cada una de una sola generación: es lo único que garantiza que las
+// tres poses sean el mismo personaje.
 const ARCHIVOS_PERSONAJE = [
-  ['', 'De frente, para la ficha', '1 pose'],
+  ['', 'De frente', '3 poses: quieto (ficha), celebrando, arrodillado'],
   ['_combate', 'De espaldas en diagonal', '3 poses: quieto, atacando, recibiendo daño'],
-  ['_victoria', 'Celebrando, de frente', '1 pose'],
-  ['_derrota', 'Arrodillado, de frente', '1 pose'],
 ];
 
 const linea = (carpeta, id, nombre, nota = '') =>
@@ -92,7 +90,7 @@ ${tabla('Cómo se gana', MASCOTAS.map((m) => linea('mascotas', m.id, m.nombre, m
 
 | Categoría | Imágenes |
 | --- | --- |
-| Personaje (4 archivos por etapa) | ${ETAPAS_PERSONAJE.length * ARCHIVOS_PERSONAJE.length} |
+| Personaje (2 hojas por etapa) | ${ETAPAS_PERSONAJE.length * ARCHIVOS_PERSONAJE.length} |
 | Enemigos (hojas de 3 poses) | ${ZONAS.reduce((t, z) => t + z.enemigos.length + 1, 0)} |
 | Fondos de zona | ${ZONAS.length} |
 | Fondos de espacios | ${ESPACIOS.length} |

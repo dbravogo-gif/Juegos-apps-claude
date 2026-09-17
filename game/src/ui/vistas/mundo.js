@@ -1,5 +1,5 @@
 import { esc, plural } from '../util.js';
-import { sprite } from '../sprite.js';
+import { figura } from '../sprite.js';
 import { MUEBLES, EQUIPO, MASCOTAS } from '../../data/content.js';
 import {
   espaciosAbiertos,
@@ -51,7 +51,7 @@ function vistaParcela(ctx) {
     return `
     <div class="casilla ${mueble ? 'ocupada' : ''}" style="${activa ? 'border-color:var(--acento)' : ''}"
       data-accion="casilla" data-indice="${i}">
-      ${mueble ? sprite('muebles', id, mueble.nombre) : '<span class="mini">+</span>'}
+      ${mueble ? figura('muebles', id, mueble.nombre, { clase: 'objeto' }) : '<span class="mini">+</span>'}
     </div>`;
   }).join('');
 
@@ -80,7 +80,7 @@ function vistaParcela(ctx) {
                        .map((id) => {
                          const mueble = articuloPorId(id);
                          return `<div class="articulo">
-                           ${sprite('muebles', id, mueble.nombre)}
+                           ${figura('muebles', id, mueble.nombre, { clase: 'objeto' })}
                            <div class="nom">${esc(mueble.nombre)}</div>
                            <button data-accion="colocar" data-articulo="${esc(id)}">Poner</button>
                          </div>`;
@@ -128,7 +128,7 @@ function vistaTienda(ctx) {
 
         return `
         <div class="articulo" aria-disabled="${!comprobacion.ok && !tengo}">
-          ${sprite(carpeta, articulo.id, articulo.nombre)}
+          ${figura(carpeta, articulo.id, articulo.nombre, { clase: 'objeto' })}
           <div class="nom">${esc(articulo.nombre)}</div>
           <div class="precio">${articulo.precio} 🪙</div>
           ${
@@ -167,7 +167,7 @@ function vistaMascotas(ctx) {
       const tengo = ganadas.includes(mascota.id);
       return `
       <div class="articulo" aria-disabled="${!tengo}">
-        ${sprite('mascotas', mascota.id, mascota.nombre)}
+        ${figura('mascotas', mascota.id, mascota.nombre, { clase: 'objeto' })}
         <div class="nom">${tengo ? esc(mascota.nombre) : '???'}</div>
         <div class="precio">${esc(mascota.pista)}</div>
       </div>`;

@@ -1,125 +1,104 @@
 # Prompt para generar las imágenes
 
-Pega el bloque de abajo **una sola vez** al empezar la conversación con Gemini o GPT, junto
-con tu primera petición. A partir de ahí ya basta con «ahora una mesa de cobre», «ahora el
-bandido harapiento».
+El personaje ya está hecho. Este prompt sirve para pedir **todo lo demás**: enemigos,
+fondos, muebles, equipo y mascotas.
 
-Si en algún momento notas que se le olvida el estilo (suele pasar tras quince o veinte
-imágenes), vuelve a pegarlo o empieza una conversación nueva adjuntando dos o tres imágenes
-ya aprobadas como referencia.
+Pega el bloque de abajo al empezar la conversación **adjuntando las dos hojas del héroe**
+(la de frente y la de espaldas). Son la referencia de estilo: sin ellas el prompt solo
+describe con palabras algo que ya existe en imágenes, y saldrá distinto.
+
+A partir de ahí basta con «ahora una mesa de cobre», «ahora el bandido harapiento».
+
+Si tras quince o veinte imágenes empieza a desviarse, vuelve a pegarlo en una conversación
+nueva con las dos hojas del héroe y dos o tres imágenes ya aprobadas.
 
 ---
 
 ## El prompt
 
 ```
-Vas a ayudarme a generar los recursos gráficos de un pequeño videojuego 2D llamado
-Constant. Necesito que TODAS las imágenes parezcan del mismo juego, así que estas reglas
-valen para todo lo que te pida a partir de ahora, aunque no las repita.
+Te adjunto dos imágenes del personaje protagonista de un pequeño videojuego 2D llamado
+Constant. Son la REFERENCIA DE ESTILO OBLIGATORIA: todo lo que generes a partir de ahora
+tiene que parecer sacado del mismo juego, dibujado por la misma mano y el mismo día.
+
+Copia de esas imágenes, sin desviarte:
+- El trazo y el contorno: línea exterior definida, de color marrón muy oscuro, nunca negro
+  puro, de grosor constante.
+- El sombreado: color plano con dos o tres tonos de sombra bien delimitados, sin degradados
+  suaves, sin texturas y sin brillos complicados.
+- El nivel de detalle: definido pero no recargado. Silueta clara y legible en pequeño.
+- La paleta: azul verdoso apagado, crema, blanco roto, marrón cuero, oro viejo y terracota.
+  Nada de colores fríos saturados, ni neones, ni pasteles lavados.
+- La iluminación: luz suave desde arriba, sombras hacia abajo.
 
 AMBIENTACIÓN
-Fantasía ligera inspirada en la Constantinopla bizantina: cúpulas, arcos de medio punto,
-mosaicos dorados, mármol, terracota, telas bordadas, bronce envejecido. No es histórico ni
-realista: es un mundo inventado que solo toma prestada esa estética. Nada de referencias
-religiosas concretas, banderas, símbolos reales ni nada bélico identificable.
+Fantasía ligera de aire mediterráneo antiguo, entre lo griego y lo bizantino: grecas, telas
+drapeadas, cúpulas, arcos de medio punto, mosaicos, mármol, terracota, bronce envejecido.
+No es histórico: es un mundo inventado que toma prestada esa estética. Nada de referencias
+religiosas concretas, banderas ni símbolos reales.
 
-ESTILO
-- Ilustración 2D digital, limpia y acogedora. Aire de juego tipo Stardew Valley o Animal
-  Crossing, pero con formas algo más definidas y menos infantiles.
-- Color plano con sombreado suave en dos o tres tonos. Nada de degradados complicados,
-  texturas fotográficas, ni render 3D.
-- Contorno fino de color oscuro cálido (marrón muy oscuro, nunca negro puro) alrededor de
-  cada figura. Es importante: el juego tiene modo claro y modo oscuro, y sin ese contorno
-  los objetos oscuros desaparecen sobre fondo oscuro.
-- Proporciones ligeramente estilizadas y simpáticas, sin llegar a caricatura extrema.
-- Legible en pequeño: los objetos se ven a 90 píxeles de ancho en el móvil. Silueta clara,
-  pocos detalles diminutos, buen contraste interno.
-
-PALETA
-Base cálida: crema (#F6F1E7), terracota, madera media, piedra arena.
-Acentos: verde bizantino (#2F7D5D), oro viejo (#C98A2B), rojo teja (#B24A3C).
-Azules y morados solo como toques puntuales. Evita colores fríos saturados, neones y
-cualquier cosa que desentone con una paleta cálida y natural.
-
-REGLAS TÉCNICAS (siempre)
+REGLAS TÉCNICAS (en todas las imágenes)
 - Fondo completamente transparente (PNG con canal alfa), EXCEPTO los fondos de escenario.
-  Si no puedes generar transparencia real, usa un fondo de color plano y uniforme de un
-  verde puro (#00FF00) que no aparezca en la imagen, para poder recortarlo después.
-- Sin sombra proyectada en el suelo, sin plataforma, sin peana, sin base.
+  Si no puedes hacer transparencia real, usa un fondo plano de verde puro (#00FF00) que no
+  aparezca en el dibujo, para poder recortarlo.
+- Sin sombra proyectada en el suelo, sin peana, sin plataforma, sin base.
 - Sin texto, sin números, sin logotipos, sin marcas de agua.
-- Sin marco, sin borde decorativo, sin fondo de tarjeta ni viñeta.
-- Un solo objeto o personaje por imagen, centrado, con un pequeño margen alrededor.
-- Iluminación siempre igual: luz suave desde arriba y ligeramente a la izquierda.
+- Sin marco, sin borde, sin fondo de tarjeta, sin viñeta.
+- Un solo objeto o criatura por imagen, centrado y con un pequeño margen alrededor.
 
-PERSPECTIVA (esto es lo más importante para que todo encaje)
-La cámara es SIEMPRE frontal y ligeramente elevada, como si miraras el objeto de pie desde
-un par de metros: ves la cara frontal y, un poco, la superficie de arriba. Nunca cenital
-(desde el techo), nunca a ras de suelo, nunca isométrica ni en tres cuartos girado.
-Mantén exactamente el mismo ángulo en todas las imágenes.
-
-Con dos excepciones, que explico abajo: las armas y los accesorios.
+PERSPECTIVA
+La cámara es frontal y ligeramente elevada, como si miraras el objeto de pie desde un par
+de metros: se ve la cara frontal y un poco la superficie de arriba. Nunca cenital, nunca a
+ras de suelo, nunca isométrica. La misma en todo, salvo en las armas y los accesorios.
 
 CÓMO ORIENTAR CADA COSA
-- Muebles, decoración, plantas y mascotas: de frente, con esa ligera altura. Apoyados sobre
-  una superficie imaginaria, con la base bien visible y horizontal.
-- Armas: en diagonal a 45 grados, con la empuñadura abajo a la izquierda y la punta arriba
-  a la derecha. De perfil limpio, como un icono de inventario. Así aprovechan el cuadrado y
-  se reconocen al instante.
-- Armaduras: completamente de frente y rectas, simétricas, como si colgaran de un maniquí
-  invisible. Sin torsión ni perspectiva.
-- Accesorios (amuletos, anillos, reliquias): de frente y rectos, centrados, presentados como
-  una pieza de joyería sobre fondo vacío.
-- Enemigos: de frente, mirando a cámara, cuerpo entero, con los pies apoyados en una línea
+- Enemigos y criaturas: de frente, mirando a cámara, cuerpo entero, apoyados sobre una línea
   de suelo imaginaria.
-- Personaje jugable: depende de para qué sea la imagen, y te lo diré cada vez. Ver abajo.
+- Muebles, decoración y plantas: de frente con esa ligera altura, apoyados, con la base
+  visible y horizontal.
+- Mascotas: de frente, cuerpo entero, en pose tranquila.
+- Armas: en diagonal a 45 grados, empuñadura abajo a la izquierda y punta arriba a la
+  derecha, de perfil limpio, como icono de inventario.
+- Armaduras: de frente, rectas y simétricas, como colgadas de un maniquí invisible.
+- Accesorios (amuletos, anillos, reliquias): de frente, rectos y centrados, como una pieza
+  de joyería.
 
-EL PERSONAJE JUGABLE Y EL COMBATE
-El combate se ve como en Pokémon: tu personaje abajo a la izquierda visto POR DETRÁS, y el
-enemigo arriba a la derecha visto de frente, los dos mirándose. Por eso el personaje
-necesita varias versiones y te pediré cada una por separado:
-- Para su ficha: de frente, mirando a cámara, quieto.
-- Para el combate: de espaldas, en tres cuartos desde atrás, girado hacia arriba a la
-  derecha (hacia donde estaría el enemigo). Se le ve la espalda y algo del perfil.
-- Al ganar y al perder: OTRA VEZ DE FRENTE, en tres cuartos frontal. Son los momentos en
-  los que hay que verle la cara, así que aquí la cámara se pone delante aunque el resto del
-  combate se vea de espaldas.
-Cuando te pida varias versiones del mismo personaje, tienen que ser reconociblemente la
-misma persona: misma ropa, mismo pelo, mismos colores, misma altura.
+HOJAS DE TRES POSES (solo enemigos)
+Cada enemigo va en UNA sola imagen con tres poses en fila horizontal, mismo tamaño, mismos
+colores, alineadas sobre la misma línea de suelo:
+  1. En guardia: quieto, postura de espera.
+  2. Atacando: su gesto de ataque más claro.
+  3. Recibiendo daño: echado hacia atrás, encogido.
+Formato 1536 × 1024 píxeles, cada pose centrada en su propio tercio.
 
-Si el personaje lleva un arma, que la lleve en TODAS las poses de la hoja, envainada o en la
-mano. Si aparece solo en una, al alternar entre poses el arma parpadea.
+MUY IMPORTANTE SOBRE LAS HOJAS: recorto la imagen en tres partes iguales por código, así que
+NADA puede invadir el tercio de al lado. Ni una estela de arma, ni un efecto de movimiento,
+ni una cola, ni un ala, ni una sombra. Si una pose necesita un efecto, que quepa entero
+dentro de su tercio y con margen. Las tres figuras del mismo tamaño y a la misma altura, sin
+líneas ni cajas que las separen.
 
 FONDOS DE ESCENARIO (única excepción al fondo transparente)
-Hay dos tipos: los de zona, donde ocurren los combates, y los de los espacios que el
-jugador decora (patio, habitación, huerto, taller, terraza). Las reglas son las mismas.
-- Formato apaisado, 1536 × 1024 píxeles, imagen completa sin transparencia.
-- Misma cámara: frontal y ligeramente elevada. La línea del horizonte va alta, en el tercio
-  superior, de modo que se vea bastante suelo en la mitad inferior.
-- El suelo de la parte baja debe quedar despejado y sin detalles importantes: ahí se
-  colocarán personajes encima.
-- Sin personajes, sin criaturas, sin objetos en primer plano.
-- Profundidad suave, con el fondo algo desvaído y menos contrastado que el primer plano.
-
-HOJAS DE PERSONAJE (personajes y enemigos)
-No me des las poses en imágenes separadas: salen personajes distintos cada vez. Dame
-SIEMPRE una sola imagen con las tres poses en fila horizontal, mismo personaje, mismo
-tamaño, misma ropa, mismos colores, alineados sobre la misma línea de suelo:
-  1. En guardia: quieto, postura de espera.
-  2. Atacando: el gesto de ataque más claro que tenga.
-  3. Recibiendo daño: echado hacia atrás, encogido.
-Formato 1536 × 768 píxeles, cada pose centrada en su tercio, separadas entre sí, fondo
-transparente y sin nada que las divida (ni líneas, ni cajas, ni texto).
+Hay dos tipos y las reglas son las mismas:
+- De zona: donde ocurren los combates.
+- De espacio: el sitio que el jugador decora (patio, habitación, huerto, taller, terraza).
+Reglas:
+- Apaisados, 1536 × 1024, imagen completa sin transparencia.
+- Misma cámara frontal ligeramente elevada. Horizonte alto, en el tercio superior, de modo
+  que la mitad inferior sea suelo.
+- La mitad inferior tiene que quedar DESPEJADA: ahí se colocan encima los personajes y los
+  muebles. Nada de objetos importantes en primer plano.
+- Sin personajes ni criaturas.
+- Profundidad suave: el fondo algo más desvaído y con menos contraste que el primer plano.
 
 TAMAÑOS
 - Objetos sueltos (muebles, armas, armaduras, accesorios, mascotas): 512 × 512.
-- Hojas de personaje y enemigo: 1536 × 768.
+- Hojas de enemigo: 1536 × 1024.
 - Fondos de escenario: 1536 × 1024.
 
 QUÉ NO QUIERO
-Nada de estilo píxel art, ni anime, ni cómic americano, ni 3D, ni fotorrealismo, ni acuarela
-suelta. Nada de fondos decorados en los objetos. Nada de efectos de brillo, destellos,
-partículas ni resplandores mágicos salvo que te lo pida. Nada de sangre, armas de fuego ni
-violencia explícita: el tono es amable.
+Nada de píxel art, ni cómic americano, ni 3D, ni fotorrealismo, ni acuarela suelta. Nada de
+fondos decorados detrás de los objetos. Nada de brillos, destellos, partículas ni auras
+mágicas salvo que te lo pida. Nada de sangre ni violencia explícita: el tono es amable.
 
 Empecemos. Cuando te pida algo, genera solo eso y respeta todo lo anterior.
 ```
@@ -128,20 +107,19 @@ Empecemos. Cuando te pida algo, genera solo eso y respeta todo lo anterior.
 
 ## Notas prácticas
 
-**Empieza por el personaje.** Pídele `assets/personaje/etapa1.png` antes que nada: esa
-imagen fija el estilo y luego sirve de referencia visual para el resto. Cuando te guste,
-adjúntala en las peticiones siguientes diciendo «mismo estilo que esta».
+**Adjunta siempre las dos hojas del héroe** en la primera petición. La referencia visual pesa
+mucho más que cualquier descripción escrita.
 
-**Si la transparencia sale mal** y te devuelve fondo blanco o a cuadros, pídele el fondo
-verde puro (#00FF00) que menciona el prompt y dímelo: lo recorto yo sin problema.
+**Revisa que nada se salga de su tercio** en las hojas de enemigo. Es el fallo que ya salió
+una vez: la estela de la espada del héroe invadía el tercio siguiente. Si pasa, pídela de
+nuevo con «el efecto se sale de su tercio, hazlo más pequeño».
 
-**Con las hojas de poses**, comprueba que las tres figuras son reconociblemente la misma
-persona. Si no, vuelve a pedirla: es el punto donde más falla la generación por IA. Yo las
-recorto en tres al integrarlas.
+**Si la transparencia sale mal** y devuelve fondo blanco o a cuadros, pídele el fondo verde
+puro (#00FF00) y dímelo: lo recorto yo.
 
-**El nombre del archivo importa.** Cada imagen tiene que guardarse con el nombre exacto que
-aparece en `ASSETS.md`, dentro de su carpeta. En cuanto el archivo existe, la app lo muestra
-sola, sin tocar código.
+**El nombre del archivo importa.** Cada imagen va con el nombre exacto de `ASSETS.md`, dentro
+de su carpeta de `assets/`. En cuanto el archivo existe, la app lo usa sola.
 
-**Si prefieres trabajar en inglés**, el prompt funciona igual traducido y a veces los
-generadores afinan algo más los detalles. Pero en español rinde de sobra.
+**Orden sugerido** para ver resultados pronto: el fondo de Las Murallas y la rata de las
+murallas —con eso el combate ya se ve entero—, después el fondo del patio y cuatro o cinco
+muebles baratos, y a partir de ahí lo que quieras.

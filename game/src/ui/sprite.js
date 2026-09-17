@@ -17,19 +17,6 @@ function iniciales(nombre) {
 const ruta = (carpeta, id) => `assets/${esc(carpeta)}/${esc(id)}.png`;
 
 /**
- * Imagen del catálogo con marcador de reserva. Mientras no exista el archivo en
- * `assets/<carpeta>/<id>.png` se ve el marcador; en cuanto se añada, aparece sola
- * sin tocar el código.
- */
-export function sprite(carpeta, id, nombre, clase = '') {
-  return `
-  <span class="sprite ${clase}" style="--tono:${tono(id)}">
-    <b>${esc(iniciales(nombre))}</b>
-    <img src="${ruta(carpeta, id)}" alt="" loading="lazy" onerror="this.remove()">
-  </span>`;
-}
-
-/**
  * Una pose recortada de una hoja con varias en fila horizontal. La imagen se estira a lo
  * ancho de todas las poses y se desplaza hasta la que toca, así que una sola descarga sirve
  * para el personaje entero.
@@ -42,6 +29,7 @@ export function figura(carpeta, id, nombre, { pose = 0, poses = 1, clase = '' } 
   return `
   <div class="figura ${clase}" style="--tono:${tono(id)}">
     <b>${esc(iniciales(nombre))}</b>
-    <img src="${ruta(carpeta, id)}" alt="" style="${desplazamiento}" onerror="this.remove()">
+    <img src="${ruta(carpeta, id)}" alt="" style="${desplazamiento}"
+      onload="this.previousElementSibling.hidden=true" onerror="this.remove()">
   </div>`;
 }

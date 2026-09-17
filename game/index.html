@@ -117,14 +117,6 @@ header.barra .interior{max-width:620px;margin:0 auto;display:flex;align-items:ce
 .nav button[aria-current="page"]{color:var(--acento)}
 .nav .ic{font-size:18px;line-height:1}
 
-.sprite{position:relative;display:grid;place-items:center;width:100%;aspect-ratio:1;border-radius:12px;
-  background:hsl(var(--tono) 45% 88%);overflow:hidden}
-.sprite > b{color:hsl(var(--tono) 45% 32%);font-size:15px;font-weight:700;letter-spacing:.02em}
-.sprite > img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
-@media (prefers-color-scheme:dark){:root:not([data-tema="claro"]) .sprite{background:hsl(var(--tono) 25% 26%)}
-  :root:not([data-tema="claro"]) .sprite > b{color:hsl(var(--tono) 45% 78%)}}
-.sprite.grande{border-radius:16px}
-.sprite.alto{aspect-ratio:3/4}
 
 .catalogo{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .articulo{background:var(--superficie);border:1px solid var(--linea);border-radius:14px;padding:9px;box-shadow:var(--sombra)}
@@ -140,7 +132,6 @@ header.barra .interior{max-width:620px;margin:0 auto;display:flex;align-items:ce
 .vida.enemiga > i{background:var(--alerta)}
 .combate{display:grid;gap:12px}
 .luchador{display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:center}
-.luchador .sprite{width:64px}
 .diario{background:var(--superficie-2);border-radius:12px;padding:11px;font-size:13px;display:grid;gap:4px;max-height:118px;overflow-y:auto}
 .acciones{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 
@@ -163,7 +154,14 @@ header.barra .interior{max-width:620px;margin:0 auto;display:flex;align-items:ce
   font-size:13px;font-weight:700;color:hsl(var(--tono) 45% 32%);
   background:hsl(var(--tono) 45% 88%);border-radius:10px;padding:14px 10px
 }
+@media (prefers-color-scheme:dark){
+  :root:not([data-tema="claro"]) .figura > b{background:hsl(var(--tono) 25% 26%);color:hsl(var(--tono) 45% 78%)}
+}
 .figura > img{position:absolute;left:0;top:0;height:100%;width:auto;max-width:none}
+.figura.ficha{flex:none;height:118px}
+.figura.retrato{width:100%;flex:none}
+.figura.objeto{width:100%;aspect-ratio:1;flex:none}
+.figura.objeto > img{height:100%;width:100%;object-fit:contain}
 .figura.golpeado{animation:sacudida .38s}
 .figura.golpeado::after{content:"";position:absolute;inset:0;background:var(--alerta);opacity:.32;mix-blend-mode:multiply}
 @keyframes sacudida{
