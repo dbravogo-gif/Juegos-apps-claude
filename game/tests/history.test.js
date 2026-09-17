@@ -97,3 +97,60 @@ test('explotación: solo se puede registrar hoy y ayer', () => {
   assert.equal(esEditable('2026-09-14', '2026-09-16'), false, 'no se rellenan semanas a posteriori');
   assert.equal(esEditable('2026-09-17', '2026-09-16'), false, 'ni se registra el futuro');
 });
+
+// --- Rutina y dieta planificadas ---
+
+const RUTINA = {
+  id: 'r',
+  nombre: 'Torso',
+  ejercicios: [
+    { id: 'a', nombre: 'Press', importancia: 'principal', series: 3 },
+    { id: 'b', nombre: 'Remo', importancia: 'principal', series: 3 },
+    { id: 'c', nombre: 'Curl', importancia: 'secundario', series: 3 },
+  ],
+};
+
+const dbConRutina = (dias) => ({
+  plan: { diasEntreno: [0], rutinaPorDia: { 0: 'r' }, comidasPorDia: {} },
+  rutinas: [RUTINA],
+  dias,
+});
+
+test('explotación: registrar solo un ejercicio no firma la sesión entera', () => {
+  const registro = { ejercicios: [{ id: 'c', importancia: 'secundario', estado: 'completado' }] };
+  const db = dbConRutina({ '2026-09-14': registro });
+
+  const abierto = evaluarDia(registro, 'entreno', '2026-09-14', { db, hoy: '2026-09-14' });
+  assert.equal(abierto.entreno.cumplimiento, 1, 'mientras el día sigue abierto no se le da por omitido');
+
+  const cerrado = evaluarDia(registro, 'entreno', '2026-09-14', { db, hoy: '2026-09-15' });
+  assert.ok(cerrado.entreno.cumplimiento < 0.3, `firmó ${cerrado.entreno.cumplimiento} haciendo un ejercicio de tres`);
+});
+
+test('las comidas del día salen del plan semanal aunque no se haya tocado nada', () => {
+  const db = {
+    plan: { diasEntreno: [], comidasPorDia: { 0: ['Desayuno', 'Comida', 'Cena'] } },
+    rutinas: [],
+    dias: {},
+  };
+
+  const dia = evaluarDia(undefined, 'descanso', '2026-09-14', { db, hoy: '2026-09-14' });
+  assert.equal(dia.comida.puntuacion, null, 'sin marcar nada el día abierto no puntúa');
+
+  const marcado = { comidas: [{ id: 'p0', nombre: 'Desayuno', estado: 'completo' }] };
+  const parcial = evaluarDia(marcado, 'descanso', '2026-09-14', { db, hoy: '2026-09-15' });
+  assert.equal(parcial.comida.comidasComputadas, 1, 'al cerrar solo cuenta lo que quedó guardado');
+});
+
+test('editar la rutina no borra lo que ya se registró de un ejercicio retirado', () => {
+  const registro = {
+    ejercicios: [
+      { id: 'a', importancia: 'principal', estado: 'completado' },
+      { id: 'viejo', importancia: 'secundario', estado: 'completado' },
+    ],
+  };
+  const db = dbConRutina({ '2026-09-14': registro });
+  const dia = evaluarDia(registro, 'entreno', '2026-09-14', { db, hoy: '2026-09-14' });
+
+  assert.equal(dia.entreno.pesoTotal, 3 + 2, 'el ejercicio fuera de rutina sigue contando');
+});

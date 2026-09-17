@@ -1,4 +1,4 @@
-import { rutinasPorDefecto } from './defaults.js';
+import { rutinasPorDefecto, comidasPorDefecto } from './defaults.js';
 
 const CLAVE = 'juego_habitos_db';
 export const VERSION_ESQUEMA = 1;
@@ -7,7 +7,12 @@ export function estadoInicial() {
   return {
     version: VERSION_ESQUEMA,
     perfil: { nombre: '', creado: new Date().toISOString().slice(0, 10) },
-    plan: { diasEntreno: [0, 1, 3, 4], rutinaPorDia: { 0: 'r_torso', 1: 'r_pierna', 3: 'r_torso', 4: 'r_pierna' } },
+    plan: {
+      diasEntreno: [0, 1, 3, 4],
+      rutinaPorDia: { 0: 'r_torso', 1: 'r_pierna', 3: 'r_torso', 4: 'r_pierna' },
+      // Qué se supone que comes cada día de la semana, con el lunes como 0.
+      comidasPorDia: comidasPorDefecto(),
+    },
     rutinas: rutinasPorDefecto(),
     dias: {},
     exenciones: [],
@@ -47,10 +52,26 @@ const almacen = {
   },
 };
 
-/** Lleva un documento guardado al esquema actual. */
+/**
+ * Lleva un documento guardado al esquema actual.
+ * El plan se fusiona campo a campo: si se mezclara entero, un guardado anterior sin
+ * `comidasPorDia` dejaría a medias el planificador de dieta.
+ */
 export function migrar(db) {
   if (!db || typeof db !== 'object') return estadoInicial();
-  return { ...estadoInicial(), ...db, version: VERSION_ESQUEMA };
+  const base = estadoInicial();
+
+  const plan = { ...base.plan, ...(db.plan ?? {}) };
+  if (!plan.comidasPorDia || Object.keys(plan.comidasPorDia).length === 0) {
+    plan.comidasPorDia = base.plan.comidasPorDia;
+  }
+
+  const rutinas = (db.rutinas ?? base.rutinas).map((rutina) => ({
+    ...rutina,
+    ejercicios: (rutina.ejercicios ?? []).map((e) => ({ series: 3, repMin: 8, repMax: 12, ...e })),
+  }));
+
+  return { ...base, ...db, plan, rutinas, version: VERSION_ESQUEMA };
 }
 
 export function cargar() {

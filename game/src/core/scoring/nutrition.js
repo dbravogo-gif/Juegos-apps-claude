@@ -2,26 +2,31 @@ import { PUNTUACION_COMIDA, EXENCIONES } from '../constants.js';
 
 /**
  * @typedef {'completo'|'excepcion_menor'|'incumplido'} EstadoComida
- * @typedef {{ id: string, estado: EstadoComida, exenta?: boolean }} ComidaRegistrada
+ * @typedef {{ id: string, nombre?: string, estado: EstadoComida|null, exenta?: boolean }} ComidaRegistrada
  */
 
 /**
- * Puntuación de alimentación del día: media de las comidas registradas.
- * Las comidas exentas se excluyen del cálculo en lugar de puntuar cero.
- * Devuelve `null` si no queda ninguna comida computable (día sin registro o todo exento).
+ * Puntuación de alimentación del día: media de las comidas del plan.
+ * Las exentas se excluyen del cálculo en lugar de puntuar cero.
+ *
+ * Una comida del plan sin marcar se ignora mientras el día sigue abierto —aún puedes
+ * comértela— pero cuenta como incumplida en cuanto el día se cierra. Si no, bastaría con
+ * marcar solo lo que sale bien y dejar el resto en blanco.
  *
  * @param {ComidaRegistrada[]} comidas
+ * @param {{ cerrado?: boolean }} opciones
  */
-export function puntuarDiaComida(comidas) {
-  const computables = comidas.filter((c) => !c.exenta);
+export function puntuarDiaComida(comidas, { cerrado = false } = {}) {
+  const computables = comidas.filter((c) => !c.exenta && (c.estado || cerrado));
   if (computables.length === 0) {
     return { puntuacion: null, comidasComputadas: 0, comidasExentas: comidas.length };
   }
+
   const suma = computables.reduce((total, c) => total + (PUNTUACION_COMIDA[c.estado] ?? 0), 0);
   return {
     puntuacion: suma / computables.length,
     comidasComputadas: computables.length,
-    comidasExentas: comidas.length - computables.length,
+    comidasExentas: comidas.filter((c) => c.exenta).length,
   };
 }
 

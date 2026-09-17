@@ -1,5 +1,4 @@
-import { esc, plural } from '../util.js';
-import { NOMBRE_DIA } from '../../data/defaults.js';
+import { plural } from '../util.js';
 import {
   exencionesEntrenoDisponibles,
   puedeActivarExencion,
@@ -14,68 +13,12 @@ const MOTIVO = {
 };
 
 export function subtitulo(ctx) {
-  return `${plural(ctx.db.rutinas.length, 'rutina', 'rutinas')} · ${plural(ctx.db.exenciones.length, 'exención usada', 'exenciones usadas')}`;
+  return plural(ctx.db.exenciones.length, 'exención usada', 'exenciones usadas');
 }
 
 export function render(ctx) {
   const { db } = ctx;
   const disponibles = exencionesEntrenoDisponibles(db.exenciones, ctx.hoy);
-
-  const dias = NOMBRE_DIA.map(
-    (nombre, i) => `
-    <button aria-pressed="${db.plan.diasEntreno.includes(i)}" data-accion="alternarDia" data-dia="${i}">
-      ${nombre}
-    </button>`,
-  ).join('');
-
-  const asignaciones = db.plan.diasEntreno
-    .slice()
-    .sort((a, b) => a - b)
-    .map(
-      (i) => `
-      <div class="entre" style="margin-bottom:9px">
-        <span class="mini">${NOMBRE_DIA[i]}</span>
-        <select data-accion="asignarRutina" data-dia="${i}" style="width:auto">
-          ${db.rutinas
-            .map(
-              (r) =>
-                `<option value="${esc(r.id)}" ${db.plan.rutinaPorDia?.[i] === r.id ? 'selected' : ''}>${esc(r.nombre)}</option>`,
-            )
-            .join('')}
-        </select>
-      </div>`,
-    )
-    .join('');
-
-  const rutinas = db.rutinas
-    .map(
-      (rutina) => `
-    <div class="tarjeta">
-      <div class="entre" style="margin-bottom:10px">
-        <b>${esc(rutina.nombre)}</b>
-        <span class="mini">${rutina.ejercicios.length} ejercicios</span>
-      </div>
-      ${rutina.ejercicios
-        .map(
-          (e, i) => `
-        <div class="entre" style="padding:7px 0;border-bottom:1px solid var(--linea)">
-          <span>${esc(e.nombre)}</span>
-          <select data-accion="importancia" data-rutina="${esc(rutina.id)}" data-indice="${i}" style="width:auto">
-            ${['principal', 'secundario', 'opcional']
-              .map((v) => `<option value="${v}" ${e.importancia === v ? 'selected' : ''}>${v}</option>`)
-              .join('')}
-          </select>
-        </div>`,
-        )
-        .join('')}
-      <div class="fila" style="margin-top:12px">
-        <input type="text" placeholder="Nuevo ejercicio" data-nuevo="${esc(rutina.id)}">
-        <button class="boton fino secundario" style="flex:0 0 auto;padding:9px 16px"
-          data-accion="anadirEjercicio" data-rutina="${esc(rutina.id)}">Añadir</button>
-      </div>
-    </div>`,
-    )
-    .join('');
 
   const exenciones = db.exenciones.length
     ? db.exenciones
@@ -87,17 +30,7 @@ export function render(ctx) {
     : '<div class="mini">Ninguna usada todavía.</div>';
 
   return `
-  <div class="titulo-seccion">Días de entreno</div>
-  <div class="tarjeta">
-    <div class="dias" style="margin-bottom:14px">${dias}</div>
-    <div class="mini">Los días que no marques cuentan como descanso y no rompen la racha.</div>
-  </div>
-
-  <div class="titulo-seccion">Rutina de cada día</div>
-  <div class="tarjeta">${asignaciones || '<div class="mini">Marca algún día de entreno.</div>'}</div>
-
-  <div class="titulo-seccion">Rutinas</div>
-  ${rutinas}
+  <div class="aviso ojo">Tu rutina se edita en la sección Entreno y tu dieta en la sección Dieta.</div>
 
   <div class="titulo-seccion">Exenciones de entreno</div>
   <div class="tarjeta">
@@ -127,38 +60,6 @@ export function render(ctx) {
 }
 
 export const acciones = {
-  alternarDia: (el, ctx) => {
-    const dia = Number(el.dataset.dia);
-    ctx.actualizar((db) => {
-      const activos = new Set(db.plan.diasEntreno);
-      if (activos.has(dia)) activos.delete(dia);
-      else activos.add(dia);
-      db.plan.diasEntreno = [...activos].sort((a, b) => a - b);
-    });
-  },
-
-  asignarRutina: (el, ctx) =>
-    ctx.actualizar((db) => {
-      db.plan.rutinaPorDia = { ...db.plan.rutinaPorDia, [el.dataset.dia]: el.value };
-    }),
-
-  importancia: (el, ctx) =>
-    ctx.actualizar((db) => {
-      const rutina = db.rutinas.find((r) => r.id === el.dataset.rutina);
-      rutina.ejercicios[Number(el.dataset.indice)].importancia = el.value;
-    }),
-
-  anadirEjercicio: (el, ctx) => {
-    const campo = document.querySelector(`[data-nuevo="${el.dataset.rutina}"]`);
-    const nombre = campo.value.trim();
-    if (!nombre) return;
-
-    ctx.actualizar((db) => {
-      const rutina = db.rutinas.find((r) => r.id === el.dataset.rutina);
-      rutina.ejercicios.push({ id: `e${Date.now()}`, nombre, importancia: 'secundario' });
-    });
-  },
-
   pedirExencion: (_, ctx) => {
     const inicio = document.getElementById('inicioExencion').value;
     if (!inicio) return;

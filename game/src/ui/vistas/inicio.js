@@ -1,5 +1,8 @@
 import { esc, plural } from '../util.js';
 import { exencionesComidaDisponibles } from '../../core/scoring/nutrition.js';
+import { clasificarEntreno, clasificarComida } from '../../core/scoring/streaks.js';
+import { NOMBRE_DIA } from '../../data/defaults.js';
+import { diaDeLaSemana, comidasDelDia } from '../../data/history.js';
 
 const pct = (v) => (typeof v === 'number' ? `${Math.round(v * 100)} %` : '—');
 
@@ -18,6 +21,59 @@ function racha(nombre, datos, bonus) {
   return `<span class="pastilla ${clase}">${nombre} · ${texto}${extra}</span>`;
 }
 
+/** Tira de los últimos días, un cuadro por día, con el color de su clasificación. */
+function tira(dias, clasificar) {
+  return dias
+    .map((dia) => `<div class="celda ${clasificar(dia)}" title="${dia.fecha}">${NOMBRE_DIA[diaDeLaSemana(dia.fecha)]}</div>`)
+    .join('');
+}
+
+function media(dias, extraer) {
+  const valores = dias.map(extraer).filter((v) => typeof v === 'number');
+  if (!valores.length) return null;
+  return valores.reduce((a, b) => a + b, 0) / valores.length;
+}
+
+function progreso(ctx) {
+  const { estado } = ctx;
+  if (!estado.dias.length) return '';
+
+  const ultimos = estado.dias.slice(-14);
+  const cumplidos = ultimos.filter((d) => clasificarEntreno(d) === 'cumplido').length;
+  const fallados = ultimos.filter((d) => clasificarEntreno(d) === 'fallado').length;
+  const ganadoSemana = estado.resumenes.slice(-7).reduce((total, r) => total + r.recompensa.total.xp, 0);
+
+  return `
+  <div class="titulo-seccion">Últimos 14 días</div>
+  <div class="tarjeta">
+    <div class="mini" style="margin-bottom:7px">Entrenamiento</div>
+    <div class="tira" style="margin-bottom:14px">${tira(ultimos, clasificarEntreno)}</div>
+    <div class="mini" style="margin-bottom:7px">Alimentación</div>
+    <div class="tira">${tira(ultimos, clasificarComida)}</div>
+  </div>
+
+  <div class="rejilla">
+    <div class="dato">
+      <div class="k">Media entreno</div>
+      <div class="v">${pct(media(ultimos, (d) => d.entreno?.cumplimiento))}</div>
+      <div class="n">${plural(cumplidos, 'cumplido', 'cumplidos')} · ${fallados} fallados</div>
+    </div>
+    <div class="dato">
+      <div class="k">Media comida</div>
+      <div class="v">${pct(media(ultimos, (d) => d.comida?.puntuacion))}</div>
+    </div>
+    <div class="dato">
+      <div class="k">XP esta semana</div>
+      <div class="v">${ganadoSemana}</div>
+    </div>
+    <div class="dato">
+      <div class="k">Racha más larga</div>
+      <div class="v">${estado.rachas?.entreno.longitud ?? 0}</div>
+      <div class="n">${(estado.rachas?.entreno.longitud ?? 0) === 1 ? 'día' : 'días'} de entreno</div>
+    </div>
+  </div>`;
+}
+
 export function render(ctx) {
   const { estado } = ctx;
   const { nivel, xpEnNivel, xpParaSiguiente } = estado.nivel;
@@ -27,7 +83,8 @@ export function render(ctx) {
   const planHoy = ctx.planDe(ctx.hoy);
   const registro = ctx.registroDe(ctx.hoy);
   const entrenoHecho = (registro.ejercicios ?? []).length > 0;
-  const comidas = registro.comidas ?? [];
+  const comidas = comidasDelDia(registro, ctx.db.plan, ctx.hoy);
+  const marcadas = comidas.filter((c) => c.estado || c.exenta).length;
 
   const rachas = estado.rachas;
   const multiplicador = rachas ? rachas.multiplicador : 1;
@@ -86,13 +143,14 @@ export function render(ctx) {
               : 'No se exige sesión'
         }</div>
       </div>
-      <button class="boton fino" style="width:auto;padding:9px 16px" data-accion="registrar">Registrar</button>
+      <button class="boton fino" style="width:auto;padding:9px 16px" data-accion="irEntreno">Registrar</button>
     </div>
     <div class="entre">
       <div>
         <b>Comidas</b>
-        <div class="mini">${plural(comidas.length, 'registrada', 'registradas')} · ${plural(exentasRestantes, 'exención', 'exenciones')} esta semana</div>
+        <div class="mini">${marcadas} de ${comidas.length} marcadas · ${plural(exentasRestantes, 'exención', 'exenciones')} esta semana</div>
       </div>
+      <button class="boton fino secundario" style="width:auto;padding:9px 16px" data-accion="irDieta">Marcar</button>
     </div>
   </div>
 
@@ -107,9 +165,12 @@ export function render(ctx) {
       <span class="mini">Ganado hoy</span>
       <b>${hoy ? hoy.recompensa.total.xp : 0} XP · ${hoy ? hoy.recompensa.total.monedas : 0} 🪙</b>
     </div>
-  </div>`;
+  </div>
+
+  ${progreso(ctx)}`;
 }
 
 export const acciones = {
-  registrar: (_, ctx) => ctx.ir('registrar'),
+  irEntreno: (_, ctx) => ctx.ir('entreno'),
+  irDieta: (_, ctx) => ctx.ir('dieta'),
 };

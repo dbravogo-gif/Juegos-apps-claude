@@ -8,27 +8,33 @@ export function rutinasPorDefecto() {
       id: 'r_torso',
       nombre: 'Torso',
       ejercicios: [
-        { id: 'e1', nombre: 'Press banca', importancia: 'principal' },
-        { id: 'e2', nombre: 'Remo con barra', importancia: 'principal' },
-        { id: 'e3', nombre: 'Press militar', importancia: 'secundario' },
-        { id: 'e4', nombre: 'Dominadas', importancia: 'secundario' },
-        { id: 'e5', nombre: 'Elevaciones laterales', importancia: 'secundario' },
-        { id: 'e6', nombre: 'Curl de bíceps', importancia: 'opcional' },
+        { id: 'e1', nombre: 'Press banca', importancia: 'principal', series: 4, repMin: 6, repMax: 8 },
+        { id: 'e2', nombre: 'Remo con barra', importancia: 'principal', series: 4, repMin: 8, repMax: 10 },
+        { id: 'e3', nombre: 'Press militar', importancia: 'secundario', series: 3, repMin: 8, repMax: 10 },
+        { id: 'e4', nombre: 'Dominadas', importancia: 'secundario', series: 3, repMin: 6, repMax: 10 },
+        { id: 'e5', nombre: 'Elevaciones laterales', importancia: 'secundario', series: 3, repMin: 12, repMax: 15 },
+        { id: 'e6', nombre: 'Curl de bíceps', importancia: 'opcional', series: 3, repMin: 10, repMax: 12 },
       ],
     },
     {
       id: 'r_pierna',
       nombre: 'Pierna',
       ejercicios: [
-        { id: 'e7', nombre: 'Sentadilla', importancia: 'principal' },
-        { id: 'e8', nombre: 'Peso muerto rumano', importancia: 'principal' },
-        { id: 'e9', nombre: 'Prensa', importancia: 'secundario' },
-        { id: 'e10', nombre: 'Curl femoral', importancia: 'secundario' },
-        { id: 'e11', nombre: 'Gemelos', importancia: 'opcional' },
-        { id: 'e12', nombre: 'Plancha', importancia: 'opcional' },
+        { id: 'e7', nombre: 'Sentadilla', importancia: 'principal', series: 4, repMin: 6, repMax: 8 },
+        { id: 'e8', nombre: 'Peso muerto rumano', importancia: 'principal', series: 3, repMin: 8, repMax: 10 },
+        { id: 'e9', nombre: 'Prensa', importancia: 'secundario', series: 3, repMin: 10, repMax: 12 },
+        { id: 'e10', nombre: 'Curl femoral', importancia: 'secundario', series: 3, repMin: 10, repMax: 12 },
+        { id: 'e11', nombre: 'Gemelos', importancia: 'opcional', series: 3, repMin: 12, repMax: 15 },
+        { id: 'e12', nombre: 'Plancha', importancia: 'opcional', series: 3, repMin: 30, repMax: 60 },
       ],
     },
   ];
+}
+
+/** Plan de comidas de partida: mismo menú los siete días, para que se edite y no se escriba. */
+export function comidasPorDefecto() {
+  const dia = ['Desayuno', 'Comida', 'Cena'];
+  return Object.fromEntries([0, 1, 2, 3, 4, 5, 6].map((i) => [i, [...dia]]));
 }
 
 export const ETIQUETA_ESTADO = {

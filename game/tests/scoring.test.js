@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { puntuarEntreno } from '../src/core/scoring/workout.js';
+import { puntuarEntreno, estadoPorSeries } from '../src/core/scoring/workout.js';
 import {
   puntuarDiaComida,
   exencionesComidaDisponibles,
@@ -219,4 +219,18 @@ test('el bonus combinado exige que ambas rachas lleguen a la semana', () => {
   const { bonusCombinado, comida } = calcularMultiplicador(dias);
   assert.equal(comida.activa, false);
   assert.equal(bonusCombinado, 0);
+});
+
+// --- Registro serie a serie ---
+
+test('el estado del ejercicio sale de las series completadas', () => {
+  assert.equal(estadoPorSeries(3, []), null, 'sin tocar no es lo mismo que omitido');
+  assert.equal(estadoPorSeries(3, [{ hecha: true }]), 'parcial');
+  assert.equal(estadoPorSeries(3, [{ hecha: true }, { hecha: true }, { hecha: true }]), 'completado');
+  assert.equal(estadoPorSeries(3, [{ peso: '80', reps: '8' }]), null, 'anotar sin marcar no cuenta');
+});
+
+test('hacer series de más no deja el ejercicio a medias', () => {
+  const cinco = Array.from({ length: 5 }, () => ({ hecha: true }));
+  assert.equal(estadoPorSeries(3, cinco), 'completado');
 });

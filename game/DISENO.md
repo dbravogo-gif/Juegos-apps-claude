@@ -25,6 +25,16 @@ cumplimiento = Σ(peso × factor del estado) / Σ(peso exigido)
 Pesos: principal 3, secundario 2, opcional 0. Los opcionales se pueden registrar para tener
 la rutina entera, pero ni suman ni restan.
 
+Se puntúa contra **la rutina entera**, no contra lo que se haya tocado. Un ejercicio sin
+marcar se ignora mientras el día sigue abierto —todavía puedes hacerlo— y cuenta como
+omitido al cerrarse el día. Sin esa regla bastaría con registrar el ejercicio fácil y dejar
+el resto en blanco para firmar un 100 %.
+
+Cada ejercicio se anota serie a serie, con peso y repeticiones, igual que en Bulk Up. El
+estado sale de ahí: todas las series hechas es `completado`, algunas es `parcial`, ninguna
+es «sin tocar». `sustituido`, `justificado` y `omitido` se marcan a mano, porque no hay
+manera de deducirlos de unos números.
+
 Estados y factor: `completado` 1, `sustituido` 1, `parcial` 0.5, `omitido` 0.
 `justificado` (molestia, lesión) **se excluye del denominador**: ni suma ni penaliza.
 
@@ -40,8 +50,17 @@ silencio: el principio es no penalizar la salud.
 
 ## Alimentación
 
-Cualitativo, sin cantidades. Cada comida es `completo` (1), `excepcion_menor` (0,9) o
-`incumplido` (0). La puntuación del día es la media de las comidas **no exentas**.
+Cualitativo, sin cantidades. Se planifica la semana por escrito —«lunes, comida: pollo con
+arroz y tomate»— y el día solo consiste en decir si se ha cumplido. El planificador vive en
+`plan.comidasPorDia`, con el lunes como 0.
+
+Cada comida es `completo` (1), `excepcion_menor` (0,9) o `incumplido` (0). La puntuación del
+día es la media de las comidas **no exentas**. Una comida del plan sin marcar se ignora
+mientras el día sigue abierto y cuenta como incumplida al cerrarse, por el mismo motivo que
+en el entrenamiento.
+
+La lista del día se congela en cuanto se marca algo: cambiar el plan semanal no reescribe
+días ya registrados.
 
 La excepción menor puntúa 0,9 y no 1 para que la distinción signifique algo, pero queda por
 encima de todos los umbrales: un postre pequeño no arruina el día.
@@ -195,10 +214,18 @@ copia manual a archivo JSON desde Ajustes.
 | --- | --- | --- |
 | Núcleo | `src/core` | Puntuación, rachas y economía. Sin DOM ni almacenamiento |
 | Datos | `src/data` | Persistencia, migraciones y reconstrucción del historial |
-| Interfaz | `src/ui` | Cuatro pantallas: Hoy, Registrar, Progreso y Ajustes |
+| Interfaz | `src/ui` | Seis pantallas: Hoy, Entreno, Dieta, Héroe, Mundo y Ajustes |
 
 El núcleo no importa nada de las otras dos capas, para que la lógica siga siendo probable
 sin navegador y reutilizable si algún día hay servidor o app nativa.
+
+Entreno y Dieta son secciones separadas, cada una con dos pestañas: el registro del día y
+la edición del plan (la rutina y el menú semanal). Hoy reúne el resumen y el progreso.
+
+Los campos de texto que se escriben letra a letra van marcados con `data-directo`: se
+guardan en cada pulsación **sin repintar**. Repintar mientras alguien escribe destruye el
+campo que tiene bajo el dedo y le roba el foco, que es de donde venían los fallos de
+«no coge la opción que has marcado».
 
 ### Reglas contra la explotación
 
