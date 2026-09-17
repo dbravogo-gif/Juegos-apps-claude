@@ -1,6 +1,6 @@
 import { calcularMultiplicador } from './scoring/streaks.js';
 import { recompensaDelDia, presupuestoExtras } from './economy/rewards.js';
-import { VENTANA_MEDIA_RECIENTE, MIN_REGISTROS_PARA_MEDIA } from './constants.js';
+import { VENTANA_MEDIA_RECIENTE, MIN_REGISTROS_PARA_MEDIA, OTRA_ACTIVIDAD } from './constants.js';
 
 /**
  * Media de los días anteriores a `indice` (el día que se cierra no entra: uno se compara
@@ -27,11 +27,12 @@ const puntuacionComidaDe = (dia) => (dia.comida ? dia.comida.puntuacion : null);
  *
  * @param {import('./scoring/streaks.js').DiaHistorial[]} historial ordenado por fecha
  * @param {number} indice día que se cierra
+ * @param {{ diasPorSemana?: number }} opciones
  */
-export function resumenDelDia(historial, indice) {
+export function resumenDelDia(historial, indice, opciones) {
   const hastaHoy = historial.slice(0, indice + 1);
   const dia = historial[indice];
-  const rachas = calcularMultiplicador(hastaHoy);
+  const rachas = calcularMultiplicador(hastaHoy, opciones);
 
   const cumplimientoEntreno = cumplimientoEntrenoDe(dia);
   const puntuacionComida = puntuacionComidaDe(dia);
@@ -40,6 +41,8 @@ export function resumenDelDia(historial, indice) {
     cumplimientoEntreno,
     puntuacionComida,
     multiplicador: rachas.multiplicador,
+    // Sin multiplicador a propósito: la actividad de fuera se reconoce, no se farmea.
+    fijo: dia.sesion === 'otra' ? OTRA_ACTIVIDAD : null,
   });
 
   const extras = presupuestoExtras(

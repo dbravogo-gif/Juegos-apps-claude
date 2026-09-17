@@ -1,27 +1,30 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { construirHistorial, planDelDia, diaDeLaSemana, evaluarDia, esEditable } from '../src/data/history.js';
+import { construirHistorial, tipoDeSesion, diaDeLaSemana, evaluarDia, esEditable } from '../src/data/history.js';
 import { estadoInicial, migrar, importar, exportar, VERSION_ESQUEMA } from '../src/data/storage.js';
 import { clasificarEntreno } from '../src/core/scoring/streaks.js';
 
 // 2026-09-14 es lunes.
-test('la semana del plan empieza en lunes', () => {
+test('la semana empieza en lunes', () => {
   assert.equal(diaDeLaSemana('2026-09-14'), 0);
   assert.equal(diaDeLaSemana('2026-09-20'), 6);
 });
 
-test('el plan decide si un día se exige o es descanso', () => {
-  const plan = { diasEntreno: [0, 1, 3, 4] };
-  assert.equal(planDelDia(plan, '2026-09-14'), 'entreno');
-  assert.equal(planDelDia(plan, '2026-09-16'), 'descanso');
+test('la sesión del día sale de lo que se eligió, no del calendario', () => {
+  assert.equal(tipoDeSesion(undefined), 'sin_decidir');
+  assert.equal(tipoDeSesion({}), 'sin_decidir');
+  assert.equal(tipoDeSesion({ sesion: 'descanso' }), 'descanso');
+  assert.equal(tipoDeSesion({ sesion: 'otra' }), 'otra');
+  assert.equal(tipoDeSesion({ sesion: 'r_torso' }), 'entreno');
 });
 
-test('los días sin abrir la app se rellenan y cuentan como fallados', () => {
+test('los días sin abrir la app se rellenan y no se dan por buenos', () => {
   const db = {
-    plan: { diasEntreno: [0, 1, 2, 3, 4, 5, 6] },
+    plan: { comidasPorDia: {} },
+    rutinas: [{ id: 'r', nombre: 'R', ejercicios: [{ id: 'a', importancia: 'principal' }] }],
     dias: {
-      '2026-09-14': { ejercicios: [{ id: 'a', importancia: 'principal', estado: 'completado' }] },
+      '2026-09-14': { sesion: 'r', ejercicios: [{ id: 'a', importancia: 'principal', estado: 'completado' }] },
     },
   };
 
@@ -31,41 +34,53 @@ test('los días sin abrir la app se rellenan y cuentan como fallados', () => {
   assert.equal(historial[4].fecha, '2026-09-18');
 
   assert.equal(clasificarEntreno(historial[0]), 'cumplido');
-  assert.equal(clasificarEntreno(historial[1]), 'fallado', 'el hueco debe contar como fallado');
+  // El hueco no se exige por sí solo; lo que sostiene la racha es la cuota de la ventana.
+  assert.equal(clasificarEntreno(historial[1]), 'no_exigido');
+  assert.equal(historial[1].sesion, 'sin_decidir');
 });
 
-test('un hueco en un día de descanso no penaliza', () => {
-  const db = {
-    plan: { diasEntreno: [0] },
-    dias: { '2026-09-14': { ejercicios: [{ id: 'a', importancia: 'principal', estado: 'completado' }] } },
-  };
-  const historial = construirHistorial(db, '2026-09-16');
-  assert.equal(clasificarEntreno(historial[2]), 'no_exigido');
+test('un día de descanso no penaliza', () => {
+  const db = { plan: { comidasPorDia: {} }, rutinas: [], dias: { '2026-09-14': { sesion: 'descanso' } } };
+  assert.equal(clasificarEntreno(construirHistorial(db, '2026-09-14')[0]), 'no_exigido');
 });
 
 test('un historial sin registros no produce días', () => {
-  const db = { plan: { diasEntreno: [0] }, dias: {} };
+  const db = { plan: { comidasPorDia: {} }, rutinas: [], dias: {} };
   assert.deepEqual(construirHistorial(db, '2026-09-16'), [
-    { fecha: '2026-09-16', planEntreno: 'descanso', entreno: null, comida: null, extras: [] },
+    { fecha: '2026-09-16', sesion: 'sin_decidir', entreno: null, comida: null, extras: [] },
   ]);
 });
 
-test('evaluarDia puntúa ejercicios y comidas del registro', () => {
+test('evaluarDia puntúa los ejercicios de la rutina elegida y las comidas', () => {
+  const db = {
+    plan: { comidasPorDia: {} },
+    rutinas: [
+      {
+        id: 'r',
+        ejercicios: [
+          { id: 'a', importancia: 'principal' },
+          { id: 'b', importancia: 'secundario' },
+        ],
+      },
+    ],
+  };
   const registro = {
+    sesion: 'r',
     ejercicios: [
       { id: 'a', importancia: 'principal', estado: 'completado' },
       { id: 'b', importancia: 'secundario', estado: 'omitido' },
     ],
     comidas: [{ id: 'c1', estado: 'completo' }, { id: 'c2', estado: 'incumplido' }],
   };
-  const dia = evaluarDia(registro, 'entreno', '2026-09-16');
+  const dia = evaluarDia(registro, '2026-09-16', { db });
   assert.equal(dia.entreno.cumplimiento, 3 / 5);
   assert.equal(dia.comida.puntuacion, 0.5);
 });
 
-test('el registro puede sobreescribir el plan de ese día', () => {
-  const dia = evaluarDia({ planEntreno: 'descanso' }, 'entreno', '2026-09-16');
-  assert.equal(dia.planEntreno, 'descanso');
+test('marcar descanso descarta lo que hubiera anotado ese día', () => {
+  const dia = evaluarDia({ sesion: 'descanso', ejercicios: [{ id: 'a', importancia: 'principal', estado: 'completado' }] }, '2026-09-16');
+  assert.equal(dia.sesion, 'descanso');
+  assert.equal(dia.entreno, null);
 });
 
 test('un documento desconocido se migra al esquema actual sin perder datos', () => {
@@ -75,7 +90,7 @@ test('un documento desconocido se migra al esquema actual sin perder datos', () 
   assert.equal(migrado.version, VERSION_ESQUEMA);
   assert.equal(migrado.monedasGastadas, 30);
   assert.deepEqual(Object.keys(migrado.dias), ['2026-09-14']);
-  assert.ok(Array.isArray(migrado.plan.diasEntreno), 'los campos nuevos reciben su valor por defecto');
+  assert.equal(typeof migrado.plan.diasPorSemana, 'number', 'los campos nuevos reciben su valor por defecto');
 });
 
 test('la copia de seguridad va y vuelve', () => {
@@ -111,46 +126,47 @@ const RUTINA = {
 };
 
 const dbConRutina = (dias) => ({
-  plan: { diasEntreno: [0], rutinaPorDia: { 0: 'r' }, comidasPorDia: {} },
+  plan: { diasPorSemana: 4, comidasPorDia: {} },
   rutinas: [RUTINA],
   dias,
 });
 
 test('explotación: registrar solo un ejercicio no firma la sesión entera', () => {
-  const registro = { ejercicios: [{ id: 'c', importancia: 'secundario', estado: 'completado' }] };
+  const registro = { sesion: 'r', ejercicios: [{ id: 'c', importancia: 'secundario', estado: 'completado' }] };
   const db = dbConRutina({ '2026-09-14': registro });
 
-  const abierto = evaluarDia(registro, 'entreno', '2026-09-14', { db, hoy: '2026-09-14' });
+  const abierto = evaluarDia(registro, '2026-09-14', { db, hoy: '2026-09-14' });
   assert.equal(abierto.entreno.cumplimiento, 1, 'mientras el día sigue abierto no se le da por omitido');
 
-  const cerrado = evaluarDia(registro, 'entreno', '2026-09-14', { db, hoy: '2026-09-15' });
+  const cerrado = evaluarDia(registro, '2026-09-14', { db, hoy: '2026-09-15' });
   assert.ok(cerrado.entreno.cumplimiento < 0.3, `firmó ${cerrado.entreno.cumplimiento} haciendo un ejercicio de tres`);
 });
 
 test('las comidas del día salen del plan semanal aunque no se haya tocado nada', () => {
   const db = {
-    plan: { diasEntreno: [], comidasPorDia: { 0: ['Desayuno', 'Comida', 'Cena'] } },
+    plan: { diasPorSemana: 4, comidasPorDia: { 0: ['Desayuno', 'Comida', 'Cena'] } },
     rutinas: [],
     dias: {},
   };
 
-  const dia = evaluarDia(undefined, 'descanso', '2026-09-14', { db, hoy: '2026-09-14' });
+  const dia = evaluarDia(undefined, '2026-09-14', { db, hoy: '2026-09-14' });
   assert.equal(dia.comida.puntuacion, null, 'sin marcar nada el día abierto no puntúa');
 
   const marcado = { comidas: [{ id: 'p0', nombre: 'Desayuno', estado: 'completo' }] };
-  const parcial = evaluarDia(marcado, 'descanso', '2026-09-14', { db, hoy: '2026-09-15' });
+  const parcial = evaluarDia(marcado, '2026-09-14', { db, hoy: '2026-09-15' });
   assert.equal(parcial.comida.comidasComputadas, 1, 'al cerrar solo cuenta lo que quedó guardado');
 });
 
 test('editar la rutina no borra lo que ya se registró de un ejercicio retirado', () => {
   const registro = {
+    sesion: 'r',
     ejercicios: [
       { id: 'a', importancia: 'principal', estado: 'completado' },
       { id: 'viejo', importancia: 'secundario', estado: 'completado' },
     ],
   };
   const db = dbConRutina({ '2026-09-14': registro });
-  const dia = evaluarDia(registro, 'entreno', '2026-09-14', { db, hoy: '2026-09-14' });
+  const dia = evaluarDia(registro, '2026-09-14', { db, hoy: '2026-09-14' });
 
   assert.equal(dia.entreno.pesoTotal, 3 + 2, 'el ejercicio fuera de rutina sigue contando');
 });

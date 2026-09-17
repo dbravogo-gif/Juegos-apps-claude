@@ -28,9 +28,18 @@ function aplicar(base, cumplimiento, umbral, multiplicador) {
 /**
  * Recompensa de un día por actividad real, ya multiplicada por las rachas.
  *
- * @param {{ cumplimientoEntreno?: number|null, puntuacionComida?: number|null, multiplicador?: number }} dia
+ * `fijo` es una cantidad que se suma sin escalar por rachas ni cumplimiento: la usa la
+ * actividad de fuera del gimnasio, que se reconoce pero no debe poder farmearse.
+ *
+ * @param {{ cumplimientoEntreno?: number|null, puntuacionComida?: number|null,
+ *           multiplicador?: number, fijo?: { xp: number, monedas: number }|null }} dia
  */
-export function recompensaDelDia({ cumplimientoEntreno, puntuacionComida, multiplicador = 1 }) {
+export function recompensaDelDia({
+  cumplimientoEntreno,
+  puntuacionComida,
+  multiplicador = 1,
+  fijo = null,
+}) {
   const entreno =
     typeof cumplimientoEntreno === 'number'
       ? aplicar(RECOMPENSA_BASE.entreno, cumplimientoEntreno, UMBRAL_DIA_CUMPLIDO.entreno, multiplicador)
@@ -40,10 +49,16 @@ export function recompensaDelDia({ cumplimientoEntreno, puntuacionComida, multip
       ? aplicar(RECOMPENSA_BASE.comida, puntuacionComida, UMBRAL_DIA_CUMPLIDO.comida, multiplicador)
       : { xp: 0, monedas: 0 };
 
+  const otra = fijo ?? { xp: 0, monedas: 0 };
+
   return {
     entreno,
     comida,
-    total: { xp: entreno.xp + comida.xp, monedas: entreno.monedas + comida.monedas },
+    otra,
+    total: {
+      xp: entreno.xp + comida.xp + otra.xp,
+      monedas: entreno.monedas + comida.monedas + otra.monedas,
+    },
   };
 }
 

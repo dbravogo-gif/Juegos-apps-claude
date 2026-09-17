@@ -68,19 +68,43 @@ encima de todos los umbrales: un postre pequeño no arruina el día.
 Exenciones: **2 comidas por semana natural** (lunes a domingo). Una comida exenta se excluye
 del cálculo en lugar de puntuar cero.
 
+## El día de entrenamiento
+
+No hay días de entreno fijos en el calendario. El plan es un **compromiso semanal**: cuántos
+días a la semana entrenas (`plan.diasPorSemana`). Qué día lo haces y con qué rutina se elige
+al abrir el día, igual que en Bulk Up.
+
+El día se resuelve en `dias[fecha].sesion`, que guarda el id de la rutina elegida, o:
+
+| Valor | Qué significa |
+| --- | --- |
+| `descanso` | Hoy no toca. No se exige nada |
+| `otra` | Deporte fuera del gimnasio: fútbol, monte, una clase |
+| sin valor | Todavía sin decidir |
+
+`otra` existe porque quien no va al gimnasio por jugar al fútbol no debería salir castigado.
+No cuenta como sesión —si contara, sería un botón para mantener el bonus sin pisar el
+gimnasio— pero tampoco penaliza, y se reconoce con 30 XP fijos, **sin multiplicador**, para
+que marcarla no sea una forma de farmear.
+
 ## Rachas
 
 Ventana móvil de 7 días. Cada día se clasifica como:
 
 - **cumplido**: entreno ≥ 75 % o comida ≥ 70 %
-- **no exigido**: descanso planificado, exención, o sesión adaptada por completo
-- **fallado**: por debajo del umbral, o sin registro
+- **no exigido**: descanso, otra actividad, día sin decidir, exención, o sesión adaptada
+- **fallado**: por debajo del umbral, o sin registro de comida
 
-La racha sigue viva si en la ventana hay **como mucho 1 día fallado** y **al menos 1-2 días
-cumplidos**. Los días no exigidos no consumen el margen de fallo.
+La racha sigue viva si en la ventana hay **como mucho 1 día fallado** y una **cuota de días
+cumplidos** que sale del compromiso semanal: con 4 días por semana, la ventana necesita 3.
 
-El mínimo de cumplidos existe para cerrar un agujero: sin él, marcar todos los días como
-descanso planificado mantendría la racha —y su bonus— sin haber entrenado nunca.
+Esa cuota es lo que sostiene la racha ahora que no hay días fijos. Sin ella bastaría con
+marcar descanso —o no marcar nada— para mantenerla sin haber entrenado nunca; y quien deja
+de abrir la app la pierde igual, porque su ventana se queda sin cumplidos.
+
+La cuota se escala al tamaño real de la ventana, porque los primeros días del historial
+tienen menos de siete: exigir tres sesiones en una ventana de dos días sería imposible y
+nadie llegaría a tener racha.
 
 Al romperse, la racha **conserva la mitad** de los días acumulados en lugar de reiniciar a
 cero, y se congela hasta que vuelve a estar activa.
@@ -262,7 +286,14 @@ El núcleo no importa nada de las otras dos capas, para que la lógica siga sien
 sin navegador y reutilizable si algún día hay servidor o app nativa.
 
 Entreno y Dieta son secciones separadas, cada una con dos pestañas: el registro del día y
-la edición del plan (la rutina y el menú semanal). Hoy reúne el resumen y el progreso.
+la edición del plan (las rutinas y el menú semanal). Hoy reúne el resumen y el progreso.
+
+En Entreno, el día empieza con un recuadro por rutina más «Descanso» y «Otra actividad»:
+se elige y debajo aparece lo que toque. Se pueden crear tantas rutinas como se quiera.
+
+Cada elemento con acción atiende **un solo evento**: los botones el clic, los `<select>` el
+`change` y los campos con `data-directo` el `input`. Un `<select>` que atendiera el clic se
+repintaba con el desplegable abierto y se cerraba solo al soltar.
 
 Los campos de texto que se escriben letra a letra van marcados con `data-directo`: se
 guardan en cada pulsación **sin repintar**. Repintar mientras alguien escribe destruye el

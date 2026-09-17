@@ -50,8 +50,8 @@ test('las exenciones no se pueden solapar ni exceder el cupo anual', () => {
   assert.equal(puedeActivarExencion(agotadas, '2026-09-20', '2026-09-16').motivo, 'sin_exenciones');
 });
 
-test('un día exento no se exige aunque estuviera planificado como entreno', () => {
-  const historial = [{ fecha: '2026-09-16', planEntreno: 'entreno', entreno: null }];
+test('un día exento no se exige aunque se hubiera elegido rutina', () => {
+  const historial = [{ fecha: '2026-09-16', sesion: 'entreno', entreno: null }];
   assert.equal(clasificarEntreno(historial[0]), 'fallado');
 
   const conExencion = aplicarExenciones(historial, [{ id: 'a', inicio: '2026-09-16' }]);
@@ -60,7 +60,7 @@ test('un día exento no se exige aunque estuviera planificado como entreno', () 
 
 const dia = (fecha, cumplimiento, puntuacion) => ({
   fecha,
-  planEntreno: 'entreno',
+  sesion: 'entreno',
   entreno: { cumplimiento },
   comida: { puntuacion, comidasExentas: 0 },
   extras: [],

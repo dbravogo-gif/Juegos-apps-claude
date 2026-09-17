@@ -19,22 +19,26 @@ const acotar = (v) => Math.min(1, Math.max(0, Number(v.toFixed(3))));
 
 const PERFILES = {
   'Constante (4 ses/sem)': {
-    diasEntreno: [0, 1, 3, 4],
+    diasEntrena: (i) => [0, 1, 3, 4].includes(i % 7),
+    diasPorSemana: 4,
     cumplimiento: (i) => acotar(0.92 + ruido(i, 12.9)),
     comida: (i) => acotar(0.95 + ruido(i, 4.7)),
   },
   'Principiante (3 ses/sem)': {
-    diasEntreno: [0, 2, 4],
+    diasEntrena: (i) => [0, 2, 4].includes(i % 7),
+    diasPorSemana: 3,
     cumplimiento: (i) => acotar(0.8 + ruido(i, 7.3)),
     comida: (i) => acotar(0.8 + ruido(i, 9.1)),
   },
   'Principiante plano (0,8 fijo)': {
-    diasEntreno: [0, 2, 4],
+    diasEntrena: (i) => [0, 2, 4].includes(i % 7),
+    diasPorSemana: 3,
     cumplimiento: () => 0.8,
     comida: () => 0.8,
   },
   'Irregular (falla 1 de 3)': {
-    diasEntreno: [0, 1, 3, 4],
+    diasEntrena: (i) => [0, 1, 3, 4].includes(i % 7),
+    diasPorSemana: 4,
     cumplimiento: (i) => (i % 3 === 0 ? 0.3 : 0.9),
     comida: (i) => (i % 4 === 0 ? 0.4 : 0.9),
   },
@@ -43,10 +47,10 @@ const PERFILES = {
 function simular(perfil) {
   const historial = [];
   for (let i = 0; i < DIAS; i += 1) {
-    const entrena = perfil.diasEntreno.includes(i % 7);
+    const entrena = perfil.diasEntrena(i);
     historial.push({
       fecha: fecha(i),
-      planEntreno: entrena ? 'entreno' : 'descanso',
+      sesion: entrena ? 'entreno' : 'descanso',
       entreno: entrena ? { cumplimiento: perfil.cumplimiento(i) } : null,
       comida: { puntuacion: perfil.comida(i), comidasExentas: 0 },
     });
@@ -58,7 +62,7 @@ function simular(perfil) {
   let multiplicadorFinal = 1;
 
   historial.forEach((_, i) => {
-    const resumen = resumenDelDia(historial, i);
+    const resumen = resumenDelDia(historial, i, { diasPorSemana: perfil.diasPorSemana });
     xp += resumen.recompensa.total.xp;
     monedas += resumen.recompensa.total.monedas;
     if (resumen.extras.desbloqueado) diasConExtras += 1;

@@ -8,8 +8,9 @@ export function estadoInicial() {
     version: VERSION_ESQUEMA,
     perfil: { nombre: '', creado: new Date().toISOString().slice(0, 10) },
     plan: {
-      diasEntreno: [0, 1, 3, 4],
-      rutinaPorDia: { 0: 'r_torso', 1: 'r_pierna', 3: 'r_torso', 4: 'r_pierna' },
+      // Cuántos días a la semana te comprometes a entrenar. Qué día y con qué rutina se
+      // decide al abrir el día, no en un calendario fijo.
+      diasPorSemana: 4,
       // Qué se supone que comes cada día de la semana, con el lunes como 0.
       comidasPorDia: comidasPorDefecto(),
     },
@@ -52,6 +53,18 @@ const almacen = {
   },
 };
 
+/** Qué sesión fue un día guardado con el esquema viejo, deducida de lo que anotó. */
+function sesionDe(dia, rutinas) {
+  if (dia.sesion) return dia.sesion;
+  if (dia.planEntreno === 'descanso') return 'descanso';
+
+  const ids = new Set((dia.ejercicios ?? []).map((e) => e.id));
+  if (ids.size === 0) return undefined;
+
+  const rutina = rutinas.find((r) => r.ejercicios.some((e) => ids.has(e.id)));
+  return rutina?.id;
+}
+
 /**
  * Lleva un documento guardado al esquema actual.
  * El plan se fusiona campo a campo: si se mezclara entero, un guardado anterior sin
@@ -65,6 +78,12 @@ export function migrar(db) {
   if (!plan.comidasPorDia || Object.keys(plan.comidasPorDia).length === 0) {
     plan.comidasPorDia = base.plan.comidasPorDia;
   }
+  // Los días fijos del calendario se resumen en cuántos eran; el resto sobra.
+  if (Array.isArray(db.plan?.diasEntreno) && db.plan.diasEntreno.length) {
+    plan.diasPorSemana = db.plan.diasEntreno.length;
+  }
+  delete plan.diasEntreno;
+  delete plan.rutinaPorDia;
 
   // Lo colocado se guardaba por número de casilla y ahora va por id de sitio. Los números
   // sueltos ya no apuntan a nada, así que se devuelven al inventario en vez de desaparecer.
@@ -80,7 +99,13 @@ export function migrar(db) {
     ejercicios: (rutina.ejercicios ?? []).map((e) => ({ series: 3, repMin: 8, repMax: 12, ...e })),
   }));
 
-  return { ...base, ...db, plan, rutinas, colocados, version: VERSION_ESQUEMA };
+  // Los días guardaban si tocaba entrenar según el calendario; ahora guardan qué se hizo.
+  // Se deduce de los ejercicios anotados cuál era la rutina, para no perder el historial.
+  const dias = Object.fromEntries(
+    Object.entries(db.dias ?? {}).map(([fecha, dia]) => [fecha, { ...dia, sesion: sesionDe(dia, rutinas) }]),
+  );
+
+  return { ...base, ...db, plan, rutinas, colocados, dias, version: VERSION_ESQUEMA };
 }
 
 export function cargar() {

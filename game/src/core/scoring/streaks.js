@@ -9,18 +9,25 @@ import {
 
 /**
  * @typedef {'cumplido'|'fallado'|'no_exigido'} EstadoDia
+ * @typedef {'entreno'|'descanso'|'otra'|'sin_decidir'} TipoSesion
  * @typedef {{
  *   fecha: string,
- *   planEntreno: 'entreno'|'descanso',
+ *   sesion: TipoSesion,
  *   exencionEntreno?: boolean,
  *   entreno?: { cumplimiento: number|null } | null,
  *   comida?: { puntuacion: number|null, comidasExentas?: number } | null,
  * }} DiaHistorial
  */
 
-/** @returns {EstadoDia} */
+/**
+ * Los días que no son sesión de gimnasio —descanso, otra actividad, o sin decidir— no se
+ * exigen: no gastan el margen de fallo. Quien deja de abrir la app no se escapa por ahí,
+ * porque la ventana sigue necesitando su cuota de días cumplidos.
+ *
+ * @returns {EstadoDia}
+ */
 export function clasificarEntreno(dia) {
-  if (dia.planEntreno === 'descanso' || dia.exencionEntreno) return 'no_exigido';
+  if (dia.sesion !== 'entreno' || dia.exencionEntreno) return 'no_exigido';
   if (!dia.entreno) return 'fallado';
   // Sesión adaptada por completo (todo justificado): ni cuenta ni penaliza.
   if (dia.entreno.cumplimiento === null) return 'no_exigido';
@@ -37,15 +44,20 @@ export function clasificarComida(dia) {
 }
 
 /**
- * Mínimo de días cumplidos que la ventana debe contener para que la racha siga viva.
- * Sin esto, un plan con todos los días marcados como descanso mantendría la racha —y su
- * bonus— sin haber entrenado nunca.
+ * Días cumplidos que una ventana debe contener para que la racha de entreno siga viva.
+ * Sale del compromiso semanal: con 4 días por semana, la ventana completa necesita 3.
+ *
+ * Es lo que sostiene la racha ahora que no hay días fijos en el calendario. Sin esta cuota
+ * bastaría con marcar descanso —o no marcar nada— para mantenerla sin entrenar nunca.
+ *
+ * Se escala al tamaño real de la ventana porque los primeros días del historial tienen
+ * menos de siete: exigir tres sesiones en una ventana de dos días sería imposible de
+ * cumplir y nadie llegaría a tener racha.
  */
-function minimoCumplidos(ventanaDias) {
-  const exigidos = ventanaDias.filter(
-    (d) => d.planEntreno === 'entreno' && !d.exencionEntreno,
-  ).length;
-  return Math.max(1, Math.min(2, exigidos - DIAS_FALLO_PERMITIDOS));
+export function minimoCumplidosEntreno(diasPorSemana, largoVentana = VENTANA_RACHA) {
+  const comprometidos = Math.min(VENTANA_RACHA, Math.max(1, diasPorSemana));
+  const exigidos = Math.ceil((comprometidos * largoVentana) / VENTANA_RACHA);
+  return Math.max(1, exigidos - DIAS_FALLO_PERMITIDOS);
 }
 
 /**
@@ -57,8 +69,9 @@ function minimoCumplidos(ventanaDias) {
  *
  * @param {DiaHistorial[]} dias ordenados de más antiguo a más reciente
  * @param {(dia: DiaHistorial) => EstadoDia} clasificar
+ * @param {{ minimoCumplidos?: (largoVentana: number) => number }} opciones
  */
-export function calcularRacha(dias, clasificar) {
+export function calcularRacha(dias, clasificar, { minimoCumplidos = () => 1 } = {}) {
   const estados = dias.map(clasificar);
   let longitud = 0;
   let activa = false;
@@ -68,8 +81,7 @@ export function calcularRacha(dias, clasificar) {
     const ventana = estados.slice(desde, i + 1);
     const fallos = ventana.filter((e) => e === 'fallado').length;
     const cumplidos = ventana.filter((e) => e === 'cumplido').length;
-    const activaAhora =
-      fallos <= DIAS_FALLO_PERMITIDOS && cumplidos >= minimoCumplidos(dias.slice(desde, i + 1));
+    const activaAhora = fallos <= DIAS_FALLO_PERMITIDOS && cumplidos >= minimoCumplidos(ventana.length);
 
     if (activaAhora) longitud += 1;
     else if (activa) longitud = Math.floor(longitud * RETENCION_AL_ROMPER);
@@ -90,9 +102,13 @@ function bonusDe(racha, escalones) {
  * Nunca se multiplican bonus entre sí para que la economía no se dispare.
  *
  * @param {DiaHistorial[]} dias
+ * @param {{ diasPorSemana?: number }} opciones compromiso semanal de entrenos
  */
-export function calcularMultiplicador(dias) {
-  const entreno = calcularRacha(dias, clasificarEntreno);
+export function calcularMultiplicador(dias, { diasPorSemana = 4 } = {}) {
+  const entreno = calcularRacha(dias, clasificarEntreno, {
+    minimoCumplidos: (largo) => minimoCumplidosEntreno(diasPorSemana, largo),
+  });
+  // La comida se exige todos los días, así que ahí el margen de fallos ya hace el trabajo.
   const comida = calcularRacha(dias, clasificarComida);
 
   const bonusEntreno = bonusDe(entreno, BONUS_RACHA.entreno);

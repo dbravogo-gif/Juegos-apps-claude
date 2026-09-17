@@ -12,6 +12,7 @@ import {
   calcularMultiplicador,
   clasificarEntreno,
   clasificarComida,
+  minimoCumplidosEntreno,
 } from '../src/core/scoring/streaks.js';
 
 const ej = (id, importancia, estado) => ({ id, importancia, estado });
@@ -144,54 +145,75 @@ test('la semana natural empieza en lunes', () => {
 const FECHA_BASE = new Date('2026-09-01T00:00:00Z');
 const fechaDia = (i) => new Date(FECHA_BASE.getTime() + i * 86400000).toISOString().slice(0, 10);
 
-/** Construye un historial a partir de una plantilla: E=entreno ok, f=entreno fallado, D=descanso. */
+/**
+ * Historial a partir de una plantilla: E=sesión cumplida, f=sesión fallada, D=descanso,
+ * O=actividad de fuera del gimnasio, .=día sin decidir.
+ */
+const SESION = { D: 'descanso', O: 'otra', '.': 'sin_decidir' };
 const historial = (plantilla) =>
   [...plantilla].map((c, i) => ({
     fecha: fechaDia(i),
-    planEntreno: c === 'D' ? 'descanso' : 'entreno',
+    sesion: SESION[c] ?? 'entreno',
     entreno: c === 'E' ? { cumplimiento: 1 } : c === 'f' ? { cumplimiento: 0.4 } : null,
     comida: { puntuacion: 1, comidasExentas: 0 },
   }));
 
-test('los descansos planificados no rompen la racha de entreno', () => {
-  const racha = calcularRacha(historial('EDDEDDE'), clasificarEntreno);
+const rachaEntreno = (plantilla, diasPorSemana = 4) =>
+  calcularRacha(historial(plantilla), clasificarEntreno, {
+    minimoCumplidos: (largo) => minimoCumplidosEntreno(diasPorSemana, largo),
+  });
+
+test('los descansos no rompen la racha de entreno', () => {
+  // Tres sesiones y cuatro descansos, con un compromiso de tres días por semana.
+  const racha = rachaEntreno('EDDEDDE', 3);
   assert.ok(racha.activa);
   assert.equal(racha.longitud, 7);
 });
 
+test('el compromiso semanal es lo que decide: las mismas sesiones bastan o no', () => {
+  assert.ok(rachaEntreno('EDDEDDE', 3).activa, 'tres sesiones cumplen un plan de tres');
+  assert.equal(rachaEntreno('EDDEDDE', 5).activa, false, 'tres no cumplen un plan de cinco');
+});
+
+test('explotación: marcar «otra actividad» no sostiene la racha por sí solo', () => {
+  // Si contara como sesión, sería un botón para mantener el bonus sin pisar el gimnasio.
+  assert.equal(rachaEntreno('OOOOOOOOOOOO').activa, false);
+  assert.equal(rachaEntreno('..........').activa, false, 'ni dejar los días en blanco');
+});
+
 test('tres descansos seguidos a caballo entre semanas mantienen la racha', () => {
   // Plan de 4 sesiones: descansa de jueves a sábado y el lunes siguiente.
-  const racha = calcularRacha(historial('EEEDDDEEED'), clasificarEntreno);
+  const racha = rachaEntreno('EEEDDDEEED');
   assert.ok(racha.activa);
 });
 
 test('un fallo en la ventana no rompe la racha, dos sí', () => {
-  assert.ok(calcularRacha(historial('EEEfEEE'), clasificarEntreno).activa);
-  assert.equal(calcularRacha(historial('EEfEfEE'), clasificarEntreno).activa, false);
+  assert.ok(rachaEntreno('EEEfEEE').activa);
+  assert.equal(rachaEntreno('EEfEfEE').activa, false);
 });
 
 test('al romperse, la racha se reduce a la mitad en lugar de reiniciarse', () => {
-  const larga = calcularRacha(historial('EEEEEEEEEEEE'), clasificarEntreno);
+  const larga = rachaEntreno('EEEEEEEEEEEE');
   assert.equal(larga.longitud, 12);
-  const rota = calcularRacha(historial('EEEEEEEEEEEEff'), clasificarEntreno);
+  const rota = rachaEntreno('EEEEEEEEEEEEff');
   assert.equal(rota.activa, false);
   assert.ok(rota.longitud > 0 && rota.longitud < larga.longitud);
 });
 
 test('explotación: marcar todos los días como descanso no mantiene la racha', () => {
-  const racha = calcularRacha(historial('DDDDDDDDDDDDDD'), clasificarEntreno);
+  const racha = rachaEntreno('DDDDDDDDDDDDDD');
   assert.equal(racha.activa, false);
   assert.equal(racha.longitud, 0);
 });
 
 test('un día sin registro cuenta como fallado', () => {
-  assert.equal(clasificarEntreno({ planEntreno: 'entreno', entreno: null }), 'fallado');
+  assert.equal(clasificarEntreno({ sesion: 'entreno', entreno: null }), 'fallado');
   assert.equal(clasificarComida({ comida: null }), 'fallado');
 });
 
 test('una sesión adaptada por molestias no exige ni penaliza', () => {
   assert.equal(
-    clasificarEntreno({ planEntreno: 'entreno', entreno: { cumplimiento: null } }),
+    clasificarEntreno({ sesion: 'entreno', entreno: { cumplimiento: null } }),
     'no_exigido',
   );
 });

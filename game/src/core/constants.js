@@ -47,6 +47,12 @@ export const RECOMPENSA_BASE = {
   comida: { xp: 40, monedas: 20 },
 };
 
+// Actividad física fuera del gimnasio: fútbol, montaña, una clase. No cuenta como sesión
+// —si contara, sería un botón para mantener la racha sin haber entrenado nunca— pero
+// tampoco penaliza. Se reconoce con una cantidad fija y pequeña, sin multiplicador, para
+// que marcarla no sea una forma de farmear.
+export const OTRA_ACTIVIDAD = { xp: 30, monedas: 15 };
+
 export const PUNTUACION_COMIDA = {
   completo: 1,
   excepcion_menor: 0.9,

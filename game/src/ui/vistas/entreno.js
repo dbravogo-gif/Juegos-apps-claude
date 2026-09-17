@@ -1,8 +1,9 @@
 import { esc, plural } from '../util.js';
-import { ETIQUETA_ESTADO, NOMBRE_DIA } from '../../data/defaults.js';
+import { ETIQUETA_ESTADO } from '../../data/defaults.js';
 import { estadoPorSeries } from '../../core/scoring/workout.js';
-import { sumarDias } from '../../core/scoring/exemptions.js';
-import { esEditable, rutinaDelDia, ejerciciosDelDia } from '../../data/history.js';
+import { sumarDias, exencionesEntrenoDisponibles } from '../../core/scoring/exemptions.js';
+import { esEditable, rutinaDelDia } from '../../data/history.js';
+import { minimoCumplidosEntreno } from '../../core/scoring/streaks.js';
 
 /** Estados que no salen de las series y hay que marcar a mano. */
 const MANUALES = [
@@ -15,7 +16,7 @@ let pestana = 'sesion';
 const pct = (v) => (typeof v === 'number' ? `${Math.round(v * 100)} %` : '—');
 
 export function subtitulo(ctx) {
-  if (pestana === 'plan') return plural(ctx.db.rutinas.length, 'rutina', 'rutinas');
+  if (pestana === 'plan') return `${plural(ctx.db.rutinas.length, 'rutina', 'rutinas')} · ${ctx.db.plan.diasPorSemana} días/semana`;
   const dia = new Date(`${ctx.fecha}T00:00:00`);
   const etiqueta = ctx.fecha === ctx.hoy ? 'Hoy' : dia.toLocaleDateString('es-ES', { weekday: 'long' });
   return `${etiqueta} · ${dia.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}`;
@@ -94,15 +95,55 @@ function ejercicioHTML(ficha, registro, ctx, bloqueado) {
   </div>`;
 }
 
+/**
+ * Tarjetas de elección del día: una por rutina, más descanso y actividad de fuera. Nada de
+ * calendario: el día que entrenas eliges qué toca, igual que en Bulk Up.
+ */
+function eleccionHTML(ctx, bloqueado) {
+  const elegida = ctx.registroDe(ctx.fecha).sesion ?? null;
+
+  const tarjeta = (id, nombre, detalle, clase = '') => `
+    <button class="opcion ${clase}" aria-pressed="${elegida === id}" ${bloqueado ? 'disabled' : ''}
+      data-accion="elegirSesion" data-sesion="${esc(id)}">
+      <b>${esc(nombre)}</b>
+      <span class="mini">${esc(detalle)}</span>
+    </button>`;
+
+  const rutinas = ctx.db.rutinas
+    .map((r) => tarjeta(r.id, r.nombre, plural(r.ejercicios.length, 'ejercicio', 'ejercicios')))
+    .join('');
+
+  return `
+  <div class="opciones">
+    ${rutinas}
+    ${tarjeta('descanso', 'Descanso', 'Hoy no toca', 'suave')}
+    ${tarjeta('otra', 'Otra actividad', 'Fútbol, monte, una clase…', 'suave')}
+  </div>`;
+}
+
 function renderSesion(ctx) {
   const { fecha, hoy } = ctx;
   const bloqueado = !esEditable(fecha, hoy);
   const registro = ctx.registroDe(fecha);
-  const plan = ctx.planDe(fecha);
-  const rutina = plan === 'entreno' ? rutinaDelDia(ctx.db, fecha) : null;
+  const sesion = ctx.sesionDe(fecha);
+  const rutina = rutinaDelDia(ctx.db, registro);
   const evaluacion = ctx.evaluacionDe(fecha);
   const porId = new Map((registro.ejercicios ?? []).map((e) => [e.id, e]));
   const exceso = evaluacion.entreno?.justificadosExcedidos ?? [];
+  const exenciones = exencionesEntrenoDisponibles(ctx.db.exenciones, hoy);
+
+  const cuerpo = {
+    entreno: () =>
+      `<div class="entre" style="margin:18px 0 10px">
+         <b>${esc(rutina?.nombre ?? '')}</b>
+         <span class="mini">Cumplimiento ${pct(evaluacion.entreno?.cumplimiento)}</span>
+       </div>` +
+      (rutina?.ejercicios ?? []).map((e) => ejercicioHTML(e, porId.get(e.id), ctx, bloqueado)).join(''),
+    descanso: () => '<div class="vacio">Día de descanso. No se te exige nada.</div>',
+    otra: () =>
+      '<div class="vacio">Actividad fuera del gimnasio. No rompe la racha ni cuenta como sesión.</div>',
+    sin_decidir: () => '<div class="vacio">Elige arriba qué has hecho hoy.</div>',
+  }[sesion]();
 
   return `
   <div class="fila" style="margin-bottom:14px">
@@ -112,52 +153,29 @@ function renderSesion(ctx) {
 
   ${bloqueado ? '<div class="aviso ojo">Solo se puede registrar el día de hoy y el anterior.</div>' : ''}
 
-  <div class="tarjeta">
-    <div class="entre">
-      <div>
-        <b>${plan === 'entreno' ? (rutina?.nombre ?? 'Sin rutina asignada') : 'Descanso'}</b>
-        <div class="mini">${plan === 'entreno' ? `Cumplimiento ${pct(evaluacion.entreno?.cumplimiento)}` : 'Día libre según tu plan'}</div>
-      </div>
-      ${bloqueado ? '' : `<button class="mini" data-accion="alternarPlan">${plan === 'entreno' ? 'Marcar descanso' : 'Marcar entreno'}</button>`}
-    </div>
+  ${eleccionHTML(ctx, bloqueado)}
+
+  <div class="mini" style="margin:10px 0 4px">
+    ¿Lesión o viaje? Te quedan ${plural(exenciones, 'exención', 'exenciones')} este año ·
+    <button class="enlace" data-accion="irAjustes">gastar una</button>
   </div>
 
   ${
     exceso.length
-      ? '<div class="aviso ojo">Has marcado muchas molestias. Si no has podido entrenar de verdad, marca el día como descanso o gasta una exención desde Ajustes: así no te penaliza.</div>'
+      ? '<div class="aviso ojo">Has marcado muchas molestias. Si no has podido entrenar de verdad, marca descanso o gasta una exención: así no te penaliza.</div>'
       : ''
   }
 
-  ${
-    rutina
-      ? rutina.ejercicios.map((e) => ejercicioHTML(e, porId.get(e.id), ctx, bloqueado)).join('')
-      : plan === 'entreno'
-        ? '<div class="vacio">Este día no tiene rutina asignada. Ve a «Mi rutina» y elige una.</div>'
-        : '<div class="vacio">Hoy no toca entrenar. Disfruta del descanso.</div>'
-  }`;
+  ${cuerpo}`;
 }
 
 function renderPlan(ctx) {
   const { db } = ctx;
+  const porSemana = db.plan.diasPorSemana;
 
-  const dias = NOMBRE_DIA.map(
-    (nombre, i) => `
-    <button aria-pressed="${db.plan.diasEntreno.includes(i)}" data-accion="alternarDia" data-dia="${i}">${nombre}</button>`,
-  ).join('');
-
-  const asignaciones = db.plan.diasEntreno
-    .slice()
-    .sort((a, b) => a - b)
+  const dias = [1, 2, 3, 4, 5, 6, 7]
     .map(
-      (i) => `
-      <div class="entre" style="margin-bottom:9px">
-        <span class="mini">${NOMBRE_DIA[i]}</span>
-        <select data-accion="asignarRutina" data-dia="${i}" style="width:auto">
-          ${db.rutinas
-            .map((r) => `<option value="${esc(r.id)}" ${db.plan.rutinaPorDia?.[i] === r.id ? 'selected' : ''}>${esc(r.nombre)}</option>`)
-            .join('')}
-        </select>
-      </div>`,
+      (n) => `<button aria-pressed="${porSemana === n}" data-accion="diasPorSemana" data-dias="${n}">${n}</button>`,
     )
     .join('');
 
@@ -211,14 +229,15 @@ function renderPlan(ctx) {
     .join('');
 
   return `
-  <div class="titulo-seccion">Días de entreno</div>
+  <div class="titulo-seccion">Días de entreno por semana</div>
   <div class="tarjeta">
     <div class="dias" style="margin-bottom:14px">${dias}</div>
-    <div class="mini">Los días que no marques cuentan como descanso y no rompen la racha.</div>
+    <div class="mini">
+      Es tu compromiso, no un calendario: eliges qué día entrenas y con qué rutina al abrir
+      el día. Para mantener la racha necesitas
+      ${plural(minimoCumplidosEntreno(porSemana), 'sesión cumplida', 'sesiones cumplidas')} cada siete días.
+    </div>
   </div>
-
-  <div class="titulo-seccion">Qué toca cada día</div>
-  <div class="tarjeta">${asignaciones || '<div class="mini">Marca algún día de entreno.</div>'}</div>
 
   <div class="titulo-seccion">Mis rutinas</div>
   ${rutinas}
@@ -244,7 +263,7 @@ function editarDia(ctx, cambio, { callado = false } = {}) {
  * de quedar registrado como omitido antes de tiempo.
  */
 function editarEjercicio(ctx, ejercicioId, cambio, opciones) {
-  const rutina = rutinaDelDia(ctx.db, ctx.fecha);
+  const rutina = rutinaDelDia(ctx.db, ctx.registroDe(ctx.fecha));
   const ficha = rutina?.ejercicios.find((e) => e.id === ejercicioId);
   if (!ficha) return;
 
@@ -275,11 +294,14 @@ export const acciones = {
 
   dia: (el, ctx) => ctx.verFecha(sumarDias(ctx.fecha, Number(el.dataset.delta))),
 
-  alternarPlan: (_, ctx) =>
+  // Cambiar de rutina no borra lo anotado: si vuelves a la de antes, sigue ahí.
+  elegirSesion: (el, ctx) =>
     editarDia(ctx, (dia) => ({
       ...dia,
-      planEntreno: (dia.planEntreno ?? ctx.planDe(ctx.fecha)) === 'entreno' ? 'descanso' : 'entreno',
+      sesion: dia.sesion === el.dataset.sesion ? undefined : el.dataset.sesion,
     })),
+
+  irAjustes: (_, ctx) => ctx.ir('ajustes'),
 
   // Se guarda en cada tecla y sin repintar: si se repintara, el campo se recrearía a media
   // palabra y el teclado perdería el foco.
@@ -310,7 +332,7 @@ export const acciones = {
     editarEjercicio(ctx, el.dataset.ejercicio, (e) => ({ ...e, series: [...(e.series ?? []), {}] })),
 
   copiarSeries: (el, ctx) => {
-    const rutina = rutinaDelDia(ctx.db, ctx.fecha);
+    const rutina = rutinaDelDia(ctx.db, ctx.registroDe(ctx.fecha));
     const objetivo = rutina?.ejercicios.find((x) => x.id === el.dataset.ejercicio)?.series ?? 3;
     editarEjercicio(ctx, el.dataset.ejercicio, (e) => {
       const primera = (e.series ?? [])[0];
@@ -335,22 +357,9 @@ export const acciones = {
 
   // --- Plan ---
 
-  alternarDia: (el, ctx) => {
-    const dia = Number(el.dataset.dia);
+  diasPorSemana: (el, ctx) =>
     ctx.actualizar((db) => {
-      const activos = new Set(db.plan.diasEntreno);
-      if (activos.has(dia)) activos.delete(dia);
-      else activos.add(dia);
-      db.plan.diasEntreno = [...activos].sort((a, b) => a - b);
-      if (activos.has(dia) && !db.plan.rutinaPorDia?.[dia]) {
-        db.plan.rutinaPorDia = { ...db.plan.rutinaPorDia, [dia]: db.rutinas[0]?.id };
-      }
-    });
-  },
-
-  asignarRutina: (el, ctx) =>
-    ctx.actualizar((db) => {
-      db.plan.rutinaPorDia = { ...db.plan.rutinaPorDia, [el.dataset.dia]: el.value };
+      db.plan.diasPorSemana = Number(el.dataset.dias);
     }),
 
   campoEjercicio: (el, ctx) =>
@@ -393,13 +402,10 @@ export const acciones = {
       alert('Tiene que quedar al menos una rutina.');
       return;
     }
-    if (!confirm('¿Borrar esta rutina? Los días que la usen se quedarán sin asignar.')) return;
+    if (!confirm('¿Borrar esta rutina? Los días ya registrados con ella se conservan.')) return;
 
     ctx.actualizar((db) => {
       db.rutinas = db.rutinas.filter((r) => r.id !== el.dataset.rutina);
-      Object.entries(db.plan.rutinaPorDia ?? {}).forEach(([dia, id]) => {
-        if (id === el.dataset.rutina) db.plan.rutinaPorDia[dia] = db.rutinas[0].id;
-      });
     });
   },
 };

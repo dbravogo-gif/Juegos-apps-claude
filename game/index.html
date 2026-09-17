@@ -128,6 +128,23 @@ header.barra .interior{max-width:620px;margin:0 auto;display:flex;align-items:ce
 .comida-plan.exenta{opacity:.6}
 .comida-plan .estados button{flex:1}
 
+/* Recuadros para elegir la sesión del día: una rutina, descanso o actividad de fuera. */
+.opciones{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:8px}
+.opciones .opcion{
+  display:grid;gap:3px;text-align:left;padding:12px;border-radius:14px;
+  background:var(--superficie);border:1px solid var(--linea);box-shadow:var(--sombra);
+}
+.opciones .opcion b{font-size:15px}
+.opciones .opcion .mini{font-size:12px}
+.opciones .opcion.suave{background:var(--superficie-2);box-shadow:none}
+.opciones .opcion[aria-pressed="true"]{
+  border-color:var(--acento);background:var(--acento);color:#fff;
+}
+.opciones .opcion[aria-pressed="true"] .mini{color:#fff;opacity:.8}
+.opciones .opcion[disabled]{opacity:.5}
+
+.enlace{color:var(--acento);font-weight:600;text-decoration:underline;font-size:inherit}
+
 .dias{display:flex;gap:6px}
 .dias button{
   flex:1;aspect-ratio:1;border-radius:11px;background:var(--superficie-2);font-size:13px;font-weight:650;color:var(--suave)

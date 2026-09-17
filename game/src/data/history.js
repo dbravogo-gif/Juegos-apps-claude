@@ -2,7 +2,7 @@ import { puntuarEntreno } from '../core/scoring/workout.js';
 import { puntuarDiaComida } from '../core/scoring/nutrition.js';
 import { sumarDias, diasEntre } from '../core/scoring/exemptions.js';
 
-/** Índice del día de la semana con el lunes como 0, igual que `plan.diasEntreno`. */
+/** Índice del día de la semana con el lunes como 0, igual que `plan.comidasPorDia`. */
 /**
  * Solo se puede registrar hoy y ayer. Sin ese límite se podrían rellenar semanas enteras a
  * posteriori y reconstruir rachas que nunca ocurrieron.
@@ -16,14 +16,22 @@ export function diaDeLaSemana(fechaISO) {
   return (new Date(`${fechaISO}T00:00:00Z`).getUTCDay() + 6) % 7;
 }
 
-export function planDelDia(plan, fechaISO) {
-  return plan.diasEntreno.includes(diaDeLaSemana(fechaISO)) ? 'entreno' : 'descanso';
+/**
+ * Qué hizo el jugador ese día. Ya no hay días de entreno fijos en el calendario: se elige
+ * al abrir el día, igual que en Bulk Up. `sesion` guarda el id de la rutina elegida, o
+ * `descanso`, o `otra` (deporte fuera del gimnasio).
+ *
+ * @returns {'entreno'|'descanso'|'otra'|'sin_decidir'}
+ */
+export function tipoDeSesion(registro) {
+  const sesion = registro?.sesion;
+  if (!sesion) return 'sin_decidir';
+  return sesion === 'descanso' || sesion === 'otra' ? sesion : 'entreno';
 }
 
-/** Rutina que toca ese día según el plan semanal, o `null` si ese día no hay ninguna. */
-export function rutinaDelDia(db, fechaISO) {
-  const id = db?.plan?.rutinaPorDia?.[diaDeLaSemana(fechaISO)];
-  return db?.rutinas?.find((r) => r.id === id) ?? null;
+/** Rutina elegida ese día, o `null` si ese día no se eligió ninguna. */
+export function rutinaDelDia(db, registro) {
+  return db?.rutinas?.find((r) => r.id === registro?.sesion) ?? null;
 }
 
 /**
@@ -56,20 +64,20 @@ export function comidasDelDia(registro, plan, fecha) {
 
 /**
  * Convierte un registro crudo en el día que consume el motor de puntuación.
- * Un día sin sesión registrada deja `entreno: null`, que el motor trata como fallado si
- * estaba planificado; los días de descanso no se exigen.
+ * Un día sin sesión elegida no se exige por sí solo: lo que sostiene la racha es la cuota
+ * de días cumplidos por ventana, que sale del compromiso semanal.
  */
-export function evaluarDia(registro, planEntreno, fecha, { db, hoy } = {}) {
-  const toca = registro?.planEntreno ?? planEntreno;
-  const rutina = toca === 'entreno' ? rutinaDelDia(db, fecha) : null;
+export function evaluarDia(registro, fecha, { db, hoy } = {}) {
+  const sesion = tipoDeSesion(registro);
+  const rutina = sesion === 'entreno' ? rutinaDelDia(db, registro) : null;
   const ejercicios = ejerciciosDelDia(registro, rutina);
   const comidas = comidasDelDia(registro, db?.plan, fecha);
   const cerrado = Boolean(hoy) && fecha < hoy;
 
   return {
     fecha,
-    planEntreno: toca,
-    entreno: ejercicios.length > 0 ? puntuarEntreno(ejercicios, { cerrado }) : null,
+    sesion,
+    entreno: sesion === 'entreno' && ejercicios.length > 0 ? puntuarEntreno(ejercicios, { cerrado }) : null,
     comida: comidas.length > 0 ? puntuarDiaComida(comidas, { cerrado }) : null,
     extras: registro?.extras ?? [],
   };
@@ -80,7 +88,7 @@ export function evaluarDia(registro, planEntreno, fecha, { db, hoy } = {}) {
  * no se abrió la app. Sin ese relleno, dejar de registrar durante una semana no rompería
  * ninguna racha: los huecos simplemente no existirían.
  *
- * @param {{ plan: { diasEntreno: number[] }, dias: Record<string, object> }} db
+ * @param {{ plan: object, rutinas: object[], dias: Record<string, object> }} db
  * @param {string} hoy fecha ISO
  */
 export function construirHistorial(db, hoy) {
@@ -90,7 +98,7 @@ export function construirHistorial(db, hoy) {
 
   const historial = [];
   for (let fecha = primera; diasEntre(fecha, hoy) >= 0; fecha = sumarDias(fecha, 1)) {
-    historial.push(evaluarDia(db.dias[fecha], planDelDia(db.plan, fecha), fecha, { db, hoy }));
+    historial.push(evaluarDia(db.dias[fecha], fecha, { db, hoy }));
   }
   return historial;
 }

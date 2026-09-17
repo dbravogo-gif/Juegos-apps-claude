@@ -25,16 +25,19 @@ export function aplicarExenciones(historial, exenciones) {
  * milisegundos, pero conviene llamarlo al cambiar los datos y no en cada repintado.
  *
  * @param {import('./scoring/streaks.js').DiaHistorial[]} historial ordenado por fecha
- * @param {{ exenciones?: object[], monedasGastadas?: number }} opciones
+ * @param {{ exenciones?: object[], monedasGastadas?: number, diasPorSemana?: number }} opciones
  */
-export function estadoDesdeHistorial(historial, { exenciones = [], monedasGastadas = 0 } = {}) {
+export function estadoDesdeHistorial(
+  historial,
+  { exenciones = [], monedasGastadas = 0, diasPorSemana = 4 } = {},
+) {
   const dias = aplicarExenciones(historial, exenciones);
 
   let xp = 0;
   let monedasGanadas = 0;
 
   const resumenes = dias.map((dia, i) => {
-    const resumen = resumenDelDia(dias, i);
+    const resumen = resumenDelDia(dias, i, { diasPorSemana });
     const extras = dia.extras ?? [];
 
     xp += resumen.recompensa.total.xp + sumar(extras, 'xp');

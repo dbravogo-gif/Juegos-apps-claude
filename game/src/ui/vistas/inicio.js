@@ -8,6 +8,19 @@ const pct = (v) => (typeof v === 'number' ? `${Math.round(v * 100)} %` : '—');
 
 const FECHA_LARGA = { weekday: 'long', day: 'numeric', month: 'long' };
 
+const TITULO_SESION = {
+  entreno: 'Día de entreno',
+  descanso: 'Día de descanso',
+  otra: 'Otra actividad',
+  sin_decidir: 'Sin decidir',
+};
+
+const DETALLE_SESION = {
+  descanso: 'No se te exige nada',
+  otra: 'No cuenta como sesión, pero no penaliza',
+  sin_decidir: 'Elige qué has hecho hoy',
+};
+
 export function subtitulo(ctx) {
   const fecha = new Date(`${ctx.hoy}T00:00:00`);
   return fecha.toLocaleDateString('es-ES', FECHA_LARGA);
@@ -80,9 +93,8 @@ export function render(ctx) {
   const avance = xpParaSiguiente ? (xpEnNivel / xpParaSiguiente) * 100 : 100;
 
   const hoy = estado.hoy;
-  const planHoy = ctx.planDe(ctx.hoy);
+  const sesionHoy = ctx.sesionDe(ctx.hoy);
   const registro = ctx.registroDe(ctx.hoy);
-  const entrenoHecho = (registro.ejercicios ?? []).length > 0;
   const comidas = comidasDelDia(registro, ctx.db.plan, ctx.hoy);
   const marcadas = comidas.filter((c) => c.estado || c.exenta).length;
 
@@ -134,13 +146,11 @@ export function render(ctx) {
   <div class="tarjeta">
     <div class="entre" style="margin-bottom:12px">
       <div>
-        <b>${planHoy === 'entreno' ? 'Día de entreno' : 'Día de descanso'}</b>
+        <b>${TITULO_SESION[sesionHoy]}</b>
         <div class="mini">${
-          entrenoHecho
-            ? `Cumplimiento ${pct(ctx.evaluacionDe(ctx.hoy).entreno?.cumplimiento)}`
-            : planHoy === 'entreno'
-              ? 'Sin registrar'
-              : 'No se exige sesión'
+          sesionHoy === 'entreno'
+            ? `${esc(ctx.rutinaDe(ctx.hoy)?.nombre ?? '')} · cumplimiento ${pct(ctx.evaluacionDe(ctx.hoy).entreno?.cumplimiento)}`
+            : DETALLE_SESION[sesionHoy]
         }</div>
       </div>
       <button class="boton fino" style="width:auto;padding:9px 16px" data-accion="irEntreno">Registrar</button>

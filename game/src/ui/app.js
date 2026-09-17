@@ -1,5 +1,5 @@
 import { cargar, guardar } from '../data/storage.js';
-import { construirHistorial, planDelDia, evaluarDia, rutinaDelDia } from '../data/history.js';
+import { construirHistorial, evaluarDia, rutinaDelDia, tipoDeSesion } from '../data/history.js';
 import { estadoDesdeHistorial } from '../core/state.js';
 import { hoyISO } from './util.js';
 
@@ -34,6 +34,7 @@ function recalcular() {
   return estadoDesdeHistorial(historial, {
     exenciones: db.exenciones,
     monedasGastadas: db.monedasGastadas,
+    diasPorSemana: db.plan.diasPorSemana,
   });
 }
 
@@ -44,9 +45,9 @@ function contexto() {
     hoy: hoyISO(),
     fecha: fechaSeleccionada,
     registroDe: (fecha) => db.dias[fecha] ?? {},
-    planDe: (fecha) => db.dias[fecha]?.planEntreno ?? planDelDia(db.plan, fecha),
-    evaluacionDe: (fecha) => evaluarDia(db.dias[fecha], planDelDia(db.plan, fecha), fecha, { db, hoy: hoyISO() }),
-    rutinaDe: (fecha) => rutinaDelDia(db, fecha),
+    sesionDe: (fecha) => tipoDeSesion(db.dias[fecha]),
+    evaluacionDe: (fecha) => evaluarDia(db.dias[fecha], fecha, { db, hoy: hoyISO() }),
+    rutinaDe: (fecha) => rutinaDelDia(db, db.dias[fecha]),
     actualizar,
     actualizarCallado,
     refrescar: render,
@@ -129,15 +130,22 @@ function restaurarTextos(escrito) {
 }
 
 /**
- * Un campo marcado con `data-directo` se guarda en cada pulsación y no espera al `change`:
- * así lo escrito no se pierde si se cambia de pantalla, y no se repinta a media palabra.
+ * Qué evento atiende cada elemento, uno y solo uno.
+ *
+ * Un `<select>` escucha `change` y nunca el clic: si atendiera el clic, repintaríamos con
+ * el desplegable abierto y se cerraría solo al soltar, que es justo lo que pasaba.
+ * Un campo con `data-directo` escucha `input`, para guardar lo escrito en cada pulsación
+ * sin repintar a media palabra. Todo lo demás son botones y escuchan el clic.
  */
+function eventoDe(elemento) {
+  if (elemento.hasAttribute('data-directo')) return 'input';
+  return elemento.matches('select, input, textarea') ? 'change' : 'click';
+}
+
 function manejar(evento) {
   const elemento = evento.target.closest('[data-accion]');
   if (!elemento) return;
-
-  const directo = elemento.hasAttribute('data-directo');
-  if ((evento.type === 'input') !== directo && evento.type !== 'click') return;
+  if (evento.type !== eventoDe(elemento)) return;
 
   const accion = VISTAS[vistaActual].acciones?.[elemento.dataset.accion];
   if (!accion) return;
