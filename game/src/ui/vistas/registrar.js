@@ -1,4 +1,4 @@
-import { esc, plural } from '../app.js';
+import { esc, plural } from '../util.js';
 import { ETIQUETA_ESTADO, ETIQUETA_COMIDA } from '../../data/defaults.js';
 import { exencionesComidaDisponibles } from '../../core/scoring/nutrition.js';
 import { sumarDias } from '../../core/scoring/exemptions.js';

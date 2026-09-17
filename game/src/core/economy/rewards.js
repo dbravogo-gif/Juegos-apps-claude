@@ -100,6 +100,14 @@ export function presupuestoExtras(dia, totalDelDia) {
   };
 }
 
+/** Lo ya cobrado en extras un día, para saber cuánto queda del presupuesto. */
+export function sumaExtras(extras = []) {
+  return extras.reduce(
+    (total, extra) => ({ xp: total.xp + (extra.xp ?? 0), monedas: total.monedas + (extra.monedas ?? 0) }),
+    { xp: 0, monedas: 0 },
+  );
+}
+
 /** Recorta una recompensa de extra al presupuesto que queda ese día. */
 export function otorgarExtra(presupuesto, gastado, recompensa) {
   const xp = Math.max(0, Math.min(recompensa.xp, presupuesto.xp - gastado.xp));

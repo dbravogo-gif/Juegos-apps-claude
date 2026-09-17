@@ -1,4 +1,4 @@
-import { plural } from '../app.js';
+import { plural } from '../util.js';
 import { clasificarEntreno, clasificarComida } from '../../core/scoring/streaks.js';
 import { NOMBRE_DIA } from '../../data/defaults.js';
 import { diaDeLaSemana } from '../../data/history.js';

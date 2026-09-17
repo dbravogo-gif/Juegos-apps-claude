@@ -1,25 +1,25 @@
 import { cargar, guardar } from '../data/storage.js';
 import { construirHistorial, planDelDia, evaluarDia } from '../data/history.js';
 import { estadoDesdeHistorial } from '../core/state.js';
+import { hoyISO } from './util.js';
 
 import * as inicio from './vistas/inicio.js';
 import * as registrar from './vistas/registrar.js';
+import * as personaje from './vistas/personaje.js';
+import * as mundo from './vistas/mundo.js';
 import * as progreso from './vistas/progreso.js';
 import * as ajustes from './vistas/ajustes.js';
 
-const VISTAS = { inicio, registrar, progreso, ajustes };
-const TITULOS = { inicio: 'Hoy', registrar: 'Registrar', progreso: 'Progreso', ajustes: 'Ajustes' };
+const VISTAS = { inicio, registrar, personaje, mundo, progreso, ajustes };
+const TITULOS = {
+  inicio: 'Hoy',
+  registrar: 'Registrar',
+  personaje: 'Héroe',
+  mundo: 'Mundo',
+  progreso: 'Progreso',
+  ajustes: 'Ajustes',
+};
 
-/** Fecha local, no UTC: pasada la medianoche en UTC+2 el día ISO aún sería el anterior. */
-export function hoyISO() {
-  const ahora = new Date();
-  return new Date(ahora.getTime() - ahora.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
-}
-
-export const esc = (texto) =>
-  String(texto ?? '').replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
-
-export const plural = (n, singular, plural) => `${n} ${n === 1 ? singular : plural}`;
 
 let db = cargar();
 let vistaActual = 'inicio';
@@ -50,6 +50,7 @@ function contexto() {
       return db.rutinas.find((r) => r.id === id) ?? db.rutinas[0] ?? null;
     },
     actualizar,
+    refrescar: render,
     verFecha,
     ir,
   };

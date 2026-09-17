@@ -1,4 +1,4 @@
-import { esc, plural } from '../app.js';
+import { esc, plural } from '../util.js';
 import { NOMBRE_DIA } from '../../data/defaults.js';
 import {
   exencionesEntrenoDisponibles,

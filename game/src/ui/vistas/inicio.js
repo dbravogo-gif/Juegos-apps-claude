@@ -1,4 +1,4 @@
-import { esc, plural } from '../app.js';
+import { esc, plural } from '../util.js';
 import { exencionesComidaDisponibles } from '../../core/scoring/nutrition.js';
 
 const pct = (v) => (typeof v === 'number' ? `${Math.round(v * 100)} %` : '—');

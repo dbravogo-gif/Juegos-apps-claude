@@ -13,6 +13,9 @@ export function estadoInicial() {
     exenciones: [],
     monedasGastadas: 0,
     inventario: [],
+    equipado: {},
+    colocados: {},
+    jefesDerrotados: [],
   };
 }
 

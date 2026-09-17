@@ -113,9 +113,42 @@ header.barra .interior{max-width:620px;margin:0 auto;display:flex;align-items:ce
   background:var(--superficie);border-top:1px solid var(--linea);
   padding-bottom:env(safe-area-inset-bottom);
 }
-.nav button{flex:1;padding:10px 4px 8px;font-size:11px;font-weight:600;color:var(--suave);display:grid;gap:3px;justify-items:center}
+.nav button{flex:1;padding:10px 2px 8px;font-size:10px;font-weight:600;color:var(--suave);display:grid;gap:3px;justify-items:center}
 .nav button[aria-current="page"]{color:var(--acento)}
-.nav .ic{font-size:19px;line-height:1}
+.nav .ic{font-size:18px;line-height:1}
+
+.sprite{position:relative;display:grid;place-items:center;width:100%;aspect-ratio:1;border-radius:12px;
+  background:hsl(var(--tono) 45% 88%);overflow:hidden}
+.sprite > b{color:hsl(var(--tono) 45% 32%);font-size:15px;font-weight:700;letter-spacing:.02em}
+.sprite > img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+@media (prefers-color-scheme:dark){:root:not([data-tema="claro"]) .sprite{background:hsl(var(--tono) 25% 26%)}
+  :root:not([data-tema="claro"]) .sprite > b{color:hsl(var(--tono) 45% 78%)}}
+.sprite.grande{border-radius:16px}
+.sprite.alto{aspect-ratio:3/4}
+
+.catalogo{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.articulo{background:var(--superficie);border:1px solid var(--linea);border-radius:14px;padding:9px;box-shadow:var(--sombra)}
+.articulo .nom{font-size:12px;font-weight:600;margin-top:7px;line-height:1.25}
+.articulo .precio{font-size:12px;color:var(--suave);margin-top:2px}
+.articulo[aria-disabled="true"]{opacity:.5}
+.articulo button{width:100%;margin-top:7px;padding:6px;border-radius:9px;background:var(--acento);color:#fff;font-size:12px;font-weight:650}
+.articulo button.gris{background:var(--superficie-2);color:var(--texto)}
+.articulo button[disabled]{opacity:.5;pointer-events:none}
+
+.vida{height:9px;border-radius:99px;background:var(--superficie-2);overflow:hidden;margin-top:5px}
+.vida > i{display:block;height:100%;background:var(--acento);transition:width .3s}
+.vida.enemiga > i{background:var(--alerta)}
+.combate{display:grid;gap:14px}
+.luchador{display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:center}
+.luchador .sprite{width:64px}
+.diario{background:var(--superficie-2);border-radius:12px;padding:11px;font-size:13px;display:grid;gap:4px;max-height:150px;overflow-y:auto}
+.acciones{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.rejilla-casillas{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.casilla{aspect-ratio:1;border-radius:12px;border:1px dashed var(--linea);display:grid;place-items:center;background:var(--superficie)}
+.casilla.ocupada{border-style:solid}
+.pestanas{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto}
+.pestanas button{padding:7px 13px;border-radius:99px;background:var(--superficie-2);font-size:13px;font-weight:600;white-space:nowrap;color:var(--suave)}
+.pestanas button[aria-pressed="true"]{background:var(--acento);color:#fff}
 
 .vacio{text-align:center;color:var(--suave);padding:28px 16px;font-size:14px}
 .aviso{background:var(--acento-claro);color:var(--acento);border-radius:12px;padding:11px 13px;font-size:13.5px;font-weight:550;margin-bottom:12px}
@@ -150,6 +183,8 @@ textarea{min-height:70px;resize:vertical}
 <nav class="nav" id="nav">
   <button data-vista="inicio" aria-current="page"><span class="ic">🏠</span>Hoy</button>
   <button data-vista="registrar"><span class="ic">✏️</span>Registrar</button>
+  <button data-vista="personaje"><span class="ic">🗡️</span>Héroe</button>
+  <button data-vista="mundo"><span class="ic">🏛️</span>Mundo</button>
   <button data-vista="progreso"><span class="ic">📈</span>Progreso</button>
   <button data-vista="ajustes"><span class="ic">⚙️</span>Ajustes</button>
 </nav>
