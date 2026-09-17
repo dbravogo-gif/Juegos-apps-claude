@@ -10,13 +10,23 @@ export function generador(semilla) {
 }
 
 const VARIACION = 0.15;
-const FACTOR_DEFENSA = 2;
+
+// Cubrirse deja pasar solo esta parte del golpe. Antes doblaba la defensa, que es un número
+// pequeño y restado: contra un enemigo flojo no cambiaba nada y contra un jefe tampoco.
+// Como porcentaje, cubrirse siempre significa algo y el jugador tiene una decisión real.
+const PASA_DEFENDIENDO = 0.4;
+
+// La defensa quita un porcentaje del golpe, no una cantidad fija. Restándola, el combate
+// era un interruptor: por debajo del umbral no hacías nada y por encima ganabas siempre,
+// sin combates reñidos por el medio. Con esta forma el daño baja de forma continua y un
+// nivel de más se nota sin volver trivial la pelea.
+const ESCALA_DEFENSA = 20;
 
 function dano(ataque, defensa, { multiplicador = 1, defendiendo = false, azar }) {
-  const defensaEfectiva = defendiendo ? defensa * FACTOR_DEFENSA : defensa;
-  const bruto = ataque * multiplicador - defensaEfectiva;
+  const bruto = ataque * multiplicador * (ESCALA_DEFENSA / (ESCALA_DEFENSA + defensa));
   const ruido = 1 + (azar() * 2 - 1) * VARIACION;
-  return Math.max(1, Math.round(bruto * ruido));
+  const golpe = bruto * ruido * (defendiendo ? PASA_DEFENDIENDO : 1);
+  return Math.max(1, Math.round(golpe));
 }
 
 /**
@@ -33,9 +43,17 @@ export function iniciarCombate(stats, enemigoId) {
     jugador: { ...stats, ataque: stats.fuerza, vida: stats.vidaMax, energia: stats.energiaMax },
     turno: 1,
     defendiendo: { jugador: false, enemigo: false },
+    // El jefe telegrafía su golpe fuerte un turno antes. Sin ese aviso, cubrirse sería
+    // adivinar; con él, el combate se puede leer y defenderse deja de ser un botón muerto.
+    avisa: avisaGolpeFuerte(ficha, 1),
     registro: [`Te enfrentas a ${ficha.nombre}.`],
     estado: 'en_curso',
   };
+}
+
+/** Si el enemigo va a soltar su golpe fuerte en el turno indicado. */
+function avisaGolpeFuerte(ficha, turnoSiguiente) {
+  return ficha.patron === 'jefe' && turnoSiguiente % 3 === 0;
 }
 
 function accionEnemigo(combate, azar) {
@@ -104,7 +122,6 @@ export function turno(combate, accion, azar = Math.random) {
       azar,
     });
     enemigo.vida -= puntos;
-    jugador.energia = Math.min(jugador.energiaMax, jugador.energia + 1);
     registro.push(`Atacas: ${puntos} de daño.`);
   }
 
@@ -149,6 +166,7 @@ export function turno(combate, accion, azar = Math.random) {
     enemigo,
     registro,
     defendiendo: { jugador: defendiendoJugador, enemigo: defendiendoEnemigo },
+    avisa: avisaGolpeFuerte(enemigo, combate.turno + 1),
     turno: combate.turno + 1,
   };
 }

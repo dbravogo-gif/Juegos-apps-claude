@@ -2,7 +2,7 @@ import { NIVELES } from '../constants.js';
 
 /** XP necesaria para pasar de `nivel` al siguiente. */
 export function xpParaSubirDe(nivel) {
-  return Math.round((NIVELES.base * nivel ** NIVELES.exponente) / 10) * 10;
+  return Math.round((NIVELES.suelo + NIVELES.base * nivel ** NIVELES.exponente) / 10) * 10;
 }
 
 /** Nivel alcanzado con una XP acumulada, y progreso dentro del nivel actual. */

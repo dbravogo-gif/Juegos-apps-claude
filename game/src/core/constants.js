@@ -79,8 +79,21 @@ export const EXENCIONES = {
 // Valor de reventa: se recupera el 25 % del precio de compra.
 export const FACTOR_REVENTA = 0.25;
 
+// El primer nivel salía por 180 XP, poco más de un día de registro, y con él llegaba media
+// zona de golpe. El suelo encarece los primeros niveles sin tocar los altos: multiplicar la
+// curva entera habría dejado las zonas 2 y 3 fuera de alcance en una prueba de dos meses.
 export const NIVELES = {
   base: 180,
+  suelo: 260,
   exponente: 1.25,
   maximo: 60,
+};
+
+// Combates que caben en un día. Pelear es la recompensa de haber entrenado, no un atajo:
+// sin este tope se puede vaciar una zona entera en una tarde, que es justo lo que pasaba.
+// Una derrota también consume vigor, para que reintentar a ciegas cueste algo.
+export const VIGOR = {
+  base: 2,
+  porDiaCumplido: 2,
+  coste: { normal: 1, jefe: 2 },
 };

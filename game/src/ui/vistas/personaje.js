@@ -10,6 +10,7 @@ import {
   zonaDeEnemigo,
 } from '../../core/progression/unlocks.js';
 import { iniciarCombate, turno, recompensaEnemigo } from '../../core/combat/battle.js';
+import { vigorMaximo, vigorGastado, puedeCombatir, costeCombate } from '../../core/combat/vigor.js';
 import { otorgarExtra, sumaExtras } from '../../core/economy/rewards.js';
 import { articuloPorId, ranuraDe } from '../../core/economy/shop.js';
 
@@ -84,6 +85,13 @@ function presupuestoDeHoy(ctx) {
   return { presupuesto: ctx.estado.hoy?.extras ?? { desbloqueado: false, xp: 0, monedas: 0 }, gastado: sumaExtras(extras) };
 }
 
+/** Vigor que le queda hoy: cuántos combates más caben. */
+function vigorDeHoy(ctx) {
+  const cumplido = ctx.estado.hoy?.extras?.desbloqueado ?? false;
+  const combates = ctx.registroDe(ctx.hoy).combates ?? [];
+  return { maximo: vigorMaximo(cumplido), gastado: vigorGastado(combates), combates, cumplido };
+}
+
 function quedaPresupuesto(ctx) {
   const { presupuesto, gastado } = presupuestoDeHoy(ctx);
   return presupuesto.desbloqueado && (gastado.xp < presupuesto.xp || gastado.monedas < presupuesto.monedas);
@@ -152,6 +160,7 @@ function pantallaCombate(ctx) {
 
     <div class="diario">${registro.map((l) => `<div>${esc(l)}</div>`).join('')}</div>
 
+    ${combate.avisa && estado === 'en_curso' ? `<div class="aviso ojo">${esc(enemigo.nombre)} se prepara para un golpe fuerte. Cúbrete.</div>` : ''}
     ${estado === 'victoria' ? '<div class="aviso">¡Victoria!</div>' : ''}
     ${estado === 'derrota' ? '<div class="aviso ojo">Esta vez no ha podido ser. Vuelve a intentarlo.</div>' : ''}
     ${acciones}
@@ -166,6 +175,8 @@ export function render(ctx) {
   const habilidades = habilidadesAbiertas(nivel);
   const abierto = quedaPresupuesto(ctx);
   const { presupuesto, gastado } = presupuestoDeHoy(ctx);
+  const vigor = vigorDeHoy(ctx);
+  const restante = vigor.maximo - vigor.gastado;
 
   const ranuras = RANURAS.map(([ranura, etiqueta]) => {
     const id = ctx.db.equipado[ranura];
@@ -194,7 +205,8 @@ export function render(ctx) {
             ${figura('enemigos', id, ficha.nombre, { pose: 0, poses: 3, clase: 'retrato' })}
             <div class="nom">${esc(ficha.nombre)}</div>
             <div class="precio">${premio.xp} XP${derrotado ? ' · vencido' : ''}</div>
-            <button data-accion="luchar" data-enemigo="${esc(id)}" ${abierto ? '' : 'disabled'}>Luchar</button>
+            <button data-accion="luchar" data-enemigo="${esc(id)}"
+              ${abierto && restante >= costeCombate(ficha.jefe) ? '' : 'disabled'}>Luchar</button>
           </div>`;
         })
         .join('');
@@ -205,6 +217,11 @@ export function render(ctx) {
       <div class="catalogo">${enemigos}</div>`;
     })
     .join('');
+
+  const avisoVigor =
+    restante > 0
+      ? `<div class="mini">Te quedan ${restante} de ${vigor.maximo} combates hoy. Los jefes cuestan dos.</div>`
+      : `<div class="aviso ojo">Hoy ya no te queda vigor para pelear.${vigor.cumplido ? '' : ' Cumple el día para tener dos combates más.'}</div>`;
 
   return `
   <div class="tarjeta">
@@ -269,14 +286,30 @@ export function render(ctx) {
         }</div>`
   }
 
+  ${avisoVigor}
   ${zonas}`;
 }
 
 export const acciones = {
   luchar: (el, ctx) => {
+    const enemigoId = el.dataset.enemigo;
+    const jefe = Boolean(ENEMIGOS[enemigoId].jefe);
+    const vigor = vigorDeHoy(ctx);
+    if (!puedeCombatir(vigor.combates, vigor.cumplido, jefe).ok) {
+      alert('Hoy ya no te queda vigor para pelear. Vuelve mañana.');
+      return;
+    }
+
     pararAnimacion();
-    combate = iniciarCombate(statsPersonaje(ctx.estado.nivel.nivel, ctx.db.equipado), el.dataset.enemigo);
-    ctx.refrescar();
+    combate = iniciarCombate(statsPersonaje(ctx.estado.nivel.nivel, ctx.db.equipado), enemigoId);
+
+    // El vigor se gasta al entrar, no al ganar: si solo costara perder tiempo, reintentar
+    // hasta que la tirada saliera bien sería gratis.
+    ctx.actualizar((db) => {
+      const dia = db.dias[ctx.hoy] ?? { ejercicios: [], comidas: [], extras: [] };
+      dia.combates = [...(dia.combates ?? []), { enemigo: enemigoId, jefe }];
+      db.dias[ctx.hoy] = dia;
+    });
   },
 
   golpe: (el, ctx) => {

@@ -247,3 +247,67 @@ test('los jefes cuestan más que los enemigos de su zona, pero acaban cayendo', 
     assert.ok(jefe - zona.nivel <= 6, `${zona.jefe} tarda ${jefe - zona.nivel} niveles en caer`);
   });
 });
+
+// --- Vigor diario ---
+
+import { vigorMaximo, vigorGastado, puedeCombatir } from '../src/core/combat/vigor.js';
+
+test('el día limita cuántos combates caben, y cumplirlo da margen', () => {
+  assert.ok(vigorMaximo(true) > vigorMaximo(false), 'cumplir el día tiene que abrir combates');
+
+  const sinCumplir = vigorMaximo(false);
+  const gastados = Array.from({ length: sinCumplir }, () => ({}));
+  assert.equal(puedeCombatir(gastados, false, false).ok, false);
+  assert.equal(puedeCombatir(gastados, true, false).ok, true, 'cumpliendo aún queda vigor');
+});
+
+test('explotación: perder un combate también gasta vigor', () => {
+  // Si solo contaran las victorias, reintentar hasta que la tirada saliera bien sería gratis.
+  assert.equal(vigorGastado([{ enemigo: 'rata_murallas' }]), 1);
+  assert.ok(vigorGastado([{ jefe: true }]) > vigorGastado([{ jefe: false }]), 'los jefes cuestan más');
+});
+
+// --- Combate ---
+
+test('cubrirse recorta el golpe de verdad, no un par de puntos', () => {
+  // La defensa se restaba, así que cubrirse contra un jefe que pega 30 apenas se notaba.
+  const jugador = statsPersonaje(4);
+  const inicial = iniciarCombate(jugador, 'guardian_puerta');
+
+  const recibido = (tipo) => {
+    const resultado = turno(inicial, { tipo }, generador(13));
+    return inicial.jugador.vidaMax - resultado.jugador.vida;
+  };
+
+  assert.ok(recibido('defender') * 2 < recibido('atacar'), 'cubrirse debería más que partir el golpe');
+});
+
+test('el jefe avisa antes de su golpe fuerte', () => {
+  const combate = iniciarCombate(statsPersonaje(6), 'guardian_puerta');
+  const avisos = [];
+
+  let actual = combate;
+  for (let i = 0; i < 6 && actual.estado === 'en_curso'; i += 1) {
+    avisos.push(actual.avisa);
+    actual = turno(actual, { tipo: 'atacar' }, generador(4));
+  }
+
+  assert.ok(avisos.some(Boolean), 'sin aviso, cubrirse sería adivinar');
+  assert.equal(iniciarCombate(statsPersonaje(6), 'rata_murallas').avisa, false, 'los normales no avisan');
+});
+
+test('atacar ya no regala energía: hay que cubrirse para gastar habilidades', () => {
+  const inicial = iniciarCombate(statsPersonaje(8), 'cangrejo_coloso');
+  const atacando = turno(inicial, { tipo: 'atacar' }, generador(2));
+  const cubriendo = turno({ ...inicial, jugador: { ...inicial.jugador, energia: 0 } }, { tipo: 'defender' }, generador(2));
+
+  assert.equal(atacando.jugador.energia, inicial.jugador.energia);
+  assert.ok(cubriendo.jugador.energia > 0);
+});
+
+test('un nivel de más se nota sin volver trivial el combate', () => {
+  // La fórmula restada convertía el combate en un interruptor: 0 % y de golpe 100 %.
+  const tasas = [1, 2, 3].map((n) => tasaDeVictoria(n, 'bandido_harapiento'));
+  assert.ok(tasas[0] < tasas[1] && tasas[1] < tasas[2], `sin gradiente: ${tasas.join(', ')}`);
+  assert.ok(tasas[1] > 0 && tasas[1] < 1, 'el nivel intermedio debería ser una pelea reñida');
+});

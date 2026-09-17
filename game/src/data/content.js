@@ -30,7 +30,7 @@ export const ZONAS = [
 
 /** `patron` decide el comportamiento en combate: ver `src/core/combat/battle.js`. */
 export const ENEMIGOS = {
-  rata_murallas: { nombre: 'Rata de las murallas', vida: 20, ataque: 5, defensa: 1, patron: 'agresivo' },
+  rata_murallas: { nombre: 'Rata de las murallas', vida: 18, ataque: 5, defensa: 1, patron: 'agresivo' },
   bandido_harapiento: { nombre: 'Bandido harapiento', vida: 26, ataque: 5, defensa: 2, patron: 'cauto' },
   gargola_agrietada: { nombre: 'Gárgola agrietada', vida: 32, ataque: 5, defensa: 3, patron: 'defensivo' },
   guardian_puerta: { nombre: 'Guardián de la Puerta Dorada', vida: 60, ataque: 10, defensa: 4, patron: 'jefe', jefe: true },
@@ -43,7 +43,7 @@ export const ENEMIGOS = {
   ladron_bazar: { nombre: 'Ladrón del bazar', vida: 135, ataque: 35, defensa: 14, patron: 'agresivo' },
   automata_especias: { nombre: 'Autómata de especias', vida: 165, ataque: 30, defensa: 18, patron: 'defensivo' },
   serpiente_seda: { nombre: 'Serpiente de seda', vida: 140, ataque: 38, defensa: 13, patron: 'cauto' },
-  el_coleccionista: { nombre: 'El Coleccionista', vida: 200, ataque: 38, defensa: 20, patron: 'jefe', jefe: true },
+  el_coleccionista: { nombre: 'El Coleccionista', vida: 170, ataque: 32, defensa: 15, patron: 'jefe', jefe: true },
 };
 
 export const HABILIDADES = {

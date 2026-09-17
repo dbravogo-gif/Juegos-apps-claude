@@ -73,7 +73,14 @@ test('la XP y las monedas se derivan del historial', () => {
   assert.equal(estado.xp, 280); // dos días completos sin racha todavía
   assert.equal(estado.monedas.ganadas, 140);
   assert.equal(estado.monedas.disponibles, 140);
-  assert.equal(estado.nivel.nivel, 2);
+  assert.equal(estado.nivel.nivel, 1, 'dos días perfectos no pueden bastar para subir de nivel');
+});
+
+test('el primer nivel cuesta varios días, no uno', () => {
+  const perfecto = (n) => Array.from({ length: n }, (_, i) => dia(`2026-09-${14 + i}`, 1, 1));
+
+  assert.equal(estadoDesdeHistorial(perfecto(2)).nivel.nivel, 1);
+  assert.ok(estadoDesdeHistorial(perfecto(5)).nivel.nivel >= 2, 'tampoco puede ser inalcanzable');
 });
 
 test('lo gastado se descuenta de las monedas disponibles pero no de la XP', () => {

@@ -125,10 +125,15 @@ cumplido: dejarse ir para rebajar la media no abre nada.
 
 ## Niveles
 
-`XP para pasar de n a n+1 = 180 × n^1,25`, redondeado a decenas.
+`XP para pasar de n a n+1 = 260 + 180 × n^1,25`, redondeado a decenas.
 
-Con una constancia buena (~190 XP/día): nivel 2 el primer día, nivel 5 a las 2 semanas,
-nivel 10 a los ~2 meses, nivel 15 a los ~7 meses.
+El suelo de 260 existe porque el primer nivel costaba 180 XP —poco más de un día de
+registro— y con él llegaba media zona de golpe. Encarece los primeros niveles sin tocar los
+altos: multiplicar la curva entera habría dejado las zonas 2 y 3 fuera de alcance en una
+prueba de dos meses.
+
+Con una constancia buena (~190 XP/día): nivel 2 al tercer día, nivel 5 a las 2 semanas y
+media, nivel 10 a los ~2 meses y medio.
 
 ## Balance a 12 semanas
 
@@ -136,10 +141,10 @@ Salida de `tools/simular.js`, en XP respecto al perfil constante:
 
 | Perfil | XP | Nivel | Multiplicador final |
 | --- | --- | --- | --- |
-| Constante, 4 sesiones/semana | 100 % | 9 | 1,60 |
-| Principiante plano al 80 % | 73 % | 8 | 1,60 |
+| Constante, 4 sesiones/semana | 100 % | 8 | 1,60 |
+| Principiante plano al 80 % | 73 % | 7 | 1,60 |
 | Principiante, 3 sesiones/semana | 66 % | 7 | 1,55 |
-| Irregular, falla 1 de cada 3 | 51 % | 7 | 1,00 |
+| Irregular, falla 1 de cada 3 | 51 % | 6 | 1,00 |
 
 El irregular progresa a la mitad de velocidad y pierde el multiplicador entero, pero sigue
 avanzando. La distancia se nota más en monedas que en nivel, porque la curva de niveles
@@ -169,8 +174,26 @@ lo recorre.
 - **Combates y trabajos**: pagan a través del presupuesto diario de extras, con su tope del
   30 % y su exigencia de día cumplido. Ganar peleas nunca sustituye a entrenar.
 
+### Combate
+
 El combate por turnos usa un generador con semilla (`generador(n)`) para que las partidas
 sean reproducibles en los tests sin renunciar al azar en el juego real.
+
+La defensa **quita un porcentaje del golpe**, no una cantidad fija: `daño = ataque × 20 /
+(20 + defensa)`. Restándola, el combate era un interruptor —por debajo del umbral no hacías
+nada y por encima ganabas siempre— sin peleas reñidas por el medio.
+
+Cubrirse deja pasar el 40 % del golpe y recupera 2 de energía. Atacar ya no la recupera, así
+que las habilidades obligan a alternar. Los jefes **avisan** un turno antes de su golpe
+fuerte (`combate.avisa`): sin ese aviso, cubrirse sería adivinar.
+
+### Vigor diario
+
+Se puede pelear **2 veces al día**, o 4 si el día está cumplido. Los jefes cuestan dos.
+Sin este tope se vacía una zona entera en una tarde, que es exactamente lo que pasaba.
+
+El vigor se gasta **al entrar al combate**, no al ganarlo: si solo costara perder, reintentar
+hasta que la tirada saliera bien sería gratis. Vive en `dias[fecha].combates`.
 
 ### Ritmo de las zonas
 
@@ -180,9 +203,9 @@ aporta nada, y una que tarda cinco niveles es un muro.
 
 | Zona | Se abre | Normales | Jefe |
 | --- | --- | --- | --- |
-| Las Murallas | 1 | 2-3 | 4 |
-| El Puerto | 5 | 6 | 9 |
-| El Gran Bazar | 10 | 12 | 14 |
+| Las Murallas | 1 | 2-3 | 5 |
+| El Puerto | 5 | 6 | 10 |
+| El Gran Bazar | 10 | 13 | 14 |
 
 `tools/simular-combate.js` mide esto de verdad peleando, y dos tests lo fijan.
 
@@ -234,6 +257,8 @@ Además del tope de justificados y del mínimo de días cumplidos por ventana:
 - Solo se puede registrar **hoy y ayer**. Si no, se podrían rellenar semanas enteras a
   posteriori y reconstruir rachas que nunca ocurrieron.
 - Las exenciones de entreno no se pueden pedir con fecha pasada ni solapadas.
+- Un combate perdido gasta vigor igual que uno ganado.
+- Se puntúa contra la rutina y el menú completos, no contra lo que se haya marcado.
 - Los días en los que no se abre la app no son huecos: el historial se reconstruye continuo
   y esos días cuentan como fallados si estaban planificados.
 
