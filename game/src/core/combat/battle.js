@@ -20,7 +20,7 @@ function dano(ataque, defensa, { multiplicador = 1, defendiendo = false, azar })
 }
 
 /**
- * @param {{ vidaMax:number, ataque:number, defensa:number, energiaMax:number }} stats
+ * @param {{ vidaMax:number, fuerza:number, defensa:number, energiaMax:number }} stats
  * @param {string} enemigoId
  */
 export function iniciarCombate(stats, enemigoId) {
@@ -29,7 +29,8 @@ export function iniciarCombate(stats, enemigoId) {
   return {
     enemigoId,
     enemigo: { ...ficha, vida: ficha.vida, vidaMax: ficha.vida },
-    jugador: { ...stats, vida: stats.vidaMax, energia: stats.energiaMax },
+    // Dentro del combate todos pegan con `ataque`; del lado del personaje eso es su fuerza.
+    jugador: { ...stats, ataque: stats.fuerza, vida: stats.vidaMax, energia: stats.energiaMax },
     turno: 1,
     defendiendo: { jugador: false, enemigo: false },
     registro: [`Te enfrentas a ${ficha.nombre}.`],

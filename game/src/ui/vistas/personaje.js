@@ -212,10 +212,8 @@ export function render(ctx) {
       ${figura('personaje', etapaPersonaje(nivel).id, 'Héroe', { pose: FRENTE.ficha, poses: 3, clase: 'ficha' })}
       <div>
         <div class="mini">Nivel ${nivel}</div>
-        <div class="entre" style="margin-top:6px"><span class="mini">Vida</span><b>${stats.vidaMax}</b></div>
-        <div class="entre"><span class="mini">Ataque</span><b>${stats.ataque}</b></div>
-        <div class="entre"><span class="mini">Defensa</span><b>${stats.defensa}</b></div>
-        <div class="entre"><span class="mini">Energía</span><b>${stats.energiaMax}</b></div>
+        <div class="entre" style="margin-top:8px"><span class="mini">Fuerza</span><b>${stats.fuerza}</b></div>
+        <div class="entre"><span class="mini">Vida</span><b>${stats.vidaMax}</b></div>
       </div>
     </div>
   </div>

@@ -30,20 +30,20 @@ export const ZONAS = [
 
 /** `patron` decide el comportamiento en combate: ver `src/core/combat/battle.js`. */
 export const ENEMIGOS = {
-  rata_murallas: { nombre: 'Rata de las murallas', vida: 30, ataque: 7, defensa: 2, patron: 'agresivo' },
-  bandido_harapiento: { nombre: 'Bandido harapiento', vida: 42, ataque: 9, defensa: 4, patron: 'cauto' },
-  gargola_agrietada: { nombre: 'Gárgola agrietada', vida: 55, ataque: 8, defensa: 8, patron: 'defensivo' },
-  guardian_puerta: { nombre: 'Guardián de la Puerta Dorada', vida: 90, ataque: 13, defensa: 7, patron: 'jefe', jefe: true },
+  rata_murallas: { nombre: 'Rata de las murallas', vida: 14, ataque: 4, defensa: 1, patron: 'agresivo' },
+  bandido_harapiento: { nombre: 'Bandido harapiento', vida: 17, ataque: 4, defensa: 1, patron: 'cauto' },
+  gargola_agrietada: { nombre: 'Gárgola agrietada', vida: 24, ataque: 4, defensa: 2, patron: 'defensivo' },
+  guardian_puerta: { nombre: 'Guardián de la Puerta Dorada', vida: 60, ataque: 10, defensa: 4, patron: 'jefe', jefe: true },
 
-  cangrejo_coloso: { nombre: 'Cangrejo coloso', vida: 80, ataque: 14, defensa: 11, patron: 'defensivo' },
-  marinero_espectral: { nombre: 'Marinero espectral', vida: 70, ataque: 18, defensa: 5, patron: 'agresivo' },
-  anguila_abisal: { nombre: 'Anguila abisal', vida: 65, ataque: 16, defensa: 7, patron: 'cauto' },
-  bestia_cuerno: { nombre: 'Bestia del Cuerno de Oro', vida: 160, ataque: 22, defensa: 12, patron: 'jefe', jefe: true },
+  cangrejo_coloso: { nombre: 'Cangrejo coloso', vida: 50, ataque: 11, defensa: 5, patron: 'defensivo' },
+  marinero_espectral: { nombre: 'Marinero espectral', vida: 45, ataque: 15, defensa: 3, patron: 'agresivo' },
+  anguila_abisal: { nombre: 'Anguila abisal', vida: 48, ataque: 13, defensa: 5, patron: 'cauto' },
+  bestia_cuerno: { nombre: 'Bestia del Cuerno de Oro', vida: 95, ataque: 18, defensa: 8, patron: 'jefe', jefe: true },
 
-  ladron_bazar: { nombre: 'Ladrón del bazar', vida: 110, ataque: 24, defensa: 9, patron: 'agresivo' },
-  automata_especias: { nombre: 'Autómata de especias', vida: 140, ataque: 21, defensa: 16, patron: 'defensivo' },
-  serpiente_seda: { nombre: 'Serpiente de seda', vida: 120, ataque: 26, defensa: 11, patron: 'cauto' },
-  el_coleccionista: { nombre: 'El Coleccionista', vida: 240, ataque: 32, defensa: 18, patron: 'jefe', jefe: true },
+  ladron_bazar: { nombre: 'Ladrón del bazar', vida: 110, ataque: 32, defensa: 14, patron: 'agresivo' },
+  automata_especias: { nombre: 'Autómata de especias', vida: 125, ataque: 26, defensa: 18, patron: 'defensivo' },
+  serpiente_seda: { nombre: 'Serpiente de seda', vida: 115, ataque: 34, defensa: 12, patron: 'cauto' },
+  el_coleccionista: { nombre: 'El Coleccionista', vida: 200, ataque: 38, defensa: 20, patron: 'jefe', jefe: true },
 };
 
 export const HABILIDADES = {
@@ -53,23 +53,25 @@ export const HABILIDADES = {
 };
 
 export const EQUIPO = [
-  { id: 'arma_baston', nombre: 'Bastón de peregrino', tipo: 'arma', ataque: 3, precio: 150, nivel: 4 },
-  { id: 'arma_espada_corta', nombre: 'Espada corta', tipo: 'arma', ataque: 7, precio: 420, nivel: 4 },
-  { id: 'arma_hacha', nombre: 'Hacha de estibador', tipo: 'arma', ataque: 12, precio: 900, nivel: 7 },
-  { id: 'arma_sable', nombre: 'Sable curvo', tipo: 'arma', ataque: 18, precio: 1600, nivel: 10 },
-  { id: 'arma_lanza', nombre: 'Lanza de la guardia', tipo: 'arma', ataque: 25, precio: 2600, nivel: 14 },
-  { id: 'arma_ceremonial', nombre: 'Filo ceremonial', tipo: 'arma', ataque: 34, precio: 4200, nivel: 18 },
+  // La progresión sube por tramos, no doblando: si cada pieza valiera el doble que la
+  // anterior, comprar sería lo único que importa y subir de nivel dejaría de contar.
+  { id: 'arma_baston', nombre: 'Bastón de peregrino', tipo: 'arma', fuerza: 4, precio: 150, nivel: 4 },
+  { id: 'arma_espada_corta', nombre: 'Espada corta', tipo: 'arma', fuerza: 8, precio: 420, nivel: 4 },
+  { id: 'arma_hacha', nombre: 'Hacha de estibador', tipo: 'arma', fuerza: 14, precio: 900, nivel: 7 },
+  { id: 'arma_sable', nombre: 'Sable curvo', tipo: 'arma', fuerza: 22, precio: 1600, nivel: 10 },
+  { id: 'arma_lanza', nombre: 'Lanza de la guardia', tipo: 'arma', fuerza: 32, precio: 2600, nivel: 14 },
+  { id: 'arma_ceremonial', nombre: 'Filo ceremonial', tipo: 'arma', fuerza: 44, precio: 4200, nivel: 18 },
 
-  { id: 'arm_tunica', nombre: 'Túnica basta', tipo: 'armadura', defensa: 3, precio: 140, nivel: 4 },
-  { id: 'arm_cuero', nombre: 'Coraza de cuero', tipo: 'armadura', defensa: 7, precio: 400, nivel: 6 },
-  { id: 'arm_escamas', nombre: 'Cota de escamas', tipo: 'armadura', defensa: 13, precio: 1100, nivel: 9 },
-  { id: 'arm_placas', nombre: 'Placas de la muralla', tipo: 'armadura', defensa: 20, precio: 2200, nivel: 13 },
-  { id: 'arm_mosaico', nombre: 'Armadura de mosaico', tipo: 'armadura', defensa: 28, precio: 3800, nivel: 17 },
+  { id: 'arm_tunica', nombre: 'Túnica basta', tipo: 'armadura', vida: 20, precio: 140, nivel: 4 },
+  { id: 'arm_cuero', nombre: 'Coraza de cuero', tipo: 'armadura', vida: 40, precio: 400, nivel: 6 },
+  { id: 'arm_escamas', nombre: 'Cota de escamas', tipo: 'armadura', vida: 70, precio: 1100, nivel: 9 },
+  { id: 'arm_placas', nombre: 'Placas de la muralla', tipo: 'armadura', vida: 110, precio: 2200, nivel: 13 },
+  { id: 'arm_mosaico', nombre: 'Armadura de mosaico', tipo: 'armadura', vida: 160, precio: 3800, nivel: 17 },
 
-  { id: 'acc_amuleto', nombre: 'Amuleto de cobre', tipo: 'accesorio', vida: 15, precio: 300, nivel: 9 },
-  { id: 'acc_anillo', nombre: 'Anillo del mercader', tipo: 'accesorio', energia: 3, precio: 700, nivel: 9 },
-  { id: 'acc_reliquia', nombre: 'Reliquia dorada', tipo: 'accesorio', vida: 35, energia: 2, precio: 1800, nivel: 12 },
-  { id: 'acc_icono', nombre: 'Icono bendecido', tipo: 'accesorio', vida: 50, energia: 4, precio: 3200, nivel: 16 },
+  { id: 'acc_amuleto', nombre: 'Amuleto de cobre', tipo: 'accesorio', fuerza: 2, vida: 15, precio: 300, nivel: 9 },
+  { id: 'acc_anillo', nombre: 'Anillo del mercader', tipo: 'accesorio', fuerza: 4, vida: 30, precio: 700, nivel: 9 },
+  { id: 'acc_reliquia', nombre: 'Reliquia dorada', tipo: 'accesorio', fuerza: 7, vida: 55, precio: 1800, nivel: 12 },
+  { id: 'acc_icono', nombre: 'Icono bendecido', tipo: 'accesorio', fuerza: 11, vida: 85, precio: 3200, nivel: 16 },
 ];
 
 export const MUEBLES = [

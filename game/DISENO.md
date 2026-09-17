@@ -139,8 +139,12 @@ lo recorre.
 - **Personaje**: cambia de aspecto en los niveles 1, 5, 10 y 15. Va con el nivel, que sale de
   la constancia, y **nunca con el peso levantado**: atar la imagen del cuerpo al rendimiento
   castigaría a quien se estanca o se lesiona, justo lo contrario de lo que persigue la app.
-- **Equipo**: suma estadísticas pero no se ve encima del personaje. Si se viera, cada
-  combinación de arma y armadura necesitaría su propia ilustración.
+- **Estadísticas**: solo dos a la vista, fuerza y vida. Empieza con 5 y 20, y cada nivel da
+  +1 y +5. La defensa y la energía se derivan de ellas para no llenar la ficha de números.
+- **Equipo**: suma a esas dos, pero no se ve encima del personaje. Si se viera, cada
+  combinación de arma y armadura necesitaría su propia ilustración. Sube por tramos
+  (4, 8, 14, 22, 32, 44 de fuerza) y no doblando: si cada pieza valiera el doble que la
+  anterior, comprar sería lo único que importa y subir de nivel dejaría de contar.
 - **Mascotas**: solo por hito (rachas largas, jefes). No se compran, así que acumular monedas
   no las acerca.
 - **Combates y trabajos**: pagan a través del presupuesto diario de extras, con su tope del
@@ -197,5 +201,6 @@ Además del tope de justificados y del mínimo de días cumplidos por ventana:
 ```
 npm test                      # motor, datos y casos de explotación
 node tools/simular.js         # balance a 12 semanas con cuatro perfiles
+node tools/simular-combate.js # si cada zona es jugable al llegar a ella
 python3 -m http.server 8777   # y abrir http://localhost:8777
 ```

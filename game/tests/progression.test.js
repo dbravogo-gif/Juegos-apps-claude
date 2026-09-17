@@ -85,23 +85,38 @@ test('ninguna mascota se puede comprar con monedas', () => {
   });
 });
 
-test('el equipo sube las estadísticas', () => {
+test('el personaje empieza con cinco de fuerza y veinte de vida', () => {
+  assert.equal(statsPersonaje(1).fuerza, 5);
+  assert.equal(statsPersonaje(1).vidaMax, 20);
+});
+
+test('cada nivel da uno de fuerza y cinco de vida', () => {
+  assert.equal(statsPersonaje(2).fuerza, 6);
+  assert.equal(statsPersonaje(2).vidaMax, 25);
+  assert.equal(statsPersonaje(11).fuerza, 15);
+  assert.equal(statsPersonaje(11).vidaMax, 70);
+});
+
+test('el equipo suma a las dos estadísticas según su tipo', () => {
   const desnudo = statsPersonaje(5);
   const armado = statsPersonaje(5, { arma: 'arma_espada_corta', armadura: 'arm_cuero' });
 
-  assert.equal(armado.ataque, desnudo.ataque + 7);
-  assert.equal(armado.defensa, desnudo.defensa + 7);
-  assert.equal(armado.vidaMax, desnudo.vidaMax, 'ni el arma ni la armadura tocan la vida');
+  assert.equal(armado.fuerza, desnudo.fuerza + 8);
+  assert.equal(armado.vidaMax, desnudo.vidaMax + 40);
 });
 
-test('las estadísticas crecen con el nivel', () => {
-  assert.ok(statsPersonaje(10).ataque > statsPersonaje(5).ataque);
-  assert.ok(statsPersonaje(10).vidaMax > statsPersonaje(5).vidaMax);
+test('se puede avanzar sin comprar nada: subir de nivel sigue notándose', () => {
+  // Con el mejor equipo de su tramo, el nivel debe seguir aportando una parte real.
+  const soloNivel = statsPersonaje(18);
+  const conTodo = statsPersonaje(18, { arma: 'arma_ceremonial', armadura: 'arm_mosaico' });
+  const aportadoPorNivel = soloNivel.fuerza / conTodo.fuerza;
+
+  assert.ok(aportadoPorNivel > 0.3, `el equipo eclipsa al nivel: ${aportadoPorNivel}`);
 });
 
 // --- Combate ---
 
-const jugadorFuerte = statsPersonaje(12, { arma: 'arma_sable', armadura: 'arm_escamas' });
+const jugadorFuerte = statsPersonaje(14, { arma: 'arma_lanza', armadura: 'arm_placas' });
 const atacar = { tipo: 'atacar' };
 
 test('un combate termina en victoria contra un enemigo débil', () => {
@@ -161,7 +176,7 @@ test('una habilidad sin energía no se ejecuta', () => {
 });
 
 test('la habilidad pega más fuerte que un ataque normal y gasta energía', () => {
-  const inicial = iniciarCombate(statsPersonaje(8), 'cangrejo_coloso');
+  const inicial = iniciarCombate(statsPersonaje(10, { arma: 'arma_sable' }), 'cangrejo_coloso');
 
   const conHabilidad = turno(inicial, { tipo: 'habilidad', habilidad: 'embestida' }, generador(11));
   const normal = turno(inicial, atacar, generador(11));
@@ -178,4 +193,52 @@ test('un combate terminado ya no admite más turnos', () => {
 test('los jefes recompensan más que los enemigos normales de su zona', () => {
   assert.ok(recompensaEnemigo('guardian_puerta').xp > recompensaEnemigo('rata_murallas').xp);
   assert.ok(recompensaEnemigo('el_coleccionista').xp > recompensaEnemigo('guardian_puerta').xp);
+});
+
+// --- Balance ---
+// El combate se puede desajustar sin que ningún test falle: estos fijan que las zonas sean
+// jugables al llegar a ellas y que los jefes sigan costando. Ver tools/simular-combate.js.
+
+import { ZONAS } from '../src/data/content.js';
+
+const mejorPieza = (tipo, nivel) => EQUIPO.filter((e) => e.tipo === tipo && e.nivel <= nivel).pop()?.id;
+
+function tasaDeVictoria(nivel, enemigoId, intentos = 30) {
+  const equipado = { arma: mejorPieza('arma', nivel), armadura: mejorPieza('armadura', nivel) };
+  let ganadas = 0;
+
+  for (let semilla = 1; semilla <= intentos; semilla += 1) {
+    const azar = generador(semilla);
+    let combate = iniciarCombate(statsPersonaje(nivel, equipado), enemigoId);
+    while (combate.estado === 'en_curso' && combate.turno < 120) {
+      const enApuros = combate.jugador.vida < combate.jugador.vidaMax * 0.3;
+      combate = turno(combate, { tipo: enApuros ? 'defender' : 'atacar' }, azar);
+    }
+    if (combate.estado === 'victoria') ganadas += 1;
+  }
+
+  return ganadas / intentos;
+}
+
+test('los enemigos normales se pueden ganar nada más abrir su zona', () => {
+  ZONAS.forEach((zona) => {
+    zona.enemigos.forEach((id) => {
+      const tasa = tasaDeVictoria(zona.nivel, id);
+      assert.ok(tasa > 0.8, `${id} solo se gana el ${Math.round(tasa * 100)} % en ${zona.nombre}`);
+    });
+  });
+});
+
+test('los jefes no caen el mismo día que se abre la zona', () => {
+  ZONAS.forEach((zona) => {
+    const tasa = tasaDeVictoria(zona.nivel, zona.jefe);
+    assert.ok(tasa < 0.5, `${zona.jefe} se gana demasiado pronto: ${Math.round(tasa * 100)} %`);
+  });
+});
+
+test('pero todos los jefes acaban siendo alcanzables', () => {
+  ZONAS.forEach((zona) => {
+    const tasa = tasaDeVictoria(zona.nivel + 5, zona.jefe);
+    assert.ok(tasa > 0.7, `${zona.jefe} sigue imposible cinco niveles después: ${Math.round(tasa * 100)} %`);
+  });
 });

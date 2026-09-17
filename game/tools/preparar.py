@@ -195,6 +195,27 @@ def guardar(imagen, destino, colores):
         imagen.quantize(colors=colores, method=Image.MAXCOVERAGE).save(destino, optimize=True)
 
 
+LADO_OBJETO = 512
+
+
+def preparar_objetos(entrada, salidas, croma):
+    """Varios objetos sueltos en una misma imagen, cada uno a su propio archivo cuadrado."""
+    imagen = quitar_verde(Image.open(entrada)) if croma else Image.open(entrada).convert('RGBA')
+    grupos = separar_figuras(imagen, len(salidas))
+
+    for (desde, hasta), salida in zip(grupos, salidas):
+        figura = recortar(imagen, desde, hasta)
+        escala = min(LADO_OBJETO * 0.88 / figura.width, LADO_OBJETO * 0.88 / figura.height)
+        ancho, alto = round(figura.width * escala), round(figura.height * escala)
+
+        lienzo = Image.new('RGBA', (LADO_OBJETO, LADO_OBJETO), (0, 0, 0, 0))
+        redimensionada = figura.resize((ancho, alto), Image.LANCZOS)
+        # Apoyados abajo, no centrados: un mueble tiene que descansar sobre el suelo.
+        lienzo.paste(redimensionada, ((LADO_OBJETO - ancho) // 2, round(LADO_OBJETO * 0.94) - alto), redimensionada)
+        guardar(lienzo, salida, 128)
+        print(f'{salida}: objeto {ancho}×{alto}')
+
+
 def preparar_fondo(entrada, salida):
     imagen = Image.open(entrada).convert('RGB')
     alto = round(imagen.height * ANCHO_FONDO / imagen.width)
@@ -205,15 +226,20 @@ def preparar_fondo(entrada, salida):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('entrada')
-    parser.add_argument('salida')
+    parser.add_argument('salida', nargs='+', help='una ruta, o varias con --objetos')
     parser.add_argument('--poses', type=int, default=3)
     parser.add_argument('--sin-croma', action='store_true', help='la imagen ya tiene alfa')
     parser.add_argument('--damero', action='store_true', help='el fondo es el tablero de cuadros')
     parser.add_argument('--fondo', action='store_true', help='escenario: ni recorte ni alfa')
+    parser.add_argument('--objetos', action='store_true', help='varios objetos sueltos en una imagen')
     args = parser.parse_args()
 
     if args.fondo:
-        preparar_fondo(args.entrada, args.salida)
+        preparar_fondo(args.entrada, args.salida[0])
+        return 0
+
+    if args.objetos:
+        preparar_objetos(args.entrada, args.salida, not args.sin_croma and not args.damero)
         return 0
 
     imagen = Image.open(args.entrada)
@@ -226,10 +252,10 @@ def main():
 
     grupos = separar_figuras(imagen, args.poses)
     figuras = [recortar(imagen, desde, hasta) for desde, hasta in grupos]
-    guardar(componer(figuras), args.salida, 128)
+    guardar(componer(figuras), args.salida[0], 128)
 
     medidas = ' · '.join(f'{f.width}×{f.height}' for f in figuras)
-    print(f'{args.salida}: {len(figuras)} poses ({medidas})')
+    print(f'{args.salida[0]}: {len(figuras)} poses ({medidas})')
     return 0
 
 
