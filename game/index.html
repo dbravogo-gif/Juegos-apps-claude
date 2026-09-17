@@ -177,8 +177,23 @@ header.barra .interior{max-width:620px;margin:0 auto;display:flex;align-items:ce
 .placa-heroe{right:4%;bottom:5%}
 .placa b{font-size:12.5px;display:block;line-height:1.3}
 .placa .mini{font-size:11px}
-.rejilla-casillas{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.casilla{aspect-ratio:1;border-radius:12px;border:1px dashed var(--linea);display:grid;place-items:center;background:var(--superficie)}
+/* La parcela se ve sobre el fondo del sitio, con las casillas apoyadas en la parte baja
+   para que los muebles queden sobre el suelo y no flotando en el techo. */
+.escenario{
+  display:flex;flex-direction:column;justify-content:flex-end;min-height:380px;
+  padding:12px;margin-bottom:12px;border-radius:var(--r);overflow:hidden;
+  border:1px solid var(--linea);background:var(--superficie-2) center/cover
+}
+.rejilla-casillas{display:grid;grid-template-columns:repeat(auto-fit,minmax(54px,1fr));gap:7px}
+/* Las casillas vacías apenas se ven: lo que tiene que lucir es el sitio y lo que pones en
+   él, no la cuadrícula. */
+.casilla{
+  aspect-ratio:1;border-radius:12px;display:grid;place-items:center;
+  border:1px dashed color-mix(in srgb,#fff 55%,transparent);
+  background:color-mix(in srgb,#000 12%,transparent)
+}
+.casilla .mini{color:#fff;opacity:.75;font-size:15px;text-shadow:0 1px 3px rgba(0,0,0,.5)}
+.casilla.ocupada{border-color:transparent;background:transparent}
 .casilla.ocupada{border-style:solid}
 .pestanas{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto}
 .pestanas button{padding:7px 13px;border-radius:99px;background:var(--superficie-2);font-size:13px;font-weight:600;white-space:nowrap;color:var(--suave)}

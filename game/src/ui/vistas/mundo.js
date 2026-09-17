@@ -104,7 +104,7 @@ function vistaParcela(ctx) {
         </div>`
       : ''
   }
-  <div class="tarjeta">
+  <div class="escenario" style="background-image:url('assets/espacios/${esc(espacio.id)}.png')">
     <div class="rejilla-casillas">${casillas}</div>
   </div>
   ${seleccion}`;
