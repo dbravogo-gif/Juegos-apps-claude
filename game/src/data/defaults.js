@@ -10,9 +10,9 @@ export function rutinasPorDefecto() {
       ejercicios: [
         { id: 'e1', nombre: 'Press banca', importancia: 'principal', series: 4, repMin: 6, repMax: 8 },
         { id: 'e2', nombre: 'Remo con barra', importancia: 'principal', series: 4, repMin: 8, repMax: 10 },
-        { id: 'e3', nombre: 'Press militar', importancia: 'secundario', series: 3, repMin: 8, repMax: 10 },
-        { id: 'e4', nombre: 'Dominadas', importancia: 'secundario', series: 3, repMin: 6, repMax: 10 },
-        { id: 'e5', nombre: 'Elevaciones laterales', importancia: 'secundario', series: 3, repMin: 12, repMax: 15 },
+        { id: 'e3', nombre: 'Press militar', importancia: 'principal', series: 3, repMin: 8, repMax: 10 },
+        { id: 'e4', nombre: 'Dominadas', importancia: 'principal', series: 3, repMin: 6, repMax: 10 },
+        { id: 'e5', nombre: 'Elevaciones laterales', importancia: 'principal', series: 3, repMin: 12, repMax: 15 },
         { id: 'e6', nombre: 'Curl de bíceps', importancia: 'opcional', series: 3, repMin: 10, repMax: 12 },
       ],
     },
@@ -22,8 +22,8 @@ export function rutinasPorDefecto() {
       ejercicios: [
         { id: 'e7', nombre: 'Sentadilla', importancia: 'principal', series: 4, repMin: 6, repMax: 8 },
         { id: 'e8', nombre: 'Peso muerto rumano', importancia: 'principal', series: 3, repMin: 8, repMax: 10 },
-        { id: 'e9', nombre: 'Prensa', importancia: 'secundario', series: 3, repMin: 10, repMax: 12 },
-        { id: 'e10', nombre: 'Curl femoral', importancia: 'secundario', series: 3, repMin: 10, repMax: 12 },
+        { id: 'e9', nombre: 'Prensa', importancia: 'principal', series: 3, repMin: 10, repMax: 12 },
+        { id: 'e10', nombre: 'Curl femoral', importancia: 'principal', series: 3, repMin: 10, repMax: 12 },
         { id: 'e11', nombre: 'Gemelos', importancia: 'opcional', series: 3, repMin: 12, repMax: 15 },
         { id: 'e12', nombre: 'Plancha', importancia: 'opcional', series: 3, repMin: 30, repMax: 60 },
       ],

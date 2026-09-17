@@ -13,6 +13,10 @@ const MANUALES = [
 ];
 
 let pestana = 'sesion';
+// Qué tarjetas están del revés. Vive aquí y no en los datos: es cómo estás mirando la
+// pantalla, no algo que registrar. El repintado la consulta para no perder el giro.
+const volteadas = new Set();
+
 const pct = (v) => (typeof v === 'number' ? `${Math.round(v * 100)} %` : '—');
 
 export function subtitulo(ctx) {
@@ -72,26 +76,44 @@ function ejercicioHTML(ficha, registro, ctx, bloqueado) {
       data-accion="estado" data-ejercicio="${esc(ficha.id)}" data-valor="${valor}">${ETIQUETA_ESTADO[valor]}</button>`,
   ).join('');
 
+  // El doblés: la esquina doblada que gira la tarjeta. Está en las dos caras, para poder
+  // volver sin buscar otro botón.
+  const dobles = `<button class="dobles" data-accion="voltear" data-ejercicio="${esc(ficha.id)}"
+    aria-label="Ver la información del ejercicio"></button>`;
+
   return `
-  <div class="tarjeta ejercicio ${registro?.estado === 'completado' ? 'listo' : ''}">
-    <div class="cab">
-      <span class="nom">${esc(ficha.nombre)}</span>
-      <span class="etiqueta">${ficha.importancia}</span>
+  <div class="volteable" data-volteada="${volteadas.has(ficha.id)}">
+    <div class="cara tarjeta ejercicio ${registro?.estado === 'completado' ? 'listo' : ''}">
+      ${dobles}
+      <div class="cab">
+        <span class="nom">${esc(ficha.nombre)}</span>
+        <span class="etiqueta">${ficha.importancia}</span>
+      </div>
+      <div class="mini" style="margin-bottom:10px">
+        ${objetivo} × ${ficha.repMin ?? 8}-${ficha.repMax ?? 12} reps
+        ${anterior ? ` · última vez ${esc(anterior)}` : ''}
+      </div>
+      ${filas.map((s, i) => serieHTML(ficha.id, s, i, bloqueado)).join('')}
+      ${
+        bloqueado
+          ? ''
+          : `<div class="fila" style="gap:6px;margin-top:4px">
+              <button class="mini" data-accion="copiarSeries" data-ejercicio="${esc(ficha.id)}">⇣ Repetir la primera</button>
+              <button class="mini" data-accion="masSerie" data-ejercicio="${esc(ficha.id)}">+ Serie</button>
+            </div>
+            <div class="estados" style="margin-top:10px">${manuales}</div>`
+      }
     </div>
-    <div class="mini" style="margin-bottom:10px">
-      ${objetivo} × ${ficha.repMin ?? 8}-${ficha.repMax ?? 12} reps
-      ${anterior ? ` · última vez ${esc(anterior)}` : ''}
+
+    <div class="cara dorso tarjeta">
+      ${dobles}
+      <div class="cab"><span class="nom">${esc(ficha.nombre)}</span></div>
+      ${
+        ficha.info
+          ? `<p class="info">${esc(ficha.info)}</p>`
+          : '<div class="vacio">Sin notas todavía. Escríbelas en «Mi rutina».</div>'
+      }
     </div>
-    ${filas.map((s, i) => serieHTML(ficha.id, s, i, bloqueado)).join('')}
-    ${
-      bloqueado
-        ? ''
-        : `<div class="fila" style="gap:6px;margin-top:4px">
-            <button class="mini" data-accion="copiarSeries" data-ejercicio="${esc(ficha.id)}">⇣ Repetir la primera</button>
-            <button class="mini" data-accion="masSerie" data-ejercicio="${esc(ficha.id)}">+ Serie</button>
-          </div>
-          <div class="estados" style="margin-top:10px">${manuales}</div>`
-    }
   </div>`;
 }
 
@@ -199,7 +221,7 @@ function renderPlan(ctx) {
           <div class="campos">
             <label><span>Importancia</span>
               <select data-accion="campoEjercicio" data-rutina="${esc(rutina.id)}" data-indice="${i}" data-campo="importancia">
-                ${['principal', 'secundario', 'opcional']
+                ${['principal', 'opcional']
                   .map((v) => `<option value="${v}" ${e.importancia === v ? 'selected' : ''}>${v}</option>`)
                   .join('')}
               </select>
@@ -216,6 +238,11 @@ function renderPlan(ctx) {
               </div>
             </label>
           </div>
+          <label class="campo" style="margin:9px 0 0">
+            <span>Notas: técnica, material, lo que sea. Se ven al girar la tarjeta.</span>
+            <textarea rows="2" id="info_${esc(rutina.id)}_${i}" data-accion="infoEjercicio" data-directo
+              data-rutina="${esc(rutina.id)}" data-indice="${i}">${esc(e.info ?? '')}</textarea>
+          </label>
         </div>`,
         )
         .join('')}
@@ -303,6 +330,17 @@ export const acciones = {
 
   irAjustes: (_, ctx) => ctx.ir('ajustes'),
 
+  // Sin repintar: si se repintara, la tarjeta nacería ya girada y no habría animación.
+  voltear: (el) => {
+    const id = el.dataset.ejercicio;
+    const tarjeta = el.closest('.volteable');
+    const alReves = !volteadas.has(id);
+
+    if (alReves) volteadas.add(id);
+    else volteadas.delete(id);
+    tarjeta.dataset.volteada = String(alReves);
+  },
+
   // Se guarda en cada tecla y sin repintar: si se repintara, el campo se recrearía a media
   // palabra y el teclado perdería el foco.
   serie: (el, ctx) => {
@@ -362,6 +400,11 @@ export const acciones = {
       db.plan.diasPorSemana = Number(el.dataset.dias);
     }),
 
+  infoEjercicio: (el, ctx) =>
+    ctx.actualizarCallado((db) => {
+      db.rutinas.find((r) => r.id === el.dataset.rutina).ejercicios[Number(el.dataset.indice)].info = el.value;
+    }),
+
   campoEjercicio: (el, ctx) =>
     ctx.actualizar((db) => {
       const ejercicio = db.rutinas.find((r) => r.id === el.dataset.rutina).ejercicios[Number(el.dataset.indice)];
@@ -378,7 +421,7 @@ export const acciones = {
     ctx.actualizar((db) => {
       db.rutinas
         .find((r) => r.id === el.dataset.rutina)
-        .ejercicios.push({ id: `e${Date.now()}`, nombre, importancia: 'secundario', series: 3, repMin: 8, repMax: 12 });
+        .ejercicios.push({ id: `e${Date.now()}`, nombre, importancia: 'principal', series: 3, repMin: 8, repMax: 12 });
     });
   },
 

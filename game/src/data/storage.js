@@ -96,7 +96,15 @@ export function migrar(db) {
 
   const rutinas = (db.rutinas ?? base.rutinas).map((rutina) => ({
     ...rutina,
-    ejercicios: (rutina.ejercicios ?? []).map((e) => ({ series: 3, repMin: 8, repMax: 12, ...e })),
+    ejercicios: (rutina.ejercicios ?? []).map((e) => ({
+      series: 3,
+      repMin: 8,
+      repMax: 12,
+      ...e,
+      // Ya no hay importancia intermedia. Los secundarios contaban, así que pasan a
+      // principales: dejarlos caer a opcional borraría de golpe parte del cumplimiento.
+      importancia: e.importancia === 'opcional' ? 'opcional' : 'principal',
+    })),
   }));
 
   // Los días guardaban si tocaba entrenar según el calendario; ahora guardan qué se hizo.

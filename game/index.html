@@ -63,10 +63,13 @@ header.barra .interior{max-width:620px;margin:0 auto;display:flex;align-items:ce
 .pastilla.viva{background:var(--acento-claro);color:var(--acento)}
 .pastilla.rota{background:transparent;color:var(--suave);border:1px solid var(--linea)}
 
-.ejercicio{padding:12px 0;border-bottom:1px solid var(--linea)}
-.ejercicio:last-child{border-bottom:none;padding-bottom:0}
-.ejercicio .cab{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
-.ejercicio .nom{font-weight:600}
+/* Cabecera de una tarjeta de ejercicio, en las dos caras. El hueco de la derecha es para
+   el doblés: sin él, la etiqueta de importancia queda debajo de la esquina doblada. */
+.cara .cab{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin-bottom:9px;padding-right:34px;
+}
+.cara .nom{font-weight:600}
 .etiqueta{font-size:11px;color:var(--suave);text-transform:uppercase;letter-spacing:.05em}
 .estados{display:flex;gap:6px;flex-wrap:wrap}
 .estados button{
@@ -96,19 +99,54 @@ header.barra .interior{max-width:620px;margin:0 auto;display:flex;align-items:ce
 .boton.fino{padding:9px;font-size:14px}
 .boton[disabled]{opacity:.45;pointer-events:none}
 
-/* Una serie del día: número, peso, repeticiones y la marca de hecha. */
-.serie{display:grid;grid-template-columns:26px 1fr 1fr 42px;gap:7px;align-items:center;margin-bottom:7px}
-.serie .idx{font-size:12px;font-weight:700;color:var(--suave)}
+/* Una serie del día: número, peso, repeticiones y la marca de hecha. Las columnas son fijas
+   y estrechas porque son dos números; con 1fr los campos no bajaban de su ancho intrínseco
+   y la fila se salía de la tarjeta. */
+.serie{
+  display:grid;grid-template-columns:20px 68px 60px 36px;gap:7px;
+  align-items:center;justify-content:start;margin-bottom:6px;
+}
+.serie .idx{font-size:11px;font-weight:700;color:var(--suave)}
 .serie input{
-  width:100%;padding:9px;border:1px solid var(--linea);border-radius:10px;
+  width:100%;min-width:0;padding:7px 6px;border:1px solid var(--linea);border-radius:9px;
   background:var(--superficie-2);color:var(--texto);font-size:15px;text-align:center;
 }
 .serie .check{
-  height:38px;border:1px solid var(--linea);border-radius:10px;
-  background:var(--superficie-2);color:#fff;font-size:17px;font-weight:700;
+  height:33px;border:1px solid var(--linea);border-radius:9px;
+  background:var(--superficie-2);color:#fff;font-size:16px;font-weight:700;
 }
 .serie .check.hecha{background:var(--acento);border-color:var(--acento)}
 .ejercicio.listo .cab .nom{color:var(--acento)}
+
+/* La tarjeta de ejercicio gira sobre su eje para enseñar las notas del ejercicio.
+   Las dos caras comparten la misma celda de rejilla, así que la altura la marca la más
+   alta y no hace falta fijarla a mano. */
+.volteable{
+  display:grid;perspective:1100px;transform-style:preserve-3d;
+  transition:transform .55s cubic-bezier(.2,.7,.3,1);margin-bottom:12px;
+}
+.volteable[data-volteada="true"]{transform:rotateY(180deg)}
+.volteable > .cara{grid-area:1/1;backface-visibility:hidden;margin:0}
+.volteable > .dorso{transform:rotateY(180deg)}
+.volteable[data-volteada="true"] > .cara:not(.dorso){pointer-events:none}
+.volteable[data-volteada="false"] > .dorso{pointer-events:none}
+.volteable .info{font-size:14px;line-height:1.5;white-space:pre-wrap;margin:0}
+
+/* El doblés: la esquina doblada que gira la tarjeta. El triángulo es la parte levantada
+   y la sombra de debajo es lo que hace que se lea como un papel doblado. */
+.dobles{
+  position:absolute;top:0;right:0;width:30px;height:30px;border-top-right-radius:var(--r);
+  background:linear-gradient(225deg,var(--superficie-2) 0 50%,transparent 50%);
+  filter:drop-shadow(-1px 1px 1px rgba(0,0,0,.18));
+}
+.dobles::before{
+  content:'';position:absolute;inset:0;border-top-right-radius:var(--r);
+  background:linear-gradient(225deg,transparent 0 calc(50% - 1px),var(--linea) calc(50% - 1px) 50%,transparent 50%);
+}
+.dobles::after{
+  content:'⤺';position:absolute;top:1px;right:4px;font-size:13px;color:var(--suave);line-height:1;
+}
+.cara{position:relative}
 
 /* Ficha de un ejercicio dentro del editor de rutina. */
 .def{padding:11px 0;border-bottom:1px solid var(--linea)}
@@ -116,6 +154,10 @@ header.barra .interior{max-width:620px;margin:0 auto;display:flex;align-items:ce
 .def .nom{font-weight:600}
 .def .campos{display:grid;grid-template-columns:1fr 60px 1fr;gap:8px;align-items:end}
 .def .campos span{display:block;font-size:11px;color:var(--suave);margin-bottom:4px}
+.def textarea{
+  width:100%;min-height:52px;padding:8px;border:1px solid var(--linea);border-radius:9px;
+  background:var(--superficie-2);color:var(--texto);font-size:14px;resize:vertical;
+}
 .def .campos input,.def .campos select{
   width:100%;padding:8px;border:1px solid var(--linea);border-radius:9px;
   background:var(--superficie-2);color:var(--texto);font-size:14px;

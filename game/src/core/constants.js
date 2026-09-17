@@ -1,8 +1,11 @@
 // Valores de diseño. Se ajustan tras simular; ningún módulo debe repetirlos por su cuenta.
 
+// Solo hay dos importancias. Una intermedia daba muchas combinaciones con poca diferencia
+// real entre ellas, y obligaba a decidir en cada ejercicio algo que no cambiaba nada.
+// `opcional` no suma ni resta: está para seguir la rutina durante el entreno, no para
+// puntuar. Si sumara algo, marcarlo todo como opcional sería la forma fácil de hacer trampa.
 export const PESOS_EJERCICIO = {
-  principal: 3,
-  secundario: 2,
+  principal: 1,
   opcional: 0,
 };
 

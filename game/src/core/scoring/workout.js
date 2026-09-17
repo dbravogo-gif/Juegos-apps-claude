@@ -1,7 +1,7 @@
 import { PESOS_EJERCICIO, FACTOR_ESTADO, MAX_PESO_JUSTIFICADO } from '../constants.js';
 
 /**
- * @typedef {'principal'|'secundario'|'opcional'} Importancia
+ * @typedef {'principal'|'opcional'} Importancia
  * @typedef {'completado'|'sustituido'|'parcial'|'justificado'|'omitido'} EstadoEjercicio
  * @typedef {{ id: string, importancia: Importancia, estado: EstadoEjercicio }} EjercicioRegistrado
  */

@@ -95,10 +95,7 @@ function renderPlan(ctx) {
     const comidas = plan[i] ?? [];
     return `
     <div class="tarjeta">
-      <div class="entre" style="margin-bottom:10px">
-        <b>${nombre}</b>
-        ${i > 0 ? `<button class="mini" data-accion="copiarDia" data-dia="${i}">Copiar del lunes</button>` : ''}
-      </div>
+      <div class="entre" style="margin-bottom:10px"><b>${nombre}</b></div>
       ${
         comidas.length
           ? comidas
@@ -206,7 +203,4 @@ export const acciones = {
     const indice = Number(el.dataset.indice);
     editarPlan(ctx, Number(el.dataset.dia), (comidas) => comidas.filter((_, i) => i !== indice));
   },
-
-  copiarDia: (el, ctx) =>
-    editarPlan(ctx, Number(el.dataset.dia), () => [...(ctx.db.plan.comidasPorDia?.[0] ?? [])]),
 };

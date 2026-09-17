@@ -22,8 +22,13 @@ Cumplimiento ponderado, sin saltos bruscos:
 cumplimiento = Σ(peso × factor del estado) / Σ(peso exigido)
 ```
 
-Pesos: principal 3, secundario 2, opcional 0. Los opcionales se pueden registrar para tener
-la rutina entera, pero ni suman ni restan.
+Solo hay dos importancias: **principal** (pesa 1) y **opcional** (pesa 0). Una intermedia
+daba muchas combinaciones con poca diferencia real entre ellas y obligaba a decidir en cada
+ejercicio algo que no cambiaba nada.
+
+Los opcionales se registran para seguir la rutina durante el entreno, pero ni suman ni
+restan. Si sumaran algo, marcarlo todo como opcional sería la forma fácil de aprobar el día
+sin hacer nada.
 
 Se puntúa contra **la rutina entera**, no contra lo que se haya tocado. Un ejercicio sin
 marcar se ignora mientras el día sigue abierto —todavía puedes hacerlo— y cuenta como
@@ -34,6 +39,12 @@ Cada ejercicio se anota serie a serie, con peso y repeticiones, igual que en Bul
 estado sale de ahí: todas las series hechas es `completado`, algunas es `parcial`, ninguna
 es «sin tocar». `sustituido`, `justificado` y `omitido` se marcan a mano, porque no hay
 manera de deducirlos de unos números.
+
+La tarjeta de cada ejercicio tiene un **doblés** en la esquina que la gira sobre su eje y
+enseña las notas de ese ejercicio (`ejercicio.info`, que se escribe en «Mi rutina»). Las dos
+caras comparten celda de rejilla, así que la altura la marca la más alta y no hay que
+fijarla a mano. El giro se aplica sobre el nodo, sin repintar: repintando, la tarjeta
+nacería ya girada y no habría animación.
 
 Estados y factor: `completado` 1, `sustituido` 1, `parcial` 0.5, `omitido` 0.
 `justificado` (molestia, lesión) **se excluye del denominador**: ni suma ni penaliza.

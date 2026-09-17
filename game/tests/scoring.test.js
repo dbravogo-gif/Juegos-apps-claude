@@ -17,14 +17,14 @@ import {
 
 const ej = (id, importancia, estado) => ({ id, importancia, estado });
 
-// Rutina de referencia: 2 principales, 4 secundarios, 2 opcionales (peso total 14).
+// Rutina de referencia: 6 principales y 2 opcionales (peso total 6).
 const rutina = (estados) => [
   ej('p1', 'principal', estados[0]),
   ej('p2', 'principal', estados[1]),
-  ej('s1', 'secundario', estados[2]),
-  ej('s2', 'secundario', estados[3]),
-  ej('s3', 'secundario', estados[4]),
-  ej('s4', 'secundario', estados[5]),
+  ej('p3', 'principal', estados[2]),
+  ej('p4', 'principal', estados[3]),
+  ej('p5', 'principal', estados[4]),
+  ej('p6', 'principal', estados[5]),
   ej('o1', 'opcional', estados[6]),
   ej('o2', 'opcional', estados[7]),
 ];
@@ -44,16 +44,22 @@ test('los ejercicios opcionales no suman ni restan', () => {
   assert.equal(conOpcionales.cumplimiento, sinOpcionales.cumplimiento);
 });
 
-test('omitir un secundario penaliza menos que omitir un principal', () => {
-  const sinSecundario = puntuarEntreno(
-    rutina(['completado', 'completado', 'omitido', 'completado', 'completado', 'completado', 'completado', 'completado']),
-  );
-  const sinPrincipal = puntuarEntreno(
+test('todos los ejercicios que cuentan pesan lo mismo', () => {
+  const faltaUno = puntuarEntreno(
     rutina(['omitido', 'completado', 'completado', 'completado', 'completado', 'completado', 'completado', 'completado']),
   );
-  assert.ok(sinSecundario.cumplimiento > sinPrincipal.cumplimiento);
-  assert.equal(sinSecundario.cumplimiento, 12 / 14);
-  assert.equal(sinPrincipal.cumplimiento, 11 / 14);
+  const faltaOtro = puntuarEntreno(
+    rutina(['completado', 'completado', 'omitido', 'completado', 'completado', 'completado', 'completado', 'completado']),
+  );
+  assert.equal(faltaUno.cumplimiento, 5 / 6);
+  assert.equal(faltaOtro.cumplimiento, faltaUno.cumplimiento);
+});
+
+test('explotación: marcar todo como opcional no firma la sesión', () => {
+  // Opcional no suma ni resta, así que una rutina entera de opcionales no puntúa nada:
+  // no hay cumplimiento que cobrar, ni forma de aprobar sin hacer nada.
+  const todoOpcional = puntuarEntreno(Array.from({ length: 6 }, (_, i) => ej(`o${i}`, 'opcional', 'completado')));
+  assert.equal(todoOpcional.cumplimiento, null);
 });
 
 test('una sustitución razonable puntúa igual que completar', () => {
@@ -67,13 +73,13 @@ test('una sesión parcial puntúa la mitad de ese ejercicio', () => {
   const { cumplimiento } = puntuarEntreno(
     rutina(['parcial', 'completado', 'completado', 'completado', 'completado', 'completado', 'completado', 'completado']),
   );
-  assert.equal(cumplimiento, 12.5 / 14);
+  assert.equal(cumplimiento, 5.5 / 6);
 });
 
 test('el cumplimiento baja de forma continua, sin saltos bruscos', () => {
   const secuencia = [0, 1, 2, 3, 4].map((omitidos) => {
     const estados = todo('completado');
-    for (let i = 0; i < omitidos; i += 1) estados[2 + i] = 'omitido';
+    for (let i = 0; i < omitidos; i += 1) estados[i] = 'omitido';
     return puntuarEntreno(rutina(estados)).cumplimiento;
   });
   secuencia.forEach((valor, i) => {
