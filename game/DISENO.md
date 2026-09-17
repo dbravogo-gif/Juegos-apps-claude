@@ -154,10 +154,17 @@ sean reproducibles en los tests sin renunciar al azar en el juego real.
 `ASSETS.md` lista los archivos exactos, y se regenera con `node tools/assets.js`. Mientras
 un archivo no existe se ve un marcador de color; al añadirlo con su nombre aparece solo.
 
-## Pendiente de decidir
+## Fuera del alcance
 
-- Índice de rendimiento (progresión personal), separado de la XP de constancia.
-- Qué ocurre al llegar al final del contenido (nivel 20 en adelante).
+Esto es una prueba del bucle de juego, no el producto final. Quedan fuera a propósito:
+
+- **Más contenido a partir del nivel 20.** Llegar ahí lleva más de un año de constancia; para
+  lo que se quiere validar, sobra.
+- **Índice de rendimiento** (progresión de carga y volumen, separado de la XP de constancia).
+  Exigiría registrar series, repeticiones y kilos, lo que convertiría el registro diario en
+  algo mucho más lento, y no alimenta ninguna mecánica. Bulk Up ya recoge esos datos: el sitio
+  de esta métrica es la futura conexión entre ambas apps, no un segundo registro aquí.
+- **IA para analizar comidas.** El registro es cualitativo y manual.
 
 ## La app
 
