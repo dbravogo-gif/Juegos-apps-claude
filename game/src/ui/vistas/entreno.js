@@ -118,6 +118,38 @@ function ejercicioHTML(ficha, registro, ctx, bloqueado) {
 }
 
 /**
+ * Un día cuya rutina se borró después. Lo anotado sigue contando —sería injusto tirarlo por
+ * haber reorganizado el plan— así que se enseña tal cual, y se puede elegir otra cosa arriba.
+ */
+function huerfanoHTML(registro, evaluacion) {
+  const hechos = (registro.ejercicios ?? []).filter((e) => e.estado);
+
+  return `
+  <div class="aviso ojo" style="margin-top:18px">
+    La rutina de este día ya no existe. Lo que anotaste se conserva y sigue contando; si
+    quieres, elige otra cosa arriba.
+  </div>
+  <div class="tarjeta">
+    <div class="entre" style="margin-bottom:10px">
+      <b>Lo que registraste</b>
+      <span class="mini">Cumplimiento ${pct(evaluacion.entreno?.cumplimiento)}</span>
+    </div>
+    ${
+      hechos.length
+        ? hechos
+            .map(
+              (e) => `<div class="entre" style="padding:6px 0">
+                <span>${esc(e.nombre ?? e.id)}</span>
+                <span class="mini">${ETIQUETA_ESTADO[e.estado] ?? e.estado}</span>
+              </div>`,
+            )
+            .join('')
+        : '<div class="mini">No llegaste a anotar nada.</div>'
+    }
+  </div>`;
+}
+
+/**
  * Tarjetas de elección del día: una por rutina, más descanso y actividad de fuera. Nada de
  * calendario: el día que entrenas eliges qué toca, igual que en Bulk Up.
  */
@@ -156,11 +188,12 @@ function renderSesion(ctx) {
 
   const cuerpo = {
     entreno: () =>
-      `<div class="entre" style="margin:18px 0 10px">
-         <b>${esc(rutina?.nombre ?? '')}</b>
-         <span class="mini">Cumplimiento ${pct(evaluacion.entreno?.cumplimiento)}</span>
-       </div>` +
-      (rutina?.ejercicios ?? []).map((e) => ejercicioHTML(e, porId.get(e.id), ctx, bloqueado)).join(''),
+      rutina
+        ? `<div class="entre" style="margin:18px 0 10px">
+             <b>${esc(rutina.nombre)}</b>
+             <span class="mini">Cumplimiento ${pct(evaluacion.entreno?.cumplimiento)}</span>
+           </div>` + rutina.ejercicios.map((e) => ejercicioHTML(e, porId.get(e.id), ctx, bloqueado)).join('')
+        : huerfanoHTML(registro, evaluacion),
     descanso: () => '<div class="vacio">Día de descanso. No se te exige nada.</div>',
     otra: () =>
       '<div class="vacio">Actividad fuera del gimnasio. No rompe la racha ni cuenta como sesión.</div>',
@@ -297,11 +330,12 @@ function editarEjercicio(ctx, ejercicioId, cambio, opciones) {
   editarDia(ctx, (dia) => {
     const previo = dia.ejercicios.find((e) => e.id === ejercicioId) ?? {
       id: ejercicioId,
-      importancia: ficha.importancia,
       series: [],
       estado: null,
     };
-    const siguiente = cambio({ ...previo, importancia: ficha.importancia });
+    // El nombre se copia al registro: si luego se edita o se borra la rutina, lo anotado
+    // sigue siendo legible en vez de quedarse en un id suelto.
+    const siguiente = cambio({ ...previo, importancia: ficha.importancia, nombre: ficha.nombre });
     const derivado = estadoPorSeries(ficha.series ?? 3, siguiente.series);
     const estado = siguiente.manual ? siguiente.estado : derivado;
 

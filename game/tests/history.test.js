@@ -174,3 +174,20 @@ test('editar la rutina no borra lo que ya se registró de un ejercicio retirado'
   assert.equal(dia.entreno.pesoTotal, 2, 'el ejercicio fuera de rutina sigue contando');
   assert.equal(dia.entreno.cumplimiento, 1);
 });
+
+test('borrar una rutina no invalida los días ya registrados con ella', () => {
+  const registro = {
+    sesion: 'r',
+    ejercicios: [
+      { id: 'a', nombre: 'Press', importancia: 'principal', estado: 'completado' },
+      { id: 'b', nombre: 'Remo', importancia: 'principal', estado: 'completado' },
+    ],
+  };
+  // El mismo día, con la rutina ya borrada del plan.
+  const db = { plan: { diasPorSemana: 4, comidasPorDia: {} }, rutinas: [], dias: {} };
+  const dia = evaluarDia(registro, '2026-09-14', { db, hoy: '2026-09-15' });
+
+  assert.equal(dia.sesion, 'entreno', 'sigue siendo un día de entreno');
+  assert.equal(dia.entreno.cumplimiento, 1, 'lo anotado sigue contando');
+  assert.ok(registro.ejercicios.every((e) => e.nombre), 'y sigue siendo legible sin la rutina');
+});

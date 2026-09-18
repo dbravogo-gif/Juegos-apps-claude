@@ -1,10 +1,11 @@
-const VERSION = 'v0.4.0';
+const VERSION = 'v0.5.0';
 const CACHE = `constant-${VERSION}`;
 const ESENCIALES = [
   '.',
   'index.html',
   'manifest.webmanifest',
   'icon.svg',
+  'icons/apple-touch-icon.png',
   'src/ui/app.js',
 ];
 
