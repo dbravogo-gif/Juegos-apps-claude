@@ -33,6 +33,15 @@ Empieza por las cuatro de la etapa 1: con eso el combate ya se ve entero.
 | `assets/personaje/etapa4.png` | De frente (nivel 15) | 3 poses: quieto (ficha), celebrando, arrodillado |
 | `assets/personaje/etapa4_combate.png` | De espaldas en diagonal (nivel 15) | 3 poses: quieto, atacando, recibiendo daño |
 
+### El héroe de guía
+
+Una sola hoja, solo de la etapa 1: es quien lleva el recorrido guiado de la app. Va de
+frente, de medio cuerpo para arriba, porque se ve pequeño dentro de un globo de texto.
+
+| Archivo | Qué es | Poses |
+| --- | --- | --- |
+| `assets/personaje/etapa1_guia.png` | De frente, medio cuerpo | 3 poses: saludando, señalando hacia abajo, pulgar arriba |
+
 ## Enemigos
 
 | Archivo | Qué es | Zona |
@@ -142,7 +151,7 @@ así que necesitan mucho suelo libre y ningún mueble ya dibujado.
 
 | Categoría | Imágenes |
 | --- | --- |
-| Personaje (2 hojas por etapa) | 8 |
+| Personaje (2 hojas por etapa, más la de guía) | 9 |
 | Enemigos (hojas de 3 poses) | 12 |
 | Fondos de zona | 3 |
 | Fondos de espacios | 5 |

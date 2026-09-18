@@ -32,6 +32,11 @@ export function render(ctx) {
   return `
   <div class="aviso ojo">Tu rutina se edita en la sección Entreno y tu dieta en la sección Dieta.</div>
 
+  <div class="titulo-seccion">Cómo funciona</div>
+  <div class="tarjeta">
+    <button class="boton fino secundario" data-accion="verTutorial">Volver a ver la guía</button>
+  </div>
+
   <div class="titulo-seccion">Exenciones de entreno</div>
   <div class="tarjeta">
     <div class="entre" style="margin-bottom:12px">
@@ -60,6 +65,8 @@ export function render(ctx) {
 }
 
 export const acciones = {
+  verTutorial: (_, ctx) => ctx.verTutorial(),
+
   pedirExencion: (_, ctx) => {
     const inicio = document.getElementById('inicioExencion').value;
     if (!inicio) return;

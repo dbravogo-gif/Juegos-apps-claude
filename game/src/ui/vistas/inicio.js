@@ -130,7 +130,7 @@ export function render(ctx) {
   </div>
 
   <div class="titulo-seccion">Rachas</div>
-  <div class="tarjeta">
+  <div class="tarjeta" data-guia="rachas">
     <div class="fila" style="flex-wrap:wrap;gap:8px;margin-bottom:12px">
       ${racha('Entreno', rachas?.entreno, rachas?.bonusEntreno)}
       ${racha('Comida', rachas?.comida, rachas?.bonusComida)}

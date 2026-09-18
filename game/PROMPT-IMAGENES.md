@@ -78,6 +78,16 @@ colores, alineadas sobre la misma línea de suelo:
   3. Recibiendo daño: echado hacia atrás, encogido.
 Formato 1536 × 1024 píxeles, cada pose centrada en su propio tercio.
 
+LA HOJA DE GUÍA (solo la etapa 1)
+El mismo héroe hace de profesor en el recorrido guiado de la app, así que necesita una hoja
+aparte con tres poses, de frente y a cámara:
+  1. Saludando: mano levantada, gesto de bienvenida.
+  2. Señalando: brazo extendido apuntando claramente hacia ABAJO y un poco a su izquierda.
+  3. Aprobando: pulgar arriba, gesto de «bien hecho».
+Aquí, y solo aquí, el encuadre es de MEDIO CUERPO para arriba: sale dentro de un globo de
+texto pequeño y de cuerpo entero no se le vería la cara. Mismo formato 1536 × 1024, misma
+regla de los tercios, fondo transparente.
+
 MUY IMPORTANTE SOBRE LAS HOJAS: recorto la imagen en tres partes iguales por código, así que
 NADA puede invadir el tercio de al lado. Ni una estela de arma, ni un efecto de movimiento,
 ni una cola, ni un ala, ni una sombra. Si una pose necesita un efecto, que quepa entero

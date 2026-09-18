@@ -123,7 +123,7 @@ function vistaParcela(ctx) {
         </div>`
       : ''
   }
-  <div class="escenario" style="background-image:url('assets/espacios/${esc(espacio.id)}.png')">
+  <div class="escenario" data-guia="parcela" style="background-image:url('assets/espacios/${esc(espacio.id)}.png')">
     ${piezas}
   </div>
   ${seleccion}`;

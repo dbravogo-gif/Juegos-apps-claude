@@ -22,6 +22,7 @@ export function estadoInicial() {
     equipado: {},
     colocados: {},
     jefesDerrotados: [],
+    tutorialVisto: false,
   };
 }
 

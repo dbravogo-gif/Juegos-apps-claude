@@ -54,6 +54,14 @@ ${tabla('Poses', ETAPAS_PERSONAJE.flatMap((e) =>
   ARCHIVOS_PERSONAJE.map(([sufijo, que, poses]) =>
     linea('personaje', `${e.id}${sufijo}`, `${que} (nivel ${e.nivel})`, poses))))}
 
+### El héroe de guía
+
+Una sola hoja, solo de la etapa 1: es quien lleva el recorrido guiado de la app. Va de
+frente, de medio cuerpo para arriba, porque se ve pequeño dentro de un globo de texto.
+
+${tabla('Poses', [linea('personaje', 'etapa1_guia', 'De frente, medio cuerpo',
+  '3 poses: saludando, señalando hacia abajo, pulgar arriba')])}
+
 ## Enemigos
 
 ${tabla('Zona', ZONAS.flatMap((zona) =>
@@ -90,7 +98,7 @@ ${tabla('Cómo se gana', MASCOTAS.map((m) => linea('mascotas', m.id, m.nombre, m
 
 | Categoría | Imágenes |
 | --- | --- |
-| Personaje (2 hojas por etapa) | ${ETAPAS_PERSONAJE.length * ARCHIVOS_PERSONAJE.length} |
+| Personaje (2 hojas por etapa, más la de guía) | ${ETAPAS_PERSONAJE.length * ARCHIVOS_PERSONAJE.length + 1} |
 | Enemigos (hojas de 3 poses) | ${ZONAS.reduce((t, z) => t + z.enemigos.length + 1, 0)} |
 | Fondos de zona | ${ZONAS.length} |
 | Fondos de espacios | ${ESPACIOS.length} |

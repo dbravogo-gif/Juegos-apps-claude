@@ -302,6 +302,20 @@ la edición del plan (las rutinas y el menú semanal). Hoy reúne el resumen y e
 En Entreno, el día empieza con un recuadro por rutina más «Descanso» y «Otra actividad»:
 se elige y debajo aparece lo que toque. Se pueden crear tantas rutinas como se quiera.
 
+### Recorrido guiado
+
+El héroe hace de profesor y lleva por las secciones en ocho pasos. El guion vive en
+`src/data/tutorial.js` como datos, no como código, y cada paso dice a qué sección lleva y
+qué resalta.
+
+Lo señalado se busca por `data-guia`, no por selectores de CSS, para que cambiar el aspecto
+de una vista no rompa el tutorial en silencio. El foco es un recuadro transparente con una
+sombra enorme alrededor: oscurece todo menos lo que se explica, sin recortar nada.
+
+Es corto a propósito: enseña dónde está cada cosa y se detiene solo en lo que nadie adivina
+—las rachas y el vigor—, no en todo lo que la app sabe hacer. Sale la primera vez y se
+puede repetir desde Ajustes.
+
 ### Avisos de progreso
 
 Registrar el día cambiaba la XP en silencio: subías de nivel y no te enterabas. Ahora la

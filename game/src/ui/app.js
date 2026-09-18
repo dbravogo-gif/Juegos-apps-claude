@@ -3,6 +3,7 @@ import { construirHistorial, evaluarDia, rutinaDelDia, tipoDeSesion } from '../d
 import { estadoDesdeHistorial } from '../core/state.js';
 import { hoyISO } from './util.js';
 import { anunciarProgreso } from './aviso.js';
+import { empezar as empezarTutorial } from './tutorial.js';
 
 import * as inicio from './vistas/inicio.js';
 import * as entreno from './vistas/entreno.js';
@@ -58,6 +59,7 @@ function contexto() {
     rutinaDe: (fecha) => rutinaDelDia(db, db.dias[fecha]),
     actualizar,
     actualizarCallado,
+    verTutorial,
     refrescar: render,
     verFecha,
     ir,
@@ -202,7 +204,18 @@ document.getElementById('nav').addEventListener('click', (evento) => {
   if (boton) ir(boton.dataset.vista);
 });
 
+/** El recorrido guiado, desde el arranque la primera vez o a mano desde Ajustes. */
+function verTutorial() {
+  empezarTutorial(ir, () => {
+    actualizar((datos) => {
+      datos.tutorialVisto = true;
+    });
+  });
+}
+
 render();
+
+if (!db.tutorialVisto) verTutorial();
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').catch(() => {});

@@ -27,9 +27,12 @@ export function subtitulo(ctx) {
 }
 
 function pestanas() {
-  const boton = (id, texto) =>
-    `<button aria-pressed="${pestana === id}" data-accion="pestana" data-pestana="${id}">${texto}</button>`;
-  return `<div class="pestanas">${boton('sesion', 'Sesión')}${boton('plan', 'Mi rutina')}</div>`;
+  const boton = (id, texto, guia = '') =>
+    `<button aria-pressed="${pestana === id}" data-accion="pestana" data-pestana="${id}" ${guia}>${texto}</button>`;
+  return `<div class="pestanas">
+    ${boton('sesion', 'Sesión')}
+    ${boton('plan', 'Mi rutina', 'data-guia="plan-rutina"')}
+  </div>`;
 }
 
 /** Último peso anotado para ese ejercicio antes de hoy, para no tener que recordarlo. */
@@ -168,7 +171,7 @@ function eleccionHTML(ctx, bloqueado) {
     .join('');
 
   return `
-  <div class="opciones">
+  <div class="opciones" data-guia="eleccion">
     ${rutinas}
     ${tarjeta('descanso', 'Descanso', 'Hoy no toca', 'suave')}
     ${tarjeta('otra', 'Otra actividad', 'Fútbol, monte, una clase…', 'suave')}

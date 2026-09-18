@@ -25,7 +25,7 @@ export function subtitulo(ctx) {
 function pestanas() {
   const boton = (id, texto) =>
     `<button aria-pressed="${pestana === id}" data-accion="pestana" data-pestana="${id}">${texto}</button>`;
-  return `<div class="pestanas">${boton('dia', 'Hoy')}${boton('plan', 'Mi dieta')}</div>`;
+  return `<div class="pestanas" data-guia="plan-dieta">${boton('dia', 'Hoy')}${boton('plan', 'Mi dieta')}</div>`;
 }
 
 function exencionesDisponibles(ctx, fecha) {
