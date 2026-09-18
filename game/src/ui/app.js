@@ -193,7 +193,7 @@ function manejar(evento) {
   if (!accion) return;
 
   evento.preventDefault();
-  accion(elemento, contexto());
+  accion(elemento, contexto(), evento);
 }
 
 document.getElementById('vista').addEventListener('click', manejar);

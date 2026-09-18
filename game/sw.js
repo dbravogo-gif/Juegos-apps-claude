@@ -1,4 +1,4 @@
-const VERSION = 'v0.7.0';
+const VERSION = 'v0.8.0';
 const CACHE = `constant-${VERSION}`;
 const ESENCIALES = [
   '.',

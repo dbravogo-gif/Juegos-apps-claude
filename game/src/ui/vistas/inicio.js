@@ -3,6 +3,9 @@ import { exencionesComidaDisponibles } from '../../core/scoring/nutrition.js';
 import { clasificarEntreno, clasificarComida } from '../../core/scoring/streaks.js';
 import { NOMBRE_DIA } from '../../data/defaults.js';
 import { diaDeLaSemana, comidasDelDia } from '../../data/history.js';
+import * as historico from './historico.js';
+
+let pestana = 'hoy';
 
 const pct = (v) => (typeof v === 'number' ? `${Math.round(v * 100)} %` : '—');
 
@@ -22,8 +25,15 @@ const DETALLE_SESION = {
 };
 
 export function subtitulo(ctx) {
+  if (pestana === 'historico') return 'Todo lo que llevas registrado';
   const fecha = new Date(`${ctx.hoy}T00:00:00`);
   return fecha.toLocaleDateString('es-ES', FECHA_LARGA);
+}
+
+function pestanas() {
+  const boton = (id, texto) =>
+    `<button aria-pressed="${pestana === id}" data-accion="pestana" data-pestana="${id}">${texto}</button>`;
+  return `<div class="pestanas">${boton('hoy', 'Hoy')}${boton('historico', 'Histórico')}</div>`;
 }
 
 function racha(nombre, datos, bonus) {
@@ -88,6 +98,10 @@ function progreso(ctx) {
 }
 
 export function render(ctx) {
+  return pestanas() + (pestana === 'historico' ? historico.render(ctx) : renderHoy(ctx));
+}
+
+function renderHoy(ctx) {
   const { estado } = ctx;
   const { nivel, xpEnNivel, xpParaSiguiente } = estado.nivel;
   const avance = xpParaSiguiente ? (xpEnNivel / xpParaSiguiente) * 100 : 100;
@@ -181,6 +195,14 @@ export function render(ctx) {
 }
 
 export const acciones = {
+  ...historico.acciones,
+
+  pestana: (el, ctx) => {
+    pestana = el.dataset.pestana;
+    if (pestana === 'hoy') historico.reiniciar();
+    ctx.refrescar({ alPrincipio: true });
+  },
+
   irEntreno: (_, ctx) => ctx.ir('entreno'),
   irDieta: (_, ctx) => ctx.ir('dieta'),
 };

@@ -302,6 +302,33 @@ la edición del plan (las rutinas y el menú semanal). Hoy reúne el resumen y e
 En Entreno, el día empieza con un recuadro por rutina más «Descanso» y «Otra actividad»:
 se elige y debajo aparece lo que toque. Se pueden crear tantas rutinas como se quiera.
 
+### Histórico
+
+El historial se guarda **entero y para siempre**: cada día con sus series, pesos y
+repeticiones. Recortarlo a un mes no ahorraría trabajo, sería tirar datos que ya están.
+Lo que se decide es qué enseñar, y son tres vistas para tres preguntas distintas:
+
+| Vista | Responde a |
+| --- | --- |
+| Calendario del mes | ¿He sido constante? |
+| Detalle de un día | ¿Qué hice aquel día? |
+| Progresión por ejercicio | ¿Estoy mejorando? |
+
+Un día sin registro sale en blanco, no en rojo: el calendario cuenta lo que pasó, no juzga.
+El detalle sobrevive a que se borre la rutina, porque el nombre del ejercicio se guarda en
+el propio registro.
+
+La gráfica es una sola serie a lo largo del tiempo, así que va sin leyenda y con etiqueta
+solo en el último punto: un número en cada punto se leería peor, no mejor. Por encima de
+catorce sesiones deja de dibujar un punto por sesión —serían una fila de manchas pegadas— y
+marca solo el elegido y el último. La zona de toque es una sola para toda la gráfica y
+busca la sesión más cercana: con una zona por punto se solapaban entre ellas y la mayoría
+quedaba inalcanzable con el dedo.
+
+El cálculo del estado es cuadrático con los días registrados, porque el multiplicador de
+cada día depende de su propio pasado. Con un par de años va sobrado; si esto llegara a
+durar cinco, habría que cachear.
+
 ### Recorrido guiado
 
 El héroe hace de profesor y lleva por las secciones en ocho pasos. El guion vive en

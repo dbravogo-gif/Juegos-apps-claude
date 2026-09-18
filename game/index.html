@@ -254,6 +254,44 @@ body.con-tutorial #vista,body.con-tutorial #nav{pointer-events:none}
 }
 .dias button[aria-pressed="true"]{background:var(--acento);color:#fff}
 
+/* Calendario del histórico. Reusa los colores de estado de las tiras: verde cumplido,
+   rojo fallado, gris descanso. Los días sin registro se quedan casi en blanco, porque no
+   pasó nada, no es que se fallara. */
+.calendario{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.calendario.cabecera{margin-bottom:5px;font-size:11px;color:var(--suave);text-align:center;font-weight:600}
+.dia-cal{
+  position:relative;aspect-ratio:1;border-radius:8px;display:grid;place-items:center;
+  background:var(--superficie-2);font-size:12px;font-weight:600;color:var(--texto);
+}
+.dia-cal[disabled]{background:transparent;color:color-mix(in srgb,var(--suave) 45%,transparent)}
+.dia-cal.cumplido{background:var(--acento);color:#fff}
+.dia-cal.fallado{background:var(--alerta);color:#fff;opacity:.85}
+.dia-cal.abierto{outline:2px solid var(--texto);outline-offset:2px}
+/* La dieta va como una marca aparte: un día puede cumplirse en el gimnasio y no en la mesa. */
+.dia-cal .marca{position:absolute;bottom:3px;width:5px;height:5px;border-radius:99px;background:transparent}
+.dia-cal .marca.cumplido{background:var(--oro)}
+.dia-cal .marca.fallado{background:var(--alerta)}
+.dia-cal.cumplido .marca.fallado{background:#fff;opacity:.75}
+.leyenda{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;font-size:11px;color:var(--suave)}
+.leyenda span{display:inline-flex;align-items:center;gap:4px}
+.leyenda i{width:9px;height:9px;border-radius:3px;background:var(--superficie-2);display:inline-block}
+.leyenda i.cumplido{background:var(--acento)}
+.leyenda i.fallado{background:var(--alerta)}
+.leyenda i.marca{border-radius:99px;width:6px;height:6px;background:var(--oro)}
+
+.linea-hist{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--linea)}
+.linea-hist:last-child{border-bottom:none}
+
+/* Progresión: una sola serie, así que ni leyenda ni un número en cada punto. */
+.grafica{width:100%;height:auto;display:block;overflow:visible}
+.grafica .guias line{stroke:var(--linea);stroke-width:1}
+.grafica .eje{fill:var(--suave);font-size:9px}
+.grafica .serie{fill:none;stroke:var(--acento);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.grafica .punto{fill:var(--acento);stroke:var(--superficie);stroke-width:2}
+.grafica .punto.activo{fill:var(--texto)}
+.grafica .valor{fill:var(--texto);font-size:11px;font-weight:700}
+.grafica .toque{fill:transparent;cursor:pointer}
+
 .tira{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
 .tira .celda{aspect-ratio:1;border-radius:8px;background:var(--superficie-2);display:grid;place-items:center;font-size:11px;color:var(--suave);font-weight:600}
 .tira .celda.cumplido{background:var(--acento);color:#fff}
