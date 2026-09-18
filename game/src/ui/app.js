@@ -2,6 +2,7 @@ import { cargar, guardar } from '../data/storage.js';
 import { construirHistorial, evaluarDia, rutinaDelDia, tipoDeSesion } from '../data/history.js';
 import { estadoDesdeHistorial } from '../core/state.js';
 import { hoyISO } from './util.js';
+import { anunciarProgreso } from './aviso.js';
 
 import * as inicio from './vistas/inicio.js';
 import * as entreno from './vistas/entreno.js';
@@ -22,6 +23,13 @@ const TITULOS = {
 
 /** Vistas que trabajan sobre un día concreto y deben volver a hoy al entrar en ellas. */
 const DIARIAS = ['entreno', 'dieta'];
+
+/**
+ * Entrenar va limpio: ni barra de XP ni avisos flotantes mientras se está en la sesión.
+ * Lo ganado no se pierde, se guarda y se anuncia entero al salir de la sección.
+ */
+const SILENCIOSAS = ['entreno'];
+let acumulado = null;
 
 
 let db = cargar();
@@ -56,12 +64,27 @@ function contexto() {
   };
 }
 
+/** Foto del progreso, para poder comparar antes y después de un cambio. */
+function progreso() {
+  const { nivel, xpEnNivel, xpParaSiguiente } = estado.nivel;
+  return {
+    xp: estado.xp,
+    monedas: estado.monedas.ganadas,
+    nivel,
+    avance: xpParaSiguiente ? (xpEnNivel / xpParaSiguiente) * 100 : 100,
+  };
+}
+
 /** Aplica un cambio sobre los datos, lo persiste y repinta. */
 function actualizar(mutador) {
+  const antes = progreso();
   mutador(db);
   guardar(db);
   estado = recalcular();
   render();
+
+  if (SILENCIOSAS.includes(vistaActual)) acumulado ??= antes;
+  else anunciarProgreso(antes, progreso());
 }
 
 /**
@@ -80,9 +103,15 @@ function verFecha(fecha) {
 }
 
 function ir(vista) {
+  const salgoDelSilencio = SILENCIOSAS.includes(vistaActual) && !SILENCIOSAS.includes(vista);
   vistaActual = vista;
   if (DIARIAS.includes(vista)) fechaSeleccionada = hoyISO();
   render({ alPrincipio: true });
+
+  if (salgoDelSilencio && acumulado) {
+    anunciarProgreso(acumulado, progreso());
+    acumulado = null;
+  }
 }
 
 /**
@@ -99,6 +128,8 @@ function render({ alPrincipio = false } = {}) {
   document.getElementById('tituloVista').textContent = TITULOS[vistaActual];
   document.getElementById('subtitulo').textContent = vista.subtitulo ? vista.subtitulo(ctx) : '';
   document.getElementById('saldo').textContent = `🪙 ${estado.monedas.disponibles}`;
+  document.body.dataset.vista = vistaActual;
+  pintarBarraXp();
   document.getElementById('vista').innerHTML = vista.render(ctx);
 
   document.querySelectorAll('#nav button').forEach((boton) => {
@@ -109,6 +140,15 @@ function render({ alPrincipio = false } = {}) {
 
   restaurarTextos(escrito);
   window.scrollTo(0, alPrincipio ? 0 : desplazamiento);
+}
+
+/** Nivel y avance en la cabecera, visibles desde cualquier sección. */
+function pintarBarraXp() {
+  const { nivel, xpEnNivel, xpParaSiguiente } = estado.nivel;
+  const avance = xpParaSiguiente ? (xpEnNivel / xpParaSiguiente) * 100 : 100;
+
+  document.getElementById('nivelCabecera').textContent = `Nv ${nivel}`;
+  document.getElementById('barraXp').firstElementChild.style.width = `${Math.min(100, avance)}%`;
 }
 
 /** Lo que el usuario estuviera escribiendo, para que un repintado no se lo borre. */

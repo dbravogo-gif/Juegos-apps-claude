@@ -302,6 +302,18 @@ la edición del plan (las rutinas y el menú semanal). Hoy reúne el resumen y e
 En Entreno, el día empieza con un recuadro por rutina más «Descanso» y «Otra actividad»:
 se elige y debajo aparece lo que toque. Se pueden crear tantas rutinas como se quiera.
 
+### Avisos de progreso
+
+Registrar el día cambiaba la XP en silencio: subías de nivel y no te enterabas. Ahora la
+cabecera lleva el nivel y una barra de XP visible desde cualquier sección, y cada ganancia
+salta como un aviso flotante abajo a la derecha. Al subir de nivel la barra sube hasta el
+tope, destella en verde y sube una flecha.
+
+**La sección de Entreno es la excepción**: ahí no hay barra ni avisos. Es donde más XP se
+gana —cada serie marcada suma— así que sería justo la pantalla con más interrupciones, y es
+la única que tiene que estar limpia mientras entrenas. Lo ganado no se pierde: se acumula y
+se anuncia entero al salir de la sección, con su celebración si hubo subida de nivel.
+
 Cada elemento con acción atiende **un solo evento**: los botones el clic, los `<select>` el
 `change` y los campos con `data-directo` el `input`. Un `<select>` que atendiera el clic se
 repintaba con el desplegable abierto y se cerraba solo al soltar.
