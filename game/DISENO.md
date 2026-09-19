@@ -269,6 +269,28 @@ aporta nada, y una que tarda cinco niveles es un muro.
 `PROMPT-IMAGENES.md` tiene el prompt de estilo que se le pasa al generador. Mientras
 un archivo no existe se ve un marcador de color; al añadirlo con su nombre aparece solo.
 
+## Lo legal, para cuando esto salga de casa
+
+Hoy la app no tiene servidor, ni cuentas, ni cookies, ni analítica, ni pagos, ni correos,
+ni una sola dependencia de terceros: los datos se quedan en el `localStorage` del
+dispositivo y no viajan a ninguna parte. Eso deja fuera de un plumazo la mayoría de la
+lista habitual de cumplimiento. Lo que sí aplica, por orden de importancia:
+
+| Qué | Por qué aplica aquí | Estado |
+| --- | --- | --- |
+| **Aviso de salud** | Es una app de ejercicio y alimentación. No es consejo médico y no debe leerse como tal | Pendiente |
+| **Licencia de las imágenes** | Son generadas con IA; hay que comprobar los términos del generador para uso público | Pendiente |
+| **Accesibilidad** | Texto alternativo, contraste y navegación por teclado | Parcial |
+| **Política de privacidad** | Corta y honesta: los datos no salen del dispositivo | Pendiente |
+| **Borrar los datos** | Derecho de supresión | Hecho, en Ajustes |
+| **Datos mínimos** | No se recoge nada que no haga falta | Hecho por diseño |
+
+No aplican mientras no haya servidor ni tienda: política de cookies y su banner (el
+`localStorage` que usa la app es estrictamente necesario para que funcione), política de
+devoluciones, consentimientos de formularios, auditoría de SDKs de terceros, patrones
+oscuros, comisiones ocultas, reseñas falsas, enlace de baja en correos y datos fiscales del
+negocio. Si algún día hay cuentas, pagos o analítica, vuelven todos de golpe.
+
 ## Fuera del alcance
 
 Esto es una prueba del bucle de juego, no el producto final. Quedan fuera a propósito:
