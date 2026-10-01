@@ -19,7 +19,7 @@ Inicio de temporada NBA: 20-oct-2026.
 | All-Star | 1 por temporada: un día sin límite de presupuesto ni fichajes, luego vuelve la plantilla |
 | Precios | Cambian según popularidad (más fichado = más caro) |
 
-Fuente: resúmenes de nba.com vía búsqueda web (nba.com está bloqueado en el entorno). Verificar en la app si algo no cuadra.
+Fuente: API del juego (`bootstrap-static`). Extras de la API: 3 wildcards (eventos 2-39, 40-103, 104-159), 1 All-Star, capitán 1 vez por GameWeek.
 
 ## Implicaciones
 
@@ -28,6 +28,19 @@ Fuente: resúmenes de nba.com vía búsqueda web (nba.com está bloqueado en el 
 - **Puntos por millón**: las estrellas rinden ~3 FPPG por millón; los buenos chollos 3.5-5. Ganar la liga depende sobre todo de acertar con los chollos, no con las estrellas.
 - **Calendario**: con 2 fichajes gratis por semana, conviene tener a jugadores con 4 partidos en la semana.
 - **Primera wildcard** (hasta GW6): permite corregir errores del equipo inicial. No hace falta acertar al 100% el día 1.
+
+## Datos y scripts
+
+```bash
+python3 fantasy-nba/scripts/fetch.py          # precios, calendario y stats -> 2026-27/data/<fecha>/
+pip install pulp                               # solo para el optimizador
+python3 fantasy-nba/scripts/optimize.py --gw 1 6 [--must "Nombre"] [--exclude "Nombre"]
+```
+
+- `fetch.py`: descarga de nbafantasy.nba.com (precios, % de selección, estado/lesiones, calendario) y de basketball-reference (stats por partido de las dos últimas temporadas). Solo librería estándar.
+- `optimize.py`: elige los 10 que maximizan los puntos esperados en las GameWeeks indicadas, simulando las alineaciones diarias (5 titulares, máx. 3 por posición) y el capitán semanal.
+- `2026-27/proyecciones.csv`: ajustes manuales (multiplicador, disponibilidad o FPPG fijo). Es donde va el criterio humano; revisarlo cada semana.
+- Requiere que el entorno permita `*.nba.com` y `*.basketball-reference.com` (Network access → Custom).
 
 ## Proceso semanal
 
