@@ -6,9 +6,16 @@
      "T: " / "C: "  diálogo (Tú / Cliente)
      **negrita**  *cursiva*
    Tipos de tarjeta: read, quiz, open, scenario, order, num, flash.
-   Las tarjetas de ventas se muestran en el orden de este archivo. */
+   Dentro de cada área, las tarjetas salen en el orden de este archivo. */
 
 window.CHISPA = {
+areas: [
+  {id:"ventas",   title:"Ventas"},
+  {id:"ciencia",  title:"Ciencia"},
+  {id:"mente",    title:"Psicología"},
+  {id:"economia", title:"Economía"},
+  {id:"historia", title:"Historia"}
+],
 modules: [
   {id:"v1",  area:"ventas", n:1,  title:"Vender valor",              desc:"Qué vende de verdad Bitmakers y por qué el precio no es lo importante."},
   {id:"v2",  area:"ventas", n:2,  title:"Preguntar con método",      desc:"SPIN: situación, problema, implicación y necesidad."},
@@ -20,12 +27,10 @@ modules: [
   {id:"v8",  area:"ventas", n:8,  title:"Cierre y seguimiento",      desc:"Cada visita termina con un avance. Seguimiento siempre."},
   {id:"v9",  area:"ventas", n:9,  title:"Role-play y entrevista",    desc:"El patinete, bien hecho, y cómo contar lo que has aprendido."},
   {id:"v10", area:"ventas", n:10, title:"Producto y planta",         desc:"Qué problema resuelve cada familia de equipos y el vocabulario de fábrica."},
-  {id:"cien",  area:"cur", title:"Ciencia",    desc:"Física y química de lo cotidiano."},
-  {id:"hist",  area:"cur", title:"Historia",   desc:"Personas, inventos y momentos que cambiaron cosas."},
-  {id:"mente", area:"cur", title:"Mente",      desc:"Cómo pensamos, recordamos y decidimos."},
-  {id:"num",   area:"cur", title:"Números",    desc:"Probabilidad, economía y paradojas."},
-  {id:"mundo", area:"cur", title:"Naturaleza", desc:"Animales y rarezas del planeta."},
-  {id:"tec",   area:"cur", title:"Tecnología", desc:"Máquinas, códigos y sondas."}
+  {id:"cien",  area:"ciencia",  title:"Cómo sabemos lo que sabemos", desc:"Método científico y la física de lo cotidiano."},
+  {id:"mente", area:"mente",    title:"Cómo pensamos y decidimos",   desc:"Sesgos, memoria y atención."},
+  {id:"eco",   area:"economia", title:"Las ideas clave de la economía", desc:"Coste de oportunidad, comercio, precios e incentivos."},
+  {id:"hist",  area:"historia", title:"Momentos que cambiaron cosas", desc:"Inventos, epidemias y personas que se adelantaron."}
 ],
 
 cards: [
@@ -929,57 +934,26 @@ Una buena demo:
  model:`«Sé que sois los distribuidores oficiales y exclusivos de Keyence en España, desde Barcelona, con soluciones de detección, medición láser, visión artificial, marcado y microscopía. Lo que más me atrae es el enfoque: no vendéis un producto, resolvéis un problema de producción o de laboratorio, y lo justificáis con números: menos paradas, menos rechazo, más fiabilidad. Me encaja porque me gusta entender cómo funcionan las cosas y me motiva la parte de preguntar y calcular.»`,
  check:["Mencionas la relación con Keyence","Nombras 2 o 3 familias de producto","Hablas del enfoque: valor, fiabilidad, cálculo","Lo conectas contigo"]},
 
-/* ========== CURIOSIDADES (25%) ========== */
-{id:"c-01", m:"cien", t:"quiz",
- q:"¿Qué significa «láser»?",
- opts:["Amplificación de luz por emisión estimulada de radiación",
-       "Lente avanzada de sincronización de energía radiante",
-       "Línea activa de señal electromagnética reflejada",
-       "Nada: es un nombre comercial"], a:0,
- exp:`Es un acrónimo inglés: *Light Amplification by Stimulated Emission of Radiation*. Einstein describió la emisión estimulada en 1917, pero el primer láser no llegó hasta 1960: Theodore Maiman lo construyó con un cristal de rubí. Al principio lo llamaban en broma «una solución en busca de un problema». Hoy mide, corta, opera ojos y lee códigos.`},
+/* ========== CIENCIA ========== */
 
-{id:"c-02", m:"hist", t:"quiz",
- q:"¿Quién vivió más cerca en el tiempo de la llegada a la Luna (1969) que de la construcción de la Gran Pirámide de Guiza?",
- opts:["Cleopatra","Tutankamón","Ramsés II","Ninguno de ellos"], a:0,
- exp:`La Gran Pirámide se terminó hacia el 2560 a. C. Cleopatra murió en el 30 a. C.: unos 2.500 años después de la pirámide y unos 2.000 años antes del Apolo 11. El antiguo Egipto duró tanto que, para Cleopatra, las pirámides ya eran antigüedades.`},
+{id:"s-01", m:"cien", t:"read", title:"Correlación no es causalidad",
+ body:`En los meses en que se venden más helados también hay más ahogamientos. ¿Los helados ahogan? No: los dos suben por una **tercera causa**, el calor, que lleva a la gente a comer helado y a bañarse.
 
-{id:"c-03", m:"mente", t:"read", title:"La curva del olvido",
- body:`En 1885, Hermann Ebbinghaus memorizó listas de sílabas sin sentido y midió cuánto olvidaba. El olvido es brutal al principio: en un día puedes perder buena parte de lo aprendido si no lo repasas.
+Que dos cosas vayan juntas (**correlación**) no significa que una cause la otra (**causalidad**). Puede haber una causa común, puede ser al revés, o puede ser casualidad.
 
-Pero cada repaso **aplana la curva**: olvidas más despacio. Por eso funciona la **repetición espaciada**: repasar justo cuando empiezas a olvidar (al día siguiente, a los pocos días, a la semana…).
+Por eso la ciencia usa **experimentos controlados**: cambiar solo una cosa y comparar con un grupo donde no cambia.`,
+ key:"Que dos cosas vayan juntas no prueba que una cause la otra."},
 
-Esta app lo hace: lo que fallas vuelve pronto; lo que aciertas, cada vez más tarde.`,
- key:"Repasar cuando empiezas a olvidar fija el recuerdo mucho más que repasar seguido."},
+{id:"s-02", m:"cien", t:"read", title:"Placebo y doble ciego",
+ body:`Si das una pastilla de azúcar a alguien convencido de que es un medicamento, a menudo **se siente mejor**. Es el **efecto placebo**, y es real: las expectativas influyen en el dolor, el cansancio o el ánimo.
 
-{id:"c-04", m:"mundo", t:"read", title:"Tres corazones y sangre azul",
- body:`El pulpo es lo más parecido a un extraterrestre que tenemos cerca:
-- **Tres corazones**: dos bombean sangre a las branquias y uno al resto del cuerpo.
-- **Sangre azul**: transporta el oxígeno con hemocianina, que lleva cobre, en vez de con hemoglobina, que lleva hierro.
-- **Cerebro repartido**: unos dos tercios de sus neuronas están en los brazos. Cada brazo decide parte de sus movimientos.
+Por eso, para saber si un medicamento funciona, se compara con un placebo en un ensayo de **doble ciego**: ni el paciente ni el médico saben quién toma qué. Así ni las expectativas del paciente ni las del médico (sin querer, se trata distinto a quien crees que mejorará) contaminan el resultado.`,
+ key:"Doble ciego: ni paciente ni médico saben quién toma el placebo."},
 
-Abren frascos, se escapan de acuarios y distinguen a unas personas de otras.`,
- key:"Un animal con la mayoría de sus neuronas fuera de la cabeza."},
-
-{id:"c-05", m:"num", t:"quiz",
- q:"¿Cuántas personas tiene que haber en una sala para que la probabilidad de que dos cumplan años el mismo día supere el 50%?",
- opts:["23","57","183","366"], a:0,
- exp:`Solo **23**. Con 57, la probabilidad supera el 99%. Nos parece imposible porque pensamos «¿alguien cumple el mismo día que yo?», pero la pregunta es sobre **cualquier pareja**, y con 23 personas hay 253 parejas posibles. Es la paradoja del cumpleaños.`},
-
-{id:"c-06", m:"tec", t:"read", title:"El GPS necesita a Einstein",
- body:`Los satélites GPS llevan relojes atómicos, y por la relatividad no marchan al mismo ritmo que los de la superficie:
-- Se mueven muy rápido, así que su tiempo va **más lento**: unos 7 microsegundos al día.
-- Están más lejos de la gravedad terrestre, así que su tiempo va **más rápido**: unos 45 microsegundos al día.
-
-En total se adelantan **unos 38 microsegundos al día**. Parece nada, pero sin corregirlo el GPS acumularía errores de **unos 10 km cada día**. Por eso los relojes se ajustan antes del lanzamiento.`,
- key:"Sin corregir la relatividad, el GPS se desviaría unos 10 km cada día."},
-
-{id:"c-07", m:"num", t:"read", title:"La falacia del coste hundido",
- body:`Has pagado la entrada del cine, la película es mala y te quedas «para no tirar el dinero». Pero el dinero ya está gastado: quedarte solo añade una hora perdida.
-
-Es la **falacia del coste hundido**: seguir con algo por lo que ya invertiste, no por lo que te queda por ganar. También se llama «falacia del Concorde»: Francia y Reino Unido siguieron financiando el avión supersónico durante años, aunque ya se veía que no sería rentable.
-
-Pregunta útil: «Si empezara hoy desde cero, ¿lo elegiría?».`,
- key:"Decide por lo que viene, no por lo que ya gastaste."},
+{id:"s-03", m:"cien", t:"quiz",
+ q:"Según el filósofo Karl Popper, ¿cuál de estas afirmaciones es científica?",
+ opts:["Todo ocurre por una razón","Todos los cisnes son blancos","El universo tiene un propósito","Las cosas buenas les pasan a las buenas personas"], a:1,
+ exp:`Para Popper, una afirmación es científica si se puede **refutar**: si es posible imaginar una observación que la desmienta. «Todos los cisnes son blancos» lo es, y de hecho cayó: en 1697 unos exploradores neerlandeses vieron cisnes negros en Australia. Las demás no se pueden desmentir con ningún dato, así que quedan fuera de la ciencia.`},
 
 {id:"c-08", m:"cien", t:"read", title:"Por qué el cielo es azul",
  body:`La luz del Sol lleva todos los colores. Al cruzar la atmósfera, las moléculas del aire dispersan mucho más la luz de onda corta (azul) que la de onda larga (roja): varias veces más. Ese azul rebota por todo el cielo y nos llega desde todas las direcciones.
@@ -989,64 +963,26 @@ Al atardecer la luz atraviesa mucha más atmósfera: el azul se dispersa por el 
 ¿Por qué no es violeta? La luz solar trae menos violeta, parte se absorbe arriba y nuestros ojos lo captan peor.`,
  key:"El aire dispersa más el azul; al atardecer, el azul se pierde por el camino."},
 
-{id:"c-09", m:"hist", t:"read", title:"El reloj que resolvió el mar",
- body:`En el siglo XVIII los barcos sabían su latitud por el Sol, pero no su **longitud**: a cuánto estaban al este o al oeste. Hubo naufragios terribles por eso.
-
-La clave era el tiempo: si sabes la hora exacta de tu puerto de salida y la comparas con el mediodía donde estás, cada hora de diferencia son 15° de longitud. Pero los relojes de péndulo no funcionaban en un barco que se balancea.
-
-John Harrison, un carpintero sin estudios académicos, pasó décadas construyendo relojes marinos. Su H4, probado en 1761, funcionó con una precisión asombrosa para la época.`,
- key:"Medir el tiempo con precisión fue la forma de medir el espacio."},
-
-{id:"c-10", m:"mente", t:"quiz",
- q:"Hay 3 puertas y detrás de una hay un coche. Eliges la 1. El presentador, que sabe dónde está, abre la 3: hay una cabra. ¿Te conviene cambiar a la 2?",
- opts:["Sí: cambiando ganas 2 de cada 3 veces","Da igual: es 50/50","No: mejor quedarte con la tuya"], a:0,
- exp:`Al elegir, tu puerta tenía 1/3 de probabilidad, y las otras dos juntas, 2/3. El presentador no abre al azar: siempre te enseña una cabra. Esa información concentra los 2/3 en la puerta que queda. Es el problema de Monty Hall, y hasta matemáticos famosos se equivocaron con él.`},
-
-{id:"c-11", m:"mundo", t:"read", title:"La miel que no caduca",
- body:`La miel bien cerrada prácticamente no se estropea. Tiene muy poca agua disponible (las bacterias no pueden crecer), es ácida y contiene un poco de peróxido de hidrógeno gracias a una enzima que añaden las abejas.
-
-Se ha encontrado miel comestible en tumbas del antiguo Egipto, con miles de años. Si se cristaliza no está estropeada: basta con calentarla suavemente al baño maría.`,
- key:"Poca agua, mucha acidez y un antiséptico natural: la miel se conserva sola."},
-
-{id:"c-12", m:"tec", t:"quiz",
- q:"¿De dónde viene llamar «bug» a un fallo informático?",
- opts:["De una polilla atrapada en un ordenador en 1947",
-       "De unas siglas de IBM",
-       "De un videojuego de los años 80",
-       "De un virus llamado Bug"], a:0,
- exp:`En 1947, el equipo de Grace Hopper encontró una polilla atrapada en un relé del ordenador Harvard Mark II y la pegó en el cuaderno con la nota «primer caso real de bug encontrado». La gracia es que la palabra ya se usaba para fallos técnicos (Edison la usaba en el siglo XIX); la polilla la hizo famosa.`},
-
-{id:"c-13", m:"num", t:"read", title:"La regla del 72",
- body:`¿Cuánto tarda en duplicarse una inversión? Divide **72 entre el interés anual**:
-- Al 6% → 72 ÷ 6 = **12 años**.
-- Al 8% → **9 años**.
-
-También funciona con la inflación: con un 3% anual, los precios se duplican en unos **24 años**, así que el dinero parado vale la mitad.
-
-Es una aproximación del interés compuesto que funciona muy bien entre el 4% y el 12%, más o menos.`,
- key:"72 ÷ interés = años que tarda en duplicarse."},
-
-{id:"c-14", m:"mente", t:"read", title:"El efecto IKEA",
- body:`En un estudio publicado en 2012, Michael Norton, Daniel Mochon y Dan Ariely vieron que la gente valoraba más los muebles de IKEA que montaba ella misma que esos mismos muebles ya montados. Estaban dispuestos a pagar más por lo que habían construido, aunque hubiera quedado peor.
-
-Valoramos más lo que hemos ayudado a crear. Pasa con muebles, con recetas y con ideas: una conclusión a la que llegas tú pesa más que una que te dan hecha.`,
- key:"Lo que construimos nosotros nos parece más valioso."},
+{id:"c-01", m:"cien", t:"quiz",
+ q:"¿Qué significa «láser»?",
+ opts:["Amplificación de luz por emisión estimulada de radiación",
+       "Lente avanzada de sincronización de energía radiante",
+       "Línea activa de señal electromagnética reflejada",
+       "Nada: es un nombre comercial"], a:0,
+ exp:`Es un acrónimo inglés: *Light Amplification by Stimulated Emission of Radiation*. Einstein describió la emisión estimulada en 1917, pero el primer láser no llegó hasta 1960: Theodore Maiman lo construyó con un cristal de rubí. Al principio lo llamaban en broma «una solución en busca de un problema». Hoy mide, corta, opera ojos y lee códigos.`},
 
 {id:"c-15", m:"cien", t:"quiz",
  q:"¿Cuánto tarda la luz del Sol en llegar a la Tierra?",
  opts:["8 segundos","8 minutos","8 horas","Es instantánea"], a:1,
  exp:`Unos **8 minutos y 20 segundos**: el Sol está a unos 150 millones de km y la luz viaja a casi 300.000 km/s. Si el Sol desapareciera, seguiríamos viéndolo y girando a su alrededor durante esos 8 minutos.`},
 
-{id:"c-16", m:"hist", t:"read", title:"Semmelweis y el lavado de manos",
- body:`En 1847, en Viena, el médico Ignaz Semmelweis vio que en la sala atendida por médicos morían muchas más madres por fiebre puerperal que en la atendida por comadronas. Los médicos venían de hacer autopsias.
+{id:"c-06", m:"cien", t:"read", title:"El GPS necesita a Einstein",
+ body:`Los satélites GPS llevan relojes atómicos, y por la relatividad no marchan al mismo ritmo que los de la superficie:
+- Se mueven muy rápido, así que su tiempo va **más lento**: unos 7 microsegundos al día.
+- Están más lejos de la gravedad terrestre, así que su tiempo va **más rápido**: unos 45 microsegundos al día.
 
-Impuso lavarse las manos con una solución de cloro y la mortalidad se desplomó. Pero sus colegas lo rechazaron: la idea de que los médicos causaban muertes les ofendía y aún no se conocían los gérmenes. Murió en 1865 en un manicomio. Años después, Pasteur y Lister le dieron la razón.`,
- key:"Tener razón no basta: también hay que conseguir que te escuchen."},
-
-{id:"c-17", m:"mundo", t:"quiz",
- q:"En el mapa de Mercator (el de siempre), Groenlandia parece casi tan grande como África. ¿Cuántas veces más grande es África en realidad?",
- opts:["Son iguales","2 veces","5 veces","14 veces"], a:3,
- exp:`África tiene unos 30 millones de km² y Groenlandia, unos 2,2 millones: unas **14 veces** menos. El mapa de Mercator conserva los ángulos (genial para navegar), pero agranda las zonas cercanas a los polos.`},
+En total se adelantan **unos 38 microsegundos al día**. Parece nada, pero sin corregirlo el GPS acumularía errores de **unos 10 km cada día**. Por eso los relojes se ajustan antes del lanzamiento.`,
+ key:"Sin corregir la relatividad, el GPS se desviaría unos 10 km cada día."},
 
 {id:"c-18", m:"cien", t:"read", title:"El agua que flota",
  body:`Casi todas las sustancias son más densas en sólido que en líquido. El agua no: al congelarse se expande alrededor de un 9%, porque sus moléculas se ordenan en una red con huecos.
@@ -1056,45 +992,20 @@ Por eso el hielo flota. Y por eso los lagos se congelan de arriba abajo: la capa
 También es la razón de que revienten tuberías y botellas en el congelador.`,
  key:"El hielo flota porque el agua se expande al congelarse."},
 
-{id:"c-19", m:"mente", t:"read", title:"Dormir para recordar",
- body:`Mientras duermes, el cerebro **reactiva y consolida** lo que aprendiste durante el día: pasa los recuerdos de un almacén temporal (el hipocampo) a otro más estable (la corteza).
-
-En los experimentos, la gente recuerda mejor lo aprendido si duerme después que si pasa las mismas horas despierta.
-
-Consecuencia práctica: estudiar hasta tarde la víspera y dormir poco es la peor combinación posible. Repasa y duerme bien.`,
- key:"Lo que aprendes hoy se fija esta noche."},
-
-{id:"c-20", m:"tec", t:"read", title:"La ley de Moore",
- body:`En 1965, Gordon Moore (que después cofundaría Intel) predijo que el número de transistores en un chip se duplicaría cada año; en 1975 lo corrigió a **cada dos años**. Se cumplió durante décadas.
-
-Duplicar cada dos años durante 50 años es multiplicar por unos **33 millones** (2²⁵). Por eso el móvil que llevas en el bolsillo es muchísimo más potente que los ordenadores que llevaron al ser humano a la Luna.
-
-Hoy el ritmo se ha frenado: hay transistores de apenas unas decenas de átomos.`,
- key:"Duplicar cada 2 años durante 50 años es multiplicar por 33 millones."},
-
-{id:"c-21", m:"hist", t:"quiz",
- q:"¿Qué palabra española viene del árabe y significaba originalmente «si Dios quiere»?",
- opts:["Ojalá","Albóndiga","Azúcar","Alcalde"], a:0,
- exp:`**Ojalá** viene del árabe hispánico *law šá lláh*, «si Dios quiere». El español tiene miles de arabismos: almohada, aceite, azúcar, albóndiga, alcalde, ajedrez, hasta… Muchos empiezan por *al-*, el artículo árabe.`},
-
-{id:"c-22", m:"num", t:"read", title:"La ley de Goodhart",
- body:`«Cuando una medida se convierte en objetivo, deja de ser una buena medida.»
-
-Un ejemplo clásico, quizá inventado: a una fábrica soviética de clavos le fijaron el objetivo en toneladas, y fabricó unos pocos clavos gigantes. Cuando el objetivo pasó a ser el número de clavos, fabricó millones de clavos minúsculos e inútiles.
-
-Pasa en empresas, colegios y apps: si solo cuentas llamadas, tendrás muchas llamadas cortas e inútiles.`,
- key:"Si persigues el número, el número deja de significar algo."},
-
-{id:"c-23", m:"mundo", t:"read", title:"Tardígrados: sobrevivir al espacio",
- body:`Miden menos de un milímetro y viven, entre otros sitios, en el musgo. Ante condiciones extremas expulsan casi toda el agua y se convierten en una bolita inerte.
-
-Así resisten temperaturas cercanas al cero absoluto, radiación muy intensa y años de sequedad. En 2007, la misión espacial FOTON-M3 los expuso al **vacío del espacio**: algunos sobrevivieron y se reprodujeron al volver.`,
- key:"Ante el peligro, se secan y esperan."},
-
 {id:"c-24", m:"cien", t:"quiz",
  q:"Verdadero o falso: los aviones vuelan porque el aire de encima del ala tiene que llegar al final a la vez que el de abajo, y por eso va más rápido.",
  opts:["Verdadero","Falso"], a:1,
  exp:`Es un mito muy extendido. No hay ningún motivo para que lleguen a la vez; de hecho, el aire de arriba llega **antes**. El ala sustenta porque desvía aire hacia abajo y crea una diferencia de presión: menos arriba y más abajo. Hablar de presiones o de aire desviado son dos formas de describir lo mismo.`},
+
+{id:"c-30", m:"cien", t:"read", title:"Plátanos radiactivos",
+ body:`Los plátanos tienen potasio, y una pequeñísima parte del potasio natural es **potasio-40**, que es radiactivo. Así que sí: un plátano es ligeramente radiactivo.
+
+Tanto que se usa en broma como unidad: la «dosis equivalente a un plátano». Una radiografía de tórax o un vuelo largo equivalen a cientos de plátanos. Y tú también eres radiactivo: tu cuerpo lleva potasio-40 y carbono-14.
+
+No hay ningún peligro: la dosis es minúscula.`,
+ key:"Todo lo vivo es un poco radiactivo, y no pasa nada."},
+
+/* ========== PSICOLOGÍA ========== */
 
 {id:"c-25", m:"mente", t:"read", title:"Pensar rápido, pensar despacio",
  body:`Daniel Kahneman (Nobel de Economía en 2002) popularizó la idea de dos «sistemas»:
@@ -1106,35 +1017,42 @@ Prueba: un bate y una pelota cuestan 1,10 € en total. El bate cuesta 1 € má
 El Sistema 1 grita «10 céntimos». La respuesta es **5 céntimos** (bate 1,05 + pelota 0,05).`,
  key:"La intuición es rápida; comprobar cuesta, pero a veces hace falta."},
 
-{id:"c-26", m:"tec", t:"read", title:"El mecanismo de Anticitera",
- body:`En 1901, unos buceadores sacaron de un naufragio griego, cerca de la isla de Anticitera, un bloque de bronce corroído. Décadas de estudio, incluidos escáneres de rayos X, revelaron un mecanismo con decenas de engranajes construido hace más de 2.000 años.
+{id:"m-01", m:"mente", t:"read", title:"Perder duele más que ganar",
+ body:`Daniel Kahneman y Amos Tversky (teoría de las perspectivas, 1979) mostraron que **perder algo duele aproximadamente el doble** de lo que alegra ganar lo mismo.
 
-Servía para predecir la posición del Sol y la Luna, las fases lunares y los eclipses. Es el «ordenador analógico» más antiguo que se conoce. No se conoce nada de complejidad parecida hasta los relojes astronómicos medievales, más de mil años después.`,
- key:"Una calculadora astronómica de engranajes, hace más de 2.000 años."},
+Por eso la mayoría rechaza esta apuesta: cara ganas 150 €, cruz pierdes 100 €. Matemáticamente es favorable, pero el miedo a perder 100 pesa más.
 
-{id:"c-27", m:"num", t:"quiz",
- q:"Cuando las máquinas de vapor se hicieron más eficientes y gastaban menos carbón para el mismo trabajo, ¿qué pasó con el consumo total de carbón en Inglaterra?",
- opts:["Bajó mucho","Se mantuvo","Subió"], a:2,
- exp:`**Subió.** Al salir más barato usar carbón, se usó para muchas más cosas. William Stanley Jevons lo describió en 1865: es la paradoja de Jevons. Pasa también con la energía, la memoria de los ordenadores o los datos móviles: la eficiencia abarata y dispara el uso.`},
+Se llama **aversión a la pérdida**. Explica por qué nos cuesta vender una acción que ha bajado, por qué «evita perder 50 €» motiva más que «ahorra 50 €», o por qué nos aferramos a lo que ya tenemos.`,
+ key:"Una pérdida pesa más o menos el doble que una ganancia del mismo tamaño."},
 
-{id:"c-28", m:"mundo", t:"read", title:"Los cuervos te recuerdan",
- body:`En la Universidad de Washington, unos investigadores capturaron cuervos llevando puesta una máscara concreta. Años después, los cuervos seguían graznando y atacando a quien llevara **esa** máscara, y no otras. Incluso cuervos que nunca habían sido capturados reaccionaban: lo habían aprendido de los demás.
+{id:"m-02", m:"mente", t:"read", title:"El poder del primer número",
+ body:`En un experimento clásico (Tversky y Kahneman, 1974), hacían girar una ruleta trucada que caía en 10 o en 65. Después preguntaban qué porcentaje de países africanos había en la ONU.
 
-Los córvidos fabrican herramientas, planifican y resuelven problemas de varios pasos.`,
- key:"Los cuervos reconocen caras y enseñan a los demás quién es peligroso."},
+Quienes habían visto el 10 respondían de media un 25%. Quienes habían visto el 65, un 45%. Un número **sin ninguna relación** con la pregunta movía la respuesta.
 
-{id:"c-29", m:"hist", t:"quiz",
- q:"¿Quién descubrió la penicilina, y además por casualidad?",
- opts:["Louis Pasteur","Alexander Fleming","Marie Curie","Robert Koch"], a:1,
- exp:`**Alexander Fleming**, en 1928: al volver de vacaciones vio que un moho había contaminado una placa y había matado las bacterias a su alrededor. Pero no logró producirla en cantidad. Howard Florey y Ernst Chain la convirtieron en medicamento en los años 40, y los tres compartieron el Nobel en 1945.`},
+Es el **efecto anclaje**: el primer número que aparece condiciona todos los demás. Por eso importa tanto quién dice el primer precio en una negociación.`,
+ key:"El primer número que oyes arrastra tus estimaciones, aunque no tenga nada que ver."},
 
-{id:"c-30", m:"cien", t:"read", title:"Plátanos radiactivos",
- body:`Los plátanos tienen potasio, y una pequeñísima parte del potasio natural es **potasio-40**, que es radiactivo. Así que sí: un plátano es ligeramente radiactivo.
+{id:"m-03", m:"mente", t:"quiz",
+ q:"Te dicen que la serie 2-4-6 cumple una regla secreta y puedes probar otras series para descubrirla. ¿Cuál te da más información?",
+ opts:["8-10-12","20-22-24","3-2-1","100-200-300"], a:2,
+ exp:`La regla del experimento de Peter Wason (1960) era simplemente «números en orden creciente». Casi todo el mundo prueba series que **confirman** su idea («de dos en dos») y se convence de ella. 3-2-1 es la única que podría **desmentirla**. Buscar solo lo que confirma lo que ya crees es el **sesgo de confirmación**.`},
 
-Tanto que se usa en broma como unidad: la «dosis equivalente a un plátano». Una radiografía de tórax o un vuelo largo equivalen a cientos de plátanos. Y tú también eres radiactivo: tu cuerpo lleva potasio-40 y carbono-14.
+{id:"c-03", m:"mente", t:"read", title:"La curva del olvido",
+ body:`En 1885, Hermann Ebbinghaus memorizó listas de sílabas sin sentido y midió cuánto olvidaba. El olvido es brutal al principio: en un día puedes perder buena parte de lo aprendido si no lo repasas.
 
-No hay ningún peligro: la dosis es minúscula.`,
- key:"Todo lo vivo es un poco radiactivo, y no pasa nada."},
+Pero cada repaso **aplana la curva**: olvidas más despacio. Por eso funciona la **repetición espaciada**: repasar justo cuando empiezas a olvidar (al día siguiente, a los pocos días, a la semana…).
+
+Esta app lo hace: lo que fallas vuelve pronto; lo que aciertas, cada vez más tarde.`,
+ key:"Repasar cuando empiezas a olvidar fija el recuerdo mucho más que repasar seguido."},
+
+{id:"c-19", m:"mente", t:"read", title:"Dormir para recordar",
+ body:`Mientras duermes, el cerebro **reactiva y consolida** lo que aprendiste durante el día: pasa los recuerdos de un almacén temporal (el hipocampo) a otro más estable (la corteza).
+
+En los experimentos, la gente recuerda mejor lo aprendido si duerme después que si pasa las mismas horas despierta.
+
+Consecuencia práctica: estudiar hasta tarde la víspera y dormir poco es la peor combinación posible. Repasa y duerme bien.`,
+ key:"Lo que aprendes hoy se fija esta noche."},
 
 {id:"c-31", m:"mente", t:"read", title:"El coste de cambiar de tarea",
  body:`Creemos que hacemos varias cosas a la vez, pero el cerebro **alterna** entre ellas, y cada cambio cuesta: hay que volver a cargar el contexto de la tarea. Los estudios muestran que alternar hace las tareas más lentas y con más errores que hacerlas una detrás de otra.
@@ -1144,9 +1062,158 @@ Por eso una notificación cada pocos minutos destroza la concentración, aunque 
 Truco: bloques de tiempo con el móvil fuera de la vista.`,
  key:"La multitarea es alternar, y cada cambio cuesta."},
 
-{id:"c-32", m:"tec", t:"quiz",
- q:"La sonda Voyager 1 se lanzó en 1977. ¿Dónde está hoy?",
- opts:["Orbitando Júpiter","Se estrelló en Saturno","En el espacio interestelar, fuera de la burbuja del viento solar","De vuelta en la Tierra"], a:2,
- exp:`En 2012 cruzó la heliopausa, el límite donde termina el viento solar. Es el objeto fabricado por humanos más lejano: está a más de 24.000 millones de km, y su señal tarda casi un día entero en llegar. Lleva un disco de oro con sonidos e imágenes de la Tierra, por si alguien lo encuentra.`}
+{id:"c-14", m:"mente", t:"read", title:"El efecto IKEA",
+ body:`En un estudio publicado en 2012, Michael Norton, Daniel Mochon y Dan Ariely vieron que la gente valoraba más los muebles de IKEA que montaba ella misma que esos mismos muebles ya montados. Estaban dispuestos a pagar más por lo que habían construido, aunque hubiera quedado peor.
+
+Valoramos más lo que hemos ayudado a crear. Pasa con muebles, con recetas y con ideas: una conclusión a la que llegas tú pesa más que una que te dan hecha.`,
+ key:"Lo que construimos nosotros nos parece más valioso."},
+
+{id:"c-05", m:"mente", t:"quiz",
+ q:"¿Cuántas personas tiene que haber en una sala para que la probabilidad de que dos cumplan años el mismo día supere el 50%?",
+ opts:["23","57","183","366"], a:0,
+ exp:`Solo **23**. Con 57, la probabilidad supera el 99%. Nos parece imposible porque pensamos «¿alguien cumple el mismo día que yo?», pero la pregunta es sobre **cualquier pareja**, y con 23 personas hay 253 parejas posibles. Es la paradoja del cumpleaños.`},
+
+{id:"c-10", m:"mente", t:"quiz",
+ q:"Hay 3 puertas y detrás de una hay un coche. Eliges la 1. El presentador, que sabe dónde está, abre la 3: hay una cabra. ¿Te conviene cambiar a la 2?",
+ opts:["Sí: cambiando ganas 2 de cada 3 veces","Da igual: es 50/50","No: mejor quedarte con la tuya"], a:0,
+ exp:`Al elegir, tu puerta tenía 1/3 de probabilidad, y las otras dos juntas, 2/3. El presentador no abre al azar: siempre te enseña una cabra. Esa información concentra los 2/3 en la puerta que queda. Es el problema de Monty Hall, y hasta matemáticos famosos se equivocaron con él.`},
+
+/* ========== ECONOMÍA ========== */
+
+{id:"e-01", m:"eco", t:"read", title:"El coste de oportunidad",
+ body:`Todo lo que eliges tiene un coste escondido: **lo mejor que dejas de hacer**.
+
+Estudiar un máster de dos años no cuesta solo la matrícula. Cuesta también los dos años de sueldo que no cobras. Una tarde de sofá cuesta lo que habrías hecho con esa tarde.
+
+Los economistas lo llaman **coste de oportunidad**, y es quizá la idea más útil de toda la economía: el precio real de algo no es lo que pagas, sino aquello a lo que renuncias.`,
+ key:"El coste real de algo es lo mejor a lo que renuncias por elegirlo."},
+
+{id:"e-02", m:"eco", t:"quiz",
+ q:"Te ofrecen 2 horas extra a 15 €/h, pero prefieres ir al cine (entrada de 10 €). ¿Cuál es el coste real de ir al cine?",
+ opts:["10 €","30 €","40 €","25 €"], a:2,
+ exp:`10 € de la entrada **más** los 30 € que dejas de ganar: **40 €**. No significa que ir al cine sea mala idea; significa que, si lo eliges, lo eliges sabiendo lo que cuesta de verdad.`},
+
+{id:"c-07", m:"eco", t:"read", title:"La falacia del coste hundido",
+ body:`Has pagado la entrada del cine, la película es mala y te quedas «para no tirar el dinero». Pero el dinero ya está gastado: quedarte solo añade una hora perdida.
+
+Es la **falacia del coste hundido**: seguir con algo por lo que ya invertiste, no por lo que te queda por ganar. También se llama «falacia del Concorde»: Francia y Reino Unido siguieron financiando el avión supersónico durante años, aunque ya se veía que no sería rentable.
+
+Pregunta útil: «Si empezara hoy desde cero, ¿lo elegiría?».`,
+ key:"Decide por lo que viene, no por lo que ya gastaste."},
+
+{id:"e-03", m:"eco", t:"read", title:"La ventaja comparativa",
+ body:`En 1817, David Ricardo explicó algo que sigue sorprendiendo: **dos países ganan comerciando aunque uno sea mejor en todo**.
+
+La clave no es quién hace algo mejor (ventaja absoluta), sino a quién le cuesta **menos renunciar** a otras cosas para hacerlo (ventaja comparativa).
+
+Ejemplo cotidiano: una abogada escribe a máquina más rápido que su asistente. Aun así le conviene delegar, porque cada hora que escribe es una hora que no cobra como abogada. Cada uno se especializa en lo que tiene menor coste de oportunidad, y producen más entre los dos.`,
+ key:"Conviene especializarse en lo que te cuesta menos dejar de hacer, no en lo que haces mejor."},
+
+{id:"e-04", m:"eco", t:"quiz",
+ q:"En una hora, Ana hace 10 panes o 5 camisas. Luis hace 2 panes o 4 camisas. Ana es mejor en las dos cosas. ¿Quién debería hacer las camisas?",
+ opts:["Ana, porque las hace más rápido","Luis","Los dos, a medias","Da igual"], a:1,
+ exp:`Cada camisa le cuesta a Ana 2 panes (10 ÷ 5) y a Luis solo medio pan (2 ÷ 4). Luis tiene la **ventaja comparativa** en camisas y Ana en pan. Si cada uno se especializa e intercambian, entre los dos tienen más pan y más camisas que si cada uno lo hace todo.`},
+
+{id:"e-05", m:"eco", t:"read", title:"Qué es la inflación",
+ body:`La **inflación** es la subida general y continuada de los precios. En España la mide el INE con el **IPC**: el precio de una «cesta» de cosas que compra un hogar típico (comida, energía, alquiler, transporte…).
+
+Con un 3% de inflación, lo que hoy cuesta 100 € costará 103 € dentro de un año. Tu dinero parado compra cada vez menos.
+
+El Banco Central Europeo intenta que ronde el **2% anual**: algo de inflación estable se considera sano; mucha, o muy imprevisible, destroza ahorros y planes. Sube cuando la gente quiere comprar más de lo que se produce, o cuando se encarece algo que lo encarece todo, como la energía.`,
+ key:"Inflación = tu dinero compra un poco menos cada año."},
+
+{id:"c-13", m:"eco", t:"read", title:"La regla del 72",
+ body:`¿Cuánto tarda en duplicarse una inversión? Divide **72 entre el interés anual**:
+- Al 6% → 72 ÷ 6 = **12 años**.
+- Al 8% → **9 años**.
+
+También funciona con la inflación: con un 3% anual, los precios se duplican en unos **24 años**, así que el dinero parado vale la mitad.
+
+Es una aproximación del interés compuesto que funciona muy bien entre el 4% y el 12%, más o menos.`,
+ key:"72 ÷ interés = años que tarda en duplicarse."},
+
+{id:"e-06", m:"eco", t:"quiz",
+ q:"Si el precio del café se dispara, ¿qué suele pasar con la demanda de té?",
+ opts:["Baja","Sube","No cambia"], a:1,
+ exp:`Café y té son **bienes sustitutivos**: cuando uno se encarece, parte de la gente se pasa al otro. Lo contrario pasa con los **complementarios**: si suben las impresoras, se venden menos cartuchos.`},
+
+{id:"e-07", m:"eco", t:"read", title:"La tragedia de los comunes",
+ body:`En 1968, el ecólogo Garrett Hardin describió un pasto común donde cada pastor gana metiendo una oveja más, pero el daño de sobreexplotar el pasto se reparte entre todos. Resultado: cada uno actúa con lógica… y el pasto se arruina.
+
+Pasa con los caladeros de pesca, los acuíferos o la limpieza de un piso compartido.
+
+Elinor Ostrom ganó el Nobel de Economía en 2009 por demostrar que no es inevitable: muchas comunidades gestionan bien sus recursos comunes con normas claras, vigilancia y sanciones decididas por ellas mismas.`,
+ key:"Lo que es de todos tiende a sobreexplotarse, salvo que haya buenas reglas compartidas."},
+
+{id:"c-22", m:"eco", t:"read", title:"La ley de Goodhart",
+ body:`«Cuando una medida se convierte en objetivo, deja de ser una buena medida.»
+
+Un ejemplo clásico, quizá inventado: a una fábrica soviética de clavos le fijaron el objetivo en toneladas, y fabricó unos pocos clavos gigantes. Cuando el objetivo pasó a ser el número de clavos, fabricó millones de clavos minúsculos e inútiles.
+
+Pasa en empresas, colegios y apps: si solo cuentas llamadas, tendrás muchas llamadas cortas e inútiles.`,
+ key:"Si persigues el número, el número deja de significar algo."},
+
+{id:"c-27", m:"eco", t:"quiz",
+ q:"Cuando las máquinas de vapor se hicieron más eficientes y gastaban menos carbón para el mismo trabajo, ¿qué pasó con el consumo total de carbón en Inglaterra?",
+ opts:["Bajó mucho","Se mantuvo","Subió"], a:2,
+ exp:`**Subió.** Al salir más barato usar carbón, se usó para muchas más cosas. William Stanley Jevons lo describió en 1865: es la paradoja de Jevons. Pasa también con la energía, la memoria de los ordenadores o los datos móviles: la eficiencia abarata y dispara el uso.`},
+
+/* ========== HISTORIA ========== */
+
+{id:"c-02", m:"hist", t:"quiz",
+ q:"¿Quién vivió más cerca en el tiempo de la llegada a la Luna (1969) que de la construcción de la Gran Pirámide de Guiza?",
+ opts:["Cleopatra","Tutankamón","Ramsés II","Ninguno de ellos"], a:0,
+ exp:`La Gran Pirámide se terminó hacia el 2560 a. C. Cleopatra murió en el 30 a. C.: unos 2.500 años después de la pirámide y unos 2.000 años antes del Apolo 11. El antiguo Egipto duró tanto que, para Cleopatra, las pirámides ya eran antigüedades.`},
+
+{id:"h-01", m:"hist", t:"read", title:"La imprenta de Gutenberg",
+ body:`Hacia 1450, en Maguncia (Alemania), Johannes Gutenberg combinó tipos móviles de metal, una prensa adaptada de las de vino y una tinta de base oleosa. Su Biblia, de hacia 1455, fue el primer gran libro impreso en Europa.
+
+Antes, un libro se copiaba a mano durante meses. En apenas 50 años se imprimieron millones de ejemplares por toda Europa.
+
+Las consecuencias fueron enormes: las ideas viajaban más rápido que la censura. La Reforma de Lutero (1517) se extendió en gran parte gracias a panfletos impresos.`,
+ key:"Abaratar copiar ideas cambió la religión, la ciencia y la política."},
+
+{id:"c-16", m:"hist", t:"read", title:"Semmelweis y el lavado de manos",
+ body:`En 1847, en Viena, el médico Ignaz Semmelweis vio que en la sala atendida por médicos morían muchas más madres por fiebre puerperal que en la atendida por comadronas. Los médicos venían de hacer autopsias.
+
+Impuso lavarse las manos con una solución de cloro y la mortalidad se desplomó. Pero sus colegas lo rechazaron: la idea de que los médicos causaban muertes les ofendía y aún no se conocían los gérmenes. Murió en 1865 en un manicomio. Años después, Pasteur y Lister le dieron la razón.`,
+ key:"Tener razón no basta: también hay que conseguir que te escuchen."},
+
+{id:"c-09", m:"hist", t:"read", title:"El reloj que resolvió el mar",
+ body:`En el siglo XVIII los barcos sabían su latitud por el Sol, pero no su **longitud**: a cuánto estaban al este o al oeste. Hubo naufragios terribles por eso.
+
+La clave era el tiempo: si sabes la hora exacta de tu puerto de salida y la comparas con el mediodía donde estás, cada hora de diferencia son 15° de longitud. Pero los relojes de péndulo no funcionaban en un barco que se balancea.
+
+John Harrison, un carpintero sin estudios académicos, pasó décadas construyendo relojes marinos. Su H4, probado en 1761, funcionó con una precisión asombrosa para la época.`,
+ key:"Medir el tiempo con precisión fue la forma de medir el espacio."},
+
+{id:"h-02", m:"hist", t:"read", title:"La peste negra subió los sueldos",
+ body:`Entre 1347 y 1351, la peste negra mató a entre un tercio y la mitad de la población europea.
+
+Una consecuencia inesperada: faltaban brazos para trabajar el campo, y los supervivientes pudieron **exigir sueldos más altos**. En Inglaterra, el rey intentó congelarlos por ley en 1351, sin mucho éxito. En Europa occidental la servidumbre se fue debilitando.
+
+Es oferta y demanda en estado puro: cuando algo escasea (en este caso, trabajadores), su precio sube.`,
+ key:"La escasez de trabajadores tras la peste dio poder a los que sobrevivieron."},
+
+{id:"c-29", m:"hist", t:"quiz",
+ q:"¿Quién descubrió la penicilina, y además por casualidad?",
+ opts:["Louis Pasteur","Alexander Fleming","Marie Curie","Robert Koch"], a:1,
+ exp:`**Alexander Fleming**, en 1928: al volver de vacaciones vio que un moho había contaminado una placa y había matado las bacterias a su alrededor. Pero no logró producirla en cantidad. Howard Florey y Ernst Chain la convirtieron en medicamento en los años 40, y los tres compartieron el Nobel en 1945.`},
+
+{id:"c-26", m:"hist", t:"read", title:"El mecanismo de Anticitera",
+ body:`En 1901, unos buceadores sacaron de un naufragio griego, cerca de la isla de Anticitera, un bloque de bronce corroído. Décadas de estudio, incluidos escáneres de rayos X, revelaron un mecanismo con decenas de engranajes construido hace más de 2.000 años.
+
+Servía para predecir la posición del Sol y la Luna, las fases lunares y los eclipses. Es el «ordenador analógico» más antiguo que se conoce. No se conoce nada de complejidad parecida hasta los relojes astronómicos medievales, más de mil años después.`,
+ key:"Una calculadora astronómica de engranajes, hace más de 2.000 años."},
+
+{id:"c-17", m:"hist", t:"quiz",
+ q:"En el mapa de Mercator (el de siempre), Groenlandia parece casi tan grande como África. ¿Cuántas veces más grande es África en realidad?",
+ opts:["Son iguales","2 veces","5 veces","14 veces"], a:3,
+ exp:`África tiene unos 30 millones de km² y Groenlandia, unos 2,2 millones: unas **14 veces** menos. El mapa de Mercator conserva los ángulos (genial para navegar), pero agranda las zonas cercanas a los polos.`},
+
+{id:"c-21", m:"hist", t:"quiz",
+ q:"¿Qué palabra española viene del árabe y significaba originalmente «si Dios quiere»?",
+ opts:["Ojalá","Albóndiga","Azúcar","Alcalde"], a:0,
+ exp:`**Ojalá** viene del árabe hispánico *law šá lláh*, «si Dios quiere». El español tiene miles de arabismos: almohada, aceite, azúcar, albóndiga, alcalde, ajedrez, hasta… Muchos empiezan por *al-*, el artículo árabe.`}
 ]
 };

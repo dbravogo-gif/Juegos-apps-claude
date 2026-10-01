@@ -1,7 +1,7 @@
 {
   "name": "Chispa",
   "short_name": "Chispa",
-  "description": "Sesiones cortas para aprender venta consultiva y curiosidades en lugar de hacer scroll.",
+  "description": "Sesiones cortas para aprender ventas, ciencia, psicología, economía e historia en lugar de hacer scroll.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

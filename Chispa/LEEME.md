@@ -1,7 +1,14 @@
 # Chispa
 
 App "antiscroll": sesiones cortas con la dosis de estímulo de un feed, pero aprendiendo.
-Cada sesión es **75% venta consultiva** (preparación de la entrevista en Bitmakers) y **25% curiosidades**.
+Cinco áreas: **ventas**, **ciencia**, **psicología**, **economía** e **historia**.
+
+- **Modo entrevista** (por defecto): 75% ventas (preparación de la entrevista en Bitmakers) y el 25%
+  restante repartido entre las otras cuatro áreas.
+- **Modo equilibrado**: todas las áreas por igual. Se cambia en Ajustes → Reparto, sin perder el progreso.
+
+El reparto es exacto a la larga: la app lleva la cuenta de cuántas tarjetas de cada área has visto
+y compensa en las siguientes sesiones.
 
 ## Cómo funciona
 
@@ -15,6 +22,8 @@ Cada sesión es **75% venta consultiva** (preparación de la entrevista en Bitma
   niveles y días seguidos.
 - **Chuleta**: el método entero en una pantalla, para la víspera de la entrevista.
 - **Temario**: lee o practica cualquier módulo por separado.
+- **Añadir un área nueva**: en `content.js`, un elemento en `areas`, un módulo en `modules` y sus
+  tarjetas. El color se define en `index.html` (`--a-<área>` y `--a-<área>-soft`).
 
 ## Instalarla en el iPhone
 

@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#EDF0F3" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0E1318" media="(prefers-color-scheme: dark)">
-<meta name="description" content="Sesiones cortas para aprender venta consultiva y curiosidades en lugar de hacer scroll.">
+<meta name="description" content="Sesiones cortas para aprender ventas, ciencia, psicología, economía e historia en lugar de hacer scroll.">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -24,7 +24,11 @@
   --bg:#EDF0F3; --surface:#FFFFFF; --surface-2:#E3E8ED; --line:#D0D8E0; --tick:rgba(19,27,36,.22);
   --ink:#131B24; --muted:#5B6776;
   --laser:#CF3B16; --laser-ink:#FFFFFF; --laser-soft:#FBE3DA;
-  --cur:#0B7D70; --cur-soft:#D4EEE9;
+  --a-ventas:#CF3B16; --a-ventas-soft:#FBE3DA;
+  --a-ciencia:#2560B5; --a-ciencia-soft:#DCE7F6;
+  --a-mente:#7646BD; --a-mente-soft:#EADFF6;
+  --a-economia:#0B7D70; --a-economia-soft:#D4EEE9;
+  --a-historia:#94560F; --a-historia-soft:#F3E3CE;
   --gold:#9A6C05; --gold-soft:#F6E8C6;
   --good:#167A46; --good-soft:#DAF0E2;
   --bad:#B8234A; --bad-soft:#F7DBE3;
@@ -42,7 +46,11 @@
     --bg:#0E1318; --surface:#161D24; --surface-2:#1F2830; --line:#2B3641; --tick:rgba(231,236,241,.22);
     --ink:#E7ECF1; --muted:#97A3B0;
     --laser:#FF6A45; --laser-ink:#1B0D08; --laser-soft:#3A1D15;
-    --cur:#3CC6B4; --cur-soft:#11302B;
+    --a-ventas:#FF6A45; --a-ventas-soft:#3A1D15;
+    --a-ciencia:#6EA8FF; --a-ciencia-soft:#15253B;
+    --a-mente:#B690F5; --a-mente-soft:#2A1E3D;
+    --a-economia:#3CC6B4; --a-economia-soft:#11302B;
+    --a-historia:#E2A55C; --a-historia-soft:#352613;
     --gold:#E8B947; --gold-soft:#372B0F;
     --good:#45CF83; --good-soft:#12301F;
     --bad:#FF6B8B; --bad-soft:#3A1620;
@@ -56,7 +64,11 @@
   --bg:#0E1318; --surface:#161D24; --surface-2:#1F2830; --line:#2B3641; --tick:rgba(231,236,241,.22);
   --ink:#E7ECF1; --muted:#97A3B0;
   --laser:#FF6A45; --laser-ink:#1B0D08; --laser-soft:#3A1D15;
-  --cur:#3CC6B4; --cur-soft:#11302B;
+  --a-ventas:#FF6A45; --a-ventas-soft:#3A1D15;
+  --a-ciencia:#6EA8FF; --a-ciencia-soft:#15253B;
+  --a-mente:#B690F5; --a-mente-soft:#2A1E3D;
+  --a-economia:#3CC6B4; --a-economia-soft:#11302B;
+  --a-historia:#E2A55C; --a-historia-soft:#352613;
   --gold:#E8B947; --gold-soft:#372B0F;
   --good:#45CF83; --good-soft:#12301F;
   --bad:#FF6B8B; --bad-soft:#3A1620;
@@ -114,7 +126,7 @@ body.playing #app{padding-bottom:calc(150px + env(safe-area-inset-bottom,0px))}
 .ruler{position:relative;height:14px;border-radius:4px;background:var(--surface-2);overflow:hidden}
 .ruler>i{position:absolute;left:0;top:0;bottom:0;background:var(--laser);border-radius:4px 0 0 4px;transition:width .6s ease}
 .ruler::after{content:"";position:absolute;inset:0 0 50% 0;background:repeating-linear-gradient(90deg,transparent 0 9px,var(--tick) 9px 10px)}
-.ruler.cur>i{background:var(--cur)}
+.ruler.area>i{background:var(--ac)}
 
 /* Chip de entrevista */
 .ivchip{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:14px;background:var(--laser-soft);color:var(--ink);font-size:14.5px;margin-bottom:14px}
@@ -128,12 +140,10 @@ body.playing #app{padding-bottom:calc(150px + env(safe-area-inset-bottom,0px))}
 .hero-n .big{font-size:56px;font-weight:800;letter-spacing:-.04em;line-height:1;margin-right:6px}
 .mix{display:flex;gap:4px;height:10px;margin-bottom:10px}
 .mix span{border-radius:3px}
-.m-s{background:var(--laser)}
-.m-c{background:var(--cur)}
+.mix span{background:var(--ac)}
 .hero-meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;color:var(--muted);font-size:14px;margin-bottom:16px}
 .dot{display:inline-block;width:9px;height:9px;border-radius:50%}
-.dot.s{background:var(--laser)}
-.dot.c{background:var(--cur)}
+.dot{background:var(--ac)}
 .hero-done{font-size:30px;font-weight:800;letter-spacing:-.03em;margin:4px 0 8px}
 .hero.done p{margin-bottom:14px}
 .hero.done .row .btn{flex:1 1 160px}
@@ -152,12 +162,11 @@ body.playing #app{padding-bottom:calc(150px + env(safe-area-inset-bottom,0px))}
 .mrow{display:grid;grid-template-columns:28px 1fr 64px 42px;align-items:center;gap:10px;padding:13px 14px;text-align:left;border-top:1px solid var(--line)}
 .mrow:first-child{border-top:0}
 .mrow:active{background:var(--surface-2)}
-.mn{font-family:var(--f-mono);font-size:12.5px;color:var(--laser);font-weight:700}
-.mn.c{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--cur)}
+.mn{font-family:var(--f-mono);font-size:12.5px;color:var(--ac,var(--laser));font-weight:700}
+.mn.c{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--ac)}
 .mt{font-weight:600;font-size:15.5px;min-width:0}
 .mbar{height:6px;border-radius:3px;background:var(--surface-2);overflow:hidden}
-.mbar i{display:block;height:100%;background:var(--laser)}
-.mrow.c .mbar i{background:var(--cur)}
+.mbar i{display:block;height:100%;background:var(--ac,var(--laser))}
 .mf{font-family:var(--f-mono);font-size:12px;color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}
 
 /* Pestañas */
@@ -193,8 +202,7 @@ body.playing #app{padding-bottom:calc(150px + env(safe-area-inset-bottom,0px))}
 .play.enter{animation:enter .32s cubic-bezier(.2,.8,.3,1)}
 .chead{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin-bottom:14px}
 .tag{font-family:var(--f-mono);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
-.is-s .tag{color:var(--laser)}
-.is-c .tag{color:var(--cur)}
+.play .tag{color:var(--ac)}
 .badge{font-family:var(--f-mono);font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 7px;border-radius:6px;background:var(--surface-2);color:var(--muted)}
 .badge.gold{background:var(--gold-soft);color:var(--gold)}
 .kind{margin-left:auto;font-family:var(--f-mono);font-size:11px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
@@ -221,7 +229,7 @@ body.playing #app{padding-bottom:calc(150px + env(safe-area-inset-bottom,0px))}
 .bub.them{align-self:flex-start;background:var(--surface-2);border-bottom-left-radius:5px}
 .bub.me{align-self:flex-end;background:var(--laser-soft);border-bottom-right-radius:5px}
 .key{margin-top:16px;padding:13px 14px;border-radius:12px;background:var(--laser-soft);font-weight:600;font-size:16px;line-height:1.35}
-.is-c .key,.crow.c .key{background:var(--cur-soft)}
+.play .key,.crow .key{background:var(--acs,var(--laser-soft))}
 
 /* Opciones */
 .opts{display:flex;flex-direction:column;gap:9px}
@@ -386,9 +394,19 @@ textarea{resize:vertical;min-height:120px}
 const D = window.CHISPA;
 const MOD = Object.fromEntries(D.modules.map(m=>[m.id,m]));
 const CARD = Object.fromEntries(D.cards.map(c=>[c.id,c]));
-const isSales = c => MOD[c.m].area === "ventas";
-const SALES = D.cards.filter(isSales);
-const CUR = D.cards.filter(c=>!isSales(c));
+const AREAS = D.areas;
+const AREA = Object.fromEntries(AREAS.map(a=>[a.id,a]));
+const areaOf = c => MOD[c.m].area;
+const ac = id => `--ac:var(--a-${id});--acs:var(--a-${id}-soft)`;
+const MODES = {entrevista:"Entrevista", equilibrado:"Equilibrado"};
+function weights(){
+  const w = {};
+  if(S.settings.mode === "equilibrado"){ AREAS.forEach(a=> w[a.id] = 1/AREAS.length); return w; }
+  const others = AREAS.filter(a=>a.id !== "ventas");
+  w.ventas = .75; others.forEach(a=> w[a.id] = .25/others.length);
+  return w;
+}
+const pctTxt = x => Math.round(x*100)+"%";
 const isEx = c => c.t !== "read";
 const INTERVAL = [0,1,2,4,7,15,30];
 const KIND = {read:"Lectura", quiz:"Pregunta", open:"Practica", scenario:"Simulación", order:"Ordena", num:"Cálculo", flash:"Memoria"};
@@ -399,7 +417,7 @@ const LS_KEY = "chispa.v1";
 /* ---------- Estado ---------- */
 function defState(){
   return {v:1, cards:{}, xp:0, days:{}, streak:{last:null,count:0,best:0},
-          settings:{len:8, sound:true, interview:""}, fav:[], stats:{sessions:0}};
+          settings:{len:8, sound:true, interview:"", mode:"entrevista"}, fav:[], stats:{sessions:0}, areaCount:{}};
 }
 function loadState(){
   try{
@@ -455,32 +473,31 @@ function levelOf(xp){ let L = 1; while(xp >= need(L+1)) L++; return {lvl:L, from
 function buildSession(kind, arg){
   const t = dayNum();
   if(kind === "daily" || kind === "extra"){
-    const len = kind === "daily" ? S.settings.len : 4;
-    const nCur = Math.round(len/4), nSales = len - nCur;
-    const due = SALES.filter(c=>isEx(c) && seen(c) && st(c).d <= t)
-      .sort((a,b)=> st(a).d - st(b).d || st(a).b - st(b).b);
-    const reviews = due.slice(0, Math.ceil(nSales/2));
-    const fresh = SALES.filter(c=>!seen(c)).slice(0, nSales - reviews.length);
-    const sales = reviews.map(c=>({c, rev:true})).concat(fresh.map(c=>({c})));
-    if(sales.length < nSales){
-      const used = new Set(sales.map(x=>x.c.id));
-      SALES.filter(c=>isEx(c) && seen(c) && !used.has(c.id))
-        .sort((a,b)=> st(a).b - st(b).b || st(a).last - st(b).last)
-        .slice(0, nSales - sales.length).forEach(c=>sales.push({c, rev:true}));
+    const len = kind === "daily" ? S.settings.len : 4, w = weights();
+    // Reparto por "déficit" acumulado: a la larga, cada área recibe exactamente su peso.
+    const cnt = Object.assign({}, S.areaCount), slots = [];
+    let total = Object.values(cnt).reduce((a,b)=>a+b, 0);
+    for(let k=0; k<len; k++){
+      let best = null, bd = -Infinity;
+      AREAS.forEach(a=>{ const d = w[a.id]*(total+1) - (cnt[a.id]||0); if(d > bd + 1e-9){ bd = d; best = a.id; } });
+      slots.push(best); cnt[best] = (cnt[best]||0) + 1; total++;
     }
-    let cur = CUR.filter(c=>!seen(c)).slice(0, nCur);
-    if(cur.length < nCur){
-      const used = new Set(cur.map(c=>c.id));
-      cur = cur.concat(CUR.filter(c=>!used.has(c.id)).sort((a,b)=> st(a).last - st(b).last).slice(0, nCur - cur.length));
-    }
-    // Una curiosidad cada pocas tarjetas de ventas, como descanso.
-    const out = []; let ci = 0;
-    sales.forEach((x,k)=>{
-      out.push(x);
-      if(ci < cur.length && k+1 >= Math.round((ci+1)*sales.length/cur.length)) out.push({c:cur[ci++]});
+    const nArea = {}; slots.forEach(a=> nArea[a] = (nArea[a]||0) + 1);
+    const picks = {};
+    Object.keys(nArea).forEach(a=>{
+      const n = nArea[a], pool = D.cards.filter(c=>areaOf(c) === a);
+      const due = pool.filter(c=>isEx(c) && seen(c) && st(c).d <= t).sort((x,y)=> st(x).d - st(y).d || st(x).b - st(y).b);
+      const list = due.slice(0, Math.ceil(n/2)).map(c=>({c, rev:true}));
+      pool.filter(c=>!seen(c)).slice(0, n - list.length).forEach(c=>list.push({c}));
+      if(list.length < n){
+        const used = new Set(list.map(x=>x.c.id));
+        pool.filter(c=>seen(c) && !used.has(c.id))
+          .sort((x,y)=> (isEx(y)-isEx(x)) || st(x).b - st(y).b || st(x).last - st(y).last)
+          .slice(0, n - list.length).forEach(c=>list.push({c, rev:true}));
+      }
+      picks[a] = list;
     });
-    while(ci < cur.length) out.push({c:cur[ci++]});
-    return out;
+    return slots.map(a=> picks[a].shift()).filter(Boolean);
   }
   if(kind === "review"){
     return failedCards().sort((a,b)=> st(a).last - st(b).last).slice(0, 8).map(c=>({c, rev:true}));
@@ -613,7 +630,7 @@ function levelBlock(){
 }
 function interviewChip(){
   const iv = S.settings.interview;
-  if(!iv) return `<button class="chip" data-go="ajustes">+ Añade la fecha de tu entrevista</button>`;
+  if(!iv) return `<button class="chip" data-go="ajustes">+ Añade la fecha de la entrevista cuando la sepas</button>`;
   const p = iv.split("-").map(Number);
   const diff = dayNum(new Date(p[0], p[1]-1, p[2])) - dayNum();
   const txt = diff > 1 ? `Entrevista en <b>${diff} días</b>`
@@ -633,18 +650,20 @@ function weekStrip(){
 function modProgress(m){ const cs = D.cards.filter(c=>c.m === m.id); return {done:cs.filter(mastered).length, total:cs.length}; }
 function modRow(m){
   const p = modProgress(m), pct = Math.round(100*p.done/p.total), sales = m.area === "ventas";
-  return `<button class="mrow${sales?"":" c"}" data-mod="${m.id}">${sales?`<span class="mn">${two(m.n)}</span>`:`<span><i class="mn c"></i></span>`}<span class="mt">${m.title}</span><span class="mbar"><i style="width:${pct}%"></i></span><span class="mf">${p.done}/${p.total}</span></button>`;
+  return `<button class="mrow" style="${ac(m.area)}" data-mod="${m.id}">${m.n?`<span class="mn">${two(m.n)}</span>`:`<span><i class="mn c"></i></span>`}<span class="mt">${m.title}</span><span class="mbar"><i style="width:${pct}%"></i></span><span class="mf">${p.done}/${p.total}</span></button>`;
 }
 function renderHome(){
   const d = today(), streak = curStreak();
   let main;
   if(!d.done){
-    const q = buildSession("daily"), nS = q.filter(x=>isSales(x.c)).length, nC = q.length - nS, rev = q.filter(x=>x.rev).length;
+    const q = buildSession("daily"), rev = q.filter(x=>x.rev).length, byArea = {};
+    q.forEach(x=>{ const a = areaOf(x.c); byArea[a] = (byArea[a]||0) + 1; });
+    const present = AREAS.filter(a=>byArea[a.id]);
     main = `<section class="hero card">
       <div class="eyebrow">Sesión de hoy</div>
       <div class="hero-n"><span class="big">${q.length}</span>tarjetas</div>
-      <div class="mix" aria-hidden="true"><span class="m-s" style="flex:${nS}"></span><span class="m-c" style="flex:${nC}"></span></div>
-      <div class="hero-meta"><span><i class="dot s"></i> ${nS} de ventas${rev?` (${rev} de repaso)`:""}</span><span><i class="dot c"></i> ${nC} curiosidades</span><span>unos ${Math.max(5, Math.round(q.length*1.3))} min</span></div>
+      <div class="mix" aria-hidden="true">${present.map(a=>`<span style="flex:${byArea[a.id]};${ac(a.id)}"></span>`).join("")}</div>
+      <div class="hero-meta">${present.map(a=>`<span style="${ac(a.id)}"><i class="dot"></i> ${byArea[a.id]} ${a.title.toLowerCase()}</span>`).join("")}<span>${rev?`${rev} de repaso · `:""}unos ${Math.max(5, Math.round(q.length*1.3))} min</span></div>
       <button class="btn primary wide" data-act="start" data-kind="daily">Empezar</button>
     </section>`;
   } else {
@@ -664,25 +683,23 @@ function renderHome(){
     ${main}
     ${weekStrip()}
     <div class="sec-h"><h3>Tu formación</h3><button class="link" data-go="temario">Temario</button></div>
-    <div class="mlist">${D.modules.filter(m=>m.area==="ventas").map(modRow).join("")}</div>`;
+    <div class="mlist">${(S.settings.mode === "equilibrado" ? D.modules : D.modules.filter(m=>m.area==="ventas")).map(modRow).join("")}</div>`;
 }
 
 /* ---------- Temario y módulo ---------- */
 function renderTemario(){
   const favs = S.fav.map(id=>CARD[id]).filter(Boolean);
   app.innerHTML = `<header class="phead"><h1>Temario</h1><p class="muted">Lee cualquier módulo cuando quieras o practícalo por separado.</p></header>
-    <div class="sec-h"><h3>Ventas</h3><span class="muted small">75% de cada sesión</span></div>
-    <div class="mlist">${D.modules.filter(m=>m.area==="ventas").map(modRow).join("")}</div>
-    <div class="sec-h"><h3>Curiosidades</h3><span class="muted small">25%</span></div>
-    <div class="mlist">${D.modules.filter(m=>m.area==="cur").map(modRow).join("")}</div>
+    ${AREAS.map(a=>`<div class="sec-h"><h3>${a.title}</h3><span class="muted small">${pctTxt(weights()[a.id])} de cada sesión</span></div>
+    <div class="mlist">${D.modules.filter(m=>m.area===a.id).map(modRow).join("")}</div>`).join("")}
     ${favs.length ? `<div class="sec-h"><h3>Guardadas</h3></div><div class="mlist">${favs.map(c=>`<button class="mrow" data-act="open-card" data-arg="${c.id}"><span class="mn" style="color:var(--gold)">★</span><span class="mt">${inline(c.title)}</span><span></span><span class="mf">${MOD[c.m].n?two(MOD[c.m].n):""}</span></button>`).join("")}</div>` : ""}`;
 }
 function cardRow(c, open){
-  const s = S.cards[c.id], cur = !isSales(c);
+  const s = S.cards[c.id];
   const state = !s || !s.n ? "" : (c.t === "read" || s.b >= 2) ? "ok" : "ko";
   if(c.t === "read"){
     const fav = S.fav.includes(c.id);
-    return `<details class="crow${cur?" c":""}" id="row-${c.id}"${open?" open":""}><summary><span class="st ${state}"></span><span class="ck">Lectura</span><span class="cq">${inline(c.title)}</span></summary>
+    return `<details class="crow" style="${ac(areaOf(c))}" id="row-${c.id}"${open?" open":""}><summary><span class="st ${state}"></span><span class="ck">Lectura</span><span class="cq">${inline(c.title)}</span></summary>
       <div class="prose">${md(c.body)}</div>${c.key?`<div class="key"><span class="lbl">Idea clave</span>${inline(c.key)}</div>`:""}
       <div class="favl"><button class="link" data-act="fav-lib" data-arg="${c.id}">${fav?"Quitar de guardadas":"Guardar"}</button></div></details>`;
   }
@@ -690,10 +707,10 @@ function cardRow(c, open){
 }
 function renderModule(){
   const arg = typeof screenArg === "string" ? {id:screenArg} : screenArg;
-  const m = MOD[arg.id], cs = D.cards.filter(c=>c.m === m.id), p = modProgress(m), sales = m.area === "ventas";
+  const m = MOD[arg.id], cs = D.cards.filter(c=>c.m === m.id), p = modProgress(m);
   app.innerHTML = `<div class="top"><button class="back" data-go="temario">${ICON.back}Temario</button></div>
-    <header class="mhead"><div class="eyebrow">${sales?`Ventas · Módulo ${m.n}`:"Curiosidades"}</div><h1>${m.title}</h1><p class="muted">${m.desc}</p>
-      <div class="ruler${sales?"":" cur"}"><i style="width:${Math.round(100*p.done/p.total)}%"></i></div>
+    <header class="mhead"><div class="eyebrow">${AREA[m.area].title}${m.n?` · Módulo ${m.n}`:""}</div><h1>${m.title}</h1><p class="muted">${m.desc}</p>
+      <div class="ruler area" style="${ac(m.area)}"><i style="width:${Math.round(100*p.done/p.total)}%"></i></div>
       <div class="muted small">${p.done} de ${p.total} dominadas</div>
       <button class="btn primary wide" data-act="start" data-kind="module" data-arg="${m.id}">Practicar este módulo</button></header>
     <div class="clist">${cs.map(c=>cardRow(c, arg.open === c.id)).join("")}</div>`;
@@ -704,6 +721,7 @@ function renderModule(){
 function startSession(kind, arg){
   const q = buildSession(kind, arg);
   if(!q.length){ toast("No hay tarjetas pendientes aquí."); return; }
+  if(kind === "daily" || kind === "extra") q.forEach(x=>{ const a = areaOf(x.c); S.areaCount[a] = (S.areaCount[a]||0) + 1; });
   SES = {kind, arg, queue:q.map(x=>Object.assign({}, x, {gold: isEx(x.c) && kind !== "single" && Math.random() < 0.15})),
          i:0, xp:0, ok:0, total:0, combo:0, best:0, keys:[], requeued:{}, startLevel:levelOf(S.xp).lvl};
   go("play");
@@ -764,14 +782,14 @@ function verdict(kind, text){
 const praise = ()=> PRAISE[Math.floor(Math.random()*PRAISE.length)];
 
 function renderPlay(){
-  const it = curItem(), c = it.c, m = MOD[c.m], sales = isSales(c);
+  const it = curItem(), c = it.c, m = MOD[c.m];
   CS = {};
   app.innerHTML = `
     <div class="ptop"><button class="icon-btn" data-act="quit" aria-label="Salir de la sesión">${ICON.x}</button>
       <div class="prog" id="prog">${progSegs()}</div><span class="pcount" id="pcount">${SES.i+1}/${SES.queue.length}</span></div>
     <div class="pstat" id="pstat"></div>
-    <article class="card play enter ${sales?"is-s":"is-c"}${it.gold?" gold":""}">
-      <div class="chead"><span class="tag">${sales?`${two(m.n)} · ${m.title}`:`Curiosidad · ${m.title}`}</span>
+    <article class="card play enter${it.gold?" gold":""}" style="${ac(m.area)}">
+      <div class="chead"><span class="tag">${m.n?`${two(m.n)} · ${m.title}`:AREA[m.area].title}</span>
         ${it.rev?`<span class="badge">Repaso</span>`:""}${it.retry?`<span class="badge">Otra vez</span>`:""}${it.gold?`<span class="badge gold">Dorada · XP ×2</span>`:""}
         <span class="kind">${KIND[c.t]}</span></div>
       <div id="cb"></div>
@@ -885,7 +903,7 @@ function confetti(){
   const cv = document.getElementById("fx"), ctx = cv.getContext("2d"), dpr = window.devicePixelRatio || 1;
   cv.width = innerWidth*dpr; cv.height = innerHeight*dpr; ctx.scale(dpr, dpr);
   const cs = getComputedStyle(document.documentElement);
-  const cols = ["--laser","--cur","--gold","--good"].map(v=>cs.getPropertyValue(v).trim());
+  const cols = ["--a-ventas","--a-ciencia","--a-mente","--a-economia","--a-historia","--gold"].map(v=>cs.getPropertyValue(v).trim());
   const P = Array.from({length:110}, ()=>({x:innerWidth/2 + (Math.random()-.5)*80, y:innerHeight*.32, vx:(Math.random()-.5)*9, vy:-Math.random()*9-3,
     s:4+Math.random()*5, r:Math.random()*6, vr:(Math.random()-.5)*.3, c:cols[Math.floor(Math.random()*cols.length)]}));
   const t0 = performance.now();
@@ -946,7 +964,9 @@ function renderChuleta(){
 function renderAjustes(){
   app.innerHTML = `<header class="phead"><h1>Ajustes</h1></header>
   <div class="set card">
-    <div class="srow"><div><b>Tarjetas por sesión</b><span class="muted small">Siempre 75% ventas y 25% curiosidades</span></div>
+    <div class="srow"><div><b>Reparto</b><span class="muted small">${S.settings.mode === "equilibrado" ? "Todas las áreas por igual" : "75% ventas; el resto, a partes iguales"}</span></div>
+      <div class="seg" role="group" aria-label="Reparto">${Object.keys(MODES).map(k=>`<button data-act="mode" data-v="${k}" class="${S.settings.mode===k?"on":""}" style="font-family:var(--f-display)">${MODES[k]}</button>`).join("")}</div></div>
+    <div class="srow"><div><b>Tarjetas por sesión</b><span class="muted small">Unos 10, 15 o 20 minutos</span></div>
       <div class="seg" role="group" aria-label="Tarjetas por sesión">${[8,12,16].map(v=>`<button data-act="len" data-v="${v}" class="${S.settings.len===v?"on":""}">${v}</button>`).join("")}</div></div>
     <div class="srow"><label for="ivdate"><b>Fecha de la entrevista</b><span class="muted small">Para la cuenta atrás</span></label>
       <input type="date" id="ivdate" value="${esc(S.settings.interview)}"></div>
@@ -964,7 +984,7 @@ function renderAjustes(){
     <div class="srow"><div><b>Reiniciar progreso</b><span class="muted small">Borra XP, rachas y repasos</span></div><button class="btn ghost danger" data-act="reset-ask">Reiniciar</button></div>
     <div id="resetc" class="row" hidden><span>¿Seguro? No se puede deshacer.</span><button class="btn danger" data-act="reset-yes">Sí, borrar</button><button class="btn ghost" data-act="reset-no">Cancelar</button></div>
   </div>
-  <p class="muted small center">Chispa 1.0 · ${SALES.length} tarjetas de ventas y ${CUR.length} curiosidades · ${S.stats.sessions||0} sesiones hechas</p>`;
+  <p class="muted small center">Chispa 1.1 · ${AREAS.map(a=>`${D.cards.filter(c=>areaOf(c)===a.id).length} de ${a.title.toLowerCase()}`).join(", ")} · ${S.stats.sessions||0} sesiones hechas</p>`;
   document.getElementById("ivdate").addEventListener("change", e=>{ S.settings.interview = e.target.value; save(); toast(e.target.value ? "Fecha guardada" : "Fecha borrada"); });
 }
 
@@ -1072,6 +1092,7 @@ const ACT = {
     outcome(curItem().c, g ? "ok" : "ko", g ? 6 : 2);
     setTimeout(advance, 450);
   },
+  mode(t){ S.settings.mode = t.dataset.v; save(); renderAjustes(); },
   len(t){ S.settings.len = +t.dataset.v; save(); renderAjustes(); },
   sound(){ S.settings.sound = !S.settings.sound; save(); renderAjustes(); if(S.settings.sound) SND.ok(); },
   export(){
