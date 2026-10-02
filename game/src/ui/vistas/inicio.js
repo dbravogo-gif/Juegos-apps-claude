@@ -4,6 +4,8 @@ import { clasificarEntreno, clasificarComida } from '../../core/scoring/streaks.
 import { NOMBRE_DIA } from '../../data/defaults.js';
 import { diaDeLaSemana, comidasDelDia } from '../../data/history.js';
 import * as historico from './historico.js';
+import { recordatorioCopia } from '../../data/storage.js';
+import { guardarCopia } from '../copia.js';
 
 let pestana = 'hoy';
 
@@ -101,6 +103,23 @@ export function render(ctx) {
   return pestanas() + (pestana === 'historico' ? historico.render(ctx) : renderHoy(ctx));
 }
 
+/** Aviso de copia: el progreso vive en el navegador y es lo único que lo protege. */
+function avisoCopia(ctx) {
+  const { toca, dias } = recordatorioCopia(ctx.db, ctx.hoy);
+  if (!toca) return '';
+  const texto = dias === null
+    ? 'Aún no has guardado ninguna copia de tu progreso.'
+    : `Hace ${dias} días que no guardas una copia de tu progreso.`;
+  return `
+  <div class="tarjeta copia">
+    <div class="mini">${texto} Está solo en este dispositivo: si el navegador lo borra, se pierde.</div>
+    <div class="fila-botones">
+      <button class="boton fino" data-accion="guardarCopia">Guardar copia</button>
+      <button class="boton fino secundario" data-accion="posponerCopia">Ahora no</button>
+    </div>
+  </div>`;
+}
+
 function renderHoy(ctx) {
   const { estado } = ctx;
   const { nivel, xpEnNivel, xpParaSiguiente } = estado.nivel;
@@ -120,6 +139,7 @@ function renderHoy(ctx) {
   );
 
   return `
+  ${avisoCopia(ctx)}
   <div class="tarjeta">
     <div class="nivel-fila">
       <div>
@@ -202,6 +222,12 @@ export const acciones = {
     if (pestana === 'hoy') historico.reiniciar();
     ctx.refrescar({ alPrincipio: true });
   },
+
+  guardarCopia: (_, ctx) => guardarCopia(ctx),
+  posponerCopia: (_, ctx) =>
+    ctx.actualizar((db) => {
+      db.copiaPospuesta = ctx.hoy;
+    }),
 
   irEntreno: (_, ctx) => ctx.ir('entreno'),
   irDieta: (_, ctx) => ctx.ir('dieta'),

@@ -1,5 +1,6 @@
 import { rutinasPorDefecto, comidasPorDefecto } from './defaults.js';
 import { ESPACIOS } from './content.js';
+import { diasEntre } from '../core/scoring/exemptions.js';
 
 const CLAVE = 'juego_habitos_db';
 export const VERSION_ESQUEMA = 1;
@@ -24,6 +25,10 @@ export function estadoInicial() {
     colocados: {},
     jefesDerrotados: [],
     tutorialVisto: false,
+    // Fecha de la última copia guardada fuera del navegador, y hasta cuándo se ha
+    // pospuesto el recordatorio.
+    ultimaCopia: null,
+    copiaPospuesta: null,
   };
 }
 
@@ -134,6 +139,40 @@ export function cargar() {
 export function guardar(db) {
   almacen.escribir(CLAVE, JSON.stringify(db));
   return db;
+}
+
+// Cada cuánto se recuerda guardar una copia, y cuánto calla el aviso al posponerlo.
+export const COPIA = { cadaDias: 14, posponerDias: 7, diasMinimos: 7 };
+
+/**
+ * Si toca recordar la copia. Los datos viven en el navegador y este puede borrarlos (Safari
+ * lo hace con las webs que no se abren en una semana, salvo instaladas en el inicio), así
+ * que una copia fuera es lo único que garantiza no perder meses de progreso. Con pocos días
+ * registrados no se pide: no hay casi nada que perder y el aviso solo molestaría.
+ *
+ * @returns {{ toca: boolean, dias: number|null }} dias desde la última copia
+ */
+export function recordatorioCopia(db, hoy) {
+  const registrados = Object.keys(db.dias ?? {}).length;
+  const dias = db.ultimaCopia ? diasEntre(db.ultimaCopia, hoy) : null;
+  if (registrados < COPIA.diasMinimos) return { toca: false, dias };
+  if (db.copiaPospuesta && diasEntre(db.copiaPospuesta, hoy) < COPIA.posponerDias) return { toca: false, dias };
+  return { toca: dias === null || dias >= COPIA.cadaDias, dias };
+}
+
+/**
+ * Pide al navegador que no borre los datos aunque ande justo de espacio o la web pase
+ * días sin abrirse. Puede negarse (Safari solo lo concede a la app instalada), y entonces
+ * lo que protege es la copia. Devuelve si quedan protegidos.
+ */
+export async function pedirPersistencia() {
+  try {
+    if (!navigator.storage?.persist) return false;
+    if (await navigator.storage.persisted()) return true;
+    return await navigator.storage.persist();
+  } catch {
+    return false;
+  }
 }
 
 export function exportar(db) {

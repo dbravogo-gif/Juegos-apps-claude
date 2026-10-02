@@ -1,4 +1,4 @@
-import { cargar, guardar } from '../data/storage.js';
+import { cargar, guardar, pedirPersistencia } from '../data/storage.js';
 import { construirHistorial, evaluarDia, rutinaDelDia, tipoDeSesion } from '../data/history.js';
 import { estadoDesdeHistorial } from '../core/state.js';
 import { hoyISO } from './util.js';
@@ -34,6 +34,7 @@ let acumulado = null;
 
 
 let db = cargar();
+let almacenProtegido = false;
 let vistaActual = 'inicio';
 let fechaSeleccionada = hoyISO();
 let estado = recalcular();
@@ -60,6 +61,7 @@ function contexto() {
     actualizar,
     actualizarCallado,
     verTutorial,
+    almacenProtegido,
     refrescar: render,
     verFecha,
     ir,
@@ -216,6 +218,10 @@ function verTutorial() {
 render();
 
 if (!db.tutorialVisto) verTutorial();
+
+pedirPersistencia().then((protegido) => {
+  almacenProtegido = protegido;
+});
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').catch(() => {});

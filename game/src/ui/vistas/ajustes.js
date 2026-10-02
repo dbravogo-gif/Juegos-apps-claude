@@ -4,7 +4,11 @@ import {
   puedeActivarExencion,
   fechasCubiertas,
 } from '../../core/scoring/exemptions.js';
-import { exportar, importar, estadoInicial } from '../../data/storage.js';
+import { importar, estadoInicial } from '../../data/storage.js';
+import { guardarCopia } from '../copia.js';
+
+const formatoFecha = (iso) =>
+  new Date(`${iso}T12:00:00`).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
 
 const MOTIVO = {
   retroactiva: 'No se pueden pedir exenciones para días que ya han pasado.',
@@ -52,13 +56,21 @@ export function render(ctx) {
 
   <div class="titulo-seccion">Copia de seguridad</div>
   <div class="tarjeta">
-    <button class="boton fino secundario" data-accion="exportar">Descargar copia</button>
+    <button class="boton fino secundario" data-accion="exportar">Guardar copia</button>
     <div style="height:8px"></div>
     <label class="boton fino secundario" style="display:block;cursor:pointer">
       Restaurar copia
       <input type="file" accept="application/json" data-accion="importar" hidden>
     </label>
-    <div class="mini" style="margin-top:10px">Tus datos se guardan solo en este dispositivo.</div>
+    <div class="mini" style="margin-top:10px">
+      Tus datos se guardan solo en este dispositivo.
+      ${ctx.db.ultimaCopia ? `Última copia: ${formatoFecha(ctx.db.ultimaCopia)}.` : 'Aún no has guardado ninguna copia.'}
+      ${
+        ctx.almacenProtegido
+          ? 'El navegador no los borrará por su cuenta.'
+          : 'El navegador podría borrarlos si pasas días sin abrir la app: instálala en la pantalla de inicio y guarda copias de vez en cuando.'
+      }
+    </div>
     <div style="height:12px"></div>
     <button class="boton fino" style="background:var(--alerta)" data-accion="borrar">Borrar todo</button>
   </div>`;
@@ -82,14 +94,7 @@ export const acciones = {
     });
   },
 
-  exportar: (_, ctx) => {
-    const blob = new Blob([exportar(ctx.db)], { type: 'application/json' });
-    const enlace = document.createElement('a');
-    enlace.href = URL.createObjectURL(blob);
-    enlace.download = `constant-${ctx.hoy}.json`;
-    enlace.click();
-    URL.revokeObjectURL(enlace.href);
-  },
+  exportar: (_, ctx) => guardarCopia(ctx),
 
   importar: (el, ctx) => {
     const archivo = el.files[0];
