@@ -1,4 +1,5 @@
 import { ENEMIGOS, HABILIDADES } from '../../data/content.js';
+import { potencia, CARGA_VACIA } from './habilidades.js';
 
 /** Generador con semilla: el combate necesita azar, pero los tests necesitan repetirlo. */
 export function generador(semilla) {
@@ -22,18 +23,20 @@ const PASA_DEFENDIENDO = 0.4;
 // nivel de más se nota sin volver trivial la pelea.
 const ESCALA_DEFENSA = 20;
 
-function dano(ataque, defensa, { multiplicador = 1, defendiendo = false, azar }) {
+function dano(ataque, defensa, { multiplicador = 1, defendiendo = false, pasa = null, azar }) {
   const bruto = ataque * multiplicador * (ESCALA_DEFENSA / (ESCALA_DEFENSA + defensa));
   const ruido = 1 + (azar() * 2 - 1) * VARIACION;
-  const golpe = bruto * ruido * (defendiendo ? PASA_DEFENDIENDO : 1);
+  const golpe = bruto * ruido * (pasa ?? (defendiendo ? PASA_DEFENDIENDO : 1));
   return Math.max(1, Math.round(golpe));
 }
 
 /**
  * @param {{ vidaMax:number, fuerza:number, defensa:number, energiaMax:number }} stats
  * @param {string} enemigoId
+ * @param {import('./habilidades.js').Carga} carga hábitos que alimentan las habilidades;
+ *   se fija al empezar para que el combate no cambie a mitad si se registra algo.
  */
-export function iniciarCombate(stats, enemigoId) {
+export function iniciarCombate(stats, enemigoId, carga = CARGA_VACIA) {
   const ficha = ENEMIGOS[enemigoId];
 
   return {
@@ -46,6 +49,11 @@ export function iniciarCombate(stats, enemigoId) {
     // El jefe telegrafía su golpe fuerte un turno antes. Sin ese aviso, cubrirse sería
     // adivinar; con él, el combate se puede leer y defenderse deja de ser un botón muerto.
     avisa: avisaGolpeFuerte(ficha, 1),
+    carga,
+    // Habilidades de una vez por combate ya gastadas.
+    usadas: [],
+    // Lo que acaba de pasar con una habilidad, para que la escena lo pinte.
+    efecto: null,
     registro: [`Te enfrentas a ${ficha.nombre}.`],
     estado: 'en_curso',
   };
@@ -87,33 +95,53 @@ export function turno(combate, accion, azar = Math.random) {
   const enemigo = { ...combate.enemigo };
   const registro = [];
   let defendiendoJugador = false;
+  let pasaJugador = null;
+  let esquiva = 0;
+  let usadas = combate.usadas ?? [];
+  let efecto = null;
 
   if (accion.tipo === 'defender') {
     defendiendoJugador = true;
     jugador.energia = Math.min(jugador.energiaMax, jugador.energia + 2);
     registro.push('Te cubres y recuperas aliento.');
   } else if (accion.tipo === 'habilidad') {
-    const habilidad = HABILIDADES[accion.habilidad];
-    if (jugador.energia < habilidad.energia) {
-      registro.push('No te queda energía para eso.');
-    } else {
-      jugador.energia -= habilidad.energia;
+    const ficha = HABILIDADES[accion.habilidad];
+    const p = potencia(accion.habilidad, combate.carga ?? CARGA_VACIA);
 
-      if (habilidad.defensaExtra) {
-        defendiendoJugador = true;
-        jugador.defensaExtra = habilidad.defensaExtra;
-        registro.push(`${habilidad.nombre}: te preparas para el golpe.`);
+    if (jugador.energia < ficha.energia) {
+      registro.push('No te queda energía para eso.');
+    } else if (ficha.efecto === 'cura' && usadas.includes(accion.habilidad)) {
+      registro.push(`${ficha.nombre} ya lo has usado en este combate.`);
+    } else {
+      jugador.energia -= ficha.energia;
+
+      if (ficha.efecto === 'cura') {
+        const antes = jugador.vida;
+        jugador.vida = Math.min(jugador.vidaMax, jugador.vida + Math.round(jugador.vidaMax * p.cura));
+        usadas = [...usadas, accion.habilidad];
+        efecto = { habilidad: accion.habilidad, tipo: 'cura', valor: jugador.vida - antes };
+        registro.push(`${ficha.nombre}: recuperas ${jugador.vida - antes} de vida.`);
+      } else if (ficha.efecto === 'guardia') {
+        pasaJugador = p.pasa;
+        efecto = { habilidad: accion.habilidad, tipo: 'guardia' };
+        registro.push(`${ficha.nombre}: te plantas para el golpe.`);
+      } else if (ficha.efecto === 'esquiva') {
+        esquiva = p.esquiva;
+        efecto = { habilidad: accion.habilidad, tipo: 'esquiva' };
+        registro.push(`${ficha.nombre}: te mueves ligero.`);
       } else {
-        const golpes = habilidad.golpes ?? 1;
-        for (let i = 0; i < golpes; i += 1) {
+        let total = 0;
+        for (let i = 0; i < p.golpes; i += 1) {
           const puntos = dano(jugador.ataque, enemigo.defensa, {
-            multiplicador: habilidad.multiplicador,
+            multiplicador: p.multiplicador,
             defendiendo: combate.defendiendo.enemigo,
             azar,
           });
           enemigo.vida -= puntos;
-          registro.push(`${habilidad.nombre}: ${puntos} de daño.`);
+          total += puntos;
+          registro.push(`${ficha.nombre}: ${puntos} de daño.`);
         }
+        efecto = { habilidad: accion.habilidad, tipo: 'golpe', valor: total, golpes: p.golpes };
       }
     }
   } else {
@@ -128,7 +156,7 @@ export function turno(combate, accion, azar = Math.random) {
   if (enemigo.vida <= 0) {
     enemigo.vida = 0;
     registro.push(`${enemigo.nombre} cae derrotado.`);
-    return { ...combate, jugador, enemigo, registro, estado: 'victoria', turno: combate.turno + 1 };
+    return { ...combate, jugador, enemigo, registro, usadas, efecto, estado: 'victoria', turno: combate.turno + 1 };
   }
 
   const respuesta = accionEnemigo({ ...combate, enemigo }, azar);
@@ -137,11 +165,14 @@ export function turno(combate, accion, azar = Math.random) {
   if (respuesta === 'defender') {
     defendiendoEnemigo = true;
     registro.push(`${enemigo.nombre} se protege.`);
+  } else if (esquiva && azar() < esquiva) {
+    efecto = { ...efecto, esquivado: true };
+    registro.push(`${enemigo.nombre} golpea al aire: lo esquivas.`);
   } else {
-    const defensaJugador = jugador.defensa + (jugador.defensaExtra ?? 0);
-    const puntos = dano(enemigo.ataque, defensaJugador, {
+    const puntos = dano(enemigo.ataque, jugador.defensa, {
       multiplicador: respuesta === 'fuerte' ? 1.6 : 1,
       defendiendo: defendiendoJugador,
+      pasa: pasaJugador,
       azar,
     });
     jugador.vida -= puntos;
@@ -152,12 +183,10 @@ export function turno(combate, accion, azar = Math.random) {
     );
   }
 
-  delete jugador.defensaExtra;
-
   if (jugador.vida <= 0) {
     jugador.vida = 0;
     registro.push('Te retiras malherido.');
-    return { ...combate, jugador, enemigo, registro, estado: 'derrota', turno: combate.turno + 1 };
+    return { ...combate, jugador, enemigo, registro, usadas, efecto, estado: 'derrota', turno: combate.turno + 1 };
   }
 
   return {
@@ -165,7 +194,9 @@ export function turno(combate, accion, azar = Math.random) {
     jugador,
     enemigo,
     registro,
-    defendiendo: { jugador: defendiendoJugador, enemigo: defendiendoEnemigo },
+    usadas,
+    efecto,
+    defendiendo: { jugador: defendiendoJugador || pasaJugador !== null, enemigo: defendiendoEnemigo },
     avisa: avisaGolpeFuerte(enemigo, combate.turno + 1),
     turno: combate.turno + 1,
   };

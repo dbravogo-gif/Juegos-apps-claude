@@ -419,3 +419,27 @@ Los ejercicios de la rutina son texto libre, así que la ficha se busca por el n
 larga contenida en lo escrito. Ante la duda no se asigna ninguna —una ficha equivocada es
 peor que ninguna— y en «Mi rutina» se puede elegir a mano o quitarla. Las notas propias
 siguen existiendo y salen en el dorso junto a la ficha.
+
+## Habilidades
+
+El nivel abre las habilidades; la fuerza de cada una sale de tus hábitos de los últimos
+días (`src/core/combat/habilidades.js`). Es lo que hace que el combate premie entrenar y
+comer bien, y no solo acumular XP.
+
+| Habilidad | Nivel | Efecto | Se carga con |
+|---|---|---|---|
+| Embestida | 2 | golpe ×1,3 → ×1,78 | sesiones cumplidas en 7 días |
+| Segundo aliento | 5 | cura 10 % → 38 %, una vez por combate | días de dieta cumplidos en 7 días |
+| Paso de peregrino | 7 | 40 % → 85 % de esquivar el siguiente golpe | «otra actividad» en 14 días |
+| Guardia férrea | 9 | deja pasar 35 % → 10 % del golpe | días de racha de entreno |
+| Tajo doble | 12 | 2 cortes, 3 con 5 días de dieta | dieta de la semana |
+| Golpe del constante | 16 | ×1,2 → ×2,8 | las dos rachas sumadas |
+
+- Todas sirven sin carga (nadie empieza con botones muertos) y tienen topes: ningún golpe
+  llega a triplicar uno normal y ninguna guardia es invulnerable.
+- La carga se fija al empezar el combate: registrar algo a mitad no lo cambia.
+- Se llevan tres al combate. Si nunca se ha elegido, van las tres más recientes, para que
+  la última abierta se pruebe sin pasar por un menú.
+- Simulado contra los jefes con una estrategia sencilla: las habilidades sin hábitos casi
+  no cambian el resultado; con hábitos al máximo equivalen a unos dos niveles de ventaja.
+  Al principio daban tres o más, y se rebajaron la cura y la embestida.

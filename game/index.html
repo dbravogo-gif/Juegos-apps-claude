@@ -379,6 +379,60 @@ body.con-tutorial #vista,body.con-tutorial #nav{pointer-events:none}
 .placa-heroe{right:4%;bottom:5%}
 .placa b{font-size:12.5px;display:block;line-height:1.3}
 .placa .mini{font-size:11px}
+/* Habilidades. El color dice de qué hábito bebe cada una: así se ve qué hay que cuidar. */
+.rama-entreno{--rama:#e0703a}
+.rama-dieta{--rama:#3f9d5d}
+.rama-constancia{--rama:#c9971f}
+.rama-otra{--rama:#3f86c4}
+.icono-habilidad{width:44px;height:44px;object-fit:contain;flex:none}
+.habilidad{display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;padding:12px}
+.habilidad > div{flex:1;min-width:0}
+.habilidad .potencia{font-size:13px;font-weight:650;color:var(--rama);margin:5px 0 2px}
+.habilidad button{margin-top:8px;padding:6px 12px;border-radius:9px;background:var(--superficie-2);border:none;color:var(--texto)}
+.habilidad button:disabled{opacity:.5}
+.habilidad.llevada{outline:2px solid var(--acento);outline-offset:-2px}
+.habilidad.cerrada{opacity:.55}
+.habilidad.cerrada .icono-habilidad{filter:grayscale(1)}
+.boton.con-icono{display:flex;align-items:center;justify-content:center;gap:6px;padding-left:8px}
+.boton.con-icono .icono-habilidad{width:26px;height:26px}
+
+/* Efectos del turno. Son decoración: el daño ya está aplicado cuando aparecen. */
+.efecto{position:absolute;pointer-events:none;z-index:4}
+.efecto-golpe{right:7%;top:24%;width:26%;height:48%}
+.efecto-golpe i{
+  position:absolute;left:-10%;right:-10%;top:calc(30% + var(--i) * 18%);height:7px;border-radius:9px;
+  background:linear-gradient(90deg,transparent,#fff 45%,var(--rama) 70%,transparent);
+  box-shadow:0 0 12px var(--rama);transform:rotate(-28deg) scaleX(0);opacity:0;
+  animation:estela .42s ease-out calc(var(--i) * .12s) forwards;
+}
+@keyframes estela{0%{transform:rotate(-28deg) scaleX(0);opacity:1}60%{opacity:1}100%{transform:rotate(-28deg) scaleX(1);opacity:0}}
+.efecto-cura,.efecto-guardia,.efecto-esquiva{left:2%;bottom:6%;width:36%;height:66%}
+.efecto-cura i{
+  position:absolute;inset:0;border-radius:50%;
+  background:radial-gradient(circle,color-mix(in srgb,var(--rama) 55%,#fff) 0,color-mix(in srgb,var(--rama) 35%,transparent) 40%,transparent 70%);
+  animation:aliento .9s ease-out forwards;mix-blend-mode:screen;
+}
+@keyframes aliento{0%{transform:scale(.4);opacity:0}35%{opacity:1}100%{transform:scale(1.15) translateY(-12%);opacity:0}}
+.efecto-guardia i{
+  position:absolute;inset:8% 4%;border-radius:50%;border:4px solid var(--rama);
+  box-shadow:0 0 18px var(--rama),inset 0 0 18px color-mix(in srgb,var(--rama) 60%,transparent);
+  animation:escudo 1.1s ease-out forwards;
+}
+@keyframes escudo{0%{transform:scale(.7);opacity:0}25%{transform:scale(1);opacity:1}80%{opacity:.9}100%{opacity:0}}
+.efecto-esquiva i{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 60%,color-mix(in srgb,var(--rama) 30%,transparent),transparent 65%);animation:aliento .8s ease-out forwards}
+.combatiente.heroe.esquiva .figura{animation:esquivar .5s ease-in-out}
+@keyframes esquivar{0%,100%{transform:translateX(0);opacity:1}40%{transform:translateX(-14%);opacity:.55}}
+.cifra{
+  position:absolute;z-index:5;pointer-events:none;font-weight:800;font-size:22px;color:#fff;
+  -webkit-text-stroke:1px rgba(0,0,0,.55);text-shadow:0 2px 4px rgba(0,0,0,.45);
+  animation:cifra .9s ease-out forwards;
+}
+.cifra-rival{right:18%;top:20%}
+.cifra-heroe{left:14%;top:30%}
+.cifra.cura{color:#9be7a8}
+.cifra.esquivado{font-size:16px;color:#cfe6ff}
+@keyframes cifra{0%{transform:translateY(8px) scale(.8);opacity:0}20%{transform:translateY(0) scale(1.1);opacity:1}100%{transform:translateY(-26px) scale(1);opacity:0}}
+@media (prefers-reduced-motion:reduce){.efecto,.cifra{animation-duration:.01s!important}}
 /* La parcela es una escena, no una cuadrícula. Cada objeto se ancla por su base al punto
    del suelo que le toca y se escala con la profundidad: lo que está más atrás se ve más
    pequeño. Con la rejilla anterior todo medía igual y quedaba flotando. */

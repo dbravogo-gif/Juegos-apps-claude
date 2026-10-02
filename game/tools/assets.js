@@ -9,6 +9,7 @@ import {
   MASCOTAS,
   ESPACIOS,
   ETAPAS_PERSONAJE,
+  HABILIDADES,
 } from '../src/data/content.js';
 
 // Dos hojas por etapa, cada una de una sola generación: es lo único que garantiza que las
@@ -94,6 +95,12 @@ ${tabla('Tipo', EQUIPO.map((e) => linea('equipo', e.id, e.nombre, e.tipo)))}
 
 ${tabla('Cómo se gana', MASCOTAS.map((m) => linea('mascotas', m.id, m.nombre, m.pista)))}
 
+## Habilidades
+
+Medallón redondo, mismo marco para todas.
+
+${tabla('Se carga con', Object.entries(HABILIDADES).map(([id, h]) => linea('habilidades', id, h.nombre, h.fuente)))}
+
 ## Resumen
 
 | Categoría | Imágenes |
@@ -105,4 +112,5 @@ ${tabla('Cómo se gana', MASCOTAS.map((m) => linea('mascotas', m.id, m.nombre, m
 | Muebles | ${MUEBLES.length} |
 | Equipo | ${EQUIPO.length} |
 | Mascotas | ${MASCOTAS.length} |
+| Habilidades | ${Object.keys(HABILIDADES).length} |
 `);

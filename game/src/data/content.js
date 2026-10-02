@@ -46,11 +46,45 @@ export const ENEMIGOS = {
   el_coleccionista: { nombre: 'El Coleccionista', vida: 170, ataque: 32, defensa: 15, patron: 'jefe', jefe: true },
 };
 
+// Las habilidades se cargan con hábitos de verdad: la fuerza de cada una sale de lo que has
+// hecho estos días (ver src/core/combat/habilidades.js). El nivel solo las abre. Así el
+// combate premia entrenar y comer bien, no solo acumular XP.
+//   rama: de qué hábito bebe. efecto: qué hace en el turno.
 export const HABILIDADES = {
-  embestida: { nombre: 'Embestida', nivel: 2, energia: 3, multiplicador: 1.8, descripcion: 'Un golpe fuerte que gasta energía.' },
-  guardia_ferrea: { nombre: 'Guardia férrea', nivel: 9, energia: 2, defensaExtra: 12, descripcion: 'Aguanta el siguiente golpe casi entero.' },
-  tajo_doble: { nombre: 'Tajo doble', nivel: 15, energia: 5, multiplicador: 1.1, golpes: 2, descripcion: 'Dos cortes seguidos.' },
+  embestida: {
+    nombre: 'Embestida', nivel: 2, energia: 3, rama: 'entreno', efecto: 'golpe',
+    descripcion: 'Un golpe con todo el cuerpo.',
+    fuente: 'Pega más cuantas más sesiones hayas cumplido esta semana.',
+  },
+  segundo_aliento: {
+    nombre: 'Segundo aliento', nivel: 5, energia: 3, rama: 'dieta', efecto: 'cura',
+    descripcion: 'Recuperas vida en mitad del combate. Una vez por combate.',
+    fuente: 'Cura más cuantos más días de dieta hayas cumplido esta semana.',
+  },
+  paso_peregrino: {
+    nombre: 'Paso de peregrino', nivel: 7, energia: 2, rama: 'otra', efecto: 'esquiva',
+    descripcion: 'Te apartas: el siguiente golpe puede no tocarte.',
+    fuente: 'Esquiva mejor si has hecho deporte fuera del gimnasio estas dos semanas.',
+  },
+  guardia_ferrea: {
+    nombre: 'Guardia férrea', nivel: 9, energia: 2, rama: 'constancia', efecto: 'guardia',
+    descripcion: 'Aguantas el siguiente golpe mejor que cubriéndote.',
+    fuente: 'Bloquea más cuanto más larga sea tu racha de entreno.',
+  },
+  tajo_doble: {
+    nombre: 'Tajo doble', nivel: 12, energia: 5, rama: 'dieta', efecto: 'golpe',
+    descripcion: 'Dos cortes seguidos.',
+    fuente: 'Un tercer corte si llevas cinco días de dieta cumplida esta semana.',
+  },
+  golpe_constante: {
+    nombre: 'Golpe del constante', nivel: 16, energia: 6, rama: 'constancia', efecto: 'golpe',
+    descripcion: 'El golpe de quien no falla.',
+    fuente: 'Crece con tus dos rachas, entreno y comida, sumadas.',
+  },
 };
+
+/** Cuántas habilidades se llevan a un combate. Elegir es parte del juego. */
+export const HABILIDADES_EN_COMBATE = 3;
 
 export const EQUIPO = [
   // La progresión sube por tramos, no doblando: si cada pieza valiera el doble que la

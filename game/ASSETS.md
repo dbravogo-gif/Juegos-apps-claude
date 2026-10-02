@@ -147,6 +147,19 @@ así que necesitan mucho suelo libre y ningún mueble ya dibujado.
 | `assets/mascotas/perro.png` | Perro guardián | Derrota a tu primer jefe |
 | `assets/mascotas/cabra.png` | Cabra terca | Un mes de racha de entreno |
 
+## Habilidades
+
+Medallón redondo, mismo marco para todas.
+
+| Archivo | Qué es | Se carga con |
+| --- | --- | --- |
+| `assets/habilidades/embestida.png` | Embestida | Pega más cuantas más sesiones hayas cumplido esta semana. |
+| `assets/habilidades/segundo_aliento.png` | Segundo aliento | Cura más cuantos más días de dieta hayas cumplido esta semana. |
+| `assets/habilidades/paso_peregrino.png` | Paso de peregrino | Esquiva mejor si has hecho deporte fuera del gimnasio estas dos semanas. |
+| `assets/habilidades/guardia_ferrea.png` | Guardia férrea | Bloquea más cuanto más larga sea tu racha de entreno. |
+| `assets/habilidades/tajo_doble.png` | Tajo doble | Un tercer corte si llevas cinco días de dieta cumplida esta semana. |
+| `assets/habilidades/golpe_constante.png` | Golpe del constante | Crece con tus dos rachas, entreno y comida, sumadas. |
+
 ## Resumen
 
 | Categoría | Imágenes |
@@ -158,4 +171,5 @@ así que necesitan mucho suelo libre y ningún mueble ya dibujado.
 | Muebles | 30 |
 | Equipo | 15 |
 | Mascotas | 4 |
+| Habilidades | 6 |
 

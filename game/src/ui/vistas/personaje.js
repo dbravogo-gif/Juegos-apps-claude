@@ -1,6 +1,6 @@
 import { esc } from '../util.js';
 import { figura } from '../sprite.js';
-import { ENEMIGOS } from '../../data/content.js';
+import { ENEMIGOS, HABILIDADES, HABILIDADES_EN_COMBATE } from '../../data/content.js';
 import { statsPersonaje } from '../../core/progression/character.js';
 import {
   zonasAbiertas,
@@ -10,6 +10,7 @@ import {
   zonaDeEnemigo,
 } from '../../core/progression/unlocks.js';
 import { iniciarCombate, turno, recompensaEnemigo } from '../../core/combat/battle.js';
+import { cargaDeHabilidades, describirPotencia, habilidadesLlevadas } from '../../core/combat/habilidades.js';
 import { vigorMaximo, vigorGastado, puedeCombatir, costeCombate } from '../../core/combat/vigor.js';
 import { otorgarExtra, sumaExtras } from '../../core/economy/rewards.js';
 import { articuloPorId, ranuraDe } from '../../core/economy/shop.js';
@@ -19,7 +20,7 @@ let combate = null;
 
 // Estado de la animación. Vive aparte del combate porque es solo representación: el
 // resultado del turno ya está calculado antes de que se mueva nada.
-let escena = { heroe: 0, rival: 0, golpeado: null };
+let escena = { heroe: 0, rival: 0, golpeado: null, efecto: null, cifras: [] };
 let temporizadores = [];
 
 // Dos hojas de tres poses por etapa. Las de frente y las de espaldas se generan cada una
@@ -30,8 +31,16 @@ const FRENTE = { ficha: 0, victoria: 1, derrota: 2 };
 function pararAnimacion() {
   temporizadores.forEach(clearTimeout);
   temporizadores = [];
-  escena = { heroe: POSES.quieto, rival: POSES.quieto, golpeado: null };
+  escena = { heroe: POSES.quieto, rival: POSES.quieto, golpeado: null, efecto: null, cifras: [] };
 }
+
+/** Hábitos de hoy que cargan las habilidades. */
+const cargaDe = (ctx) => cargaDeHabilidades(ctx.estado.dias, ctx.estado.rachas);
+
+const llevadasDe = (ctx) => habilidadesLlevadas(habilidadesAbiertas(ctx.estado.nivel.nivel), ctx.db.habilidadesEquipadas);
+
+const icono = (id, clase = '') =>
+  `<img class="icono-habilidad ${clase}" src="assets/habilidades/${esc(id)}.png" alt="" onerror="this.style.visibility='hidden'">`;
 
 /**
  * Encadena el vaivén del turno: primero pega quien ha actuado, después responde el otro.
@@ -40,10 +49,20 @@ function pararAnimacion() {
 function animarTurno(ctx, antes, despues) {
   pararAnimacion();
 
-  const rivalHerido = despues.enemigo.vida < antes.enemigo.vida;
-  const heroeHerido = despues.jugador.vida < antes.jugador.vida;
+  const danoRival = antes.enemigo.vida - despues.enemigo.vida;
+  const danoHeroe = antes.jugador.vida - despues.jugador.vida;
+  const efecto = despues.efecto ? { ...despues.efecto, rama: HABILIDADES[despues.efecto.habilidad]?.rama } : null;
 
-  escena = { heroe: POSES.atacando, rival: rivalHerido ? POSES.dolor : POSES.quieto, golpeado: rivalHerido ? 'rival' : null };
+  // Las cifras flotan sobre quien recibe: el número dice más que la barra cuando el golpe
+  // es pequeño. Una cura sale en positivo sobre el héroe.
+  const cifrasHeroe = efecto?.tipo === 'cura' ? [{ donde: 'heroe', texto: `+${efecto.valor}`, clase: 'cura' }] : [];
+  escena = {
+    heroe: efecto && efecto.tipo !== 'golpe' ? POSES.quieto : POSES.atacando,
+    rival: danoRival > 0 ? POSES.dolor : POSES.quieto,
+    golpeado: danoRival > 0 ? 'rival' : null,
+    efecto,
+    cifras: [...cifrasHeroe, ...(danoRival > 0 ? [{ donde: 'rival', texto: `−${danoRival}` }] : [])],
+  };
 
   const paso = (retraso, siguiente) => {
     temporizadores.push(
@@ -55,15 +74,35 @@ function animarTurno(ctx, antes, despues) {
   };
 
   if (despues.estado === 'en_curso') {
-    paso(420, {
-      heroe: heroeHerido ? POSES.dolor : POSES.quieto,
+    // Lo que pegó el enemigo: con una cura en el mismo turno, la vida neta lo esconde.
+    const recibido = danoHeroe + (efecto?.tipo === 'cura' ? efecto.valor : 0);
+    paso(480, {
+      heroe: recibido > 0 ? POSES.dolor : POSES.quieto,
       rival: POSES.atacando,
-      golpeado: heroeHerido ? 'heroe' : null,
+      golpeado: recibido > 0 ? 'heroe' : null,
+      // El escudo o la esquiva siguen a la vista mientras responde el enemigo.
+      efecto: efecto && efecto.tipo !== 'golpe' && efecto.tipo !== 'cura' ? efecto : null,
+      cifras: efecto?.esquivado
+        ? [{ donde: 'heroe', texto: 'Esquivado', clase: 'esquivado' }]
+        : recibido > 0
+          ? [{ donde: 'heroe', texto: `−${recibido}` }]
+          : [],
     });
-    paso(900, { heroe: POSES.quieto, rival: POSES.quieto, golpeado: null });
+    paso(1050, { heroe: POSES.quieto, rival: POSES.quieto, golpeado: null, efecto: null, cifras: [] });
   } else {
-    paso(500, { heroe: POSES.quieto, rival: POSES.quieto, golpeado: null });
+    paso(600, { heroe: POSES.quieto, rival: POSES.quieto, golpeado: null, efecto: null, cifras: [] });
   }
+}
+
+/** Capa de efectos de la escena: estela del golpe, brillo de la cura, escudo, esquiva. */
+function efectosHTML() {
+  const { efecto, cifras } = escena;
+  const capa = efecto
+    ? `<div class="efecto efecto-${efecto.tipo} rama-${efecto.rama ?? 'entreno'} ${efecto.esquivado ? 'esquivado' : ''}">
+        ${efecto.tipo === 'golpe' ? Array.from({ length: efecto.golpes ?? 1 }, (_, i) => `<i style="--i:${i}"></i>`).join('') : '<i></i>'}
+      </div>`
+    : '';
+  return capa + cifras.map((c) => `<div class="cifra cifra-${c.donde} ${c.clase ?? ''}">${esc(c.texto)}</div>`).join('');
 }
 
 const RANURAS = [
@@ -103,8 +142,9 @@ function figuraHeroe(ctx) {
 
   // Al acabar el combate el personaje se gira hacia cámara: la cara es lo que cuenta en
   // el momento de ganar o perder.
+  // Se espera a que acabe el último golpe: si no, el golpe final cae en el vacío.
   const remate = { victoria: FRENTE.victoria, derrota: FRENTE.derrota }[combate.estado];
-  if (remate !== undefined) {
+  if (remate !== undefined && !escena.golpeado) {
     return figura('personaje', etapa, 'Tú', { pose: remate, poses: 3, clase: golpeado });
   }
 
@@ -113,7 +153,7 @@ function figuraHeroe(ctx) {
 
 function pantallaCombate(ctx) {
   const { jugador, enemigo, registro, estado } = combate;
-  const habilidades = habilidadesAbiertas(ctx.estado.nivel.nivel);
+  const habilidades = llevadasDe(ctx);
   const zona = zonaDeEnemigo(combate.enemigoId);
 
   const acciones =
@@ -124,8 +164,9 @@ function pantallaCombate(ctx) {
       <button class="boton secundario" data-accion="golpe" data-tipo="defender">Defender</button>
       ${habilidades
         .map(
-          (h) => `<button class="boton secundario" data-accion="golpe" data-tipo="habilidad" data-habilidad="${esc(h.id)}"
-            ${jugador.energia < h.energia ? 'disabled' : ''}>${esc(h.nombre)} · ${h.energia}⚡</button>`,
+          (h) => `<button class="boton secundario con-icono" data-accion="golpe" data-tipo="habilidad" data-habilidad="${esc(h.id)}"
+            ${jugador.energia < h.energia || (h.efecto === 'cura' && combate.usadas.includes(h.id)) ? 'disabled' : ''}>
+            ${icono(h.id)}<span>${esc(h.nombre)} · ${h.energia}⚡</span></button>`,
         )
         .join('')}
     </div>`
@@ -145,7 +186,7 @@ function pantallaCombate(ctx) {
 
       <div class="combatiente rival">
         ${
-          estado === 'victoria'
+          estado === 'victoria' && escena.golpeado !== 'rival'
             ? ''
             : figura('enemigos', combate.enemigoId, enemigo.nombre, {
                 pose: escena.rival,
@@ -155,7 +196,8 @@ function pantallaCombate(ctx) {
         }
       </div>
 
-      <div class="combatiente heroe">${figuraHeroe(ctx)}</div>
+      <div class="combatiente heroe ${escena.efecto?.esquivado ? 'esquiva' : ''}">${figuraHeroe(ctx)}</div>
+      ${efectosHTML()}
     </div>
 
     <div class="diario">${registro.map((l) => `<div>${esc(l)}</div>`).join('')}</div>
@@ -167,12 +209,45 @@ function pantallaCombate(ctx) {
   </div>`;
 }
 
+/** Todas las habilidades: las abiertas con lo que valen hoy, las cerradas con su nivel. */
+function habilidadesHTML(ctx) {
+  const nivel = ctx.estado.nivel.nivel;
+  const carga = cargaDe(ctx);
+  const llevadas = new Set(llevadasDe(ctx).map((h) => h.id));
+  const lleno = llevadas.size >= HABILIDADES_EN_COMBATE;
+
+  return Object.entries(HABILIDADES)
+    .map(([id, h]) => {
+      if (h.nivel > nivel) {
+        return `
+        <div class="tarjeta habilidad cerrada">
+          ${icono(id)}
+          <div><b>${esc(h.nombre)}</b> <span class="mini">· nivel ${h.nivel}</span>
+            <div class="mini">${esc(h.fuente)}</div></div>
+        </div>`;
+      }
+      const lleva = llevadas.has(id);
+      return `
+      <div class="tarjeta habilidad ${lleva ? 'llevada' : ''}">
+        ${icono(id)}
+        <div>
+          <div class="entre"><b>${esc(h.nombre)}</b><span class="mini">${h.energia}⚡</span></div>
+          <div class="mini">${esc(h.descripcion)}</div>
+          <div class="potencia rama-${h.rama}">${esc(describirPotencia(id, carga))}</div>
+          <div class="mini">${esc(h.fuente)}</div>
+          <button class="mini" data-accion="llevarHabilidad" data-habilidad="${esc(id)}"
+            ${!lleva && lleno ? 'disabled' : ''}>${lleva ? 'Dejar en casa' : lleno ? `Ya llevas ${HABILIDADES_EN_COMBATE}` : 'Llevar al combate'}</button>
+        </div>
+      </div>`;
+    })
+    .join('');
+}
+
 export function render(ctx) {
   if (combate) return pantallaCombate(ctx);
 
   const nivel = ctx.estado.nivel.nivel;
   const stats = statsPersonaje(nivel, ctx.db.equipado);
-  const habilidades = habilidadesAbiertas(nivel);
   const abierto = quedaPresupuesto(ctx);
   const { presupuesto, gastado } = presupuestoDeHoy(ctx);
   const vigor = vigorDeHoy(ctx);
@@ -261,20 +336,10 @@ export function render(ctx) {
   </div>
 
   <div class="titulo-seccion">Habilidades</div>
-  <div class="tarjeta">
-    ${
-      habilidades.length
-        ? habilidades
-            .map(
-              (h) => `<div style="padding:7px 0">
-                <b>${esc(h.nombre)}</b> <span class="mini">· ${h.energia}⚡</span>
-                <div class="mini">${esc(h.descripcion)}</div>
-              </div>`,
-            )
-            .join('')
-        : '<div class="mini">Todavía ninguna. La primera llega al nivel 2.</div>'
-    }
+  <div class="mini" style="margin:-4px 0 10px">
+    Se cargan con tus hábitos: cuanto mejor llevas la semana, más pegan. Llevas ${HABILIDADES_EN_COMBATE} al combate.
   </div>
+  ${habilidadesHTML(ctx)}
 
   ${
     abierto
@@ -301,7 +366,7 @@ export const acciones = {
     }
 
     pararAnimacion();
-    combate = iniciarCombate(statsPersonaje(ctx.estado.nivel.nivel, ctx.db.equipado), enemigoId);
+    combate = iniciarCombate(statsPersonaje(ctx.estado.nivel.nivel, ctx.db.equipado), enemigoId, cargaDe(ctx));
 
     // El vigor se gasta al entrar, no al ganar: si solo costara perder tiempo, reintentar
     // hasta que la tirada saliera bien sería gratis.
@@ -340,6 +405,17 @@ export const acciones = {
       if (ENEMIGOS[enemigoId].jefe && !db.jefesDerrotados.includes(enemigoId)) {
         db.jefesDerrotados.push(enemigoId);
       }
+    });
+  },
+
+  llevarHabilidad: (el, ctx) => {
+    const id = el.dataset.habilidad;
+    const actuales = llevadasDe(ctx).map((h) => h.id);
+    const siguiente = actuales.includes(id)
+      ? actuales.filter((x) => x !== id)
+      : [...actuales, id].slice(0, HABILIDADES_EN_COMBATE);
+    ctx.actualizar((db) => {
+      db.habilidadesEquipadas = siguiente;
     });
   },
 

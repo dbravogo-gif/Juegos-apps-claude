@@ -364,6 +364,7 @@ MODO_POR_CARPETA = {
     'muebles': 'objetos',
     'equipo': 'objetos',
     'mascotas': 'objetos',
+    'habilidades': 'objetos',
 }
 
 ORIGINALES = Path('assets/originales')

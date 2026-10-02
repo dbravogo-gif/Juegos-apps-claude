@@ -12,7 +12,7 @@
  * `refs` son las imágenes ya hechas que se mandan como referencia de estilo o identidad.
  */
 import fs from 'node:fs';
-import { ZONAS, ESPACIOS, MUEBLES, EQUIPO, MASCOTAS, ETAPAS_PERSONAJE } from '../src/data/content.js';
+import { ZONAS, ESPACIOS, MUEBLES, EQUIPO, MASCOTAS, ETAPAS_PERSONAJE, HABILIDADES } from '../src/data/content.js';
 
 const ESTILO =
   'Fantasy RPG game art in EXACTLY the same art style as the reference images: hand-drawn ' +
@@ -23,14 +23,14 @@ const ESTILO =
 const VERDE =
   'Background: flat solid pure chroma-key green (#00FF00), completely uniform, no gradient, ' +
   'no floor, no shadow, no ground line. Do not use green anywhere on the subject. No text, ' +
-  'no labels, no borders, no frames.';
+  'no labels, no border or frame around the whole image.';
 
 // Las plantas van sobre magenta: quitar el verde también desatura cualquier tono verdoso
 // del dibujo, y un árbol se quedaría con las hojas grises.
 const MAGENTA =
   'Background: flat solid pure chroma-key magenta (#FF00FF), completely uniform, no gradient, ' +
   'no floor, no shadow, no ground line. Do not use magenta or pink anywhere on the subject. ' +
-  'No text, no labels, no borders, no frames.';
+  'No text, no labels, no border or frame around the whole image.';
 
 const TERCIOS =
   'ONE single image with THREE poses of the SAME character side by side in a horizontal row, ' +
@@ -232,7 +232,23 @@ const MASCOTA = {
 const mascotas = [tanda('mascotas', ['gato', 'paloma', 'perro', 'cabra'], MASCOTA,
   'Each animal front view, full body, in a calm relaxed pose.')];
 
-export const ENCARGOS = [...enemigos, guia, ...heroe, ...fondos, ...muebles, ...equipo, ...mascotas];
+// Las habilidades van en medallón: un marco común hace que se lean como una familia y no
+// como objetos sueltos de la tienda. El motivo apunta al hábito que las carga.
+const EMBLEMA = {
+  embestida: 'a bold bronze fist thrusting forward with short speed lines, for a charging strike',
+  segundo_aliento: 'a pomegranate and an olive sprig with a soft warm golden glow, for recovery',
+  paso_peregrino: 'a winged leather sandal with swirling wind lines, for a nimble dodge',
+  guardia_ferrea: 'a round bronze shield with an iron rim and a bright gleam, braced for impact',
+  tajo_doble: 'a short straight sword with two crossed arcs of light, for a double slash',
+  golpe_constante: 'an upright sword inside a golden laurel wreath, radiating light, for unbroken perseverance',
+};
+const habilidades = [
+  ['embestida', 'segundo_aliento', 'paso_peregrino'],
+  ['guardia_ferrea', 'tajo_doble', 'golpe_constante'],
+].map((ids) => tanda('habilidades', ids, EMBLEMA,
+  'Each one is a skill emblem: the motif centred inside its own round bronze medallion frame with Greek-key trim and a deep teal enamel background, all medallions the same size, front view, flat.'));
+
+export const ENCARGOS = [...enemigos, guia, ...heroe, ...fondos, ...muebles, ...equipo, ...mascotas, ...habilidades];
 
 // --- Comprobación ---
 const ASSETS = new URL('../assets/', import.meta.url).pathname;
@@ -250,6 +266,7 @@ function necesarios() {
     ...MUEBLES.map((m) => `muebles/${m.id}.png`),
     ...EQUIPO.map((e) => `equipo/${e.id}.png`),
     ...MASCOTAS.map((m) => `mascotas/${m.id}.png`),
+    ...Object.keys(HABILIDADES).map((id) => `habilidades/${id}.png`),
   ];
 }
 
