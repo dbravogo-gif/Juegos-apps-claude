@@ -342,7 +342,7 @@ body.con-tutorial #vista,body.con-tutorial #nav{pointer-events:none}
 
 /* La proporción tiene que ser la de UNA pose de la hoja (ANCHO_POSE/ALTO_POSE en
    tools/preparar.py). Si no coincide, el recorte deja asomar a la pose de al lado. */
-.figura{position:relative;flex:1;min-height:0;aspect-ratio:1/2;overflow:hidden;display:grid;place-items:center}
+.figura{position:relative;flex:1;min-height:0;aspect-ratio:2/3;overflow:hidden;display:grid;place-items:center}
 .figura > b{
   font-size:13px;font-weight:700;color:hsl(var(--tono) 45% 32%);
   background:hsl(var(--tono) 45% 88%);border-radius:10px;padding:14px 10px
@@ -396,6 +396,9 @@ body.con-tutorial #vista,body.con-tutorial #nav{pointer-events:none}
 .hueco.activo,.puesto.activo{opacity:1;outline:2px solid var(--acento);outline-offset:3px;border-radius:12px}
 .puesto{width:calc(80px * var(--talla, 1));background:none;border:none}
 .puesto .objeto{width:100%;height:auto;display:block}
+/* Las alfombras se dibujan vistas desde arriba: tumbadas sobre el suelo, se leen como un
+   plano que se aleja en vez de como un cuadro de pie. */
+.puesto.suelo .objeto{transform:perspective(260px) rotateX(58deg);transform-origin:50% 94%}
 
 .pestanas{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto}
 .pestanas button{padding:7px 13px;border-radius:99px;background:var(--superficie-2);font-size:13px;font-weight:600;white-space:nowrap;color:var(--suave)}

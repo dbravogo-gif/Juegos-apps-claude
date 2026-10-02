@@ -76,6 +76,7 @@ export const EQUIPO = [
 
 // `talla` es el lado más largo del mueble, con 1 = una estantería. El recorte deja cada
 // objeto llenando su cuadro, así que sin ella un taburete se vería tan grande como una cama.
+// Las alfombras van más grandes porque se dibujan tumbadas y solo luce su ancho.
 export const MUEBLES = [
   { id: 'mub_taburete', nombre: 'Taburete de madera', categoria: 'asientos', precio: 80, nivel: 1, talla: 0.45 },
   { id: 'mub_banco', nombre: 'Banco tallado', categoria: 'asientos', precio: 180, nivel: 1, talla: 0.9 },
@@ -94,12 +95,12 @@ export const MUEBLES = [
   { id: 'mub_vitrina', nombre: 'Vitrina de curiosidades', categoria: 'almacenaje', precio: 700, nivel: 8, talla: 1.1 },
 
   { id: 'mub_vela', nombre: 'Candelabro', categoria: 'luz', precio: 90, nivel: 1, talla: 0.7 },
-  { id: 'mub_farol', nombre: 'Farol colgante', categoria: 'luz', precio: 220, nivel: 3, talla: 0.8 },
+  { id: 'mub_farol', nombre: 'Farol de hierro', categoria: 'luz', precio: 220, nivel: 3, talla: 0.8 },
   { id: 'mub_lampara', nombre: 'Lámpara de aceite dorada', categoria: 'luz', precio: 540, nivel: 8, talla: 0.75 },
 
-  { id: 'mub_estera', nombre: 'Estera de junco', categoria: 'suelo', precio: 70, nivel: 1, talla: 1 },
-  { id: 'mub_alfombra', nombre: 'Alfombra de lana', categoria: 'suelo', precio: 250, nivel: 3, talla: 1.15 },
-  { id: 'mub_alfombra_seda', nombre: 'Alfombra de seda', categoria: 'suelo', precio: 780, nivel: 8, talla: 1.25 },
+  { id: 'mub_estera', nombre: 'Estera de junco', categoria: 'suelo', precio: 70, nivel: 1, talla: 1.4 },
+  { id: 'mub_alfombra', nombre: 'Alfombra de lana', categoria: 'suelo', precio: 250, nivel: 3, talla: 1.6 },
+  { id: 'mub_alfombra_seda', nombre: 'Alfombra de seda', categoria: 'suelo', precio: 780, nivel: 8, talla: 1.75 },
 
   { id: 'mub_maceta', nombre: 'Maceta de barro', categoria: 'plantas', precio: 60, nivel: 1, talla: 0.5 },
   { id: 'mub_olivo', nombre: 'Olivo joven', categoria: 'plantas', precio: 200, nivel: 6, talla: 1.3 },
@@ -185,7 +186,7 @@ export const ESPACIOS = [
   { id: 'huerto', nombre: 'El huerto', nivel: 6, sitios: sitiosPara({ suelo: 62 }) },
   // La ventana del taller ocupa el centro de la pared: los cuadros van a los lados.
   { id: 'taller', nombre: 'El taller', nivel: 8, sitios: sitiosPara({ suelo: 65, pared: 38, huecosPared: 2 }) },
-  { id: 'terraza', nombre: 'La terraza', nivel: 12, sitios: sitiosPara({ suelo: 62 }) },
+  { id: 'terraza', nombre: 'La terraza', nivel: 12, sitios: sitiosPara({ suelo: 64 }) },
 ];
 
 export const TIENDAS = [

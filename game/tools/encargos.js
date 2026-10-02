@@ -25,6 +25,13 @@ const VERDE =
   'no floor, no shadow, no ground line. Do not use green anywhere on the subject. No text, ' +
   'no labels, no borders, no frames.';
 
+// Las plantas van sobre magenta: quitar el verde también desatura cualquier tono verdoso
+// del dibujo, y un árbol se quedaría con las hojas grises.
+const MAGENTA =
+  'Background: flat solid pure chroma-key magenta (#FF00FF), completely uniform, no gradient, ' +
+  'no floor, no shadow, no ground line. Do not use magenta or pink anywhere on the subject. ' +
+  'No text, no labels, no borders, no frames.';
+
 const TERCIOS =
   'ONE single image with THREE poses of the SAME character side by side in a horizontal row, ' +
   'each centered in its own third, all the same size, at the same height. Nothing may cross ' +
@@ -68,11 +75,13 @@ const heroe = Object.entries(ETAPA).flatMap(([id, sujeto]) => [
     'Center: celebrating victory, both fists raised, big smile.',
     'Right: kneeling in defeat, head down, sword on the ground.',
   ], 'All three face the camera (front view).'),
-  hoja(`personaje/${id}_combate`, [id, 'heroe_combate'], sujeto, [
+  // De espaldas el generador se inventa el emblema del escudo en cada pose (salió un águila
+  // en una y una estrella en otra: parpadea al animar) y en el golpe gira la cara a cámara.
+  hoja(`personaje/${id}_combate`, [id, 'heroe_combate'], `${sujeto} The shield is decorated only with rings and a geometric rosette, no animals or emblems, and the shield and outfit are IDENTICAL in all three poses.`, [
     'Left: seen FROM BEHIND in a three-quarter diagonal view, standing in guard, facing into the image towards the upper right.',
     'Center: seen FROM BEHIND in the same diagonal, attacking with the sword towards the upper right.',
-    'Right: seen FROM BEHIND in the same diagonal, recoiling from a hit.',
-  ], 'Keep exactly the same back-diagonal camera as the combat reference sheet.'),
+    'Right: seen FROM BEHIND in the same diagonal, recoiling from a hit, the head still turned away from the viewer: the back of the head, never the full face.',
+  ], 'In ALL three poses the camera is behind the hero, exactly like the combat reference sheet.'),
 ]);
 
 // La primera vez salió de cuerpo entero aunque se pedía medio cuerpo: el generador tira
@@ -116,16 +125,18 @@ const fondos = [
   fondo('espacios/taller', ['habitacion'], 'an empty craftsman\'s workshop interior: plank floor, brick back wall with tools hanging only at the sides, high window.', `${SUELO} Leave the upper third of the back wall free for hanging pictures.`),
   // Sin minaretes: una gran cúpula rodeada de minaretes es la Constantinopla de después de
   // la conquista, y el mundo del juego evita a propósito ese ángulo bélico.
-  fondo('espacios/terraza', ['habitacion'], 'a rooftop terrace overlooking a fantasy city of domes, arches and terracotta roofs at dusk: tiled floor, a low balustrade at the back. The skyline has domes and bell towers only, absolutely NO minarets and no slender pointed towers.', SUELO),
+  // Con la habitación de referencia salió una copia de la habitación: la misma columnata y
+  // el mismo techo. El patio, que es un exterior, la lleva a cielo abierto.
+  fondo('espacios/terraza', ['patio'], 'an OPEN-AIR rooftop terrace under the open dusk sky, with NO roof, NO ceiling and NO columns: a tiled floor and a low stone balustrade at the back, beyond which a fantasy city of domes, arches and terracotta roofs stretches away. The skyline has domes and bell towers only, absolutely NO minarets and no slender pointed towers.', SUELO),
 ];
 
 // --- Objetos, en tandas ---
 const OBJETO = 'Each object standing upright, front view with a slightly elevated camera, its base flat and horizontal.';
-const tanda = (carpeta, ids, describir, como = OBJETO, refs = ['habitacion', 'guardian']) => ({
+const tanda = (carpeta, ids, describir, como = OBJETO, refs = ['habitacion', 'guardian'], fondo = VERDE) => ({
   destino: `${carpeta}/${ids.join('+')}`, refs, tipo: 'objetos',
   // 1K basta: en pantalla un mueble no pasa de unos cien píxeles de ancho.
   aspecto: ids.length > 3 ? '21:9' : '16:9', resolucion: '1K',
-  prompt: `${ESTILO}\n\nA row of ${ids.length} SEPARATE game item icons side by side, evenly spaced, widely separated, none touching or overlapping, each fully visible and as large as possible within its own ${ids.length === 4 ? 'quarter' : 'third'} of the image:\n${ids.map((id, i) => `${i + 1}. ${describir[id]}`).join('\n')}\n${como}\n\n${VERDE}`,
+  prompt: `${ESTILO}\n\nA row of ${ids.length} SEPARATE game item icons side by side, evenly spaced, widely separated, none touching or overlapping, each fully visible and as large as possible within its own ${{ 2: 'half', 3: 'third', 4: 'quarter' }[ids.length]} of the image:\n${ids.map((id, i) => `${i + 1}. ${describir[id]}`).join('\n')}\n${como}\n\n${fondo}`,
 });
 
 // Descripciones concretas: con el nombre a secas el generador improvisa, y «Mesa baja»
@@ -165,12 +176,14 @@ const DESCRIPCION_MUEBLE = {
 
 const muebles = [
   ['mub_taburete', 'mub_banco', 'mub_mesa_baja', 'mub_arcon'],
-  ['mub_vela', 'mub_maceta', 'mub_anfora', 'mub_divan'],
+  ['mub_vela', 'mub_lampara', 'mub_anfora', 'mub_divan'],
   ['mub_mesa_cobre', 'mub_jergon', 'mub_lecho', 'mub_estante'],
   ['mub_farol', 'mub_trono', 'mub_escritorio', 'mub_vitrina'],
-  ['mub_lampara', 'mub_olivo', 'mub_parra', 'mub_naranjo'],
   ['mub_brasero', 'mub_columna', 'mub_fuente'],
 ].map((ids) => tanda('muebles', ids, DESCRIPCION_MUEBLE));
+
+muebles.push(tanda('muebles', ['mub_maceta', 'mub_olivo', 'mub_parra', 'mub_naranjo'], DESCRIPCION_MUEBLE,
+  OBJETO, undefined, MAGENTA));
 
 muebles.push(
   tanda('muebles', ['mub_estera', 'mub_alfombra', 'mub_alfombra_seda'], DESCRIPCION_MUEBLE,

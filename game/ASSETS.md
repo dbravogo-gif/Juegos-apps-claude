@@ -100,7 +100,7 @@ así que necesitan mucho suelo libre y ningún mueble ya dibujado.
 | `assets/muebles/mub_estante.png` | Estantería | almacenaje |
 | `assets/muebles/mub_vitrina.png` | Vitrina de curiosidades | almacenaje |
 | `assets/muebles/mub_vela.png` | Candelabro | luz |
-| `assets/muebles/mub_farol.png` | Farol colgante | luz |
+| `assets/muebles/mub_farol.png` | Farol de hierro | luz |
 | `assets/muebles/mub_lampara.png` | Lámpara de aceite dorada | luz |
 | `assets/muebles/mub_estera.png` | Estera de junco | suelo |
 | `assets/muebles/mub_alfombra.png` | Alfombra de lana | suelo |

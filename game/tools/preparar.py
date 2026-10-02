@@ -27,7 +27,7 @@ from PIL import Image, ImageDraw
 # En pantalla la figura no pasa de unos 180 píxeles de alto; incluso en pantallas de alta
 # densidad esto va sobrado, y cada píxel de más es peso que la app tiene que guardar.
 ALTO_POSE = 768
-ANCHO_POSE = 384
+ANCHO_POSE = 512  # 2:3; con 1:2 la espada de un ataque obligaba a encoger toda la hoja
 MARGEN = 0.06  # aire alrededor de la figura, en proporción al alto de la pose
 
 
@@ -49,6 +49,31 @@ def quitar_verde(imagen):
                 pixeles[x, y] = (r, max(r, b), b, 255)
 
     return imagen
+
+
+def quitar_magenta(imagen):
+    """Chroma key sobre magenta, para lo que no puede ir sobre verde: las plantas.
+
+    El verde no vale para ellas porque su quitado también desatura cualquier tono verdoso
+    del dibujo, y un árbol se quedaría con las hojas grises. El magenta casi no aparece en
+    lo que se dibuja aquí, así que el borde rosado que deja el suavizado se puede borrar sin
+    miedo a comerse nada.
+    """
+    imagen = imagen.convert('RGBA')
+    pixeles = imagen.load()
+    ancho, alto = imagen.size
+
+    for y in range(alto):
+        for x in range(ancho):
+            r, g, b, _ = pixeles[x, y]
+            if r - g > 40 and b - g > 40:
+                pixeles[x, y] = (0, 0, 0, 0)
+
+    return imagen
+
+
+def quitar_croma(imagen, fondo):
+    return quitar_magenta(imagen) if fondo == 'magenta' else quitar_verde(imagen)
 
 
 def quitar_damero(imagen):
@@ -103,6 +128,31 @@ def separar_figuras(imagen, poses):
     cortes.append(ancho)
 
     return [(cortes[i], cortes[i + 1]) for i in range(poses)]
+
+
+def separar_objetos(imagen, cuantos):
+    """Como separar_figuras, pero para objetos sueltos, que sí dejan aire entre ellos.
+
+    Los objetos de una tanda no miden lo mismo (un diván es el triple de ancho que un
+    ánfora), así que la frontera teórica puede caer dentro de uno. Se corta por el centro
+    de los huecos vacíos más anchos; si no hay suficientes, se vuelve al método de poses.
+    """
+    densidad = densidad_por_columna(imagen)
+    huecos, inicio = [], None
+    for x, d in enumerate(densidad + [1]):
+        if d == 0 and inicio is None:
+            inicio = x
+        elif d and inicio is not None:
+            if inicio > 0 and x < len(densidad):  # los márgenes exteriores no separan nada
+                huecos.append((x - inicio, (inicio + x) // 2))
+            inicio = None
+
+    if len(huecos) < cuantos - 1:
+        return separar_figuras(imagen, cuantos)
+
+    cortes = sorted(centro for _, centro in sorted(huecos, reverse=True)[:cuantos - 1])
+    cortes = [0] + cortes + [len(densidad)]
+    return [(cortes[i], cortes[i + 1]) for i in range(cuantos)]
 
 
 def limpiar_restos(trozo):
@@ -165,6 +215,66 @@ def limpiar_restos(trozo):
     return trozo
 
 
+def figuras_por_islas(imagen, poses):
+    """Separa las poses por piezas conectadas en vez de por columnas.
+
+    Un corte vertical amputa lo que asoma al tercio vecino: la espada de un ataque suele
+    entrar en el hueco de la pose de al lado, y el corte se la llevaba. Cada pieza va
+    entera a la pose donde cae su centro de masa, así que una espada unida a la mano se
+    queda con su dueño. Si dos figuras se tocan forman una sola pieza enorme y esto no
+    sirve: entonces devuelve None y se corta por columnas como antes.
+    """
+    ancho, alto = imagen.size
+    alfa = imagen.getchannel('A').tobytes()
+    etiqueta = [0] * (ancho * alto)
+    islas = []  # (píxeles, suma de x, x mínima, x máxima)
+
+    for inicio in range(ancho * alto):
+        if etiqueta[inicio] or alfa[inicio] <= 40:
+            continue
+        num = len(islas) + 1
+        etiqueta[inicio] = num
+        pila, cuenta, suma_x, x_min, x_max = [inicio], 0, 0, ancho, 0
+        while pila:
+            i = pila.pop()
+            x = i % ancho
+            cuenta += 1
+            suma_x += x
+            x_min, x_max = min(x_min, x), max(x_max, x)
+            for v in (i - 1 if x else -1, i + 1 if x < ancho - 1 else -1, i - ancho, i + ancho):
+                if 0 <= v < ancho * alto and not etiqueta[v] and alfa[v] > 40:
+                    etiqueta[v] = num
+                    pila.append(v)
+        islas.append((cuenta, suma_x, x_min, x_max))
+
+    if not islas:
+        return None
+    mayor = max(cuenta for cuenta, *_ in islas)
+    if any(x_max - x_min > ancho * 0.6 for cuenta, _, x_min, x_max in islas if cuenta == mayor):
+        return None
+
+    duena = [None]  # la etiqueta 0 es el fondo
+    tiene_cuerpo = [False] * poses
+    for cuenta, suma_x, _, _ in islas:
+        pose = min(poses - 1, int(suma_x / cuenta * poses / ancho))
+        if cuenta < mayor * 0.004:
+            duena.append(None)  # mota suelta del recorte del fondo
+            continue
+        duena.append(pose)
+        tiene_cuerpo[pose] |= cuenta > mayor * 0.3
+    if not all(tiene_cuerpo):
+        return None
+
+    origen = imagen.load()
+    lienzos = [Image.new('RGBA', imagen.size, (0, 0, 0, 0)) for _ in range(poses)]
+    destinos = [lienzo.load() for lienzo in lienzos]
+    for i, num in enumerate(etiqueta):
+        if num and duena[num] is not None:
+            x, y = i % ancho, i // ancho
+            destinos[duena[num]][x, y] = origen[x, y]
+    return [lienzo.crop(lienzo.getbbox()) for lienzo in lienzos]
+
+
 def recortar(imagen, desde, hasta):
     trozo = limpiar_restos(imagen.crop((desde, 0, hasta, imagen.height)))
     caja = trozo.getbbox()
@@ -211,14 +321,21 @@ def guardar(imagen, destino, colores):
 
 LADO_OBJETO = 512
 
+# Las alfombras salen pintadas en vertical, pero en la escena se tumban sobre el suelo: de
+# pie se verían como una franja estrecha. Se guardan apaisadas.
+APAISADOS = ('mub_estera', 'mub_alfombra', 'mub_alfombra_seda')
 
-def preparar_objetos(entrada, salidas, croma):
+
+def preparar_objetos(entrada, salidas, fondo):
     """Varios objetos sueltos en una misma imagen, cada uno a su propio archivo cuadrado."""
-    imagen = quitar_verde(Image.open(entrada)) if croma else Image.open(entrada).convert('RGBA')
-    grupos = separar_figuras(imagen, len(salidas))
+    imagen = Image.open(entrada)
+    imagen = quitar_croma(imagen, fondo) if fondo in ('verde', 'magenta') else imagen.convert('RGBA')
+    grupos = separar_objetos(imagen, len(salidas))
 
     for (desde, hasta), salida in zip(grupos, salidas):
         figura = recortar(imagen, desde, hasta)
+        if Path(salida).stem in APAISADOS and figura.height > figura.width:
+            figura = figura.rotate(90, expand=True)
         escala = min(LADO_OBJETO * 0.88 / figura.width, LADO_OBJETO * 0.88 / figura.height)
         ancho, alto = round(figura.width * escala), round(figura.height * escala)
 
@@ -253,7 +370,7 @@ ORIGINALES = Path('assets/originales')
 
 
 def detectar_fondo(entrada):
-    """Verde de croma, tablero de cuadros o transparencia de verdad."""
+    """Verde o magenta de croma, tablero de cuadros o transparencia de verdad."""
     imagen = Image.open(entrada)
     if imagen.mode in ('RGBA', 'LA') and imagen.convert('RGBA').getchannel('A').getextrema()[0] < 250:
         return 'alfa'
@@ -262,6 +379,8 @@ def detectar_fondo(entrada):
     r, g, b = muestra.getpixel((2, 2))
     if g > 90 and g - max(r, b) > 25:
         return 'verde'
+    if r - g > 60 and b - g > 60:
+        return 'magenta'
     return 'damero'
 
 
@@ -290,17 +409,18 @@ def procesar_pendientes():
         if modo == 'fondo':
             preparar_fondo(entrada, destinos[0])
         elif modo == 'objetos':
-            preparar_objetos(entrada, destinos, fondo == 'verde')
+            preparar_objetos(entrada, destinos, fondo)
         else:
             imagen = Image.open(entrada)
-            if fondo == 'verde':
-                imagen = quitar_verde(imagen)
+            if fondo in ('verde', 'magenta'):
+                imagen = quitar_croma(imagen, fondo)
             elif fondo == 'damero':
                 imagen = quitar_damero(imagen)
             else:
                 imagen = imagen.convert('RGBA')
 
-            figuras = [recortar(imagen, a, b) for a, b in separar_figuras(imagen, 3)]
+            figuras = figuras_por_islas(imagen, 3) or [
+                recortar(imagen, a, b) for a, b in separar_figuras(imagen, 3)]
             guardar(componer(figuras), destinos[0], 128)
             print(f'{destinos[0]}: 3 poses (fondo {fondo})')
 
@@ -330,7 +450,8 @@ def main():
         return 0
 
     if args.objetos:
-        preparar_objetos(args.entrada, args.salida, not args.sin_croma and not args.damero)
+        fondo = 'alfa' if args.sin_croma else 'damero' if args.damero else detectar_fondo(args.entrada)
+        preparar_objetos(args.entrada, args.salida, fondo)
         return 0
 
     imagen = Image.open(args.entrada)
@@ -341,8 +462,8 @@ def main():
     else:
         imagen = quitar_verde(imagen)
 
-    grupos = separar_figuras(imagen, args.poses)
-    figuras = [recortar(imagen, desde, hasta) for desde, hasta in grupos]
+    figuras = figuras_por_islas(imagen, args.poses) or [
+        recortar(imagen, desde, hasta) for desde, hasta in separar_figuras(imagen, args.poses)]
     guardar(componer(figuras), args.salida[0], 128)
 
     medidas = ' · '.join(f'{f.width}×{f.height}' for f in figuras)
