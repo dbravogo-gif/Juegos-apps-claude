@@ -191,3 +191,16 @@ test('borrar una rutina no invalida los días ya registrados con ella', () => {
   assert.equal(dia.entreno.cumplimiento, 1, 'lo anotado sigue contando');
   assert.ok(registro.ejercicios.every((e) => e.nombre), 'y sigue siendo legible sin la rutina');
 });
+
+test('lo colocado en un sitio que ya no existe vuelve al inventario', () => {
+  // Si se quedara apuntando a un sitio borrado, el mueble contaría como puesto sin verse
+  // en ninguna parte: ni en la escena ni entre lo que se puede colocar.
+  const migrado = migrar({
+    dias: {},
+    inventario: ['mub_banco', 'mub_maceta'],
+    colocados: { patio: { m62_0: 'mub_banco', m65_0: 'mub_maceta', 3: 'mub_vela' } },
+  });
+
+  assert.deepEqual(migrado.colocados.patio, { m65_0: 'mub_maceta' });
+  assert.deepEqual(migrado.inventario, ['mub_banco', 'mub_maceta'], 'el inventario no pierde nada');
+});

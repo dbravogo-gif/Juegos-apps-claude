@@ -64,7 +64,7 @@ function vistaParcela(ctx) {
           data-accion="sitio" data-sitio="${esc(s.id)}" aria-label="Sitio libre"></button>`;
       }
 
-      return `<button class="puesto ${activo ? 'activo' : ''}" style="${estilo}"
+      return `<button class="puesto ${activo ? 'activo' : ''}" style="${estilo};--talla:${mueble.talla ?? 1}"
         data-accion="sitio" data-sitio="${esc(s.id)}">
         ${figura('muebles', id, mueble.nombre, { clase: 'objeto' })}
       </button>`;

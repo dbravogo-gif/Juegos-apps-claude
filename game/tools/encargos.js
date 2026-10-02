@@ -53,7 +53,9 @@ const enemigo = (id, sujeto) =>
 // cuerpo en todas las etapas: lo que cambia es el equipo y la seguridad con que se planta.
 const ETAPA = {
   etapa2: 'the SAME young hero as the references (same face, same messy brown hair, same build), now a seasoned fighter: a bronze cuirass over the cream tunic, leather pteruges, the same teal cape, a sturdier round bronze-rimmed shield, a better short sword. More confident stance.',
-  etapa3: 'the SAME hero as the references (same face and hair, slightly older), now a veteran: bronze scale armour, longer teal cape with gold Greek-key trim, an open-faced crested helmet that keeps the face visible, a large decorated round shield and a fine straight sword.',
+  // Sin casco: la primera vez el casco le tapaba la cara, y la cara es lo que hace que se
+  // le reconozca de una etapa a otra.
+  etapa3: 'the SAME hero as the references (same face, same messy brown hair, slightly older), now a veteran: bronze scale armour, longer teal cape with gold Greek-key trim, a large decorated round shield and a fine straight sword. NO helmet: bare head, the face and hair fully visible in all three poses.',
   etapa4: 'the SAME hero as the references (same face and hair), now a legendary champion: ornate gilded armour with Byzantine mosaic motifs, a rich crimson-and-teal cape, a thin golden diadem, an ornate shield and a ceremonial sword. Calm, heroic bearing.',
 };
 
@@ -112,22 +114,53 @@ const fondos = [
   fondo('espacios/patio', ['habitacion'], 'the open-air courtyard of a modest house: packed earth and worn stone floor, low whitewashed walls, a doorway at the back, sky above.', SUELO),
   fondo('espacios/huerto', ['habitacion'], 'a small walled garden plot: tilled earth and a stone path, low walls, a few distant trees beyond the wall.', SUELO),
   fondo('espacios/taller', ['habitacion'], 'an empty craftsman\'s workshop interior: plank floor, brick back wall with tools hanging only at the sides, high window.', `${SUELO} Leave the upper third of the back wall free for hanging pictures.`),
-  fondo('espacios/terraza', ['habitacion'], 'a rooftop terrace overlooking a domed city at dusk: tiled floor, a low balustrade at the back.', SUELO),
+  // Sin minaretes: una gran cúpula rodeada de minaretes es la Constantinopla de después de
+  // la conquista, y el mundo del juego evita a propósito ese ángulo bélico.
+  fondo('espacios/terraza', ['habitacion'], 'a rooftop terrace overlooking a fantasy city of domes, arches and terracotta roofs at dusk: tiled floor, a low balustrade at the back. The skyline has domes and bell towers only, absolutely NO minarets and no slender pointed towers.', SUELO),
 ];
 
 // --- Objetos, en tandas ---
 const OBJETO = 'Each object standing upright, front view with a slightly elevated camera, its base flat and horizontal.';
-const tanda = (carpeta, ids, describir, como = OBJETO) => ({
-  destino: `${carpeta}/${ids.join('+')}`, refs: ['guardian'], tipo: 'objetos',
-  aspecto: ids.length > 3 ? '21:9' : '16:9', resolucion: '2K',
-  prompt: `${ESTILO}\n\nA row of ${ids.length} SEPARATE game item icons side by side, evenly spaced, widely separated, none touching or overlapping, each fully visible:\n${ids.map((id, i) => `${i + 1}. ${describir[id]}`).join('\n')}\n${como}\n\n${VERDE}`,
+const tanda = (carpeta, ids, describir, como = OBJETO, refs = ['habitacion', 'guardian']) => ({
+  destino: `${carpeta}/${ids.join('+')}`, refs, tipo: 'objetos',
+  // 1K basta: en pantalla un mueble no pasa de unos cien píxeles de ancho.
+  aspecto: ids.length > 3 ? '21:9' : '16:9', resolucion: '1K',
+  prompt: `${ESTILO}\n\nA row of ${ids.length} SEPARATE game item icons side by side, evenly spaced, widely separated, none touching or overlapping, each fully visible and as large as possible within its own ${ids.length === 4 ? 'quarter' : 'third'} of the image:\n${ids.map((id, i) => `${i + 1}. ${describir[id]}`).join('\n')}\n${como}\n\n${VERDE}`,
 });
 
-const MUEBLE = Object.fromEntries(MUEBLES.map((m) => [m.id, m.nombre]));
+// Descripciones concretas: con el nombre a secas el generador improvisa, y «Mesa baja»
+// puede ser cualquier cosa.
 const DESCRIPCION_MUEBLE = {
-  ...MUEBLE,
-  mub_farol: 'Farol: an iron lantern standing on a short wrought-iron post',
-  mub_fuente: 'Fuente de mármol: a small round marble fountain with a basin',
+  mub_taburete: 'a simple three-legged wooden stool',
+  mub_banco: 'a carved wooden bench with Greek-key trim along the seat',
+  mub_divan: 'a low velvet divan in teal with bronze feet and cushions',
+  mub_trono: 'a high-backed carved wooden chair of office with gilded details',
+  mub_mesa_baja: 'a low round wooden table',
+  mub_mesa_cobre: 'a round table with a hammered copper top on carved legs',
+  mub_escritorio: 'a scribe\'s writing desk with scrolls, an inkwell and a quill',
+  mub_jergon: 'a simple straw mattress on a low wooden frame with a wool blanket',
+  mub_lecho: 'a wooden bed with a canopy and draped teal curtains',
+  mub_arcon: 'a wooden travel chest with bronze bands and a lock',
+  mub_estante: 'a tall wooden shelf unit with jars and books',
+  mub_vitrina: 'a tall glass-fronted cabinet of curiosities with small relics inside',
+  mub_vela: 'a tall bronze floor candelabrum with three lit candles',
+  mub_farol: 'an iron lantern standing on a short wrought-iron post',
+  mub_lampara: 'a golden oil lamp on a tall slender stand, lit',
+  mub_estera: 'a woven reed mat',
+  mub_alfombra: 'a rectangular wool rug with a rust and cream Greek-key border',
+  mub_alfombra_seda: 'an ornate silk rug with a Byzantine medallion pattern in crimson, teal and gold',
+  mub_maceta: 'a terracotta flower pot with a small leafy plant',
+  mub_olivo: 'a young olive tree in a large terracotta planter',
+  mub_parra: 'a grapevine climbing a wooden trellis frame, with grape bunches',
+  mub_naranjo: 'an orange tree in blossom with oranges, in a large planter',
+  mub_tapiz: 'an embroidered wall tapestry with a woven pattern, hanging from a rod',
+  mub_mosaico: 'a square golden Byzantine mosaic panel framed in stone',
+  mub_icono_pared: 'a small framed painted icon in a gilded frame',
+  mub_mapa: 'an old parchment map of a strait, framed in wood',
+  mub_anfora: 'a painted clay amphora with a black-and-terracotta pattern',
+  mub_brasero: 'a bronze brazier on three legs with glowing coals',
+  mub_columna: 'a broken marble column with an ornate capital',
+  mub_fuente: 'a small round marble fountain with a basin and a trickle of water',
 };
 
 const muebles = [
@@ -146,7 +179,24 @@ muebles.push(
     'Wall pieces seen straight on and flat, no perspective at all, as if looked at face to face.'),
 );
 
-const PIEZA = Object.fromEntries(EQUIPO.map((e) => [e.id, e.nombre]));
+const PIEZA = {
+  arma_baston: 'a pilgrim\'s wooden walking staff with a bronze tip',
+  arma_espada_corta: 'a short straight bronze sword with a leather-wrapped grip',
+  arma_hacha: 'a docker\'s single-bladed iron axe with a wooden haft',
+  arma_sable: 'a curved steel sabre with a brass guard',
+  arma_lanza: 'a guard\'s spear with a long leaf-shaped steel head',
+  arma_ceremonial: 'an ornate ceremonial sword with a gilded hilt and engraved blade',
+  arm_tunica: 'a coarse cream linen tunic with a rope belt',
+  arm_cuero: 'a brown leather cuirass with shoulder straps',
+  arm_escamas: 'a bronze scale-mail shirt',
+  arm_placas: 'a heavy iron plate breastplate with pauldrons',
+  arm_mosaico: 'an ornate gilded breastplate decorated with Byzantine mosaic motifs',
+  acc_amuleto: 'a copper amulet on a leather cord',
+  acc_anillo: 'a gold merchant\'s signet ring with a red stone',
+  acc_reliquia: 'a small golden reliquary box with a cross-shaped lid',
+  acc_icono: 'a tiny blessed icon pendant in a golden frame',
+};
+
 const equipo = [
   tanda('equipo', ['arma_baston', 'arma_espada_corta', 'arma_hacha'], PIEZA,
     'Each weapon on a 45-degree diagonal, handle bottom-left and tip top-right, clean side profile, like an inventory icon.'),
@@ -160,7 +210,12 @@ const equipo = [
     'Each accessory front view, straight and centred, like a piece of jewellery.'),
 ];
 
-const MASCOTA = Object.fromEntries(MASCOTAS.map((m) => [m.id, m.nombre]));
+const MASCOTA = {
+  gato: 'a sleek tabby bazaar cat sitting',
+  paloma: 'a white messenger pigeon standing, a tiny scroll tied to its leg',
+  perro: 'a sturdy guard dog sitting alert, with a bronze-studded collar',
+  cabra: 'a stubborn little goat standing with small horns',
+};
 const mascotas = [tanda('mascotas', ['gato', 'paloma', 'perro', 'cabra'], MASCOTA,
   'Each animal front view, full body, in a calm relaxed pose.')];
 

@@ -111,6 +111,12 @@ def limpiar_restos(trozo):
     Un fragmento pequeño que toca el borde lateral del recorte es casi siempre el arma o la
     capa de la pose de al lado. Uno que no toca ningún borde se respeta: puede ser parte del
     dibujo, como un arma que sale despedida.
+
+    Tocar el borde no basta para condenarlo, porque un objeto propio puede rozarlo con la
+    punta: el bastón del Coleccionista no llega a tocarle la mano, así que es una pieza
+    suelta, y su contera roza el corte. Lo que arrastra el corte desde la pose vecina se
+    reconoce porque se pega al corte en buena parte de su altura, o porque es una tira
+    estrecha que apenas entra en el recorte.
     """
     ancho, alto = trozo.size
     alfa = trozo.getchannel('A').load()
@@ -122,29 +128,35 @@ def limpiar_restos(trozo):
             if pertenece[x0][y0] or alfa[x0, y0] <= 40:
                 continue
 
-            pila, isla, toca_lado = [(x0, y0)], [], False
+            pila, isla, contacto = [(x0, y0)], [], 0
             pertenece[x0][y0] = True
             while pila:
                 x, y = pila.pop()
                 isla.append((x, y))
                 if x == 0 or x == ancho - 1:
-                    toca_lado = True
+                    contacto += 1
                 for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
                     vx, vy = x + dx, y + dy
                     if 0 <= vx < ancho and 0 <= vy < alto and not pertenece[vx][vy] and alfa[vx, vy] > 40:
                         pertenece[vx][vy] = True
                         pila.append((vx, vy))
-            islas.append((isla, toca_lado))
+            islas.append((isla, contacto))
 
     if not islas:
         return trozo
 
     mayor = max(len(isla) for isla, _ in islas)
     pixeles = trozo.load()
-    for isla, toca_lado in islas:
+    for isla, contacto in islas:
+        xs = [x for x, _ in isla]
+        ys = [y for _, y in isla]
+        alto_isla = max(ys) - min(ys) + 1
+        pegado_al_corte = contacto >= alto_isla * 0.15
+        tira_estrecha = (max(xs) - min(xs) + 1) < ancho * 0.12
+
         # Se va lo que el corte arrastra de la pose vecina, y también las motas sueltas que
         # deja el recorte del fondo: si no, inflan el recuadro y descuadran la alineación.
-        resto_del_vecino = toca_lado and len(isla) < mayor * 0.5
+        resto_del_vecino = contacto and len(isla) < mayor * 0.5 and (pegado_al_corte or tira_estrecha)
         mota = len(isla) < mayor * 0.004
         if resto_del_vecino or mota:
             for x, y in isla:

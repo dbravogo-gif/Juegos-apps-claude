@@ -1,4 +1,5 @@
 import { rutinasPorDefecto, comidasPorDefecto } from './defaults.js';
+import { ESPACIOS } from './content.js';
 
 const CLAVE = 'juego_habitos_db';
 export const VERSION_ESQUEMA = 1;
@@ -86,12 +87,15 @@ export function migrar(db) {
   delete plan.diasEntreno;
   delete plan.rutinaPorDia;
 
-  // Lo colocado se guardaba por número de casilla y ahora va por id de sitio. Los números
-  // sueltos ya no apuntan a nada, así que se devuelven al inventario en vez de desaparecer.
+  // Lo colocado en un sitio que ya no existe vuelve al inventario. Pasa cuando cambia la
+  // disposición de un espacio —los sitios se calculan desde su fondo— o con los números de
+  // casilla de la cuadrícula antigua. Si se conservara, el mueble seguiría contando como
+  // puesto sin verse en ninguna parte: ni en la escena ni entre lo que se puede colocar.
+  const sitiosValidos = new Map(ESPACIOS.map((e) => [e.id, new Set(e.sitios.map((s) => s.id))]));
   const colocados = Object.fromEntries(
     Object.entries(db.colocados ?? {}).map(([espacio, puestos]) => [
       espacio,
-      Object.fromEntries(Object.entries(puestos).filter(([sitio]) => Number.isNaN(Number(sitio)))),
+      Object.fromEntries(Object.entries(puestos).filter(([sitio]) => sitiosValidos.get(espacio)?.has(sitio))),
     ]),
   );
 

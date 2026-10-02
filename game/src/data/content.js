@@ -74,45 +74,47 @@ export const EQUIPO = [
   { id: 'acc_icono', nombre: 'Icono bendecido', tipo: 'accesorio', fuerza: 11, vida: 85, precio: 3200, nivel: 16 },
 ];
 
+// `talla` es el lado más largo del mueble, con 1 = una estantería. El recorte deja cada
+// objeto llenando su cuadro, así que sin ella un taburete se vería tan grande como una cama.
 export const MUEBLES = [
-  { id: 'mub_taburete', nombre: 'Taburete de madera', categoria: 'asientos', precio: 80, nivel: 1 },
-  { id: 'mub_banco', nombre: 'Banco tallado', categoria: 'asientos', precio: 180, nivel: 1 },
-  { id: 'mub_divan', nombre: 'Diván de terciopelo', categoria: 'asientos', precio: 480, nivel: 3 },
-  { id: 'mub_trono', nombre: 'Silla del prefecto', categoria: 'asientos', precio: 850, nivel: 8 },
+  { id: 'mub_taburete', nombre: 'Taburete de madera', categoria: 'asientos', precio: 80, nivel: 1, talla: 0.45 },
+  { id: 'mub_banco', nombre: 'Banco tallado', categoria: 'asientos', precio: 180, nivel: 1, talla: 0.9 },
+  { id: 'mub_divan', nombre: 'Diván de terciopelo', categoria: 'asientos', precio: 480, nivel: 3, talla: 1 },
+  { id: 'mub_trono', nombre: 'Silla del prefecto', categoria: 'asientos', precio: 850, nivel: 8, talla: 0.95 },
 
-  { id: 'mub_mesa_baja', nombre: 'Mesa baja', categoria: 'mesas', precio: 120, nivel: 1 },
-  { id: 'mub_mesa_cobre', nombre: 'Mesa de cobre', categoria: 'mesas', precio: 380, nivel: 3 },
-  { id: 'mub_escritorio', nombre: 'Escritorio del escriba', categoria: 'mesas', precio: 640, nivel: 8 },
+  { id: 'mub_mesa_baja', nombre: 'Mesa baja', categoria: 'mesas', precio: 120, nivel: 1, talla: 0.7 },
+  { id: 'mub_mesa_cobre', nombre: 'Mesa de cobre', categoria: 'mesas', precio: 380, nivel: 3, talla: 0.8 },
+  { id: 'mub_escritorio', nombre: 'Escritorio del escriba', categoria: 'mesas', precio: 640, nivel: 8, talla: 0.95 },
 
-  { id: 'mub_jergon', nombre: 'Jergón', categoria: 'camas', precio: 150, nivel: 3 },
-  { id: 'mub_lecho', nombre: 'Lecho con dosel', categoria: 'camas', precio: 720, nivel: 3 },
+  { id: 'mub_jergon', nombre: 'Jergón', categoria: 'camas', precio: 150, nivel: 3, talla: 0.95 },
+  { id: 'mub_lecho', nombre: 'Lecho con dosel', categoria: 'camas', precio: 720, nivel: 3, talla: 1.25 },
 
-  { id: 'mub_arcon', nombre: 'Arcón de viaje', categoria: 'almacenaje', precio: 160, nivel: 1 },
-  { id: 'mub_estante', nombre: 'Estantería', categoria: 'almacenaje', precio: 260, nivel: 3 },
-  { id: 'mub_vitrina', nombre: 'Vitrina de curiosidades', categoria: 'almacenaje', precio: 700, nivel: 8 },
+  { id: 'mub_arcon', nombre: 'Arcón de viaje', categoria: 'almacenaje', precio: 160, nivel: 1, talla: 0.65 },
+  { id: 'mub_estante', nombre: 'Estantería', categoria: 'almacenaje', precio: 260, nivel: 3, talla: 1 },
+  { id: 'mub_vitrina', nombre: 'Vitrina de curiosidades', categoria: 'almacenaje', precio: 700, nivel: 8, talla: 1.1 },
 
-  { id: 'mub_vela', nombre: 'Candelabro', categoria: 'luz', precio: 90, nivel: 1 },
-  { id: 'mub_farol', nombre: 'Farol colgante', categoria: 'luz', precio: 220, nivel: 3 },
-  { id: 'mub_lampara', nombre: 'Lámpara de aceite dorada', categoria: 'luz', precio: 540, nivel: 8 },
+  { id: 'mub_vela', nombre: 'Candelabro', categoria: 'luz', precio: 90, nivel: 1, talla: 0.7 },
+  { id: 'mub_farol', nombre: 'Farol colgante', categoria: 'luz', precio: 220, nivel: 3, talla: 0.8 },
+  { id: 'mub_lampara', nombre: 'Lámpara de aceite dorada', categoria: 'luz', precio: 540, nivel: 8, talla: 0.75 },
 
-  { id: 'mub_estera', nombre: 'Estera de junco', categoria: 'suelo', precio: 70, nivel: 1 },
-  { id: 'mub_alfombra', nombre: 'Alfombra de lana', categoria: 'suelo', precio: 250, nivel: 3 },
-  { id: 'mub_alfombra_seda', nombre: 'Alfombra de seda', categoria: 'suelo', precio: 780, nivel: 8 },
+  { id: 'mub_estera', nombre: 'Estera de junco', categoria: 'suelo', precio: 70, nivel: 1, talla: 1 },
+  { id: 'mub_alfombra', nombre: 'Alfombra de lana', categoria: 'suelo', precio: 250, nivel: 3, talla: 1.15 },
+  { id: 'mub_alfombra_seda', nombre: 'Alfombra de seda', categoria: 'suelo', precio: 780, nivel: 8, talla: 1.25 },
 
-  { id: 'mub_maceta', nombre: 'Maceta de barro', categoria: 'plantas', precio: 60, nivel: 1 },
-  { id: 'mub_olivo', nombre: 'Olivo joven', categoria: 'plantas', precio: 200, nivel: 6 },
-  { id: 'mub_parra', nombre: 'Parra trepadora', categoria: 'plantas', precio: 340, nivel: 6 },
-  { id: 'mub_naranjo', nombre: 'Naranjo en flor', categoria: 'plantas', precio: 560, nivel: 6 },
+  { id: 'mub_maceta', nombre: 'Maceta de barro', categoria: 'plantas', precio: 60, nivel: 1, talla: 0.5 },
+  { id: 'mub_olivo', nombre: 'Olivo joven', categoria: 'plantas', precio: 200, nivel: 6, talla: 1.3 },
+  { id: 'mub_parra', nombre: 'Parra trepadora', categoria: 'plantas', precio: 340, nivel: 6, talla: 1.25 },
+  { id: 'mub_naranjo', nombre: 'Naranjo en flor', categoria: 'plantas', precio: 560, nivel: 6, talla: 1.3 },
 
-  { id: 'mub_tapiz', nombre: 'Tapiz bordado', categoria: 'pared', precio: 210, nivel: 3 },
-  { id: 'mub_mosaico', nombre: 'Mosaico dorado', categoria: 'pared', precio: 620, nivel: 3 },
-  { id: 'mub_icono_pared', nombre: 'Icono enmarcado', categoria: 'pared', precio: 430, nivel: 3 },
-  { id: 'mub_mapa', nombre: 'Mapa del estrecho', categoria: 'pared', precio: 290, nivel: 8 },
+  { id: 'mub_tapiz', nombre: 'Tapiz bordado', categoria: 'pared', precio: 210, nivel: 3, talla: 0.85 },
+  { id: 'mub_mosaico', nombre: 'Mosaico dorado', categoria: 'pared', precio: 620, nivel: 3, talla: 0.8 },
+  { id: 'mub_icono_pared', nombre: 'Icono enmarcado', categoria: 'pared', precio: 430, nivel: 3, talla: 0.55 },
+  { id: 'mub_mapa', nombre: 'Mapa del estrecho', categoria: 'pared', precio: 290, nivel: 8, talla: 0.8 },
 
-  { id: 'mub_anfora', nombre: 'Ánfora pintada', categoria: 'temáticos', precio: 240, nivel: 1 },
-  { id: 'mub_brasero', nombre: 'Brasero de bronce', categoria: 'temáticos', precio: 460, nivel: 6 },
-  { id: 'mub_columna', nombre: 'Columna rota', categoria: 'temáticos', precio: 680, nivel: 8 },
-  { id: 'mub_fuente', nombre: 'Fuente de mármol', categoria: 'temáticos', precio: 1400, nivel: 12 },
+  { id: 'mub_anfora', nombre: 'Ánfora pintada', categoria: 'temáticos', precio: 240, nivel: 1, talla: 0.55 },
+  { id: 'mub_brasero', nombre: 'Brasero de bronce', categoria: 'temáticos', precio: 460, nivel: 6, talla: 0.65 },
+  { id: 'mub_columna', nombre: 'Columna rota', categoria: 'temáticos', precio: 680, nivel: 8, talla: 1.2 },
+  { id: 'mub_fuente', nombre: 'Fuente de mármol', categoria: 'temáticos', precio: 1400, nivel: 12, talla: 1.1 },
 ];
 
 /** Las mascotas se ganan por hito, nunca se compran: son el premio que no se puede acumular. */
@@ -134,52 +136,56 @@ export const SUPERFICIE = {
 export const superficieDe = (categoria) => SUPERFICIE[categoria] ?? 'mueble';
 
 /**
- * Sitios de un espacio, descritos por filas de profundidad. Cada fila tiene su altura en la
- * escena (`y`, donde se apoya la base del objeto) y su escala: lo que está más atrás se ve
- * más pequeño, que es lo que faltaba para que la vista frontal no pareciera un collage.
+ * Sitios de un espacio, calculados a partir de dónde empieza su suelo en el fondo.
  *
- * El orden de dibujo sale de la propia `y`, así que nunca hay que mantenerlo a mano.
+ * Cada fondo tiene el suelo a una altura distinta —el generador no respeta un horizonte
+ * exacto—, así que cada espacio dice dónde empieza el suyo (`suelo`, en % de la altura) y las
+ * filas se reparten desde ahí hasta abajo. Caben tantas como permite la separación mínima
+ * entre filas, que es la que impide que las marcas de hueco libre se pisen.
+ *
+ * Cada fila tiene su escala: lo que está más atrás se ve más pequeño. El orden de dibujo sale
+ * de la propia `y`, así que nunca hay que mantenerlo a mano.
  */
-function filas(...definiciones) {
-  return definiciones.flatMap(({ superficie, y, escala, huecos }) =>
-    Array.from({ length: huecos }, (_, i) => ({
-      id: `${superficie[0]}${y}_${i}`,
-      superficie,
-      // Repartidos a lo ancho dejando aire en los bordes.
-      x: Math.round(((i + 1) / (huecos + 1)) * 100),
-      y,
-      escala,
-    })),
-  );
+const SEPARACION_FILAS = 11;
+
+function fila(superficie, y, escala, huecos) {
+  return Array.from({ length: huecos }, (_, i) => ({
+    id: `${superficie[0]}${Math.round(y)}_${i}`,
+    superficie,
+    // Repartidos a lo ancho dejando aire en los bordes.
+    x: Math.round(((i + 1) / (huecos + 1)) * 100),
+    y: Math.round(y),
+    escala: Math.round(escala * 100) / 100,
+  }));
 }
 
-// Las filas van separadas lo suficiente para que las marcas de hueco vacío no se pisen: si
-// se solapan, el dedo acaba tocando la de delante y la de atrás queda inalcanzable.
-const INTERIOR = () =>
-  filas(
-    { superficie: 'pared', y: 38, escala: 0.8, huecos: 3 },
-    { superficie: 'mueble', y: 62, escala: 0.62, huecos: 4 },
-    { superficie: 'suelo', y: 78, escala: 0.85, huecos: 1 },
-    { superficie: 'mueble', y: 99, escala: 1, huecos: 3 },
-  );
+function sitiosPara({ suelo, pared = null, huecosPared = 3 }) {
+  // Un poco por delante de donde la pared toca el suelo, para no apoyar nada en la junta.
+  const fondo = suelo + 3;
+  const filas = Math.min(4, Math.floor((99 - fondo) / SEPARACION_FILAS) + 1);
+  const tipos = filas === 4
+    ? [['mueble', 4], ['mueble', 3], ['suelo', 1], ['mueble', 3]]
+    : [['mueble', 4], ['suelo', 1], ['mueble', 3]];
 
-// En los exteriores el suelo arranca más abajo que en los interiores: la pared del fondo
-// es baja y por encima se ve el cielo. Medido sobre el fondo del patio, el suelo empieza
-// hacia el 64 % de la altura, así que la fila del fondo no puede ir más arriba.
-const EXTERIOR = () =>
-  filas(
-    { superficie: 'mueble', y: 66, escala: 0.55, huecos: 4 },
-    { superficie: 'mueble', y: 77, escala: 0.72, huecos: 3 },
-    { superficie: 'suelo', y: 88, escala: 0.9, huecos: 1 },
-    { superficie: 'mueble', y: 99, escala: 1.05, huecos: 3 },
-  );
+  const ys = tipos.map((_, i) => fondo + (i * (99 - fondo)) / (tipos.length - 1));
+  const escalaDe = (y) => 0.55 + ((y - fondo) / (99 - fondo)) * 0.5;
 
+  return [
+    ...(pared ? fila('pared', pared, 0.8, huecosPared) : []),
+    ...tipos.flatMap(([superficie, huecos], i) =>
+      fila(superficie, ys[i], superficie === 'suelo' ? Math.max(0.8, escalaDe(ys[i])) : escalaDe(ys[i]), huecos)),
+  ];
+}
+
+// `suelo` está medido sobre cada fondo: dónde toca la pared del fondo con el suelo. Si se
+// cambia un fondo, hay que volver a medirlo.
 export const ESPACIOS = [
-  { id: 'patio', nombre: 'El patio', nivel: 1, sitios: EXTERIOR() },
-  { id: 'habitacion', nombre: 'La habitación', nivel: 3, sitios: INTERIOR() },
-  { id: 'huerto', nombre: 'El huerto', nivel: 6, sitios: EXTERIOR() },
-  { id: 'taller', nombre: 'El taller', nivel: 8, sitios: INTERIOR() },
-  { id: 'terraza', nombre: 'La terraza', nivel: 12, sitios: EXTERIOR() },
+  { id: 'patio', nombre: 'El patio', nivel: 1, sitios: sitiosPara({ suelo: 62 }) },
+  { id: 'habitacion', nombre: 'La habitación', nivel: 3, sitios: sitiosPara({ suelo: 62, pared: 38 }) },
+  { id: 'huerto', nombre: 'El huerto', nivel: 6, sitios: sitiosPara({ suelo: 62 }) },
+  // La ventana del taller ocupa el centro de la pared: los cuadros van a los lados.
+  { id: 'taller', nombre: 'El taller', nivel: 8, sitios: sitiosPara({ suelo: 65, pared: 38, huecosPared: 2 }) },
+  { id: 'terraza', nombre: 'La terraza', nivel: 12, sitios: sitiosPara({ suelo: 62 }) },
 ];
 
 export const TIENDAS = [
