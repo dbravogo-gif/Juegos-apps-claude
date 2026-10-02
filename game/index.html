@@ -193,6 +193,15 @@ body.con-tutorial #vista,body.con-tutorial #nav{pointer-events:none}
 .volteable[data-volteada="true"] > .cara:not(.dorso){pointer-events:none}
 .volteable[data-volteada="false"] > .dorso{pointer-events:none}
 .volteable .info{font-size:14px;line-height:1.5;white-space:pre-wrap;margin:0}
+/* El dorso no puede estirar la tarjeta: la ficha es larga y la cara de las series manda.
+   Con contain:size no cuenta para la altura de la celda y lo que no cabe se desplaza. */
+.volteable > .dorso{contain:size;display:flex;flex-direction:column;overflow:hidden}
+.ficha-tecnica{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;font-size:13.5px;line-height:1.45}
+.ficha-tecnica .objetivo{margin:0 0 4px;font-weight:550}
+.ficha-tecnica h4{margin:12px 0 4px;font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--suave)}
+.ficha-tecnica ul{margin:0;padding-left:18px}
+.ficha-tecnica li{margin:2px 0}
+.ficha-tecnica p{margin:0}
 
 /* El doblés: la esquina doblada que gira la tarjeta. El triángulo es la parte levantada
    y la sombra de debajo es lo que hace que se lea como un papel doblado. */

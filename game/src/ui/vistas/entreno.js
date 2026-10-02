@@ -4,6 +4,7 @@ import { estadoPorSeries } from '../../core/scoring/workout.js';
 import { sumarDias, exencionesEntrenoDisponibles } from '../../core/scoring/exemptions.js';
 import { esEditable, rutinaDelDia } from '../../data/history.js';
 import { minimoCumplidosEntreno } from '../../core/scoring/streaks.js';
+import { FICHAS, TIPOS_MOVIMIENTO, SIN_FICHA, buscarFicha, fichaDe } from '../../data/catalogo.js';
 
 /** Estados que no salen de las series y hay que marcar a mano. */
 const MANUALES = [
@@ -16,6 +17,26 @@ let pestana = 'sesion';
 // Qué tarjetas están del revés. Vive aquí y no en los datos: es cómo estás mirando la
 // pantalla, no algo que registrar. El repintado la consulta para no perder el giro.
 const volteadas = new Set();
+
+/**
+ * Ficha de un ejercicio en el editor. Por defecto se busca por el nombre; si no acierta,
+ * se elige a mano, y «Sin ficha» la quita aunque el nombre encaje.
+ */
+function selectorFicha(ejercicio, rutinaId, indice) {
+  const automatica = buscarFicha(ejercicio.nombre);
+  const elegida = ejercicio.fichaId ?? '';
+  const opcion = (valor, texto) =>
+    `<option value="${esc(valor)}" ${elegida === valor ? 'selected' : ''}>${esc(texto)}</option>`;
+
+  return `<select data-accion="fichaEjercicio" data-rutina="${esc(rutinaId)}" data-indice="${indice}">
+    ${opcion('', automatica ? `Automática: ${automatica.nombre}` : 'Automática: ninguna encaja')}
+    ${opcion(SIN_FICHA, 'Sin ficha')}
+    <optgroup label="Elegir otra">${FICHAS.map((f) => opcion(f.id, f.nombre)).join('')}</optgroup>
+  </select>`;
+}
+
+/** Sugerencias al escribir un ejercicio nuevo: los nombres que tienen ficha. */
+const DATALIST = `<datalist id="catalogo-ejercicios">${FICHAS.map((f) => `<option value="${esc(f.nombre)}">`).join('')}</datalist>`;
 
 const pct = (v) => (typeof v === 'number' ? `${Math.round(v * 100)} %` : '—');
 
@@ -67,6 +88,45 @@ function serieHTML(ejercicioId, serie, i, bloqueado) {
   </div>`;
 }
 
+const segundos = (s) => (s >= 60 ? `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')} min` : `${s} s`);
+
+/** Lo que Bulk Up recomienda para el ejercicio. Solo orienta: la rutina propia manda. */
+function sugerenciaHTML({ series, repMin, repMax, unidad, rirMin, rirMax, descansoSeg }) {
+  const partes = [];
+  if (series && repMin) partes.push(`${series} × ${repMin}${repMax && repMax !== repMin ? `–${repMax}` : ''} ${unidad === 'reps' ? 'reps' : unidad}`);
+  if (rirMin != null) partes.push(`RIR ${rirMin}${rirMax != null && rirMax !== rirMin ? `–${rirMax}` : ''}`);
+  if (descansoSeg) partes.push(`descanso ${segundos(descansoSeg)}`);
+  return partes.length ? `<div class="mini">Recomendado: ${esc(partes.join(' · '))}</div>` : '';
+}
+
+const apartado = (titulo, lineas) =>
+  lineas.length ? `<h4>${titulo}</h4><ul>${lineas.map((l) => `<li>${esc(l)}</li>`).join('')}</ul>` : '';
+
+/** El dorso: la ficha técnica del ejercicio y, debajo, las notas propias. */
+function dorsoHTML(ejercicio) {
+  const tecnica = fichaDe(ejercicio);
+  const notas = ejercicio.info?.trim()
+    ? `<h4>Tus notas</h4><p class="info">${esc(ejercicio.info)}</p>`
+    : '';
+
+  if (!tecnica) {
+    return notas || '<div class="vacio">Sin ficha para este ejercicio. Elige una o escribe tus notas en «Mi rutina».</div>';
+  }
+
+  const tipos = tecnica.tipos.map((c) => TIPOS_MOVIMIENTO[c]).filter(Boolean);
+  return `
+    ${tecnica.objetivo ? `<p class="objetivo">${esc(tecnica.objetivo)}</p>` : ''}
+    ${tecnica.grupo.length ? `<div class="mini">${esc(tecnica.grupo.join(' · '))}</div>` : ''}
+    ${sugerenciaHTML(tecnica.sugerencia)}
+    ${notas}
+    ${apartado('Cómo hacerlo', tecnica.ejecucion)}
+    ${tipos.map((t) => `<h4>Ritmo · ${esc(t.nombre)}</h4><p>${esc(t.como)}</p>`).join('')}
+    ${apartado('Errores habituales', tecnica.errores)}
+    ${apartado('Consejos', tecnica.consejos)}
+    ${apartado('Cómo progresar', tecnica.progresion)}
+    ${apartado('Observaciones', tecnica.observaciones)}`;
+}
+
 function ejercicioHTML(ficha, registro, ctx, bloqueado) {
   const series = registro?.series ?? [];
   const objetivo = ficha.series ?? 3;
@@ -111,11 +171,7 @@ function ejercicioHTML(ficha, registro, ctx, bloqueado) {
     <div class="cara dorso tarjeta">
       ${dobles}
       <div class="cab"><span class="nom">${esc(ficha.nombre)}</span></div>
-      ${
-        ficha.info
-          ? `<p class="info">${esc(ficha.info)}</p>`
-          : '<div class="vacio">Sin notas todavía. Escríbelas en «Mi rutina».</div>'
-      }
+      <div class="ficha-tecnica">${dorsoHTML(ficha)}</div>
     </div>
   </div>`;
 }
@@ -275,7 +331,11 @@ function renderPlan(ctx) {
             </label>
           </div>
           <label class="campo" style="margin:9px 0 0">
-            <span>Notas: técnica, material, lo que sea. Se ven al girar la tarjeta.</span>
+            <span>Ficha técnica (se ve al girar la tarjeta)</span>
+            ${selectorFicha(e, rutina.id, i)}
+          </label>
+          <label class="campo" style="margin:9px 0 0">
+            <span>Tus notas: material, ajustes de la máquina, lo que sea.</span>
             <textarea rows="2" id="info_${esc(rutina.id)}_${i}" data-accion="infoEjercicio" data-directo
               data-rutina="${esc(rutina.id)}" data-indice="${i}">${esc(e.info ?? '')}</textarea>
           </label>
@@ -283,7 +343,7 @@ function renderPlan(ctx) {
         )
         .join('')}
       <div class="fila" style="margin-top:12px">
-        <input type="text" placeholder="Nuevo ejercicio" data-nuevo="${esc(rutina.id)}">
+        <input type="text" placeholder="Nuevo ejercicio" list="catalogo-ejercicios" data-nuevo="${esc(rutina.id)}">
         <button class="boton fino secundario" style="flex:0 0 auto;padding:9px 16px"
           data-accion="anadirEjercicio" data-rutina="${esc(rutina.id)}">Añadir</button>
       </div>
@@ -292,6 +352,7 @@ function renderPlan(ctx) {
     .join('');
 
   return `
+  ${DATALIST}
   <div class="titulo-seccion">Días de entreno por semana</div>
   <div class="tarjeta">
     <div class="dias" style="margin-bottom:14px">${dias}</div>
@@ -442,6 +503,13 @@ export const acciones = {
       db.rutinas.find((r) => r.id === el.dataset.rutina).ejercicios[Number(el.dataset.indice)].info = el.value;
     }),
 
+  fichaEjercicio: (el, ctx) =>
+    ctx.actualizar((db) => {
+      const ejercicio = db.rutinas.find((r) => r.id === el.dataset.rutina).ejercicios[Number(el.dataset.indice)];
+      if (el.value) ejercicio.fichaId = el.value;
+      else delete ejercicio.fichaId;
+    }),
+
   campoEjercicio: (el, ctx) =>
     ctx.actualizar((db) => {
       const ejercicio = db.rutinas.find((r) => r.id === el.dataset.rutina).ejercicios[Number(el.dataset.indice)];
@@ -455,10 +523,17 @@ export const acciones = {
     if (!nombre) return;
     campo.value = '';
 
+    // Si el ejercicio tiene ficha, se arranca con lo que recomienda; si no, con 3 × 8-12.
+    const { series = 3, repMin = 8, repMax = 12 } = buscarFicha(nombre)?.sugerencia ?? {};
     ctx.actualizar((db) => {
-      db.rutinas
-        .find((r) => r.id === el.dataset.rutina)
-        .ejercicios.push({ id: `e${Date.now()}`, nombre, importancia: 'principal', series: 3, repMin: 8, repMax: 12 });
+      db.rutinas.find((r) => r.id === el.dataset.rutina).ejercicios.push({
+        id: `e${Date.now()}`,
+        nombre,
+        importancia: 'principal',
+        series: series ?? 3,
+        repMin: repMin ?? 8,
+        repMax: repMax ?? repMin ?? 12,
+      });
     });
   },
 

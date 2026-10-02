@@ -406,3 +406,16 @@ node tools/simular.js         # balance a 12 semanas con cuatro perfiles
 node tools/simular-combate.js # si cada zona es jugable al llegar a ella
 python3 -m http.server 8777   # y abrir http://localhost:8777
 ```
+
+## Fichas de ejercicio
+
+El dorso de cada tarjeta de entreno muestra la ficha técnica del ejercicio: objetivo,
+músculos, cómo hacerlo, ritmo según el tipo de movimiento, errores habituales, consejos y
+cómo progresar. Las fichas vienen de Bulk Up (`tools/importar-bulkup.mjs` las extrae de su
+`index.html` y genera `src/data/fichas.js`; si Bulk Up cambia, se vuelve a lanzar).
+
+Los ejercicios de la rutina son texto libre, así que la ficha se busca por el nombre
+(`buscarFicha`): exacto, luego la ficha más corta que contenga lo escrito, luego la más
+larga contenida en lo escrito. Ante la duda no se asigna ninguna —una ficha equivocada es
+peor que ninguna— y en «Mi rutina» se puede elegir a mano o quitarla. Las notas propias
+siguen existiendo y salen en el dorso junto a la ficha.
