@@ -27,13 +27,15 @@ const VERDE =
 
 const TERCIOS =
   'ONE single image with THREE poses of the SAME character side by side in a horizontal row, ' +
-  'each centered in its own third, all the same size, standing on the same ground line, full ' +
-  'body head to feet. Nothing may cross into a neighbouring third: no motion trails, no ' +
-  'effects, generous empty margin between the figures.';
+  'each centered in its own third, all the same size, at the same height. Nothing may cross ' +
+  'into a neighbouring third: no motion trails, no effects, generous empty margin between ' +
+  'the figures.';
 
-const hoja = (destino, refs, sujeto, poses, extra = '') => ({
+const CUERPO_ENTERO = 'Full body, head to feet, all three standing on the same ground line.';
+
+const hoja = (destino, refs, sujeto, poses, extra = '', encuadre = CUERPO_ENTERO) => ({
   destino, refs, tipo: 'hoja', aspecto: '3:2', resolucion: '1K',
-  prompt: `${ESTILO}\n\nSubject: ${sujeto}\n\nLayout: ${TERCIOS}\n${poses.map((p, i) => `${i + 1}. ${p}`).join('\n')}\n${extra}\n\n${VERDE}`,
+  prompt: `${ESTILO}\n\nSubject: ${sujeto}\n\nLayout: ${TERCIOS} ${encuadre}\n${poses.map((p, i) => `${i + 1}. ${p}`).join('\n')}\n${extra}\n\n${VERDE}`,
 });
 
 const POSES_ENEMIGO = [
@@ -55,26 +57,32 @@ const ETAPA = {
   etapa4: 'the SAME hero as the references (same face and hair), now a legendary champion: ornate gilded armour with Byzantine mosaic motifs, a rich crimson-and-teal cape, a thin golden diadem, an ornate shield and a ceremonial sword. Calm, heroic bearing.',
 };
 
+// La hoja de frente de cada etapa se hace primero y sirve de referencia a la de espaldas:
+// así la armadura sale igual por delante y por detrás. Las etapas altas miran además a la
+// etapa 2 para que la progresión se lea como el mismo personaje creciendo.
 const heroe = Object.entries(ETAPA).flatMap(([id, sujeto]) => [
-  hoja(`personaje/${id}`, ['heroe'], sujeto, [
+  hoja(`personaje/${id}`, id === 'etapa2' ? ['heroe'] : ['heroe', 'etapa2'], sujeto, [
     'Left: standing still, relaxed, facing the viewer (portrait pose).',
     'Center: celebrating victory, both fists raised, big smile.',
     'Right: kneeling in defeat, head down, sword on the ground.',
   ], 'All three face the camera (front view).'),
-  hoja(`personaje/${id}_combate`, ['heroe', 'heroe_combate'], sujeto, [
+  hoja(`personaje/${id}_combate`, [id, 'heroe_combate'], sujeto, [
     'Left: seen FROM BEHIND in a three-quarter diagonal view, standing in guard, facing into the image towards the upper right.',
     'Center: seen FROM BEHIND in the same diagonal, attacking with the sword towards the upper right.',
     'Right: seen FROM BEHIND in the same diagonal, recoiling from a hit.',
   ], 'Keep exactly the same back-diagonal camera as the combat reference sheet.'),
 ]);
 
+// La primera vez salió de cuerpo entero aunque se pedía medio cuerpo: el generador tira
+// hacia la referencia. Por eso el encuadre se repite y se dice qué NO debe verse.
 const guia = hoja('personaje/etapa1_guia', ['heroe'],
-  'the SAME young hero as the references, framed from the waist up (half body), acting as a friendly teacher.',
+  'the SAME young hero as the reference (same face, messy brown hair, cream tunic, teal cape, bronze bracers), shown as a friendly teacher in a close PORTRAIT CROP.',
   [
-    'Left: waving hello with one raised hand, warm smile.',
-    'Center: arm extended pointing clearly DOWNWARDS and slightly to his left.',
-    'Right: thumbs up, approving grin.',
-  ], 'Half-body framing in all three, facing the camera.');
+    'Left: waving hello, one open hand raised beside his face, warm smile.',
+    'Center: his arm fully extended DOWNWARDS, index finger pointing straight down at the ground in front of him, looking down where he points.',
+    'Right: a big thumbs up held at chest height, approving grin.',
+  ], 'All three facing the camera.',
+  'CLOSE PORTRAIT CROP: each figure shows ONLY the head, shoulders, chest and arms, cut off just below the belt. The legs and feet must NOT appear at all. The head is large in the frame.');
 
 // --- Enemigos ---
 const enemigos = [

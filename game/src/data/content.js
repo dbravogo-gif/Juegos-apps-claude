@@ -163,11 +163,14 @@ const INTERIOR = () =>
     { superficie: 'mueble', y: 99, escala: 1, huecos: 3 },
   );
 
+// En los exteriores el suelo arranca más abajo que en los interiores: la pared del fondo
+// es baja y por encima se ve el cielo. Medido sobre el fondo del patio, el suelo empieza
+// hacia el 64 % de la altura, así que la fila del fondo no puede ir más arriba.
 const EXTERIOR = () =>
   filas(
-    { superficie: 'mueble', y: 54, escala: 0.55, huecos: 4 },
-    { superficie: 'mueble', y: 70, escala: 0.72, huecos: 3 },
-    { superficie: 'suelo', y: 84, escala: 0.9, huecos: 1 },
+    { superficie: 'mueble', y: 66, escala: 0.55, huecos: 4 },
+    { superficie: 'mueble', y: 77, escala: 0.72, huecos: 3 },
+    { superficie: 'suelo', y: 88, escala: 0.9, huecos: 1 },
     { superficie: 'mueble', y: 99, escala: 1.05, huecos: 3 },
   );
 
