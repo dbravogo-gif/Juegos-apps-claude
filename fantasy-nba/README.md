@@ -10,7 +10,7 @@ Inicio de temporada NBA: 20-oct-2026.
 | Presupuesto | 100.0 para 10 jugadores (media 10.0) |
 | Plantilla | 5 Backcourt (BC: bases/escoltas) + 5 Frontcourt (FC: aleros/ala-pívots/pívots) |
 | Máx. por equipo NBA | 2 |
-| Alineación diaria | 5 titulares, formación 3BC+2FC o 2BC+3FC. Solo puntúan los titulares |
+| Alineación diaria | 5 titulares (3BC+2FC o 2BC+3FC) + 5 suplentes. Solo puntúan los titulares; si un titular no juega, entra un suplente automáticamente según el orden de banquillo |
 | Cierre | 30 min antes del primer partido del día |
 | Puntuación | Punto 1 · Rebote 1 · **Asistencia 2** · **Robo 3** · **Tapón 3** |
 | Fichajes | 2 gratis por semana; cada extra −100 puntos |
@@ -38,7 +38,7 @@ python3 fantasy-nba/scripts/optimize.py --gw 1 6 [--must "Nombre"] [--exclude "N
 ```
 
 - `fetch.py`: descarga de nbafantasy.nba.com (precios, % de selección, estado/lesiones, calendario) y de basketball-reference (stats por partido de las dos últimas temporadas). Solo librería estándar.
-- `optimize.py`: elige los 10 que maximizan los puntos esperados en las GameWeeks indicadas, simulando las alineaciones diarias (5 titulares, máx. 3 por posición) y el capitán semanal.
+- `optimize.py`: elige los 10 que maximizan los puntos esperados en las GameWeeks indicadas, simulando las alineaciones diarias (5 titulares, máx. 3 por posición), los suplentes automáticos y el capitán semanal.
 - `2026-27/proyecciones.csv`: ajustes manuales (multiplicador, disponibilidad o FPPG fijo). Es donde va el criterio humano; revisarlo cada semana.
 - Requiere que el entorno permita `*.nba.com` y `*.basketball-reference.com` (Network access → Custom).
 
@@ -46,6 +46,7 @@ python3 fantasy-nba/scripts/optimize.py --gw 1 6 [--must "Nombre"] [--exclude "N
 
 1. Antes del cierre de cada GameWeek: revisar minutos, lesiones, calendario (nº de partidos) y precios.
 2. Decidir los 2 fichajes gratis (o guardarlos) y el día del capitán.
-3. Registrar en `2026-27/jornadas.md` qué se hizo y por qué.
+3. Cada día: titulares = jugadores con partido; banquillo ordenado con los que también juegan ese día primero (son los que pueden entrar si falla un titular).
+4. Registrar en `2026-27/jornadas.md` qué se hizo y por qué.
 
 FPPG = fantasy points per game con la puntuación de este juego.

@@ -2,7 +2,9 @@
 
 Modela el juego día a día: cada GameDay puntúan como máximo 5 titulares
 (máx. 3 BC y 3 FC) entre los jugadores cuyo equipo juega ese día, y en cada
-GameWeek un capitán puntúa doble un día.
+GameWeek un capitán puntúa doble un día. Los otros 5 son suplentes: si un titular
+no juega, entra automáticamente un suplente con partido ese día (aproximado con el
+número esperado de titulares que fallan: suma de 1 - disponibilidad).
 
 Uso:
   pip install pulp
@@ -82,15 +84,16 @@ def solve(players, days, budget, must=(), exclude=()):
 
     prob = pulp.LpProblem("squad", pulp.LpMaximize)
     x = {p["name"]: pulp.LpVariable(f"x_{i}", cat="Binary") for i, p in enumerate(cands)}
-    y, cap = {}, {}
+    y, cap, sub = {}, {}, {}
     for d, (gw, teams) in days.items():
         for i, p in enumerate(cands):
             if p["team"] in teams:
                 y[p["name"], d] = pulp.LpVariable(f"y_{i}_{d}", cat="Binary")
                 cap[p["name"], d] = pulp.LpVariable(f"c_{i}_{d}", cat="Binary")
+                sub[p["name"], d] = pulp.LpVariable(f"s_{i}_{d}", lowBound=0, upBound=1)
     by_name = {p["name"]: p for p in cands}
 
-    prob += pulp.lpSum(by_name[n]["exp"] * (y[n, d] + cap[n, d]) for (n, d) in y)
+    prob += pulp.lpSum(by_name[n]["exp"] * (y[n, d] + cap[n, d] + sub[n, d]) for (n, d) in y)
     prob += pulp.lpSum(p["price"] * x[p["name"]] for p in cands) <= budget
     for pos in ("BC", "FC"):
         prob += pulp.lpSum(x[p["name"]] for p in cands if p["pos"] == pos) == 5
@@ -103,8 +106,10 @@ def solve(players, days, budget, must=(), exclude=()):
         prob += pulp.lpSum(y[k] for k in on) <= 5
         for pos in ("BC", "FC"):
             prob += pulp.lpSum(y[k] for k in on if by_name[k[0]]["pos"] == pos) <= 3
+        # Suplentes automáticos: cubren, en esperanza, los titulares que no juegan
+        prob += pulp.lpSum(sub[k] for k in on) <= pulp.lpSum((1 - by_name[k[0]]["avail"]) * y[k] for k in on)
     for (n, d), v in y.items():
-        prob += v <= x[n]
+        prob += v + sub[n, d] <= x[n]
         prob += cap[n, d] <= v
     for gw in {gw for gw, _ in days.values()}:
         prob += pulp.lpSum(cap[n, d] for (n, d) in cap if days[d][0] == gw) <= 1
@@ -121,7 +126,10 @@ def solve(players, days, budget, must=(), exclude=()):
     for (n, d), v in cap.items():
         if v.value() > 0.5:
             caps[n] += 1
-    return squad, starts, games, caps, pulp.value(prob.objective), pulp.LpStatus[prob.status]
+    subs = defaultdict(float)
+    for (n, d), v in sub.items():
+        subs[n] += v.value() or 0
+    return squad, starts, games, caps, subs, pulp.value(prob.objective), pulp.LpStatus[prob.status]
 
 
 def main():
@@ -135,15 +143,16 @@ def main():
     snap = latest_snapshot()
     players = load_players(snap)
     days = load_days(snap, *a.gw)
-    squad, starts, games, caps, total, status = solve(players, days, a.budget, a.must, a.exclude)
+    squad, starts, games, caps, subs, total, status = solve(players, days, a.budget, a.must, a.exclude)
 
     print(f"Datos: {snap.name} | GW{a.gw[0]}-GW{a.gw[1]} ({len(days)} días) | estado: {status}")
-    print(f"{'Pos':3} {'Jugador':26} {'Eq':4} {'Precio':>6} {'Proy':>5} {'Disp':>4} {'Part':>4} {'Tit':>3} {'Cap':>3}  Nota")
+    print(f"{'Pos':3} {'Jugador':26} {'Eq':4} {'Precio':>6} {'Proy':>5} {'Disp':>4} {'Part':>4} {'Tit':>3} {'Sup':>4} {'Cap':>3}  Nota")
     for p in sorted(squad, key=lambda p: (p["pos"], -p["price"])):
         n = p["name"]
         print(f"{p['pos']:3} {n:26} {p['team']:4} {p['price']:6.1f} {p['proj']:5.1f} {p['avail']:4.2f} "
-              f"{games[n]:4} {starts[n]:3} {caps[n]:3}  {p['note']}")
+              f"{games[n]:4} {starts[n]:3} {subs[n]:4.1f} {caps[n]:3}  {p['note']}")
     print(f"Coste: {sum(p['price'] for p in squad):.1f} / {a.budget} | Puntos esperados: {total:.0f}")
+    print("Part = partidos de su equipo; Tit = días como titular; Sup = entradas esperadas como suplente automático")
 
 
 if __name__ == "__main__":

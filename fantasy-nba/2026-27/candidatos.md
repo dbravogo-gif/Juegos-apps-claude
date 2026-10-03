@@ -59,9 +59,9 @@ Proyecciones: `proyecciones.csv` (ajustes manuales por cambio de rol, lesiones y
 | FC | Jericho Sims | MIL | 5.0 | Relleno |
 | FC | Chaney Johnson | BKN | 5.0 | Relleno |
 
-Puntos esperados en GW1-6 según el modelo: ~5.800. La mejor combinación que encuentra el optimizador da ~5.880 (+1.5%), una diferencia menor que el error de las proyecciones. Se prefiere esta por apoyarse en 3 estrellas fiables.
+Puntos esperados en GW1-6 según el modelo (con suplentes automáticos): ~5.900. La mejor combinación que encuentra el optimizador da ~5.990 (+1.3%), una diferencia menor que el error de las proyecciones. Se prefiere esta por apoyarse en 3 estrellas fiables.
 
-**Cómo funciona**: las 3 estrellas juegan todos sus partidos; Nurkić, Spencer y Williams casi todos; los 4 rellenos (5.0-5.5) completan los días con pocos partidos (titulares ~la mitad de los días).
+**Cómo funciona**: solo puntúan 5 titulares al día; los 10 hacen falta porque cada día solo juega una parte de la plantilla. Las 3 estrellas son titulares en todos sus partidos; Nurkić, Spencer y Williams casi siempre. Los 4 rellenos (5.0-5.5) son titulares ~la mitad de los días (los de pocos partidos) y el resto hacen de suplentes automáticos (1-2.5 entradas cada uno en GW1-6).
 
 **Alternativas equivalentes**: Wembanyama por Jalen Johnson (+2.0, quitando de un relleno); Cunningham por SGA (−0.5); Kessler o Murphy en lugar de dos rellenos si se prescinde de una estrella.
 
