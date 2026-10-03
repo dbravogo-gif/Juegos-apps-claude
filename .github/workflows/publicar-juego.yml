@@ -1,0 +1,39 @@
+# Publica el juego (la carpeta game/) en GitHub Pages cada vez que cambia en main.
+# Antes de publicar pasa los tests: si fallan, no se despliega.
+name: Publicar juego
+
+on:
+  push:
+    branches: [main]
+    paths: ['game/**', '.github/workflows/publicar-juego.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.despliegue.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Tests
+        working-directory: game
+        run: npm test
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: game
+      - id: despliegue
+        uses: actions/deploy-pages@v4

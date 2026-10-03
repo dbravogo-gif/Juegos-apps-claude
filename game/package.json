@@ -1,0 +1,10 @@
+{
+  "name": "juego-habitos",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "RPG de habitos saludables y construccion. App web instalable, sin dependencias ni paso de build.",
+  "scripts": {
+    "test": "node --test \"tests/*.test.js\""
+  }
+}
