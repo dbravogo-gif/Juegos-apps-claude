@@ -4,8 +4,9 @@ Nombre decidido por el autor. Simulador de aerolínea para móvil: fundas una co
 mediados de los años 70, con un avión de segunda mano y una base en un aeropuerto real, y la
 llevas a través de 50 años de historia de la aviación.
 
-Estado: **prototipo 1 jugable** (ver «Prototipo 1» al final). Lo marcado como *pendiente* se
-cierra antes de programar esa parte.
+Estado: **versión 2 jugable** (núcleo realista: mantenimiento, riesgo, operación y economía;
+ver «Versión 2» al final). Las reglas del autor están en `CRITERIOS.md` y mandan sobre este
+documento. Lo marcado como *pendiente* se cierra antes de programar esa parte.
 
 Decisiones cerradas:
 
@@ -37,40 +38,41 @@ Decisiones cerradas:
 
 ## El despacho de vuelo (el núcleo)
 
-Una tarjeta del tipo «Vuelo 214, Bilbao → Londres, sale en 40 min» muestra:
+La hoja de despacho de cada vuelo dudoso muestra:
 
-| Factor | Ejemplos |
+| Bloque | Qué enseña |
 | --- | --- |
-| Meteo | Niebla en destino, tormenta en ruta, nieve en la pista, viento cruzado |
-| Avión | Horas desde la última revisión, averías pendientes, edad, historial |
-| Tripulación | Fatiga, experiencia en ese tipo de avión, rasgos (temerario, prudente…) |
-| Aeropuerto | Longitud de pista, ayudas a la aproximación (ILS sí o no), terreno, calidad del servicio |
-| Negocio | Pasajeros, ingreso del vuelo, coste de retrasar o cancelar, reputación en juego |
+| Valoración | Probabilidad de incidencias y riesgo grave **en palabras** (muy bajo → muy alto), nunca porcentajes; y «lo más probable si sale» |
+| Fuera de norma | Revisiones vencidas, averías fuera de límites, MEL caducada, directivas, tripulación por encima de 13 h, previsión bajo mínimos |
+| Meteo prevista | Origen, ruta y destino; visibilidad contra el mínimo de esa aproximación |
+| Destino | ILS y categoría que admite el avión, pista disponible, terreno |
+| Avión | Averías conocidas, GPWS, radar |
+| Tripulación | Horas de actividad al llegar, llegada de noche |
+| Negocio | Pasajeros e ingreso |
 
-Opciones: **despegar**, **retrasar**, **cancelar** o **cargar combustible extra para un
-alternativo** (cuesta dinero y reduce el riesgo).
+Opciones: **despegar**, **combustible extra** (más margen para esperar o desviarse),
+**retrasar 2 h**, **cancelar**, y cuando hay algo vencido: **traslado a la base sin pasaje**
+(permiso especial de vuelo) o, si ya está en la base, **cancelar y mandarlo al taller**.
 
-**Riesgo con niebla informativa.** El juego calcula un riesgo real, pero tú ves una
-*estimación*. Cuanto mejor es tu despachador o tu meteorólogo, más se acerca la estimación a
-la realidad. Contratar bien es comprar información.
+**Información imperfecta.** La valoración usa la previsión (que falla a veces) y solo las
+averías conocidas. Lo que nadie ha inspeccionado no aparece.
 
-**Resultados graduados, no binarios**: normal, retraso, turbulencia (quejas), desvío al
-alternativo, aterrizaje de emergencia, daños en el avión y, en raras ocasiones, accidente.
+**Delegación.** El jugador elige cuándo le consultan: en cada vuelo, si hay algo anormal,
+solo si es serio, o lo mínimo. Cuando decide el despachador no firma nada fuera de norma:
+retiene y, si no mejora, cancela los vuelos con previsión bajo mínimos, y carga combustible
+extra si el tiempo va justo. Lo que esté fuera de norma por el avión o la tripulación lo
+decide siempre el jugador.
 
-- Un accidente cuesta el avión, hunde la reputación y abre una **investigación**. Si descubre
-  culpa (una revisión saltada, un piloto fatigado), llegan multas, la suspensión de rutas o la
-  dimisión de alguien.
-- Un accidente no acaba la partida automáticamente, pero puede arruinarte.
-- Las probabilidades están muy exageradas respecto a la realidad: es un juego, no un
-  simulador de seguridad aérea.
-- **Tono**: crudo pero contenido. Cada tipo de accidente tiene su escena animada en la que
-  solo se ve el avión; después, un avance del «Diario Nacional» (ficticio) da las cifras de
-  fallecidos y heridos. Al mes, otro avance cuenta la conclusión de la investigación.
+**Resultados graduados**: normal, espera, desvío, motor parado, aterrizaje de emergencia,
+daños e inmovilización y, raras veces, accidente.
 
-**Para que no se vuelva tedioso:** con pocos aviones, decides tú cada vuelo dudoso. Cuando
-contratas a un **jefe de operaciones**, defines una política de riesgo («cancela por encima de
-X») y solo te llegan los casos límite. La parte incremental del juego es pasar de despachar
-vuelos a dirigir una aerolínea.
+- Un accidente cuesta el avión, hunde la reputación y abre una **investigación** de 30 días
+  con causa probable y 1–3 factores. Si hubo culpa de la compañía, no paga el seguro y llega
+  una multa; si fue un fallo técnico del tipo, la autoridad emite una directiva para toda la
+  flota de ese modelo.
+- **Tono**: crudo pero contenido. Tres escenas animadas (aproximación, salida de pista, en
+  vuelo) que solo muestran el avión, con su silueta según el modelo; después, un avance del
+  «Diario Nacional» con fallecidos y heridos, y al mes el informe de la investigación.
 
 ## 50 años de historia
 
@@ -90,9 +92,9 @@ Empieza hacia **1976** (*pendiente*: quizá con la opción de empezar en otras �
 - **Mercado regulado al principio.** Para abrir una ruta internacional hace falta un
   permiso. Con la liberalización llega la competencia de las low cost.
 
-**Ritmo** (*pendiente*): 1 año de juego dura unos 10–15 minutos, así que la campaña completa
-son unas 8–12 horas repartidas en muchas sesiones. Cada vuelo rutinario se simula solo: las
-tarjetas aparecen únicamente cuando hay algo que decidir.
+**Ritmo**: a la velocidad máxima un día dura 2 segundos y un año unos 12 minutos sin
+contar las pausas, así que la campaña completa son unas 10 horas repartidas en muchas
+sesiones. Cada vuelo rutinario se simula solo: las hojas aparecen cuando hay algo que decidir.
 
 ## Aviones de segunda mano
 
@@ -166,33 +168,80 @@ del juego, rivales incluidas, son ficticias.
 - Publicación: el flujo actual sube solo `game/` a GitHub Pages; habrá que publicar las dos
   carpetas (*pendiente*).
 
-## Prototipo 1 — qué tiene que demostrar (hecho)
+## Prototipo 1 (hecho)
 
-Pregunta: **¿engancha decidir si el vuelo sale?**
+Demostró que decidir si el vuelo sale engancha: aeropuertos reales, mercado de segunda mano,
+rutas con frecuencia y tarifa, hojas de despacho, accidentes con escenas y noticiario.
 
-- Año 1976, unos 20 aeropuertos de Europa y el Mediterráneo, y una base.
-- Mercado con 3–4 aviones de segunda mano de la época, con inspección opcional.
-- Crear 2–3 rutas y ver los aviones moverse sobre el globo.
-- Tarjetas de despacho con meteo, estado del avión y aeropuerto. Riesgo y resultados
-  graduados, incluido el accidente con su investigación.
-- Dinero y reputación.
+## Versión 2 — núcleo realista (hecho)
 
-Fuera del prototipo: personal y entrevistas, eventos históricos, liberalización, piezas,
-retos y arte final (se usan siluetas y formas).
+Aplica `CRITERIOS.md` 1–25 y 33. Lo que cambió:
 
-Lo que tiene el prototipo, además: todos los aeropuertos (no solo 20), frecuencia por ruta
-(vueltas al día con horarios), tres tarifas, préstamo, umbral de consulta configurable (la
-delegación más simple) y las tres escenas de accidente con su noticiario.
+- **Mantenimiento** (`src/core/mantenimiento.js`, `src/data/averias.js`, `src/data/motores.js`):
+  revisiones A, C y estructural por horas con tolerancia del 10 %; motores como piezas con su
+  revisión general y motor de alquiler; averías que avanzan por horas, ciclos o días con
+  fases (oculta → indicio → anomalía → confirmada → diferida según la MEL); inspecciones
+  fiables por umbrales y doble comprobación en lo importante; falsas alarmas; directivas.
+- **Operación** (`src/core/operaciones.js`): compatibilidad avión–ruta–aeropuerto con
+  «no puede» y «puede con restricciones»; pista según peso (la distancia de despegue crece
+  con el cuadrado del peso) y altitud; alcance con carga; bimotores sobre el mar (60 min,
+  ETOPS desde 1985/1988) con alternativos reales; Concorde solo supersónico sobre el mar y
+  prohibido en Nueva York hasta finales de 1977.
+- **Tecnología** (`src/data/tecnologias.js`): radar, GPWS, alerta de cizalladura, TCAS y EGPWS
+  con fecha, coste, retrofit y efecto sobre su categoría de accidente.
+- **Riesgo** (`src/core/riesgo.js`): amenaza → evento → desenlace. Cada vuelo calcula sus
+  amenazas (técnicas, meteo, pista, tráfico, humanas) y cada una escala a accidente según
+  los factores agravantes.
+- **Investigación** (`src/core/investigacion.js`): causa probable, 1–3 factores y
+  responsabilidad, ligada a lo que pasó en la partida.
+- **Economía** (`src/core/economia.js`): dólares de cada año (IPC de EE. UU.) con su serie de
+  queroseno; tasas, handling y catering por aeropuerto; estructura, tripulaciones y seguro.
 
-### Cifras de partida (primera calibración)
+### Calibración del riesgo (CRITERIOS 33)
 
-Simulando un año con un bot que despega siempre y hace las revisiones:
+Se calibra por partida, no con estadística real: el jugador hace pocos vuelos al día. Tres
+palancas:
 
-- Riesgo medio por vuelo: ~0,03 % en rutas normales; ~0,15 % hacia Tenerife Norte, por la
-  niebla sin ILS. Un jugador que cancela lo peor baja mucho de ahí.
-- Tarjetas de decisión con el umbral al 0,3 %: entre 7 y 40 al año por avión.
-- Un F27 entre islas apenas cubre gastos; un 737 de Gran Canaria a Londres-Gatwick gana
-  1,5–2 M$ al año. Las rutas sobredimensionadas (737 con dos vueltas a Londres desde Madrid)
-  pierden dinero.
+1. **Base baja** para todos (`BASE` en `riesgo.js`), que mejora con la época y con la
+   tecnología, pero con suelo: nunca llega a cero.
+2. **Dejadez**: cada revisión vencida (más cuanto más tiempo lleve vencida) y cada avería
+   conocida sin atender suma peso; el riesgo técnico se multiplica por e^(0,8·peso) hasta ×100,
+   y aparece el fallo de mandos de vuelo por mantenimiento descuidado.
+3. **Decisiones de despacho**: despachar con la previsión bajo mínimos (presión ×6 sobre
+   seguir bajando), sin combustible extra, con la tripulación cansada (se dispara pasadas
+   las 13 h), de noche, sin GPWS.
 
-Son números para ajustar jugando, no definitivos.
+Medido con bots (probabilidad esperada de accidente por vuelo):
+
+| Perfil | 1976 | Años 90 en adelante |
+| --- | --- | --- |
+| Todo bien (revisiones al día, inspecciona, retrofit, nada fuera de norma) | ~4 por millón | ~2–3 por millón |
+| Medio (revisiones al día, ignora indicios, a veces despacha con niebla) | 10–60 por millón | — |
+| Todo mal (nada de mantenimiento, despega siempre) | 0,1–0,3 % de media; ~3 % con el avión ya abandonado | — |
+
+Con unos 150.000 vuelos en una partida de 50 años, quien lo hace todo bien tiene en torno a
+0,5 accidentes esperados; quien lo hace todo mal se estrella varias veces al año. Escala
+entre un avión cuidado y uno con la revisión A vencida: +30 % ×2, el doble ×20, el triple
+×100; con todo vencido, ~3 % por vuelo.
+
+### Calibración económica
+
+Tarifas cerca del rendimiento real de 1976 (≈96 $ Gran Canaria–Madrid, ≈120 $ a Londres,
+≈190 $ Londres–Nueva York) y costes con handling y estructura de la época. Un año con un
+solo avión:
+
+- F27 entre Gran Canaria y Tenerife con 2 vueltas al día (ocupación 85 %): +150–200 k$.
+  Con 4 vueltas (51 %), pierde 0,2–0,5 M$.
+- 737 Gran Canaria–Madrid (48 %): +0,45 M$; Gran Canaria–Gatwick (65 %): +1,5–1,9 M$.
+- 707 Londres–Nueva York para una compañía nueva (38 %): pierde 1,3–2,4 M$. Un 747 o un
+  Concorde, mucho más.
+
+Son números para ajustar jugando. `npm run calibrar` (`tools/calibrar.mjs`) repite la
+medición del riesgo con bots de tres perfiles; conviene pasarlo después de tocar `riesgo.js`,
+`mantenimiento.js` o los datos de averías.
+
+## Versión 3 — siguiente
+
+Competencia y mercado (`CRITERIOS.md` 26–32): aerolíneas rivales con nombre de parodia,
+oferta y demanda por ruta, reputación por dimensiones y acontecimientos del mundo como
+señales graduales.

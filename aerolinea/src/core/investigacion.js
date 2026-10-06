@@ -31,6 +31,7 @@ const CAUSAS = {
   hielo: (c) => `Pérdida de sustentación en el despegue de ${c.origen.id} por hielo en las alas`,
   conflicto: () => 'Colisión en vuelo tras una pérdida de separación con otro tráfico',
   errorTripulacion: (c) => `Impacto contra el terreno en la aproximación a ${c.destino.id} por un error de navegación`,
+  mandos: () => 'Pérdida de control por un fallo en los mandos de vuelo de un avión con el mantenimiento descuidado',
 };
 
 export function causaProbable(ctx, evento) {

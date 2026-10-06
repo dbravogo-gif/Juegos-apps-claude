@@ -5,6 +5,7 @@
   "type": "module",
   "description": "Simulador de aerolínea desde 1976. App web instalable, sin paso de build.",
   "scripts": {
-    "test": "node --test \"tests/*.test.js\""
+    "test": "node --test \"tests/*.test.js\"",
+    "calibrar": "node tools/calibrar.mjs"
   }
 }

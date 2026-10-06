@@ -574,3 +574,16 @@ Una simulación compacta pero suficientemente profunda. El jugador debería pode
 sensación buscada: «aquí hay una oportunidad», «esta ruta parece buenísima, pero se va a
 llenar», «todo el mundo ignora esta ciudad; quizá yo llegue primero», «esta compañía se
 equivoca entrando aquí; dejaré que se queme».
+
+## 33. Calibración del riesgo: por partida, no por estadística real
+
+El juego no es la vida real: el jugador hace pocos vuelos al día, así que las tasas reales de
+accidentes (uno cada millones de vuelos) harían que nunca pasara nada. Se calibra por partida:
+
+- **Quien lo hace todo bien** tiene una probabilidad de **0,3–0,7 accidentes en toda la
+  partida**. Nunca llega a cero: por bien que se haga todo, el riesgo sigue ahí.
+- **Quien lo hace todo mal** llega a **en torno a un 1 % de vuelos con accidente**. Con un
+  0,01 % se podría hacer todo mal y no estrellarse nunca, y eso no puede pasar: hay que
+  notar que, si lo haces mal, se te puede liar.
+- **Entre medio, una escala**: cada mala decisión o descuido sube el riesgo, y varios a la vez
+  lo disparan.

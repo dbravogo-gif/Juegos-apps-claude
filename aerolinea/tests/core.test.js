@@ -108,16 +108,22 @@ test('operación: alcance, bimotores sobre el mar y Concorde en Nueva York', () 
 
 // ---------------------------------------------------------------- riesgo
 
-function ctxPrueba({ destino = 'TFN', clima = { tipo: 'niebla', sev: 3 }, equipo = {}, extra = false, averias = [] } = {}) {
-  const avion = { averias, equipo: { radar: true, gpws: false, ...equipo }, inop: {} };
+function ctxPrueba({ destino = 'TFN', clima = { tipo: 'niebla', sev: 3 }, equipo = {}, extra = false, averias = [], revisiones = {}, irregularidades = [] } = {}) {
   const tipo = TIPOS.b727;
+  const avion = {
+    averias, equipo: { radar: true, gpws: false, ...equipo }, inop: {},
+    revisiones: { A: 0, C: 0, D: 0, ...revisiones },
+    motores: Array.from({ length: tipo.nMotores }, (_, i) => ({ pos: i + 1, horasRG: 0 })),
+  };
   const c = { origen: { tipo: 'despejado', sev: 0 }, destino: clima, ruta: { tipo: 'despejado', sev: 0 } };
   return {
-    avion, tipo, origen: POR_ID.LPA, destino: POR_ID[destino], anio: 1976, duracion: 45,
+    avion, tipo, origen: POR_ID.LPA, destino: POR_ID[destino], anio: 1976, t: 0, duracion: 45,
     clima: c, prevision: c, combustibleExtra: extra, jornada: 6, noche: false,
-    cargaPorPista: 1, pistaDestino: 3400, irregularidades: [], despachoIrregular: false,
+    cargaPorPista: 1, pistaDestino: 3400, irregularidades, despachoIrregular: irregularidades.length > 0,
   };
 }
+
+const riesgoTotal = (ctx, vision = 'real') => amenazas(ctx, vision).reduce((s, e) => s + e.p * (e.esc ?? 0), 0);
 
 test('riesgo: niebla por debajo de mínimos suele acabar en desvío, no en accidente', () => {
   const ctx = ctxPrueba();
@@ -158,6 +164,28 @@ test('riesgo: una avería oculta no la ve el despacho pero sí cuenta', () => {
   const despacho = amenazas(ctx, 'despacho').filter((x) => x.averia === 1);
   assert.ok(real.length > 0);
   assert.equal(despacho.length, 0);
+});
+
+test('riesgo: escala de conducta, del avión cuidado al abandonado', () => {
+  const despejado = { tipo: 'despejado', sev: 0 };
+  const cuidado = riesgoTotal(ctxPrueba({ clima: despejado }));
+  // Revisión A pasada un 30 %: algo peor, nada dramático.
+  const descuido = riesgoTotal(ctxPrueba({ clima: despejado, revisiones: { A: 200 } }));
+  // Todo vencido desde hace mucho: A, C y la general de los motores.
+  const abandonado = ctxPrueba({ clima: despejado, revisiones: { A: 1500, C: 6000 } });
+  for (const m of abandonado.avion.motores) m.horasRG = 12000;
+  const malo = riesgoTotal(abandonado);
+  assert.ok(cuidado < 0.0001, `cuidado ${cuidado}`);
+  assert.ok(descuido > cuidado && descuido < cuidado * 5, `descuido ${descuido}`);
+  assert.ok(malo > 0.005 && malo < 0.05, `abandonado ${malo}`);
+  // El despacho lo ve: un avión abandonado no sale como «muy bajo».
+  assert.ok(estimar(abandonado).pAccidente > 0.003);
+});
+
+test('riesgo: despachar con la previsión bajo mínimos multiplica el riesgo', () => {
+  const legal = riesgoTotal(ctxPrueba());
+  const irregular = riesgoTotal(ctxPrueba({ irregularidades: [{ codigo: 'minimos', texto: 'x' }] }));
+  assert.ok(irregular > legal * 4, `${legal} → ${irregular}`);
 });
 
 // ---------------------------------------------------------------- mantenimiento

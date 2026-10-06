@@ -1,5 +1,9 @@
 # App viación: contexto completo para revisión externa
 
+> **Nota:** este documento describe la versión 1 (el prototipo). La versión 2 rehízo el
+> mantenimiento, el riesgo, la operación y la economía siguiendo `CRITERIOS.md`; su estado
+> está en `DISENO.md` («Versión 2») y las fuentes de los datos en `FUENTES.md`.
+
 Este documento describe el estado actual del juego *App viación* para que otro asistente
 (ChatGPT u otro) lo entienda sin ver el código y aporte información útil. Al final está la
 lista de lo que pedimos y el formato de respuesta que nos viene bien.

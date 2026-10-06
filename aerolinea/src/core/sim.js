@@ -7,6 +7,7 @@ import { POR_ID } from '../data/aeropuertos.js';
 import { TIPOS, programa, tripulacion } from '../data/aviones.js';
 import { TECNOLOGIAS, puedeInstalar } from '../data/tecnologias.js';
 import { METODOS, DIAGNOSTICO, AVERIAS } from '../data/averias.js';
+import { MOTORES } from '../data/motores.js';
 import { azarDe, entre, entero, hash, generador, normal } from './azar.js';
 import { climaEn, climaRuta, franja } from './clima.js';
 import { evaluarTramo, evaluarRuta, pistaEfectiva } from './operaciones.js';
@@ -15,7 +16,7 @@ import { investigar } from './investigacion.js';
 import {
   progresar, inspeccionar as inspeccionarAveria, diagnosticar as diagnosticarAveria, aplicarRevision,
   costeRevision, diasRevision, costeRG, alquilerMotor, diasTallerMotor, revisarMotor, diferir as diferirAveria,
-  irregularidades, metodoDe, tipoDiagnostico, describir, revisionPendiente,
+  irregularidades, metodoDe, tipoDiagnostico, describir, revisionPendiente, TOLERANCIA,
 } from './mantenimiento.js';
 import { crearAvion, generarMercado, ofertaSegundaMano, valorMercado, costeReparacion, edad } from './flota.js';
 import {
@@ -122,6 +123,7 @@ function actualizarAvion(estado, a, eventos) {
     if (t >= a.libreEn) salirDelTaller(estado, a, eventos);
     return;
   }
+  if (a.estado === 'tierra') revisionNocturna(estado, a);
   if (a.estado !== 'tierra' || t < a.libreEn) return;
 
   if (a.lugar === estado.base && a.tareas.length) {
@@ -147,6 +149,23 @@ function actualizarAvion(estado, a, eventos) {
     return;
   }
   prepararSalida(estado, a, destino, eventos);
+}
+
+// La revisión A se hace de noche, en cuanto el avión para: en la base con tu personal y fuera
+// con mantenimiento contratado, que sale más caro.
+function revisionNocturna(estado, a) {
+  if (!estado.ajustes.revisionesAuto) return;
+  const h = hora(estado.t);
+  if (h >= 5 && h < 23) return;
+  if (a.revisionNoche === dia(estado.t - 6 * 60) || revisionPendiente(a).A < 0.6) return;
+  a.revisionNoche = dia(estado.t - 6 * 60);
+  const n = anio(estado.t);
+  const fuera = a.lugar !== estado.base;
+  const coste = costeRevision(a, 'A', n) * (fuera ? 1.5 : 1);
+  const res = aplicarRevision(a, 'A', n);
+  gastar(estado, coste + res.reparaciones);
+  a.libreEn = Math.max(a.libreEn, dia(estado.t + 6 * 60) * MIN_DIA + HORA_PRIMERA_SALIDA * 60);
+  if (res.hallazgos.length) apuntar(estado, `Revisión A del ${a.matricula}${fuera ? ` en ${a.lugar}` : ''}: ${res.hallazgos.join('; ')}.`, 'info');
 }
 
 // ---------------------------------------------------------------- rutas y horarios
@@ -232,7 +251,7 @@ export function contextoVuelo(estado, a, destinoId, combustibleExtra = false) {
   if (jornada.horas > LIMITE_ACTIVIDAD) irreg.push({ codigo: 'actividad', texto: `Tripulación por encima del límite de actividad (${jornada.horas.toFixed(1)} h)` });
   if (visibilidad(previsto.destino) < minimos(destino, tipo)) irreg.push({ codigo: 'minimos', texto: `Previsión en ${destino.id} por debajo de los mínimos de aproximación` });
   return {
-    avion: a, tipo, origen, destino, anio: anioDec, tramo, duracion, llegada,
+    avion: a, tipo, origen, destino, anio: anioDec, t: estado.t, tramo, duracion, llegada,
     clima: real, prevision: previsto, combustibleExtra,
     jornada: jornada.horas, turno: jornada,
     noche: hLlegada < 6 || hLlegada >= 23,
@@ -245,6 +264,11 @@ export function contextoVuelo(estado, a, destinoId, combustibleExtra = false) {
 
 function datosComerciales(estado, a, ctx) {
   const { tipo, origen, destino, tramo } = ctx;
+  if (ctx.traslado) {
+    const n = anio(estado.t);
+    const coste = costeVuelo({ tipo, horas: ctx.duracion / 60, origen, destino, pax: 0, ingreso: 0, anio: n, combustibleExtra: ctx.combustibleExtra });
+    return { ruta: null, pax: 0, ingreso: 0, coste: coste.total, desglose: coste.desglose, clave: null, precio: 0 };
+  }
   const n = anio(estado.t);
   const ruta = rutaDelTramo(estado, origen.id, destino.id);
   const tarifa = ruta?.tarifa ?? 'normal';
@@ -347,6 +371,8 @@ export function informeDespacho(estado, decision) {
   const comExtra = datosComerciales(estado, a, ctxExtra);
   return {
     avion: a, ctx, est, estExtra, com,
+    traslado: puedeTrasladar(estado, a, ctx),
+    taller: puedeIrAlTaller(estado, a, ctx),
     numero: numeroVuelo(estado, com.ruta, decision.destino === estado.base),
     costeExtra: comExtra.coste - com.coste,
     compensacion: Math.round(com.ingreso * 0.1),
@@ -356,12 +382,17 @@ export function informeDespacho(estado, decision) {
   };
 }
 
+// Punto de observación para las herramientas de calibración: si se le asigna una función, la
+// llama en cada despegue con el contexto y la simulación del vuelo.
+export const sondas = { despegue: null };
+
 function despegar(estado, a, ctx, { manual }) {
   const r = azarDe(estado);
   a.retenido = 0;
   const com = datosComerciales(estado, a, ctx);
   const sim = simular(ctx, r);
-  estado.demandaUsada[com.clave] = (estado.demandaUsada[com.clave] ?? 0) + com.pax;
+  sondas.despegue?.(ctx, sim, { manual });
+  if (com.clave) estado.demandaUsada[com.clave] = (estado.demandaUsada[com.clave] ?? 0) + com.pax;
   if (com.ruta && a.lugar === estado.base) registrarSalida(estado, com.ruta);
   const turno = ctx.turno;
   a.turnos = { ...(a.turnos ?? {}), [turno.turno]: { dia: dia(estado.t), inicio: turno.inicio } };
@@ -386,10 +417,12 @@ function despegar(estado, a, ctx, { manual }) {
   a.vuelo = {
     origen: a.lugar,
     destino: ctx.destino.id,
-    numero: numeroVuelo(estado, com.ruta, ctx.destino.id === estado.base),
+    numero: ctx.traslado ? `${estado.codigo} 990` : numeroVuelo(estado, com.ruta, ctx.destino.id === estado.base),
     salida,
     llegada,
     retraso,
+    traslado: ctx.traslado ?? false,
+    extra: ctx.combustibleExtra,
     pax: com.pax,
     ingreso: com.ingreso,
     coste: com.coste,
@@ -430,6 +463,7 @@ const TEXTO_INCIDENTE = {
   turbulencia: (v) => `${v.numero}: turbulencia severa dentro de una tormenta. Varios pasajeros heridos leves.`,
   hielo: (v) => `${v.numero}: despegue abortado por hielo en las alas. Nuevo deshielo y retraso.`,
   conflicto: (v) => `${v.numero}: pérdida de separación con otro avión. El control lo resuelve a tiempo; se abre un informe.`,
+  mandos: (v) => `${v.numero}: los mandos de vuelo responden mal (un cable destensado que un mantenimiento al día habría visto). Aterrizaje de emergencia en ${v.destino}.`,
 };
 
 function aterrizar(estado, a, eventos) {
@@ -468,7 +502,7 @@ function aterrizar(estado, a, eventos) {
     }
     if (!texto) continue;
     a.stats.incidentes++;
-    const grave = ['noContenido', 'incendio', 'estructura', 'tren', 'turbulencia', 'salidaPista'].includes(e.id);
+    const grave = ['noContenido', 'incendio', 'estructura', 'tren', 'turbulencia', 'salidaPista', 'mandos'].includes(e.id);
     reputacion -= grave ? 3 : 1;
     if (e.averia) {
       const av = a.averias.find((x) => x.id === e.averia);
@@ -496,6 +530,9 @@ function aterrizar(estado, a, eventos) {
       coste += e.averia ? costeReparacion(a, a.averias.find((x) => x.id === e.averia) ?? { codigo: e.id === 'hidraulico' ? 'bomba' : e.id === 'reventon' ? 'neumatico' : 'presurizacion' }, n) : 0;
       a.averias = a.averias.filter((x) => x.id !== e.averia);
       inmovilizado = Math.max(inmovilizado, 24);
+    } else if (e.id === 'mandos') {
+      coste += Math.round(precioNuevo(tipo, n) * 0.002);
+      inmovilizado = Math.max(inmovilizado, 72);
     } else if (e.id === 'turbulencia') {
       const heridos = entero(r, 1, 8);
       coste += Math.round(heridos * 5000 * indice(n));
@@ -505,7 +542,8 @@ function aterrizar(estado, a, eventos) {
   }
 
   ajustarReputacion(estado, reputacion + (v.retraso > 60 ? -0.1 : 0));
-  const ruta = rutaDelTramo(estado, v.origen, v.destino);
+  const ruta = v.traslado ? null : rutaDelTramo(estado, v.origen, v.destino);
+  if (v.traslado) apuntar(estado, `${a.matricula} llega a ${v.destino} en vuelo de traslado.`, 'info');
   if (ruta) ajustarReputacion(estado, SERVICIOS[ruta.servicio ?? 'estandar'].reputacion);
   ingresar(estado, ingreso);
   gastar(estado, coste);
@@ -539,7 +577,7 @@ function estrellar(estado, a, eventos) {
   const r = azarDe(estado);
   const evento = v.accidente.evento;
   const escena = evento.escena;
-  const tripulantes = tripulacion(tipo);
+  const tripulantes = v.traslado ? tipo.tecnica : tripulacion(tipo);
   const ocupantes = v.pax + tripulantes;
   let fallecidos;
   if (escena === 'pista') fallecidos = Math.round(ocupantes * entre(r, 0, 0.25));
@@ -551,8 +589,9 @@ function estrellar(estado, a, eventos) {
   const lugar = escena === 'vuelo' ? (enDespegue ? v.origen : null) : v.destino;
 
   // La investigación se hace con el estado del avión en el momento del accidente.
-  const ctx = contextoVuelo({ ...estado, t: v.salida }, { ...a, lugar: v.origen, estado: 'tierra' }, v.destino, false);
+  const ctx = contextoVuelo({ ...estado, t: v.salida }, { ...a, lugar: v.origen, estado: 'tierra' }, v.destino, v.extra ?? false);
   ctx.despachoIrregular = v.irregular;
+  if (v.traslado) ctx.irregularidades = ctx.irregularidades.filter((x) => !MANTENIMIENTO.has(x.codigo));
   const informe = investigar(ctx, evento);
 
   const accidente = {
@@ -566,7 +605,8 @@ function estrellar(estado, a, eventos) {
     destino: v.destino,
     lugar: lugar ?? v.origen,
     enRuta: !lugar,
-    causa: escena,
+    escena,
+    evento: evento.id,
     descripcion: lugar ? DESCRIPCION_ACCIDENTE[escena] : 'se ha estrellado en ruta',
     pax: v.pax,
     tripulantes,
@@ -593,7 +633,46 @@ function estrellar(estado, a, eventos) {
 
 // ---------------------------------------------------------------- decisiones
 
-export const OPCIONES = ['despegar', 'extra', 'retrasar', 'cancelar'];
+export const OPCIONES = ['despegar', 'extra', 'retrasar', 'cancelar', 'traslado', 'taller'];
+
+// Irregularidades del avión que un permiso especial de vuelo deja resolver llevándolo sin
+// pasaje a la base, donde está el taller.
+const MANTENIMIENTO = new Set(['revisionA', 'revisionC', 'revisionD', 'motorRG', 'mel', 'equipo', 'noApto', 'directiva']);
+
+export function puedeTrasladar(estado, a, ctx) {
+  return a.lugar !== estado.base && ctx.destino.id === estado.base && ctx.irregularidades.some((x) => MANTENIMIENTO.has(x.codigo));
+}
+
+export function puedeIrAlTaller(estado, a, ctx) {
+  return a.lugar === estado.base && ctx.irregularidades.some((x) => MANTENIMIENTO.has(x.codigo));
+}
+
+// Encarga al taller lo que hace falta para que el avión vuelva a ser legal.
+function encargarLoPendiente(estado, a) {
+  const tipo = TIPOS[a.tipo];
+  const prog = programa(tipo);
+  const motor = MOTORES[tipo.motor];
+  for (const nivel of ['D', 'C', 'A']) {
+    if (a.revisiones[nivel] > prog[nivel].horas * TOLERANCIA) { pedirRevision(estado, a.id, nivel); break; }
+  }
+  for (const m of a.motores) if (m.horasRG > motor.intervalo * TOLERANCIA) pedirMotor(estado, a.id, m.pos, true);
+  for (const x of a.averias) {
+    const caducada = x.fase === 'diferida' && estado.t > x.diferidaHasta;
+    const pendiente = x.fase === 'confirmada' && (x.equipo || x.diagnostico?.fueraDeLimites);
+    if (caducada || pendiente) pedirReparacion(estado, a.id, x.id);
+  }
+  for (const d of estado.directivas ?? []) {
+    if (d.tipo === a.tipo && !d.hechas.includes(a.id) && estado.t > d.hasta) pedirDirectiva(estado, a.id, d.id);
+  }
+}
+
+function contextoTraslado(estado, a, destino) {
+  const ctx = contextoVuelo(estado, a, destino);
+  ctx.traslado = true;
+  ctx.irregularidades = ctx.irregularidades.filter((x) => !MANTENIMIENTO.has(x.codigo));
+  ctx.despachoIrregular = ctx.irregularidades.length > 0;
+  return ctx;
+}
 
 export function decidir(estado, idDecision, opcion) {
   const i = estado.decisiones.findIndex((x) => x.id === idDecision);
@@ -614,6 +693,21 @@ export function decidir(estado, idDecision, opcion) {
     cancelarVuelo(estado, a, dec.origen, dec.destino);
     return;
   }
+  if (opcion === 'taller') {
+    cancelarVuelo(estado, a, dec.origen, dec.destino);
+    encargarLoPendiente(estado, a);
+    a.libreEn = estado.t;
+    return;
+  }
+  if (opcion === 'traslado') {
+    const ctx = contextoVuelo(estado, a, dec.destino);
+    if (!puedeTrasladar(estado, a, ctx)) return;
+    gastar(estado, Math.round(datosComerciales(estado, a, ctx).ingreso * 0.1));
+    ajustarReputacion(estado, -0.8);
+    apuntar(estado, `${numero} cancelado: el ${a.matricula} vuelve sin pasaje a la base con un permiso especial de vuelo.`, 'aviso');
+    despegar(estado, a, contextoTraslado(estado, a, dec.destino), { manual: true });
+    return;
+  }
   const ctx = contextoVuelo(estado, a, dec.destino, opcion === 'extra');
   despegar(estado, a, ctx, { manual: true });
 }
@@ -631,13 +725,6 @@ function finDeDia(estado, eventos) {
     if (a.lugar !== estado.base && a.estado !== 'vuelo') gastar(estado, pernocta(tipo, POR_ID[a.lugar], n));
     a.horasHoy = 0;
     for (const ev of progresar(estado, a, { dias: 1 }, r)) eventos.push(ev);
-    // Revisión A de noche en la base, si toca.
-    if (estado.ajustes.revisionesAuto && a.lugar === estado.base && a.estado === 'tierra' && revisionPendiente(a).A >= 0.6) {
-      const coste = costeRevision(a, 'A', n);
-      const res = aplicarRevision(a, 'A', n);
-      gastar(estado, coste + res.reparaciones);
-      if (res.hallazgos.length) apuntar(estado, `Revisión A del ${a.matricula}: ${res.hallazgos.join('; ')}.`, 'info');
-    }
   }
   if (estado.prestamo > 0) gastar(estado, (estado.prestamo * INTERES_ANUAL) / 365);
   ajustarReputacion(estado, (50 - estado.reputacion) * 0.01);

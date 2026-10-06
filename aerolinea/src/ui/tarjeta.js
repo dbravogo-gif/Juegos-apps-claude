@@ -107,6 +107,8 @@ export function htmlTarjeta(estado, dec) {
     <div class="hd-acciones">
       <button class="btn btn-despegar" data-decision="despegar">Despegar</button>
       <button class="btn" data-decision="extra">Combustible extra <small>+${dinero(inf.costeExtra)} · más margen para esperar o desviarse · riesgo grave: ${inf.graveExtra.texto.toLowerCase()}</small></button>
+      ${inf.taller ? `<button class="btn" data-decision="taller">Cancelar y mandarlo al taller <small>se encarga lo vencido o pendiente · −${dinero(inf.compensacion)} por el vuelo</small></button>` : ''}
+      ${inf.traslado ? `<button class="btn" data-decision="traslado">Traslado a la base sin pasaje <small>permiso especial de vuelo · se cancela este tramo (−${dinero(inf.compensacion)})</small></button>` : ''}
       <div class="hd-par">
         <button class="btn btn-sec" data-decision="retrasar">Retrasar 2 h</button>
         <button class="btn btn-sec" data-decision="cancelar">Cancelar <small>−${dinero(inf.compensacion)} y reputación</small></button>

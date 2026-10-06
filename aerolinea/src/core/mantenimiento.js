@@ -72,18 +72,21 @@ export function progresar(estado, avion, uso, r) {
     a.progreso += unidades / a.vida;
   }
 
-  // Averías nuevas
+  // Averías nuevas. Sin revisiones al día aparecen más: nadie lubrica, ajusta ni cambia lo que
+  // está a punto de fallar.
+  const prog = programa(tipo);
+  const descuido = 1 + (avion.revisiones.C > prog.C.horas * TOLERANCIA ? 1 : 0) + (avion.revisiones.A > prog.A.horas * TOLERANCIA ? 0.5 : 0);
   if (horas) {
     const motor = MOTORES[tipo.motor];
     const delMotor = averiasPosibles(tipo).filter((c) => AVERIAS[c].comp === 'motor');
     for (const m of avion.motores) {
-      if (r() < horas * 0.00022 * motor.tasaAverias * desgasteMotor(m, motor) * (tipo.repuestos > 1 ? 1.2 : 1)) {
+      if (r() < horas * 0.00022 * motor.tasaAverias * desgasteMotor(m, motor) * descuido * (tipo.repuestos > 1 ? 1.2 : 1)) {
         const codigo = ponderado(r, delMotor.map((c) => [c, AVERIAS[c].peso ?? 0.1]));
         if (!existe(avion, codigo, m.pos)) avion.averias.push(nuevaAveria(estado, r, codigo, { motor: m.pos }));
       }
     }
     for (const [codigo, tasa] of [['bomba', 0.00012], ['presurizacion', 0.0001]]) {
-      if (r() < horas * tasa && !existe(avion, codigo, null)) avion.averias.push(nuevaAveria(estado, r, codigo));
+      if (r() < horas * tasa * descuido && !existe(avion, codigo, null)) avion.averias.push(nuevaAveria(estado, r, codigo));
     }
     for (const [equipo, def] of Object.entries(EQUIPOS_INOP)) {
       if (avion.equipo[equipo] && !avion.inop[equipo] && r() < horas * def.tasa) {
@@ -107,7 +110,7 @@ export function progresar(estado, avion, uso, r) {
     const tasas = [['frenos', 0.0016], ['amortiguador', 0.0002], ['fatiga', 0.000004 * edadCiclos * edadCiclos]];
     if (averiasPosibles(tipo).includes('neumatico')) tasas.push(['neumatico', 0.004]);
     for (const [codigo, tasa] of tasas) {
-      if (r() < ciclos * tasa && !existe(avion, codigo, null)) avion.averias.push(nuevaAveria(estado, r, codigo));
+      if (r() < ciclos * tasa * descuido && !existe(avion, codigo, null)) avion.averias.push(nuevaAveria(estado, r, codigo));
     }
   }
   if (dias) {

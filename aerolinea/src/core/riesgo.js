@@ -13,6 +13,9 @@
 // pero con las proporciones razonables entre unas causas y otras.
 
 import { AVERIAS } from '../data/averias.js';
+import { programa } from '../data/aviones.js';
+import { MOTORES } from '../data/motores.js';
+import { TOLERANCIA } from './mantenimiento.js';
 import { textoClima } from './clima.js';
 
 // Visibilidad en metros según el fenómeno y su intensidad.
@@ -44,8 +47,51 @@ function proteccionCFIT(avion, anio) {
   return { factor: 1, texto: avion.equipo.gpws ? 'GPWS inoperativo' : 'Sin GPWS' };
 }
 
-// Mejora de procedimientos, formación y gestión de cabina con los años.
-const epoca = (anio) => Math.pow(0.975, Math.max(0, anio - 1976));
+// Mejora de procedimientos, formación y gestión de cabina con los años. Tiene suelo: por bien
+// que se haga todo, el riesgo no llega a desaparecer.
+const epoca = (anio) => Math.max(0.55, Math.pow(0.975, Math.max(0, anio - 1976)));
+
+// Averías que el jugador conoce desde hace más de tres días y no ha atendido (ni reparadas ni
+// diferidas según la MEL).
+export function averiasDesatendidas(avion, t) {
+  return avion.averias.filter((a) => !a.equipo && ['indicio', 'anomalia', 'confirmada'].includes(a.fase) && t - a.desde > 3 * 24 * 60);
+}
+
+// Peso de cada cosa vencida o desatendida. Las revisiones pesan más cuanto más tiempo llevan
+// vencidas: no es lo mismo pasarse diez horas que mil. La A es la más ligera; la C, la
+// estructural y la general de los motores pesan más.
+const REVISION = { A: { peso: 0.4, crece: 5 }, C: { peso: 1, crece: 3 }, D: { peso: 1, crece: 3 } };
+const MOTOR = { peso: 0.8, crece: 3 };
+const PESO_OTRAS = { mel: 1, equipo: 0.5, noApto: 2, directiva: 1.5 };
+const PESO_FASE = { indicio: 0.6, anomalia: 1, confirmada: 0.8 };
+
+function pesoVencida(horas, intervalo, { peso, crece }) {
+  const r = horas / intervalo;
+  return r > TOLERANCIA ? peso * (1 + crece * Math.log(r / TOLERANCIA)) : 0;
+}
+
+// Dejadez: revisiones vencidas y averías conocidas sin atender. Multiplica el riesgo técnico de
+// forma exponencial con el peso acumulado: un despiste pequeño lo dobla, varios a la vez lo
+// disparan, y un avión con todo vencido y averías ignoradas acaba fallando y, cuando algo
+// falla, se encadena. Vale 1 en un avión cuidado y llega a 100 en uno abandonado. Una falsa
+// alarma ignorada no empeora el avión, pero el despacho no lo sabe.
+export function dejadez(ctx, vision = 'real') {
+  const { avion, tipo } = ctx;
+  const prog = programa(tipo);
+  const intervaloMotor = MOTORES[tipo.motor].intervalo;
+  let w = 0;
+  for (const nivel of ['A', 'C', 'D']) w += pesoVencida(avion.revisiones[nivel], prog[nivel].horas, REVISION[nivel]);
+  for (const m of avion.motores) w += pesoVencida(m.horasRG, intervaloMotor, MOTOR);
+  for (const x of ctx.irregularidades) w += PESO_OTRAS[x.codigo] ?? 0;
+  for (const a of averiasDesatendidas(avion, ctx.t ?? 0)) {
+    if (vision === 'despacho' || !a.falsa) w += PESO_FASE[a.fase] ?? 0;
+  }
+  return Math.min(100, Math.exp(0.8 * w));
+}
+
+// Escala general: con todo bien hecho, una partida entera (unos 150.000 vuelos en 50 años) se
+// queda en torno a medio accidente. El resto lo ponen las decisiones del jugador.
+const BASE = 0.5;
 
 // Calcula los eventos posibles del vuelo y sus probabilidades. `vision` = 'real' usa el
 // estado verdadero del avión y el tiempo real; 'despacho' usa lo que se sabe (previsión y
@@ -57,9 +103,12 @@ export function amenazas(ctx, vision = 'real') {
   const lista = [];
   const add = (e) => { if (e.p > 0) lista.push(e); };
   const era = epoca(anio);
-  const fatiga = ctx.jornada > 10 ? 1 + 0.15 * (ctx.jornada - 10) : 1;
+  // Cansancio: crece con la actividad y se dispara por encima del límite legal (13 h).
+  const fatiga = ctx.jornada > 10 ? 1 + 0.15 * (ctx.jornada - 10) + 0.35 * Math.max(0, ctx.jornada - 13) : 1;
   const noche = ctx.noche ? 1.3 : 1;
-  const presion = ctx.despachoIrregular ? 3 : 1;
+  // Presión por despachar fuera de norma: la tripulación sabe que la compañía quiere que llegue.
+  const presion = !ctx.despachoIrregular ? 1 : ctx.irregularidades.some((x) => x.codigo === 'minimos') ? 6 : 3;
+  const dej = dejadez(ctx, vision);
   const cfit = proteccionCFIT(avion, anio);
   const montana = destino.montana ? 2.5 : 1;
   const bimotor = tipo.nMotores === 2;
@@ -79,7 +128,7 @@ export function amenazas(ctx, vision = 'real') {
     const base = { averia: a.id, motor: a.motor, origen: 'tecnico', p: pf };
     switch (def.fallo) {
       case 'apagado': {
-        add({ ...base, id: 'apagadoDespegue', p: pf * 0.25, esc: (bimotor ? 0.02 : tipo.nMotores === 3 ? 0.006 : 0.004) * (restringido ? 2 : 1) * fatiga * era, escena: 'vuelo' });
+        add({ ...base, id: 'apagadoDespegue', p: pf * 0.25, esc: (bimotor ? 0.012 : tipo.nMotores === 3 ? 0.005 : 0.004) * (restringido ? 2 : 1) * fatiga * era, escena: 'vuelo' });
         add({ ...base, id: 'apagadoCrucero', p: pf * 0.65, esc: (bimotor ? 0.003 : 0.001) * era, escena: 'vuelo' });
         add({ ...base, id: 'apagadoAproximacion', p: pf * 0.1, esc: (bimotor ? 0.01 : 0.004) * fatiga * noche * era, escena: 'aproximacion' });
         break;
@@ -87,16 +136,16 @@ export function amenazas(ctx, vision = 'real') {
       case 'noContenido': add({ ...base, id: 'noContenido', esc: 0.12, escena: 'vuelo' }); break;
       case 'incendio': add({ ...base, id: 'incendio', esc: 0.03 * era, escena: 'vuelo' }); break;
       case 'estructuraVuelo': add({ ...base, id: 'estructura', esc: 0.2, escena: 'vuelo' }); break;
-      case 'hidraulico': add({ ...base, id: 'hidraulico', esc: 0.004 * (tipo.hidraulicos <= 2 ? 2 : 1) * (contaminada(clima.destino) ? 2 : 1), escena: 'pista' }); break;
+      case 'hidraulico': add({ ...base, id: 'hidraulico', esc: 0.001 * (tipo.hidraulicos <= 2 ? 2 : 1) * (contaminada(clima.destino) ? 2 : 1), escena: 'pista' }); break;
       case 'tren': add({ ...base, id: 'tren', esc: 0.015, escena: 'pista' }); break;
       case 'presurizacion': add({ ...base, id: 'presurizacion', esc: 0.001, escena: 'vuelo' }); break;
       case 'reventon': add({ ...base, id: 'reventon', esc: 0.03 * (anio >= 2001 ? 0.2 : 1), escena: 'vuelo' }); break;
       default: break; // los frenos agravan la salida de pista (más abajo)
     }
   }
-  if (vision === 'real') {
-    add({ id: 'apagadoSinAviso', origen: 'tecnico', p: horas * tipo.nMotores * 0.00002, esc: (bimotor ? 0.006 : 0.002) * era, escena: 'vuelo' });
-  }
+  add({ id: 'apagadoSinAviso', origen: 'tecnico', p: Math.min(0.2, horas * tipo.nMotores * 0.00002 * dej), esc: (bimotor ? 0.006 : 0.002) * era, escena: 'vuelo' });
+  // Lo que un mantenimiento al día habría encontrado: cables y mandos de vuelo, compensadores.
+  if (dej > 1.2) add({ id: 'mandos', origen: 'tecnico', propio: true, p: Math.min(0.06, 0.0008 * (dej - 1)), esc: Math.min(0.5, 0.005 * (dej - 1)), escena: 'vuelo' });
   add({ id: 'ave', origen: 'entorno', p: 0.0002, esc: 0.001, escena: 'vuelo' });
 
   // --- Meteorología en destino
@@ -110,7 +159,7 @@ export function amenazas(ctx, vision = 'real') {
   if (vis < min || sinViento) {
     const niebla = vis < min;
     const motivo = niebla ? `${textoClima(clima.destino)} en ${destino.id}, por debajo de mínimos` : `viento cruzado fuera de límites en ${destino.id}`;
-    const continuar = Math.min(0.3, 0.01 * fatiga * presion * (extra ? 0.5 : 1.5) * era);
+    const continuar = Math.min(0.3, 0.008 * fatiga * presion * (extra ? 0.5 : 1.5) * era);
     const escCfit = Math.min(0.4, 0.06 * montana * (destino.ils === 0 ? 1.5 : 1) * cfit.factor * noche * fatiga);
     const escPista = Math.min(0.4, 0.04 * (destino.finPista === 'peligroso' ? 4 : 1) * fatiga);
     add({
@@ -118,20 +167,20 @@ export function amenazas(ctx, vision = 'real') {
       variante: niebla ? 'visibilidad' : 'viento', escena: niebla ? 'aproximacion' : 'pista', motivo, mejora: extra ? 0.35 : 0.1,
     });
   } else if (vis < min * 1.5) {
-    add({ id: 'cercaMinimos', origen: 'meteo', p: 0.35, esc: 0.0004 * montana * cfit.factor * noche * fatiga * era, escena: 'aproximacion', motivo: `${textoClima(clima.destino)} en ${destino.id}, cerca de mínimos` });
+    add({ id: 'cercaMinimos', origen: 'meteo', p: 0.35, esc: 0.0001 * montana * cfit.factor * noche * fatiga * era, escena: 'aproximacion', motivo: `${textoClima(clima.destino)} en ${destino.id}, cerca de mínimos` });
   }
   if (clima.destino.tipo === 'tormenta' && clima.destino.sev >= 2) {
-    add({ id: 'cizalladura', origen: 'meteo', p: 0.004 * clima.destino.sev, esc: 0.06 * (avion.equipo.cizalladura ? 0.4 : 1) * fatiga, escena: 'aproximacion' });
+    add({ id: 'cizalladura', origen: 'meteo', p: 0.002 * clima.destino.sev, esc: 0.012 * (avion.equipo.cizalladura ? 0.4 : 1) * fatiga, escena: 'aproximacion' });
     add({ id: 'tormentaDestino', origen: 'meteo', p: extra ? 0.15 : 0.25, esc: 0, escena: null, motivo: `Tormenta en ${destino.id}` });
   }
   if (clima.destino.tipo === 'viento' && clima.destino.sev === 2) {
-    add({ id: 'vientoCruzado', origen: 'meteo', p: 0.15, esc: 0.0005 * (destino.montana ? 3 : 1) * fatiga, escena: 'pista', motivo: `Viento cruzado fuerte en ${destino.id}` });
+    add({ id: 'vientoCruzado', origen: 'meteo', p: 0.15, esc: 0.0002 * (destino.montana ? 3 : 1) * fatiga, escena: 'pista', motivo: `Viento cruzado fuerte en ${destino.id}` });
   }
 
   // --- Pista: salida de pista al aterrizar
   {
     const c = clima.destino;
-    let p = 0.00005;
+    let p = 0.00003;
     if (c.tipo === 'lluvia') p = [0.00005, 0.0006, 0.0015][c.sev - 1];
     if (c.tipo === 'nieve') p = [0.0008, 0.002, 0.004][c.sev - 1];
     if (c.tipo === 'tormenta') p = [0.0003, 0.001, 0.002][c.sev - 1];
@@ -141,7 +190,7 @@ export function amenazas(ctx, vision = 'real') {
     const viento = c.tipo === 'viento' && c.sev >= 2 ? 2 : 1;
     add({
       id: 'salidaPista', origen: 'pista', p: p * margen * frenos * viento * fatiga,
-      esc: 0.03 * (destino.finPista === 'peligroso' ? 5 : 1) * (margen > 2 ? 1.5 : 1), escena: 'pista',
+      esc: 0.015 * (destino.finPista === 'peligroso' ? 4 : 1) * (margen > 2 ? 1.5 : 1), escena: 'pista',
       motivo: contaminada(c) ? `Pista ${c.tipo === 'nieve' ? 'con nieve' : 'mojada'} en ${destino.id}` : null,
     });
   }
@@ -155,13 +204,19 @@ export function amenazas(ctx, vision = 'real') {
     add({ id: 'hielo', origen: 'meteo', p: 0.0005 * clima.origen.sev, esc: 0.05 * era, escena: 'vuelo', motivo: `Nieve en ${origen.id} al despegar` });
   }
   if (clima.origen.tipo === 'tormenta' && clima.origen.sev >= 2) {
-    add({ id: 'cizalladuraDespegue', origen: 'meteo', p: 0.002 * clima.origen.sev, esc: 0.05 * (avion.equipo.cizalladura ? 0.4 : 1), escena: 'vuelo' });
+    add({ id: 'cizalladuraDespegue', origen: 'meteo', p: 0.001 * clima.origen.sev, esc: 0.012 * (avion.equipo.cizalladura ? 0.4 : 1), escena: 'vuelo' });
   }
 
   // --- Tráfico y factor humano
-  add({ id: 'conflicto', origen: 'trafico', p: 0.00005 * (origen.tam + destino.tam) / 6, esc: 0.02 * (avion.equipo.tcas ? 0.15 : 1), escena: 'vuelo' });
-  add({ id: 'errorTripulacion', origen: 'humano', p: 0.0003 * fatiga * noche * presion, esc: 0.004 * montana * cfit.factor * era, escena: 'aproximacion' });
+  add({ id: 'conflicto', origen: 'trafico', p: 0.00005 * (origen.tam + destino.tam) / 6, esc: 0.008 * (avion.equipo.tcas ? 0.15 : 1), escena: 'vuelo' });
+  add({ id: 'errorTripulacion', origen: 'humano', p: 0.0003 * fatiga * noche * presion, esc: 0.003 * montana * cfit.factor * era, escena: 'aproximacion' });
 
+  // Escala general y, en lo técnico, la dejadez.
+  for (const e of lista) {
+    if (e.propio || !e.esc) continue;
+    e.esc *= BASE;
+    if (e.origen === 'tecnico') e.esc = Math.min(0.6, e.esc * dej);
+  }
   return lista;
 }
 
@@ -244,5 +299,7 @@ export function factoresAgravantes(ctx, evento) {
   if (evento.escena === 'pista' && destino.finPista === 'peligroso') f.push({ texto: `Terreno peligroso al final de la pista de ${destino.id}`, imputable: false });
   if (ctx.cargaPorPista < 1 && evento.id === 'apagadoDespegue') f.push({ texto: `Despegue con poco margen de pista en ${origen.id}`, imputable: false });
   for (const irr of ctx.irregularidades) f.push({ texto: irr.texto, imputable: true });
+  const desatendidas = averiasDesatendidas(avion, ctx.t ?? 0);
+  if (desatendidas.length) f.push({ texto: `${desatendidas.length === 1 ? 'Una avería conocida llevaba' : `${desatendidas.length} averías conocidas llevaban`} días sin atender`, imputable: true });
   return f;
 }

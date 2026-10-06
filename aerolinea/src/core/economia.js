@@ -52,10 +52,12 @@ export const TARIFAS = {
   alta: { nombre: 'Alta', precio: 1.25 },
 };
 
-// Billete en dólares de 1976: los tramos cortos son caros por km; los largos compiten con los
-// chárter. El Concorde cobra como una primera clase con recargo.
+// Billete medio en dólares de 1976 (lo que de verdad se cobra, con descuentos incluidos): los
+// tramos cortos son caros por km y los largos compiten con los chárter. Queda cerca del
+// rendimiento por pasajero-milla de las aerolíneas de EE. UU. de la época. El Concorde cobra
+// como una primera clase con recargo.
 export function tarifaBase(distancia) {
-  return distancia <= 1000 ? 25 + 0.06 * distancia : 85 + 0.045 * (distancia - 1000);
+  return distancia <= 1000 ? 26 + 0.046 * distancia : 72 + 0.025 * (distancia - 1000);
 }
 
 export function precioBillete(distancia, tarifa, anio, supersonico = false) {
@@ -108,31 +110,35 @@ export function demandaPropia(o, d, t, reputacion, tarifa = 'normal', servicio =
 // --- Catering y servicio a bordo
 
 export const SERVICIOS = {
-  basico: { nombre: 'Básico', coste: 2, demanda: -0.06, reputacion: -0.01 },
-  estandar: { nombre: 'Estándar', coste: 4.5, demanda: 0, reputacion: 0 },
-  superior: { nombre: 'Superior', coste: 9, demanda: 0.06, reputacion: 0.02 },
+  basico: { nombre: 'Básico', coste: 0.8, demanda: -0.06, reputacion: -0.01 },
+  estandar: { nombre: 'Estándar', coste: 2, demanda: 0, reputacion: 0 },
+  superior: { nombre: 'Superior', coste: 4.5, demanda: 0.06, reputacion: 0.02 },
 };
 
-// Coste del catering por pasajero en un aeropuerto. El país pesa, pero también la competencia
-// entre proveedores (los grandes aeropuertos tienen varios) y el volumen que contratas allí.
+// Coste del catering por pasajero en un aeropuerto, en dólares de 1976 para una hora de vuelo
+// (unos 3,5 $ una comida en un vuelo de tres horas; en un salto de 40 minutos, casi nada). El
+// país pesa, pero también la competencia entre proveedores (los grandes aeropuertos tienen
+// varios) y el volumen que contratas allí.
 export function costeCatering(servicio, horas, aeropuerto, salidasDiarias, anio, supersonico = false) {
   const pais = 0.8 + 0.25 * nivelCostes(aeropuerto);
   const proveedores = aeropuerto.tam >= 5 ? 0.9 : aeropuerto.tam <= 2 ? 1.15 : 1;
   const volumen = salidasDiarias >= 10 ? 0.85 : salidasDiarias >= 4 ? 0.92 : 1;
   const base = SERVICIOS[supersonico ? 'superior' : servicio].coste * (supersonico ? 3 : 1);
-  return base * (0.4 + 0.6 * horas) * pais * proveedores * volumen * indice(anio);
+  return base * Math.max(0.15, 0.55 * horas) * pais * proveedores * volumen * indice(anio);
 }
 
 // --- Costes de aeropuerto
 
-const ESCALA_HANDLING = { regional: 0.5, estrecho: 1, cuatrimotor: 1.6, ancho: 3, supersonico: 3 };
+const ESCALA_HANDLING = { regional: 0.4, estrecho: 1, cuatrimotor: 1.5, ancho: 2.6, supersonico: 2.5 };
 
 export function tasasAeropuerto(tipo, aeropuerto, paxSalida, anio) {
   const nivel = nivelCostes(aeropuerto);
   const i = indice(anio);
   const aterrizaje = tipo.mtow * 2.5 * nivel * (0.7 + 0.15 * aeropuerto.tam) * i;
-  const handling = 120 * ESCALA_HANDLING[tipo.clase] * nivel * i;
-  const pasajeros = paxSalida * 1.5 * nivel * (0.5 + 0.25 * aeropuerto.tam) * i;
+  // Atención en tierra de cada salida: rampa, equipajes, mostradores, limpieza y personal de
+  // escala. En los 70 era una de las partidas grandes de una aerolínea.
+  const handling = 450 * ESCALA_HANDLING[tipo.clase] * nivel * i;
+  const pasajeros = paxSalida * 1 * nivel * (0.5 + 0.25 * aeropuerto.tam) * i;
   return { aterrizaje, handling, pasajeros, total: aterrizaje + handling + pasajeros };
 }
 
@@ -143,8 +149,10 @@ export const pernocta = (tipo, aeropuerto, anio) =>
 
 const LINEA_HORA = { regional: 40, estrecho: 80, cuatrimotor: 120, ancho: 220, supersonico: 600 };
 
+// Sueldo, cargas y dietas por hora de bloque. Los pilotos de turbohélice cobran menos.
 export function tripulacionHora(tipo, anio) {
-  return ((tipo.tecnica === 3 ? 160 : 130) + Math.ceil(tipo.plazas / 50) * 14) * indice(anio);
+  const cabina = (tipo.tecnica === 3 ? 215 : 175) * (tipo.clase === 'regional' ? 0.8 : 1);
+  return (cabina + Math.ceil(tipo.plazas / 50) * 20) * indice(anio);
 }
 
 export function costeVuelo({ tipo, horas, origen, destino, pax, ingreso, anio, combustibleExtra = false, catering = 0 }) {
@@ -154,18 +162,21 @@ export function costeVuelo({ tipo, horas, origen, destino, pax, ingreso, anio, c
   const tasasOrigen = tasasAeropuerto(tipo, origen, pax, anio);
   const tasasDestino = tasasAeropuerto(tipo, destino, 0, anio);
   const aeropuertos = tasasOrigen.pasajeros + tasasOrigen.handling + tasasDestino.aterrizaje;
-  const comision = ingreso * 0.09;
-  const total = combustible + tripulacion + linea + aeropuertos + catering + comision;
+  // Comisión de agencia y venta, reservas y atención al pasajero.
+  const ventas = ingreso * 0.09 + pax * 2 * indice(anio);
+  const total = combustible + tripulacion + linea + aeropuertos + catering + ventas;
   return {
     total: Math.round(total),
-    desglose: { combustible, tripulacion, mantenimiento: linea, aeropuertos, catering, comision },
+    desglose: { combustible, tripulacion, mantenimiento: linea, aeropuertos, catering, ventas },
   };
 }
 
 // --- Costes fijos diarios
 
 export const costeBaseDiario = (aeropuerto, anio) => aeropuerto.tam * 150 * nivelCostes(aeropuerto) * indice(anio);
-export const administracionDiaria = (tipo, anio) => 250 * ESCALA_HANDLING[tipo.clase] * indice(anio);
-// Sueldos que se pagan aunque el avión no vuele: unas tres horas de tripulación al día.
-export const tripulacionFijaDiaria = (tipo, anio) => tripulacionHora(tipo, anio) * 3;
+// Estructura de la compañía (dirección, administración, oficinas) que crece con la flota.
+export const administracionDiaria = (tipo, anio) => 1200 * ESCALA_HANDLING[tipo.clase] * indice(anio);
+// Sueldos que se pagan aunque el avión no vuele (reservas, formación, mínimo de tripulaciones):
+// hora y media de tripulación al día.
+export const tripulacionFijaDiaria = (tipo, anio) => tripulacionHora(tipo, anio) * 1.5;
 export const seguroDiario = (valor) => (valor * 0.015) / 365;

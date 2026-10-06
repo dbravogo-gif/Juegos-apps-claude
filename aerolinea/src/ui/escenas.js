@@ -224,8 +224,8 @@ export function htmlEscena(accidente) {
   const sil = silueta(tipo);
   const lugar = POR_ID[accidente.lugar];
   return `<style>${ESTILO_COMUN}</style>
-    <div class="escena">${ESCENAS[accidente.causa]({ ...sil, svg: `<g>${sil.svg}</g>` })}</div>
-    <p class="escena-pie"><span>${esc(accidente.numero)} · ${esc(accidente.matricula)} · ${esc(tipo.corto)}</span><span>${accidente.enRuta ? 'En ruta' : lugar.id} · ${textoHora(accidente.t)}</span><span>${LETREROS[accidente.causa]}</span></p>`;
+    <div class="escena">${ESCENAS[accidente.escena]({ ...sil, svg: `<g>${sil.svg}</g>` })}</div>
+    <p class="escena-pie"><span>${esc(accidente.numero)} · ${esc(accidente.matricula)} · ${esc(tipo.corto)}</span><span>${accidente.enRuta ? 'En ruta' : lugar.id} · ${textoHora(accidente.t)}</span><span>${LETREROS[accidente.escena]}</span></p>`;
 }
 
 // --- noticiario
@@ -245,8 +245,8 @@ export function htmlNoticia(accidente, estado) {
   const sinFallecidos = accidente.fallecidos === 0;
   let titular;
   if (accidente.enRuta) titular = `Se estrella un avión entre ${o.ciudad} y ${d.ciudad}`;
-  else if (sinFallecidos && accidente.causa === 'pista') titular = `Grave accidente en el aeropuerto de ${lugar.ciudad}`;
-  else titular = TITULARES[accidente.causa](lugar.ciudad);
+  else if (sinFallecidos && accidente.escena === 'pista') titular = `Grave accidente en el aeropuerto de ${lugar.ciudad}`;
+  else titular = TITULARES[accidente.escena](lugar.ciudad);
   const donde = accidente.enRuta ? '' : ` en ${lugar.nombre}`;
   const ticker = [
     'Las autoridades de aviación civil abren una investigación',
