@@ -72,8 +72,8 @@ button,input,select{font:inherit;color:inherit}
 .cerrar{background:none;border:0;font-size:24px;line-height:1;color:var(--suave);cursor:pointer;padding:0 4px}
 
 /* Pestañas y hoja */
-#pestanas{display:grid;grid-template-columns:repeat(5,1fr);background:var(--panel);border-top:1px solid var(--linea);padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}
-#pestanas button{background:none;border:0;padding:11px 2px 10px;font:600 13px/1 var(--f-texto);letter-spacing:.06em;text-transform:uppercase;color:var(--suave);cursor:pointer;border-top:2px solid transparent}
+#pestanas{display:grid;grid-template-columns:repeat(6,1fr);background:var(--panel);border-top:1px solid var(--linea);padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}
+#pestanas button{background:none;border:0;padding:11px 2px 10px;font:600 12px/1 var(--f-texto);letter-spacing:.04em;text-transform:uppercase;color:var(--suave);cursor:pointer;border-top:2px solid transparent}
 #pestanas button[aria-selected="true"]{color:var(--ambar);border-top-color:var(--ambar)}
 #hoja{position:absolute;left:0;right:0;bottom:0;max-height:68%;display:flex;flex-direction:column;background:var(--panel);border-top:1px solid var(--linea);border-radius:14px 14px 0 0;z-index:4;box-shadow:0 -10px 30px rgba(0,0,0,.35)}
 .hoja-cab{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 6px}
@@ -144,6 +144,29 @@ button,input,select{font:inherit;color:inherit}
 .diario .d-aviso{border-left-color:#9fc3ff}
 .diario .d-grave{border-left-color:#ff9c8c}
 .diario .d-accidente{border-left-color:var(--rojo);color:#ffb3a6}
+/* v3: mercados, noticias, competencia y reputación */
+.mercado{display:grid;gap:6px;padding:10px 0;border-bottom:1px solid var(--linea);min-width:0}
+.mercado-cifras{margin:0;font-size:14px;line-height:1.5}
+.mercado-cifras strong{font-variant-numeric:tabular-nums}
+.tabla-envoltura{overflow-x:auto;max-width:100%}
+.tabla-mercado{border-collapse:collapse;width:100%;font-size:13px;min-width:340px}
+.tabla-mercado th,.tabla-mercado td{text-align:left;padding:5px 6px;border-bottom:1px solid var(--linea);white-space:nowrap}
+.tabla-mercado thead th{font:600 11px/1 var(--f-texto);letter-spacing:.06em;text-transform:uppercase;color:var(--suave)}
+.tabla-mercado tbody th{font-weight:600}
+.tabla-mercado .tu-fila th,.tabla-mercado .tu-fila td{color:var(--ambar)}
+.noticias{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.noticias li{display:grid;gap:3px;font-size:14px;padding-left:10px;border-left:2px solid var(--linea)}
+.noticias li.importante{border-left-color:var(--ambar)}
+.noticias time{font:400 11px var(--f-cifra);color:var(--suave)}
+.noticias li>span:not(.chip){color:var(--suave);font-size:13px}
+.noticias .chip{justify-self:start}
+.chip.escala-global{background:var(--ambar-oscuro);color:var(--ambar)}
+.chip.escala-regional{background:#23324a;color:#9fc3ff}
+.reputacion{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0}
+.reputacion>div{background:var(--panel-2);border:1px solid var(--linea);border-radius:var(--r);padding:8px 10px}
+.reputacion dt{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--suave)}
+.reputacion dd{margin:2px 0 0;font:600 15px var(--f-texto);text-transform:capitalize}
+.rival-datos{margin:0;font-size:13px}
 
 /* Modales */
 #modal{position:fixed;inset:0;z-index:20;background:rgba(5,10,15,.78);display:flex;align-items:flex-end;justify-content:center;padding:env(safe-area-inset-top,0px) 0 0}
@@ -304,7 +327,8 @@ details.bloque>*+*{margin-top:8px}
   <nav id="pestanas" role="tablist">
     <button data-panel="flota" role="tab" aria-selected="false">Flota</button>
     <button data-panel="rutas" role="tab" aria-selected="false">Rutas</button>
-    <button data-panel="mercado" role="tab" aria-selected="false">Mercado</button>
+    <button data-panel="mercado" role="tab" aria-selected="false">Aviones</button>
+    <button data-panel="mundo" role="tab" aria-selected="false">Mundo</button>
     <button data-panel="cuentas" role="tab" aria-selected="false">Cuentas</button>
     <button data-panel="diario" role="tab" aria-selected="false">Diario</button>
   </nav>

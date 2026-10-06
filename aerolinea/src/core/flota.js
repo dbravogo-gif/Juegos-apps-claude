@@ -109,6 +109,8 @@ export function crearAvion(estado, r, tipoId, opciones = {}) {
 export function valorMercado(avion, anio) {
   const tipo = TIPOS[avion.tipo];
   const i = indice(anio);
+  // Sin soporte del fabricante (el Concorde desde finales de 2003) solo vale como pieza de museo.
+  if (tipo.clase === 'supersonico' && anio >= 2004) return Math.round(precioNuevo(tipo, anio) * 0.02);
   const base = precioNuevo(tipo, anio) * Math.max(0.12, Math.pow(0.93, edad(avion, anio)));
   const prog = programa(tipo);
   // Lo que falta para la próxima revisión estructural y para la revisión general de cada motor

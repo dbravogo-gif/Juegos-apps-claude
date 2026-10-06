@@ -14,9 +14,19 @@ import {
 } from '../core/mantenimiento.js';
 import { valorMercado, edad } from '../core/flota.js';
 import { resumenSeguridad } from '../core/seguridad.js';
-import { demandaPropia, precioBillete, precioNuevo, precioGalon, indice, TARIFAS, SERVICIOS } from '../core/economia.js';
+import { precioBillete, precioNuevo, precioGalon, indice, TARIFAS, SERVICIOS, liberalizado } from '../core/economia.js';
+import { demandaConEventos, paxJugador } from '../core/mercado.js';
+import { etiquetaGeneral } from '../core/reputacion.js';
+import { htmlMercado, htmlEstimacion } from './mundo.js';
 import { limitePrestamo, patrimonio, puedeOperar, horariosRuta, costeReparar, costeInspeccionCompra } from '../core/sim.js';
 import { dinero, porcentaje, esc, km } from './formato.js';
+
+// Redondeo a dos cifras significativas, para cifras de mercado aproximadas.
+const redondo = (x) => {
+  if (x < 20) return Math.round(x);
+  const m = Math.pow(10, Math.floor(Math.log10(x)) - 1);
+  return (Math.round(x / m) * m).toLocaleString('es-ES');
+};
 
 const vacio = (titulo, texto) => `<div class="vacio"><p class="vacio-titulo">${titulo}</p><p>${texto}</p></div>`;
 const horasTexto = (h) => `${Math.round(h).toLocaleString('es-ES')} h`;
@@ -154,14 +164,14 @@ export function panelRutas(estado) {
   const base = POR_ID[estado.base];
   const n = anio(estado.t);
   const opciones = destinosPosibles(estado).map(({ a, dist }) => {
-    const pax = Math.round(demandaPropia(base, a, estado.t, estado.reputacion));
+    const pax = redondo(demandaConEventos(estado, base, a, estado.t));
     return `<option value="${a.id}">${a.id} · ${esc(a.ciudad)} · ${km(dist)} · ~${pax} pax/día</option>`;
   }).join('');
   const nueva = `
   <div class="nueva-ruta">
     <label class="campo"><span>Nueva ruta desde ${base.id}</span><select id="nueva-ruta-destino">${opciones}</select></label>
     <button class="btn" data-accion="crear-ruta">Abrir ruta</button>
-    <p class="nota">Pax/día: lo que podrías llenar en cada sentido con tu reputación de hoy. También puedes tocar un aeropuerto en el globo.</p>
+    <p class="nota">Pax/día: la demanda de todo el mercado en cada sentido, la compartes con las demás compañías. Toca un aeropuerto en el globo para ver quién opera y cuánto te tocaría.</p>
   </div>`;
   if (!estado.rutas.length) return vacio('Sin rutas', 'Una ruta une tu base con un destino. Después le asignas un avión y decides cuántas vueltas hace al día.') + nueva;
 
@@ -171,14 +181,15 @@ export function panelRutas(estado) {
     const avion = estado.aviones.find((a) => a.id === r.avion);
     const compat = avion ? evaluarRuta(avion.tipo, r.origen, r.destino, anioDecimal(estado.t)) : null;
     const horas = compat ? compat.duracion / 60 : dist / 750 + 0.5;
-    const pax = Math.round(demandaPropia(base, d, estado.t, estado.reputacion, r.tarifa, r.servicio, horas));
+    const pax = Math.round(paxJugador(estado, base, d, estado.t));
+    const mercadoTotal = redondo(demandaConEventos(estado, base, d, estado.t));
     const ocupacion = r.stats.plazas ? r.stats.pax / r.stats.plazas : null;
     const libres = estado.aviones.filter((a) => !a.ruta && !puedeOperar(estado, a, r.destino));
     const puntual = r.stats.vuelos ? r.stats.retraso / r.stats.vuelos : 0;
     return `
     <article class="ficha">
       <header class="ficha-cab">
-        <div><h3>${esc(estado.codigo)} ${r.numero} · ${r.origen} ⇄ ${r.destino}</h3><p>${esc(d.nombre)} · ${km(dist)} · billete ${dinero(precioBillete(dist, r.tarifa, n, avion && TIPOS[avion.tipo].clase === 'supersonico'))}</p></div>
+        <div><h3>${esc(estado.codigo)} ${r.numero} · ${r.origen} ⇄ ${r.destino}</h3><p>${esc(d.nombre)} · ${km(dist)} · billete ${dinero(precioBillete(dist, r.tarifa, anioDecimal(estado.t), avion && TIPOS[avion.tipo].clase === 'supersonico', base, d))}${liberalizado(base, d, anioDecimal(estado.t)) ? '' : ' · precios regulados'}</p></div>
       </header>
       <p class="ficha-estado">${avion ? `<span class="chip vuelo">${esc(avion.matricula)}</span> ${esc(TIPOS[avion.tipo].corto)}` : `<span class="chip alerta">Sin avión</span>`}
         ${!avion && libres.length ? `<button class="btn-mini" data-accion="asignar-libre" data-ruta="${r.id}" data-avion="${libres[0].id}">Asignar ${esc(libres[0].matricula)}</button>` : ''}</p>
@@ -191,7 +202,7 @@ export function panelRutas(estado) {
           <button class="btn-mini" data-accion="frecuencia" data-ruta="${r.id}" data-delta="1" aria-label="Una vuelta más">+</button>
         </div>
       </div>
-      <p class="nota">Salidas de ${r.origen}: ${horariosRuta(r).map((m) => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`).join(' · ')} · demanda ~${pax} pax/día</p>
+      <p class="nota">Salidas de ${r.origen}: ${horariosRuta(r).map((m) => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`).join(' · ')} · ${avion ? `te tocan ~${pax} de ~${mercadoTotal} pax/día` : `mercado de ~${mercadoTotal} pax/día`}</p>
       <div class="segmentado" role="group" aria-label="Tarifa">
         ${Object.entries(TARIFAS).map(([k, t]) => `<button class="${r.tarifa === k ? 'activo' : ''}" data-accion="tarifa" data-ruta="${r.id}" data-tarifa="${k}">${t.nombre}</button>`).join('')}
       </div>
@@ -308,7 +319,7 @@ export function panelCuentas(estado) {
     <div><span>Caja</span><strong>${dinero(estado.caja)}</strong></div>
     <div><span>Préstamo</span><strong>${dinero(estado.prestamo)}</strong></div>
     <div><span>Patrimonio</span><strong>${dinero(patrimonio(estado))}</strong></div>
-    <div><span>Reputación</span><strong>${Math.round(estado.reputacion)}/100</strong></div>
+    <div><span>Reputación</span><strong>${etiquetaGeneral(estado.reputacion)}</strong></div>
   </div>
   <h3 class="seccion">Últimos 30 días</h3>
   ${grafica(estado.cuentas.historial)}
@@ -343,7 +354,6 @@ export function htmlAeropuerto(estado, id) {
   const n = anio(estado.t);
   const dist = distanciaKm(base, a);
   const ruta = estado.rutas.find((r) => r.destino === id);
-  const pax = id === estado.base ? null : Math.round(demandaPropia(base, a, estado.t, estado.reputacion));
   const tipos = [...new Set(estado.aviones.map((x) => x.tipo))];
   const compat = id === estado.base ? [] : tipos.map((t) => {
     const r = evaluarRuta(t, estado.base, id, anioDecimal(estado.t));
@@ -357,7 +367,8 @@ export function htmlAeropuerto(estado, id) {
   const ils = a.ils ? `ILS CAT ${a.ils}` : 'sin ILS';
   return `
     <div class="ap-cab"><div><h3>${a.id} · ${esc(a.ciudad)}</h3><p>${esc(a.nombre)}</p></div><button class="cerrar" data-accion="cerrar-ap" aria-label="Cerrar">×</button></div>
-    <p class="nota">Pista ${pistaEn(a, n).toLocaleString('es-ES')} m · ${ils}${a.montana ? ' · terreno montañoso' : ''}${a.elev > 500 ? ` · ${a.elev} m de altitud` : ''}${a.finPista === 'peligroso' ? ' · final de pista peligroso' : ''} · costes ${nivelCostes(a) > 1.2 ? 'altos' : nivelCostes(a) < 0.8 ? 'bajos' : 'medios'}${id !== estado.base ? ` · ${km(dist)} desde ${base.id} · ~${pax} pax/día` : ''}</p>
+    <p class="nota">Pista ${pistaEn(a, n).toLocaleString('es-ES')} m · ${ils}${a.montana ? ' · terreno montañoso' : ''}${a.elev > 500 ? ` · ${a.elev} m de altitud` : ''}${a.finPista === 'peligroso' ? ' · final de pista peligroso' : ''} · costes ${nivelCostes(a) > 1.2 ? 'altos' : nivelCostes(a) < 0.8 ? 'bajos' : 'medios'}${id !== estado.base ? ` · ${km(dist)} desde ${base.id}` : ''}</p>
+    ${id !== estado.base && abiertoEn(a, n) ? htmlMercado(estado, base, a) + (ruta ? '' : htmlEstimacion(estado, base, a)) : ''}
     ${compat.length ? `<ul class="lista-simple">${compat.join('')}</ul>` : ''}
     ${accion}`;
 }

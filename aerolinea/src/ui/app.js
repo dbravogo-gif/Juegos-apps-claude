@@ -12,6 +12,8 @@ import { crearGlobo } from './globo.js';
 import { htmlTarjeta } from './tarjeta.js';
 import { htmlEscena, htmlNoticia, htmlInforme, DURACION_ESCENA } from './escenas.js';
 import { panelFlota, panelRutas, panelMercado, panelCuentas, panelDiario, htmlAeropuerto } from './paneles.js';
+import { panelMundo, htmlAvance } from './mundo.js';
+import { etiquetaGeneral } from '../core/reputacion.js';
 import { dinero, esc } from './formato.js';
 
 const CLAVE = 'aerolinea_partida_v1';
@@ -71,7 +73,8 @@ function pintarBarra() {
   ui.fecha.textContent = `${textoFecha(estado.t, { corta: true })} · ${textoHora(estado.t)}`;
   ui.caja.textContent = dinero(estado.caja);
   ui.caja.classList.toggle('negativo', estado.caja < 0);
-  ui.rep.textContent = Math.round(estado.reputacion);
+  const rep = etiquetaGeneral(estado.reputacion);
+  ui.rep.textContent = rep.charAt(0).toUpperCase() + rep.slice(1);
   for (const b of ui.velocidad.querySelectorAll('button')) {
     b.setAttribute('aria-pressed', String(Number(b.dataset.v) === velocidad));
   }
@@ -111,7 +114,8 @@ ui.velocidad.addEventListener('click', (e) => {
 const PANELES = {
   flota: ['Flota', panelFlota],
   rutas: ['Rutas', panelRutas],
-  mercado: ['Mercado', panelMercado],
+  mercado: ['Aviones', panelMercado],
+  mundo: ['Mundo', panelMundo],
   cuentas: ['Cuentas', panelCuentas],
   diario: ['Diario', panelDiario],
 };
@@ -290,6 +294,8 @@ function siguienteModal() {
     }, DURACION_ESCENA);
   } else if (item.tipo === 'noticia') {
     abrirModal(`${htmlNoticia(item.accidente, estado)}<button class="btn" data-cerrar>Continuar</button>`, 'modal-tele');
+  } else if (item.tipo === 'avance') {
+    abrirModal(`${htmlAvance(item.noticia)}<button class="btn" data-cerrar>Continuar</button>`, 'modal-tele');
   } else if (item.tipo === 'informe') {
     abrirModal(`${htmlInforme(item.accidente, estado)}<button class="btn" data-cerrar>Continuar</button>`, 'modal-tele');
   } else if (item.tipo === 'quiebra') {
@@ -356,6 +362,11 @@ function procesar(eventos) {
     } else if (ev.tipo === 'investigacion') encolar({ tipo: 'informe', accidente: ev.accidente });
     else if (ev.tipo === 'quiebra') encolar({ tipo: 'quiebra' });
     else if (ev.tipo === 'decision' && !modalActual) siguienteModal();
+    else if (ev.tipo === 'noticia') {
+      // Las grandes noticias del mundo paran el juego con un avance; el resto, un aviso.
+      if (ev.noticia.importante && ev.noticia.escala !== 'local') encolar({ tipo: 'avance', noticia: ev.noticia });
+      else aviso(ev.noticia.titular, ev.noticia.importante);
+    }
   }
   if (eventos.length) panelSucio = true;
 }

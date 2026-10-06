@@ -13,6 +13,11 @@ import { climaEn, climaRuta, franja } from './clima.js';
 import { evaluarTramo, evaluarRuta, pistaEfectiva } from './operaciones.js';
 import { amenazas, estimar, simular, minimos, visibilidad, bandaGrave, bandaIncidencia } from './riesgo.js';
 import { investigar } from './investigacion.js';
+import { crearMundoNoticias, avanzarMundo, cierre } from './mundo.js';
+import { crearCompetencia, cicloCompetencia } from './competencia.js';
+import { paxJugador, demandaPremium, concordesRivales } from './mercado.js';
+import * as Reputacion from './reputacion.js';
+import { reputacionInicial } from './reputacion.js';
 import {
   progresar, inspeccionar as inspeccionarAveria, diagnosticar as diagnosticarAveria, aplicarRevision,
   costeRevision, diasRevision, costeRG, alquilerMotor, diasTallerMotor, revisarMotor, diferir as diferirAveria,
@@ -20,12 +25,12 @@ import {
 } from './mantenimiento.js';
 import { crearAvion, generarMercado, ofertaSegundaMano, valorMercado, costeReparacion, edad } from './flota.js';
 import {
-  demandaPropia, demandaPremium, precioBillete, costeVuelo, costeCatering, costeBaseDiario, administracionDiaria,
-  tripulacionFijaDiaria, seguroDiario, pernocta, precioNuevo, indice, CAJA_INICIAL, INTERES_ANUAL, SERVICIOS,
+  precioBillete, costeVuelo, costeCatering, costeBaseDiario, administracionDiaria,
+  tripulacionFijaDiaria, seguroDiario, pernocta, precioNuevo, indice, CAJA_INICIAL, INTERES_ANUAL,
 } from './economia.js';
 import { MIN_DIA, dia, hora, anio, anioDecimal, mes, textoFecha } from './tiempo.js';
 
-export const VERSION = 2;
+export const VERSION = 3;
 const PASO = 5;
 const HORA_PRIMERA_SALIDA = 6;
 const HORA_ULTIMA_SALIDA = 23;
@@ -52,7 +57,7 @@ export function nuevaPartida({ nombre, base, semilla = Date.now() >>> 0 }) {
     pais: aeropuerto.pais,
     caja: CAJA_INICIAL,
     prestamo: 0,
-    reputacion: 50,
+    reputacion: reputacionInicial(),
     aviones: [],
     rutas: [],
     mercado: [],
@@ -65,10 +70,14 @@ export function nuevaPartida({ nombre, base, semilla = Date.now() >>> 0 }) {
     cuentas: { hoy: { ingresos: 0, gastos: 0 }, historial: [] },
     ajustes: { consulta: 'anormal', revisionesAuto: true },
     concordes: 0,
+    fundada: 8 * 60,
     siguienteId: 1,
     quiebra: false,
   };
   estado.mercado = generarMercado(estado, azarDe(estado), 1976, aeropuerto);
+  estado.mundo = crearMundoNoticias();
+  crearCompetencia(estado);
+  estado.mesCompetencia = mes(estado.t);
   apuntar(estado, `Se funda ${nombre} con base en ${aeropuerto.ciudad}.`, 'hito');
   return estado;
 }
@@ -88,9 +97,6 @@ function ingresar(estado, cantidad) {
   estado.cuentas.hoy.ingresos += cantidad;
 }
 
-const ajustarReputacion = (estado, delta) => {
-  estado.reputacion = Math.max(0, Math.min(100, estado.reputacion + delta));
-};
 
 export const anioActual = (estado) => anio(estado.t);
 
@@ -266,7 +272,7 @@ function datosComerciales(estado, a, ctx) {
   const { tipo, origen, destino, tramo } = ctx;
   if (ctx.traslado) {
     const n = anio(estado.t);
-    const coste = costeVuelo({ tipo, horas: ctx.duracion / 60, origen, destino, pax: 0, ingreso: 0, anio: n, combustibleExtra: ctx.combustibleExtra });
+    const coste = costeVuelo({ tipo, horas: ctx.duracion / 60, origen, destino, pax: 0, ingreso: 0, anio: n, combustibleExtra: ctx.combustibleExtra, pais: estado.pais });
     return { ruta: null, pax: 0, ingreso: 0, coste: coste.total, desglose: coste.desglose, clave: null, precio: 0 };
   }
   const n = anio(estado.t);
@@ -274,12 +280,13 @@ function datosComerciales(estado, a, ctx) {
   const tarifa = ruta?.tarifa ?? 'normal';
   const servicio = ruta?.servicio ?? 'estandar';
   const supersonico = tipo.clase === 'supersonico';
+  const concorde = { plazas: ruta ? ruta.frecuencia * tipo.plazas : tipo.plazas };
   const horas = ctx.duracion / 60;
-  const precio = precioBillete(tramo.distancia, tarifa, n, supersonico);
+  const precio = precioBillete(tramo.distancia, tarifa, anioDecimal(estado.t), supersonico, origen, destino);
   const clave = `${dia(estado.t)}:${origen.id}-${destino.id}`;
   const demanda = supersonico
-    ? demandaPremium(origen, destino, estado.t) * (estado.reputacion / 50)
-    : demandaPropia(origen, destino, estado.t, estado.reputacion, tarifa, servicio, horas);
+    ? demandaPremium(origen, destino, estado.t) * (estado.reputacion.prestigio / 50) * concorde.plazas / (concorde.plazas + concordesRivales(origen, destino, estado.t))
+    : paxJugador(estado, origen, destino, estado.t);
   const libre = Math.max(0, demanda - (estado.demandaUsada[clave] ?? 0));
   const r = generador(hash(estado.semilla, 'pax', a.id, estado.t));
   const pax = Math.max(0, Math.min(tramo.plazasMax, Math.round(libre * entre(r, 0.85, 1.15))));
@@ -288,7 +295,7 @@ function datosComerciales(estado, a, ctx) {
   const abastece = ruta?.cateringBase && horas <= 3 ? POR_ID[estado.base] : origen;
   const salidasAlli = estado.rutas.filter((x) => x.avion && (x.origen === abastece.id || x.destino === abastece.id)).reduce((s, x) => s + x.frecuencia, 0);
   const catering = pax * costeCatering(servicio, horas, abastece, salidasAlli, n, supersonico) * (ruta?.cateringBase && abastece.id !== origen.id ? 1.1 : 1);
-  const coste = costeVuelo({ tipo, horas, origen, destino, pax, ingreso, anio: n, combustibleExtra: ctx.combustibleExtra, catering });
+  const coste = costeVuelo({ tipo, horas, origen, destino, pax, ingreso, anio: n, combustibleExtra: ctx.combustibleExtra, catering, pais: estado.pais });
   return { ruta, pax, ingreso, coste: coste.total, desglose: coste.desglose, clave, precio };
 }
 
@@ -304,6 +311,17 @@ function debePreguntar(estado, ctx, est) {
 }
 
 function prepararSalida(estado, a, destino, eventos) {
+  // Un acontecimiento puede impedir el vuelo (espacio aéreo cerrado, huelga, Concorde retirado).
+  const motivo = cierre(estado.mundo, POR_ID[a.lugar], POR_ID[destino], estado.t, TIPOS[a.tipo].clase === 'supersonico');
+  if (motivo) {
+    a.libreEn = estado.t + 12 * 60;
+    if (a.avisoCierre !== `${motivo}|${dia(estado.t)}`) {
+      a.avisoCierre = `${motivo}|${dia(estado.t)}`;
+      apuntar(estado, `${a.matricula} no puede volar a ${destino}: ${motivo}.`, 'aviso');
+      eventos.push({ tipo: 'aviso', grave: true, texto: `${a.matricula} en tierra: ${motivo}` });
+    }
+    return;
+  }
   const ctx = contextoVuelo(estado, a, destino);
   if (!ctx.tramo.posible) {
     // No puede volar este tramo (por ejemplo, la pista ha cambiado): se queda en tierra.
@@ -356,7 +374,7 @@ function cancelarVuelo(estado, a, origen, destino) {
   a.libreEn = estado.t + (origen === estado.base ? 30 : 180);
   const com = datosComerciales(estado, a, contextoVuelo(estado, a, destino));
   gastar(estado, Math.round(com.ingreso * 0.1));
-  ajustarReputacion(estado, -0.8);
+  Reputacion.trasCancelacion(estado.reputacion);
   apuntar(estado, `${numero} cancelado. Se reubica a los pasajeros.`, 'info');
 }
 
@@ -440,7 +458,7 @@ function inspeccionEnRampa(estado, a, ctx) {
   if (r() >= 0.05) return;
   const multa = Math.round(50e3 * indice(anio(estado.t)));
   gastar(estado, multa);
-  ajustarReputacion(estado, -2);
+  Reputacion.trasMulta(estado.reputacion);
   apuntar(estado, `Inspección de la autoridad en ${ctx.origen.ciudad}: ${ctx.irregularidades[0].texto.toLowerCase()}. Multa de ${multa.toLocaleString('es-ES')} $.`, 'grave');
 }
 
@@ -475,7 +493,7 @@ function aterrizar(estado, a, eventos) {
   let ingreso = v.ingreso;
   let coste = v.coste;
   let inmovilizado = 0;
-  let reputacion = 0.03;
+  let desviado = false;
   const destino = POR_ID[v.destino];
   a.lugar = v.destino;
   a.estado = 'tierra';
@@ -488,7 +506,7 @@ function aterrizar(estado, a, eventos) {
       if (e.desvia) {
         coste += Math.round(v.coste * 0.3 + v.pax * 20 * indice(n));
         ingreso = Math.round(ingreso * 0.9);
-        reputacion -= 0.4;
+        desviado = true;
         apuntar(estado, `${v.numero} se desvía: ${e.motivo}. Llega con dos horas y media de retraso.`, 'aviso');
         eventos.push({ tipo: 'aviso', texto: `${v.numero} desviado: ${e.motivo}` });
       } else {
@@ -503,7 +521,7 @@ function aterrizar(estado, a, eventos) {
     if (!texto) continue;
     a.stats.incidentes++;
     const grave = ['noContenido', 'incendio', 'estructura', 'tren', 'turbulencia', 'salidaPista', 'mandos'].includes(e.id);
-    reputacion -= grave ? 3 : 1;
+    Reputacion.trasIncidente(estado.reputacion, grave);
     if (e.averia) {
       const av = a.averias.find((x) => x.id === e.averia);
       if (av) {
@@ -541,10 +559,9 @@ function aterrizar(estado, a, eventos) {
     eventos.push({ tipo: 'aviso', grave, texto });
   }
 
-  ajustarReputacion(estado, reputacion + (v.retraso > 60 ? -0.1 : 0));
   const ruta = v.traslado ? null : rutaDelTramo(estado, v.origen, v.destino);
   if (v.traslado) apuntar(estado, `${a.matricula} llega a ${v.destino} en vuelo de traslado.`, 'info');
-  if (ruta) ajustarReputacion(estado, SERVICIOS[ruta.servicio ?? 'estandar'].reputacion);
+  else Reputacion.trasVuelo(estado.reputacion, { retraso: v.retraso, desviado, servicio: ruta?.servicio ?? 'estandar', edadAvion: edad(a, n) });
   ingresar(estado, ingreso);
   gastar(estado, coste);
   a.stats.vuelos++;
@@ -623,7 +640,7 @@ function estrellar(estado, a, eventos) {
   };
   estado.accidentes.unshift(accidente);
   gastar(estado, v.coste);
-  ajustarReputacion(estado, -30);
+  Reputacion.trasAccidente(estado.reputacion);
   estado.aviones = estado.aviones.filter((x) => x.id !== a.id);
   for (const ruta of estado.rutas) if (ruta.avion === a.id) ruta.avion = null;
   const ap = POR_ID[accidente.lugar];
@@ -703,7 +720,7 @@ export function decidir(estado, idDecision, opcion) {
     const ctx = contextoVuelo(estado, a, dec.destino);
     if (!puedeTrasladar(estado, a, ctx)) return;
     gastar(estado, Math.round(datosComerciales(estado, a, ctx).ingreso * 0.1));
-    ajustarReputacion(estado, -0.8);
+    Reputacion.trasCancelacion(estado.reputacion);
     apuntar(estado, `${numero} cancelado: el ${a.matricula} vuelve sin pasaje a la base con un permiso especial de vuelo.`, 'aviso');
     despegar(estado, a, contextoTraslado(estado, a, dec.destino), { manual: true });
     return;
@@ -721,13 +738,13 @@ function finDeDia(estado, eventos) {
   gastar(estado, costeBaseDiario(base, n));
   for (const a of estado.aviones) {
     const tipo = TIPOS[a.tipo];
-    gastar(estado, administracionDiaria(tipo, n) + tripulacionFijaDiaria(tipo, n) + seguroDiario(valorMercado(a, n)));
+    gastar(estado, administracionDiaria(tipo, n, estado.pais) + tripulacionFijaDiaria(tipo, n, estado.pais) + seguroDiario(valorMercado(a, n)));
     if (a.lugar !== estado.base && a.estado !== 'vuelo') gastar(estado, pernocta(tipo, POR_ID[a.lugar], n));
     a.horasHoy = 0;
     for (const ev of progresar(estado, a, { dias: 1 }, r)) eventos.push(ev);
   }
   if (estado.prestamo > 0) gastar(estado, (estado.prestamo * INTERES_ANUAL) / 365);
-  ajustarReputacion(estado, (50 - estado.reputacion) * 0.01);
+  Reputacion.diaria(estado.reputacion);
 
   const hoy = dia(estado.t);
   for (const k of Object.keys(estado.demandaUsada)) {
@@ -742,6 +759,15 @@ function finDeDia(estado, eventos) {
     estado.mesMercado = mes(estado.t);
     renovarMercado(estado);
   }
+
+  // El mundo: acontecimientos cada día y la competencia una vez al mes.
+  const noticias = avanzarMundo(estado, estado.t);
+  if (mes(estado.t) !== estado.mesCompetencia) {
+    estado.mesCompetencia = mes(estado.t);
+    noticias.push(...cicloCompetencia(estado, estado.t));
+    cierreDeMes(estado);
+  }
+  for (const noticia of noticias) eventos.push({ tipo: 'noticia', noticia });
 
   estado.cuentas.historial.push({ dia: hoy - 1, ...estado.cuentas.hoy });
   if (estado.cuentas.historial.length > 90) estado.cuentas.historial.shift();
@@ -767,6 +793,26 @@ function finDeDia(estado, eventos) {
   }
 }
 
+// Cada mes: ocupación reciente de las rutas (la competencia la ve) y prestigio.
+function cierreDeMes(estado) {
+  const n = anio(estado.t);
+  for (const r of estado.rutas) {
+    const pax = r.stats.pax - (r.mes?.pax ?? 0);
+    const plazas = r.stats.plazas - (r.mes?.plazas ?? 0);
+    if (plazas > 0) r.lfReciente = r.lfReciente == null ? pax / plazas : 0.5 * r.lfReciente + 0.5 * (pax / plazas);
+    r.mes = { pax: r.stats.pax, plazas: r.stats.plazas };
+  }
+  const tipos = estado.aviones.map((a) => TIPOS[a.tipo]);
+  Reputacion.mensual(estado.reputacion, {
+    rutas: estado.rutas.filter((r) => r.avion).length,
+    anchos: tipos.some((x) => x.clase === 'ancho'),
+    supersonicos: tipos.some((x) => x.clase === 'supersonico'),
+    edadMedia: estado.aviones.length ? estado.aviones.reduce((s, a) => s + edad(a, n), 0) / estado.aviones.length : 15,
+    anios: (estado.t - (estado.fundada ?? 0)) / (365 * MIN_DIA),
+    accidentesRecientes: estado.accidentes.filter((x) => estado.t - x.t < 5 * 365 * MIN_DIA).length,
+  });
+}
+
 function cerrarInvestigacion(estado, acc, eventos) {
   acc.cerrado = true;
   const n = anio(estado.t);
@@ -775,7 +821,7 @@ function cerrarInvestigacion(estado, acc, eventos) {
     acc.multa = Math.round(250000 * indice(n));
     acc.pagaSeguro = 0;
     gastar(estado, indemnizaciones + acc.multa);
-    ajustarReputacion(estado, -10);
+    Reputacion.trasInvestigacion(estado.reputacion, true);
   } else {
     acc.multa = 0;
     acc.pagaSeguro = Math.round(acc.valorAvion * 0.7 + indemnizaciones * 0.8);

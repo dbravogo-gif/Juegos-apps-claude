@@ -6,13 +6,12 @@
 // aproximaciones de juego (ver FUENTES.md).
 
 import { verano } from './clima.js';
-import { distanciaKm } from './geo.js';
 import { mes } from './tiempo.js';
 import { nivelCostes } from '../data/aeropuertos.js';
+import { enMercadoUnico, rentaEn } from '../data/paises.js';
 
 export const CAJA_INICIAL = 3e6;
 export const INTERES_ANUAL = 0.09;
-export const CUOTA_MAXIMA = 0.1;
 
 // IPC de EE. UU., media anual (CPI-U, 1982-84 = 100).
 const IPC = {
@@ -57,54 +56,35 @@ export const TARIFAS = {
 // rendimiento por pasajero-milla de las aerolíneas de EE. UU. de la época. El Concorde cobra
 // como una primera clase con recargo.
 export function tarifaBase(distancia) {
-  return distancia <= 1000 ? 26 + 0.046 * distancia : 72 + 0.025 * (distancia - 1000);
+  return distancia <= 1000 ? 27 + 0.042 * distancia : 69 + 0.023 * (distancia - 1000);
 }
 
-export function precioBillete(distancia, tarifa, anio, supersonico = false) {
-  const p = tarifaBase(distancia) * TARIFAS[tarifa].precio * indice(anio);
+// Hasta la liberalización los precios estaban regulados (gobiernos e IATA): una compañía no
+// podía bajar ni subir mucho la tarifa. En Europa llega en 1993, en los vuelos nacionales de
+// EE. UU. en 1979 y en el resto, de forma general, hacia 1997.
+export function liberalizado(o, d, anio) {
+  if (!o || !d) return anio >= 1997;
+  if (o.pais === 'US' && d.pais === 'US') return anio >= 1979;
+  if (enMercadoUnico(o.pais, anio) && enMercadoUnico(d.pais, anio)) return true;
+  return anio >= 1997;
+}
+
+// Precio relativo de una tarifa del jugador en una ruta y un año.
+export function precioTarifa(tarifa, anio, o, d) {
+  const p = TARIFAS[tarifa ?? 'normal'].precio;
+  return liberalizado(o, d, anio) ? p : 1 + (p - 1) * 0.5;
+}
+
+export function precioBillete(distancia, tarifa, anio, supersonico = false, o = null, d = null) {
+  const p = tarifaBase(distancia) * precioTarifa(tarifa, anio, o, d) * indice(anio);
   return Math.round(supersonico ? p * 3.2 : p);
 }
 
-function estacional(aeropuerto, t) {
+export function estacional(aeropuerto, t) {
   if (!aeropuerto.temporada) return 1;
   const s = verano(mes(t), aeropuerto.lat);
   const pico = aeropuerto.temporada === 'verano' ? s : 1 - s;
   return 1 + 0.4 * (pico - 0.5) * 2 * Math.min(1, aeropuerto.tur - 0.5);
-}
-
-// Pasajeros al día en cada sentido para todo el mercado, no solo para ti.
-export function demandaMercado(o, d, t) {
-  const dist = distanciaKm(o, d);
-  const pob = Math.pow(Math.max(0.05, o.pob) * Math.max(0.05, d.pob), 0.4);
-  const turismo = ((o.tur + d.tur) / 2) ** 2;
-  const temporada = (estacional(o, t) + estacional(d, t)) / 2;
-  // Sin alternativa por tierra: islas y vuelos nacionales largos.
-  const islas = o.grupo || d.grupo ? (o.grupo === d.grupo ? 1.5 : 1.4) : 1;
-  const nacional = o.pais === d.pais ? 1.3 : 1;
-  return (300 * pob * turismo * temporada * islas * nacional) / (1 + dist / 2500);
-}
-
-// Pasaje dispuesto a pagar el Concorde: una fracción pequeña del mercado de largo radio entre
-// ciudades grandes.
-export function demandaPremium(o, d, t) {
-  const dist = distanciaKm(o, d);
-  if (dist < 2500 || Math.min(o.tam, d.tam) < 4) return 0;
-  return demandaMercado(o, d, t) * 0.03;
-}
-
-export function factorReputacion(rep) {
-  return Math.max(0.3, Math.min(1.6, rep / 50));
-}
-
-// Cuanto más grande es el aeropuerto, más competencia establecida hay y menos te toca.
-const COMPETENCIA = { 1: 1.4, 2: 1.2, 3: 1, 4: 0.8, 5: 0.55 };
-
-// Lo que te toca a ti al día en ese sentido.
-export function demandaPropia(o, d, t, reputacion, tarifa = 'normal', servicio = 'estandar', horas = 1) {
-  const elasticidad = Math.pow(TARIFAS[tarifa].precio, -1.6);
-  const competencia = COMPETENCIA[Math.max(o.tam, d.tam)];
-  const atencion = horas > 1.5 ? 1 + SERVICIOS[servicio].demanda : 1;
-  return demandaMercado(o, d, t) * CUOTA_MAXIMA * competencia * factorReputacion(reputacion) * elasticidad * atencion;
 }
 
 // --- Catering y servicio a bordo
@@ -129,7 +109,7 @@ export function costeCatering(servicio, horas, aeropuerto, salidasDiarias, anio,
 
 // --- Costes de aeropuerto
 
-const ESCALA_HANDLING = { regional: 0.4, estrecho: 1, cuatrimotor: 1.5, ancho: 2.6, supersonico: 2.5 };
+const ESCALA_HANDLING = { regional: 0.3, estrecho: 1, cuatrimotor: 1.5, ancho: 2.6, supersonico: 2.5 };
 
 export function tasasAeropuerto(tipo, aeropuerto, paxSalida, anio) {
   const nivel = nivelCostes(aeropuerto);
@@ -137,7 +117,7 @@ export function tasasAeropuerto(tipo, aeropuerto, paxSalida, anio) {
   const aterrizaje = tipo.mtow * 2.5 * nivel * (0.7 + 0.15 * aeropuerto.tam) * i;
   // Atención en tierra de cada salida: rampa, equipajes, mostradores, limpieza y personal de
   // escala. En los 70 era una de las partidas grandes de una aerolínea.
-  const handling = 450 * ESCALA_HANDLING[tipo.clase] * nivel * i;
+  const handling = 520 * ESCALA_HANDLING[tipo.clase] * nivel * i;
   const pasajeros = paxSalida * 1 * nivel * (0.5 + 0.25 * aeropuerto.tam) * i;
   return { aterrizaje, handling, pasajeros, total: aterrizaje + handling + pasajeros };
 }
@@ -149,21 +129,27 @@ export const pernocta = (tipo, aeropuerto, anio) =>
 
 const LINEA_HORA = { regional: 40, estrecho: 80, cuatrimotor: 120, ancho: 220, supersonico: 600 };
 
-// Sueldo, cargas y dietas por hora de bloque. Los pilotos de turbohélice cobran menos.
-export function tripulacionHora(tipo, anio) {
-  const cabina = (tipo.tecnica === 3 ? 215 : 175) * (tipo.clase === 'regional' ? 0.8 : 1);
-  return (cabina + Math.ceil(tipo.plazas / 50) * 20) * indice(anio);
+// Sueldos según el país de la compañía: en 1976 una tripulación española costaba bastante
+// menos que una de EE. UU. (de eso vivían las chárter españolas). Se acercan con la renta.
+export function factorSalarios(pais, anio) {
+  return 0.55 + 0.45 * Math.min(1, rentaEn(pais, anio) / rentaEn('US', anio));
 }
 
-export function costeVuelo({ tipo, horas, origen, destino, pax, ingreso, anio, combustibleExtra = false, catering = 0 }) {
+// Sueldo, cargas y dietas por hora de bloque. Los pilotos de turbohélice cobran menos.
+export function tripulacionHora(tipo, anio, pais = 'US') {
+  const cabina = (tipo.tecnica === 3 ? 215 : 175) * (tipo.clase === 'regional' ? 0.8 : 1);
+  return (cabina + Math.ceil(tipo.plazas / 50) * 20) * indice(anio) * factorSalarios(pais, anio);
+}
+
+export function costeVuelo({ tipo, horas, origen, destino, pax, ingreso, anio, combustibleExtra = false, catering = 0, pais = 'US' }) {
   const combustible = tipo.consumo * horas * precioCombustibleKg(anio) * (combustibleExtra ? 1.06 : 1);
-  const tripulacion = tripulacionHora(tipo, anio) * horas;
+  const tripulacion = tripulacionHora(tipo, anio, pais) * horas;
   const linea = LINEA_HORA[tipo.clase] * horas * indice(anio);
   const tasasOrigen = tasasAeropuerto(tipo, origen, pax, anio);
   const tasasDestino = tasasAeropuerto(tipo, destino, 0, anio);
   const aeropuertos = tasasOrigen.pasajeros + tasasOrigen.handling + tasasDestino.aterrizaje;
   // Comisión de agencia y venta, reservas y atención al pasajero.
-  const ventas = ingreso * 0.09 + pax * 2 * indice(anio);
+  const ventas = ingreso * 0.09 + pax * 3 * indice(anio);
   const total = combustible + tripulacion + linea + aeropuertos + catering + ventas;
   return {
     total: Math.round(total),
@@ -175,8 +161,8 @@ export function costeVuelo({ tipo, horas, origen, destino, pax, ingreso, anio, c
 
 export const costeBaseDiario = (aeropuerto, anio) => aeropuerto.tam * 150 * nivelCostes(aeropuerto) * indice(anio);
 // Estructura de la compañía (dirección, administración, oficinas) que crece con la flota.
-export const administracionDiaria = (tipo, anio) => 1200 * ESCALA_HANDLING[tipo.clase] * indice(anio);
+export const administracionDiaria = (tipo, anio, pais = 'US') => 1400 * ESCALA_HANDLING[tipo.clase] * indice(anio) * factorSalarios(pais, anio);
 // Sueldos que se pagan aunque el avión no vuele (reservas, formación, mínimo de tripulaciones):
 // hora y media de tripulación al día.
-export const tripulacionFijaDiaria = (tipo, anio) => tripulacionHora(tipo, anio) * 1.5;
+export const tripulacionFijaDiaria = (tipo, anio, pais = 'US') => tripulacionHora(tipo, anio, pais) * 1.5;
 export const seguroDiario = (valor) => (valor * 0.015) / 365;

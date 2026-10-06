@@ -39,8 +39,15 @@ export const AEROPUERTOS = [
   // Europa
   A('MAD', 'Madrid-Barajas', 'Madrid', 'ES', 'Europa', 40.47, -3.56, 4.0, 5, 4100, true, 'continental', { tur: 1.1 }),
   A('BCN', 'Barcelona-El Prat', 'Barcelona', 'ES', 'Europa', 41.30, 2.08, 3.5, 4, 3100, true, 'mediterraneo', { tur: 1.3, temporada: 'verano' }),
-  A('PMI', 'Palma de Mallorca', 'Palma', 'ES', 'Europa', 39.55, 2.74, 0.5, 4, 3270, true, 'mediterraneo', { tur: 2.0, temporada: 'verano' }),
+  A('PMI', 'Palma de Mallorca', 'Palma', 'ES', 'Europa', 39.55, 2.74, 0.5, 4, 3270, true, 'mediterraneo', { tur: 2.0, temporada: 'verano', grupo: 'baleares' }),
+  A('IBZ', 'Ibiza', 'Ibiza', 'ES', 'Europa', 38.87, 1.37, 0.06, 2, 2800, true, 'mediterraneo', { tur: 2.2, temporada: 'verano', grupo: 'baleares' }),
   A('AGP', 'Málaga', 'Málaga', 'ES', 'Europa', 36.67, -4.50, 0.6, 3, 3200, true, 'mediterraneo', { tur: 1.8, temporada: 'verano' }),
+  A('ALC', 'Alicante-El Altet', 'Alicante', 'ES', 'Europa', 38.28, -0.56, 0.4, 3, 3000, true, 'mediterraneo', { tur: 2.0, temporada: 'verano' }),
+  A('VLC', 'Valencia-Manises', 'Valencia', 'ES', 'Europa', 39.49, -0.48, 1.2, 3, 2700, true, 'mediterraneo', { tur: 1.2 }),
+  A('SVQ', 'Sevilla-San Pablo', 'Sevilla', 'ES', 'Europa', 37.42, -5.90, 0.9, 3, 3360, true, 'mediterraneo', { tur: 1.4 }),
+  A('BIO', 'Bilbao', 'Bilbao', 'ES', 'Europa', 43.30, -2.91, 1.0, 3, 2600, true, 'atlantico', { montana: true, tur: 0.9 }),
+  A('PNA', 'Pamplona', 'Pamplona', 'ES', 'Europa', 42.77, -1.65, 0.25, 1, 2200, false, 'continental', { montana: true, elev: 459, tur: 0.9 }),
+  A('SCQ', 'Santiago de Compostela', 'Santiago', 'ES', 'Europa', 42.90, -8.42, 0.4, 2, 3200, true, 'llanura_niebla', { elev: 370, tur: 1.1 }),
   A('LIS', 'Lisboa-Portela', 'Lisboa', 'PT', 'Europa', 38.77, -9.13, 2.0, 4, 3800, true, 'mediterraneo', { tur: 1.3 }),
   A('FNC', 'Madeira (Santa Catarina)', 'Funchal', 'PT', 'Europa', 32.70, -16.77, 0.25, 2, 1600, false, 'subtropical', { montana: true, tur: 1.6, temporada: 'invierno', finPista: 'peligroso', cambios: [{ desde: 1986, pista: 1800 }, { desde: 2000, pista: 2781 }] }),
   A('LHR', 'Londres-Heathrow', 'Londres', 'GB', 'Europa', 51.47, -0.45, 10, 5, 3900, 3, 'atlantico', { tur: 1.3 }),
@@ -93,6 +100,7 @@ export const AEROPUERTOS = [
   A('RUH', 'Riad', 'Riad', 'SA', 'Oriente Medio', 24.71, 46.73, 0.7, 3, 3200, false, 'desierto'),
   A('KWI', 'Kuwait', 'Kuwait', 'KW', 'Oriente Medio', 29.24, 47.97, 0.8, 3, 3400, true, 'desierto'),
   A('DXB', 'Dubái', 'Dubái', 'AE', 'Oriente Medio', 25.25, 55.36, 0.2, 3, 3800, true, 'desierto'),
+  A('DOH', 'Doha', 'Doha', 'QA', 'Oriente Medio', 25.26, 51.57, 0.2, 2, 4570, true, 'desierto', { tur: 0.8 }),
 
   // Asia
   A('KHI', 'Karachi', 'Karachi', 'PK', 'Asia', 24.91, 67.16, 4.0, 4, 3400, true, 'desierto'),
@@ -164,7 +172,6 @@ export const ALTERNATIVOS = [
   ALT('PXO', 'Porto Santo', 'Porto Santo', 'PT', 33.07, -16.35, 2440),
   ALT('FAO', 'Faro', 'Faro', 'PT', 37.01, -7.97, 2490),
   ALT('OPO', 'Oporto', 'Oporto', 'PT', 41.24, -8.68, 3480),
-  ALT('SCQ', 'Santiago de Compostela', 'Santiago', 'ES', 42.90, -8.42, 3200),
   ALT('BOD', 'Burdeos-Mérignac', 'Burdeos', 'FR', 44.83, -0.72, 3100),
   ALT('BES', 'Brest', 'Brest', 'FR', 48.45, -4.42, 3100),
   ALT('AGA', 'Agadir-Inezgane', 'Agadir', 'MA', 30.38, -9.55, 2950),
