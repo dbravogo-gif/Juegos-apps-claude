@@ -1,10 +1,21 @@
-# Aerolínea — documento de diseño (borrador)
+# Pista libre — documento de diseño
 
 Nombre provisional. Simulador de aerolínea para móvil: fundas una compañía minúscula a
 mediados de los años 70, con un avión de segunda mano y una base en un aeropuerto real, y la
 llevas a través de 50 años de historia de la aviación.
 
-Estado: **propuesta**. Lo marcado como *pendiente* se cierra antes de programar esa parte.
+Estado: **prototipo 1 jugable** (ver «Prototipo 1» al final). Lo marcado como *pendiente* se
+cierra antes de programar esa parte.
+
+Decisiones cerradas:
+
+| Tema | Decisión |
+| --- | --- |
+| Inicio | Enero de 1976 |
+| Base | La elige el jugador entre todos los aeropuertos abiertos en 1976 |
+| Aeropuertos | Ciudades principales de cada continente, una o dos por país y solo en los países con más peso; EE. UU. tiene algunos más. Canarias completa, con TFS (1978) y GMZ (1999) apareciendo cuando abrieron |
+| Tono de los accidentes | Crudo pero sin personas: tres escenas animadas que solo muestran el avión (salida de pista, impacto en la aproximación, fallo en vuelo) y después un avance informativo con fallecidos y heridos |
+
 
 ## La fantasía
 
@@ -52,8 +63,9 @@ alternativo, aterrizaje de emergencia, daños en el avión y, en raras ocasiones
 - Un accidente no acaba la partida automáticamente, pero puede arruinarte.
 - Las probabilidades están muy exageradas respecto a la realidad: es un juego, no un
   simulador de seguridad aérea.
-- **Tono**: sobrio. Sin detalles gráficos; las consecuencias se cuentan con titulares de
-  prensa y con el informe de la investigación.
+- **Tono**: crudo pero contenido. Cada tipo de accidente tiene su escena animada en la que
+  solo se ve el avión; después, un avance del «Diario Nacional» (ficticio) da las cifras de
+  fallecidos y heridos. Al mes, otro avance cuenta la conclusión de la investigación.
 
 **Para que no se vuelva tedioso:** con pocos aviones, decides tú cada vuelo dudoso. Cuando
 contratas a un **jefe de operaciones**, defines una política de riesgo («cancela por encima de
@@ -154,7 +166,7 @@ del juego, rivales incluidas, son ficticias.
 - Publicación: el flujo actual sube solo `game/` a GitHub Pages; habrá que publicar las dos
   carpetas (*pendiente*).
 
-## Prototipo 1 — qué tiene que demostrar
+## Prototipo 1 — qué tiene que demostrar (hecho)
 
 Pregunta: **¿engancha decidir si el vuelo sale?**
 
@@ -167,3 +179,20 @@ Pregunta: **¿engancha decidir si el vuelo sale?**
 
 Fuera del prototipo: personal y entrevistas, eventos históricos, liberalización, piezas,
 retos y arte final (se usan siluetas y formas).
+
+Lo que tiene el prototipo, además: todos los aeropuertos (no solo 20), frecuencia por ruta
+(vueltas al día con horarios), tres tarifas, préstamo, umbral de consulta configurable (la
+delegación más simple) y las tres escenas de accidente con su noticiario.
+
+### Cifras de partida (primera calibración)
+
+Simulando un año con un bot que despega siempre y hace las revisiones:
+
+- Riesgo medio por vuelo: ~0,03 % en rutas normales; ~0,15 % hacia Tenerife Norte, por la
+  niebla sin ILS. Un jugador que cancela lo peor baja mucho de ahí.
+- Tarjetas de decisión con el umbral al 0,3 %: entre 7 y 40 al año por avión.
+- Un F27 entre islas apenas cubre gastos; un 737 de Gran Canaria a Londres-Gatwick gana
+  1,5–2 M$ al año. Las rutas sobredimensionadas (737 con dos vueltas a Londres desde Madrid)
+  pierden dinero.
+
+Son números para ajustar jugando, no definitivos.

@@ -1,0 +1,11 @@
+{
+  "name": "Pista libre",
+  "short_name": "Pista libre",
+  "description": "Simulador de aerolínea desde 1976.",
+  "lang": "es",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0f1a24",
+  "theme_color": "#0f1a24",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}
