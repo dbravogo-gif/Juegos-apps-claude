@@ -29,6 +29,7 @@
   --a-mente:#7646BD; --a-mente-soft:#EADFF6;
   --a-economia:#0B7D70; --a-economia-soft:#D4EEE9;
   --a-historia:#94560F; --a-historia-soft:#F3E3CE;
+  --a-mind:var(--muted); --a-mind-soft:var(--surface-2);
   --gold:#9A6C05; --gold-soft:#F6E8C6;
   --good:#167A46; --good-soft:#DAF0E2;
   --bad:#B8234A; --bad-soft:#F7DBE3;
@@ -108,6 +109,7 @@ body.playing #app{padding-bottom:calc(150px + env(safe-area-inset-bottom,0px))}
 .btn.grow{flex:1}
 .btn.sq{width:52px;padding:0;flex:none}
 .btn svg{width:22px;height:22px}
+.btn:disabled{opacity:.45;cursor:default}
 .link{color:var(--laser);font-weight:600;text-decoration:underline;text-underline-offset:3px}
 
 /* Cabecera de inicio */
@@ -371,6 +373,26 @@ textarea{resize:vertical;min-height:120px}
 #imp,#exptext{margin-top:10px}
 #imp .btn{margin-top:8px}
 
+.rep{margin-left:4px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-decoration:underline;text-underline-offset:2px}
+.gennote{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--muted);margin:-4px 2px 16px}
+.gennote i{flex:none;width:8px;height:8px;border-radius:50%;background:var(--gold)}
+.gennote.busy i{animation:pulse 1.2s ease-in-out infinite}
+.sv{margin-bottom:18px}
+.sv .q{margin-bottom:10px;font-size:17px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips button{padding:9px 13px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);font-weight:600;font-size:14.5px;line-height:1.25;text-align:left}
+.chips button.on{border-color:var(--ac);background:var(--acs)}
+.mind-q{font-family:var(--f-mono);font-size:28px;font-weight:700;text-align:center;margin:8px 0 18px;line-height:1.3;overflow-wrap:anywhere}
+.mind-digits{font-family:var(--f-mono);font-size:40px;font-weight:700;letter-spacing:.18em;text-align:center;margin:14px 0}
+.mind-hint{text-align:center;color:var(--muted);font-size:14px;margin-bottom:12px}
+.mind .numrow{justify-content:center}
+.mind .opts{flex-direction:row}
+.mind .opts .opt{justify-content:center;font-family:var(--f-mono);font-size:24px;font-weight:700}
+.timebar{height:4px;border-radius:2px;background:var(--surface-2);overflow:hidden;margin:0 auto 12px;max-width:240px}
+.timebar i{display:block;height:100%;background:var(--ac);animation:drain 3s linear forwards}
+.secs{text-align:center;font-family:var(--f-mono);font-size:13px;color:var(--muted);margin-top:6px}
+@keyframes pulse{50%{opacity:.25}}
+@keyframes drain{from{width:100%}to{width:0}}
 @keyframes enter{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
 @keyframes rise{0%{opacity:0;transform:translate(-50%,8px) scale(.9)}20%{opacity:1;transform:translate(-50%,0) scale(1.08)}100%{opacity:0;transform:translate(-50%,-46px) scale(1)}}
 @keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.18)}100%{transform:scale(1)}}
@@ -392,24 +414,37 @@ textarea{resize:vertical;min-height:120px}
 
 /* ---------- Datos ---------- */
 const D = window.CHISPA;
-const MOD = Object.fromEntries(D.modules.map(m=>[m.id,m]));
-const CARD = Object.fromEntries(D.cards.map(c=>[c.id,c]));
 const AREAS = D.areas;
+let MOD = {}, CARD = {}, ALL = [];
 const AREA = Object.fromEntries(AREAS.map(a=>[a.id,a]));
 const areaOf = c => MOD[c.m].area;
 const ac = id => `--ac:var(--a-${id});--acs:var(--a-${id}-soft)`;
-const MODES = {entrevista:"Entrevista", equilibrado:"Equilibrado"};
+const MODES = {entrevista:"75%", equilibrado:"Igual", poco:"10%", sin:"0%"};
+const MODE_SHARE = {entrevista:.75, poco:.10, sin:0};
 function weights(){
-  const w = {};
-  if(S.settings.mode === "equilibrado"){ AREAS.forEach(a=> w[a.id] = 1/AREAS.length); return w; }
+  const w = {}, mode = S.settings.mode;
+  if(!(mode in MODE_SHARE)){ AREAS.forEach(a=> w[a.id] = 1/AREAS.length); return w; }
   const others = AREAS.filter(a=>a.id !== "ventas");
-  w.ventas = .75; others.forEach(a=> w[a.id] = .25/others.length);
+  w.ventas = MODE_SHARE[mode]; others.forEach(a=> w[a.id] = (1 - w.ventas)/others.length);
   return w;
+}
+function modsOf(area){
+  const base = D.modules.filter(m=>m.area === area);
+  return ALL.some(c=>c.m === "x-"+area) ? base.concat(MOD["x-"+area]) : base;
+}
+function rebuildIndex(){
+  const mods = D.modules.concat(
+    AREAS.map(a=>({id:"x-"+a.id, area:a.id, gen:true, title:"Explorar", desc:"Tarjetas nuevas creadas para ti a partir de lo que ya sabes y de lo que te interesa."})),
+    [{id:"_mind", area:"mind", title:"Activa la mente"}, {id:"_survey", area:"mind", title:"Tu opinión"}]);
+  MOD = Object.fromEntries(mods.map(m=>[m.id,m]));
+  const hidden = S.hidden || {};
+  ALL = D.cards.concat(GEN.filter(c=>!hidden[c.id] && MOD[c.m]));
+  CARD = Object.fromEntries(ALL.map(c=>[c.id,c]));
 }
 const pctTxt = x => Math.round(x*100)+"%";
 const isEx = c => c.t !== "read";
 const INTERVAL = [0,1,2,4,7,15,30];
-const KIND = {read:"Lectura", quiz:"Pregunta", open:"Practica", scenario:"Simulación", order:"Ordena", num:"Cálculo", flash:"Memoria"};
+const KIND = {read:"Lectura", quiz:"Pregunta", open:"Practica", scenario:"Simulación", order:"Ordena", num:"Cálculo", flash:"Memoria", mind:"Reto", survey:"Encuesta"};
 const LEVELS = ["Becario curioso","Aprendiz que pregunta","Oído fino","Detective de necesidades","Calculador de valor","Negociador firme","Consultor técnico","Cerrador elegante","Key account","Leyenda de planta"];
 const PRAISE = ["¡Correcto!","¡Eso es!","Bien visto","Exacto","¡Clavado!"];
 const LS_KEY = "chispa.v1";
@@ -417,20 +452,213 @@ const LS_KEY = "chispa.v1";
 /* ---------- Estado ---------- */
 function defState(){
   return {v:1, cards:{}, xp:0, days:{}, streak:{last:null,count:0,best:0},
-          settings:{len:8, sound:true, interview:"", mode:"entrevista"}, fav:[], stats:{sessions:0}, areaCount:{}};
+          settings:{len:8, sound:true, interview:"", mode:"entrevista"}, fav:[], stats:{sessions:0, surveys:0, lastSurvey:-99}, areaCount:{},
+          hidden:{}, prefs:{topics:{}, diff:0, notes:[], boost:null}, mind:{lvl:1, ok:0, n:0}, savedAt:0};
 }
 function loadState(){
   try{
     const raw = localStorage.getItem(LS_KEY);
     if(raw){
       const s = JSON.parse(raw), d = defState();
-      return Object.assign(d, s, {settings:Object.assign(d.settings, s.settings||{}), streak:Object.assign(d.streak, s.streak||{})});
+      return mergeState(s);
     }
   }catch(e){}
   return defState();
 }
+function mergeState(s){
+  const d = defState();
+  return Object.assign(d, s, {settings:Object.assign(d.settings, s.settings||{}), streak:Object.assign(d.streak, s.streak||{}),
+    stats:Object.assign(d.stats, s.stats||{}), prefs:Object.assign(d.prefs, s.prefs||{}), mind:Object.assign(d.mind, s.mind||{}), hidden:s.hidden||{}});
+}
 let S = loadState();
-function save(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(S)); }catch(e){} }
+const GEN_KEY = "chispa.gen.v1";
+let GEN = (()=>{ try{ return JSON.parse(localStorage.getItem(GEN_KEY) || "[]"); }catch(e){ return []; } })();
+function saveGen(){ try{ localStorage.setItem(GEN_KEY, JSON.stringify(GEN)); }catch(e){} }
+rebuildIndex();
+function save(){
+  S.savedAt = Date.now();
+  try{ localStorage.setItem(LS_KEY, JSON.stringify(S)); }catch(e){}
+  schedulePush();
+}
+
+/* ---------- Tu cuenta de Claude: guardado, tarjetas nuevas y opiniones ---------- */
+const CAP = {db:null, sample:null};
+let writeChain = Promise.resolve(), pushTimer = null;
+function queueWrite(fn){ writeChain = writeChain.then(fn).catch(()=>{}); return writeChain; }
+function schedulePush(){
+  if(!CAP.db) return;
+  clearTimeout(pushTimer);
+  pushTimer = setTimeout(()=> queueWrite(()=> CAP.db.doc("app/state").set({savedAt:S.savedAt, state:JSON.parse(JSON.stringify(S))})), 1500);
+}
+function genBucket(c){
+  const d = new Date(c.at || 0), jan = new Date(d.getFullYear(), 0, 1);
+  const w = Math.ceil(((d - jan)/86400000 + jan.getDay() + 1)/7);
+  return c.m.slice(2)+"-"+d.getFullYear()+"-w"+w;
+}
+function pushGen(cards){
+  if(!CAP.db) return;
+  [...new Set(cards.map(genBucket))].forEach(key=>{
+    queueWrite(()=> CAP.db.doc("gen/"+key).set({key, cards:GEN.filter(c=>genBucket(c) === key)}));
+  });
+}
+function logFeedback(obj){
+  const row = Object.assign({at:new Date().toISOString()}, obj);
+  S.feedbackLog = (S.feedbackLog || []).concat([row]).slice(-30);
+  if(CAP.db) queueWrite(()=> CAP.db.collection("feedback").add(row));
+}
+async function initCaps(){
+  if(!(window.claude && typeof window.claude.use === "function")) return;
+  const [db, sample] = await Promise.all([
+    window.claude.use("db").catch(()=>null), window.claude.use("sample").catch(()=>null)]);
+  CAP.sample = sample;
+  if(db){
+    try{
+      const snap = await db.doc("app/state").get();
+      const remote = snap.exists ? snap.data() : null;
+      if(remote && remote.state && (remote.savedAt||0) > (S.savedAt||0)){
+        S = mergeState(JSON.parse(JSON.stringify(remote.state)));
+        try{ localStorage.setItem(LS_KEY, JSON.stringify(S)); }catch(e){}
+      }
+      const g = await db.collection("gen").get();
+      const have = new Set(GEN.map(c=>c.id));
+      g.docs.forEach(d=> ((d.data()||{}).cards||[]).forEach(c=>{ if(c && c.id && !have.has(c.id)){ GEN.push(c); have.add(c.id); } }));
+      GEN.sort((a,b)=> (a.at||0) - (b.at||0));
+      saveGen();
+      CAP.db = db;
+      if(!remote || (S.savedAt||0) > (remote.savedAt||0)) schedulePush();
+    }catch(e){ CAP.db = db; }
+  }
+  rebuildIndex();
+  if(screen !== "play") render();
+  maybeGenerate();
+}
+
+/* Generación: cuando a un área le quedan pocas tarjetas sin ver, Claude crea una mini-unidad
+   adaptada a tu nivel y a tus preferencias. Como mucho unas pocas llamadas por visita. */
+let genBusy = false, genCalls = 0, genNote = "";
+const GEN_MAX_CALLS = 3;
+function stockOf(area){ return ALL.filter(c=>areaOf(c) === area && !seen(c)).length; }
+function areaToGenerate(){
+  const w = weights(), boost = S.prefs.boost;
+  if(boost && w[boost.area] > 0) return boost.area;
+  let best = null, worst = Infinity;
+  AREAS.forEach(a=>{
+    if(!(w[a.id] > 0)) return;
+    const need = Math.max(4, Math.ceil(w[a.id]*S.settings.len*3)), stock = stockOf(a.id);
+    if(stock < need && stock/need < worst){ worst = stock/need; best = a.id; }
+  });
+  return best;
+}
+function pickTopic(area){
+  const boost = S.prefs.boost;
+  if(boost && boost.area === area && boost.topic) return boost.topic;
+  const topics = AREA[area].topics || [AREA[area].title];
+  const made = {}; GEN.forEach(c=>{ if(c.m === "x-"+area) made[c.topic] = (made[c.topic]||0) + 1; });
+  const ws = topics.map(t=> (S.prefs.topics[area+"|"+t] || 1) / (1 + (made[t]||0)*0.1));
+  let x = Math.random()*ws.reduce((a,b)=>a+b, 0);
+  for(let i=0; i<topics.length; i++){ x -= ws[i]; if(x <= 0) return topics[i]; }
+  return topics[0];
+}
+function learnerProfile(area){
+  const cs = ALL.filter(c=>areaOf(c) === area);
+  let ok = 0, ko = 0; cs.forEach(c=>{ const s = S.cards[c.id]; if(s){ ok += s.ok||0; ko += s.ko||0; } });
+  const n = ok + ko, acc = n ? ok/n : null;
+  let lvl = n && acc < .6 ? 0 : acc > .85 && n > 50 ? 2 : 1;
+  lvl = Math.max(0, Math.min(2, lvl + (S.prefs.diff||0)));
+  const seenTitles = cs.filter(c=>seen(c) && (c.t === "read" || c.concept)).map(c=> c.concept ? c.concept+": "+(c.title||c.q||"") : c.title).slice(-45);
+  const weak = cs.filter(c=>isEx(c) && seen(c) && st(c).b <= 1).map(c=> String(c.q || c.front || c.title).slice(0,110)).slice(-6);
+  return {n, acc, level:["principiante","intermedio","avanzado"][lvl], seenTitles:[...new Set(seenTitles)], weak};
+}
+function genPrompt(area, topic){
+  const a = AREA[area], p = learnerProfile(area);
+  const ventas = area === "ventas" ? `
+El alumno es comercial técnico en una empresa española que distribuye equipos industriales de medición, detección, visión artificial, marcado láser y microscopía (fábricas y laboratorios). Usa ejemplos B2B industriales y su método: venta consultiva (SPIN), venta de valor con coste total, concesiones a cambio de algo y seguimiento.` : "";
+  const notes = (S.prefs.notes||[]).slice(-3);
+  return `Eres el autor de contenidos de Chispa, una app para aprender en sesiones cortas que sustituye al scroll de las redes sociales. Escribes en español de España, tuteando, con claridad y gancho, sin tono infantil ni sensacionalista.
+
+ÁREA: ${a.title}
+SUBTEMA: ${topic}${ventas}
+NIVEL DEL ALUMNO EN ESTA ÁREA: ${p.level}${p.acc !== null ? ` (acierta el ${Math.round(p.acc*100)}% de ${p.n} ejercicios)` : " (aún sin datos)"}
+YA CONOCE ESTOS CONCEPTOS (no los repitas; puedes apoyarte en ellos para ir más lejos):
+${p.seenTitles.length ? p.seenTitles.map(t=>"- "+t).join("\n") : "- (nada todavía)"}
+${p.weak.length ? "LE HAN COSTADO ESTOS EJERCICIOS (si encaja, refuerza la idea desde otro ángulo):\n"+p.weak.map(t=>"- "+t).join("\n") : ""}
+${notes.length ? "TEMAS QUE HA PEDIDO EXPRESAMENTE: "+notes.join(" | ") : ""}
+
+TAREA: crea una mini-unidad de 5 tarjetas sobre UN concepto concreto e importante de ese subtema que el alumno no conozca todavía. Que sea conocimiento con fondo (ideas, mecanismos, causas, consecuencias), nunca curiosidades sueltas sin concepto detrás.
+- Tarjeta 1: "read" que explique el concepto (90-150 palabras) con un ejemplo concreto.
+- Tarjeta 2: otra "read" que lo profundice o lo conecte con otra idea, o un primer ejercicio.
+- Resto: ejercicios que obliguen a pensar y no solo a recordar: aplicar a un caso, predecir, detectar un error, calcular. Mezcla tipos.
+Ajusta la dificultad al nivel indicado.
+
+RIGOR: solo hechos bien establecidos y consenso académico. Si dudas de una cifra, fecha o atribución, no la pongas o redondéala ("hacia 1450", "más o menos el doble"). Si un tema está en debate, dilo.
+
+RESPONDE SOLO CON ESTE JSON:
+{"concept":"nombre corto del concepto","cards":[...]}
+Formatos de tarjeta:
+{"t":"read","title":"título corto","body":"texto","key":"idea clave en una frase"}
+{"t":"quiz","q":"pregunta","opts":["A","B","C","D"],"a":0,"exp":"por qué es la correcta y por qué fallan las otras"}
+{"t":"num","q":"pregunta con respuesta numérica","a":12.5,"tol":0.5,"unit":"unidad o cadena vacía","exp":"cómo se calcula"}
+{"t":"flash","front":"pregunta para responder de memoria","back":"respuesta"}
+{"t":"open","q":"pregunta para responder con tus palabras","model":"respuesta modelo","check":["punto que debe incluir","otro punto","otro"]}
+En body, exp, back y model puedes usar **negrita**, listas con "- " y saltos de línea (\n). En un quiz, las opciones incorrectas deben ser plausibles y la posición de la correcta debe variar.`;
+}
+const str = (v, max) => typeof v === "string" && v.trim() ? v.trim().slice(0, max||2000) : null;
+function cleanCard(x){
+  if(!x || typeof x !== "object") return null;
+  const t = x.t;
+  if(t === "read"){ const title = str(x.title,120), body = str(x.body,2500); return title && body ? {t, title, body, key:str(x.key,300)||undefined} : null; }
+  if(t === "quiz"){
+    const q = str(x.q,600), exp = str(x.exp,1500), opts = Array.isArray(x.opts) ? x.opts.map(o=>str(o,300)).filter(Boolean) : [];
+    const a = Number(x.a);
+    return q && exp && opts.length >= 2 && opts.length <= 5 && Number.isInteger(a) && a >= 0 && a < opts.length ? {t, q, opts, a, exp} : null;
+  }
+  if(t === "num"){
+    const q = str(x.q,600), exp = str(x.exp,1500), a = Number(x.a);
+    if(!q || !exp || !isFinite(a)) return null;
+    const tol = isFinite(Number(x.tol)) && Number(x.tol) >= 0 ? Number(x.tol) : Math.max(0.01, Math.abs(a)*0.01);
+    return {t, q, a, tol, unit:typeof x.unit === "string" ? x.unit.slice(0,20) : "", exp};
+  }
+  if(t === "flash"){ const front = str(x.front,500), back = str(x.back,1500); return front && back ? {t, front, back} : null; }
+  if(t === "open"){
+    const q = str(x.q,600), model = str(x.model,2000), check = Array.isArray(x.check) ? x.check.map(o=>str(o,200)).filter(Boolean).slice(0,6) : [];
+    return q && model && check.length >= 2 ? {t, q, model, check} : null;
+  }
+  return null;
+}
+async function maybeGenerate(){
+  if(genBusy || !CAP.sample || genCalls >= GEN_MAX_CALLS) return;
+  const area = areaToGenerate(); if(!area) return;
+  const topic = pickTopic(area);
+  genBusy = true; genCalls++; genNote = `Creando tarjetas nuevas de ${AREA[area].title.toLowerCase()} · ${topic}`; refreshGenNote();
+  let ok = false;
+  try{
+    const out = await CAP.sample.json(genPrompt(area, topic), {modelTier:"default", cache:false});
+    const at = Date.now(), base = at.toString(36);
+    const cards = (out && Array.isArray(out.cards) ? out.cards : []).map(cleanCard).filter(Boolean).slice(0,7)
+      .map((c,i)=> Object.assign(c, {id:"g"+base+i, m:"x-"+area, gen:true, topic, concept:str(out.concept,80)||topic, at:at+i}));
+    if(cards.length >= 2){
+      GEN = GEN.concat(cards); saveGen(); rebuildIndex(); pushGen(cards);
+      if(S.prefs.boost && S.prefs.boost.area === area){ S.prefs.boost = null; save(); }
+      ok = true; genNote = "";
+    } else genNote = "";
+  }catch(e){
+    const code = e && e.code;
+    if(["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed"].includes(code)) CAP.sample = null;
+    genNote = code === "rate_limited" ? "Has llegado al límite de uso de Claude: las tarjetas nuevas llegarán más tarde." : "";
+    genCalls = code === "rate_limited" ? GEN_MAX_CALLS : genCalls;
+  }finally{
+    genBusy = false;
+    if(screen === "home") renderHome(); else refreshGenNote();
+  }
+  if(ok && areaToGenerate()) maybeGenerate();
+}
+function refreshGenNote(){ const el = document.getElementById("gennote"); if(el) el.outerHTML = genNoteHtml(); }
+function genNoteHtml(){
+  if(genNote) return `<div class="gennote${genBusy?" busy":""}" id="gennote"><i></i><span>${esc(genNote)}…</span></div>`;
+  if(!CAP.sample) return `<div id="gennote" hidden></div>`;
+  const fresh = ALL.filter(c=>c.gen && !seen(c)).length;
+  return fresh ? `<div class="gennote" id="gennote"><i></i><span>${fresh} tarjetas nuevas creadas para ti, listas para salir</span></div>` : `<div id="gennote" hidden></div>`;
+}
 
 /* ---------- Fechas ---------- */
 const pad = n => String(n).padStart(2,"0");
@@ -463,7 +691,7 @@ function record(c, r){
   else if(r === "meh"){ s.b = Math.max(1, s.b); s.d = t + 1; }
   else { s.ko++; s.b = 1; s.d = t + 1; }
 }
-function failedCards(){ return D.cards.filter(c=>isEx(c) && seen(c) && st(c).b <= 1); }
+function failedCards(){ return ALL.filter(c=>isEx(c) && seen(c) && st(c).b <= 1); }
 
 /* ---------- Niveles ---------- */
 const need = L => 25*(L-1)*(L+2);
@@ -485,7 +713,9 @@ function buildSession(kind, arg){
     const nArea = {}; slots.forEach(a=> nArea[a] = (nArea[a]||0) + 1);
     const picks = {};
     Object.keys(nArea).forEach(a=>{
-      const n = nArea[a], pool = D.cards.filter(c=>areaOf(c) === a);
+      const n = nArea[a], all = ALL.filter(c=>areaOf(c) === a);
+      // Primero lo creado para ti (va adaptado), después el temario fijo en su orden.
+      const pool = all.filter(c=>c.gen).concat(all.filter(c=>!c.gen));
       const due = pool.filter(c=>isEx(c) && seen(c) && st(c).d <= t).sort((x,y)=> st(x).d - st(y).d || st(x).b - st(y).b);
       const list = due.slice(0, Math.ceil(n/2)).map(c=>({c, rev:true}));
       pool.filter(c=>!seen(c)).slice(0, n - list.length).forEach(c=>list.push({c}));
@@ -497,13 +727,18 @@ function buildSession(kind, arg){
       }
       picks[a] = list;
     });
-    return slots.map(a=> picks[a].shift()).filter(Boolean);
+    const out = slots.map(a=> picks[a].shift()).filter(Boolean);
+    if(out.length >= 3 && (kind === "daily" || Math.random() < .5)){
+      out.splice(1 + Math.floor(Math.random()*(out.length-1)), 0, {c:mindTask()});
+    }
+    if(kind === "daily" && surveyDue()) out.push({c:surveyCard()});
+    return out;
   }
   if(kind === "review"){
     return failedCards().sort((a,b)=> st(a).last - st(b).last).slice(0, 8).map(c=>({c, rev:true}));
   }
   if(kind === "module"){
-    const cs = D.cards.filter(c=>c.m === arg);
+    const cs = ALL.filter(c=>c.m === arg);
     const unseen = cs.filter(c=>!seen(c));
     const pick = unseen.length ? unseen : cs.filter(isEx).sort((a,b)=> st(a).b - st(b).b);
     return pick.slice(0, 10).map(c=>({c, rev: !unseen.length}));
@@ -630,13 +865,14 @@ function levelBlock(){
 }
 function interviewChip(){
   const iv = S.settings.interview;
-  if(!iv) return `<button class="chip" data-go="ajustes">+ Añade la fecha de la entrevista cuando la sepas</button>`;
+  if(!iv) return "";
   const p = iv.split("-").map(Number);
   const diff = dayNum(new Date(p[0], p[1]-1, p[2])) - dayNum();
   const txt = diff > 1 ? `Entrevista en <b>${diff} días</b>`
     : diff === 1 ? `La entrevista es <b>mañana</b>. Repasa la chuleta y duerme bien.`
     : diff === 0 ? `La entrevista es <b>hoy</b>. Repasa la chuleta y a por ello.`
-    : `¿Qué tal fue la entrevista? Cuéntaselo a Claude y completamos la app.`;
+    : "";
+  if(!txt) return "";
   return `<div class="ivchip">${ICON.target}<span>${txt}</span>${diff >= 0 && diff <= 1 ? `<button class="link" data-go="chuleta">Chuleta</button>` : ""}</div>`;
 }
 function weekStrip(){
@@ -647,10 +883,10 @@ function weekStrip(){
   }
   return `<div class="week" aria-label="Actividad de los últimos 7 días">${out}</div>`;
 }
-function modProgress(m){ const cs = D.cards.filter(c=>c.m === m.id); return {done:cs.filter(mastered).length, total:cs.length}; }
+function modProgress(m){ const cs = ALL.filter(c=>c.m === m.id); return {done:cs.filter(mastered).length, total:cs.length}; }
 function modRow(m){
   const p = modProgress(m), pct = Math.round(100*p.done/p.total), sales = m.area === "ventas";
-  return `<button class="mrow" style="${ac(m.area)}" data-mod="${m.id}">${m.n?`<span class="mn">${two(m.n)}</span>`:`<span><i class="mn c"></i></span>`}<span class="mt">${m.title}</span><span class="mbar"><i style="width:${pct}%"></i></span><span class="mf">${p.done}/${p.total}</span></button>`;
+  return `<button class="mrow" style="${ac(m.area)}" data-mod="${m.id}">${m.n?`<span class="mn">${two(m.n)}</span>`:`<span><i class="mn c"></i></span>`}<span class="mt">${m.gen ? `Explorar · ${AREA[m.area].title}` : m.title}</span><span class="mbar"><i style="width:${pct}%"></i></span><span class="mf">${p.done}/${p.total}</span></button>`;
 }
 function renderHome(){
   const d = today(), streak = curStreak();
@@ -658,12 +894,12 @@ function renderHome(){
   if(!d.done){
     const q = buildSession("daily"), rev = q.filter(x=>x.rev).length, byArea = {};
     q.forEach(x=>{ const a = areaOf(x.c); byArea[a] = (byArea[a]||0) + 1; });
-    const present = AREAS.filter(a=>byArea[a.id]);
+    const present = AREAS.filter(a=>byArea[a.id]), extra = q.filter(x=>x.c.t === "mind" || x.c.t === "survey");
     main = `<section class="hero card">
       <div class="eyebrow">Sesión de hoy</div>
       <div class="hero-n"><span class="big">${q.length}</span>tarjetas</div>
       <div class="mix" aria-hidden="true">${present.map(a=>`<span style="flex:${byArea[a.id]};${ac(a.id)}"></span>`).join("")}</div>
-      <div class="hero-meta">${present.map(a=>`<span style="${ac(a.id)}"><i class="dot"></i> ${byArea[a.id]} ${a.title.toLowerCase()}</span>`).join("")}<span>${rev?`${rev} de repaso · `:""}unos ${Math.max(5, Math.round(q.length*1.3))} min</span></div>
+      <div class="hero-meta">${present.map(a=>`<span style="${ac(a.id)}"><i class="dot"></i> ${byArea[a.id]} ${a.title.toLowerCase()}</span>`).join("")}${extra.some(x=>x.c.t==="mind")?`<span style="${ac("mind")}"><i class="dot"></i> 1 reto</span>`:""}<span>${rev?`${rev} de repaso · `:""}unos ${Math.max(5, Math.round(q.length*1.3))} min</span></div>
       <button class="btn primary wide" data-act="start" data-kind="daily">Empezar</button>
     </section>`;
   } else {
@@ -681,9 +917,10 @@ function renderHome(){
     ${levelBlock()}
     ${interviewChip()}
     ${main}
+    ${genNoteHtml()}
     ${weekStrip()}
     <div class="sec-h"><h3>Tu formación</h3><button class="link" data-go="temario">Temario</button></div>
-    <div class="mlist">${(S.settings.mode === "equilibrado" ? D.modules : D.modules.filter(m=>m.area==="ventas")).map(modRow).join("")}</div>`;
+    <div class="mlist">${AREAS.filter(a=> S.settings.mode === "entrevista" ? a.id === "ventas" : weights()[a.id] > 0).flatMap(a=>modsOf(a.id)).map(modRow).join("")}</div>`;
 }
 
 /* ---------- Temario y módulo ---------- */
@@ -691,7 +928,7 @@ function renderTemario(){
   const favs = S.fav.map(id=>CARD[id]).filter(Boolean);
   app.innerHTML = `<header class="phead"><h1>Temario</h1><p class="muted">Lee cualquier módulo cuando quieras o practícalo por separado.</p></header>
     ${AREAS.map(a=>`<div class="sec-h"><h3>${a.title}</h3><span class="muted small">${pctTxt(weights()[a.id])} de cada sesión</span></div>
-    <div class="mlist">${D.modules.filter(m=>m.area===a.id).map(modRow).join("")}</div>`).join("")}
+    <div class="mlist">${modsOf(a.id).map(modRow).join("")}</div>`).join("")}
     ${favs.length ? `<div class="sec-h"><h3>Guardadas</h3></div><div class="mlist">${favs.map(c=>`<button class="mrow" data-act="open-card" data-arg="${c.id}"><span class="mn" style="color:var(--gold)">★</span><span class="mt">${inline(c.title)}</span><span></span><span class="mf">${MOD[c.m].n?two(MOD[c.m].n):""}</span></button>`).join("")}</div>` : ""}`;
 }
 function cardRow(c, open){
@@ -699,7 +936,7 @@ function cardRow(c, open){
   const state = !s || !s.n ? "" : (c.t === "read" || s.b >= 2) ? "ok" : "ko";
   if(c.t === "read"){
     const fav = S.fav.includes(c.id);
-    return `<details class="crow" style="${ac(areaOf(c))}" id="row-${c.id}"${open?" open":""}><summary><span class="st ${state}"></span><span class="ck">Lectura</span><span class="cq">${inline(c.title)}</span></summary>
+    return `<details class="crow" style="${ac(areaOf(c))}" id="row-${c.id}"${open?" open":""}><summary><span class="st ${state}"></span><span class="ck">Lectura</span><span class="cq">${inline(c.title)}${c.topic?`<br><span class="muted small">${esc(c.topic)}</span>`:""}</span></summary>
       <div class="prose">${md(c.body)}</div>${c.key?`<div class="key"><span class="lbl">Idea clave</span>${inline(c.key)}</div>`:""}
       <div class="favl"><button class="link" data-act="fav-lib" data-arg="${c.id}">${fav?"Quitar de guardadas":"Guardar"}</button></div></details>`;
   }
@@ -707,9 +944,9 @@ function cardRow(c, open){
 }
 function renderModule(){
   const arg = typeof screenArg === "string" ? {id:screenArg} : screenArg;
-  const m = MOD[arg.id], cs = D.cards.filter(c=>c.m === m.id), p = modProgress(m);
+  const m = MOD[arg.id], cs = ALL.filter(c=>c.m === m.id), p = modProgress(m);
   app.innerHTML = `<div class="top"><button class="back" data-go="temario">${ICON.back}Temario</button></div>
-    <header class="mhead"><div class="eyebrow">${AREA[m.area].title}${m.n?` · Módulo ${m.n}`:""}</div><h1>${m.title}</h1><p class="muted">${m.desc}</p>
+    <header class="mhead"><div class="eyebrow">${AREA[m.area].title}${m.n?` · Módulo ${m.n}`:""}</div><h1>${m.gen ? `Explorar · ${AREA[m.area].title}` : m.title}</h1><p class="muted">${m.desc}</p>
       <div class="ruler area" style="${ac(m.area)}"><i style="width:${Math.round(100*p.done/p.total)}%"></i></div>
       <div class="muted small">${p.done} de ${p.total} dominadas</div>
       <button class="btn primary wide" data-act="start" data-kind="module" data-arg="${m.id}">Practicar este módulo</button></header>
@@ -721,8 +958,8 @@ function renderModule(){
 function startSession(kind, arg){
   const q = buildSession(kind, arg);
   if(!q.length){ toast("No hay tarjetas pendientes aquí."); return; }
-  if(kind === "daily" || kind === "extra") q.forEach(x=>{ const a = areaOf(x.c); S.areaCount[a] = (S.areaCount[a]||0) + 1; });
-  SES = {kind, arg, queue:q.map(x=>Object.assign({}, x, {gold: isEx(x.c) && kind !== "single" && Math.random() < 0.15})),
+  if(kind === "daily" || kind === "extra") q.forEach(x=>{ const a = areaOf(x.c); if(AREA[a]) S.areaCount[a] = (S.areaCount[a]||0) + 1; });
+  SES = {kind, arg, queue:q.map(x=>Object.assign({}, x, {gold: isEx(x.c) && x.c.t !== "survey" && kind !== "single" && Math.random() < 0.15})),
          i:0, xp:0, ok:0, total:0, combo:0, best:0, keys:[], requeued:{}, startLevel:levelOf(S.xp).lvl};
   go("play");
 }
@@ -730,7 +967,7 @@ function curItem(){ return SES.queue[SES.i]; }
 function mult(){ return SES.combo >= 5 ? 2 : SES.combo >= 3 ? 1.5 : 1; }
 function outcome(c, r, base){
   const it = curItem();
-  record(c, r);
+  if(c.t !== "mind" && c.t !== "survey") record(c, r);
   let xp = base;
   if(r === "read"){
     if(c.key) SES.keys.push(c.key);
@@ -740,7 +977,7 @@ function outcome(c, r, base){
     if(r === "ok"){ SES.ok++; SES.combo++; SES.best = Math.max(SES.best, SES.combo); xp = Math.round(base*mult()); }
     else if(r === "ko"){ SES.combo = 0; }
     if(r === "ok") (SES.combo >= 3 ? SND.combo : SND.ok)(); else if(r === "meh") SND.meh(); else SND.ko();
-    if(r === "ko" && !it.retry && !SES.requeued[c.id] && SES.kind !== "single"){
+    if(r === "ko" && !it.retry && !SES.requeued[c.id] && SES.kind !== "single" && c.t !== "mind"){
       SES.requeued[c.id] = true; SES.queue.push({c, retry:true});
     }
   }
@@ -774,6 +1011,7 @@ function finishSession(){
   S.stats.sessions = (S.stats.sessions||0) + 1;
   save();
   go("summary");
+  maybeGenerate();
 }
 function verdict(kind, text){
   const ic = kind === "ok" ? ICON.check : kind === "ko" ? ICON.x : ICON.target;
@@ -789,7 +1027,8 @@ function renderPlay(){
       <div class="prog" id="prog">${progSegs()}</div><span class="pcount" id="pcount">${SES.i+1}/${SES.queue.length}</span></div>
     <div class="pstat" id="pstat"></div>
     <article class="card play enter${it.gold?" gold":""}" style="${ac(m.area)}">
-      <div class="chead"><span class="tag">${m.n?`${two(m.n)} · ${m.title}`:AREA[m.area].title}</span>
+      <div class="chead"><span class="tag">${m.n ? `${two(m.n)} · ${m.title}` : AREA[m.area] ? AREA[m.area].title + (c.topic ? " · "+esc(c.topic) : "") : m.title}</span>
+        ${c.gen?`<span class="badge">Nueva</span><button class="rep" data-act="report">¿Algo mal?</button>`:""}
         ${it.rev?`<span class="badge">Repaso</span>`:""}${it.retry?`<span class="badge">Otra vez</span>`:""}${it.gold?`<span class="badge gold">Dorada · XP ×2</span>`:""}
         <span class="kind">${KIND[c.t]}</span></div>
       <div id="cb"></div>
@@ -800,6 +1039,38 @@ function renderPlay(){
 }
 
 const RENDER = {
+  mind(c, el){
+    el.parentNode.classList.add("mind");
+    CS.t0 = performance.now();
+    if(c.kind === "memory"){
+      el.innerHTML = `<p class="mind-hint">${c.hint}</p><div class="timebar"><i></i></div><div class="mind-digits" id="digits">${c.q}</div><div id="memin" hidden><div class="numrow"><label class="sr" for="num-${c.id}">Cifra</label><input id="num-${c.id}" type="text" inputmode="numeric" autocomplete="off" placeholder="¿Cuál era?"></div></div><div id="exp" class="exp" hidden></div>`;
+      setDock(`<div class="dock-hint">Memoriza…</div>`);
+      const token = c.id;
+      setTimeout(()=>{
+        if(!SES || curItem().c.id !== token) return;
+        document.getElementById("digits").hidden = true; document.querySelector(".timebar").hidden = true;
+        document.getElementById("memin").hidden = false; document.querySelector(".mind-hint").textContent = "Escríbela";
+        CS.t0 = performance.now();
+        const inp = document.getElementById("num-"+c.id); inp && inp.focus();
+        setDock(`<button class="btn primary grow" data-act="mind-check">Comprobar</button>`);
+      }, 3000);
+      return;
+    }
+    if(c.kind === "pick"){
+      el.innerHTML = `<p class="mind-hint">${c.hint}</p><p class="q" style="text-align:center">${c.q}</p><div class="opts">${c.opts.map((o,k)=>`<button class="opt" data-act="mind-pick" data-i="${k}">${o}</button>`).join("")}</div><div id="exp" class="exp" hidden></div>`;
+      setDock(`<div class="dock-hint">Elige rápido</div>`);
+      return;
+    }
+    el.innerHTML = `<p class="mind-hint">${c.hint}</p><div class="mind-q">${c.q}</div><div class="numrow"><label class="sr" for="num-${c.id}">Resultado</label><input id="num-${c.id}" type="text" inputmode="numeric" autocomplete="off" placeholder="="></div><div id="exp" class="exp" hidden></div>`;
+    setDock(`<button class="btn primary grow" data-act="mind-check">Comprobar</button>`);
+  },
+  survey(c, el){
+    CS.ans = c.qs.map(()=>[]);
+    el.innerHTML = `<h2 class="ctitle">¿Por dónde seguimos?</h2><p class="ctx">Tus respuestas deciden qué tarjetas nuevas se crean para ti.</p>`
+      + c.qs.map((q,qi)=>`<div class="sv"><p class="q">${esc(q.q)}${q.multi?` <span class="muted small">(una o varias)</span>`:""}</p><div class="chips">${q.opts.map((o,i)=>`<button data-act="sv-opt" data-q="${qi}" data-i="${i}" aria-pressed="false">${esc(o)}</button>`).join("")}</div></div>`).join("")
+      + `<div class="sv"><label class="q" for="svn-${c.id}" style="display:block">¿Algún tema concreto que te apetezca? <span class="muted small">(opcional)</span></label><input type="text" id="svn-${c.id}" maxlength="140" autocomplete="off" placeholder="Por ejemplo: la Guerra Fría, la dopamina…"></div>`;
+    setDock(`<button class="btn primary grow" data-act="sv-send" disabled>Enviar</button>`);
+  },
   read(c, el){
     el.innerHTML = `<h2 class="ctitle">${inline(c.title)}</h2><div class="prose">${md(c.body)}</div>${c.key?`<div class="key"><span class="lbl">Idea clave</span>${inline(c.key)}</div>`:""}`;
     const fav = S.fav.includes(c.id);
@@ -834,6 +1105,80 @@ const RENDER = {
     setDock(`<button class="btn primary grow" data-act="flash-show">Dar la vuelta</button>`);
   }
 };
+
+/* ---------- Retos mentales: se crean al momento, nunca se acaban ---------- */
+function mindTask(){
+  const L = Math.max(1, Math.min(5, Math.round((S.mind && S.mind.lvl) || 1)));
+  const r = (a,b)=> a + Math.floor(Math.random()*(b-a+1)), pick = arr => arr[Math.floor(Math.random()*arr.length)];
+  const k = pick(["mult","pct","sum","series","series","memory","compare"]);
+  let t;
+  if(k === "mult"){ const a = r(11, 15+L*8), b = r(3, 5+L); t = {kind:"num", q:`${a} × ${b}`, a:a*b, hint:"Cálculo mental"}; }
+  else if(k === "pct"){ const p = pick([10,20,25,50,15,30,75]), n = pick([40,60,80,120,160,200,240,360,480]); t = {kind:"num", q:`El ${p}% de ${n}`, a:p*n/100, hint:"Cálculo mental"}; }
+  else if(k === "sum"){
+    let v = r(10,40), txt = String(v);
+    for(let i=0; i<2+Math.min(L,3); i++){ if(Math.random() < .55 || v < 12){ const x = r(3,19); v += x; txt += ` + ${x}`; } else { const x = r(2, Math.min(19, v-1)); v -= x; txt += ` − ${x}`; } }
+    t = {kind:"num", q:txt, a:v, hint:"Calcula de izquierda a derecha"};
+  }
+  else if(k === "series"){
+    const s = pick(["ar","geo","sq","alt","fib"]); let seq, nx;
+    if(s === "ar"){ const a = r(1,20), d = r(2, 4+L*2); seq = [0,1,2,3].map(i=>a+i*d); nx = a+4*d; }
+    else if(s === "geo"){ const a = r(1,5), q = pick([2,3]); seq = [0,1,2,3].map(i=>a*Math.pow(q,i)); nx = a*Math.pow(q,4); }
+    else if(s === "sq"){ const o = r(1,6); seq = [0,1,2,3].map(i=>(o+i)*(o+i)); nx = (o+4)*(o+4); }
+    else if(s === "alt"){ const a = r(10,30), x = r(4,9), y = r(1,x-2); seq = [a, a+x, a+x-y, a+2*x-y, a+2*x-2*y]; nx = a+3*x-2*y; }
+    else { const a = r(1,4), b = r(a,a+4); seq = [a,b]; while(seq.length < 5) seq.push(seq[seq.length-1]+seq[seq.length-2]); nx = seq[3]+seq[4]; }
+    t = {kind:"num", q:seq.join(", ")+", ?", a:nx, hint:"¿Qué número sigue?"};
+  }
+  else if(k === "memory"){ const n = Math.min(9, 3+L); let d = ""; for(let i=0; i<n; i++) d += r(0,9); t = {kind:"memory", q:d, a:d, hint:"Memoriza la cifra: desaparece en 3 segundos"}; }
+  else {
+    let a, b, c, e;
+    do{ a = r(1,7); b = r(a+1,9); c = r(1,7); e = r(c+1,9); }while(a*e === c*b || a === c && b === e);
+    t = {kind:"pick", q:"¿Cuál es mayor?", opts:[`${a}/${b}`, `${c}/${e}`], a: a/b > c/e ? 0 : 1, hint:"Sin calculadora, a ojo"};
+  }
+  return Object.assign({id:"mind-"+Date.now().toString(36)+r(0,999), t:"mind", m:"_mind"}, t);
+}
+function mindAnswer(ok, c){
+  const secs = ((performance.now() - (CS.t0 || performance.now()))/1000).toFixed(1).replace(".", ",");
+  S.mind.n = (S.mind.n||0) + 1; if(ok) S.mind.ok = (S.mind.ok||0) + 1;
+  S.mind.lvl = Math.max(1, Math.min(5, (S.mind.lvl||1) + (ok ? .4 : -.5)));
+  const ex = document.getElementById("exp");
+  ex.innerHTML = verdict(ok?"ok":"ko", ok ? praise() : `Era ${esc(c.kind === "pick" ? c.opts[c.a] : fmtNum(c.a))}`) + `<div class="secs">${ok ? `Resuelto en ${secs} s` : "La próxima sale"}</div>`;
+  ex.hidden = false;
+  outcome(c, ok?"ok":"ko", ok?8:2);
+  nextDock();
+}
+/* ---------- Encuesta: decide qué se crea para ti y me llega a mí ---------- */
+function surveyDue(){ return (S.stats.surveys||0) === 0 || (S.stats.sessions - (S.stats.lastSurvey ?? -99)) >= 3; }
+function surveyCard(){
+  const k = S.stats.surveys || 0, w = weights();
+  const areas = AREAS.filter(a=> w[a.id] > 0 && a.topics);
+  const a = areas[k % areas.length];
+  const topics = a.topics.slice().sort(()=>Math.random()-.5).slice(0,5);
+  const qs = [{id:"topics", area:a.id, multi:true, q:`En ${a.title.toLowerCase()}, ¿qué te apetece ver más?`, opts:topics.concat(["Nada en especial"])}];
+  const second = [
+    {id:"ventas", q:"¿Cuánto espacio quieres para ventas?", opts:["Mucho (75%)","Como las demás áreas","Poco (10%)","Nada por ahora"]},
+    {id:"nivel", q:"¿Qué tal el nivel de las tarjetas?", opts:["Demasiado fácil","Bien así","Demasiado difícil"]},
+    {id:"len", q:"¿Y la duración de cada sesión?", opts:["Más corta","Bien así","Más larga"]}
+  ][k % 3];
+  qs.push(second);
+  return {id:"survey-"+Date.now().toString(36), t:"survey", m:"_survey", qs};
+}
+function applySurvey(c, answers, note){
+  answers.forEach(ans=>{
+    const q = c.qs.find(x=>x.id === ans.id), idx = ans.idx;
+    if(q.id === "topics"){
+      const picked = idx.map(i=>q.opts[i]).filter(t=>t !== "Nada en especial");
+      picked.forEach(t=>{ const key = q.area+"|"+t; S.prefs.topics[key] = (S.prefs.topics[key]||1) + 1; });
+      if(picked.length) S.prefs.boost = {area:q.area, topic:picked[Math.floor(Math.random()*picked.length)]};
+    }
+    if(q.id === "ventas"){
+      const mode = ["entrevista","equilibrado","poco","sin"][idx[0]];
+      if(mode && mode !== S.settings.mode){ S.settings.mode = mode; S.areaCount = {}; }
+    }
+    if(q.id === "nivel") S.prefs.diff = Math.max(-2, Math.min(2, (S.prefs.diff||0) + [1,0,-1][idx[0]]));
+    if(q.id === "len"){ const L = [6,8,12,16], i = L.indexOf(S.settings.len); S.settings.len = L[Math.max(0, Math.min(L.length-1, (i<0?1:i) + [-1,0,1][idx[0]]))]; }
+  });
+  if(note){ S.prefs.notes = (S.prefs.notes||[]).concat([note]).slice(-5); }
+}
 
 function scStep(c){
   const s = c.steps[CS.step];
@@ -964,17 +1309,15 @@ function renderChuleta(){
 function renderAjustes(){
   app.innerHTML = `<header class="phead"><h1>Ajustes</h1></header>
   <div class="set card">
-    <div class="srow"><div><b>Reparto</b><span class="muted small">${S.settings.mode === "equilibrado" ? "Todas las áreas por igual" : "75% ventas; el resto, a partes iguales"}</span></div>
-      <div class="seg" role="group" aria-label="Reparto">${Object.keys(MODES).map(k=>`<button data-act="mode" data-v="${k}" class="${S.settings.mode===k?"on":""}" style="font-family:var(--f-display)">${MODES[k]}</button>`).join("")}</div></div>
+    <div class="srow"><div><b>Peso de ventas</b><span class="muted small">${S.settings.mode === "equilibrado" ? "Todas las áreas por igual" : `Ventas ${pctTxt(weights().ventas)}; el resto, a partes iguales`}</span></div>
+      <div class="seg" role="group" aria-label="Reparto">${Object.keys(MODES).map(k=>`<button data-act="mode" data-v="${k}" class="${S.settings.mode===k?"on":""}">${MODES[k]}</button>`).join("")}</div></div>
     <div class="srow"><div><b>Tarjetas por sesión</b><span class="muted small">Unos 10, 15 o 20 minutos</span></div>
       <div class="seg" role="group" aria-label="Tarjetas por sesión">${[8,12,16].map(v=>`<button data-act="len" data-v="${v}" class="${S.settings.len===v?"on":""}">${v}</button>`).join("")}</div></div>
-    <div class="srow"><label for="ivdate"><b>Fecha de la entrevista</b><span class="muted small">Para la cuenta atrás</span></label>
-      <input type="date" id="ivdate" value="${esc(S.settings.interview)}"></div>
     <div class="srow"><div><b>Sonido</b><span class="muted small">Avisos cortos al acertar y fallar</span></div>
       <button class="switch${S.settings.sound?" on":""}" data-act="sound" role="switch" aria-checked="${S.settings.sound}" aria-label="Sonido"><i></i></button></div>
   </div>
   <div class="set card">
-    <div class="srow col"><div><b>Copia de seguridad</b><span class="muted small">El progreso se guarda solo en este dispositivo. Copia el código y pégalo en una nota para no perderlo.</span></div>
+    <div class="srow col"><div><b>Copia de seguridad</b><span class="muted small">${CAP.db ? "Tu progreso y tus tarjetas se guardan en tu cuenta de Claude. Este código es una copia extra." : "El progreso se guarda solo en este dispositivo. Copia el código y pégalo en una nota para no perderlo."}</span></div>
       <div class="row"><button class="btn ghost" data-act="export">Copiar código</button><button class="btn ghost" data-act="import-show">Restaurar</button></div>
       <textarea id="exptext" rows="3" readonly hidden aria-label="Código de copia"></textarea>
       <div id="imp" hidden><label class="sr" for="imptext">Código</label><textarea id="imptext" rows="3" placeholder="Pega aquí el código"></textarea><button class="btn primary wide" data-act="import">Restaurar progreso</button></div>
@@ -984,8 +1327,7 @@ function renderAjustes(){
     <div class="srow"><div><b>Reiniciar progreso</b><span class="muted small">Borra XP, rachas y repasos</span></div><button class="btn ghost danger" data-act="reset-ask">Reiniciar</button></div>
     <div id="resetc" class="row" hidden><span>¿Seguro? No se puede deshacer.</span><button class="btn danger" data-act="reset-yes">Sí, borrar</button><button class="btn ghost" data-act="reset-no">Cancelar</button></div>
   </div>
-  <p class="muted small center">Chispa 1.1 · ${AREAS.map(a=>`${D.cards.filter(c=>areaOf(c)===a.id).length} de ${a.title.toLowerCase()}`).join(", ")} · ${S.stats.sessions||0} sesiones hechas</p>`;
-  document.getElementById("ivdate").addEventListener("change", e=>{ S.settings.interview = e.target.value; save(); toast(e.target.value ? "Fecha guardada" : "Fecha borrada"); });
+  <p class="muted small center">Chispa 2.0 · ${AREAS.map(a=>`${ALL.filter(c=>areaOf(c)===a.id).length} de ${a.title.toLowerCase()}`).join(", ")} · ${CAP.sample ? "tarjetas nuevas activadas" : "sin tarjetas nuevas en esta versión"} · ${S.stats.sessions||0} sesiones hechas</p>`;
 }
 
 /* ---------- Acciones ---------- */
@@ -1080,6 +1422,53 @@ const ACT = {
     ex.scrollIntoView({behavior:"smooth", block:"nearest"});
   },
   "num-check"(){ checkNum(); },
+  "mind-check"(){
+    const c = curItem().c, inp = document.getElementById("num-"+c.id);
+    if(CS.done || !inp) return;
+    const raw = inp.value.trim();
+    if(!raw){ inp.classList.remove("shake"); void inp.offsetWidth; inp.classList.add("shake"); inp.focus(); return; }
+    CS.done = true; inp.disabled = true;
+    const ok = c.kind === "memory" ? raw.replace(/\D/g,"") === c.a : (parseNum(raw)||[]).some(x=>Math.abs(x - c.a) < 1e-6);
+    mindAnswer(ok, c);
+  },
+  "mind-pick"(t){
+    if(CS.done) return; CS.done = true;
+    const c = curItem().c, i = +t.dataset.i, ok = i === c.a;
+    document.querySelectorAll("#cb .opt").forEach((b,k)=>{ b.disabled = true; b.classList.add(k === c.a ? "ok" : k === i ? "ko" : "dim"); });
+    mindAnswer(ok, c);
+  },
+  "sv-opt"(t){
+    const c = curItem().c, qi = +t.dataset.q, i = +t.dataset.i, q = c.qs[qi];
+    let cur = CS.ans[qi];
+    const none = q.opts.indexOf("Nada en especial");
+    if(q.multi){
+      if(cur.includes(i)) cur = cur.filter(x=>x !== i);
+      else cur = i === none ? [i] : cur.filter(x=>x !== none).concat([i]);
+    } else cur = [i];
+    CS.ans[qi] = cur;
+    t.parentNode.querySelectorAll("button").forEach((b,k)=>{ const on = cur.includes(k); b.classList.toggle("on", on); b.setAttribute("aria-pressed", on); });
+    const send = dockin.querySelector("[data-act=sv-send]"); if(send) send.disabled = !CS.ans.every(a=>a.length);
+  },
+  "sv-send"(){
+    if(CS.done) return; CS.done = true;
+    const c = curItem().c, inp = document.getElementById("svn-"+c.id), note = inp ? inp.value.trim().slice(0,140) : "";
+    const answers = c.qs.map((q,qi)=>({id:q.id, area:q.area||null, q:q.q, idx:CS.ans[qi], picked:CS.ans[qi].map(i=>q.opts[i])}));
+    applySurvey(c, answers, note);
+    S.stats.surveys = (S.stats.surveys||0) + 1; S.stats.lastSurvey = S.stats.sessions;
+    logFeedback({type:"survey", answers:answers.map(a=>({id:a.id, area:a.area, q:a.q, picked:a.picked})), note});
+    outcome(c, "read", 10);
+    toast("Gracias. Lo tendré en cuenta para las próximas tarjetas.");
+    setTimeout(advance, 300);
+  },
+  report(){
+    const c = curItem().c;
+    if(!c.gen || CS.reported) return; CS.reported = true;
+    S.hidden[c.id] = true;
+    logFeedback({type:"report", card:{id:c.id, topic:c.topic, concept:c.concept, t:c.t, title:c.title||null, q:c.q||c.front||null}});
+    save(); rebuildIndex();
+    toast("Gracias. Esta tarjeta no volverá a salir.");
+    setTimeout(advance, 400);
+  },
   "flash-show"(){
     const c = curItem().c, b = document.getElementById("back");
     b.innerHTML = `<div class="prose">${md(c.back)}</div>`; b.hidden = false;
@@ -1092,7 +1481,7 @@ const ACT = {
     outcome(curItem().c, g ? "ok" : "ko", g ? 6 : 2);
     setTimeout(advance, 450);
   },
-  mode(t){ S.settings.mode = t.dataset.v; save(); renderAjustes(); },
+  mode(t){ if(S.settings.mode !== t.dataset.v){ S.settings.mode = t.dataset.v; S.areaCount = {}; } save(); renderAjustes(); },
   len(t){ S.settings.len = +t.dataset.v; save(); renderAjustes(); },
   sound(){ S.settings.sound = !S.settings.sound; save(); renderAjustes(); if(S.settings.sound) SND.ok(); },
   export(){
@@ -1124,12 +1513,13 @@ document.addEventListener("click", e=>{
   const f = ACT[t.dataset.act]; if(f) f(t, e);
 });
 document.addEventListener("keydown", e=>{
-  if(e.key === "Enter" && e.target && e.target.id && e.target.id.indexOf("num-") === 0){ e.preventDefault(); checkNum(); }
+  if(e.key === "Enter" && e.target && e.target.id && e.target.id.indexOf("num-") === 0){ e.preventDefault(); if(SES && curItem().c.t === "mind") ACT["mind-check"](); else checkNum(); }
 });
 
 /* ---------- Arranque ---------- */
 try{ if(window.top !== window.self) document.documentElement.classList.add("embedded"); }catch(e){ document.documentElement.classList.add("embedded"); }
 render();
+initCaps();
 
 /* ---------- PWA: service worker y avisos de versión ---------- */
 if("serviceWorker" in navigator && !document.documentElement.classList.contains("embedded") && location.protocol !== "file:"){

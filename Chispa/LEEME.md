@@ -10,6 +10,18 @@ Cinco áreas: **ventas**, **ciencia**, **psicología**, **economía** e **histor
 El reparto es exacto a la larga: la app lleva la cuenta de cuántas tarjetas de cada área has visto
 y compensa en las siguientes sesiones.
 
+## Versión 2: nunca se acaba
+
+- **Úsala desde el enlace de claude.ai** (añádelo a la pantalla de inicio). Allí la app:
+  - crea tarjetas nuevas con tu cuenta de Claude cuando a un área le quedan pocas sin ver,
+    adaptadas a tu nivel, a lo que fallas y a los subtemas que eliges;
+  - guarda el progreso y las tarjetas en tu cuenta (no se pierden al borrar el navegador);
+  - cada 3 sesiones hace una encuesta de 2 preguntas cuyas respuestas quedan guardadas
+    para que Claude las lea al mejorar la app.
+- Cada sesión incluye un **reto mental** corto (cálculo, series, memoria) generado al momento.
+- Las tarjetas creadas llevan la etiqueta «Nueva» y un botón «¿Algo mal?» para retirarlas.
+- La versión de GitHub Pages sigue funcionando, pero solo con el temario fijo.
+
 ## Cómo funciona
 
 - **Sesión de hoy**: 8 tarjetas (configurable a 12 o 16), unos 10 minutos. Al terminar, la app te dice

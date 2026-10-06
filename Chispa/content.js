@@ -10,11 +10,11 @@
 
 window.CHISPA = {
 areas: [
-  {id:"ventas",   title:"Ventas"},
-  {id:"ciencia",  title:"Ciencia"},
-  {id:"mente",    title:"Psicología"},
-  {id:"economia", title:"Economía"},
-  {id:"historia", title:"Historia"}
+  {id:"ventas",   title:"Ventas", topics:["Preguntar y escuchar","Negociación y precio","Objeciones","Coste total y valor","Producto industrial y medición","Seguimiento y relación con clientes","Prospección y organización comercial","Comunicación y persuasión"]},
+  {id:"ciencia",  title:"Ciencia", topics:["Método científico y estadística","Física cotidiana","Química de lo cotidiano","Biología y cuerpo humano","Astronomía y cosmos","Energía y clima","Medicina y salud","Grandes descubrimientos"]},
+  {id:"mente",    title:"Psicología", topics:["Sesgos y decisiones","Memoria y aprendizaje","Emociones y motivación","Hábitos y conducta","Psicología social","Cerebro y percepción","Personalidad","Bienestar y estrés"]},
+  {id:"economia", title:"Economía", topics:["Conceptos básicos","Dinero, inflación y bancos","Mercados y precios","Finanzas personales e inversión","Comercio y globalización","Economía conductual","Empresas y estrategia","Historia económica"]},
+  {id:"historia", title:"Historia", topics:["Antigüedad","Edad Media","Edad Moderna","Siglo XIX","Siglo XX","Historia de España","Historia de la ciencia y la técnica","Imperios y civilizaciones"]}
 ],
 modules: [
   {id:"v1",  area:"ventas", n:1,  title:"Vender valor",              desc:"Qué vende de verdad Bitmakers y por qué el precio no es lo importante."},

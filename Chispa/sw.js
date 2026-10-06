@@ -1,7 +1,7 @@
 /* Chispa — Service Worker
    Sube APP_VERSION cada vez que publiques cambios: invalida la caché
    antigua y la app avisa de que hay versión nueva. */
-const APP_VERSION = "v1.1.0";
+const APP_VERSION = "v2.0.0";
 const CACHE = "chispa-" + APP_VERSION;
 
 const ASSETS = [
