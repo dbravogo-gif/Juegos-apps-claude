@@ -1,4 +1,4 @@
-# Pista libre (carpeta aerolinea/)
+# App viación (carpeta aerolinea/)
 
 Simulador de aerolínea para móvil desde 1976. Web sin paso de build: módulos ES, Canvas con
 d3-geo y `node --test`.

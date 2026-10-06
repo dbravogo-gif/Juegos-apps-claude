@@ -1,6 +1,6 @@
 {
-  "name": "Pista libre",
-  "short_name": "Pista libre",
+  "name": "App viación",
+  "short_name": "App viación",
   "description": "Simulador de aerolínea desde 1976.",
   "lang": "es",
   "start_url": "./",

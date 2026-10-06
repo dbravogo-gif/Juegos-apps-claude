@@ -8,8 +8,12 @@
 //   pob       población del área en millones (aprox. 1976)
 //   tam       tamaño del aeropuerto, 1–5: demanda, tasas y coste de tener base
 //   pista     metros de la pista más larga (aprox.)
-//   ils       ayuda a la aproximación instrumental en 1976 (aprox.)
+//   ils       categoría del ILS en 1976: 0 = sin ILS (aproximación de no precisión), 1, 2 o 3
 //   montana   terreno montañoso o accidentado en la aproximación
+//   elev      elevación en metros, solo donde afecta a las prestaciones (aeropuertos altos)
+//   finPista  'peligroso' si pasado el final de la pista hay mar, acantilado o terreno
+//   cambios   cambios históricos de pista: [{ desde: año, pista: metros }]
+//   prohibido tipos de avión vetados hasta una fecha: [{ tipo, hasta: año con decimales, motivo }]
 //   clima     perfil de src/core/clima.js
 //   tur       peso del turismo en la demanda (1 = normal)
 //   temporada 'verano' o 'invierno' si la demanda turística es estacional
@@ -17,19 +21,19 @@
 //   region    agrupación para elegir base
 
 const A = (id, nombre, ciudad, pais, region, lat, lon, pob, tam, pista, ils, clima, extra = {}) => ({
-  id, nombre, ciudad, pais, region, lat, lon, pob, tam, pista, ils, clima,
-  montana: false, tur: 1, temporada: null, desde: 0, grupo: null, ...extra,
+  id, nombre, ciudad, pais, region, lat, lon, pob, tam, pista, ils: ils === true ? 1 : ils === false ? 0 : ils, clima,
+  montana: false, tur: 1, temporada: null, desde: 0, grupo: null, elev: 0, finPista: 'normal', cambios: [], ...extra,
 });
 
 export const AEROPUERTOS = [
   // Canarias
   A('LPA', 'Gran Canaria (Gando)', 'Gran Canaria', 'ES', 'Canarias', 27.93, -15.39, 0.65, 4, 3100, true, 'subtropical', { tur: 1.8, temporada: 'invierno', grupo: 'canarias' }),
-  A('TFN', 'Tenerife Norte (Los Rodeos)', 'Tenerife', 'ES', 'Canarias', 28.48, -16.34, 0.55, 4, 3400, false, 'nubes_montana', { montana: true, tur: 1.4, temporada: 'invierno', grupo: 'canarias' }),
+  A('TFN', 'Tenerife Norte (Los Rodeos)', 'Tenerife', 'ES', 'Canarias', 28.48, -16.34, 0.55, 4, 3400, true, 'nubes_montana', { montana: true, elev: 633, tur: 1.4, temporada: 'invierno', grupo: 'canarias' }),
   A('TFS', 'Tenerife Sur (Reina Sofía)', 'Tenerife', 'ES', 'Canarias', 28.04, -16.57, 0.1, 3, 3200, true, 'subtropical', { tur: 2.0, temporada: 'invierno', grupo: 'canarias', desde: 1978 }),
   A('ACE', 'Lanzarote', 'Lanzarote', 'ES', 'Canarias', 28.95, -13.61, 0.05, 3, 2400, false, 'subtropical', { tur: 1.8, temporada: 'invierno', grupo: 'canarias' }),
   A('FUE', 'Fuerteventura', 'Fuerteventura', 'ES', 'Canarias', 28.45, -13.86, 0.03, 2, 2400, false, 'subtropical', { tur: 1.6, temporada: 'invierno', grupo: 'canarias' }),
-  A('SPC', 'La Palma', 'La Palma', 'ES', 'Canarias', 28.63, -17.76, 0.08, 2, 2200, false, 'nubes_montana', { montana: true, grupo: 'canarias' }),
-  A('VDE', 'El Hierro', 'El Hierro', 'ES', 'Canarias', 27.81, -17.89, 0.006, 1, 1250, false, 'subtropical', { montana: true, tur: 0.8, grupo: 'canarias' }),
+  A('SPC', 'La Palma', 'La Palma', 'ES', 'Canarias', 28.63, -17.76, 0.08, 2, 1700, false, 'nubes_montana', { montana: true, grupo: 'canarias', finPista: 'peligroso', cambios: [{ desde: 1980, pista: 2200 }] }),
+  A('VDE', 'El Hierro', 'El Hierro', 'ES', 'Canarias', 27.81, -17.89, 0.006, 1, 1000, false, 'subtropical', { montana: true, tur: 0.8, grupo: 'canarias', finPista: 'peligroso', cambios: [{ desde: 1992, pista: 1205 }] }),
   A('GMZ', 'La Gomera', 'La Gomera', 'ES', 'Canarias', 28.03, -17.21, 0.02, 1, 1500, false, 'subtropical', { montana: true, grupo: 'canarias', desde: 1999 }),
 
   // Europa
@@ -38,11 +42,11 @@ export const AEROPUERTOS = [
   A('PMI', 'Palma de Mallorca', 'Palma', 'ES', 'Europa', 39.55, 2.74, 0.5, 4, 3270, true, 'mediterraneo', { tur: 2.0, temporada: 'verano' }),
   A('AGP', 'Málaga', 'Málaga', 'ES', 'Europa', 36.67, -4.50, 0.6, 3, 3200, true, 'mediterraneo', { tur: 1.8, temporada: 'verano' }),
   A('LIS', 'Lisboa-Portela', 'Lisboa', 'PT', 'Europa', 38.77, -9.13, 2.0, 4, 3800, true, 'mediterraneo', { tur: 1.3 }),
-  A('FNC', 'Madeira (Santa Catarina)', 'Funchal', 'PT', 'Europa', 32.70, -16.77, 0.25, 2, 1600, false, 'subtropical', { montana: true, tur: 1.6, temporada: 'invierno' }),
-  A('LHR', 'Londres-Heathrow', 'Londres', 'GB', 'Europa', 51.47, -0.45, 10, 5, 3900, true, 'atlantico', { tur: 1.3 }),
+  A('FNC', 'Madeira (Santa Catarina)', 'Funchal', 'PT', 'Europa', 32.70, -16.77, 0.25, 2, 1600, false, 'subtropical', { montana: true, tur: 1.6, temporada: 'invierno', finPista: 'peligroso', cambios: [{ desde: 1986, pista: 1800 }, { desde: 2000, pista: 2781 }] }),
+  A('LHR', 'Londres-Heathrow', 'Londres', 'GB', 'Europa', 51.47, -0.45, 10, 5, 3900, 3, 'atlantico', { tur: 1.3 }),
   A('LGW', 'Londres-Gatwick', 'Londres', 'GB', 'Europa', 51.15, -0.19, 6, 4, 3100, true, 'atlantico', { tur: 1.5 }),
   A('DUB', 'Dublín', 'Dublín', 'IE', 'Europa', 53.43, -6.25, 1.0, 3, 2600, true, 'atlantico'),
-  A('CDG', 'París-Charles de Gaulle', 'París', 'FR', 'Europa', 49.01, 2.55, 9, 5, 3600, true, 'atlantico', { tur: 1.4 }),
+  A('CDG', 'París-Charles de Gaulle', 'París', 'FR', 'Europa', 49.01, 2.55, 9, 5, 3600, 3, 'atlantico', { tur: 1.4 }),
   A('NCE', 'Niza-Costa Azul', 'Niza', 'FR', 'Europa', 43.66, 7.22, 0.5, 3, 2700, true, 'mediterraneo', { tur: 1.7, temporada: 'verano' }),
   A('FRA', 'Fráncfort', 'Fráncfort', 'DE', 'Europa', 50.03, 8.57, 2.5, 5, 3900, true, 'continental'),
   A('DUS', 'Düsseldorf', 'Düsseldorf', 'DE', 'Europa', 51.29, 6.77, 5, 4, 3000, true, 'continental', { tur: 1.2 }),
@@ -77,14 +81,14 @@ export const AEROPUERTOS = [
   A('ABJ', 'Abiyán-Port Bouët', 'Abiyán', 'CI', 'África', 5.26, -3.93, 1.0, 3, 3000, true, 'tropical'),
   A('LOS', 'Lagos-Ikeja', 'Lagos', 'NG', 'África', 6.58, 3.32, 3.0, 4, 3900, true, 'monzon'),
   A('FIH', 'Kinsasa-N\'Djili', 'Kinsasa', 'ZR', 'África', -4.39, 15.44, 2.0, 3, 4700, false, 'tropical'),
-  A('ADD', 'Adís Abeba-Bole', 'Adís Abeba', 'ET', 'África', 8.98, 38.80, 1.1, 3, 3800, false, 'altitud', { montana: true }),
-  A('NBO', 'Nairobi-Embakasi', 'Nairobi', 'KE', 'África', -1.32, 36.93, 0.8, 4, 4100, true, 'altitud', { tur: 1.3 }),
-  A('JNB', 'Johannesburgo-Jan Smuts', 'Johannesburgo', 'ZA', 'África', -26.14, 28.25, 3.0, 4, 4400, true, 'altitud'),
+  A('ADD', 'Adís Abeba-Bole', 'Adís Abeba', 'ET', 'África', 8.98, 38.80, 1.1, 3, 3800, false, 'altitud', { elev: 2326, montana: true }),
+  A('NBO', 'Nairobi-Embakasi', 'Nairobi', 'KE', 'África', -1.32, 36.93, 0.8, 4, 4100, true, 'altitud', { elev: 1624, tur: 1.3 }),
+  A('JNB', 'Johannesburgo-Jan Smuts', 'Johannesburgo', 'ZA', 'África', -26.14, 28.25, 3.0, 4, 4400, true, 'altitud', { elev: 1694 }),
   A('CPT', 'Ciudad del Cabo-D. F. Malan', 'Ciudad del Cabo', 'ZA', 'África', -33.97, 18.60, 1.1, 3, 3200, true, 'mediterraneo', { montana: true, tur: 1.3 }),
 
   // Oriente Medio
   A('TLV', 'Tel Aviv-Lod', 'Tel Aviv', 'IL', 'Oriente Medio', 32.01, 34.89, 1.5, 3, 3600, true, 'mediterraneo'),
-  A('THR', 'Teherán-Mehrabad', 'Teherán', 'IR', 'Oriente Medio', 35.69, 51.31, 4.5, 4, 4000, true, 'altitud', { montana: true }),
+  A('THR', 'Teherán-Mehrabad', 'Teherán', 'IR', 'Oriente Medio', 35.69, 51.31, 4.5, 4, 4000, true, 'altitud', { elev: 1208, montana: true }),
   A('JED', 'Yeda-Kandara', 'Yeda', 'SA', 'Oriente Medio', 21.50, 39.20, 0.6, 3, 3300, false, 'desierto'),
   A('RUH', 'Riad', 'Riad', 'SA', 'Oriente Medio', 24.71, 46.73, 0.7, 3, 3200, false, 'desierto'),
   A('KWI', 'Kuwait', 'Kuwait', 'KW', 'Oriente Medio', 29.24, 47.97, 0.8, 3, 3400, true, 'desierto'),
@@ -101,7 +105,7 @@ export const AEROPUERTOS = [
   A('JKT', 'Yakarta-Kemayoran', 'Yakarta', 'ID', 'Asia', -6.15, 106.85, 6.0, 3, 2500, false, 'tropical'),
   A('DPS', 'Bali-Ngurah Rai', 'Denpasar', 'ID', 'Asia', -8.75, 115.17, 0.3, 2, 3000, false, 'tropical', { tur: 1.8 }),
   A('MNL', 'Manila', 'Manila', 'PH', 'Asia', 14.51, 121.02, 5.0, 4, 3400, true, 'tropical'),
-  A('HKG', 'Hong Kong-Kai Tak', 'Hong Kong', 'HK', 'Asia', 22.31, 114.20, 4.5, 4, 3400, true, 'monzon', { montana: true, tur: 1.3 }),
+  A('HKG', 'Hong Kong-Kai Tak', 'Hong Kong', 'HK', 'Asia', 22.31, 114.20, 4.5, 4, 3400, true, 'monzon', { montana: true, tur: 1.3, finPista: 'peligroso' }),
   A('TPE', 'Taipéi-Songshan', 'Taipéi', 'TW', 'Asia', 25.07, 121.55, 2.0, 3, 2600, true, 'monzon', { montana: true }),
   A('PEK', 'Pekín-Capital', 'Pekín', 'CN', 'Asia', 40.08, 116.58, 8.0, 3, 3200, true, 'continental'),
   A('SHA', 'Shanghái-Hongqiao', 'Shanghái', 'CN', 'Asia', 31.20, 121.34, 10, 3, 3200, true, 'monzon'),
@@ -119,7 +123,7 @@ export const AEROPUERTOS = [
   A('HNL', 'Honolulu', 'Honolulu', 'US', 'Oceanía', 21.32, -157.92, 0.7, 4, 3800, true, 'tropical', { tur: 2.0 }),
 
   // Norteamérica
-  A('JFK', 'Nueva York-JFK', 'Nueva York', 'US', 'Norteamérica', 40.64, -73.78, 16, 5, 4400, true, 'continental', { tur: 1.3 }),
+  A('JFK', 'Nueva York-JFK', 'Nueva York', 'US', 'Norteamérica', 40.64, -73.78, 16, 5, 4400, true, 'continental', { tur: 1.3, prohibido: [{ tipo: 'concorde', hasta: 1977.89, motivo: 'Nueva York no admite el Concorde hasta noviembre de 1977' }] }),
   A('ORD', 'Chicago-O\'Hare', 'Chicago', 'US', 'Norteamérica', 41.98, -87.90, 7.5, 5, 3900, true, 'continental'),
   A('ATL', 'Atlanta', 'Atlanta', 'US', 'Norteamérica', 33.64, -84.43, 1.8, 5, 3600, true, 'tropical'),
   A('MIA', 'Miami', 'Miami', 'US', 'Norteamérica', 25.79, -80.29, 2.5, 4, 3900, true, 'tropical', { tur: 1.6, temporada: 'invierno' }),
@@ -129,7 +133,7 @@ export const AEROPUERTOS = [
   A('YYZ', 'Toronto-Malton', 'Toronto', 'CA', 'Norteamérica', 43.68, -79.63, 2.8, 4, 3400, true, 'nordico'),
   A('YUL', 'Montreal-Dorval', 'Montreal', 'CA', 'Norteamérica', 45.47, -73.74, 2.8, 4, 3300, true, 'nordico'),
   A('YVR', 'Vancouver', 'Vancouver', 'CA', 'Norteamérica', 49.19, -123.18, 1.1, 3, 3300, true, 'atlantico', { montana: true }),
-  A('MEX', 'Ciudad de México', 'Ciudad de México', 'MX', 'Norteamérica', 19.44, -99.07, 12, 4, 3900, true, 'altitud', { montana: true }),
+  A('MEX', 'Ciudad de México', 'Ciudad de México', 'MX', 'Norteamérica', 19.44, -99.07, 12, 4, 3900, true, 'altitud', { elev: 2230, montana: true }),
   A('CUN', 'Cancún', 'Cancún', 'MX', 'Norteamérica', 21.04, -86.87, 0.05, 2, 3500, false, 'tropical', { tur: 2.0, temporada: 'invierno' }),
   A('HAV', 'La Habana-José Martí', 'La Habana', 'CU', 'Norteamérica', 22.99, -82.41, 1.9, 3, 4000, false, 'tropical'),
   A('SDQ', 'Santo Domingo-Las Américas', 'Santo Domingo', 'DO', 'Norteamérica', 18.43, -69.67, 1.0, 2, 3350, false, 'tropical', { tur: 1.3 }),
@@ -138,8 +142,8 @@ export const AEROPUERTOS = [
 
   // Sudamérica
   A('CCS', 'Caracas-Maiquetía', 'Caracas', 'VE', 'Sudamérica', 10.60, -66.99, 2.5, 4, 3500, true, 'tropical', { montana: true }),
-  A('BOG', 'Bogotá-El Dorado', 'Bogotá', 'CO', 'Sudamérica', 4.70, -74.15, 3.5, 4, 3800, true, 'altitud', { montana: true }),
-  A('UIO', 'Quito-Mariscal Sucre', 'Quito', 'EC', 'Sudamérica', -0.14, -78.49, 0.6, 2, 3100, false, 'altitud', { montana: true }),
+  A('BOG', 'Bogotá-El Dorado', 'Bogotá', 'CO', 'Sudamérica', 4.70, -74.15, 3.5, 4, 3800, true, 'altitud', { elev: 2548, montana: true }),
+  A('UIO', 'Quito-Mariscal Sucre', 'Quito', 'EC', 'Sudamérica', -0.14, -78.49, 0.6, 2, 3100, false, 'altitud', { elev: 2800, montana: true }),
   A('LIM', 'Lima-Jorge Chávez', 'Lima', 'PE', 'Sudamérica', -12.02, -77.11, 3.5, 3, 3500, true, 'costa_niebla'),
   A('SCL', 'Santiago-Pudahuel', 'Santiago', 'CL', 'Sudamérica', -33.39, -70.79, 3.5, 3, 3200, true, 'mediterraneo', { montana: true }),
   A('EZE', 'Buenos Aires-Ezeiza', 'Buenos Aires', 'AR', 'Sudamérica', -34.82, -58.54, 9.5, 4, 3300, true, 'atlantico'),
@@ -148,7 +152,49 @@ export const AEROPUERTOS = [
   A('VCP', 'São Paulo-Viracopos', 'São Paulo', 'BR', 'Sudamérica', -23.01, -47.13, 11, 4, 3240, true, 'tropical'),
 ];
 
-export const POR_ID = Object.fromEntries(AEROPUERTOS.map((a) => [a.id, a]));
+// Aeropuertos de desvío: no son destinos comerciales en el juego, pero cuentan como
+// alternativos para las normas de bimotores sobre el mar y para los desvíos. Datos aprox.
+const ALT = (id, nombre, ciudad, pais, lat, lon, pista) =>
+  A(id, nombre, ciudad, pais, 'Alternativos', lat, lon, 0.05, 1, pista, true, 'atlantico', { alternativo: true });
+
+export const ALTERNATIVOS = [
+  ALT('SID', 'Sal-Amílcar Cabral', 'Isla de Sal', 'CV', 16.74, -22.95, 3270),
+  ALT('SMA', 'Santa Maria (Azores)', 'Santa Maria', 'PT', 36.97, -25.17, 3050),
+  ALT('TER', 'Lajes (Azores)', 'Terceira', 'PT', 38.76, -27.09, 3310),
+  ALT('PXO', 'Porto Santo', 'Porto Santo', 'PT', 33.07, -16.35, 2440),
+  ALT('FAO', 'Faro', 'Faro', 'PT', 37.01, -7.97, 2490),
+  ALT('OPO', 'Oporto', 'Oporto', 'PT', 41.24, -8.68, 3480),
+  ALT('SCQ', 'Santiago de Compostela', 'Santiago', 'ES', 42.90, -8.42, 3200),
+  ALT('BOD', 'Burdeos-Mérignac', 'Burdeos', 'FR', 44.83, -0.72, 3100),
+  ALT('BES', 'Brest', 'Brest', 'FR', 48.45, -4.42, 3100),
+  ALT('AGA', 'Agadir-Inezgane', 'Agadir', 'MA', 30.38, -9.55, 2950),
+  ALT('EUN', 'El Aaiún', 'El Aaiún', 'EH', 27.15, -13.22, 2700),
+  ALT('NDB', 'Nouadhibou', 'Nouadhibou', 'MR', 20.93, -17.03, 2400),
+  ALT('SNN', 'Shannon', 'Shannon', 'IE', 52.70, -8.92, 3200),
+  ALT('KEF', 'Keflavík', 'Keflavík', 'IS', 63.99, -22.62, 3050),
+  ALT('YQX', 'Gander', 'Gander', 'CA', 48.94, -54.57, 3100),
+  ALT('BDA', 'Bermudas', 'Bermudas', 'BM', 32.36, -64.68, 2960),
+  ALT('REC', 'Recife-Guararapes', 'Recife', 'BR', -8.13, -34.92, 3000),
+  ALT('ANC', 'Anchorage', 'Anchorage', 'US', 61.17, -150.0, 3500),
+];
+
+export const TODOS = [...AEROPUERTOS, ...ALTERNATIVOS];
+export const POR_ID = Object.fromEntries(TODOS.map((a) => [a.id, a]));
+
+// Pista disponible en un año, con los cambios históricos.
+export function pistaEn(aeropuerto, anio) {
+  let pista = aeropuerto.pista;
+  for (const c of aeropuerto.cambios) if (anio >= c.desde) pista = c.pista;
+  return pista;
+}
+
+// Nivel de costes del país para tasas y servicios: 0,7 bajo, 1 medio, 1,35 alto. Es una
+// simplificación de juego, no una tabla de tasas reales.
+const COSTES_ALTOS = new Set(['US', 'CA', 'GB', 'FR', 'DE', 'NL', 'BE', 'CH', 'AT', 'SE', 'NO', 'DK', 'FI', 'JP', 'AU', 'NZ', 'IE']);
+const COSTES_BAJOS = new Set(['CV', 'MR', 'EH', 'MA', 'DZ', 'TN', 'LY', 'EG', 'SN', 'CI', 'NG', 'ZR', 'ET', 'KE', 'IN', 'PK', 'LK', 'TH', 'MY', 'ID', 'PH', 'CN', 'CU', 'DO', 'PA', 'CO', 'EC', 'PE', 'FJ']);
+export function nivelCostes(aeropuerto) {
+  return COSTES_ALTOS.has(aeropuerto.pais) ? 1.35 : COSTES_BAJOS.has(aeropuerto.pais) ? 0.7 : 1;
+}
 
 export const REGIONES = ['Canarias', 'Europa', 'África', 'Oriente Medio', 'Asia', 'Oceanía', 'Norteamérica', 'Sudamérica'];
 

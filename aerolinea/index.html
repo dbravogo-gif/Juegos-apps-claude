@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0f1a24">
-<title>Pista libre</title>
+<title>App viación</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -233,6 +233,41 @@ button,input,select{font:inherit;color:inherit}
 .tele-ticker span{display:inline-block;padding-left:100%;animation:ticker 26s linear infinite}
 @keyframes ticker{to{transform:translateX(-100%)}}
 .modal-tele .btn{margin-top:4px}
+
+/* Versión 2: mantenimiento, seguridad y despacho */
+.chip.aviso{background:var(--ambar-oscuro);color:var(--ambar)}
+details.bloque{border-top:1px solid var(--linea);padding-top:8px}
+details.bloque>summary{cursor:pointer;font:600 14px var(--f-texto);letter-spacing:.04em;color:var(--tinta);list-style:none;display:flex;align-items:center;gap:6px}
+details.bloque>summary::before{content:"▸";color:var(--suave);font-size:12px;transition:transform .2s}
+details.bloque[open]>summary::before{transform:rotate(90deg)}
+details.bloque>*+*{margin-top:8px}
+.datos{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:4px 12px;margin:8px 0 0;font-size:13px}
+.datos dt{color:var(--suave)}
+.datos dd{margin:0;display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.datos dd small{flex-basis:100%;color:var(--suave);font-size:11px}
+.averias{margin:0;padding:0;list-style:none;display:grid;gap:10px;font-size:14px}
+.averias li{display:grid;gap:6px}
+.averias .chip{justify-self:start}
+.irregular,.restricciones{margin:0;padding:8px 10px 8px 26px;border-radius:8px;font-size:13px;display:grid;gap:3px}
+.irregular{background:#3a1813;color:#ffb3a6;border:1px solid #6b2b22}
+.restricciones{background:var(--ambar-oscuro);color:#f5cf8f;border:1px solid #5a4318}
+.punto{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--suave)}
+.punto.alto{background:var(--verde)}.punto.medio{background:var(--ambar)}.punto.bajo{background:var(--rojo)}
+.interruptor{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--tinta)}
+.interruptor input{margin-top:2px;accent-color:var(--ambar)}
+.interruptor small{color:var(--suave)}
+.hd-valoracion{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.hd-valoracion .hd-riesgo strong{font:600 22px/1.1 var(--f-cifra)}
+.hd-valoracion .hd-riesgo:first-child .hd-sello{display:none}
+.hd-riesgo.bajo strong{color:#2f6b3d}.hd-riesgo.moderado strong{color:#9a6512}.hd-riesgo.alto strong,.hd-riesgo.extremo strong{color:#b02a1a}
+.hd-valoracion .hd-sello{display:none}
+.hd-probable{margin:0;font-size:14px}
+.hd-irregular{border:2px solid #b02a1a;border-radius:8px;padding:8px 10px;background:#f6dcd2}
+.hd-irregular h3{color:#b02a1a}
+.hd-irregular ul{margin:0;padding-left:18px;font-size:13px}
+.hd-irregular p{margin:6px 0 0;font-size:12px}
+.hd-averia span{font-size:13px;color:#b02a1a}
+.tele-lista{margin:0;padding-left:20px;color:#d6dee0;font-size:15px;display:grid;gap:2px}
 @media (prefers-reduced-motion:reduce){.tele-ticker span{animation:none;padding-left:16px}}
 @media (min-width:720px){
   #modal{align-items:center}
@@ -244,7 +279,7 @@ button,input,select{font:inherit;color:inherit}
 <body>
 <div id="app">
   <header id="barra">
-    <div class="b-id"><span id="b-nombre">Pista libre</span><span id="b-fecha">1 ene 1976 · 08:00</span></div>
+    <div class="b-id"><span id="b-nombre">App viación</span><span id="b-fecha">1 ene 1976 · 08:00</span></div>
     <div class="b-cifras">
       <div><small>Caja</small><span id="b-caja">—</span></div>
       <div><small>Rep.</small><span id="b-rep">—</span></div>

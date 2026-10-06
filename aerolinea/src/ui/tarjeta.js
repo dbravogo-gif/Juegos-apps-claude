@@ -1,100 +1,115 @@
 // La hoja de despacho: la decisión de si el vuelo sale.
+//
+// No enseña porcentajes exactos: la valoración del despachador va en palabras, con lo que se
+// sabe. Lo que nadie ha inspeccionado no aparece.
 
-import { POR_ID } from '../data/aeropuertos.js';
 import { TIPOS } from '../data/aviones.js';
 import { textoClima, ICONOS } from '../core/clima.js';
 import { textoHora, textoFecha } from '../core/tiempo.js';
-import { LIMITE_REVISION, factorPista } from '../core/riesgo.js';
-import { costeVuelo } from '../core/economia.js';
-import { dinero, porcentaje, nivelRiesgo, esc, barra } from './formato.js';
+import { visibilidad, minimos, descripcionAproximacion } from '../core/riesgo.js';
+import { describir } from '../core/mantenimiento.js';
+import { informeDespacho } from '../core/sim.js';
+import { dinero, esc } from './formato.js';
 
-function filaClima(etiqueta, clima) {
-  const icono = ICONOS[clima.tipo];
-  const clase = clima.sev >= 3 ? 'mal' : clima.sev === 2 ? 'regular' : 'bien';
-  return `<div class="hd-fila"><span class="hd-etq">${etiqueta}</span><span class="hd-val ${clase}">${icono} ${esc(textoClima(clima))}</span></div>`;
+function textoVisibilidad(m) {
+  return m >= 5000 ? 'buena' : m >= 1000 ? `${(m / 1000).toLocaleString('es-ES')} km` : `${m} m`;
 }
 
+function filaClima(etiqueta, clima) {
+  const clase = clima.sev >= 3 ? 'mal' : clima.sev === 2 ? 'regular' : '';
+  return `<div class="hd-fila"><span class="hd-etq">${etiqueta}</span><span class="hd-val ${clase}">${ICONOS[clima.tipo]} ${esc(textoClima(clima))}</span></div>`;
+}
+
+const LO_MAS_PROBABLE = {
+  bajoMinimos: (e) => `desvío o espera: ${e.motivo}`,
+  cercaMinimos: (e) => `aproximación difícil: ${e.motivo}`,
+  tormentaDestino: (e) => `espera o desvío: ${e.motivo}`,
+  vientoCruzado: (e) => `motor y al aire: ${e.motivo}`,
+  turbulencia: (e) => `turbulencia: ${e.motivo}`,
+  salidaPista: (e) => `frenada larga: ${e.motivo}`,
+};
+
 export function htmlTarjeta(estado, dec) {
-  const avion = estado.aviones.find((a) => a.id === dec.avion);
+  const inf = informeDespacho(estado, dec);
+  const { avion, ctx, est, com } = inf;
   const tipo = TIPOS[avion.tipo];
-  const o = POR_ID[dec.origen];
-  const d = POR_ID[dec.destino];
-  const ev = dec.evaluacion;
-  const nivel = nivelRiesgo(dec.estimacion);
-  const visibles = ev.factores.filter((f) => !f.oculto && f.valor >= ev.visible * 0.04).slice(0, 6);
-  const maxF = Math.max(...visibles.map((f) => f.valor), 1e-9);
-  const conocidos = avion.defectos.filter((x) => x.descubierto);
-  const vencida = avion.horasDesdeRevision > LIMITE_REVISION;
-  const holgura = factorPista(d, tipo);
-  const extra = costeVuelo(tipo, dec.duracion / 60, d, dec.pax, dec.ingreso, true) - dec.coste;
-  const compensacion = Math.round(dec.ingreso * 0.1);
+  const o = ctx.origen;
+  const d = ctx.destino;
+  const conocidas = avion.averias.filter((x) => x.fase !== 'oculta');
+  const visPrevista = visibilidad(ctx.prevision.destino);
+  const min = minimos(d, tipo);
+  const probable = est.probable ? (LO_MAS_PROBABLE[est.probable.id]?.(est.probable) ?? est.probable.motivo) : null;
+  const plazas = ctx.tramo.plazasMax;
 
   return `
   <div class="hoja" role="dialog" aria-labelledby="hd-titulo">
     <header class="hd-cabecera">
       <div>
         <p class="hd-eyebrow">Hoja de despacho · ${textoFecha(dec.t, { corta: true })}</p>
-        <h2 id="hd-titulo" class="hd-vuelo">${esc(dec.numero)}</h2>
+        <h2 id="hd-titulo" class="hd-vuelo">${esc(inf.numero)}</h2>
       </div>
       <div class="hd-hora"><span>Salida</span><strong>${textoHora(dec.t)}</strong></div>
     </header>
     <div class="hd-ruta"><span>${o.id}</span><i aria-hidden="true">✈</i><span>${d.id}</span></div>
-    <p class="hd-sub">${esc(o.ciudad)} → ${esc(d.ciudad)} · ${Math.round(dec.duracion)} min · ${esc(tipo.corto)} ${esc(avion.matricula)}</p>
+    <p class="hd-sub">${esc(o.ciudad)} → ${esc(d.ciudad)} · ${Math.round(ctx.duracion)} min · ${esc(tipo.corto)} ${esc(avion.matricula)}</p>
 
-    <div class="hd-riesgo ${nivel.clase}">
-      <div>
-        <span class="hd-etq">Riesgo estimado</span>
-        <strong>${porcentaje(dec.estimacion)}</strong>
+    <div class="hd-valoracion">
+      <div class="hd-riesgo ${inf.incidencia.clase}">
+        <div><span class="hd-etq">Probabilidad de incidencias</span><strong>${inf.incidencia.texto}</strong></div>
       </div>
-      <span class="hd-sello">${nivel.texto}</span>
+      <div class="hd-riesgo ${inf.grave.clase}">
+        <div><span class="hd-etq">Riesgo grave</span><strong>${inf.grave.texto}</strong></div>
+        <span class="hd-sello">${inf.grave.texto}</span>
+      </div>
     </div>
-    <p class="hd-nota">Estimación de tu despachador: puede equivocarse en un tercio arriba o abajo, y no ve lo que nadie ha inspeccionado.</p>
+    ${probable ? `<p class="hd-probable">Lo más probable si sale: <strong>${esc(probable)}</strong>.</p>` : ''}
+    <p class="hd-nota">Valoración de tu despachador con la información que tiene. Lo que nadie ha inspeccionado no lo ve.</p>
 
-    <section class="hd-bloque">
-      <h3>Qué pesa</h3>
-      <ul class="hd-factores">
-        ${visibles.map((f) => `<li><span>${esc(f.texto)}</span><span class="hd-peso"><span style="width:${Math.max(4, (f.valor / maxF) * 100).toFixed(0)}%"></span></span></li>`).join('')}
-      </ul>
-    </section>
+    ${ctx.irregularidades.length ? `
+    <section class="hd-bloque hd-irregular">
+      <h3>Fuera de norma</h3>
+      <ul>${ctx.irregularidades.map((x) => `<li>${esc(x.texto)}</li>`).join('')}</ul>
+      <p>Si despegas así y pasa algo, la investigación lo contará. Y una inspección en rampa puede multarte.</p>
+    </section>` : ''}
 
     <section class="hd-bloque hd-columnas">
       <div>
-        <h3>Meteo</h3>
-        ${filaClima(o.id, ev.clima.origen)}
-        ${filaClima('Ruta', ev.clima.ruta)}
-        ${filaClima(d.id, ev.clima.destino)}
-      </div>
-      <div>
-        <h3>Avión</h3>
-        <div class="hd-fila"><span class="hd-etq">Motores</span>${barra(avion.partes.motores)}</div>
-        <div class="hd-fila"><span class="hd-etq">Tren</span>${barra(avion.partes.tren)}</div>
-        <div class="hd-fila"><span class="hd-etq">Fuselaje</span>${barra(avion.partes.fuselaje)}</div>
-        <div class="hd-fila"><span class="hd-etq">Revisión</span><span class="hd-val ${vencida ? 'mal' : ''}">${Math.round(avion.horasDesdeRevision)} / ${LIMITE_REVISION} h</span></div>
+        <h3>Meteo prevista</h3>
+        ${filaClima(o.id, ctx.prevision.origen)}
+        ${filaClima('Ruta', ctx.prevision.ruta)}
+        ${filaClima(d.id, ctx.prevision.destino)}
+        <div class="hd-fila"><span class="hd-etq">Visibilidad</span><span class="hd-val ${visPrevista < min ? 'mal' : visPrevista < min * 1.5 ? 'regular' : ''}">${textoVisibilidad(visPrevista)} (mínimo ${textoVisibilidad(min)})</span></div>
       </div>
       <div>
         <h3>Destino</h3>
-        <div class="hd-fila"><span class="hd-etq">Pista</span><span class="hd-val ${holgura > 2 ? 'mal' : holgura > 1 ? 'regular' : ''}">${d.pista} m (necesita ${tipo.pista})</span></div>
-        <div class="hd-fila"><span class="hd-etq">ILS</span><span class="hd-val ${d.ils ? '' : 'regular'}">${d.ils ? 'Sí' : 'No'}</span></div>
+        <div class="hd-fila"><span class="hd-etq">Aproximación</span><span class="hd-val ${d.ils === 0 ? 'regular' : ''}">${esc(descripcionAproximacion(d, tipo))}</span></div>
+        <div class="hd-fila"><span class="hd-etq">Pista</span><span class="hd-val">${Math.round(ctx.pistaDestino).toLocaleString('es-ES')} m${d.finPista === 'peligroso' ? ', final peligroso' : ''}</span></div>
         <div class="hd-fila"><span class="hd-etq">Terreno</span><span class="hd-val ${d.montana ? 'regular' : ''}">${d.montana ? 'Montañoso' : 'Llano'}</span></div>
       </div>
       <div>
+        <h3>Avión</h3>
+        ${conocidas.length ? conocidas.map((x) => `<div class="hd-fila hd-averia"><span>${esc(describir(x))}</span></div>`).join('') : '<div class="hd-fila"><span class="hd-val">Sin averías conocidas</span></div>'}
+        <div class="hd-fila"><span class="hd-etq">Terreno</span><span class="hd-val ${avion.equipo.gpws && !avion.inop.gpws ? '' : 'regular'}">${avion.equipo.egpws ? 'EGPWS' : avion.equipo.gpws ? (avion.inop.gpws ? 'GPWS averiado' : 'GPWS') : 'Sin GPWS'}</span></div>
+        <div class="hd-fila"><span class="hd-etq">Radar</span><span class="hd-val ${avion.equipo.radar && !avion.inop.radar ? '' : 'regular'}">${avion.equipo.radar ? (avion.inop.radar ? 'Averiado' : 'Operativo') : 'No tiene'}</span></div>
+      </div>
+      <div>
         <h3>Tripulación</h3>
-        <div class="hd-fila"><span class="hd-etq">Hoy</span><span class="hd-val ${ev.jornada > 9 ? 'mal' : ''}">${ev.jornada.toFixed(1)} h al llegar</span></div>
-        ${conocidos.length ? `<div class="hd-fila"><span class="hd-etq">Defectos</span><span class="hd-val mal">${conocidos.length} sin reparar</span></div>` : ''}
+        <div class="hd-fila"><span class="hd-etq">Actividad</span><span class="hd-val ${ctx.jornada > 13 ? 'mal' : ctx.jornada > 10 ? 'regular' : ''}">${ctx.jornada.toFixed(1)} h al llegar</span></div>
+        ${ctx.noche ? '<div class="hd-fila"><span class="hd-etq">Llegada</span><span class="hd-val regular">De noche</span></div>' : ''}
       </div>
     </section>
 
     <div class="hd-negocio">
-      <span><strong>${dec.pax}</strong>/${tipo.plazas} pasajeros</span>
-      <span>Ingreso <strong>${dinero(dec.ingreso)}</strong></span>
+      <span><strong>${com.pax}</strong>/${plazas}${plazas < tipo.plazas ? ` (de ${tipo.plazas})` : ''} pasajeros</span>
+      <span>Ingreso <strong>${dinero(com.ingreso)}</strong></span>
     </div>
 
     <div class="hd-acciones">
       <button class="btn btn-despegar" data-decision="despegar">Despegar</button>
-      <button class="btn" data-decision="extra">Combustible para alternativo <small>+${dinero(extra)} · se puede desviar</small></button>
+      <button class="btn" data-decision="extra">Combustible extra <small>+${dinero(inf.costeExtra)} · más margen para esperar o desviarse · riesgo grave: ${inf.graveExtra.texto.toLowerCase()}</small></button>
       <div class="hd-par">
         <button class="btn btn-sec" data-decision="retrasar">Retrasar 2 h</button>
-        <button class="btn btn-sec" data-decision="cancelar">Cancelar <small>−${dinero(compensacion)} y reputación</small></button>
+        <button class="btn btn-sec" data-decision="cancelar">Cancelar <small>−${dinero(inf.compensacion)} y reputación</small></button>
       </div>
     </div>
   </div>`;

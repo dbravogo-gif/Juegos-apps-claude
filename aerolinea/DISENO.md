@@ -1,6 +1,6 @@
-# Pista libre — documento de diseño
+# App viación — documento de diseño
 
-Nombre provisional. Simulador de aerolínea para móvil: fundas una compañía minúscula a
+Nombre decidido por el autor. Simulador de aerolínea para móvil: fundas una compañía minúscula a
 mediados de los años 70, con un avión de segunda mano y una base en un aeropuerto real, y la
 llevas a través de 50 años de historia de la aviación.
 

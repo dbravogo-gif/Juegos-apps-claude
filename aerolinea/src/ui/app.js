@@ -3,8 +3,9 @@
 import { AEROPUERTOS, POR_ID, REGIONES, abiertoEn } from '../data/aeropuertos.js';
 import {
   nuevaPartida, avanzar, decidir, comprar, comprarNuevo, inspeccionar, vender, crearRuta, borrarRuta,
-  asignar, cambiarFrecuencia, cambiarTarifa, ordenarRevision, ordenarReparacion, pedirPrestamo,
-  devolverPrestamo, apuntar, VERSION,
+  asignar, cambiarFrecuencia, cambiarTarifa, cambiarServicio, cambiarCateringBase, pedirPrestamo,
+  devolverPrestamo, apuntar, VERSION, pedirInspeccion, pedirDiagnostico, pedirReparacion, diferir,
+  pedirRevision, pedirMotor, pedirRetrofit, pedirDirectiva, cancelarTareas,
 } from '../core/sim.js';
 import { textoFecha, textoHora } from '../core/tiempo.js';
 import { crearGlobo } from './globo.js';
@@ -174,10 +175,21 @@ function manejarAccion(el) {
   switch (d.accion) {
     case 'comprar': return resultado(comprar(estado, num('oferta')), 'Avión comprado. Llega mañana a tu base.');
     case 'comprar-nuevo': return resultado(comprarNuevo(estado, d.tipo), 'Avión nuevo en camino.');
-    case 'inspeccionar': return resultado(inspeccionar(estado, num('oferta')));
+    case 'inspeccionar': return resultado(inspeccionar(estado, num('oferta'), d.nivel), 'Inspección hecha.');
     case 'vender': return confirmar('¿Vender este avión?', 'Recibes el 85 % de su valor de mercado.', 'Vender', () => resultado(vender(estado, num('avion')), 'Avión vendido.'));
-    case 'revision': return resultado(ordenarRevision(estado, num('avion')), 'Revisión pedida.');
-    case 'reparar': return resultado(ordenarReparacion(estado, num('avion'), num('defecto')), 'Reparación pedida.');
+    case 'revision': return resultado(pedirRevision(estado, num('avion'), d.nivel), 'Revisión pedida: entra al taller cuando esté en la base.');
+    case 'inspeccionar-averia': return resultado(pedirInspeccion(estado, num('avion'), num('averia')), 'Inspección pedida.');
+    case 'diagnosticar': return resultado(pedirDiagnostico(estado, num('avion'), num('averia')), 'Diagnóstico pedido.');
+    case 'reparar': return resultado(pedirReparacion(estado, num('avion'), num('averia')), 'Reparación pedida.');
+    case 'diferir': return resultado(diferir(estado, num('avion'), num('averia')), 'Avería diferida según la MEL.');
+    case 'motor': return resultado(pedirMotor(estado, num('avion'), num('pos'), d.alquiler === '1'), 'Motor pedido al taller.');
+    case 'retrofit': return resultado(pedirRetrofit(estado, num('avion'), d.tecnologia), 'Instalación pedida.');
+    case 'directiva': return resultado(pedirDirectiva(estado, num('avion'), num('directiva')), 'Inspección de la directiva pedida.');
+    case 'cancelar-tareas': return resultado(cancelarTareas(estado, num('avion')), 'Pedido anulado. Lo pagado no se devuelve.');
+    case 'servicio': return resultado(cambiarServicio(estado, num('ruta'), d.servicio));
+    case 'catering-base': return resultado(cambiarCateringBase(estado, num('ruta'), el.checked));
+    case 'consulta': estado.ajustes.consulta = el.value; return resultado(null, 'Ajuste guardado.');
+    case 'revisiones-auto': estado.ajustes.revisionesAuto = el.checked; return resultado(null, 'Ajuste guardado.');
     case 'asignar': return resultado(asignar(estado, num('avion'), el.value === '' ? null : Number(el.value)));
     case 'asignar-libre': return resultado(asignar(estado, num('avion'), num('ruta')), 'Avión asignado.');
     case 'crear-ruta': {
@@ -193,7 +205,6 @@ function manejarAccion(el) {
     case 'tarifa': return resultado(cambiarTarifa(estado, num('ruta'), d.tarifa));
     case 'prestamo': return resultado(pedirPrestamo(estado, num('cantidad')), 'Préstamo concedido.');
     case 'devolver': return resultado(devolverPrestamo(estado, num('cantidad')), 'Préstamo devuelto.');
-    case 'umbral': estado.ajustes.umbral = Number(el.value); return resultado(null, 'Ajuste guardado.');
     case 'nueva-partida': return confirmar('¿Empezar otra partida?', 'Se pierde la actual. No hay vuelta atrás.', 'Empezar de nuevo', () => {
       try { localStorage.removeItem(CLAVE); } catch { /* nada */ }
       estado = null;
@@ -216,7 +227,7 @@ document.addEventListener('click', (e) => {
   if (el && !el.disabled && estado) manejarAccion(el);
 });
 document.addEventListener('change', (e) => {
-  const el = e.target.closest('select[data-accion]');
+  const el = e.target.closest('select[data-accion], input[type="checkbox"][data-accion]');
   if (el && estado) manejarAccion(el);
 });
 
@@ -336,6 +347,7 @@ ui.modal.addEventListener('click', (e) => {
 function procesar(eventos) {
   for (const ev of eventos) {
     if (ev.tipo === 'aviso') aviso(ev.texto, ev.grave);
+    else if (ev.tipo === 'indicio') aviso(`Indicio: ${ev.texto}`);
     else if (ev.tipo === 'accidente') {
       velocidad = Math.min(velocidad, 1);
       encolar({ tipo: 'escena', accidente: ev.accidente });
@@ -359,7 +371,7 @@ function mostrarInicio() {
   }).join('');
   abrirModal(`
     <p class="inicio-eyebrow">Enero de 1976</p>
-    <h1 class="inicio-titulo">Pista libre</h1>
+    <h1 class="inicio-titulo">App viación</h1>
     <p class="inicio-texto">Tienes 3 millones de dólares, un banco dispuesto a prestarte algo más y ningún avión. Cada vuelo que salga lo autorizas tú. Si el tiempo está feo, decides si se arriesga.</p>
     <label class="campo"><span>Nombre de la compañía</span><input id="nombre-compania" type="text" maxlength="28" value="Atlántica" autocomplete="off"></label>
     <label class="campo"><span>Buscar base</span><input id="buscar-base" type="search" placeholder="Ciudad o código" autocomplete="off"></label>
@@ -457,4 +469,4 @@ if (hot?.ready) hot.ready(arrancar);
 else arrancar(hot?.data ?? {});
 
 // Acceso para pruebas desde la consola.
-window.pistaLibre = { estado: () => estado, procesar, encolar };
+window.appViacion = { estado: () => estado, procesar, encolar };

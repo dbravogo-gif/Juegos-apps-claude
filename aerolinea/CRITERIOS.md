@@ -1,9 +1,9 @@
-# Pista libre — criterios de realismo y diseño
+# App viación — criterios de realismo y diseño
 
 Reglas del autor que guían todas las versiones del juego a partir de la 2. Si una propuesta
 choca con ellas, gana este documento.
 
-## 1. Qué significa «realista» en Pista libre
+## 1. Qué significa «realista» en App viación
 
 El objetivo **no** es un simulador aeronáutico académico ni reproducir con exactitud cada
 dato histórico de 50 años de aviación.

@@ -8,23 +8,71 @@ import { TIPOS } from '../data/aviones.js';
 import { textoFecha, textoHora } from '../core/tiempo.js';
 import { dinero, esc } from './formato.js';
 
-// Silueta lateral mirando a la derecha, centrada en (0, 0), unos 90 px de largo.
-function silueta(tipo) {
-  const helice = tipo === 'helice';
-  const ventanillas = Array.from({ length: 11 }, (_, i) => `<rect x="${-28 + i * 5}" y="-3.6" width="2.2" height="2" rx="0.6" fill="#1d2633" opacity=".8"/>`).join('');
-  const motor = helice
-    ? `<path d="M-10,-8.5 L18,-8.5 L15,-11 L-8,-11 Z" fill="#c9cfd6"/>
-       <rect x="4" y="-8" width="11" height="5" rx="2" fill="#aeb6bf"/>
-       <ellipse class="helice" cx="16" cy="-5.5" rx="1.2" ry="7" fill="#e8ecf0" opacity=".55"/>`
-    : `<path d="M-4,2 L-22,9 L-15,9 L8,2 Z" fill="#aeb6bf"/>
-       <rect class="motor" x="-16" y="5" width="13" height="4.6" rx="2.2" fill="#9aa3ad"/>`;
-  return `
-    <path d="M-40,-22 L-30,-22 L-20,-6 L-36,-6 Z" fill="#c9cfd6"/>
-    <path d="M-44,0 Q-46,-6 -36,-7 L30,-7 Q42,-6 47,-1 Q44,4 32,5 L-36,5 Q-46,4 -44,0 Z" fill="#e8ecf0"/>
+// Silueta lateral mirando a la derecha, centrada en (0, 0), unos 90 px de largo. Respeta la
+// configuración real de cada tipo: ala alta o baja, motores bajo el ala o en la cola, cola en T
+// o convencional, hélices, la joroba del 747 y el ala en delta del Concorde. Devuelve también
+// dónde está el motor, para dibujar el fuego.
+const CLARO = '#e8ecf0';
+const MEDIO = '#c9cfd6';
+const OSCURO = '#aeb6bf';
+const CRISTAL = '#1d2633';
+
+function helice(x, y) {
+  return `<ellipse class="helice" cx="${x}" cy="${y}" rx="1.2" ry="7" fill="${CLARO}" opacity=".55"/>`;
+}
+
+export function silueta(tipo) {
+  const c = tipo.config;
+  const n = tipo.nMotores;
+  if (c.ala === 'delta') {
+    return {
+      svg: `<path d="M-44,-4 L-35,-24 L-27,-24 L-30,-4 Z" fill="${MEDIO}"/>
+        <path d="M-46,-1 Q-46,-4 -40,-4 L28,-4 L50,1 L28,2 L-40,2 Q-46,2 -46,-1 Z" fill="${CLARO}"/>
+        <path d="M-40,2 L12,2 L-36,6 Z" fill="${OSCURO}"/>
+        <rect x="-36" y="3" width="22" height="4" rx="1.5" fill="#9aa3ad"/>
+        <path d="M-44,-1 L44,-1" stroke="#b5862c" stroke-width="1.2"/>
+        ${Array.from({ length: 9 }, (_, i) => `<rect x="${-26 + i * 5}" y="-3" width="1.8" height="1.6" rx="0.5" fill="${CRISTAL}" opacity=".8"/>`).join('')}`,
+      motor: { x: -26, y: 5 },
+    };
+  }
+  const ventanillas = Array.from({ length: 11 }, (_, i) => `<rect x="${-28 + i * 5}" y="-3.6" width="2.2" height="2" rx="0.6" fill="${CRISTAL}" opacity=".8"/>`).join('');
+  const fuselaje = `<path d="M-44,0 Q-46,-6 -36,-7 L30,-7 Q42,-6 47,-1 Q44,4 32,5 L-36,5 Q-46,4 -44,0 Z" fill="${CLARO}"/>
+    ${c.joroba ? `<path d="M6,-7 Q18,-14 36,-6 Z" fill="${CLARO}"/>` : ''}
     <path d="M-44,-0.5 L44,-0.5" stroke="#b5862c" stroke-width="1.6"/>
     ${ventanillas}
-    <path d="M38,-4.5 L43,-4 L45,-1.5 L39,-1.5 Z" fill="#1d2633"/>
-    ${motor}`;
+    <path d="M38,-4.5 L43,-4 L45,-1.5 L39,-1.5 Z" fill="${CRISTAL}"/>`;
+  const deriva = `<path d="M-40,-22 L-31,-22 L-21,-6 L-36,-6 Z" fill="${MEDIO}"/>`;
+  const estabilizador = c.cola === 'T'
+    ? `<path d="M-46,-24 L-28,-24 L-31,-21.5 L-45,-21.5 Z" fill="${OSCURO}"/>`
+    : c.cola === 'cruciforme'
+      ? `<path d="M-44,-14 L-30,-14 L-33,-12 L-45,-12 Z" fill="${OSCURO}"/>`
+      : `<path d="M-46,-1 L-31,-1 L-35,1.5 L-47,1.5 Z" fill="${OSCURO}"/>`;
+  let ala = '';
+  let motores = '';
+  let motor = { x: -10, y: 7 };
+  if (c.ala === 'alta') ala = `<path d="M-10,-8.5 L18,-8.5 L15,-11 L-8,-11 Z" fill="${MEDIO}"/>`;
+  else ala = `<path d="M-4,2 L-22,9 L-15,9 L8,2 Z" fill="${OSCURO}"/>`;
+  if (c.motores === 'helices-ala') {
+    if (c.ala === 'alta') {
+      motores = `<rect x="4" y="-9" width="12" height="5" rx="2" fill="${OSCURO}"/>${helice(17, -6.5)}`;
+      motor = { x: 9, y: -5 };
+    } else {
+      motores = `<rect x="-2" y="1" width="12" height="5" rx="2" fill="#9aa3ad"/>${helice(11, 3.5)}`
+        + (n >= 4 ? `<rect x="-12" y="4.5" width="10" height="4.5" rx="2" fill="#9aa3ad"/>${helice(-1, 6.5)}` : '');
+      motor = { x: 4, y: 4 };
+    }
+  } else if (c.motores === 'ala' || c.motores === 'ala+cola') {
+    motores = `<rect x="-16" y="5" width="13" height="4.6" rx="2.2" fill="#9aa3ad"/>`
+      + (n >= 4 ? '<rect x="-25" y="7.5" width="11" height="4.2" rx="2" fill="#9aa3ad"/>' : '');
+    motor = { x: -10, y: 7 };
+  }
+  if (c.motores === 'cola') {
+    motores = '<rect x="-38" y="-10" width="13" height="5" rx="2.3" fill="#9aa3ad"/>';
+    motor = { x: -32, y: -7.5 };
+  }
+  if (c.motorCola === 'conducto') motores += `<path d="M-36,-7 Q-31,-11.5 -24,-7 Z" fill="${MEDIO}"/>`;
+  if (c.motorCola === 'aleta') motores += '<rect x="-41" y="-16" width="13" height="5" rx="2.3" fill="#9aa3ad"/>';
+  return { svg: `${deriva}${estabilizador}${fuselaje}${ala}${motores}`, motor };
 }
 
 const humo = (x, y, n, retraso, color = '#3a3a3a') =>
@@ -44,7 +92,7 @@ const ESTILO_COMUN = `
   @media (prefers-reduced-motion: reduce){.escena *{animation-duration:.01s!important;animation-iteration-count:1!important}}
 `;
 
-function escenaPista(sil) {
+function escenaPista({ svg: sil }) {
   const luces = Array.from({ length: 15 }, (_, i) => `<circle cx="${i * 20}" cy="181" r="1.6" fill="#f5edd2"/>`).join('');
   const lluvia = Array.from({ length: 60 }, (_, i) => `<line x1="${(i * 37) % 420}" y1="${(i * 53) % 240}" x2="${(i * 37) % 420 - 6}" y2="${(i * 53) % 240 + 14}"/>`).join('');
   return `
@@ -84,7 +132,7 @@ function escenaPista(sil) {
   </svg>`;
 }
 
-function escenaAproximacion(sil) {
+function escenaAproximacion({ svg: sil }) {
   return `
   <style>
     .e-aprox .avion{animation:aprox-avion 5s linear forwards}
@@ -122,7 +170,7 @@ function escenaAproximacion(sil) {
   </svg>`;
 }
 
-function escenaVuelo(sil) {
+function escenaVuelo({ svg: sil, motor }) {
   const arboles = 'M0,200 ' + Array.from({ length: 41 }, (_, i) => `Q${i * 10 + 5},${186 - (i % 3) * 4} ${i * 10 + 10},200`).join(' ') + ' L400,240 L0,240 Z';
   const estela = Array.from({ length: 10 }, (_, i) => {
     const x = 20 + i * 15;
@@ -153,7 +201,7 @@ function escenaVuelo(sil) {
     <rect x="-10" y="196" width="120" height="5" fill="#3a3030"/>
     ${estela}
     <g class="avion">${sil}
-      <g class="llama"><ellipse class="fuego" cx="-18" cy="7" rx="7" ry="4" fill="#ff8a1e"/><ellipse class="fuego" cx="-21" cy="7" rx="4" ry="2.5" fill="#ffe08a"/></g>
+      <g class="llama"><ellipse class="fuego" cx="${motor.x - 6}" cy="${motor.y}" rx="7" ry="4" fill="#ff8a1e"/><ellipse class="fuego" cx="${motor.x - 9}" cy="${motor.y}" rx="4" ry="2.5" fill="#ffe08a"/></g>
     </g>
     <g class="columna">${humo(318, 186, 10, 5.4, '#1f1b1b')}</g>
     <ellipse class="bola" cx="318" cy="188" rx="46" ry="34" fill="url(#fuegoV)"/>
@@ -166,17 +214,18 @@ const ESCENAS = { pista: escenaPista, aproximacion: escenaAproximacion, vuelo: e
 export const DURACION_ESCENA = 7000;
 
 const LETREROS = {
-  pista: 'Aterrizaje con la pista mojada',
-  aproximacion: 'Aproximación con visibilidad nula',
-  vuelo: 'Fallo en vuelo',
+  pista: 'Salida de pista',
+  aproximacion: 'Aproximación',
+  vuelo: 'En vuelo',
 };
 
 export function htmlEscena(accidente) {
-  const sil = silueta(accidente.silueta);
+  const tipo = TIPOS[accidente.tipo];
+  const sil = silueta(tipo);
   const lugar = POR_ID[accidente.lugar];
   return `<style>${ESTILO_COMUN}</style>
-    <div class="escena">${ESCENAS[accidente.causa](`<g>${sil}</g>`)}</div>
-    <p class="escena-pie"><span>${esc(accidente.numero)} · ${esc(accidente.matricula)}</span><span>${lugar.id} · ${textoHora(accidente.t)}</span><span>${LETREROS[accidente.causa]}</span></p>`;
+    <div class="escena">${ESCENAS[accidente.causa]({ ...sil, svg: `<g>${sil.svg}</g>` })}</div>
+    <p class="escena-pie"><span>${esc(accidente.numero)} · ${esc(accidente.matricula)} · ${esc(tipo.corto)}</span><span>${accidente.enRuta ? 'En ruta' : lugar.id} · ${textoHora(accidente.t)}</span><span>${LETREROS[accidente.causa]}</span></p>`;
 }
 
 // --- noticiario
@@ -194,15 +243,17 @@ export function htmlNoticia(accidente, estado) {
   const tipo = TIPOS[accidente.tipo];
   const aBordo = accidente.pax + accidente.tripulantes;
   const sinFallecidos = accidente.fallecidos === 0;
-  const titular = sinFallecidos && accidente.causa === 'pista'
-    ? `Grave accidente en el aeropuerto de ${lugar.ciudad}`
-    : TITULARES[accidente.causa](lugar.ciudad);
+  let titular;
+  if (accidente.enRuta) titular = `Se estrella un avión entre ${o.ciudad} y ${d.ciudad}`;
+  else if (sinFallecidos && accidente.causa === 'pista') titular = `Grave accidente en el aeropuerto de ${lugar.ciudad}`;
+  else titular = TITULARES[accidente.causa](lugar.ciudad);
+  const donde = accidente.enRuta ? '' : ` en ${lugar.nombre}`;
   const ticker = [
-    `Las autoridades de aviación civil abren una investigación`,
+    'Las autoridades de aviación civil abren una investigación',
     `${estado.nombre} suspende la venta de billetes del ${accidente.numero}`,
-    `Los equipos de rescate trabajan en la zona`,
+    'Los equipos de rescate trabajan en la zona',
     `El avión, un ${tipo.nombre}, cubría la ruta ${o.ciudad}–${d.ciudad}`,
-    `Se habilita un teléfono de información para los familiares`,
+    'Se habilita un teléfono de información para los familiares',
   ].join('   ·   ');
   return `
   <div class="tele">
@@ -210,7 +261,7 @@ export function htmlNoticia(accidente, estado) {
       <div class="tele-cabecera"><span class="tele-cadena">Diario Nacional</span><span class="tele-directo">Avance informativo</span></div>
       <p class="tele-fecha">${textoFecha(accidente.t)} · ${textoHora(accidente.t)}</p>
       <h2 class="tele-titular">${esc(titular)}</h2>
-      <p class="tele-texto">Un ${esc(tipo.nombre)} de ${esc(estado.nombre)}, vuelo ${esc(accidente.numero)} entre ${esc(o.ciudad)} y ${esc(d.ciudad)}, ${esc(accidente.descripcion)} en ${esc(lugar.nombre)}. Viajaban ${aBordo} personas: ${accidente.pax} pasajeros y ${accidente.tripulantes} tripulantes.</p>
+      <p class="tele-texto">Un ${esc(tipo.nombre)} de ${esc(estado.nombre)}, vuelo ${esc(accidente.numero)} entre ${esc(o.ciudad)} y ${esc(d.ciudad)}, ${esc(accidente.descripcion)}${esc(donde)}. Viajaban ${aBordo} personas: ${accidente.pax} pasajeros y ${accidente.tripulantes} tripulantes.</p>
       <div class="tele-cifras">
         <div><strong>${accidente.fallecidos}</strong><span>fallecidos</span></div>
         <div><strong>${accidente.heridos}</strong><span>heridos</span></div>
@@ -223,16 +274,19 @@ export function htmlNoticia(accidente, estado) {
 
 export function htmlInforme(accidente, estado) {
   const lugar = POR_ID[accidente.lugar];
+  const donde = accidente.enRuta ? `del vuelo ${accidente.numero}` : `de ${lugar.ciudad}`;
   const conclusion = accidente.negligencia
-    ? `La comisión concluye que hubo negligencia de ${esc(estado.nombre)}: ${accidente.motivos.map(esc).join('; ')}. La aseguradora no cubre el siniestro y la autoridad impone una multa.`
-    : `La comisión no aprecia negligencia de la compañía. La aseguradora cubre el avión y la mayor parte de las indemnizaciones.`;
+    ? `La comisión aprecia responsabilidad de ${esc(estado.nombre)}. La aseguradora no cubre el siniestro y la autoridad impone una multa.`
+    : 'La comisión no aprecia responsabilidad de la compañía. La aseguradora cubre el avión y la mayor parte de las indemnizaciones.';
   return `
   <div class="tele">
     <div class="tele-pantalla">
       <div class="tele-cabecera"><span class="tele-cadena">Diario Nacional</span><span class="tele-directo">Investigación</span></div>
       <p class="tele-fecha">${textoFecha(estado.t)}</p>
-      <h2 class="tele-titular">Concluye la investigación del accidente de ${esc(lugar.ciudad)}</h2>
-      <p class="tele-texto">Causa probable: ${esc(accidente.principal.toLowerCase())}. ${conclusion}</p>
+      <h2 class="tele-titular">Concluye la investigación del accidente ${esc(donde)}</h2>
+      <p class="tele-texto"><strong>Causa probable:</strong> ${esc(accidente.principal)}.</p>
+      ${accidente.factores?.length ? `<p class="tele-texto"><strong>Factores contribuyentes:</strong></p><ul class="tele-lista">${accidente.factores.map((f) => `<li>${esc(f)}</li>`).join('')}</ul>` : ''}
+      <p class="tele-texto">${conclusion}${accidente.directiva ? ` ${esc(accidente.directiva.texto)}` : ''}</p>
       <div class="tele-cifras">
         <div><strong>${dinero(accidente.indemnizaciones)}</strong><span>indemnizaciones</span></div>
         <div><strong>${dinero(accidente.pagaSeguro)}</strong><span>paga el seguro</span></div>
