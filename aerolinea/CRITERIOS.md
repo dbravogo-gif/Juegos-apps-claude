@@ -52,6 +52,13 @@ Si un dato no puede verificarse razonablemente, se usa «desconocido» o una apr
 **marcada explícitamente como tal**. Nunca se inventa una cifra precisa para rellenar un
 hueco.
 
+**Matiz del autor sobre los datos antiguos**: no hace falta revisar al detalle cada dato
+antiguo. Cuanto más antiguo, menos fiable es la información disponible, sobre todo antes de
+1990. Para esa época se aceptan aproximaciones razonables y coherentes, marcadas como tales;
+la verificación con dos fuentes se reserva para lo que más pesa en el juego (fechas de
+tecnologías y de entrada en servicio, motores, características muy conocidas de un avión o
+aeropuerto).
+
 ## 3. La cantidad de datos debe ser razonable
 
 El juego tiene que funcionar con una base de datos manejable y un código razonablemente
@@ -442,3 +449,128 @@ Añadirlos cuando el jugador pueda preguntarse «¿qué opción me conviene?»:
 El objetivo no es simular toda la aviación real, sino que las decisiones importantes de una
 aerolínea se sientan plausibles y que las simplificaciones sean coherentes con cómo funciona
 la aviación.
+
+---
+
+*Las secciones 26 a 32 llegaron en un tercer bloque del autor (allí numeradas del 24 al 30).*
+
+## 26. Competencia y mercado
+
+Competencia entre aerolíneas con profundidad estratégica pero complejidad moderada: ni
+simulador económico AAA ni IA empresarial gigante. El jugador analiza el mercado y decide con
+información comprensible.
+
+**Compañías competidoras**: unas **22** importantes a lo largo de toda la historia, con unas
+**13–15 activas** como máximo a la vez. Pueden aparecer, crecer, reducir operaciones, entrar en
+mercados, abandonar rutas, fusionarse o cambiar de estructura si es interesante, quebrar y ser
+sustituidas. El jugador tiene que reconocer a las principales y notar que el mercado cambia.
+
+**Personalidad**: pocas características estratégicas (tamaño, tipo de compañía, estrategia de
+precios, nivel de servicio, tendencia a expandirse, tolerancia al riesgo, zonas fuertes,
+reputación). Se comportan distinto sin necesitar una IA enorme.
+
+Nombres aprobados (humorísticos, reconociblemente inspirados en compañías reales y parte del
+universo ficticio del juego; no todos tienen que ser parodia):
+
+| Ficticia | Inspirada en | Perfil |
+| --- | --- | --- |
+| Castilla | Iberia | Tradicional, gran red, buena reputación, servicio alto, protege sus mercados |
+| Flyando | Vueling | Low cost, precios competitivos, busca demanda con costes razonables |
+| Depie Air | Ryanair | Costes muy bajos, precios agresivos, aeropuertos y rutas baratos |
+| Naftansa | Lufthansa | Grande y eficiente, buena reputación, gran presencia internacional |
+| Croissair | Air France | Orientada al servicio y al segmento premium, precios superiores |
+| Bread Am | Pan Am | Internacional y de largo radio, gran prestigio en sus mejores épocas |
+| Burkirates | Emirates | Largo radio y premium, fuerte apuesta por crecer y conectar |
+| SOS | SAS | Fuerte en el norte de Europa |
+
+La lista definitiva de 22 se desarrollará más adelante.
+
+**Información de una ruta**, sencilla y en cantidades aproximadas de personas y plazas (no
+estrellas):
+
+> Madrid → París · demanda ~2.400 pasajeros/día · oferta ~2.100 plazas/día · tendencia ↗
+> creciendo · operan Castilla, Croissair y Flyando
+
+**Investigar a los competidores**: precio, servicio, reputación y presencia de cada uno (alto,
+medio, bajo…). Así el jugador descubre oportunidades que no salen directamente: si casi toda
+la oferta es premium, quizá haya sitio para una alternativa barata. **No mostrar nunca
+«oportunidad low cost: 87 %»**: la gracia está en interpretar los datos.
+
+## 27. Entrada y salida de competidores
+
+Los competidores reaccionan a las oportunidades pero **no son omniscientes ni perfectamente
+racionales**: pueden no detectar una oportunidad, detectarla tarde, entrar en una ruta
+saturada, sobreestimar la demanda, subestimar los costes, abandonar demasiado pronto,
+mantener una ruta mala demasiado tiempo, copiar al jugador o reaccionar ante amenazas que no
+lo eran. **Tienen que equivocarse.**
+
+**Retraso**: si el jugador descubre una ruta muy rentable, nadie aparece al día siguiente. Hay
+una cadena simplificada con variabilidad: la ruta muestra una oportunidad → la información se
+hace visible → alguien puede detectarla → la estudia → decide entrar → empieza a operar. El
+jugador tiene una ventana de ventaja, y el mercado parece vivo, no calculado.
+
+## 28. Saturación y oportunidades
+
+La oferta y la demanda son la base, pero **no con una regla binaria** (oferta < demanda =
+rentable). Una ruta puede seguir siendo rentable con exceso de oferta si una compañía tiene
+mejores precios, reputación, horarios, aeropuerto, costes, servicio o un avión más adecuado.
+
+Tipos de mercado que el jugador debe poder encontrar antes de que sean obvios: **saturado**
+(Madrid–Londres: demanda y oferta enormes, márgenes pequeños), **con oportunidad**
+(Bilbao–Lisboa: demanda moderada, poca competencia, crecimiento alto), **de nicho**
+(Pamplona–París: poca demanda, poca competencia, funciona con avión pequeño) y **emergente**
+(Barcelona–Praga: demanda moderada, crecimiento fuerte, poca competencia).
+
+## 29. Reputación y posicionamiento
+
+Pocas características: **precio, puntualidad, seguridad, servicio y prestigio**. Influyen en
+atraer pasajeros y competir. Una compañía pequeña puede ganar a una grande con precios bajos,
+puntualidad, buena reputación y un servicio sencillo y fiable; otra puede ser cara y atraer
+por prestigio. La compañía construye una identidad propia, no solo «más aviones que el
+rival».
+
+## 30. Acontecimientos del mundo y noticias
+
+Noticias y acontecimientos externos que cambian de vez en cuando las condiciones del mercado.
+No es un simulador político, económico o histórico: las noticias son **señales** que hacen
+pensar «esto puede ser una oportunidad» o «esto va a destruir parte de este mercado».
+
+Tipos: nuevas sedes internacionales, grandes empresas, organizaciones que se trasladan, zonas
+industriales, recursos descubiertos, crecimiento económico excepcional, aumento de población,
+destinos de moda, aeropuertos nuevos o ampliados, líneas ferroviarias, grandes eventos
+deportivos, exposiciones, política, crisis, guerras, pandemias, catástrofes, cambios
+regulatorios, seguridad, huelgas, restricciones fronterizas.
+
+**Las noticias no son certezas**: «se planea construir» no significa que se construya. El
+jugador puede adelantarse si interpreta bien la señal, o equivocarse.
+
+**Efecto gradual**, no instantáneo: año 1 se anuncia, año 2 empieza la obra, año 3 sube algo la
+actividad, año 4 abre, después la demanda crece poco a poco.
+
+**Positivas y negativas**: guerras, pandemias, crisis, seguridad, desastres, regulación,
+nuevas alternativas de transporte, cierres de empresas o pérdida de atractivo turístico
+destruyen mercados. El mapa y las rutas están en evolución constante.
+
+## 31. Escala de los acontecimientos
+
+**Locales** (una ciudad o aeropuerto), **regionales** (varios países) y **globales**. Muchos
+pequeños y pocos extraordinarios. No cientos de noticias: las suficientes para que el mundo
+parezca vivo sin que el jugador deje de prestarles atención. Las importantes tienen que
+destacar.
+
+## 32. Principio de simplificación del mercado
+
+Una simulación compacta pero suficientemente profunda. El jugador debería poder:
+
+1. mirar una ruta;
+2. conocer aproximadamente la oferta y la demanda;
+3. saber quién opera;
+4. investigar brevemente a esos competidores;
+5. detectar huecos;
+6. decidir;
+7. comprobar con el tiempo si su hipótesis era correcta.
+
+**Pocas variables, pero que interactúen entre sí y produzcan decisiones interesantes.** La
+sensación buscada: «aquí hay una oportunidad», «esta ruta parece buenísima, pero se va a
+llenar», «todo el mundo ignora esta ciudad; quizá yo llegue primero», «esta compañía se
+equivoca entrando aquí; dejaré que se queme».
