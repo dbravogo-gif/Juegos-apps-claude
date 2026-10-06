@@ -276,3 +276,169 @@ Todo lo demás está subordinado a esto.
 
 Lo que buscamos es que el jugador piense: *«No es un simulador profesional, pero estos
 desarrolladores saben de aviones.»*
+
+---
+
+*Las secciones 20 a 25 llegaron en un segundo bloque del autor (allí numeradas del 18 al 23).*
+
+## 20. Evolución tecnológica y seguridad
+
+**Principio**: no usar una única estadística abstracta de «seguridad» como mecánica
+principal. La seguridad de un avión se deriva de sus tecnologías, sistemas, diseño,
+mantenimiento y operación. Puede haber una valoración global visible como resumen, pero
+tiene que ser **consecuencia** de los sistemas concretos que equipa el avión.
+
+Cada tecnología importante tiene:
+
+- fecha aproximada de aparición o disponibilidad;
+- tipos de avión en los que aparece;
+- si era estándar, opcional o instalable después (retrofit);
+- coste de adquisición o de retrofit cuando corresponda;
+- coste adicional de mantenimiento o formación si es relevante;
+- categorías de riesgo que modifica;
+- efectos operativos, además del efecto sobre la seguridad.
+
+**No inventar tecnologías ni fechas.** Las importantes se verifican con al menos dos fuentes
+independientes y fiables. La lista no tiene que ser enorme: pocas tecnologías relevantes y
+bien modeladas.
+
+Ejemplos:
+
+- **Radar meteorológico**: mejora la detección y gestión de ciertos fenómenos, permite mejores
+  decisiones de desvío y de ruta, reduce riesgos de tormentas y precipitación, no elimina el
+  riesgo meteorológico.
+- **GPWS**: reduce sobre todo el riesgo de CFIT; aparece en su periodo histórico; puede tener
+  versiones posteriores.
+- **TAWS/EGPWS**: evolución posterior del GPWS, con conciencia del terreno más avanzada; no
+  existe antes de que sea históricamente plausible.
+- **TCAS/ACAS**: reduce el riesgo de colisión en vuelo; aparece cuando corresponde; sus
+  versiones tienen capacidades distintas.
+- **Detección y alerta de cizalladura (windshear)**: afecta a fases de vuelo y condiciones
+  concretas; no es un bonus genérico contra cualquier accidente.
+- **Navegación y aproximación**: ILS y sus categorías; navegación más avanzada; después
+  FMS/GPS. Mejoran ciertos tipos de operación o permiten operar en condiciones antes más
+  restrictivas.
+- **Mejoras de motores**: más fiabilidad, menos consumo, otras necesidades de mantenimiento,
+  otras características de fallo.
+- **Mejoras estructurales y de sistemas**: redundancia, protección frente a ciertos fallos,
+  materiales y diseño, resistencia estructural.
+
+Solo se representan las tecnologías que crean decisiones interesantes o son importantes para
+la credibilidad.
+
+**Seguridad como sistema de riesgos específicos.** Una tecnología no da «+10 de seguridad»;
+modifica una situación concreta. Un avión con GPWS no es «un 10 % más seguro»: tiene menos
+probabilidad de que una situación determinada termine en CFIT. La simulación trabaja con
+categorías de riesgo (meteorología, CFIT, pérdida de separación o colisión, aproximación y
+aterrizaje, fallo de motor, fallo de sistemas, fuego, problemas estructurales…). No hace falta
+mostrarlas al jugador como números.
+
+**Tecnología como capacidad operativa.** Algunas tecnologías cambian lo que la aerolínea puede
+hacer: mejor navegación o aproximación para operar en ciertas condiciones o aeropuertos,
+radar meteorológico para decidir distinto ante tormentas, menos restricciones operativas. La
+tecnología es una herramienta de gestión, no una estadística de combate.
+
+**Coste de la tecnología.** Puede implicar mayor precio del avión, más mantenimiento,
+formación, disponibilidad limitada, infraestructura compatible, posibilidad de retrofit y
+menor madurez inicial. Después puede abaratarse y hacerse habitual. Debe generar decisiones
+(¿avión antiguo y barato o moderno y caro?). **La tecnología moderna no es siempre
+económicamente superior**: hay un intercambio real entre coste, capacidad, riesgo y
+rentabilidad.
+
+**Retrofits.** Algunas tecnologías se pueden instalar después en aviones antiguos cuando sea
+históricamente plausible; otras van integradas en el diseño y no se añaden fácilmente. No
+asumir que cualquier avión puede recibir cualquier tecnología.
+
+**Información para el jugador.** La interfaz puede mostrar algo sencillo (General: alta; CFIT:
+muy protegida; meteorología: buena; colisión en vuelo: sin sistema avanzado; sistemas: alta
+redundancia), pero derivado de las características reales del avión.
+
+## 21. Costes de aeropuerto
+
+Los aeropuertos tienen costes distintos: aterrizaje, estacionamiento, handling, uso de
+terminal, pasajeros, carga, slots, servicios aeroportuarios y otros relevantes. No todos
+tienen la misma estructura.
+
+Un aeropuerto grande y prestigioso puede ser muy caro pero dar más demanda, mejores
+conexiones, mejores instalaciones, más capacidad y mejores servicios. Uno secundario puede
+ser barato pero con menos demanda, peores instalaciones y conexiones y limitaciones
+operativas. La decisión real: ¿pago mucho por un aeropuerto importante o uso uno
+secundario más barato? Los costes pueden evolucionar con el tiempo.
+
+## 22. Compatibilidad entre avión, ruta y aeropuerto
+
+No basta con que la autonomía matemática alcance. Poder operar una ruta depende de una
+combinación de alcance, carga útil, longitud de pista, peso de despegue, características e
+infraestructura del aeropuerto, navegación y aproximación, meteorología, restricciones
+operativas, tamaño del avión, restricciones acústicas cuando sean relevantes y otros factores
+importantes.
+
+Tiene que haber diferencia entre **«no puede operar»** y **«puede operar, pero con
+penalizaciones o restricciones»**: un avión con autonomía suficiente puede no poder despegar
+de un aeropuerto con su peso máximo; otro puede operar reduciendo carga útil; otro puede
+operar técnicamente pero con restricciones de ruido u horario. Decisiones interesantes sin
+convertir cada vuelo en una hoja de cálculo.
+
+## 23. Catering y servicios a bordo
+
+Un sistema sencillo de comidas y bebidas, no un simulador de cada producto. Un coste de
+servicio por pasajero y/o por vuelo que dependa del nivel de servicio, la duración, la clase,
+el número de pasajeros, el aeropuerto donde se abastece, el proveedor, la situación económica
+local y los contratos de suministro.
+
+Abastecerse en un país de costes altos puede salir más caro, pero sin reglas absurdas del
+tipo «país rico = catering siempre caro»: contratos, proveedores y economías de escala
+modifican el resultado.
+
+Función comercial: servicio básico, menor coste; servicio superior, más coste pero más
+satisfacción y prestigio; ciertos vuelos o rutas justifican un servicio mejor. Una capa
+económica sencilla.
+
+## 24. Concorde y aviación supersónica
+
+El Concorde entra como aeronave especial de alto prestigio: una oportunidad extraordinaria y
+una apuesta empresarial. No es «avión normal + mucha velocidad».
+
+- **Ventajas**: velocidad extraordinaria, tiempos de vuelo muy inferiores en ciertas rutas,
+  enorme prestigio, atractivo para cierto pasaje, precios premium, imagen tecnológica,
+  notoriedad.
+- **Datos de partida del autor**: empezó a operar comercialmente en 1976, iba a
+  aproximadamente Mach 2, con unas 100 plazas y una autonomía relativamente limitada para su
+  categoría.
+- **Desventajas**: adquisición carísima, costes operativos y consumo muy altos, capacidad
+  limitada, rutas muy específicas, aeropuertos adecuados, posibles restricciones operativas y
+  acústicas, mantenimiento y operación especializados, mercado reducido y dependencia total de
+  la demanda premium.
+- **Riesgo económico considerable**: lleno puede ser extraordinariamente rentable; con baja
+  ocupación, desastroso.
+
+**Seguridad del Concorde**: no se le asigna artificialmente más probabilidad de accidente por
+ser supersónico. Hay que respetar la diferencia entre riesgo técnico real y riesgo económico u
+operativo. Sus problemas técnicos específicos se representan con sus propios sistemas:
+neumáticos y tren, temperaturas y régimen supersónico, mantenimiento especializado, sistemas
+complejos, características del despegue, repuestos, historial de mantenimiento.
+
+El accidente del vuelo 4590 de Air France (2000) puede existir como **evento histórico** si el
+juego llega a ese periodo, pero no se usa retrospectivamente para afirmar que el avión tenía
+una tasa genérica de accidentes mayor. La investigación del BEA estableció una cadena causal
+específica iniciada por el daño de un neumático y sus consecuencias.
+
+El Concorde es: muy rápido, muy prestigioso, muy caro, muy especializado, potencialmente muy
+rentable y económicamente arriesgado. No «rápido y simplemente más inseguro».
+
+## 25. Principio general
+
+No añadir sistemas porque sean históricamente interesantes si no generan decisiones.
+Añadirlos cuando el jugador pueda preguntarse «¿qué opción me conviene?»:
+
+- ¿Avión antiguo barato o moderno más caro?
+- ¿Instalo un sistema de seguridad nuevo? ¿Pago el retrofit?
+- ¿Aeropuerto caro con mucha demanda o secundario?
+- ¿Acepto un avión que cubre la ruta pero con limitaciones?
+- ¿Catering premium?
+- ¿Compro un Concorde y apuesto por el mercado premium, con su enorme coste, a cambio de
+  prestigio y velocidad?
+
+El objetivo no es simular toda la aviación real, sino que las decisiones importantes de una
+aerolínea se sientan plausibles y que las simplificaciones sean coherentes con cómo funciona
+la aviación.
