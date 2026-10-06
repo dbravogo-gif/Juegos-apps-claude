@@ -4,8 +4,8 @@ Nombre decidido por el autor. Simulador de aerolínea para móvil: fundas una co
 mediados de los años 70, con un avión de segunda mano y una base en un aeropuerto real, y la
 llevas a través de 50 años de historia de la aviación.
 
-Estado: **versión 2 jugable** (núcleo realista: mantenimiento, riesgo, operación y economía;
-ver «Versión 2» al final). Las reglas del autor están en `CRITERIOS.md` y mandan sobre este
+Estado: **versión 3 jugable** (núcleo realista de la v2 más competencia, mercado,
+reputación y noticias; ver «Versión 3» al final). Las reglas del autor están en `CRITERIOS.md` y mandan sobre este
 documento. Lo marcado como *pendiente* se cierra antes de programar esa parte.
 
 Decisiones cerradas:
@@ -224,9 +224,9 @@ Con unos 150.000 vuelos en una partida de 50 años, quien lo hace todo bien tien
 entre un avión cuidado y uno con la revisión A vencida: +30 % ×2, el doble ×20, el triple
 ×100; con todo vencido, ~3 % por vuelo.
 
-### Calibración económica
+### Calibración económica (v2, sin competencia)
 
-Tarifas cerca del rendimiento real de 1976 (≈96 $ Gran Canaria–Madrid, ≈120 $ a Londres,
+Superada por la de la v3, que reparte el pasaje entre competidores. Tarifas cerca del rendimiento real de 1976 (≈96 $ Gran Canaria–Madrid, ≈120 $ a Londres,
 ≈190 $ Londres–Nueva York) y costes con handling y estructura de la época. Un año con un
 solo avión:
 
@@ -240,8 +240,75 @@ Son números para ajustar jugando. `npm run calibrar` (`tools/calibrar.mjs`) rep
 medición del riesgo con bots de tres perfiles; conviene pasarlo después de tocar `riesgo.js`,
 `mantenimiento.js` o los datos de averías.
 
-## Versión 3 — siguiente
+## Versión 3 — competencia y mercado (hecho)
 
-Competencia y mercado (`CRITERIOS.md` 26–32): aerolíneas rivales con nombre de parodia,
-oferta y demanda por ruta, reputación por dimensiones y acontecimientos del mundo como
-señales graduales.
+Aplica `CRITERIOS.md` 26–32. Lo que cambió:
+
+- **Demanda** (`src/core/mercado.js`, `src/data/paises.js`): modelo de gravedad por par de
+  aeropuertos con la población y la renta de cada país año a año, la distancia, el mar (en
+  tierra compiten el coche y el tren), las fronteras (el mercado único suma), el turismo con
+  su temporada, los grandes hubs, un factor para aeropuertos pequeños y un suelo para las
+  islas. Cuatro tipos de mercado salen solos: saturado (Madrid–Londres), con oportunidad
+  (Bilbao–Lisboa), de nicho (Pamplona–París) y emergente (Barcelona–Praga, tras 1989).
+- **Reparto**: el pasaje se reparte por plazas con curva en S (más frecuencia atrae más que
+  proporcionalmente), precio con elasticidad según la ruta sea turística, mixta o de
+  negocios, reputación y servicio. «Otras compañías» cubre con retraso la capacidad que no
+  ponen las rivales con nombre; su cobertura varía por ruta y quinquenio, así que hay rutas
+  mal servidas por descubrir.
+- **Información aproximada** (CRITERIOS 26 y 28): demanda y oferta redondeadas y con ruido,
+  tendencia y quién opera con su precio, servicio, reputación y presencia en palabras. La
+  estimación para tus aviones da pasajeros/día con 1 y 2 vueltas. Ningún «oportunidad 87 %».
+- **Tarifas reguladas** hasta la liberalización: nacional de EE. UU. en 1979, Comunidad
+  Europea en 1993 (incluidas las rutas nacionales), el resto en 1997. Mientras tanto, la
+  tarifa económica o la alta solo mueven el precio la mitad.
+- **Salarios por país**: tripulaciones y estructura cuestan según la renta del país de la
+  base (España de 1976, ~0,8 de EE. UU.).
+- **Competencia** (`src/core/competencia.js`, `src/data/aerolineas.js`): 22 aerolíneas de
+  parodia con época, tipo (tradicional, regional, chárter, bajo coste, ultra bajo coste,
+  largo radio), carácter (expansión, riesgo, copia, terquedad) y final histórico (Lager
+  quiebra en 1982, Bread Am en 1991 y Delfín hereda su Atlántico, Aviacutre se funde con
+  Castilla en 1999…). Nunca más de 15 activas. Cada mes revisan sus rutas con lo que les toca
+  del reparto, recortan o cierran las que pierden (más tarde cuanto más tercas), buscan
+  huecos con estimaciones con error, copian rutas llenas del jugador con meses de retraso,
+  responden a las bajadas de precio y cuadran cuentas: quiebran salvo rescate (las de
+  bandera antes de la liberalización; rescates generales en 2001–02 y 2020–22). Respetan la
+  regulación: antes de 1993, solo rutas que tocan su país; después, entre países de la
+  Comunidad; desde 1997, rutas nacionales de otro país comunitario.
+- **Reputación** (`src/core/reputacion.js`): puntualidad, seguridad, servicio y prestigio de
+  0 a 100 por dentro; en pantalla, palabras. Pesan distinto según la ruta: en la turística
+  manda el precio, en la de negocios la puntualidad. Un accidente hunde la seguridad y el
+  prestigio, que se recuperan despacio volando limpio.
+- **Mundo y noticias** (`src/core/mundo.js`, `src/data/acontecimientos.js`): 27
+  acontecimientos históricos con fecha real (liberalizaciones, crisis, guerras, AVE, jet-foil,
+  Eurostar, 11-S, volcán, COVID…) con efectos graduales sobre la demanda, cierres y costes; y
+  9 plantillas de acontecimientos locales cerca del jugador (sede, moda turística, feria,
+  tren, cierre de fábrica, ampliación, inestabilidad, recursos, huelga) que se anuncian y a
+  veces no pasan. Solo llegan las noticias que tocan al jugador: 10–25 al año. Las
+  importantes salen como avance de televisión.
+- **Interfaz**: pestaña Mundo (tu compañía, tus mercados, noticias y competencia), estudio de
+  mercado en la ficha de cada aeropuerto y, en cada ruta, «te tocan ~N de ~D pax/día».
+
+### Calibración con competencia
+
+Un año con un solo avión, base en Gran Canaria en 1976, bot prudente, cuatro semillas:
+
+| Ruta | Mercado | Ocupación | Resultado del año |
+| --- | --- | --- | --- |
+| F27 Gran Canaria–Tenerife Norte, 2 vueltas | Saturado: ~1.600 pax/día contra ~2.600 plazas | ~50 % | −0,21 a −0,25 M$ |
+| 737 Gran Canaria–Madrid, 1 vuelta | Bien servido | 45–53 % | +0,1 a +0,6 M$ |
+| 737 Gran Canaria–Barcelona, 2 vueltas | Mal servido | 54–69 % | +1,9 a +3,6 M$ |
+| 737 Gran Canaria–Gatwick, 1 vuelta | Chárter británico lleno (Espantax y Lager) | ~40 % | −0,3 a −0,7 M$ |
+| 737 Madrid–Heathrow, 2 vueltas | Negocios, sobreofertado | 38–43 % | −0,6 a +0,4 M$ |
+| 707 Heathrow–Nueva York, 1 vuelta | Los grandes del Atlántico | 23–31 % | −3,1 a −5,6 M$ |
+
+Ya no basta con elegir la ruta obvia: hay que mirar el mercado. Con 3 M$ de caja inicial, un
+mal primer año se puede corregir. El mundo completo sin jugador (1976–2026) tarda 7–11 s y se
+mantiene estable.
+
+## Siguiente
+
+- Nombres pendientes de aprobar: 14 de las 22 compañías llevan `propuesta: true` en
+  `src/data/aerolineas.js`.
+- Jugar la v3 y ajustar: el arranque interinsular con un solo F27 pierde dinero (la
+  estructura de la compañía pesa demasiado para un avión).
+- Abrir bases nuevas, personal (entrevistas y eventos) y retos cortos con semilla.

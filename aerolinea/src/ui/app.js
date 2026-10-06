@@ -480,4 +480,4 @@ if (hot?.ready) hot.ready(arrancar);
 else arrancar(hot?.data ?? {});
 
 // Acceso para pruebas desde la consola.
-window.appViacion = { estado: () => estado, procesar, encolar };
+window.appViacion = { estado: () => estado, procesar, encolar, aeropuerto: (id) => mostrarAeropuerto(id) };

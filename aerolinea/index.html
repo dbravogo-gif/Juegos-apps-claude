@@ -45,14 +45,16 @@ button,input,select{font:inherit;color:inherit}
 #app{position:relative;height:100%;display:grid;grid-template-rows:auto 1fr auto}
 
 /* Barra superior */
-#barra{display:flex;align-items:center;gap:10px;padding:8px 16px;padding-top:calc(8px + env(safe-area-inset-top,0px));background:var(--panel);border-bottom:1px solid var(--linea);z-index:5;min-width:0}
-.b-id{min-width:0;flex:1}
-#b-nombre{font:800 18px/1 var(--f-titulo);letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
-#b-fecha{display:block;font:400 12px/1.4 var(--f-cifra);color:var(--ambar);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.b-cifras{display:flex;gap:10px;white-space:nowrap;font-family:var(--f-cifra);font-variant-numeric:tabular-nums;font-size:13px;text-align:right}
-.b-cifras small{display:block;font:500 10px/1 var(--f-texto);letter-spacing:.08em;text-transform:uppercase;color:var(--suave)}
+/* Dos filas: nombre y velocidad arriba; fecha, caja y reputación abajo. En una sola fila la
+   fecha no cabe en un móvil. */
+#barra{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"nombre velocidad" "fecha cifras";align-items:center;column-gap:12px;row-gap:3px;padding:8px 16px;padding-top:calc(8px + env(safe-area-inset-top,0px));background:var(--panel);border-bottom:1px solid var(--linea);z-index:5;min-width:0}
+#b-nombre{grid-area:nombre;font:800 18px/1 var(--f-titulo);letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+#b-fecha{grid-area:fecha;font:400 12px/1.4 var(--f-cifra);color:var(--ambar);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.b-cifras{grid-area:cifras;display:flex;gap:12px;align-items:baseline;justify-content:flex-end;white-space:nowrap;font-family:var(--f-cifra);font-variant-numeric:tabular-nums;font-size:13px}
+.b-cifras small{font:500 10px/1 var(--f-texto);letter-spacing:.08em;text-transform:uppercase;color:var(--suave);margin-right:5px}
 #b-caja.negativo{color:var(--rojo)}
-#velocidad{display:flex;border:1px solid var(--linea);border-radius:8px;overflow:hidden}
+#b-rep{font:600 13px/1.2 var(--f-texto);letter-spacing:.02em}
+#velocidad{grid-area:velocidad;display:flex;border:1px solid var(--linea);border-radius:8px;overflow:hidden}
 #velocidad button{background:none;border:0;padding:6px 4px;font:600 11px var(--f-cifra);color:var(--suave);cursor:pointer;min-width:28px;letter-spacing:-.08em}
 #velocidad button[aria-pressed="true"]{background:var(--ambar);color:var(--noche)}
 
@@ -302,10 +304,11 @@ details.bloque>*+*{margin-top:8px}
 <body>
 <div id="app">
   <header id="barra">
-    <div class="b-id"><span id="b-nombre">App viación</span><span id="b-fecha">1 ene 1976 · 08:00</span></div>
+    <span id="b-nombre">App viación</span>
+    <span id="b-fecha">1 ene 1976 · 08:00</span>
     <div class="b-cifras">
-      <div><small>Caja</small><span id="b-caja">—</span></div>
-      <div><small>Rep.</small><span id="b-rep">—</span></div>
+      <span id="b-caja" title="Caja">—</span>
+      <span><small>Rep.</small><span id="b-rep">—</span></span>
     </div>
     <div id="velocidad" role="group" aria-label="Velocidad">
       <button data-v="0" aria-label="Pausa">II</button>

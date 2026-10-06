@@ -40,6 +40,9 @@ lo «verificado» se apoya en lo que devolvían los buscadores de esas mismas fu
   Teherán: AIP de cada país. Verificado.
 - Tamaño, demanda, perfil de clima, nivel de costes del país y aeropuertos alternativos:
   aprox.
+- **Añadidos en la v3** (Bilbao, Pamplona, Santiago, Sevilla, Valencia, Alicante, Ibiza y
+  Doha): coordenadas verificadas; elevación de Pamplona (459 m) y Santiago (370 m) del AIP
+  España, una fuente; pistas, ILS de 1976 y el resto, aprox.
 
 ## Aviones
 
@@ -104,6 +107,39 @@ Costes y días de taller de cada retrofit, y el tamaño de su efecto en el riesg
 - **Costes**: tripulación, handling, tasas, catering, estructura y seguro calibrados para que
   el coste por hora de bloque de un 737-200 en 1976 quede en torno a 1.600–1.800 $ y el
   equilibrio de una ruta normal esté en una ocupación del 45–55 %. Aprox.
+
+## Mercado y competencia (v3)
+
+- **Países** (`src/data/paises.js`): renta por habitante relativa y población por década,
+  aprox (orden de magnitud de las series de PIB por habitante en paridad de poder adquisitivo
+  y de población, sin comprobar cifra a cifra). Año de entrada en la Comunidad Europea y
+  salida del Reino Unido (2020): registro histórico conocido.
+- **Demanda entre ciudades**: cifra de juego, aprox. Se ha cuidado el orden de magnitud (por
+  ejemplo, ~1.600 pasajeros diarios por sentido entre Gran Canaria y Tenerife en 1976), no el
+  dato exacto.
+- **Liberalización**: Airline Deregulation Act de EE. UU. (24 de octubre de 1978), tercer
+  paquete europeo (1 de enero de 1993) y cabotaje en la Comunidad (1 de abril de 1997).
+  Registro histórico conocido.
+- **Aerolíneas** (`src/data/aerolineas.js`): ficticias. Las fechas de entrada, quiebra o
+  fusión siguen a la compañía real en la que se inspiran (Laker, 1982; Spantax, 1988; Pan Am,
+  1991, con su Atlántico para Delta; Aviaco en Iberia, 1999; KLM con Air France, 2004; Air
+  Berlin, 2017; Alitalia e ITA, 2021), salvo Catarro, que entra en 2017 por el tope de 15
+  activas (Qatar Airways vuela desde 1994). Tamaños, costes y carácter: aprox.
+
+## Acontecimientos
+
+- **Fechas** de los históricos, de las liberalizaciones y de las compañías reales: registro
+  histórico conocido, sin contrastar una a una con búsqueda. La noticia sale el día del
+  suceso o poco después, nunca antes.
+- **Jet-foil** entre Las Palmas y Santa Cruz de Tenerife: primer viaje el 7 de agosto de 1980,
+  unos 70 minutos (RTVC). Una fuente.
+- **Catamaranes rápidos** entre Gran Canaria y Tenerife en 1999: Fred. Olsen empezó ese año a
+  sustituir sus ferris por buques de alta velocidad (Wikipedia). Una fuente.
+- **Concorde**: certificado suspendido tras el accidente de París (25 de julio de 2000) hasta
+  noviembre de 2001; último vuelo comercial el 24 de octubre de 2003.
+- El tamaño de cada efecto sobre la demanda (−12 % por el jet-foil, −15 % por los
+  catamaranes, −55 % Madrid–Sevilla con el AVE…) y los acontecimientos locales: cifras de
+  juego.
 
 ## Riesgo
 

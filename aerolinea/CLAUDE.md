@@ -25,11 +25,16 @@ d3-geo y `node --test`.
 
 - `src/core/`: motor puro y determinista con semilla, sin DOM. Todo lo que tenga lógica va
   aquí y lleva pruebas en `tests/`.
-- `src/data/`: aeropuertos, aviones, motores y catálogo de averías.
-- `src/ui/`: globo, paneles, hoja de despacho, escenas y noticiario.
+- `src/data/`: aeropuertos, países, aviones, motores, catálogo de averías, aerolíneas rivales
+  y acontecimientos históricos.
+- `src/ui/`: globo, paneles, hoja de despacho, escenas, noticiario y pestaña Mundo.
+- Mercado y competencia (v3): `mercado.js` reparte el pasaje, `competencia.js` mueve a las
+  rivales una vez al mes, `mundo.js` publica las noticias y `reputacion.js` lleva la
+  reputación. Las rivales con `propuesta: true` tienen el nombre pendiente de aprobar.
 
 ## Comprobar
 
 - `npm test` dentro de `aerolinea/`.
+- `npm run calibrar` después de tocar el riesgo, el mantenimiento o las averías.
 - Para ver la interfaz, sirve la carpeta con `python3 -m http.server` y ábrela con un
   viewport de móvil.
