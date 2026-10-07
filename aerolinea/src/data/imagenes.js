@@ -2,15 +2,14 @@
 // accidentes, grandes aeropuertos y taller).
 //
 // Las escenas y los aviones ficticios están generados con IA (OpenArt) para el juego, con
-// aspecto de foto de la época y sin marcas reales; en pantalla llevan la etiqueta
-// «Recreación». Las fotos de aviones reales llevarán autor y licencia (ver FUENTES.md).
-// Si un tipo no tiene foto, la interfaz pinta su silueta.
+// aspecto de foto de la época. Las fotos de aviones reales son de Wikimedia Commons, con su
+// autor y licencia en img/LEEME.md. Si un tipo no tiene foto, la interfaz pinta su silueta.
 
 import { TIPOS } from './aviones.js';
 
 export const FOTOS_AVION = {
-  kr134: { src: 'img/aviones/kr134.webp', alt: 'Krasnov KR-134 en la plataforma, foto de época', recreacion: true },
-  vk42: { src: 'img/aviones/vk42.webp', alt: 'Volkov VK-42 en un aeropuerto regional, foto de época', recreacion: true },
+  kr134: { src: 'img/aviones/kr134.webp', alt: 'Krasnov KR-134 en la plataforma, foto de época' },
+  vk42: { src: 'img/aviones/vk42.webp', alt: 'Volkov VK-42 en un aeropuerto regional, foto de época' },
 };
 
 export const ESCENAS = {
@@ -26,7 +25,6 @@ export const ESCENAS = {
   tallerHangar: { src: 'img/historia/taller-hangar.webp', alt: 'Revisión completa en el hangar, con un motor desmontado' },
   tallerMotor: { src: 'img/historia/taller-motor.webp', alt: 'Revisión general de un motor a reacción en el taller' },
 };
-for (const e of Object.values(ESCENAS)) e.recreacion = true;
 
 // Desde 2005 las escenas modernas: pantallas en vez de paneles de paletas, terminales de cristal.
 const MODERNO = 2005;

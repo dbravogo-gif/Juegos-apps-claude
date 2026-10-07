@@ -5,7 +5,7 @@ import {
   nuevaPartida, avanzar, decidir, comprar, comprarNuevo, inspeccionar, vender, crearRuta, borrarRuta,
   asignar, cambiarFrecuencia, cambiarTarifa, cambiarServicio, cambiarCateringBase, pedirPrestamo,
   devolverPrestamo, apuntar, VERSION, pedirInspeccion, pedirDiagnostico, pedirReparacion, diferir,
-  pedirRevision, pedirMotor, pedirRetrofit, pedirDirectiva, cancelarTareas,
+  pedirRevision, pedirMotor, pedirRetrofit, pedirDirectiva, cancelarTareas, codigoDe, marcaPorDefecto,
 } from '../core/sim.js';
 import { textoFecha, textoHora } from '../core/tiempo.js';
 import { crearGlobo } from './globo.js';
@@ -15,6 +15,7 @@ import { panelFlota, panelRutas, panelMercado, panelCuentas, panelDiario, htmlAe
 import { panelMundo, htmlAvance } from './mundo.js';
 import { etiquetaGeneral } from '../core/reputacion.js';
 import { dinero, esc } from './formato.js';
+import { htmlMarca, htmlEditorMarca, conectarEditorMarca } from './marcas.js';
 
 const CLAVE = 'aerolinea_partida_v1';
 // Minutos de juego por segundo real.
@@ -69,9 +70,15 @@ document.addEventListener('visibilitychange', () => {
 
 // ---------------------------------------------------------------- barra superior
 
+let marcaPintada = '';
+
 function pintarBarra() {
   if (!estado) return;
-  ui.nombre.textContent = `${estado.codigo} · ${estado.nombre}`;
+  const clave = `${estado.codigo}|${estado.nombre}|${JSON.stringify(estado.marca)}`;
+  if (clave !== marcaPintada) {
+    marcaPintada = clave;
+    ui.nombre.innerHTML = `${htmlMarca(estado.marca, 'en-barra')}${esc(`${estado.codigo} · ${estado.nombre}`)}`;
+  }
   ui.fecha.textContent = `${textoFecha(estado.t, { corta: true })} · ${textoHora(estado.t)}`;
   ui.caja.textContent = dinero(estado.caja);
   ui.caja.classList.toggle('negativo', estado.caja < 0);
@@ -227,6 +234,7 @@ function manejarAccion(el) {
       mostrarInicio();
     });
     case 'cerrar-ap': ui.aeropuerto.hidden = true; globo?.seleccionar(null); return undefined;
+    case 'editar-marca': return encolar({ tipo: 'marca', marca: { ...estado.marca } });
     default: return undefined;
   }
 }
@@ -322,6 +330,10 @@ function siguienteModal() {
     abrirModal(`${htmlInforme(item.accidente, estado)}<button class="btn" data-cerrar>Continuar</button>`, 'modal-tele');
   } else if (item.tipo === 'quiebra') {
     abrirModal(`<h2 class="titulo-modal">Quiebra</h2><p>${esc(estado.nombre)} no puede pagar sus deudas y el banco ya no presta más. Los aviones se subastan.</p><button class="btn" data-accion-modal="reiniciar">Empezar otra partida</button>`, 'modal-aviso');
+  } else if (item.tipo === 'marca') {
+    abrirModal(`<h2 class="titulo-modal">Tu marca</h2><div id="editor-marca">${htmlEditorMarca(item.marca)}</div>
+      <div class="fila-botones"><button class="btn btn-sec" data-cerrar>Volver</button><button class="btn" data-accion-modal="guardar-marca">Guardar</button></div>`, 'modal-aviso');
+    conectarEditorMarca(ui.modalCaja.querySelector('#editor-marca'), item.marca);
   } else if (item.tipo === 'confirmar') {
     abrirModal(`<h2 class="titulo-modal">${esc(item.titulo)}</h2><p>${esc(item.texto)}</p><div class="fila-botones"><button class="btn btn-sec" data-cerrar>Volver</button><button class="btn peligro" data-accion-modal="confirmar">${esc(item.boton)}</button></div>`, 'modal-aviso');
   }
@@ -356,6 +368,12 @@ ui.modal.addEventListener('click', (e) => {
     return;
   }
   const accion = e.target.closest('[data-accion-modal]')?.dataset.accionModal;
+  if (accion === 'guardar-marca' && modalActual?.tipo === 'marca') {
+    estado.marca = modalActual.marca;
+    cerrarModal();
+    resultado(null, 'Marca guardada.');
+    return;
+  }
   if (accion === 'confirmar') {
     const fn = modalActual.alAceptar;
     cerrarModal();
@@ -396,6 +414,8 @@ function procesar(eventos) {
 // ---------------------------------------------------------------- inicio
 
 function mostrarInicio() {
+  const marca = marcaPorDefecto(codigoDe('Atlántica'));
+  let letrasPropias = false;
   const grupos = REGIONES.map((region) => {
     const lista = AEROPUERTOS.filter((a) => a.region === region && abiertoEn(a, 1976));
     return `<fieldset class="grupo-base"><legend>${region}</legend>${lista.map((a) => `
@@ -407,10 +427,20 @@ function mostrarInicio() {
     <h1 class="inicio-titulo">App viación</h1>
     <p class="inicio-texto">Tienes 3 millones de dólares, un banco dispuesto a prestarte algo más y ningún avión. Cada vuelo que salga lo autorizas tú. Si el tiempo está feo, decides si se arriesga.</p>
     <label class="campo"><span>Nombre de la compañía</span><input id="nombre-compania" type="text" maxlength="28" value="Atlántica" autocomplete="off"></label>
+    <div class="campo"><span>Tu marca: la cola de tus aviones</span><div id="editor-marca">${htmlEditorMarca(marca)}</div></div>
     <label class="campo"><span>Buscar base</span><input id="buscar-base" type="search" placeholder="Ciudad o código" autocomplete="off"></label>
     <div class="lista-bases">${grupos}</div>
     <button class="btn btn-despegar" data-fundar>Fundar la compañía</button>`, 'modal-inicio');
   modalActual = { tipo: 'inicio' };
+  const editor = $('#editor-marca');
+  conectarEditorMarca(editor, marca);
+  editor.addEventListener('input', (e) => { if (e.target.dataset.marca === 'letras') letrasPropias = true; });
+  // Mientras no se toquen, las letras de la cola siguen al nombre de la compañía.
+  $('#nombre-compania').addEventListener('input', (e) => {
+    if (letrasPropias) return;
+    marca.letras = codigoDe(e.target.value.trim() || 'Atlántica');
+    editor.innerHTML = htmlEditorMarca(marca);
+  });
   const buscar = $('#buscar-base');
   buscar.addEventListener('input', () => {
     const q = buscar.value.trim().toLowerCase();
@@ -421,7 +451,7 @@ function mostrarInicio() {
   ui.modalCaja.querySelector('[data-fundar]').addEventListener('click', () => {
     const nombre = $('#nombre-compania').value.trim() || 'Atlántica';
     const base = ui.modalCaja.querySelector('input[name="base"]:checked')?.value ?? 'LPA';
-    empezar(nuevaPartida({ nombre, base }));
+    empezar(nuevaPartida({ nombre, base, marca }));
     apuntar(estado, 'Consejo: los aeropuertos sin ILS y con niebla son los más traicioneros. Mira la hoja de despacho antes de autorizar.', 'info');
     ui.modal.hidden = true;
     modalActual = null;
@@ -433,6 +463,9 @@ function mostrarInicio() {
 
 function empezar(e) {
   estado = e;
+  // Las partidas de antes del creador de marca reciben la cola por defecto.
+  estado.marca ??= marcaPorDefecto(estado.codigo);
+  marcaPintada = '';
   cola = [];
   pintarBarra();
   globo?.marcarSucio();

@@ -1,8 +1,8 @@
 # Imágenes
 
 Todas las de esta carpeta están generadas con IA en OpenArt (Wan 2.7, modo estándar, 2K,
-6 créditos cada una) y reducidas a WebP de 900–960 px. Llevan la etiqueta «Recreación» en el
-juego. El catálogo y cuándo sale cada una está en `src/data/imagenes.js`.
+6 créditos cada una) y reducidas a WebP de 900–960 px. El catálogo y cuándo sale cada una
+está en `src/data/imagenes.js`.
 
 ## Estilo común
 

@@ -169,7 +169,7 @@ export const AEROLINEAS = [
     descripcion: 'Largo radio y premium, con una apuesta muy fuerte por crecer y conectar el mundo por Dubái.',
   }),
   L('uropa', {
-    nombre: 'Air Uropa', inspirada: 'Air Europa', pais: 'ES', tipo: 'charter', propuesta: true,
+    nombre: 'Ay Europa', inspirada: 'Air Europa', pais: 'ES', tipo: 'charter',
     hubs: ['PMI'], bases: ['MAD'], zonas: ['ES', 'GB', 'DE', 'Europa', 'Sudamérica'],
     desde: 1986, tamano: 0.3, precio: 0.85, costes: 0.85, servicio: 'estandar',
     expansion: 0.5, riesgo: 0.5, copia: 0.4, terquedad: 0.4,

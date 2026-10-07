@@ -482,6 +482,7 @@ universo ficticio del juego; no todos tienen que ser parodia):
 | Bread Am | Pan Am | Internacional y de largo radio, gran prestigio en sus mejores épocas |
 | Burkirates | Emirates | Largo radio y premium, fuerte apuesta por crecer y conectar |
 | SOS | SAS | Fuerte en el norte de Europa |
+| Ay Europa | Air Europa | Nace chárter en Mallorca; después, red regular y largo radio |
 
 La lista definitiva de 22 se desarrollará más adelante.
 

@@ -101,10 +101,31 @@ button,input,select{font:inherit;color:inherit}
 .ficha.con-miniatura>.nota{grid-column:1 / -1}
 .foto.miniatura{width:84px;height:56px}
 .foto-silueta{display:grid;place-items:center;background:linear-gradient(180deg,#30485d 0%,#1a2a38 100%)}
+/* Colas de las aerolíneas, con sus colores y un logo parecido */
+.cola{width:18px;height:18px;vertical-align:-3px;margin-right:6px;flex:none}
+.cola.grande{width:34px;height:34px;margin:0}
+.rival-nombre{display:flex;gap:10px;align-items:center;min-width:0}
+.cola.en-barra{width:20px;height:20px;vertical-align:-3px;margin-right:6px}
+/* Creador de marca */
+.marca-editor{display:grid;grid-template-columns:96px minmax(0,1fr);gap:12px;align-items:start;color:var(--tinta)}
+.marca-vista{display:grid;place-items:center;background:var(--panel-2);border:1px solid var(--linea);border-radius:var(--r);padding:8px}
+.cola.marca-grande{width:80px;height:80px;margin:0}
+.marca-controles{display:grid;gap:10px;min-width:0}
+.paleta{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.muestra{width:26px;height:26px;border-radius:50%;border:2px solid var(--linea);padding:0;cursor:pointer}
+.muestra.activa{border-color:var(--ambar);box-shadow:0 0 0 2px var(--ambar)}
+.campo .paleta input[type=color]{width:38px;height:30px;padding:2px;border-radius:6px;cursor:pointer}
+.dibujos{display:flex;flex-wrap:wrap;gap:6px}
+.dibujo{background:var(--panel-2);border:1px solid var(--linea);border-radius:8px;padding:3px;cursor:pointer;line-height:0}
+.dibujo.activo{border-color:var(--ambar);box-shadow:0 0 0 1px var(--ambar)}
+.cola.mini{width:30px;height:30px;margin:0}
+.marca-controles .btn-mini{cursor:pointer}
+.tu-marca{display:flex;gap:12px;align-items:center;margin-bottom:10px}
+.tu-marca>div{display:grid;gap:6px;justify-items:start}
+@media (max-width:400px){.marca-editor{grid-template-columns:1fr}.marca-vista{justify-self:start}}
+.rival-nombre>div{min-width:0}
 .foto-silueta svg{width:78%;max-height:86%}
 .foto.miniatura.foto-silueta svg{width:88%}
-.foto-etiqueta{position:absolute;right:6px;bottom:6px;font:600 9px/1 var(--f-texto);letter-spacing:.1em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,.55);padding:3px 5px;border-radius:3px}
-.foto figcaption{position:absolute;left:6px;bottom:6px;max-width:70%;font:400 10px/1.2 var(--f-texto);color:#fff;background:rgba(0,0,0,.55);padding:3px 5px;border-radius:3px}
 #ficha-aeropuerto .foto.banda{height:104px}
 .chip{display:inline-block;font:600 11px/1 var(--f-texto);letter-spacing:.06em;text-transform:uppercase;padding:4px 7px;border-radius:4px;background:var(--linea);color:var(--tinta);margin-right:4px}
 .chip.vuelo{background:var(--ambar-oscuro);color:var(--ambar)}

@@ -44,7 +44,14 @@ export function codigoDe(nombre) {
   return (letras + 'XX').slice(0, 2);
 }
 
-export function nuevaPartida({ nombre, base, semilla = Date.now() >>> 0 }) {
+// La imagen de marca: la cola del avión. La diseña el jugador al fundar la compañía.
+//   fondo, segundo  colores de la cola y del dibujo
+//   dibujo          liso | franja | bandas | circulo | estrella | ola
+//   letras          hasta tres letras en la cola
+//   imagen          una imagen propia (data URL pequeña) que llena la cola, o null
+export const marcaPorDefecto = (codigo) => ({ fondo: '#f0a63a', segundo: '#0f1a24', dibujo: 'franja', letras: codigo, imagen: null });
+
+export function nuevaPartida({ nombre, base, semilla = Date.now() >>> 0, marca = null }) {
   const aeropuerto = POR_ID[base];
   const estado = {
     version: VERSION,
@@ -53,6 +60,7 @@ export function nuevaPartida({ nombre, base, semilla = Date.now() >>> 0 }) {
     t: 8 * 60,
     nombre,
     codigo: codigoDe(nombre),
+    marca: marca ?? marcaPorDefecto(codigoDe(nombre)),
     base,
     pais: aeropuerto.pais,
     caja: CAJA_INICIAL,

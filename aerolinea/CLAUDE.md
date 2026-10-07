@@ -28,8 +28,10 @@ d3-geo y `node --test`.
 - `src/data/`: aeropuertos, países, aviones, motores, catálogo de averías, aerolíneas rivales
   y acontecimientos históricos.
 - `src/ui/`: globo, paneles, hoja de despacho, escenas, noticiario y pestaña Mundo.
-- `img/`: imágenes en WebP. Qué sale y cuándo, en `src/data/imagenes.js`; cómo se hicieron, en
-  `img/LEEME.md`. Las generadas con IA llevan la etiqueta «Recreación» en pantalla.
+- `img/`: imágenes en WebP. Qué sale y cuándo, en `src/data/imagenes.js`; de dónde salen
+  (fotos de Wikimedia o generadas con IA), en `img/LEEME.md`.
+- `src/ui/marcas.js`: las colas de las aerolíneas, con los colores de la real en la que se
+  inspira cada una y un logo parecido.
 - Mercado y competencia (v3): `mercado.js` reparte el pasaje, `competencia.js` mueve a las
   rivales una vez al mes, `mundo.js` publica las noticias y `reputacion.js` lleva la
   reputación. Las rivales con `propuesta: true` tienen el nombre pendiente de aprobar.

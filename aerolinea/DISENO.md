@@ -316,7 +316,7 @@ mantiene estable.
 - **Robustez**: un error en un fotograma ya no congela el juego, los paneles no se repintan
   bajo el dedo y cada pestaña se abre desde arriba.
 - **Imágenes** (`img/`, `src/data/imagenes.js`): los dos aviones ficticios y las escenas,
-  generados con IA y marcados «Recreación»: avances de noticias (dos épocas), noticiario de
+  generados con IA: avances de noticias (dos épocas), noticiario de
   accidentes (en el campo o en el monte, con reactor o con turbohélice), grandes aeropuertos
   (dos épocas) y taller (revisión de línea, hangar y motor). Los aviones reales se ven con su
   silueta hasta tener sus fotos.
@@ -326,7 +326,7 @@ mantiene estable.
 - Fotos reales de los aviones (Wikimedia Commons, con autor y licencia) en cuanto el entorno
   pueda descargarlas.
 
-- Nombres pendientes de aprobar: 14 de las 22 compañías llevan `propuesta: true` en
+- Nombres pendientes de aprobar: 13 de las 22 compañías llevan `propuesta: true` en
   `src/data/aerolineas.js`.
 - Jugar la v3 y ajustar: el arranque interinsular con un solo F27 pierde dinero (la
   estructura de la compañía pesa demasiado para un avión).

@@ -141,7 +141,7 @@ Costes y días de taller de cada retrofit, y el tamaño de su efecto en el riesg
 - **Escenas** (noticias, accidentes, grandes aeropuertos y taller) y **aviones ficticios**
   (KR-134, VK-42): generadas con IA en OpenArt (Wan 2.7) para el juego, con aspecto de foto de
   la época y sin marcas, matrículas ni aerolíneas reales. No muestran sucesos, aeropuertos ni
-  aviones concretos; en pantalla llevan la etiqueta «Recreación». Las indicaciones usadas y lo
+  aviones concretos. Las indicaciones usadas y lo
   que se descartó por poco realista (un motor dentro del morro, restos con forma de avioncito)
   quedan en `img/LEEME.md`.
 - **Fotos de aviones reales**: pendientes. Irán con autor y licencia (Wikimedia Commons) en

@@ -12,6 +12,7 @@ import { infoMercado, estimarJugador, clave } from '../core/mercado.js';
 import { activas, resumenAerolinea } from '../core/competencia.js';
 import { etiqueta, etiquetaGeneral, notaReputacion } from '../core/reputacion.js';
 import { esc, htmlFoto } from './formato.js';
+import { htmlCola, htmlMarca } from './marcas.js';
 import { escenaNoticia } from '../data/imagenes.js';
 
 const ESCALAS = { local: 'Local', regional: 'Regional', global: 'Mundial' };
@@ -26,7 +27,7 @@ export function htmlMercado(estado, o, d) {
   const m = infoMercado(estado, o, d);
   const ops = m.operadores.map((x) => `
     <tr class="${x.id === 'jugador' ? 'tu-fila' : ''}">
-      <th scope="row">${esc(x.id === 'jugador' ? `${x.nombre} (tú)` : x.nombre)}</th>
+      <th scope="row">${htmlCola(x.id, '', estado.marca)}${esc(x.id === 'jugador' ? `${x.nombre} (tú)` : x.nombre)}</th>
       <td>${x.precio}</td><td>${SERVICIO[x.servicio]}</td><td>${x.reputacion}</td><td>${x.presencia}</td>
     </tr>`).join('');
   return `
@@ -75,7 +76,7 @@ function htmlCompetencia(estado) {
       const bases = x.al.bases.slice(0, 4).map((b) => POR_ID[b]?.ciudad ?? b).join(', ') + (x.al.bases.length > 4 ? '…' : '');
       return `
       <article class="ficha rival">
-        <header class="ficha-cab"><div><h3>${esc(def.nombre)}</h3><p>${TIPOS_AEROLINEA[def.tipo]} · ${esc(bases)}</p></div><span class="chip">${x.situacion}</span></header>
+        <header class="ficha-cab"><div class="rival-nombre">${htmlCola(def.id, 'grande')}<div><h3>${esc(def.nombre)}</h3><p>${TIPOS_AEROLINEA[def.tipo]} · ${esc(bases)}</p></div></div><span class="chip">${x.situacion}</span></header>
         <p class="nota">${esc(def.descripcion)}</p>
         <p class="rival-datos">Precio ${def.precio < 0.9 ? 'bajo' : def.precio > 1.1 ? 'alto' : 'medio'} · servicio ${SERVICIO[def.servicio]} · reputación ${etiqueta(notaReputacion(x.al.rep))} · ${x.rutas} rutas${x.enTuPais ? `, ${x.enTuPais} en tu país` : ''}</p>
       </article>`;
@@ -105,6 +106,7 @@ function htmlReputacion(estado) {
 export function panelMundo(estado) {
   return `
   <h3 class="seccion">Tu compañía</h3>
+  <div class="tu-marca">${htmlMarca(estado.marca, 'marca-grande')}<div><strong>${esc(estado.nombre)}</strong><button class="btn-mini" data-accion="editar-marca">Cambiar la marca</button></div></div>
   ${htmlReputacion(estado)}
   <p class="nota">Con precios bajos y puntualidad se puede ganar a una grande; con servicio y prestigio se puede cobrar más. La seguridad pesa en todas.</p>
   <h3 class="seccion">Tus mercados</h3>
