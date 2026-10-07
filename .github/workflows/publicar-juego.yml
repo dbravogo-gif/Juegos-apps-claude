@@ -1,11 +1,14 @@
-# Publica el juego (la carpeta game/) en GitHub Pages cada vez que cambia en main.
-# Antes de publicar pasa los tests: si fallan, no se despliega.
-name: Publicar juego
+# Publica en GitHub Pages los dos juegos del repositorio cada vez que cambian en main:
+#   game/       en la raíz:          https://dbravogo-gif.github.io/Juegos-apps-claude/
+#   aerolinea/  en /aerolinea/:      https://dbravogo-gif.github.io/Juegos-apps-claude/aerolinea/
+# Un repositorio solo tiene un sitio de Pages, así que se publican juntos. Antes pasan los
+# tests de los dos: si fallan, no se despliega.
+name: Publicar juegos
 
 on:
   push:
     branches: [main]
-    paths: ['game/**', '.github/workflows/publicar-juego.yml']
+    paths: ['game/**', 'aerolinea/**', '.github/workflows/publicar-juego.yml']
   workflow_dispatch:
 
 permissions:
@@ -28,12 +31,21 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Tests
+      - name: Tests del juego
         working-directory: game
         run: npm test
+      - name: Tests de App viación
+        working-directory: aerolinea
+        run: npm test
+      - name: Montar el sitio
+        run: |
+          mkdir web
+          cp -r game/. web/
+          mkdir web/aerolinea
+          cp -r aerolinea/index.html aerolinea/manifest.webmanifest aerolinea/icon.svg aerolinea/src aerolinea/vendor aerolinea/img web/aerolinea/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: game
+          path: web
       - id: despliegue
         uses: actions/deploy-pages@v4

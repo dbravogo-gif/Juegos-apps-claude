@@ -1,4 +1,4 @@
-const VERSION = 'v0.9.0';
+const VERSION = 'v0.9.1';
 const CACHE = `constant-${VERSION}`;
 const ESENCIALES = [
   '.',
@@ -26,6 +26,8 @@ self.addEventListener('activate', (evento) => {
 // Red primero para que una versión nueva se recoja al momento; la caché es el respaldo sin conexión.
 self.addEventListener('fetch', (evento) => {
   if (evento.request.method !== 'GET') return;
+  // App viación vive en /aerolinea/ dentro del mismo sitio: no es de este juego.
+  if (new URL(evento.request.url).pathname.includes('/aerolinea/')) return;
 
   evento.respondWith(
     fetch(evento.request)
