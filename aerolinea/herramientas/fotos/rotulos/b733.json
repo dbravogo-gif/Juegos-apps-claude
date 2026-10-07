@@ -1,0 +1,5 @@
+{"borrar": [[214, 293, 32, 21, "tinta", {"color": "#2d242f", "umbral": 70, "dilatar": 1}]],
+ "textos": [{"texto": "ay", "x": 221.5, "y": 309.5, "alto": 13.3, "color": "#251d27", "fuente": "inter-extra-cursiva", "desenfoque": 0.45}],
+ "girados": [{"angulo": 49, "centro": [800, 200], "radio": 95,
+   "borrar": [[15, 84, 47, 29, "tinta", {"color": "#151015", "umbral": 90, "dilatar": 1}]],
+   "textos": [{"texto": "ay", "x": 24, "y": 107, "alto": 21.3, "color": "#141014", "fuente": "inter-negra-cursiva", "desenfoque": 0.45}]}]}

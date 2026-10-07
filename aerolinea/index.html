@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f1a24">
+<title>App viación</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Barlow+Semi+Condensed:wght@400;500;600&family=Overpass+Mono:wght@400;600&display=swap">
+<style>
+/* Sala de operaciones de noche, 1976: un globo sobre azul petróleo, cifras en ámbar de panel de
+   salidas y la hoja de despacho en papel. Un solo tema, oscuro, a propósito. */
+:root{
+  color-scheme: dark;
+  --noche:#0f1a24;        /* fondo */
+  --panel:#16232f;        /* hojas y barras */
+  --panel-2:#1d2d3b;
+  --linea:#2b3e4f;
+  --tinta:#e6e1d3;        /* texto principal */
+  --suave:#93a3b1;
+  --ambar:#f0a63a;        /* panel de salidas */
+  --ambar-oscuro:#3a2a12;
+  --rojo:#e5533d;
+  --verde:#7fbf8e;
+  --papel:#ede4cf;        /* hoja de despacho */
+  --papel-tinta:#24211b;
+  --papel-linea:#cbbf9f;
+  --mar:#13314a; --mar-borde:#1f4a6b; --tierra:#3c4a3a; --costa:#5c6b55; --frontera:#4f5d4c;
+  --reticula:rgba(160,190,210,.10); --tinta-globo:#d8d2c2; --apagado:#6f8090;
+  --f-titulo:"Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+  --f-texto:"Barlow Semi Condensed", "Arial Narrow", system-ui, sans-serif;
+  --f-cifra:"Overpass Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:10px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{margin:0;background:var(--noche);color:var(--tinta);font:16px/1.4 var(--f-texto);overflow:hidden;overscroll-behavior:none}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--ambar);outline-offset:2px}
+[hidden]{display:none!important}
+
+#app{position:relative;height:100%;display:grid;grid-template-rows:auto 1fr auto}
+
+/* Barra superior */
+/* Dos filas: nombre y velocidad arriba; fecha, caja y reputación abajo. En una sola fila la
+   fecha no cabe en un móvil. */
+#barra{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"nombre velocidad" "fecha cifras";align-items:center;column-gap:12px;row-gap:3px;padding:8px 16px;padding-top:calc(8px + env(safe-area-inset-top,0px));background:var(--panel);border-bottom:1px solid var(--linea);z-index:5;min-width:0}
+#b-nombre{grid-area:nombre;font:800 18px/1 var(--f-titulo);letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+#b-fecha{grid-area:fecha;font:400 12px/1.4 var(--f-cifra);color:var(--ambar);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.b-cifras{grid-area:cifras;display:flex;gap:12px;align-items:baseline;justify-content:flex-end;white-space:nowrap;font-family:var(--f-cifra);font-variant-numeric:tabular-nums;font-size:13px}
+.b-cifras small{font:500 10px/1 var(--f-texto);letter-spacing:.08em;text-transform:uppercase;color:var(--suave);margin-right:5px}
+#b-caja.negativo{color:var(--rojo)}
+#b-rep{font:600 13px/1.2 var(--f-texto);letter-spacing:.02em}
+#velocidad{grid-area:velocidad;display:flex;border:1px solid var(--linea);border-radius:8px;overflow:hidden}
+#velocidad button{background:none;border:0;padding:6px 4px;font:600 11px var(--f-cifra);color:var(--suave);cursor:pointer;min-width:28px;letter-spacing:-.08em}
+#velocidad button[aria-pressed="true"]{background:var(--ambar);color:var(--noche)}
+
+/* Globo */
+.escenario{position:relative;min-height:0;overflow:hidden}
+#globo{width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+#avisos{position:absolute;top:10px;left:16px;right:16px;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;z-index:4}
+.aviso{background:var(--panel-2);border:1px solid var(--linea);border-left:3px solid var(--ambar);padding:7px 12px;border-radius:6px;font-size:14px;max-width:420px;transition:opacity .4s,transform .4s}
+.aviso.grave{border-left-color:var(--rojo)}
+.aviso.fuera{opacity:0;transform:translateY(-6px)}
+#guia{position:absolute;left:16px;right:16px;bottom:12px;margin:auto;max-width:460px;display:flex;align-items:center;gap:10px;background:var(--ambar);color:var(--noche);border:0;border-radius:var(--r);padding:10px 14px;font-weight:600;text-align:left;cursor:pointer;z-index:3}
+#guia::after{content:"→";margin-left:auto;font-family:var(--f-cifra)}
+#ficha-aeropuerto{position:absolute;left:16px;right:16px;bottom:12px;margin:auto;max-width:460px;background:var(--panel);border:1px solid var(--linea);border-radius:var(--r);padding:12px 14px;z-index:3;display:grid;gap:8px}
+.ap-cab{display:flex;justify-content:space-between;gap:8px}
+.ap-cab h3{margin:0;font:800 20px/1.1 var(--f-titulo);letter-spacing:.03em}
+.ap-cab p{margin:2px 0 0;color:var(--suave);font-size:14px}
+.cerrar{background:none;border:0;font-size:24px;line-height:1;color:var(--suave);cursor:pointer;padding:0 4px}
+
+/* Pestañas y hoja */
+#pestanas{display:grid;grid-template-columns:repeat(6,1fr);background:var(--panel);border-top:1px solid var(--linea);padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}
+#pestanas button{background:none;border:0;padding:11px 2px 10px;font:600 12px/1 var(--f-texto);letter-spacing:.04em;text-transform:uppercase;color:var(--suave);cursor:pointer;border-top:2px solid transparent}
+#pestanas button[aria-selected="true"]{color:var(--ambar);border-top-color:var(--ambar)}
+#hoja{position:absolute;left:0;right:0;bottom:0;max-height:68%;display:flex;flex-direction:column;background:var(--panel);border-top:1px solid var(--linea);border-radius:14px 14px 0 0;z-index:4;box-shadow:0 -10px 30px rgba(0,0,0,.35)}
+.hoja-cab{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 6px}
+#hoja-titulo{margin:0;font:800 24px/1 var(--f-titulo);letter-spacing:.05em;text-transform:uppercase}
+#hoja-cuerpo{overflow-y:auto;padding:4px 16px 20px;display:grid;gap:12px;align-content:start;overscroll-behavior:contain}
+
+.ficha{background:var(--panel-2);border:1px solid var(--linea);border-radius:var(--r);padding:12px;display:grid;gap:8px;min-width:0}
+.ficha-cab{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.ficha-cab>div{min-width:0}
+.ficha h3{margin:0;font:600 17px/1.2 var(--f-texto)}
+.ficha-cab p{margin:2px 0 0;color:var(--suave);font-size:14px}
+.ficha-valor{font:600 14px var(--f-cifra);color:var(--ambar);white-space:nowrap}
+.ficha-estado{margin:0;font-size:14px}
+.ficha-pie{margin:0;font-size:13px;color:var(--suave);display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+
+/* Fotos y escenas: banda arriba de la ficha, miniatura en los nuevos de fábrica */
+.foto{position:relative;margin:0;border-radius:6px;overflow:hidden;background:#0b1218;max-width:100%}
+.foto img{display:block;width:100%;height:100%;object-fit:cover}
+.foto.banda{height:132px}
+.ficha>.foto.banda{margin:-12px -12px 0;max-width:none;border-radius:calc(var(--r) - 1px) calc(var(--r) - 1px) 0 0}
+.ficha.con-miniatura{grid-template-columns:84px minmax(0,1fr);align-items:center;column-gap:12px}
+.con-miniatura .ficha-cab .btn-mini{white-space:nowrap}
+.ficha.con-miniatura>.nota{grid-column:1 / -1}
+.foto.miniatura{width:84px;height:56px}
+.foto-silueta{display:grid;place-items:center;background:linear-gradient(180deg,#30485d 0%,#1a2a38 100%)}
+/* Colas de las aerolíneas, con sus colores y un logo parecido */
+.cola{width:18px;height:18px;vertical-align:-3px;margin-right:6px;flex:none}
+.cola.grande{width:34px;height:34px;margin:0}
+.rival-nombre{display:flex;gap:10px;align-items:center;min-width:0}
+.cola.en-barra{width:20px;height:20px;vertical-align:-3px;margin-right:6px}
+/* Creador de marca */
+.marca-editor{display:grid;grid-template-columns:96px minmax(0,1fr);gap:12px;align-items:start;color:var(--tinta)}
+.marca-vista{display:grid;place-items:center;background:var(--panel-2);border:1px solid var(--linea);border-radius:var(--r);padding:8px}
+.cola.marca-grande{width:80px;height:80px;margin:0}
+.marca-controles{display:grid;gap:10px;min-width:0}
+.paleta{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.muestra{width:26px;height:26px;border-radius:50%;border:2px solid var(--linea);padding:0;cursor:pointer}
+.muestra.activa{border-color:var(--ambar);box-shadow:0 0 0 2px var(--ambar)}
+.campo .paleta input[type=color]{width:38px;height:30px;padding:2px;border-radius:6px;cursor:pointer}
+.dibujos{display:flex;flex-wrap:wrap;gap:6px}
+.dibujo{background:var(--panel-2);border:1px solid var(--linea);border-radius:8px;padding:3px;cursor:pointer;line-height:0}
+.dibujo.activo{border-color:var(--ambar);box-shadow:0 0 0 1px var(--ambar)}
+.cola.mini{width:30px;height:30px;margin:0}
+.marca-controles .btn-mini{cursor:pointer}
+.tu-marca{display:flex;gap:12px;align-items:center;margin-bottom:10px}
+.tu-marca>div{display:grid;gap:6px;justify-items:start}
+@media (max-width:400px){.marca-editor{grid-template-columns:1fr}.marca-vista{justify-self:start}}
+.rival-nombre>div{min-width:0}
+.foto-silueta svg{width:78%;max-height:86%}
+.foto.miniatura.foto-silueta svg{width:88%}
+#ficha-aeropuerto .foto.banda{height:104px}
+.chip{display:inline-block;font:600 11px/1 var(--f-texto);letter-spacing:.06em;text-transform:uppercase;padding:4px 7px;border-radius:4px;background:var(--linea);color:var(--tinta);margin-right:4px}
+.chip.vuelo{background:var(--ambar-oscuro);color:var(--ambar)}
+.chip.taller{background:#23324a;color:#9fc3ff}
+.chip.alerta{background:#4a1d17;color:#ff9c8c}
+.piezas{display:grid;gap:5px}
+.piezas>div{display:grid;grid-template-columns:72px 1fr 48px;align-items:center;gap:8px;font-size:13px;color:var(--suave)}
+.piezas em{font:400 12px var(--f-cifra);font-style:normal;text-align:right;color:var(--tinta)}
+.barra{display:block;height:6px;border-radius:3px;background:var(--linea);overflow:hidden;min-width:60px}
+.barra>span{display:block;height:100%}
+.barra.bien>span{background:var(--verde)}
+.barra.regular>span{background:var(--ambar)}
+.barra.mal>span{background:var(--rojo)}
+.defectos{margin:0;padding:0;list-style:none;display:grid;gap:6px;font-size:14px}
+.defectos li{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.defectos em{font-style:normal;color:var(--suave);font-size:13px}
+.grav{font:600 10px/1 var(--f-texto);text-transform:uppercase;letter-spacing:.06em;padding:3px 6px;border-radius:3px}
+.g1{background:var(--linea)}.g2{background:var(--ambar-oscuro);color:var(--ambar)}.g3{background:#4a1d17;color:#ff9c8c}
+.campo{display:grid;gap:4px;font-size:13px;color:var(--suave)}
+.campo input,.campo select{background:var(--noche);border:1px solid var(--linea);border-radius:8px;padding:9px 10px;font-size:15px;color:var(--tinta);width:100%;min-width:0}
+.fila-botones{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{display:block;width:100%;background:var(--panel-2);border:1px solid var(--linea);color:var(--tinta);border-radius:var(--r);padding:12px 14px;font:600 16px/1.2 var(--f-texto);cursor:pointer;text-align:center}
+.btn small{display:block;font:400 12px/1.3 var(--f-texto);color:var(--suave);margin-top:2px}
+.btn:hover{border-color:var(--suave)}
+.btn-mini{background:var(--panel);border:1px solid var(--linea);color:var(--tinta);border-radius:7px;padding:7px 10px;font:600 13px/1.1 var(--f-texto);cursor:pointer}
+.btn-mini.primario,.btn.primario{background:var(--ambar);border-color:var(--ambar);color:var(--noche)}
+.btn-mini.peligro,.btn.peligro{border-color:#6b2b22;color:#ff9c8c}
+.btn-mini:disabled{opacity:.45;cursor:not-allowed}
+.nota{margin:0;font-size:13px;color:var(--suave)}
+.nota.bien{color:var(--verde)}
+.mal{color:var(--rojo)}
+.seccion{margin:8px 0 0;font:800 16px/1 var(--f-titulo);letter-spacing:.08em;text-transform:uppercase;color:var(--ambar)}
+.vacio{border:1px dashed var(--linea);border-radius:var(--r);padding:14px;color:var(--suave);font-size:14px}
+.vacio p{margin:0}
+.vacio-titulo{font-weight:600;color:var(--tinta);margin-bottom:4px!important}
+.nueva-ruta{display:grid;gap:8px;border-top:1px solid var(--linea);padding-top:12px}
+.control-fila{display:flex;justify-content:space-between;align-items:center;font-size:14px}
+.paso{display:flex;align-items:center;gap:10px;font:600 15px var(--f-cifra)}
+.paso .btn-mini{width:34px;padding:6px 0}
+.segmentado{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--linea);border-radius:8px;overflow:hidden}
+.segmentado button{background:none;border:0;padding:7px 4px;font-size:13px;color:var(--suave);cursor:pointer}
+.segmentado button.activo{background:var(--linea);color:var(--tinta)}
+.cifras{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.cifras>div{background:var(--panel-2);border:1px solid var(--linea);border-radius:var(--r);padding:10px}
+.cifras span{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--suave)}
+.cifras strong{font:600 18px var(--f-cifra);font-variant-numeric:tabular-nums}
+.grafica{width:100%;height:auto;display:block}
+.grafica line{stroke:var(--linea)}
+.grafica .pos{fill:var(--verde)}.grafica .neg{fill:var(--rojo)}
+.lista-simple{margin:0;padding-left:18px;font-size:14px;display:grid;gap:4px}
+.diario{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.diario li{display:grid;gap:2px;font-size:14px;padding-left:10px;border-left:2px solid var(--linea)}
+.diario time{font:400 11px var(--f-cifra);color:var(--suave)}
+.diario .d-hito{border-left-color:var(--ambar)}
+.diario .d-aviso{border-left-color:#9fc3ff}
+.diario .d-grave{border-left-color:#ff9c8c}
+.diario .d-accidente{border-left-color:var(--rojo);color:#ffb3a6}
+/* v3: mercados, noticias, competencia y reputación */
+.mercado{display:grid;gap:6px;padding:10px 0;border-bottom:1px solid var(--linea);min-width:0}
+.mercado-cifras{margin:0;font-size:14px;line-height:1.5}
+.mercado-cifras strong{font-variant-numeric:tabular-nums}
+.tabla-envoltura{overflow-x:auto;max-width:100%}
+.tabla-mercado{border-collapse:collapse;width:100%;font-size:13px;min-width:340px}
+.tabla-mercado th,.tabla-mercado td{text-align:left;padding:5px 6px;border-bottom:1px solid var(--linea);white-space:nowrap}
+.tabla-mercado thead th{font:600 11px/1 var(--f-texto);letter-spacing:.06em;text-transform:uppercase;color:var(--suave)}
+.tabla-mercado tbody th{font-weight:600}
+.tabla-mercado .tu-fila th,.tabla-mercado .tu-fila td{color:var(--ambar)}
+.noticias{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.noticias li{display:grid;gap:3px;font-size:14px;padding-left:10px;border-left:2px solid var(--linea)}
+.noticias li.importante{border-left-color:var(--ambar)}
+.noticias time{font:400 11px var(--f-cifra);color:var(--suave)}
+.noticias li>span:not(.chip){color:var(--suave);font-size:13px}
+.noticias .chip{justify-self:start}
+.chip.escala-global{background:var(--ambar-oscuro);color:var(--ambar)}
+.chip.escala-regional{background:#23324a;color:#9fc3ff}
+.reputacion{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0}
+.reputacion>div{background:var(--panel-2);border:1px solid var(--linea);border-radius:var(--r);padding:8px 10px}
+.reputacion dt{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--suave)}
+.reputacion dd{margin:2px 0 0;font:600 15px var(--f-texto);text-transform:capitalize}
+.rival-datos{margin:0;font-size:13px}
+
+/* Modales */
+#modal{position:fixed;inset:0;z-index:20;background:rgba(5,10,15,.78);display:flex;align-items:flex-end;justify-content:center;padding:env(safe-area-inset-top,0px) 0 0}
+.modal-caja{width:100%;max-width:520px;max-height:100%;overflow-y:auto;background:var(--panel);border-radius:16px 16px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px));display:grid;gap:12px;overscroll-behavior:contain}
+.titulo-modal{margin:0;font:800 30px/1 var(--f-titulo);letter-spacing:.04em;text-transform:uppercase}
+.modal-aviso p{margin:0}
+
+/* Inicio */
+.modal-inicio{max-width:560px}
+.inicio-eyebrow{margin:0;font:600 12px var(--f-cifra);letter-spacing:.14em;text-transform:uppercase;color:var(--ambar)}
+.inicio-titulo{margin:0;font:800 clamp(48px,14vw,76px)/.9 var(--f-titulo);letter-spacing:.02em;text-transform:uppercase}
+.inicio-texto{margin:0;max-width:60ch;color:var(--tinta)}
+.lista-bases{max-height:38vh;overflow-y:auto;border:1px solid var(--linea);border-radius:var(--r);padding:4px 10px}
+.grupo-base{border:0;margin:0;padding:6px 0;display:grid;gap:2px}
+.grupo-base legend{font:800 14px var(--f-titulo);letter-spacing:.1em;text-transform:uppercase;color:var(--ambar);padding:6px 0 2px}
+.opcion-base{display:flex;gap:10px;align-items:flex-start;padding:6px 4px;border-radius:6px;cursor:pointer}
+.opcion-base:has(input:checked){background:var(--panel-2)}
+.opcion-base input{margin-top:4px;accent-color:var(--ambar)}
+.opcion-base strong{font-family:var(--f-cifra);color:var(--ambar);margin-right:4px}
+.opcion-base small{display:block;color:var(--suave);font-size:12px}
+.btn-despegar{background:var(--ambar);border-color:var(--ambar);color:var(--noche);font:800 20px/1 var(--f-titulo);letter-spacing:.08em;text-transform:uppercase;padding:14px}
+
+/* Hoja de despacho: papel */
+.modal-hoja{background:var(--papel);color:var(--papel-tinta);max-width:540px}
+.hoja{display:grid;gap:12px}
+.hd-cabecera{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid var(--papel-tinta);padding-bottom:8px}
+.hd-eyebrow{margin:0;font:600 11px var(--f-cifra);letter-spacing:.12em;text-transform:uppercase}
+.hd-vuelo{margin:0;font:800 40px/.95 var(--f-titulo);letter-spacing:.03em}
+.hd-hora{text-align:right;font-family:var(--f-cifra)}
+.hd-hora span{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.hd-hora strong{font-size:24px}
+.hd-ruta{display:flex;align-items:center;gap:12px;font:800 34px/1 var(--f-titulo);letter-spacing:.06em}
+.hd-ruta i{font-style:normal;font-size:20px;opacity:.6}
+.hd-sub{margin:-6px 0 0;font-size:14px}
+.hd-riesgo{display:flex;justify-content:space-between;align-items:center;border:2px solid var(--papel-tinta);border-radius:8px;padding:10px 12px}
+.hd-riesgo strong{display:block;font:600 30px/1 var(--f-cifra)}
+.hd-sello{font:800 18px/1 var(--f-titulo);letter-spacing:.12em;text-transform:uppercase;border:3px solid currentColor;border-radius:6px;padding:6px 10px;transform:rotate(-6deg)}
+.hd-riesgo.bajo .hd-sello{color:#2f6b3d}
+.hd-riesgo.moderado .hd-sello{color:#9a6512}
+.hd-riesgo.alto .hd-sello,.hd-riesgo.extremo .hd-sello{color:#b02a1a}
+.hd-riesgo.extremo{background:#f3d2c6}
+.hd-nota{margin:-4px 0 0;font-size:12px;opacity:.75}
+.hd-bloque h3{margin:0 0 6px;font:800 14px var(--f-titulo);letter-spacing:.12em;text-transform:uppercase}
+.hd-factores{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:14px}
+.hd-factores li{display:grid;grid-template-columns:1fr 80px;gap:10px;align-items:center}
+.hd-peso{height:8px;background:var(--papel-linea);border-radius:2px;overflow:hidden}
+.hd-peso span{display:block;height:100%;background:#b02a1a}
+.hd-columnas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 16px;border-top:1px dashed var(--papel-linea);padding-top:10px}
+.hd-fila{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;padding:2px 0}
+.hd-etq{font:600 11px var(--f-cifra);letter-spacing:.06em;text-transform:uppercase;opacity:.75}
+.hd-val{text-align:right}
+.hd-val.mal{color:#b02a1a;font-weight:600}
+.hd-val.regular{color:#9a6512;font-weight:600}
+.modal-hoja .barra{background:var(--papel-linea);flex:1;max-width:90px}
+.modal-hoja .barra.bien>span{background:#2f6b3d}
+.modal-hoja .barra.regular>span{background:#c4831c}
+.modal-hoja .barra.mal>span{background:#b02a1a}
+.hd-negocio{display:flex;justify-content:space-between;font-family:var(--f-cifra);font-size:14px;border-top:1px dashed var(--papel-linea);padding-top:10px}
+.hd-acciones{display:grid;gap:8px}
+.hd-par{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.modal-hoja .btn{background:transparent;border:2px solid var(--papel-tinta);color:var(--papel-tinta)}
+.modal-hoja .btn small{color:var(--papel-tinta);opacity:.7}
+.modal-hoja .btn-despegar{background:var(--papel-tinta);color:var(--papel)}
+.modal-hoja .btn-sec{border-width:1px}
+
+/* Escena y televisión */
+#modal:has(.modal-escena),#modal:has(.modal-tele){align-items:center;background:#000}
+.modal-escena{position:relative;max-width:none;height:100%;border-radius:0;padding:0;background:#000;display:flex;flex-direction:column;justify-content:center;gap:16px}
+.modal-escena .escena{width:100%;aspect-ratio:5/3;max-height:80%}
+.escena-pie{margin:0;padding:0 16px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;font:400 12px var(--f-cifra);letter-spacing:.08em;text-transform:uppercase;color:#8d969c}
+.saltar{position:absolute;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));background:rgba(0,0,0,.5);border:1px solid #555;color:#ddd;border-radius:8px;padding:8px 14px;cursor:pointer}
+.modal-tele{background:#000;border-radius:0;max-width:600px;padding:16px}
+.tele{background:#1b1b1b;border-radius:28px;padding:14px;box-shadow:inset 0 0 0 3px #2c2c2c}
+.tele-pantalla{position:relative;overflow:hidden;border-radius:22px/18px;background:radial-gradient(ellipse at center,#24313a 0%,#0c1216 85%);padding:18px 16px 46px;color:#eef2f2;display:grid;gap:10px}
+.tele-pantalla::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,.04) 0 1px,transparent 1px 3px)}
+.tele-cabecera{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.tele-cadena{font:800 20px/1 var(--f-titulo);letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
+.tele-directo{font:600 11px/1 var(--f-cifra);letter-spacing:.1em;text-transform:uppercase;background:#c22d1c;color:#fff;padding:5px 7px;border-radius:3px;white-space:nowrap}
+.tele-fecha{margin:0;font:400 12px var(--f-cifra);color:#a9b7bd}
+.tele-foto{aspect-ratio:16/9;border-radius:6px;filter:saturate(.9) contrast(1.05)}
+.tele-titular{margin:0;font:800 clamp(28px,8vw,40px)/1 var(--f-titulo);letter-spacing:.02em;text-wrap:balance}
+.tele-texto{margin:0;font-size:16px;line-height:1.45;color:#d6dee0}
+.tele-cifras{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;text-align:center}
+.tele-cifras div{border:1px solid #3c4a52;border-radius:6px;padding:8px 4px}
+.tele-cifras strong{display:block;font:600 26px/1.1 var(--f-cifra);color:#fff}
+.tele-cifras span{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#a9b7bd}
+.tele-ticker{position:absolute;left:0;right:0;bottom:0;background:#c22d1c;color:#fff;font:600 13px/1 var(--f-texto);padding:8px 0;white-space:nowrap;overflow:hidden}
+.tele-ticker span{display:inline-block;padding-left:100%;animation:ticker 26s linear infinite}
+@keyframes ticker{to{transform:translateX(-100%)}}
+.modal-tele .btn{margin-top:4px}
+
+/* Versión 2: mantenimiento, seguridad y despacho */
+.chip.aviso{background:var(--ambar-oscuro);color:var(--ambar)}
+details.bloque{border-top:1px solid var(--linea);padding-top:8px}
+details.bloque>summary{cursor:pointer;font:600 14px var(--f-texto);letter-spacing:.04em;color:var(--tinta);list-style:none;display:flex;align-items:center;gap:6px}
+details.bloque>summary::before{content:"▸";color:var(--suave);font-size:12px;transition:transform .2s}
+details.bloque[open]>summary::before{transform:rotate(90deg)}
+details.bloque>*+*{margin-top:8px}
+.datos{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:4px 12px;margin:8px 0 0;font-size:13px}
+.datos dt{color:var(--suave)}
+.datos dd{margin:0;display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.datos dd small{flex-basis:100%;color:var(--suave);font-size:11px}
+.averias{margin:0;padding:0;list-style:none;display:grid;gap:10px;font-size:14px}
+.averias li{display:grid;gap:6px}
+.averias .chip{justify-self:start}
+.irregular,.restricciones{margin:0;padding:8px 10px 8px 26px;border-radius:8px;font-size:13px;display:grid;gap:3px}
+.irregular{background:#3a1813;color:#ffb3a6;border:1px solid #6b2b22}
+.restricciones{background:var(--ambar-oscuro);color:#f5cf8f;border:1px solid #5a4318}
+.punto{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--suave)}
+.punto.alto{background:var(--verde)}.punto.medio{background:var(--ambar)}.punto.bajo{background:var(--rojo)}
+.interruptor{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--tinta)}
+.interruptor input{margin-top:2px;accent-color:var(--ambar)}
+.interruptor small{color:var(--suave)}
+.hd-valoracion{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.hd-valoracion .hd-riesgo strong{font:600 22px/1.1 var(--f-cifra)}
+.hd-valoracion .hd-riesgo:first-child .hd-sello{display:none}
+.hd-riesgo.bajo strong{color:#2f6b3d}.hd-riesgo.moderado strong{color:#9a6512}.hd-riesgo.alto strong,.hd-riesgo.extremo strong{color:#b02a1a}
+.hd-valoracion .hd-sello{display:none}
+.hd-probable{margin:0;font-size:14px}
+.hd-irregular{border:2px solid #b02a1a;border-radius:8px;padding:8px 10px;background:#f6dcd2}
+.hd-irregular h3{color:#b02a1a}
+.hd-irregular ul{margin:0;padding-left:18px;font-size:13px}
+.hd-irregular p{margin:6px 0 0;font-size:12px}
+.hd-averia span{font-size:13px;color:#b02a1a}
+.tele-lista{margin:0;padding-left:20px;color:#d6dee0;font-size:15px;display:grid;gap:2px}
+@media (prefers-reduced-motion:reduce){.tele-ticker span{animation:none;padding-left:16px}}
+@media (min-width:720px){
+  #modal{align-items:center}
+  .modal-caja{border-radius:16px;max-height:92%}
+  #hoja{left:auto;right:16px;bottom:12px;width:440px;border-radius:14px;border:1px solid var(--linea)}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <header id="barra">
+    <span id="b-nombre">App viación</span>
+    <span id="b-fecha">1 ene 1976 · 08:00</span>
+    <div class="b-cifras">
+      <span id="b-caja" title="Caja">—</span>
+      <span><small>Rep.</small><span id="b-rep">—</span></span>
+    </div>
+    <div id="velocidad" role="group" aria-label="Velocidad">
+      <button data-v="0" aria-label="Pausa">II</button>
+      <button data-v="1" aria-label="Normal" aria-pressed="true">▶</button>
+      <button data-v="2" aria-label="Rápido">▶▶</button>
+      <button data-v="3" aria-label="Muy rápido">▶▶▶</button>
+    </div>
+  </header>
+  <main class="escenario">
+    <canvas id="globo" aria-label="Globo con tus rutas y aviones"></canvas>
+    <div id="avisos" aria-live="polite"></div>
+    <button id="guia" hidden><span></span></button>
+    <div id="ficha-aeropuerto" hidden></div>
+    <section id="hoja" hidden aria-labelledby="hoja-titulo">
+      <div class="hoja-cab"><h2 id="hoja-titulo">Flota</h2><button id="hoja-cerrar" class="cerrar" aria-label="Cerrar">×</button></div>
+      <div id="hoja-cuerpo"></div>
+    </section>
+  </main>
+  <nav id="pestanas" role="tablist">
+    <button data-panel="flota" role="tab" aria-selected="false">Flota</button>
+    <button data-panel="rutas" role="tab" aria-selected="false">Rutas</button>
+    <button data-panel="mercado" role="tab" aria-selected="false">Aviones</button>
+    <button data-panel="mundo" role="tab" aria-selected="false">Mundo</button>
+    <button data-panel="cuentas" role="tab" aria-selected="false">Cuentas</button>
+    <button data-panel="diario" role="tab" aria-selected="false">Diario</button>
+  </nav>
+</div>
+<div id="modal" hidden><div id="modal-caja" class="modal-caja"></div></div>
+
+<script src="vendor/d3-array.min.js"></script>
+<script src="vendor/d3-geo.min.js"></script>
+<script src="vendor/topojson-client.min.js"></script>
+<script type="module" src="src/ui/app.js"></script>
+</body>
+</html>
