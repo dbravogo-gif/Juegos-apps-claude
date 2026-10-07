@@ -35,6 +35,8 @@ let acumulado = 0;
 let panel = null;
 let panelSucio = false;
 let ultimoRefresco = 0;
+let ultimoToque = 0;
+let fallos = 0;
 let cola = [];
 let modalActual = null;
 
@@ -85,13 +87,13 @@ function pintarGuia() {
   let texto = '';
   let ir = null;
   if (!estado.aviones.length && !estado.rutas.length) {
-    texto = 'Primer paso: compra un avión en el Mercado.';
+    texto = 'Primer paso: compra un avión en la pestaña Aviones.';
     ir = 'mercado';
   } else if (!estado.rutas.length) {
     texto = 'Abre una ruta: toca un aeropuerto en el globo o ve a Rutas.';
     ir = 'rutas';
   } else if (!estado.aviones.length) {
-    texto = 'Tienes rutas pero ningún avión. Pasa por el Mercado.';
+    texto = 'Tienes rutas pero ningún avión. Pasa por la pestaña Aviones.';
     ir = 'mercado';
   } else if (!estado.aviones.some((a) => a.ruta)) {
     texto = 'Asigna un avión a una ruta para que empiece a volar.';
@@ -133,8 +135,10 @@ function abrirPanel(nombre) {
 
 function pintarPanel(forzar = false) {
   if (!panel || !estado) return;
-  // No repintar mientras se usa un desplegable: se cerraría en la mano.
+  // No repintar mientras se usa un desplegable (se cerraría en la mano) ni justo después de
+  // tocar o desplazar el panel: el botón cambiaría bajo el dedo y el toque se perdería.
   if (!forzar && document.activeElement?.tagName === 'SELECT' && ui.hoja.contains(document.activeElement)) return;
+  if (!forzar && performance.now() - ultimoToque < 1500) return;
   const scroll = ui.hojaCuerpo.scrollTop;
   const [titulo, fn] = PANELES[panel];
   ui.hojaTitulo.textContent = titulo;
@@ -142,6 +146,11 @@ function pintarPanel(forzar = false) {
   ui.hojaCuerpo.scrollTop = scroll;
   panelSucio = false;
 }
+
+for (const tipo of ['pointerdown', 'touchstart', 'wheel']) {
+  ui.hoja.addEventListener(tipo, () => { ultimoToque = performance.now(); }, { passive: true });
+}
+ui.hojaCuerpo.addEventListener('scroll', () => { ultimoToque = performance.now(); }, { passive: true });
 
 ui.pestanas.addEventListener('click', (e) => {
   const b = e.target.closest('button[data-panel]');
@@ -279,7 +288,18 @@ function siguienteModal() {
       modalActual = null;
       return siguienteModal();
     }
-    abrirModal(htmlTarjeta(estado, dec), 'modal-hoja');
+    let hoja;
+    try {
+      hoja = htmlTarjeta(estado, dec);
+    } catch (err) {
+      // Sin hoja no se puede decidir y el reloj se quedaría parado: el vuelo no sale.
+      console.error(err);
+      aviso(`No se pudo preparar la hoja del vuelo (${err.message}). Se cancela.`, true);
+      decidir(estado, dec.id, 'cancelar');
+      modalActual = null;
+      return siguienteModal();
+    }
+    abrirModal(hoja, 'modal-hoja');
     const origen = POR_ID[dec.origen];
     globo?.volarA(origen.lon, origen.lat);
   } else if (item.tipo === 'escena') {
@@ -420,7 +440,18 @@ function empezar(e) {
 // ---------------------------------------------------------------- bucle
 
 let ultimo = performance.now();
+// Un error en un fotograma no puede parar el bucle: el juego se quedaría congelado.
 function fotograma(ahora) {
+  requestAnimationFrame(fotograma);
+  try {
+    paso(ahora);
+  } catch (err) {
+    console.error(err);
+    if (fallos++ < 3) aviso(`Algo ha fallado: ${err.message}`, true);
+  }
+}
+
+function paso(ahora) {
   const dt = Math.min(0.25, (ahora - ultimo) / 1000);
   ultimo = ahora;
   if (estado && !estado.quiebra && ui.modal.hidden && !estado.decisiones.length && velocidad > 0) {
@@ -437,12 +468,12 @@ function fotograma(ahora) {
       if (Math.floor(estado.t / 1440) !== diaAntes) guardar();
     }
   }
-  if (globo && (estado || globo.necesitaDibujo())) globo.dibujar(estado, ahora);
+  // El globo decide si hace falta dibujar: sin cambios, no hace nada.
+  if (globo) globo.dibujar(estado, ahora);
   if (panelSucio && ahora - ultimoRefresco > 800) {
     ultimoRefresco = ahora;
     pintarPanel();
   }
-  requestAnimationFrame(fotograma);
 }
 
 async function arrancar(datos = {}) {

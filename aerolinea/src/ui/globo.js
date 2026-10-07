@@ -2,6 +2,11 @@
 //
 // Se dibuja con la costa de baja resolución mientras se arrastra o con poco zoom, y con la de
 // 1:50 millones en reposo y de cerca, que es la única en la que aparecen todas las Canarias.
+//
+// El fondo (mar, retícula, tierra y fronteras) es lo caro: la costa de 1:50 millones tarda del
+// orden de 100 ms. Se guarda en un lienzo aparte y solo se rehace cuando cambia la vista; en
+// cada fotograma se copia y encima van rutas, aeropuertos y aviones. Si no cambia nada (juego
+// en pausa, sin tocar el globo), no se dibuja.
 
 import { AEROPUERTOS, POR_ID, abiertoEn } from '../data/aeropuertos.js';
 import { TIPOS } from '../data/aviones.js';
@@ -37,6 +42,10 @@ export async function crearGlobo(canvas, { alTocar }) {
   const proyeccion = d3.geoOrthographic().clipAngle(90).precision(0.4);
   const ctx = canvas.getContext('2d');
   const camino = d3.geoPath(proyeccion, ctx);
+  const fondo = document.createElement('canvas');
+  const fctx = fondo.getContext('2d');
+  const caminoFondo = d3.geoPath(proyeccion, fctx);
+  let claveFondo = '';
   let colores = leerColores();
 
   const vista = { rot: [16, -30], zoom: 1.1 };
@@ -44,9 +53,12 @@ export async function crearGlobo(canvas, { alTocar }) {
   let alto = 0;
   let dpr = 1;
   let interactuando = false;
+  let rapidoHasta = 0; // tras la rueda del ratón, unos instantes con la costa sencilla
   let vuelo = null; // animación hacia un punto
   let seleccionado = null;
   let sucio = true;
+  let ultimoEstado = null;
+  let ultimoT = null;
 
   function redimensionar() {
     dpr = Math.min(2, window.devicePixelRatio || 1);
@@ -65,7 +77,9 @@ export async function crearGlobo(canvas, { alTocar }) {
     proyeccion
       .translate([ancho / 2, alto / 2])
       .scale(radioBase() * vista.zoom)
-      .rotate([vista.rot[0], vista.rot[1], 0]);
+      .rotate([vista.rot[0], vista.rot[1], 0])
+      // Recortar a la pantalla: de cerca, casi toda la costa queda fuera.
+      .clipExtent([[-20, -20], [ancho + 20, alto + 20]]);
   }
 
   const centro = () => [-vista.rot[0], -vista.rot[1]];
@@ -133,6 +147,7 @@ export async function crearGlobo(canvas, { alTocar }) {
   canvas.addEventListener('wheel', (e) => {
     e.preventDefault();
     vista.zoom = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, vista.zoom * Math.exp(-e.deltaY * 0.0015)));
+    rapidoHasta = performance.now() + 250;
     sucio = true;
   }, { passive: false });
 
@@ -157,6 +172,57 @@ export async function crearGlobo(canvas, { alTocar }) {
   }
 
   // --- dibujo
+  function dibujarFondo(detalle) {
+    if (fondo.width !== canvas.width || fondo.height !== canvas.height) {
+      fondo.width = canvas.width;
+      fondo.height = canvas.height;
+    }
+    const c = colores;
+    const g = fctx;
+    g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    g.clearRect(0, 0, ancho, alto);
+    const r = proyeccion.scale();
+    const [cx, cy] = proyeccion.translate();
+
+    // Halo y océano
+    const halo = g.createRadialGradient(cx, cy, r * 0.98, cx, cy, r * 1.12);
+    halo.addColorStop(0, c.oceanoBorde);
+    halo.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = halo;
+    g.beginPath();
+    g.arc(cx, cy, r * 1.12, 0, Math.PI * 2);
+    g.fill();
+    const mar = g.createRadialGradient(cx - r * 0.3, cy - r * 0.35, r * 0.1, cx, cy, r);
+    mar.addColorStop(0, c.oceanoBorde);
+    mar.addColorStop(1, c.oceano);
+    g.fillStyle = mar;
+    g.beginPath();
+    caminoFondo({ type: 'Sphere' });
+    g.fill();
+
+    g.beginPath();
+    caminoFondo(reticula);
+    g.strokeStyle = c.reticula;
+    g.lineWidth = 0.6;
+    g.stroke();
+
+    g.beginPath();
+    caminoFondo(detalle ? tierraAlta : tierraBaja);
+    g.fillStyle = c.tierra;
+    g.fill();
+    g.strokeStyle = c.costa;
+    g.lineWidth = 0.7;
+    g.stroke();
+
+    if (vista.zoom > 1.6) {
+      g.beginPath();
+      caminoFondo(fronteras);
+      g.strokeStyle = c.frontera;
+      g.lineWidth = 0.6;
+      g.stroke();
+    }
+  }
+
   function dibujar(estado, tReal) {
     estadoActual = estado;
     if (vuelo) {
@@ -166,52 +232,25 @@ export async function crearGlobo(canvas, { alTocar }) {
       vista.zoom = vuelo.desde.zoom + (vuelo.hasta.zoom - vuelo.desde.zoom) * e;
       if (k >= 1) vuelo = null;
     }
+    // La costa detallada solo con el globo quieto: mientras se mueve, la sencilla.
+    const detalle = !interactuando && !vuelo && tReal > rapidoHasta && vista.zoom > 2.2;
+    const clave = `${vista.rot[0].toFixed(3)}|${vista.rot[1].toFixed(3)}|${vista.zoom.toFixed(4)}|${ancho}|${alto}|${dpr}|${detalle}`;
+    const esperando = estado?.aviones.some((a) => a.estado === 'esperando');
+    if (!sucio && clave === claveFondo && estado === ultimoEstado && estado?.t === ultimoT && !esperando) return;
+    ultimoEstado = estado;
+    ultimoT = estado?.t;
+
     configurar();
-    const c = colores;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.clearRect(0, 0, ancho, alto);
-
-    const r = proyeccion.scale();
-    const [cx, cy] = proyeccion.translate();
-
-    // Halo y océano
-    const halo = ctx.createRadialGradient(cx, cy, r * 0.98, cx, cy, r * 1.12);
-    halo.addColorStop(0, c.oceanoBorde);
-    halo.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.fillStyle = halo;
-    ctx.beginPath();
-    ctx.arc(cx, cy, r * 1.12, 0, Math.PI * 2);
-    ctx.fill();
-    const mar = ctx.createRadialGradient(cx - r * 0.3, cy - r * 0.35, r * 0.1, cx, cy, r);
-    mar.addColorStop(0, c.oceanoBorde);
-    mar.addColorStop(1, c.oceano);
-    ctx.fillStyle = mar;
-    ctx.beginPath();
-    camino({ type: 'Sphere' });
-    ctx.fill();
-
-    ctx.beginPath();
-    camino(reticula);
-    ctx.strokeStyle = c.reticula;
-    ctx.lineWidth = 0.6;
-    ctx.stroke();
-
-    const detalle = !interactuando && vista.zoom > 2.2;
-    ctx.beginPath();
-    camino(detalle ? tierraAlta : tierraBaja);
-    ctx.fillStyle = c.tierra;
-    ctx.fill();
-    ctx.strokeStyle = c.costa;
-    ctx.lineWidth = 0.7;
-    ctx.stroke();
-
-    if (vista.zoom > 1.6) {
-      ctx.beginPath();
-      camino(fronteras);
-      ctx.strokeStyle = c.frontera;
-      ctx.lineWidth = 0.6;
-      ctx.stroke();
+    if (clave !== claveFondo) {
+      dibujarFondo(detalle);
+      claveFondo = clave;
     }
+    const c = colores;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(fondo, 0, 0);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    sucio = false;
 
     if (!estado) return;
     const n = anio(estado.t);
@@ -307,7 +346,6 @@ export async function crearGlobo(canvas, { alTocar }) {
         ctx.globalAlpha = 1;
       }
     }
-    sucio = false;
   }
 
   function dibujarAvion(g, x, y, rumbo, tipo, color, contorno) {
@@ -344,9 +382,8 @@ export async function crearGlobo(canvas, { alTocar }) {
 
   return {
     dibujar,
-    necesitaDibujo: () => sucio || interactuando || vuelo != null,
     marcarSucio: () => { sucio = true; },
-    refrescarColores: () => { colores = leerColores(); sucio = true; },
+    refrescarColores: () => { colores = leerColores(); claveFondo = ''; sucio = true; },
     volarA(lon, lat, zoom = vista.zoom) {
       // Toma el camino corto en longitud.
       let objetivo = -lon;

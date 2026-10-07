@@ -17,7 +17,7 @@ import { indice, precioCombustibleKg, costeCatering } from '../src/core/economia
 import { investigar } from '../src/core/investigacion.js';
 import {
   nuevaPartida, avanzar, comprarNuevo, crearRuta, asignar, decidir, contextoVuelo, inspeccionar as inspeccionarOferta,
-  pedirRetrofit, informeDespacho,
+  pedirRetrofit, informeDespacho, debePreguntar,
 } from '../src/core/sim.js';
 import { MIN_DIA } from '../src/core/tiempo.js';
 
@@ -355,4 +355,19 @@ test('clima: estable por franja y estacional', () => {
   assert.deepEqual(climaEn(lhr, 1000, 7), climaEn(lhr, 1000, 7));
   assert.ok(probabilidades(lhr, 0).niebla > probabilidades(lhr, 6).niebla);
   assert.notEqual(hash(1, 'x'), hash(2, 'x'));
+});
+
+test('despacho: una avería ya autorizada no vuelve a pedir la hoja hasta que cambie', () => {
+  const estado = { ajustes: { consulta: 'anormal' } };
+  const avion = { averias: [{ id: 7, fase: 'indicio' }, { id: 9, fase: 'oculta' }] };
+  const ctx = { avion, despachoIrregular: false, irregularidades: [] };
+  const tranquilo = { pIncidencia: 0.01, pAccidente: 0.00001 };
+  assert.equal(debePreguntar(estado, ctx, tranquilo), true, 'avería nueva: pregunta');
+  avion.averiasAutorizadas = '7:indicio';
+  assert.equal(debePreguntar(estado, ctx, tranquilo), false, 'la misma avería ya autorizada: no pregunta');
+  avion.averias[0].fase = 'anomalia';
+  assert.equal(debePreguntar(estado, ctx, tranquilo), true, 'la avería avanza de fase: pregunta');
+  avion.averias = [];
+  assert.equal(debePreguntar(estado, ctx, tranquilo), false, 'sin averías conocidas: no pregunta');
+  assert.equal(debePreguntar(estado, ctx, { pIncidencia: 0.2, pAccidente: 0.00001 }), true, 'el tiempo feo sigue preguntando');
 });

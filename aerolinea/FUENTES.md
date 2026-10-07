@@ -131,15 +131,10 @@ Costes y días de taller de cada retrofit, y el tamaño de su efecto en el riesg
 - **Fechas** de los históricos, de las liberalizaciones y de las compañías reales: registro
   histórico conocido, sin contrastar una a una con búsqueda. La noticia sale el día del
   suceso o poco después, nunca antes.
-- **Jet-foil** entre Las Palmas y Santa Cruz de Tenerife: primer viaje el 7 de agosto de 1980,
-  unos 70 minutos (RTVC). Una fuente.
-- **Catamaranes rápidos** entre Gran Canaria y Tenerife en 1999: Fred. Olsen empezó ese año a
-  sustituir sus ferris por buques de alta velocidad (Wikipedia). Una fuente.
 - **Concorde**: certificado suspendido tras el accidente de París (25 de julio de 2000) hasta
   noviembre de 2001; último vuelo comercial el 24 de octubre de 2003.
-- El tamaño de cada efecto sobre la demanda (−12 % por el jet-foil, −15 % por los
-  catamaranes, −55 % Madrid–Sevilla con el AVE…) y los acontecimientos locales: cifras de
-  juego.
+- El tamaño de cada efecto sobre la demanda (−55 % Madrid–Sevilla con el AVE, −45 %
+  Madrid–Barcelona…) y los acontecimientos locales: cifras de juego.
 
 ## Riesgo
 

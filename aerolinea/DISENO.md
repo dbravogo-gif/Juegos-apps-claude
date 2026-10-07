@@ -278,9 +278,9 @@ Aplica `CRITERIOS.md` 26–32. Lo que cambió:
   0 a 100 por dentro; en pantalla, palabras. Pesan distinto según la ruta: en la turística
   manda el precio, en la de negocios la puntualidad. Un accidente hunde la seguridad y el
   prestigio, que se recuperan despacio volando limpio.
-- **Mundo y noticias** (`src/core/mundo.js`, `src/data/acontecimientos.js`): 27
-  acontecimientos históricos con fecha real (liberalizaciones, crisis, guerras, AVE, jet-foil,
-  Eurostar, 11-S, volcán, COVID…) con efectos graduales sobre la demanda, cierres y costes; y
+- **Mundo y noticias** (`src/core/mundo.js`, `src/data/acontecimientos.js`): 25
+  acontecimientos históricos con fecha real (liberalizaciones, crisis, guerras, AVE, Eurostar,
+  11-S, volcán, COVID…) con efectos graduales sobre la demanda, cierres y costes; y
   9 plantillas de acontecimientos locales cerca del jugador (sede, moda turística, feria,
   tren, cierre de fábrica, ampliación, inestabilidad, recursos, huelga) que se anuncian y a
   veces no pasan. Solo llegan las noticias que tocan al jugador: 10–25 al año. Las

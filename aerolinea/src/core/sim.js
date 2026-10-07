@@ -299,15 +299,22 @@ function datosComerciales(estado, a, ctx) {
   return { ruta, pax, ingreso, coste: coste.total, desglose: coste.desglose, clave, precio };
 }
 
-function debePreguntar(estado, ctx, est) {
+// Las averías que se conocen de un avión y en qué fase están. Si el jugador ya autorizó un vuelo
+// con ellas, el despachador no vuelve a preguntar hasta que aparezca una nueva o una avance.
+function firmaAverias(a) {
+  return a.averias.filter((x) => x.fase !== 'oculta').map((x) => `${x.id}:${x.fase}`).sort().join(',');
+}
+
+export function debePreguntar(estado, ctx, est) {
   const modo = estado.ajustes.consulta;
   if (modo === 'siempre') return true;
   // Lo que está fuera de norma por el avión o la tripulación lo decides siempre tú. Si solo es
   // el tiempo, en modo «nunca» el despachador retiene el vuelo por su cuenta.
   if (modo === 'nunca') return ctx.irregularidades.some((x) => x.codigo !== 'minimos');
-  const conocidas = ctx.avion.averias.some((x) => x.fase !== 'oculta');
   if (modo === 'serio') return ctx.despachoIrregular || est.pAccidente >= 0.002;
-  return ctx.despachoIrregular || conocidas || est.pIncidencia >= 0.08 || est.pAccidente >= 0.0005;
+  const autorizadas = new Set((ctx.avion.averiasAutorizadas ?? '').split(','));
+  const novedades = firmaAverias(ctx.avion).split(',').some((x) => x && !autorizadas.has(x));
+  return ctx.despachoIrregular || novedades || est.pIncidencia >= 0.08 || est.pAccidente >= 0.0005;
 }
 
 function prepararSalida(estado, a, destino, eventos) {
@@ -726,6 +733,7 @@ export function decidir(estado, idDecision, opcion) {
     return;
   }
   const ctx = contextoVuelo(estado, a, dec.destino, opcion === 'extra');
+  a.averiasAutorizadas = firmaAverias(a);
   despegar(estado, a, ctx, { manual: true });
 }
 
