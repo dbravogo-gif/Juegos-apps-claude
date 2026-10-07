@@ -321,13 +321,25 @@ mantiene estable.
   (dos épocas) y taller (revisión de línea, hangar y motor). Los aviones reales se ven con su
   silueta hasta tener sus fotos.
 
+## Versión 3.2 — marcas y fotos (hecho)
+
+- **Marca propia**: al fundar la compañía se diseña la cola de sus aviones (dos colores, un
+  dibujo, hasta tres letras y, si se quiere, una imagen propia reducida a 192 px que viaja en
+  la partida). Sale en la barra superior, en las tablas de mercado y en Mundo, desde donde se
+  puede cambiar.
+- **Colas de las rivales** (`src/ui/marcas.js`): cada aerolínea lleva los colores de la real en
+  la que se inspira y un logo parecido con el guiño del nombre: la corona de Castilla, la grulla
+  de Naftansa, un tulipán para Tulipair, una huella para Depie Air.
+- **Fotos de los aviones**: los 24 tipos reales tienen foto de época de Wikimedia Commons, con
+  el rótulo de la aerolínea cambiado por su nombre en el juego (Naftansa, Castilla, Bread Am,
+  Tulipair, Ay Europa, Depie Air…). Se editan en local, sin créditos de IA, y quedan
+  reproducibles en `herramientas/fotos/` por si cambia algún nombre. Créditos en `img/LEEME.md`.
+
 ## Siguiente
 
-- Fotos reales de los aviones (Wikimedia Commons, con autor y licencia) en cuanto el entorno
-  pueda descargarlas.
-
 - Nombres pendientes de aprobar: 13 de las 22 compañías llevan `propuesta: true` en
-  `src/data/aerolineas.js`.
+  `src/data/aerolineas.js`. Seis salen ya en fotos (Aviacutre, British Airgüeis, Lager,
+  Pastalia, Tulipair y Delfín); si cambian, se rehacen con `herramientas/fotos/`.
 - Jugar la v3 y ajustar: el arranque interinsular con un solo F27 pierde dinero (la
   estructura de la compañía pesa demasiado para un avión).
 - Abrir bases nuevas, personal (entrevistas y eventos) y retos cortos con semilla.

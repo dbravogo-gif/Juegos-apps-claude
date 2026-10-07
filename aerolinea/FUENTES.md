@@ -144,8 +144,9 @@ Costes y días de taller de cada retrofit, y el tamaño de su efecto en el riesg
   aviones concretos. Las indicaciones usadas y lo
   que se descartó por poco realista (un motor dentro del morro, restos con forma de avioncito)
   quedan en `img/LEEME.md`.
-- **Fotos de aviones reales**: pendientes. Irán con autor y licencia (Wikimedia Commons) en
-  cuanto el entorno de trabajo pueda descargarlas; mientras, cada tipo se ve con su silueta.
+- **Fotos de aviones reales**: Wikimedia Commons, una por tipo, de la época del avión. Se ha
+  cambiado el rótulo de la aerolínea por su nombre en el juego; autor, licencia y enlace de cada
+  una en `img/LEEME.md`, y las herramientas para rehacerlas en `herramientas/fotos/`.
 
 ## Riesgo
 

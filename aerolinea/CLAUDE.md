@@ -30,6 +30,8 @@ d3-geo y `node --test`.
 - `src/ui/`: globo, paneles, hoja de despacho, escenas, noticiario y pestaña Mundo.
 - `img/`: imágenes en WebP. Qué sale y cuándo, en `src/data/imagenes.js`; de dónde salen
   (fotos de Wikimedia o generadas con IA), en `img/LEEME.md`.
+- `herramientas/fotos/`: buscar fotos en Commons y cambiar el rótulo de la aerolínea por su
+  nombre en el juego. Si se aprueba otro nombre, su foto se rehace con el `LEEME.md` de ahí.
 - `src/ui/marcas.js`: las colas de las aerolíneas, con los colores de la real en la que se
   inspira cada una y un logo parecido.
 - Mercado y competencia (v3): `mercado.js` reparte el pasaje, `competencia.js` mueve a las

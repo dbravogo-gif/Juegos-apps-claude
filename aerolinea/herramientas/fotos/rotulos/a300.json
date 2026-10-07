@@ -1,0 +1,2 @@
+{"borrar": [[168, 338, 54, 17, "tinta", {"umbral": 45, "dilatar": 1}], [248, 338, 113, 17, "tinta", {"umbral": 45, "dilatar": 1}]],
+ "textos": [{"texto": "CROISSAIR", "x": 251, "y": 352, "alto": 11, "color": "#2f3d73", "fuente": "inter-negra", "espaciado": 1.2, "grosor": 0.3, "ancho": 110, "estirar": true, "desenfoque": 0.4}]}
