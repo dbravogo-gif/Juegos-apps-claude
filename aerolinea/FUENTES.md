@@ -136,6 +136,17 @@ Costes y días de taller de cada retrofit, y el tamaño de su efecto en el riesg
 - El tamaño de cada efecto sobre la demanda (−55 % Madrid–Sevilla con el AVE, −45 %
   Madrid–Barcelona…) y los acontecimientos locales: cifras de juego.
 
+## Imágenes
+
+- **Escenas** (noticias, accidentes, grandes aeropuertos y taller) y **aviones ficticios**
+  (KR-134, VK-42): generadas con IA en OpenArt (Wan 2.7) para el juego, con aspecto de foto de
+  la época y sin marcas, matrículas ni aerolíneas reales. No muestran sucesos, aeropuertos ni
+  aviones concretos; en pantalla llevan la etiqueta «Recreación». Las indicaciones usadas y lo
+  que se descartó por poco realista (un motor dentro del morro, restos con forma de avioncito)
+  quedan en `img/LEEME.md`.
+- **Fotos de aviones reales**: pendientes. Irán con autor y licencia (Wikimedia Commons) en
+  cuanto el entorno de trabajo pueda descargarlas; mientras, cada tipo se ve con su silueta.
+
 ## Riesgo
 
 Las probabilidades de accidente no son estadística real (`CRITERIOS.md`, 33): se calibran por

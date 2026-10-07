@@ -6,7 +6,8 @@
 import { POR_ID } from '../data/aeropuertos.js';
 import { TIPOS } from '../data/aviones.js';
 import { textoFecha, textoHora } from '../core/tiempo.js';
-import { dinero, esc } from './formato.js';
+import { dinero, esc, htmlFoto } from './formato.js';
+import { escenaAccidente } from '../data/imagenes.js';
 
 // Silueta lateral mirando a la derecha, centrada en (0, 0), unos 90 px de largo. Respeta la
 // configuración real de cada tipo: ala alta o baja, motores bajo el ala o en la cola, cola en T
@@ -260,6 +261,7 @@ export function htmlNoticia(accidente, estado) {
     <div class="tele-pantalla">
       <div class="tele-cabecera"><span class="tele-cadena">Diario Nacional</span><span class="tele-directo">Avance informativo</span></div>
       <p class="tele-fecha">${textoFecha(accidente.t)} · ${textoHora(accidente.t)}</p>
+      ${htmlFoto(escenaAccidente(accidente, lugar), 'tele-foto')}
       <h2 class="tele-titular">${esc(titular)}</h2>
       <p class="tele-texto">Un ${esc(tipo.nombre)} de ${esc(estado.nombre)}, vuelo ${esc(accidente.numero)} entre ${esc(o.ciudad)} y ${esc(d.ciudad)}, ${esc(accidente.descripcion)}${esc(donde)}. Viajaban ${aBordo} personas: ${accidente.pax} pasajeros y ${accidente.tripulantes} tripulantes.</p>
       <div class="tele-cifras">

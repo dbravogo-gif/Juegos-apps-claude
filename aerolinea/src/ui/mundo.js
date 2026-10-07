@@ -11,7 +11,8 @@ import { evaluarRuta } from '../core/operaciones.js';
 import { infoMercado, estimarJugador, clave } from '../core/mercado.js';
 import { activas, resumenAerolinea } from '../core/competencia.js';
 import { etiqueta, etiquetaGeneral, notaReputacion } from '../core/reputacion.js';
-import { esc } from './formato.js';
+import { esc, htmlFoto } from './formato.js';
+import { escenaNoticia } from '../data/imagenes.js';
 
 const ESCALAS = { local: 'Local', regional: 'Regional', global: 'Mundial' };
 const TENDENCIA = { creciendo: '↗ creciendo', estable: '→ estable', bajando: '↘ bajando' };
@@ -121,6 +122,7 @@ export function htmlAvance(noticia) {
     <div class="tele-pantalla">
       <div class="tele-cabecera"><span class="tele-cadena">Diario Nacional</span><span class="tele-directo">${noticia.tipo === 'competencia' ? 'Economía' : 'Última hora'}</span></div>
       <p class="tele-fecha">${textoFecha(noticia.t)}</p>
+      ${htmlFoto(escenaNoticia(anioDecimal(noticia.t)), 'tele-foto')}
       <h2 class="tele-titular">${esc(noticia.titular)}</h2>
       ${noticia.texto ? `<p class="tele-texto">${esc(noticia.texto)}</p>` : ''}
     </div>

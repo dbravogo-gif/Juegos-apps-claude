@@ -33,3 +33,9 @@ export function barra(valor, max = 100, clase = clasePieza(valor)) {
   const p = Math.max(0, Math.min(100, (valor / max) * 100));
   return `<span class="barra ${clase}"><span style="width:${p.toFixed(1)}%"></span></span>`;
 }
+
+// Foto o escena. Las recreaciones llevan su etiqueta, como en los informativos.
+export function htmlFoto(img, clase = '') {
+  if (!img) return '';
+  return `<figure class="foto ${clase}"><img src="${img.src}" alt="${esc(img.alt)}" loading="lazy" decoding="async">${img.recreacion ? '<span class="foto-etiqueta">Recreación</span>' : ''}${img.credito ? `<figcaption>${esc(img.credito)}</figcaption>` : ''}</figure>`;
+}

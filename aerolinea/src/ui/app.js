@@ -128,6 +128,8 @@ function abrirPanel(nombre) {
   ui.hoja.hidden = panel == null;
   if (panel) {
     ui.aeropuerto.hidden = true;
+    // Otra pestaña empieza arriba; el desplazamiento solo se conserva al repintar la misma.
+    ui.hojaCuerpo.scrollTop = 0;
     pintarPanel(true);
   }
   pintarGuia();

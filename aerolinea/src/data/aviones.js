@@ -112,7 +112,7 @@ export const TIPOS = Object.fromEntries([
     motor: 'tv24', nMotores: 2, plazas: 48, alcance: 1300, alcanceMax: 2000, crucero: 440,
     pistaMTOW: 1300, pistaMin: 700, consumo: 850, precio: 1.2e6, entrada: 1964, finProduccion: 1980,
     repuestos: 2,
-    config: { ala: 'alta', motores: 'helices-ala', cola: 'convencional' },
+    config: { ala: 'alta', motores: 'helices-ala', cola: 'T' },
     descripcion: 'Turbohélice del Este, rústico y barato. Gasta más que un F27 y sus motores piden taller a menudo.',
     aprox: ['plazas', 'pistaMTOW', ...APROX_HABITUAL],
   }),

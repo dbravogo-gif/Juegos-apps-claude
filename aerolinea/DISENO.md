@@ -305,7 +305,26 @@ Ya no basta con elegir la ruta obvia: hay que mirar el mercado. Con 3 M$ de caja
 mal primer año se puede corregir. El mundo completo sin jugador (1976–2026) tarda 7–11 s y se
 mantiene estable.
 
+## Versión 3.1 — arreglos e imágenes (hecho)
+
+- **Rendimiento**: el globo guarda el fondo (mar, costa y fronteras) en un lienzo aparte y
+  solo lo rehace al cambiar la vista. Antes redibujaba la costa de alta resolución en cada
+  fotograma: de cerca sobre Canarias iba a ~9 fotogramas por segundo; ahora a 60.
+- **Hojas de despacho**: el despachador recuerda las averías que ya autorizaste y solo vuelve
+  a preguntar si aparece una nueva o avanza de fase. En el modo por defecto, la hoja sale en
+  el 11 % de los vuelos (antes, el 57 %).
+- **Robustez**: un error en un fotograma ya no congela el juego, los paneles no se repintan
+  bajo el dedo y cada pestaña se abre desde arriba.
+- **Imágenes** (`img/`, `src/data/imagenes.js`): los dos aviones ficticios y las escenas,
+  generados con IA y marcados «Recreación»: avances de noticias (dos épocas), noticiario de
+  accidentes (en el campo o en el monte, con reactor o con turbohélice), grandes aeropuertos
+  (dos épocas) y taller (revisión de línea, hangar y motor). Los aviones reales se ven con su
+  silueta hasta tener sus fotos.
+
 ## Siguiente
+
+- Fotos reales de los aviones (Wikimedia Commons, con autor y licencia) en cuanto el entorno
+  pueda descargarlas.
 
 - Nombres pendientes de aprobar: 14 de las 22 compañías llevan `propuesta: true` en
   `src/data/aerolineas.js`.

@@ -19,7 +19,9 @@ import { demandaConEventos, paxJugador } from '../core/mercado.js';
 import { etiquetaGeneral } from '../core/reputacion.js';
 import { htmlMercado, htmlEstimacion } from './mundo.js';
 import { limitePrestamo, patrimonio, puedeOperar, horariosRuta, costeReparar, costeInspeccionCompra } from '../core/sim.js';
-import { dinero, porcentaje, esc, km } from './formato.js';
+import { dinero, porcentaje, esc, km, htmlFoto } from './formato.js';
+import { htmlAvion } from './imagenes.js';
+import { escenaAeropuerto, escenaTaller } from '../data/imagenes.js';
 
 // Redondeo a dos cifras significativas, para cifras de mercado aproximadas.
 const redondo = (x) => {
@@ -88,8 +90,8 @@ function filaAveria(estado, a, x) {
 
 export function panelFlota(estado) {
   if (!estado.aviones.length) {
-    return vacio('Todavía no tienes aviones', 'En el Mercado hay aviones de segunda mano. Inspeccionar cuesta dinero, pero comprar a ciegas puede salir más caro.')
-      + '<button class="btn" data-ir="mercado">Ir al mercado</button>';
+    return vacio('Todavía no tienes aviones', 'En la pestaña Aviones hay aviones de segunda mano. Inspeccionar cuesta dinero, pero comprar a ciegas puede salir más caro.')
+      + '<button class="btn" data-ir="mercado">Ver aviones</button>';
   }
   const n = anio(estado.t);
   return estado.aviones.map((a) => {
@@ -112,6 +114,7 @@ export function panelFlota(estado) {
       .map((id) => `<button class="btn-mini" data-accion="retrofit" data-avion="${a.id}" data-tecnologia="${id}">Instalar ${esc(TECNOLOGIAS[id].nombre.split(' (')[0])} · ${dinero(TECNOLOGIAS[id].retrofit.coste * indice(n))}</button>`);
     return `
     <article class="ficha">
+      ${a.estado === 'taller' ? htmlFoto(escenaTaller(a), 'banda') : htmlAvion(a.tipo, 'banda')}
       <header class="ficha-cab">
         <div><h3>${esc(a.matricula)}</h3><p>${esc(tipo.nombre)} · ${edad(a, n)} años · ${horasTexto(a.horas)} · ${a.ciclos.toLocaleString('es-ES')} ciclos</p></div>
         <span class="ficha-valor">${dinero(valorMercado(a, n))}</span>
@@ -253,6 +256,7 @@ export function panelMercado(estado) {
     const noBase = pistaEn(base, n) < tipo.pistaMin;
     return `
     <article class="ficha">
+      ${htmlAvion(a.tipo, 'banda')}
       <header class="ficha-cab">
         <div><h3>${esc(tipo.nombre)}</h3><p>${a.fabricado} · ${horasTexto(a.horas)} · ${a.ciclos.toLocaleString('es-ES')} ciclos${tipo.ficticio ? ' · fabricación del Este' : ''}</p></div>
         <span class="ficha-valor">${dinero(o.precio)}</span>
@@ -270,7 +274,8 @@ export function panelMercado(estado) {
   const nuevos = tiposEnProduccion(n).sort((x, y) => x.precio - y.precio).map((t) => {
     const precio = precioNuevo(t, n) + (t.clase === 'supersonico' && !estado.concordes ? 2e6 * indice(n) : 0);
     return `
-    <article class="ficha compacta">
+    <article class="ficha compacta con-miniatura">
+      ${htmlAvion(t.id, 'miniatura')}
       <header class="ficha-cab">
         <div><h3>${esc(t.nombre)}</h3><p>${t.plazas} plazas · ${km(t.alcance)} · ${MOTORES[t.motor].nombre} × ${t.nMotores} · pista ${t.pistaMTOW.toLocaleString('es-ES')} m</p></div>
         <button class="btn-mini primario" data-accion="comprar-nuevo" data-tipo="${t.id}" ${estado.caja < precio ? 'disabled' : ''}>${dinero(precio)}</button>
@@ -367,6 +372,7 @@ export function htmlAeropuerto(estado, id) {
   const ils = a.ils ? `ILS CAT ${a.ils}` : 'sin ILS';
   return `
     <div class="ap-cab"><div><h3>${a.id} · ${esc(a.ciudad)}</h3><p>${esc(a.nombre)}</p></div><button class="cerrar" data-accion="cerrar-ap" aria-label="Cerrar">×</button></div>
+    ${htmlFoto(escenaAeropuerto(a, n), 'banda')}
     <p class="nota">Pista ${pistaEn(a, n).toLocaleString('es-ES')} m · ${ils}${a.montana ? ' · terreno montañoso' : ''}${a.elev > 500 ? ` · ${a.elev} m de altitud` : ''}${a.finPista === 'peligroso' ? ' · final de pista peligroso' : ''} · costes ${nivelCostes(a) > 1.2 ? 'altos' : nivelCostes(a) < 0.8 ? 'bajos' : 'medios'}${id !== estado.base ? ` · ${km(dist)} desde ${base.id}` : ''}</p>
     ${id !== estado.base && abiertoEn(a, n) ? htmlMercado(estado, base, a) + (ruta ? '' : htmlEstimacion(estado, base, a)) : ''}
     ${compat.length ? `<ul class="lista-simple">${compat.join('')}</ul>` : ''}
