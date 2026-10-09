@@ -8,7 +8,10 @@ número esperado de titulares que fallan: suma de 1 - disponibilidad).
 
 Uso:
   pip install pulp
-  python3 fantasy-nba/scripts/optimize.py [--gw 1 3] [--budget 100] [--must "Luka Doncic"] [--exclude "X"]
+  python3 fantasy-nba/scripts/optimize.py [--gw 1 3] [--budget 100] [--must "Luka Doncic"] [--exclude "X"] [--min-games 40]
+
+--min-games: solo considera jugadores con >= N partidos en alguna de las dos últimas temporadas
+(o con una fila en proyecciones.csv, p. ej. novatos). Evita rellenos con muestras muy cortas.
 
 Proyección por jugador (puntos por partido esperados):
   base  = FPPG 2025-26 si jugó >= 25 partidos; si no, FPPG 2024-25 (si jugó >= 25).
@@ -17,6 +20,8 @@ Proyección por jugador (puntos por partido esperados):
           (mult por defecto 0.85 si cambió de equipo o no jugó la temporada pasada,
            y no está en proyecciones.csv)
   avail = probabilidad de jugar (proyecciones.csv; por defecto según estado en el juego)
+  back  = fecha de regreso de la noticia del juego ("expected back AAAA-MM-DD"): antes de esa fecha
+          no puede jugar ni ser titular; un lesionado ("i") con fecha de regreso se trata como 0.85 al volver.
 """
 import argparse
 import csv
@@ -30,6 +35,7 @@ SEASON = Path(__file__).resolve().parents[1] / "2026-27"
 SHRINK_GAMES, REPLACEMENT_FPPG = 30, 12.0
 NEW_TEAM_MULT = 0.85
 DEFAULT_AVAIL = {"a": 0.92, "d": 0.85, "i": 0.0, "s": 0.0, "u": 0.0, "n": 0.0}
+BACK_RE = re.compile(r"expected back (\d{4}-\d{2}-\d{2})")
 
 
 def latest_snapshot():
@@ -50,11 +56,19 @@ def load_players(snap):
         moved = r["last_team"] != r["team"]  # incluye "no jugó en 2025-26" (last_team vacío)
         mult = float(o["mult"]) if o.get("mult") else (NEW_TEAM_MULT if moved else 1.0)
         proj = float(o["fppg"]) if o.get("fppg") else base * mult
-        avail = float(o["avail"]) if o.get("avail") else DEFAULT_AVAIL.get(r["status"], 0)
+        m = BACK_RE.search(r["news"])
+        back = m.group(1) if m else ""
+        if o.get("avail"):
+            avail = float(o["avail"])
+        elif back and r["status"] in ("i", "s", "u"):
+            avail = 0.85  # vuelve de una lesión con fecha: disponible tras esa fecha
+        else:
+            avail = DEFAULT_AVAIL.get(r["status"], 0)
         players.append({
             "name": r["name"], "team": r["team"], "pos": r["pos"], "price": float(r["price"]),
             "proj": round(proj, 1), "exp": proj * avail, "avail": avail,
-            "sel": float(r["selected_pct"]),
+            "sel": float(r["selected_pct"]), "back": back,
+            "games": max(last_g, prev_g), "manual": r["name"] in overrides,
             "note": o.get("note") or (f"Viene de {r['last_team'] or 'no jugar'} (x{NEW_TEAM_MULT})" if moved else ""),
         })
     return players
@@ -72,8 +86,18 @@ def load_days(snap, gw_from, gw_to):
     return dict(days)
 
 
-def solve(players, days, budget, must=(), exclude=()):
-    cands = [p for p in players if p["exp"] > 0 and p["name"] not in exclude]
+def load_dates(snap):
+    """{event_id: 'AAAA-MM-DD'} fecha (UTC) del primer partido de cada GameDay."""
+    dates = {}
+    for f in csv.DictReader(open(snap / "fixtures.csv")):
+        e, day = int(f["event"]), f["kickoff_utc"][:10]
+        dates[e] = min(day, dates.get(e, day))
+    return dates
+
+
+def solve(players, days, budget, must=(), exclude=(), dates=None, min_games=0):
+    cands = [p for p in players if p["exp"] > 0 and p["name"] not in exclude
+             and (p["games"] >= min_games or p["manual"] or p["name"] in must)]
     # Reduce el problema: los mejores por posición en esperanza y en esperanza/precio
     keep = set(must)
     for pos in ("BC", "FC"):
@@ -87,7 +111,7 @@ def solve(players, days, budget, must=(), exclude=()):
     y, cap, sub = {}, {}, {}
     for d, (gw, teams) in days.items():
         for i, p in enumerate(cands):
-            if p["team"] in teams:
+            if p["team"] in teams and not (p["back"] and dates and dates[d] < p["back"]):
                 y[p["name"], d] = pulp.LpVariable(f"y_{i}_{d}", cat="Binary")
                 cap[p["name"], d] = pulp.LpVariable(f"c_{i}_{d}", cat="Binary")
                 sub[p["name"], d] = pulp.LpVariable(f"s_{i}_{d}", lowBound=0, upBound=1)
@@ -138,12 +162,13 @@ def main():
     ap.add_argument("--budget", type=float, default=100.0)
     ap.add_argument("--must", action="append", default=[])
     ap.add_argument("--exclude", action="append", default=[])
+    ap.add_argument("--min-games", type=int, default=40)
     a = ap.parse_args()
 
     snap = latest_snapshot()
     players = load_players(snap)
     days = load_days(snap, *a.gw)
-    squad, starts, games, caps, subs, total, status = solve(players, days, a.budget, a.must, a.exclude)
+    squad, starts, games, caps, subs, total, status = solve(players, days, a.budget, a.must, a.exclude, load_dates(snap), a.min_games)
 
     print(f"Datos: {snap.name} | GW{a.gw[0]}-GW{a.gw[1]} ({len(days)} días) | estado: {status}")
     print(f"{'Pos':3} {'Jugador':26} {'Eq':4} {'Precio':>6} {'Proy':>5} {'Disp':>4} {'Part':>4} {'Tit':>3} {'Sup':>4} {'Cap':>3}  Nota")

@@ -1,0 +1,579 @@
+id,name,team,pos,price,selected_pct,status,news,last_team,last_total_fp,last_g,last_gs,last_mpg,last_fppg,value_fppg_per_m,prev_g,prev_fppg
+136,Nikola Jokic,DEN,FC,23.0,17.3,a,,DEN,4464.0,65,65,34.8,68.6,2.98,70,69.9
+257,Luka Doncic,LAL,BC,21.0,21.4,a,,LAL,4113.0,64,64,35.8,64.1,3.05,50,58.4
+513,Victor Wembanyama,SAS,FC,19.5,39.2,a,,SAS,3523.0,64,55,29.2,55.0,2.82,46,57.4
+309,Giannis Antetokounmpo,MIA,FC,18.5,6.9,a,,MIL,1911.0,36,36,28.9,53.0,2.86,67,61.6
+395,Shai Gilgeous-Alexander,OKC,BC,18.5,16.7,a,,OKC,3743.0,68,68,33.2,55.2,2.98,76,58.6
+157,Cade Cunningham,DET,BC,18.0,7.0,a,,DET,3592.0,64,64,33.9,55.8,3.1,70,55.8
+2,Jalen Johnson,ATL,FC,17.5,5.1,d,Rest expected back 2026-10-10,ATL,3854.0,72,72,35.2,53.4,3.05,36,46.7
+342,Anthony Edwards,MIN,BC,16.5,6.9,a,,MIN,2907.0,61,60,35.0,47.8,2.9,79,47.7
+439,Tyrese Maxey,PHI,BC,16.5,10.1,a,,PHI,3745.0,70,70,38.0,53.7,3.25,52,48.4
+564,Anthony Davis,WAS,FC,16.5,0.2,a,,DAL,905.0,20,20,31.3,45.5,2.76,51,53.5
+22,Jayson Tatum,BOS,FC,16.0,4.5,d,Rest expected back 2026-10-10,BOS,753.0,16,16,32.6,47.2,2.95,72,52.3
+84,Josh Giddey,CHI,BC,16.0,1.0,a,,CHI,2602.0,54,51,32.1,48.0,3.0,70,42.5
+102,Donovan Mitchell,CLE,BC,16.0,1.3,a,,CLE,3436.0,70,70,33.5,49.2,3.08,71,43.0
+110,James Harden,CLE,BC,16.0,0.4,d,Ankle expected back 2026-10-11,CLE,3423.0,70,70,34.8,48.9,3.06,79,52.6
+138,Jamal Murray,DEN,BC,16.0,0.5,a,,DEN,3590.0,75,75,35.4,47.9,2.99,67,43.0
+198,Alperen Sengun,HOU,FC,16.0,1.9,a,,HOU,3483.0,72,72,33.3,48.6,3.04,76,44.9
+206,Kevin Durant,HOU,FC,15.5,3.9,d,Not Injury Related expected back 2026-10-15,HOU,3598.0,78,78,36.4,46.2,2.98,62,47.0
+433,LeBron James,PHI,FC,15.5,3.3,a,,LAL,2805.0,60,60,33.2,46.8,3.02,70,53.4
+438,Joel Embiid,PHI,FC,15.5,1.3,a,,PHI,1815.0,38,38,31.6,47.8,3.08,19,45.8
+524,Kawhi Leonard,TOR,FC,15.5,1.9,d,Not Injury Related expected back 2026-10-10,LAC,3138.0,65,65,32.1,48.4,3.12,37,39.9
+531,Scottie Barnes,TOR,FC,15.5,5.7,a,,TOR,3686.0,80,80,33.5,46.1,2.97,65,45.8
+561,Trae Young,WAS,BC,15.5,0.5,a,,WAS,584.0,15,15,25.6,38.9,2.51,76,54.7
+177,Stephen Curry,GSW,BC,15.0,3.9,d,Rest expected back 2026-10-10,GSW,1900.0,43,41,30.9,44.1,2.94,70,45.4
+203,Amen Thompson,HOU,BC,15.0,1.6,a,,HOU,3398.0,79,79,37.4,43.0,2.87,69,38.0
+218,Tyrese Haliburton,IND,BC,15.0,2.8,a,,,0.0,0,0,0,0,0.0,73,46.8
+302,Bam Adebayo,MIA,FC,15.0,1.2,a,,MIA,3069.0,73,73,32.4,42.2,2.81,78,42.3
+336,LaMelo Ball,MIN,BC,15.0,4.2,a,,CHA,3132.0,72,69,28.0,43.3,2.89,47,49.1
+379,Jalen Brunson,NYK,BC,15.0,9.4,a,,NYK,3375.0,74,74,35.0,45.6,3.04,65,46.5
+430,Jaylen Brown,PHI,BC,15.0,9.2,a,,BOS,3552.0,71,71,34.4,50.0,3.33,63,41.5
+461,Devin Booker,PHX,BC,15.0,1.1,a,,PHX,2895.0,64,64,33.5,45.3,3.02,75,47.2
+490,Domantas Sabonis,SAC,FC,15.0,0.3,d,Undisclosed expected back 2026-10-10,SAC,739.0,19,15,29.7,38.7,2.58,70,48.3
+125,Cooper Flagg,DAL,FC,14.5,21.6,a,,DAL,3015.0,70,70,33.5,43.0,2.97,0,0
+377,Karl-Anthony Towns,NYK,FC,14.5,3.3,a,,NYK,3160.0,75,75,31.0,42.2,2.91,72,48.5
+419,Paolo Banchero,ORL,FC,14.5,2.3,a,,ORL,3222.0,72,72,34.8,44.9,3.1,46,47.2
+480,Deni Avdija,POR,FC,14.5,4.2,a,,POR,3213.0,66,66,33.3,48.7,3.36,72,36.5
+51,Julius Randle,BKN,FC,14.0,2.5,a,,MIN,3307.0,79,79,33.0,41.7,2.98,69,37.9
+100,Evan Mobley,CLE,FC,14.0,0.7,a,,CLE,2717.0,65,63,31.9,41.6,2.97,71,41.7
+224,Pascal Siakam,IND,FC,14.0,1.0,a,,IND,2650.0,62,62,33.2,42.7,3.05,78,38.1
+258,Austin Reaves,LAL,BC,14.0,2.0,a,,LAL,2215.0,51,45,34.5,43.5,3.11,73,40.5
+514,Stephon Castle,SAS,BC,14.0,3.7,a,,SAS,2787.0,68,67,30.0,41.0,2.93,81,30.2
+49,Michael Porter Jr.,BKN,FC,13.5,0.7,d,Wrist expected back 2026-10-12,BKN,2147.0,52,52,32.5,41.5,3.07,77,32.7
+118,Kyrie Irving,DAL,BC,13.5,1.1,a,,,0.0,0,0,0,0,0.0,50,44.1
+398,Jalen Williams,OKC,BC,13.5,0.8,a,,OKC,1221.0,33,33,28.4,37.2,2.76,69,44.0
+414,Desmond Bane,ORL,BC,13.5,1.1,a,,ORL,3030.0,82,82,33.6,36.9,2.73,69,40.7
+469,Ja Morant,POR,BC,13.5,1.2,a,,MEM,854.0,20,20,28.5,42.9,3.18,50,46.1
+553,Lauri Markkanen,UTA,FC,13.5,1.1,d,Neck expected back 2026-10-12,UTA,1779.0,42,42,34.4,42.3,3.13,47,31.2
+4,Dyson Daniels,ATL,BC,13.0,1.0,a,,ATL,2860.0,76,76,33.2,37.7,2.9,76,39.9
+6,Nickeil Alexander-Walker,ATL,BC,13.0,1.3,a,,ATL,2894.0,78,71,33.4,37.0,2.85,82,21.0
+23,Derrick White,BOS,BC,13.0,2.2,d,Rest expected back 2026-10-10,BOS,2996.0,77,77,34.1,38.9,2.99,76,36.5
+158,Jalen Duren,DET,FC,13.0,1.1,d,Rest expected back 2026-10-10,DET,2727.0,70,70,28.2,38.8,2.98,78,32.9
+183,Jimmy Butler,GSW,FC,13.0,0.0,i,Knee expected back 2027-01-02,GSW,1531.0,38,38,31.1,40.2,3.09,55,38.8
+235,Darius Garland,LAC,BC,13.0,0.9,a,,LAC,1707.0,45,43,29.9,38.2,2.94,75,40.8
+253,Brandon Ingram,LAC,FC,13.0,0.1,i,Achilles expected back 2026-11-01,TOR,2992.0,77,77,33.8,39.0,3.0,18,42.7
+358,Dejounte Murray,NOP,BC,13.0,0.2,d,Toe expected back 2026-10-14,NOP,565.0,14,14,27.8,40.3,3.1,31,46.0
+359,Zion Williamson,NOP,FC,13.0,0.8,a,,NOP,2333.0,62,55,29.7,37.6,2.89,30,48.7
+361,Trey Murphy III,NOP,FC,13.0,0.7,a,,NOP,2666.0,66,66,35.5,40.5,3.12,53,38.7
+396,Chet Holmgren,OKC,FC,13.0,2.2,d,Rest expected back 2026-10-12,OKC,2548.0,69,69,28.9,36.9,2.84,32,35.7
+508,De'Aaron Fox,SAS,BC,13.0,0.5,d,Undisclosed expected back 2026-10-10,SAS,2820.0,72,72,31.0,39.3,3.02,62,46.6
+549,Jaren Jackson Jr.,UTA,FC,13.0,0.3,a,,UTA,1757.0,48,48,30.3,36.6,2.82,74,39.9
+554,Keyonte George,UTA,BC,13.0,2.2,a,,UTA,2353.0,54,54,33.1,43.7,3.36,67,34.2
+1,Onyeka Okongwu,ATL,FC,12.5,0.3,a,,ATL,2630.0,74,63,31.0,35.6,2.85,74,32.3
+61,Brandon Miller,CHA,FC,12.5,2.3,i,Leg expected back 2026-10-11,CHA,2397.0,65,65,30.3,36.8,2.94,27,38.5
+65,Kon Knueppel,CHA,BC,12.5,1.7,i,Hamstring expected back 2026-10-21,CHA,2706.0,81,80,31.5,33.3,2.66,0,0
+317,Tyler Herro,MIL,BC,12.5,1.1,a,,MIA,1212.0,33,28,31.3,36.8,2.94,77,43.4
+325,Ryan Rollins,MIL,BC,12.5,2.6,a,,MIL,2870.0,74,67,32.1,38.8,3.1,56,15.2
+416,Franz Wagner,ORL,FC,12.5,1.4,a,,ORL,1231.0,34,32,30.0,36.0,2.88,60,44.4
+35,Paul George,BOS,FC,12.0,0.6,d,Rest expected back 2026-10-10,PHI,1338.0,37,37,30.7,36.1,3.01,41,37.0
+221,Andrew Nembhard,IND,BC,12.0,0.4,a,,IND,2177.0,57,57,31.3,38.1,3.18,65,27.5
+381,Josh Hart,NYK,BC,12.0,0.7,a,,NYK,2189.0,66,52,30.2,33.2,2.77,77,40.7
+442,VJ Edgecombe,PHI,BC,12.0,6.8,a,,PHI,2691.0,75,75,35.0,35.7,2.98,0,0
+478,Shaedon Sharpe,POR,BC,12.0,0.0,i,Knee expected back 2027-03-02,POR,1751.0,50,42,29.4,34.8,2.9,72,31.9
+571,Alexandre Sarr,WAS,FC,12.0,0.3,d,Foot expected back 2026-10-10,WAS,1798.0,48,48,27.2,37.5,3.12,67,30.9
+18,CJ McCollum,ATL,BC,11.5,0.5,a,,ATL,2559.0,76,60,29.8,33.7,2.93,56,36.7
+24,Payton Pritchard,BOS,BC,11.5,3.7,d,Undisclosed expected back 2026-10-10,BOS,2677.0,79,50,32.4,33.7,2.93,80,28.4
+68,Coby White,CHA,BC,11.5,0.8,d,Calf expected back 2026-10-21,CHA,1528.0,50,26,25.0,30.6,2.66,74,36.4
+85,Matas Buzelis,CHI,FC,11.5,2.7,a,,CHI,2522.0,77,77,29.2,32.9,2.86,80,18.0
+228,Ivica Zubac,IND,FC,11.5,1.3,a,,IND,1570.0,48,47,30.1,32.7,2.84,80,40.2
+291,Cameron Boozer,MEM,FC,11.5,4.4,a,,,0.0,0,0,0,0,0.0,0,0
+341,Rudy Gobert,MIN,FC,11.5,2.2,a,,MIN,2503.0,76,76,31.3,33.0,2.87,72,33.1
+382,OG Anunoby,NYK,FC,11.5,3.9,a,,NYK,2215.0,67,67,33.2,33.2,2.89,74,34.4
+452,Miles Bridges,PHX,FC,11.5,0.5,d,Ankle expected back 2026-10-10,CHA,2493.0,77,77,31.0,32.3,2.81,64,39.8
+457,Jalen Green,PHX,BC,11.5,0.5,a,,PHX,992.0,32,27,25.9,31.2,2.71,82,36.0
+481,Donovan Clingan,POR,FC,11.5,2.7,a,,POR,2672.0,77,77,27.2,34.8,3.03,67,22.9
+528,RJ Barrett,TOR,FC,11.5,0.4,a,,TOR,1959.0,57,57,30.3,34.2,2.97,58,41.5
+529,Immanuel Quickley,TOR,BC,11.5,0.5,a,,TOR,2553.0,70,70,31.9,36.4,3.17,33,34.6
+81,Nic Claxton,CHI,FC,11.0,0.1,d,Hamstring expected back 2026-10-21,BKN,2160.0,69,68,27.8,31.4,2.85,70,29.0
+90,Norman Powell,CHI,BC,11.0,0.9,a,,MIA,1982.0,58,52,29.6,34.1,3.1,60,33.4
+101,Jarrett Allen,CLE,FC,11.0,1.3,a,,CLE,1842.0,56,56,27.1,32.9,2.99,82,32.4
+144,DeMar DeRozan,DEN,BC,11.0,1.8,a,,SAC,2587.0,77,77,31.2,33.4,3.04,77,38.5
+174,Kristaps Porzingis,GSW,FC,11.0,0.1,d,Undisclosed expected back 2026-10-21,GSW,1030.0,32,23,24.0,32.3,2.94,42,37.1
+269,Walker Kessler,LAL,FC,11.0,3.2,d,Finger expected back 2026-10-13,UTA,204.0,5,5,30.8,40.8,3.71,58,35.7
+285,Cedric Coward,MEM,BC,11.0,0.5,a,,MEM,1750.0,62,47,25.8,28.1,2.55,0,0
+300,Andrew Wiggins,MIA,FC,11.0,0.4,a,,MIA,2173.0,68,68,30.3,31.9,2.9,60,33.1
+321,Myles Turner,MIL,FC,11.0,0.3,a,,MIL,1925.0,71,71,26.9,27.1,2.46,72,33.5
+365,Derik Queen,NOP,FC,11.0,1.5,a,,NOP,2595.0,81,48,25.0,31.9,2.9,0,0
+378,Mikal Bridges,NYK,FC,11.0,3.5,a,,NYK,2608.0,82,82,32.8,31.9,2.9,82,32.4
+475,Damian Lillard,POR,BC,11.0,2.6,a,,,0.0,0,0,0,0,0.0,58,48.0
+516,Dylan Harper,SAS,BC,11.0,9.4,a,,SAS,1813.0,69,4,22.6,26.3,2.39,0,0
+71,Naz Reid,CHA,FC,10.5,3.9,a,,MIN,2325.0,77,3,26.1,30.2,2.88,80,29.6
+96,Caleb Wilson,CHI,FC,10.5,4.5,a,,,0.0,0,0,0,0,0.0,0,0
+137,Aaron Gordon,DEN,FC,10.5,1.0,a,,DEN,1076.0,36,33,27.9,30.1,2.87,51,28.3
+181,Brandin Podziemski,GSW,BC,10.5,1.3,d,Rest expected back 2026-10-10,GSW,2469.0,82,43,28.5,30.2,2.88,64,27.5
+200,Jabari Smith Jr.,HOU,FC,10.5,1.1,a,,HOU,2411.0,77,77,35.1,31.3,2.98,57,24.7
+343,Jaden McDaniels,MIN,FC,10.5,2.6,a,,MIN,2254.0,73,73,31.7,30.7,2.92,82,28.5
+394,Isaiah Hartenstein,OKC,FC,10.5,0.8,d,Ankle expected back 2026-10-12,OKC,1459.0,47,46,24.2,31.0,2.95,57,35.2
+420,Jalen Suggs,ORL,BC,10.5,0.5,d,Illness expected back 2026-10-11,ORL,2065.0,57,56,27.6,36.2,3.45,35,34.8
+489,Zach LaVine,SAC,BC,10.5,0.5,a,,SAC,1148.0,39,37,31.4,29.6,2.82,74,39.0
+560,Darryn Peterson,UTA,BC,10.5,3.9,a,,,0.0,0,0,0,0,0.0,0,0
+575,AJ Dybantsa,WAS,FC,10.5,7.7,a,,,0.0,0,0,0,0,0.0,0,0
+59,Moussa Diabate,CHA,FC,10.0,1.8,a,,CHA,1878.0,73,47,26.0,25.8,2.58,71,17.1
+72,Grayson Allen,CHA,BC,10.0,1.4,a,,PHX,1632.0,51,27,28.8,32.2,3.22,64,21.1
+117,Naji Marshall,DAL,FC,10.0,1.3,a,,DAL,2222.0,74,47,29.5,30.1,3.01,69,27.6
+121,P.J. Washington,DAL,FC,10.0,1.0,d,Ankle expected back 2026-10-11,DAL,1727.0,56,53,31.0,31.1,3.11,57,33.7
+159,Ausar Thompson,DET,BC,10.0,7.6,a,,DET,2237.0,73,72,26.0,30.5,3.05,59,27.0
+178,Draymond Green,GSW,FC,10.0,1.5,d,Rest expected back 2026-10-10,GSW,2007.0,68,68,27.5,29.4,2.94,68,33.8
+202,Fred VanVleet,HOU,BC,10.0,2.1,a,,,0.0,0,0,0,0,0.0,60,35.0
+205,Reed Sheppard,HOU,BC,10.0,2.9,a,,HOU,2427.0,82,21,26.2,29.8,2.98,52,11.7
+256,Collin Sexton,LAL,BC,10.0,1.1,d,Lower Body expected back 2026-10-13,CHI,1909.0,68,22,23.7,27.9,2.79,63,31.9
+282,Zach Edey,MEM,FC,10.0,0.6,a,,MEM,380.0,11,11,25.8,34.4,3.44,66,24.9
+318,Jaime Jaquez Jr.,MIL,FC,10.0,4.6,a,,MIA,2447.0,75,1,28.3,32.8,3.28,66,21.3
+323,Kevin Porter Jr.,MIL,BC,10.0,1.4,a,,MIL,1725.0,38,36,33.2,45.5,4.55,75,24.7
+337,Ayo Dosunmu,MIN,BC,10.0,2.3,a,,MIN,1985.0,69,19,27.3,28.7,2.87,46,28.7
+346,Donte DiVincenzo,MIN,BC,10.0,0.1,i,Achilles expected back 2027-04-01,MIN,2376.0,82,82,30.4,29.0,2.9,62,27.1
+367,Saddiq Bey,NOP,FC,10.0,1.4,a,,NOP,2260.0,72,64,31.2,31.3,3.13,0,0
+411,Nikola Vucevic,ORL,FC,10.0,1.9,a,,BOS,2168.0,64,49,28.4,33.7,3.37,73,40.1
+417,Wendell Carter Jr.,ORL,FC,10.0,1.1,a,,ORL,2134.0,78,78,29.3,27.4,2.74,68,24.5
+456,Mark Williams,PHX,FC,10.0,0.0,i,Shoulder expected back 2027-02-03,PHX,1622.0,60,55,23.6,27.1,2.71,44,36.2
+460,Collin Gillespie,PHX,BC,10.0,2.5,a,,PHX,2426.0,80,58,28.5,30.2,3.02,33,15.5
+477,Toumani Camara,POR,FC,10.0,2.2,a,,POR,2307.0,82,82,33.3,28.0,2.8,78,27.8
+479,Scoot Henderson,POR,BC,10.0,1.4,a,,POR,839.0,30,10,24.9,27.9,2.79,66,29.5
+492,Keegan Murray,SAC,FC,10.0,0.4,d,Undisclosed expected back 2026-10-10,SAC,709.0,23,22,34.5,30.9,3.09,76,27.0
+530,Jakob Poeltl,TOR,FC,10.0,0.9,a,,TOR,1218.0,46,44,25.0,26.5,2.65,57,36.9
+557,Kyle Filipowski,UTA,FC,10.0,0.6,d,Back expected back 2026-10-12,UTA,2163.0,77,41,23.4,28.0,2.8,72,22.5
+27,Neemias Queta,BOS,FC,9.5,5.3,d,Rest expected back 2026-10-10,BOS,2144.0,76,75,25.3,28.3,2.98,62,13.2
+34,Mitchell Robinson,BOS,FC,9.5,1.6,d,Undisclosed expected back 2026-10-10,NYK,1347.0,60,16,19.6,22.6,2.38,17,18.6
+42,Day'Ron Sharpe,BKN,FC,9.5,1.2,d,Shoulder expected back 2026-10-12,BKN,1522.0,62,7,18.7,24.5,2.58,50,22.9
+109,Peyton Watson,CLE,FC,9.5,1.1,a,,DEN,1608.0,54,40,29.6,29.7,3.13,68,20.6
+128,Santi Aldama,DAL,FC,9.5,0.3,d,Knee expected back 2026-10-11,MEM,1343.0,43,11,27.9,31.3,3.29,65,28.3
+140,Christian Braun,DEN,BC,9.5,0.6,a,,DEN,1103.0,44,44,31.8,25.2,2.65,79,30.6
+165,John Collins,DET,FC,9.5,1.7,a,,LAC,1775.0,69,56,27.1,25.7,2.71,40,37.2
+266,Quentin Grimes,LAL,BC,9.5,1.2,a,,PHI,2043.0,75,19,29.4,27.5,2.89,75,28.8
+279,Ty Jerome,MEM,BC,9.5,1.2,a,,MEM,567.0,15,15,22.6,38.1,4.01,70,25.1
+280,Scotty Pippen Jr.,MEM,BC,9.5,0.6,a,,MEM,299.0,10,6,21.2,29.9,3.15,79,27.1
+306,Davion Mitchell,MIA,BC,9.5,1.6,a,,MIA,1983.0,70,70,28.6,28.6,3.01,74,23.6
+319,Kel'el Ware,MIL,FC,9.5,6.0,a,,MIA,2086.0,77,34,22.1,27.2,2.86,64,23.6
+328,Kyle Kuzma,MIL,FC,9.5,1.3,a,,MIL,1799.0,69,43,26.2,26.2,2.76,65,27.8
+368,Jordan Poole,NOP,BC,9.5,0.4,a,,NOP,950.0,39,8,23.9,24.6,2.59,68,37.6
+422,Anthony Black,ORL,BC,9.5,1.2,d,Ankle expected back 2026-10-11,ORL,2083.0,64,40,29.8,32.5,3.42,78,23.6
+474,Jrue Holiday,POR,BC,9.5,2.1,a,,POR,1934.0,53,51,29.4,36.4,3.83,62,27.7
+491,Malik Monk,SAC,BC,9.5,0.2,d,Rest expected back 2026-10-10,SAC,1442.0,62,3,22.0,23.4,2.46,65,36.7
+502,Ben Simmons,SAC,BC,9.5,0.5,d,Undisclosed expected back 2026-10-10,,0.0,0,0,0,0,0.0,51,24.5
+504,Tobias Harris,SAS,FC,9.5,0.8,d,Calf expected back 2026-10-20,DET,1727.0,63,63,27.7,27.3,2.87,73,29.4
+512,Devin Vassell,SAS,BC,9.5,2.1,a,,SAS,1781.0,67,65,30.5,26.8,2.82,64,31.5
+551,Jusuf Nurkic,UTA,FC,9.5,1.0,i,Foot expected back 2026-11-04,UTA,1486.0,41,36,26.4,36.3,3.82,51,25.8
+556,Isaiah Collier,UTA,BC,9.5,0.8,a,,UTA,1942.0,59,19,25.7,32.8,3.45,71,27.9
+563,Deandre Ayton,WAS,FC,9.5,1.2,a,,LAL,1923.0,72,72,27.2,26.9,2.83,40,33.2
+86,Tre Jones,CHI,BC,9.0,4.0,d,Hip expected back 2026-10-09,CHI,2079.0,65,41,27.0,32.2,3.58,46,21.1
+289,Jerami Grant,MEM,FC,9.0,5.1,a,,POR,1736.0,57,38,29.7,30.2,3.36,47,27.8
+354,Bennedict Mathurin,NOP,BC,9.0,4.8,a,,LAC,1668.0,54,25,30.0,30.8,3.42,72,28.2
+364,Jeremiah Fears,NOP,BC,9.0,14.0,a,,NOP,2408.0,82,49,25.8,29.6,3.29,0,0
+401,Ajay Mitchell,OKC,BC,9.0,5.6,a,,OKC,1643.0,57,16,25.8,28.6,3.18,36,14.4
+495,Maxime Raynaud,SAC,FC,9.0,8.3,a,,SAC,1909.0,74,56,26.5,25.8,2.87,0,0
+537,Collin Murray-Boyles,TOR,FC,9.0,5.0,a,,TOR,1296.0,57,22,21.9,22.7,2.52,0,0
+558,Ace Bailey,UTA,FC,9.0,8.4,a,,UTA,1884.0,72,61,27.6,26.1,2.9,0,0
+570,Kyshawn George,WAS,FC,9.0,6.4,a,,WAS,1656.0,48,48,29.0,34.6,3.84,68,23.0
+44,Egor Dëmin,BKN,BC,8.5,6.3,a,,BKN,1224.0,52,45,25.2,23.4,2.75,0,0
+73,Royce O'Neale,CHA,FC,8.5,0.8,a,,PHX,1901.0,78,67,28.4,24.5,2.88,75,22.4
+77,Dennis Schröder,CHA,BC,8.5,6.5,a,,CLE,1825.0,70,17,24.2,26.3,3.09,75,29.8
+119,Dereck Lively II,DAL,FC,8.5,0.3,d,Foot expected back 2026-10-11,DAL,138.0,7,4,16.4,20.0,2.35,36,27.6
+120,Daniel Gafford,DAL,FC,8.5,1.2,a,,DAL,1351.0,55,44,21.7,24.9,2.93,57,28.5
+135,Cameron Johnson,DEN,FC,8.5,1.6,a,,DEN,1311.0,54,54,30.5,24.1,2.84,57,33.8
+201,Tari Eason,HOU,FC,8.5,0.9,a,,HOU,1482.0,60,34,25.8,24.9,2.93,57,29.2
+220,Aaron Nesmith,IND,FC,8.5,1.3,a,,IND,1127.0,45,42,29.7,25.1,2.95,45,22.0
+245,Brook Lopez,LAC,FC,8.5,0.7,a,,LAC,1500.0,75,40,21.8,20.1,2.36,80,29.1
+246,Bradley Beal,LAC,BC,8.5,0.2,d,Knee expected back 2026-10-10,LAC,83.0,6,6,20.2,13.9,1.64,53,32.5
+268,Sandro Mamukelashvili,LAL,FC,8.5,3.0,a,,TOR,1905.0,80,13,21.9,23.8,2.8,61,13.1
+281,GG Jackson,MEM,FC,8.5,0.7,a,,MEM,1308.0,55,28,21.4,24.0,2.82,29,14.2
+351,Jonathan Kuminga,MIN,FC,8.5,2.5,a,,ATL,905.0,36,14,23.1,25.1,2.95,47,27.9
+400,Cason Wallace,OKC,BC,8.5,10.4,a,,OKC,1832.0,77,58,26.6,23.8,2.8,68,23.7
+431,Anfernee Simons,PHI,BC,8.5,3.7,d,Undisclosed expected back 2026-10-16,CHI,1293.0,55,5,24.9,23.4,2.75,70,34.6
+458,Dillon Brooks,PHX,BC,8.5,10.7,a,,PHX,1730.0,56,56,30.4,31.0,3.65,75,24.1
+463,Oso Ighodaro,PHX,FC,8.5,0.5,a,,PHX,1709.0,82,24,22.0,21.0,2.47,61,13.2
+467,Khaman Maluach,PHX,FC,8.5,1.0,a,,PHX,398.0,46,1,8.9,8.5,1.0,0,0
+555,Brice Sensabaugh,UTA,FC,8.5,0.8,d,Hip expected back 2026-10-12,UTA,1831.0,75,22,23.5,24.5,2.88,71,19.0
+567,Bilal Coulibaly,WAS,FC,8.5,1.4,a,,WAS,1577.0,56,56,26.2,28.1,3.31,59,30.1
+43,Noah Clowney,BKN,FC,8.0,0.6,a,,BKN,1583.0,66,60,27.0,24.1,3.01,46,17.8
+78,Hannes Steinbach,CHA,FC,8.0,0.8,a,,,0.0,0,0,0,0,0.0,0,0
+83,Jalen Smith,CHI,FC,8.0,0.4,a,,CHI,1224.0,53,21,20.7,23.2,2.9,64,18.8
+154,Kevin Huerter,DET,BC,8.0,0.7,a,,DET,1577.0,69,14,22.4,22.9,2.86,69,21.4
+156,Paul Reed,DET,FC,8.0,0.7,a,,DET,1309.0,65,11,13.9,20.1,2.51,45,13.3
+190,De'Anthony Melton,GSW,BC,8.0,0.5,d,Rest expected back 2026-10-10,GSW,1301.0,49,24,23.0,26.7,3.34,6,23.7
+219,T.J. McConnell,IND,BC,8.0,0.8,d,Undisclosed expected back 2026-10-10,IND,1421.0,56,4,17.2,25.4,3.17,79,24.5
+226,Jay Huff,IND,FC,8.0,1.8,a,,IND,1934.0,82,47,21.0,23.7,2.96,64,13.7
+230,Kelly Oubre Jr.,IND,BC,8.0,1.9,a,,PHI,1393.0,50,41,31.5,28.0,3.5,60,30.8
+241,Kris Dunn,LAC,BC,8.0,1.2,a,,LAC,1892.0,82,68,27.2,23.2,2.9,74,21.7
+247,Rui Hachimura,LAC,FC,8.0,7.9,a,,LAL,1298.0,68,41,28.3,19.1,2.39,59,24.5
+297,Klay Thompson,MIA,BC,8.0,3.7,a,,DAL,1310.0,69,8,21.7,19.0,2.38,72,24.7
+303,Nikola Jovic,MIA,FC,8.0,0.5,a,,MIA,832.0,47,1,17.2,18.0,2.25,46,23.5
+310,Bobby Portis,MIA,FC,8.0,1.8,a,,MIL,1712.0,67,9,24.2,25.7,3.21,49,30.1
+360,Herbert Jones,NOP,FC,8.0,0.7,a,,NOP,1341.0,56,56,28.4,24.2,3.02,20,28.0
+363,Yves Missi,NOP,FC,8.0,0.9,a,,NOP,1293.0,66,14,19.7,19.5,2.44,73,25.5
+487,Precious Achiuwa,SAC,FC,8.0,0.8,a,,SAC,1774.0,73,57,23.9,24.4,3.05,57,18.7
+498,Darius Acuff Jr.,SAC,BC,8.0,8.0,a,,,0.0,0,0,0,0,0.0,0,0
+499,De'Andre Hunter,SAC,BC,8.0,0.7,a,,SAC,1094.0,45,25,26.1,24.2,3.02,64,26.8
+510,Julian Champagnie,SAS,FC,8.0,11.3,a,,SAS,1939.0,82,68,27.6,23.8,2.98,82,19.9
+511,Keldon Johnson,SAS,FC,8.0,2.0,a,,SAS,1914.0,82,0,23.3,23.5,2.94,77,23.4
+533,Jamal Shead,TOR,BC,8.0,1.3,a,,TOR,1849.0,82,12,22.6,22.4,2.8,75,19.7
+572,Tre Johnson,WAS,BC,8.0,1.0,a,,WAS,1301.0,60,42,24.1,21.7,2.71,0,0
+12,Luguentz Dort,ATL,BC,7.5,1.9,d,Knee expected back 2026-10-10,OKC,1258.0,69,69,26.8,18.2,2.43,71,22.2
+13,Aaron Wiggins,ATL,BC,7.5,1.1,a,,OKC,1292.0,65,21,21.8,19.8,2.64,76,22.5
+15,Kingston Flemings,ATL,BC,7.5,0.7,a,,,0.0,0,0,0,0,0.0,0,0
+33,Mike Conley,BOS,BC,7.5,0.5,a,,MIN,799.0,54,15,18.4,14.7,1.96,71,23.7
+54,Mikel Brown Jr.,BKN,BC,7.5,1.0,d,Ankle expected back 2026-10-12,,0.0,0,0,0,0,0.0,0,0
+64,Ryan Kalkbrenner,CHA,FC,7.5,1.0,a,,CHA,1405.0,69,31,21.4,20.7,2.76,0,0
+105,Jaylon Tyson,CLE,BC,7.5,2.3,a,,CLE,1750.0,66,42,26.9,26.3,3.51,47,8.6
+132,Morez Johnson,DAL,FC,7.5,0.3,a,,,0.0,0,0,0,0,0.0,0,0
+149,Tyus Jones,DEN,BC,7.5,0.4,a,,DEN,713.0,67,12,14.6,10.7,1.43,81,26.2
+160,Ronald Holland II,DET,FC,7.5,0.7,a,,DET,1502.0,78,5,19.9,19.1,2.55,81,13.5
+161,Daniss Jenkins,DET,BC,7.5,1.7,a,,DET,1630.0,72,19,20.2,22.7,3.03,7,2.1
+164,Duncan Robinson,DET,FC,7.5,2.6,a,,DET,1660.0,77,77,27.4,21.8,2.91,74,19.9
+182,Gui Santos,GSW,FC,7.5,2.3,d,Rest expected back 2026-10-10,GSW,1458.0,68,30,20.5,21.3,2.84,56,11.8
+188,Yaxel Lendeborg,GSW,FC,7.5,9.6,d,Rest expected back 2026-10-10,,0.0,0,0,0,0,0.0,0,0
+204,Steven Adams,HOU,FC,7.5,1.1,a,,HOU,685.0,32,11,22.8,21.3,2.84,58,14.4
+209,Marcus Smart,HOU,BC,7.5,2.1,a,,LAL,1453.0,62,54,28.5,23.5,3.13,34,21.7
+236,Max Strus,LAC,BC,7.5,0.6,i,Foot expected back 2026-11-02,CLE,256.0,12,5,24.0,21.5,2.87,50,22.2
+239,Derrick Jones Jr.,LAC,FC,7.5,0.7,a,,LAC,1100.0,50,45,27.0,22.1,2.95,77,19.3
+252,Keaton Wagler,LAC,BC,7.5,2.0,a,,,0.0,0,0,0,0,0.0,0,0
+255,Ziaire Williams,LAL,FC,7.5,0.3,d,Undisclosed expected back 2026-10-13,BKN,1118.0,56,13,22.9,20.2,2.69,63,21.4
+276,Isaiah Stewart,MEM,FC,7.5,0.5,d,Ankle expected back 2026-10-09,DET,1330.0,58,13,22.7,22.9,3.05,72,20.3
+284,Jaylen Wells,MEM,FC,7.5,1.1,a,,MEM,1517.0,69,69,26.4,21.9,2.92,79,19.3
+286,Javon Small,MEM,BC,7.5,0.3,a,,MEM,955.0,41,12,20.2,23.2,3.09,0,0
+298,Tim Hardaway Jr.,MIA,BC,7.5,2.6,a,,DEN,1657.0,80,6,26.6,20.7,2.76,77,18.4
+305,Pelle Larsson,MIA,BC,7.5,3.5,d,Illness expected back 2026-10-10,MIA,1711.0,70,54,26.4,24.4,3.25,55,10.8
+326,Gary Trent Jr.,MIL,BC,7.5,0.4,a,,MIL,865.0,65,21,21.2,13.0,1.73,74,19.1
+333,Ousmane Dieng,MIL,FC,7.5,0.5,a,,MIL,1009.0,57,20,19.3,17.7,2.36,37,9.7
+375,Bruce Brown,NYK,FC,7.5,0.7,a,,DEN,1630.0,82,4,24.4,19.6,2.61,41,19.3
+388,Andre Drummond,NYK,FC,7.5,1.0,a,,PHI,1356.0,63,25,19.5,21.6,2.88,40,21.4
+393,Alex Caruso,OKC,BC,7.5,4.1,a,,OKC,990.0,56,0,18.2,17.8,2.37,54,21.6
+405,Jared McCain,OKC,BC,7.5,6.7,a,,OKC,995.0,67,3,17.3,14.7,1.96,23,25.0
+459,Jordan Goodwin,PHX,BC,7.5,0.4,a,,PHX,1610.0,70,10,22.5,23.1,3.08,29,16.5
+476,Robert Williams III,POR,FC,7.5,0.8,a,,POR,1298.0,59,1,17.1,22.0,2.93,20,21.1
+569,Carlton Carrington,WAS,BC,7.5,7.7,a,,WAS,2123.0,82,48,27.7,25.7,3.43,82,25.8
+8,Ryan Nembhard,ATL,BC,7.0,0.6,a,,DAL,1244.0,60,27,19.5,20.6,2.94,0,0
+9,Buddy Hield,ATL,BC,7.0,1.0,a,,ATL,792.0,51,3,16.1,15.7,2.24,82,20.8
+11,Jock Landale,ATL,FC,7.0,1.0,a,,ATL,1548.0,68,27,22.1,22.7,3.24,42,11.4
+17,Corey Kispert,ATL,FC,7.0,0.4,a,,ATL,923.0,58,10,18.6,16.2,2.31,61,19.8
+62,Tidjane Salaun,CHA,FC,7.0,0.2,a,,CHA,494.0,37,0,15.5,13.2,1.89,60,15.1
+103,Sam Merrill,CLE,BC,7.0,0.7,a,,CLE,1166.0,52,38,26.5,22.3,3.19,71,15.1
+104,Craig Porter,CLE,BC,7.0,0.4,a,,CLE,1204.0,64,3,17.9,18.8,2.69,51,9.6
+116,Zaccharie Risacher,DAL,FC,7.0,3.8,a,,ATL,1335.0,67,46,22.4,19.8,2.83,75,22.2
+122,Max Christie,DAL,BC,7.0,3.6,a,,DAL,1718.0,77,68,29.1,22.5,3.21,78,20.3
+179,Moses Moody,GSW,BC,7.0,0.0,i,Knee expected back 2026-12-01,GSW,1400.0,60,49,25.7,23.4,3.34,74,18.6
+187,Al Horford,GSW,FC,7.0,0.8,a,,GSW,1066.0,45,13,21.5,23.8,3.4,60,23.9
+197,Clint Capela,HOU,FC,7.0,0.6,a,,HOU,1024.0,75,3,12.3,13.7,1.96,55,24.4
+223,Jarace Walker,IND,FC,7.0,7.8,a,,IND,1926.0,76,41,25.7,25.0,3.57,75,15.2
+264,Jake LaRavia,LAL,FC,7.0,3.8,a,,LAL,1718.0,82,43,25.1,21.2,3.03,66,19.2
+283,Cam Spencer,MEM,BC,7.0,7.2,a,,MEM,1970.0,72,20,23.8,27.5,3.93,25,9.4
+315,Caris LeVert,MIL,BC,7.0,1.0,a,,DET,1154.0,60,0,19.2,19.6,2.8,64,26.3
+320,Kasparas Jakučionis,MIL,BC,7.0,0.8,a,,MIA,860.0,53,12,17.8,16.1,2.3,0,0
+331,Brayden Burries,MIL,BC,7.0,1.1,a,,,0.0,0,0,0,0,0.0,0,0
+376,Jose Alvarado,NYK,BC,7.0,1.8,a,,NYK,1371.0,69,3,19.9,20.0,2.86,56,26.7
+380,Miles McBride,NYK,BC,7.0,1.0,a,,NYK,934.0,41,15,26.3,22.9,3.27,64,21.7
+434,Kentavious Caldwell-Pope,PHI,BC,7.0,0.9,a,,MEM,984.0,51,14,21.3,19.3,2.76,77,19.6
+451,Luke Kennard,PHX,BC,7.0,2.2,a,,LAL,1371.0,78,6,21.6,17.5,2.5,65,21.0
+493,Dylan Cardwell,SAC,FC,7.0,0.3,a,,SAC,986.0,44,1,20.6,22.3,3.19,0,0
+494,Nique Clifford,SAC,BC,7.0,1.6,a,,SAC,1561.0,75,28,25.1,20.8,2.97,0,0
+506,Luke Kornet,SAS,FC,7.0,1.0,a,,SAS,1402.0,68,25,21.0,20.9,2.99,73,19.0
+541,Allen Graves,TOR,FC,7.0,0.1,d,Groin expected back 2026-10-10,,0.0,0,0,0,0,0.0,0,0
+565,Justin Champagnie,WAS,FC,7.0,1.0,a,,WAS,1455.0,69,19,20.0,21.2,3.03,62,21.3
+573,Will Riley,WAS,FC,7.0,0.5,a,,WAS,1460.0,74,18,22.1,19.6,2.8,0,0
+576,Khris Middleton,WAS,FC,7.0,1.0,d,Rest expected back 2026-10-10,DAL,1373.0,63,50,22.8,21.9,3.13,37,27.1
+5,Asa Newell,ATL,FC,6.5,0.4,a,,ATL,468.0,44,2,11.4,10.7,1.65,0,0
+25,Sam Hauser,BOS,FC,6.5,2.5,d,Rest expected back 2026-10-10,BOS,1430.0,78,49,24.8,18.4,2.83,71,15.9
+29,Hugo González,BOS,BC,6.5,2.9,a,,BOS,804.0,74,3,14.6,10.9,1.68,0,0
+41,Terance Mann,BKN,BC,6.5,1.1,a,,BKN,1203.0,63,51,24.3,19.1,2.94,67,17.0
+47,Nolan Traore,BKN,BC,6.5,1.3,a,,BKN,1228.0,56,31,22.2,21.9,3.37,0,0
+48,Danny Wolf,BKN,FC,6.5,1.0,a,,BKN,1229.0,57,15,20.8,21.5,3.31,0,0
+52,Moritz Wagner,BKN,FC,6.5,1.4,a,,ORL,467.0,36,0,11.9,13.2,2.03,30,24.2
+60,Grant Williams,CHA,FC,6.5,0.1,i,Hamstring expected back 2026-10-21,CHA,611.0,36,3,19.8,17.1,2.63,16,25.8
+143,Spencer Jones,DEN,FC,6.5,0.4,d,Hamstring expected back 2026-10-11,DEN,906.0,64,37,22.1,14.3,2.2,20,4.6
+168,Isaiah Joe,DET,BC,6.5,4.5,a,,OKC,1337.0,71,9,21.2,18.9,2.91,74,18.1
+180,Gary Payton II,GSW,BC,6.5,1.2,d,Rest expected back 2026-10-10,GSW,1322.0,73,1,15.6,18.1,2.78,62,15.4
+208,Bogdan Bogdanovic,HOU,BC,6.5,1.8,a,,LAC,371.0,23,3,19.7,15.9,2.45,54,22.1
+217,Obi Toppin,IND,FC,6.5,2.7,a,,IND,534.0,24,3,17.7,22.1,3.4,79,20.7
+238,Isaiah Jackson,LAC,FC,6.5,0.8,a,,LAC,1019.0,55,14,16.5,18.6,2.86,5,21.2
+314,Nick Richards,MIA,FC,6.5,0.2,a,,CHI,680.0,48,6,14.6,14.2,2.18,57,22.9
+330,Nate Ament,MIL,FC,6.5,0.5,d,Ankle expected back 2026-10-11,,0.0,0,0,0,0,0.0,0,0
+347,Joan Beringer,MIN,FC,6.5,1.4,a,,MIN,374.0,40,3,7.9,9.5,1.46,0,0
+391,John Konchar,NYK,BC,6.5,0.1,u,,UTA,1087.0,56,8,19.9,19.5,3.0,46,10.5
+399,Jaylin Williams,OKC,FC,6.5,8.2,d,Heel expected back 2026-10-12,OKC,1362.0,65,11,19.6,20.8,3.2,47,20.0
+418,Jonathan Isaac,ORL,FC,6.5,0.1,d,Knee expected back 2026-10-11,ORL,463.0,52,0,10.0,8.9,1.37,71,17.0
+423,Tristan da Silva,ORL,FC,6.5,5.6,a,,ORL,1573.0,77,34,24.7,20.4,3.14,74,15.3
+425,Noah Penda,ORL,BC,6.5,0.4,d,Hamstring expected back 2026-10-11,ORL,698.0,59,2,12.8,11.8,1.82,0,0
+440,Adem Bona,PHI,FC,6.5,0.8,d,Foot expected back 2026-10-16,PHI,1051.0,71,18,17.4,14.9,2.29,58,15.8
+453,Pat Spencer,PHX,BC,6.5,0.6,a,,GSW,1257.0,66,14,18.6,19.0,2.92,39,7.6
+472,Vit Krejci,POR,BC,6.5,0.5,a,,POR,1093.0,65,8,21.4,16.8,2.58,57,18.4
+509,Harrison Barnes,SAS,FC,6.5,1.7,a,,SAS,1463.0,77,52,25.8,18.9,2.91,82,21.6
+534,Ja'Kobe Walter,TOR,BC,6.5,0.8,a,,TOR,1159.0,72,19,20.5,16.1,2.48,52,17.9
+538,Kyle Anderson,TOR,BC,6.5,0.4,a,,MIN,881.0,43,5,19.8,20.3,3.12,61,17.7
+21,Devin Carter,BOS,BC,6.0,0.6,a,,SAC,795.0,38,12,18.4,20.9,3.48,36,10.2
+55,Keon Ellis,BKN,BC,6.0,2.1,a,,CLE,1143.0,72,11,20.5,16.0,2.67,80,20.9
+75,Christian Anderson,CHA,BC,6.0,0.6,d,Ankle expected back 2026-10-11,,0.0,0,0,0,0,0.0,0,0
+82,Patrick Williams,CHI,FC,6.0,0.6,a,,CHI,1155.0,72,6,20.5,16.3,2.72,63,20.7
+89,Isaac Okoro,CHI,BC,6.0,1.2,a,,CHI,1182.0,63,62,26.9,18.8,3.13,55,13.6
+123,Caleb Martin,DAL,FC,6.0,0.4,d,Illness expected back 2026-10-11,DAL,697.0,58,12,14.8,12.2,2.03,45,20.5
+145,Marvin Bagley III,DEN,FC,6.0,2.7,a,,DAL,1376.0,60,12,20.0,23.0,3.83,31,9.7
+176,Brandon Williams,GSW,BC,6.0,12.8,a,,DAL,1808.0,66,15,22.2,27.3,4.55,33,17.4
+240,Jordan Miller,LAC,BC,6.0,0.0,i,Shoulder expected back 2027-03-01,LAC,1220.0,60,1,22.1,20.6,3.43,37,9.3
+254,Gradey Dick,LAC,BC,6.0,1.9,a,,TOR,860.0,76,1,14.0,11.4,1.9,54,24.9
+265,Kevon Looney,LAL,FC,6.0,0.8,a,,NOP,302.0,21,8,14.7,14.3,2.38,76,17.1
+267,Matisse Thybulle,LAL,BC,6.0,0.9,a,,POR,515.0,30,0,16.0,17.1,2.85,15,23.2
+277,Quinten Post,MEM,FC,6.0,1.3,a,,GSW,1152.0,67,35,17.3,17.2,2.87,42,16.6
+292,Walter Clayton Jr.,MEM,BC,6.0,1.1,a,,MEM,1424.0,69,6,20.4,20.5,3.42,0,0
+293,Taylor Hendricks,MEM,FC,6.0,0.5,a,,MEM,1009.0,59,17,18.9,16.8,2.8,3,20.1
+296,D'Angelo Russell,MEM,BC,6.0,0.0,u,,DAL,575.0,26,3,19.0,22.3,3.72,58,29.8
+362,Karlo Matkovic,NOP,FC,6.0,0.4,a,,NOP,918.0,62,2,14.7,14.9,2.48,42,19.4
+369,Trendon Watford,NOP,FC,6.0,0.3,a,,PHI,899.0,53,7,16.3,16.9,2.82,44,21.7
+387,Jordan Clarkson,NYK,BC,6.0,2.4,a,,NYK,1058.0,72,1,17.8,14.5,2.42,37,29.8
+389,Ochai Agbaji,NYK,BC,6.0,0.5,d,Coach's Decision expected back 2026-10-12,BKN,672.0,62,13,15.7,11.1,1.85,64,21.4
+407,Aday Mara,OKC,FC,6.0,6.5,a,,,0.0,0,0,0,0,0.0,0,0
+421,Goga Bitadze,ORL,FC,6.0,1.5,a,,ORL,1157.0,64,3,15.2,18.3,3.05,70,24.1
+437,Dominick Barlow,PHI,FC,6.0,4.5,d,Back expected back 2026-10-16,PHI,1407.0,71,59,23.8,19.7,3.28,35,10.0
+441,Justin Edwards,PHI,FC,6.0,0.4,a,,PHI,835.0,64,12,15.3,13.1,2.18,44,20.9
+462,Ryan Dunn,PHX,FC,6.0,1.0,a,,PHX,1177.0,70,16,19.4,16.9,2.82,74,15.4
+488,Daeqwon Plowden,SAC,BC,6.0,0.3,a,,SAC,613.0,32,7,26.4,19.1,3.18,6,9.6
+515,Carter Bryant,SAS,FC,6.0,3.0,a,,SAS,687.0,71,0,11.5,9.6,1.6,0,0
+543,Josh Green,UTA,BC,6.0,0.5,a,,CHA,568.0,58,0,15.7,9.8,1.63,68,17.0
+546,Jaxson Hayes,UTA,FC,6.0,1.7,a,,LAL,1129.0,66,9,18.3,17.0,2.83,56,18.1
+562,Tre Mann,WAS,BC,6.0,1.2,a,,CHA,645.0,53,1,12.6,12.2,2.03,13,25.4
+14,Zuby Ejiofor,ATL,FC,5.5,0.3,a,,,0.0,0,0,0,0,0.0,0,0
+31,Luka Garza,BOS,FC,5.5,2.6,a,,BOS,1135.0,69,6,16.2,16.6,3.02,39,6.4
+40,Josh Minott,BKN,FC,5.5,0.5,a,,BKN,818.0,49,11,17.0,16.6,3.02,46,6.2
+46,Ben Saraf,BKN,BC,5.5,1.0,a,,BKN,852.0,44,11,20.8,19.5,3.55,0,0
+87,Zach Collins,CHI,FC,5.5,0.1,d,Toe expected back 2026-10-09,CHI,201.0,10,0,18.4,20.1,3.65,64,17.3
+88,Noa Essengue,CHI,FC,5.5,0.5,a,,CHI,3.0,2,0,3.0,1.5,0.27,0,0
+92,Rob Dillingham,CHI,BC,5.5,0.1,u,Wrist expected back 2026-11-06,CHI,985.0,65,0,14.9,15.1,2.75,49,10.7
+95,Dailyn Swain,CHI,FC,5.5,0.3,a,,,0.0,0,0,0,0,0.0,0,0
+106,Nae'Qwan Tomlin,CLE,FC,5.5,0.4,d,Back expected back 2026-10-11,CLE,891.0,64,3,15.7,13.6,2.47,5,12.8
+112,Mario Hezonja,CLE,BC,5.5,2.2,a,,,0.0,0,0,0,0,0.0,0,0
+124,Moussa Cisse,DAL,FC,5.5,0.2,a,,DAL,596.0,38,1,13.9,15.7,2.85,0,0
+126,Marcus Sasser,DAL,BC,5.5,0.6,d,Hip expected back 2026-10-11,DET,458.0,38,5,12.0,12.0,2.18,57,14.5
+131,Sergio de Larrea,DAL,BC,5.5,2.5,a,,,0.0,0,0,0,0,0.0,0,0
+155,Javonte Green,DET,BC,5.5,2.6,a,,DET,1292.0,82,6,17.6,15.6,2.84,68,14.4
+166,Taurean Prince,DET,FC,5.5,0.5,a,,MIL,478.0,26,7,23.5,18.3,3.33,80,19.2
+171,Ebuka Okorie,DET,BC,5.5,0.4,a,,,0.0,0,0,0,0,0.0,0,0
+184,Will Richard,GSW,BC,5.5,1.1,a,,GSW,1066.0,69,21,20.0,15.4,2.8,0,0
+215,Larry Nance Jr.,IND,FC,5.5,0.1,d,Hamstring expected back 2026-10-10,CLE,373.0,35,3,12.8,10.8,1.96,24,19.9
+227,Jalen Slawson,IND,FC,5.5,0.1,a,,IND,326.0,13,6,23.9,25.1,4.56,0,0
+244,Kobe Sanders,LAC,BC,5.5,0.5,d,Hip expected back 2026-10-10,LAC,1043.0,68,16,19.9,15.2,2.76,0,0
+259,Jarred Vanderbilt,LAL,FC,5.5,1.6,a,,LAL,970.0,65,3,17.4,14.8,2.69,36,15.3
+270,Cameron Carr,LAL,BC,5.5,2.4,d,Undisclosed expected back 2026-10-13,,0.0,0,0,0,0,0.0,0,0
+278,Olivier-Maxence Prosper,MEM,FC,5.5,0.5,a,,MEM,978.0,53,24,18.6,18.5,3.36,52,9.7
+294,Karim Lopez,MEM,FC,5.5,0.4,a,,,0.0,0,0,0,0,0.0,0,0
+299,Simone Fontecchio,MIA,FC,5.5,2.8,a,,MIA,1148.0,70,9,16.8,16.1,2.93,75,12.4
+324,A.J. Green,MIL,BC,5.5,13.4,a,,MIL,1467.0,78,68,29.1,18.7,3.4,73,14.6
+349,Cody Williams,MIN,FC,5.5,6.4,a,,UTA,1291.0,67,41,24.3,19.4,3.53,50,11.7
+385,Landry Shamet,NYK,BC,5.5,3.0,a,,NYK,831.0,51,12,23.0,16.3,2.96,50,9.4
+402,Nikola Topic,OKC,BC,5.5,0.5,d,Back expected back 2026-10-12,OKC,174.0,10,2,16.0,17.4,3.16,0,0
+409,Bennett Stirtz,OKC,BC,5.5,0.8,a,,,0.0,0,0,0,0,0.0,0,0
+426,Jase Richardson,ORL,BC,5.5,0.4,a,,ORL,481.0,54,0,10.9,9.0,1.64,0,0
+432,Dean Wade,PHI,FC,5.5,4.0,a,,CLE,966.0,59,38,22.3,16.3,2.96,59,15.2
+445,Caleb Love,PHI,BC,5.5,1.1,a,,POR,965.0,49,1,20.7,19.8,3.6,0,0
+449,Labaron Philon,PHI,BC,5.5,0.9,a,,,0.0,0,0,0,0,0.0,0,0
+470,Jeremy Sochan,POR,FC,5.5,1.0,a,,NYK,417.0,44,0,10.7,9.6,1.75,54,26.6
+483,Yang Hansen,POR,FC,5.5,0.6,a,,POR,244.0,43,1,7.0,5.6,1.02,0,0
+500,Alex Karaban,SAC,FC,5.5,0.3,a,,,0.0,0,0,0,0,0.0,0,0
+503,Elfrid Payton,SAC,BC,5.5,0.5,a,,,0.0,0,0,0,0,0.0,24,25.1
+527,Trayce Jackson-Davis,TOR,FC,5.5,0.3,d,Head expected back 2026-10-10,TOR,527.0,53,1,9.4,9.9,1.8,62,18.0
+568,Tristan Vukcevic,WAS,FC,5.5,0.2,i,Hip expected back 2026-11-02,WAS,863.0,49,12,13.7,17.8,3.24,35,18.3
+574,Jamir Watkins,WAS,FC,5.5,0.1,i,Knee expected back 2027-04-01,WAS,933.0,50,7,20.6,18.7,3.4,0,0
+3,Mouhamed Gueye,ATL,FC,5.0,1.8,d,Foot expected back 2026-10-21,ATL,1055.0,77,8,15.3,13.7,2.74,33,17.2
+7,Jalen Wilson,ATL,FC,5.0,0.5,a,,BKN,629.0,54,2,15.9,11.5,2.3,79,18.3
+19,Henri Veesaar,ATL,FC,5.0,0.0,u,Knee expected back 2027-07-01,,0.0,0,0,0,0,0.0,0,0
+26,Jordan Walsh,BOS,FC,5.0,4.5,a,,BOS,984.0,68,25,17.8,14.6,2.92,52,4.9
+28,Baylor Scheierman,BOS,BC,5.0,5.4,a,,BOS,1072.0,77,20,18.6,13.8,2.76,31,9.7
+36,Chris Cenac Jr.,BOS,FC,5.0,0.3,a,,,0.0,0,0,0,0,0.0,0,0
+45,Drake Powell,BKN,BC,5.0,0.6,a,,BKN,851.0,63,24,21.0,13.5,2.7,0,0
+50,Chaney Johnson,BKN,FC,5.0,0.2,a,,BKN,362.0,17,1,20.5,21.2,4.24,0,0
+56,Joshua Jefferson,BKN,FC,5.0,0.1,d,Back expected back 2026-10-12,,0.0,0,0,0,0,0.0,0,0
+63,Sion James,CHA,BC,5.0,3.8,a,,CHA,1270.0,82,19,22.5,15.3,3.06,0,0
+66,Liam McNeeley,CHA,FC,5.0,0.4,a,,CHA,277.0,31,0,11.9,9.2,1.84,0,0
+69,Dorian Finney-Smith,CHA,FC,5.0,1.6,a,,HOU,354.0,37,1,16.8,9.6,1.92,63,19.3
+91,Leonard Miller,CHI,FC,5.0,0.8,a,,CHI,718.0,46,12,15.6,15.6,3.12,13,3.2
+114,Meleek Thomas,CLE,BC,5.0,1.5,a,,,0.0,0,0,0,0,0.0,0,0
+134,K.J. Simpson,DEN,BC,5.0,0.1,u,,DEN,265.0,20,2,12.9,13.3,2.66,36,20.3
+139,Zeke Nnaji,DEN,FC,5.0,0.5,a,,DEN,507.0,52,4,12.0,9.9,1.98,57,8.9
+141,Julian Strawther,DEN,BC,5.0,2.8,a,,DEN,742.0,57,14,15.1,12.9,2.58,65,16.2
+150,Lonnie Walker IV,DEN,BC,5.0,1.0,a,,,0.0,0,0,0,0,0.0,20,23.0
+151,Cam Whitmore,DEN,FC,5.0,1.0,a,,WAS,350.0,21,0,16.9,16.7,3.34,51,17.1
+167,Gary Harris,DET,BC,5.0,0.0,u,,MIL,399.0,48,2,13.8,8.6,1.72,48,7.9
+175,Charles Bassey,GSW,FC,5.0,0.5,a,,GSW,192.0,13,0,11.8,14.5,2.9,36,13.2
+191,Georges Niang,GSW,FC,5.0,0.6,d,Rest expected back 2026-10-10,,0.0,0,0,0,0,0.0,79,17.9
+192,Dalen Terry,GSW,FC,5.0,0.2,a,,PHI,526.0,48,0,11.5,11.0,2.2,73,11.2
+196,Julian Phillips,HOU,FC,5.0,0.3,a,,MIN,299.0,48,2,8.9,6.1,1.22,79,10.1
+199,Jae'Sean Tate,HOU,FC,5.0,0.3,a,,HOU,291.0,46,1,8.8,6.3,1.26,52,9.5
+210,Oscar Tshiebwe,HOU,FC,5.0,0.1,a,,UTA,517.0,27,6,16.6,19.2,3.84,14,20.5
+216,Quenton Jackson,IND,BC,5.0,0.5,a,,IND,953.0,49,19,18.3,19.3,3.86,28,14.2
+222,Ben Sheppard,IND,BC,5.0,4.2,a,,IND,1017.0,65,20,21.4,15.8,3.16,63,13.1
+225,Johnny Furphy,IND,BC,5.0,0.1,i,Knee expected back 2027-01-01,IND,496.0,35,21,18.4,14.3,2.86,50,6.1
+229,Kobe Brown,IND,FC,5.0,0.3,a,,IND,803.0,61,10,15.8,13.2,2.64,40,5.6
+237,Jalen Pickett,LAC,BC,5.0,0.3,a,,DEN,658.0,50,18,16.1,13.3,2.66,49,11.4
+243,Yanic Konan Niederhäuser,LAC,FC,5.0,0.3,i,Foot expected back 2026-11-01,LAC,422.0,41,0,10.3,10.2,2.04,0,0
+261,Dalton Knecht,LAL,FC,5.0,1.7,d,Undisclosed expected back 2026-10-13,LAL,411.0,54,1,10.2,7.6,1.52,78,14.7
+271,Jaden Hardy,LAL,BC,5.0,0.8,a,,WAS,791.0,57,4,15.8,13.9,2.78,57,14.9
+287,Jordan Hawkins,MEM,BC,5.0,0.5,a,,NOP,499.0,51,1,13.6,9.9,1.98,56,18.7
+288,Micah Peavy,MEM,BC,5.0,0.0,d,Ankle expected back 2026-10-09,NOP,657.0,61,4,15.0,10.6,2.12,0,0
+290,Kris Murray,MEM,FC,5.0,1.3,a,,POR,918.0,57,15,23.4,16.1,3.22,69,10.9
+295,Jahmai Mashack,MEM,BC,5.0,0.2,a,,MEM,564.0,31,7,21.7,18.3,3.66,0,0
+301,Dru Smith,MIA,BC,5.0,2.8,d,Calf expected back 2026-10-16,MIA,1291.0,70,1,16.3,18.4,3.68,14,17.7
+316,Kam Jones,MIL,BC,5.0,0.4,a,,IND,514.0,37,7,16.6,13.9,2.78,0,0
+327,Jericho Sims,MIL,FC,5.0,3.6,a,,MIL,1020.0,67,19,19.7,15.5,3.1,53,8.5
+340,Bones Hyland,MIN,BC,5.0,8.2,a,,MIN,1290.0,71,3,16.6,17.9,3.58,24,12.8
+345,Terrence Shannon Jr.,MIN,BC,5.0,2.0,a,,MIN,411.0,43,2,12.5,9.4,1.88,32,9.0
+352,Trey Lyles,MIN,FC,5.0,0.4,a,,,0.0,0,0,0,0,0.0,69,16.2
+366,Bryce McGowens,NOP,BC,5.0,0.3,a,,NOP,660.0,42,13,21.0,15.6,3.12,13,1.9
+372,DeAndre Jordan,NOP,FC,5.0,0.5,a,,NOP,193.0,12,7,16.6,15.8,3.16,56,13.0
+390,Drew Eubanks,NYK,FC,5.0,0.1,d,Coach's Decision expected back 2026-10-12,SAC,507.0,42,11,13.1,12.2,2.44,61,12.5
+397,Kenrich Williams,OKC,FC,5.0,1.4,a,,OKC,816.0,56,2,15.3,14.7,2.94,69,14.7
+404,Thomas Sorber,OKC,FC,5.0,0.1,d,Knee expected back 2026-10-12,,0.0,0,0,0,0,0.0,0,0
+413,Jevon Carter,ORL,BC,5.0,0.3,a,,ORL,752.0,53,1,16.4,14.3,2.86,36,9.1
+443,Jabari Walker,PHI,FC,5.0,1.0,a,,PHI,644.0,64,6,11.9,10.1,2.02,60,12.0
+450,Rayan Rupert,PHI,BC,5.0,0.4,a,,MEM,851.0,64,8,16.8,13.3,2.66,52,6.5
+454,Haywood Highsmith,PHX,FC,5.0,0.2,a,,PHX,77.0,7,0,13.0,11.1,2.22,74,17.1
+465,Rasheer Fleming,PHX,FC,5.0,0.5,a,,PHX,523.0,55,1,12.2,9.6,1.92,0,0
+468,Koa Peat,PHX,FC,5.0,0.5,a,,,0.0,0,0,0,0,0.0,0,0
+482,Sidy Cissoko,POR,BC,5.0,1.4,a,,POR,1000.0,75,26,19.1,13.3,2.66,22,4.2
+485,Micah Potter,POR,FC,5.0,0.8,a,,IND,940.0,47,7,19.3,20.1,4.02,38,12.6
+497,Jonathan Mogbo,SAC,FC,5.0,0.3,a,,TOR,236.0,40,0,6.2,5.9,1.18,63,19.9
+545,Josh Okogie,UTA,BC,5.0,1.3,a,,HOU,928.0,78,32,17.4,11.9,2.38,40,16.6
+552,Svi Mykhailiuk,UTA,BC,5.0,1.0,a,,UTA,867.0,50,41,23.1,17.5,3.5,38,17.3
+566,Anthony Gill,WAS,FC,5.0,0.2,a,,WAS,773.0,55,8,17.3,14.3,2.86,51,5.0
+10,RayJ Dennis,ATL,FC,4.5,0.2,a,,ATL,190.0,17,0,12.1,10.9,2.42,11,8.8
+16,Keshon Gilbert,ATL,BC,4.5,0.2,d,Knee expected back 2026-10-10,ATL,41.0,4,0,18.5,17.0,3.78,0,0
+20,Isaac McKneely,ATL,BC,4.5,0.1,a,,,0.0,0,0,0,0,0.0,0,0
+30,Amari Williams,BOS,FC,4.5,0.7,a,,BOS,129.0,22,2,6.6,6.0,1.33,0,0
+32,Ron Harper Jr.,BOS,BC,4.5,3.4,d,Shoulder expected back 2026-10-10,BOS,272.0,29,3,11.0,9.3,2.07,1,15.0
+37,Tucker DeVries,BOS,FC,4.5,0.1,a,,,0.0,0,0,0,0,0.0,0,0
+38,Dillon Mitchell,BOS,FC,4.5,0.0,a,,,0.0,0,0,0,0,0.0,0,0
+39,Milos Uzan,BOS,BC,4.5,0.3,a,,,0.0,0,0,0,0,0.0,0,0
+53,Tyler Bilodeau,BKN,FC,4.5,0.3,a,,,0.0,0,0,0,0,0.0,0,0
+57,Grant Nelson,BKN,FC,4.5,0.2,a,,BKN,32.0,4,0,8.8,13.2,2.93,0,0
+58,Nick Pringle,BKN,FC,4.5,0.0,u,,,0.0,0,0,0,0,0.0,0,0
+67,Pat Connaughton,CHA,BC,4.5,1.2,a,,CHA,243.0,42,0,7.1,5.8,1.29,41,12.9
+70,PJ Hall,CHA,FC,4.5,0.1,a,,CHA,220.0,19,2,11.3,11.5,2.56,19,3.9
+74,Michael Ajayi,CHA,FC,4.5,0.2,a,,,0.0,0,0,0,0,0.0,0,0
+76,Kylan Boswell,CHA,BC,4.5,0.2,d,Knee expected back 2026-10-21,,0.0,0,0,0,0,0.0,0,0
+79,DJ Armstrong,CHA,BC,4.5,0.0,u,,,0.0,0,0,0,0,0.0,0,0
+80,Tre Carroll,CHA,FC,4.5,0.0,u,,,0.0,0,0,0,0,0.0,0,0
+93,Tobe Awaka,CHI,FC,4.5,0.3,a,,,0.0,0,0,0,0,0.0,0,0
+94,Jaylin Sellers,CHI,BC,4.5,0.3,d,Back expected back 2026-10-09,,0.0,0,0,0,0,0.0,0,0
+97,Houston Mallette,CHI,BC,4.5,0.0,u,,,0.0,0,0,0,0,0.0,0,0
+98,Peter Suder,CHI,BC,4.5,0.0,u,,,0.0,0,0,0,0,0.0,0,0
+99,Tristan Enaruna,CLE,FC,4.5,0.2,a,,CLE,80.0,9,0,9.4,9.1,2.02,0,0
+107,Tyrese Proctor,CLE,BC,4.5,1.5,a,,CLE,559.0,50,1,10.9,11.2,2.49,0,0
+108,Thomas Bryant,CLE,FC,4.5,13.4,a,,CLE,776.0,60,1,12.2,12.9,2.87,66,14.9
+111,Khalifa Diop,CLE,FC,4.5,0.2,d,Undisclosed expected back 2026-10-11,,0.0,0,0,0,0,0.0,0,0
+113,Riley Minix,CLE,FC,4.5,0.0,a,,CLE,60.0,9,0,6.4,6.7,1.49,1,2.0
+115,"Ernest Udeh, Jr.",CLE,FC,4.5,0.1,a,,,0.0,0,0,0,0,0.0,0,0
+127,John Poulakidas,DAL,BC,4.5,0.2,a,,DAL,200.0,13,0,19.5,15.1,3.36,0,0
+129,Jett Howard,DAL,BC,4.5,0.9,a,,ORL,541.0,55,0,12.6,9.9,2.2,60,8.3
+130,Tarik Biberovic,DAL,FC,4.5,0.9,a,,,0.0,0,0,0,0,0.0,0,0
+133,Tobi Lawal,DAL,FC,4.5,0.1,a,,,0.0,0,0,0,0,0.0,0,0
+142,DaRon Holmes II,DEN,FC,4.5,0.3,a,,DEN,181.0,25,6,8.4,6.9,1.53,0,0
+146,Trevon Brazile,DEN,FC,4.5,0.2,a,,,0.0,0,0,0,0,0.0,0,0
+147,Alpha Diallo,DEN,BC,4.5,1.0,a,,,0.0,0,0,0,0,0.0,0,0
+148,Bryce Hopkins,DEN,FC,4.5,0.1,a,,,0.0,0,0,0,0,0.0,0,0
+152,Reese Dixon-Waters,DEN,BC,4.5,0.0,u,,,0.0,0,0,0,0,0.0,0,0
+153,Keonte Jones,DEN,BC,4.5,0.0,u,,,0.0,0,0,0,0,0.0,0,0
+162,Tolu Smith,DET,FC,4.5,0.5,a,,DET,155.0,15,0,9.1,10.3,2.29,1,22.0
+163,Chaz Lanier,DET,BC,4.5,0.2,a,,DET,158.0,34,0,7.7,4.7,1.04,0,0
+169,Elijah Harkless,DET,BC,4.5,0.6,a,,UTA,492.0,26,9,21.0,18.8,4.18,10,10.2
+170,Isaac Jones,DET,FC,4.5,0.4,a,,DET,19.0,7,1,5.1,2.5,0.56,40,6.6
+172,Ugonna Onyenso,DET,FC,4.5,0.1,a,,,0.0,0,0,0,0,0.0,0,0
+173,Drake Allen,DET,BC,4.5,0.0,u,,,0.0,0,0,0,0,0.0,0,0
+185,Alex Toohey,GSW,FC,4.5,0.1,a,,,0.0,0,0,0,0,0.0,0,0
+186,LJ Cryer,GSW,BC,4.5,0.3,a,,GSW,221.0,18,1,16.2,12.4,2.76,0,0
+189,Malevy Leons,GSW,FC,4.5,0.2,a,,GSW,251.0,25,2,11.0,10.2,2.27,6,1.2
+193,Obi Agbim,GSW,BC,4.5,0.0,u,,,0.0,0,0,0,0,0.0,0,0
+194,Nick Boyd,GSW,BC,4.5,0.0,u,,,0.0,0,0,0,0,0.0,0,0
+195,Graham Ike,GSW,FC,4.5,0.3,a,,,0.0,0,0,0,0,0.0,0,0
+207,Isaiah Crawford,HOU,FC,4.5,0.4,a,,HOU,69.0,14,0,6.6,4.8,1.07,15,2.2
+211,Rafael Castro,HOU,FC,4.5,0.1,u,,,0.0,0,0,0,0,0.0,0,0
+212,Quadir Copeland,HOU,BC,4.5,0.1,a,,,0.0,0,0,0,0,0.0,0,0
+213,Sean Pedulla,HOU,BC,4.5,0.1,a,,LAC,26.0,7,0,4.4,3.7,0.82,0,0
+214,Bruce Thornton,HOU,BC,4.5,0.3,a,,,0.0,0,0,0,0,0.0,0,0
+231,Braden Smith,IND,BC,4.5,0.3,a,,,0.0,0,0,0,0,0.0,0,0
+232,Keba Keita,IND,FC,4.5,0.1,a,,,0.0,0,0,0,0,0.0,0,0
+233,Rienk Mast,IND,FC,4.5,0.0,a,,,0.0,0,0,0,0,0.0,0,0
+234,Yuki Kawamura,LAC,BC,4.5,1.5,a,,CHI,216.0,18,0,11.6,11.9,2.64,22,4.2
+242,Cam Christie,LAC,BC,4.5,1.0,a,,LAC,353.0,55,0,8.7,6.6,1.47,13,4.8
+248,Johni Broome,LAC,FC,4.5,0.0,a,,PHI,49.0,11,0,5.0,4.7,1.04,0,0
+249,Nick Martinelli,LAC,FC,4.5,0.2,a,,,0.0,0,0,0,0,0.0,0,0
+250,Baba Miller,LAC,FC,4.5,1.4,a,,,0.0,0,0,0,0,0.0,0,0
+251,Jamarion Sharp,LAC,FC,4.5,0.0,u,,,0.0,0,0,0,0,0.0,0,0
+260,Bronny James,LAL,BC,4.5,5.2,a,,LAL,316.0,42,1,8.9,7.6,1.69,27,5.8
+262,Chris Mañon,LAL,BC,4.5,0.2,a,,LAL,44.0,9,0,5.1,4.9,1.09,0,0
+263,Adou Thiero,LAL,BC,4.5,1.0,a,,LAL,122.0,25,0,6.0,5.0,1.11,0,0
+272,Arthur Kaluma,LAL,FC,4.5,0.1,d,Lower Body expected back 2026-10-13,,0.0,0,0,0,0,0.0,0,0
+273,AK Okereke,LAL,FC,4.5,0.1,a,,,0.0,0,0,0,0,0.0,0,0
+274,Meechie Johnson,LAL,BC,4.5,0.0,u,,,0.0,0,0,0,0,0.0,0,0
+275,Chase Ross,LAL,BC,4.5,0.0,u,,,0.0,0,0,0,0,0.0,0,0
+304,Keshad Johnson,MIA,FC,4.5,0.3,u,Hamstring expected back 2026-10-26,MIA,283.0,32,0,8.8,9.2,2.04,16,6.9
+307,Myron Gardner,MIA,FC,4.5,0.3,a,,MIA,457.0,45,7,9.1,10.1,2.24,0,0
+308,Vladislav Goldin,MIA,FC,4.5,0.3,a,,MIA,31.0,9,0,2.7,3.3,0.73,0,0
+311,Ryan Conwell,MIA,BC,4.5,0.4,a,,,0.0,0,0,0,0,0.0,0,0
+312,Tre Donaldson,MIA,BC,4.5,0.3,a,,,0.0,0,0,0,0,0.0,0,0
+313,J'Vonne Hadley,MIA,FC,4.5,0.1,a,,,0.0,0,0,0,0,0.0,0,0
+322,Pete Nance,MIL,FC,4.5,2.9,a,,MIL,559.0,47,6,15.7,11.9,2.64,13,7.3
+329,Cormac Ryan,MIL,BC,4.5,0.3,a,,MIL,265.0,11,2,24.6,24.1,5.36,0,0
+332,John Butler Jr.,MIL,FC,4.5,0.2,u,,,0.0,0,0,0,0,0.0,0,0
+334,Bogoljub Marković,MIL,FC,4.5,0.2,a,,,0.0,0,0,0,0,0.0,0,0
+335,Jake Stephens,MIL,FC,4.5,0.1,a,,,0.0,0,0,0,0,0.0,0,0
+338,Zyon Pullin,MIN,BC,4.5,0.3,a,,MIN,47.0,5,0,8.6,9.4,2.09,3,0.0
+339,Enrique Freeman,MIN,FC,4.5,0.1,a,,MIN,42.0,4,0,9.3,10.7,2.38,22,4.9
+344,Jaylen Clark,MIN,BC,4.5,3.2,a,,MIN,649.0,68,1,13.1,9.4,2.09,40,9.8
+348,Rocco Zikarsky,MIN,FC,4.5,0.1,a,,MIN,47.0,5,0,7.2,9.4,2.09,0,0
+350,Isaiah Evans,MIN,FC,4.5,0.4,a,,,0.0,0,0,0,0,0.0,0,0
+353,Jalen Crutcher,MIN,BC,4.5,0.0,u,,,0.0,0,0,0,0,0.0,0,0
+355,Caleb Houstan,NOP,BC,4.5,0.2,a,,ATL,70.0,18,0,4.2,3.9,0.87,58,8.1
+356,Kobe Bufkin,NOP,BC,4.5,0.3,a,,LAL,94.0,16,1,7.4,5.8,1.29,10,12.3
+357,Christian Koloko,NOP,FC,4.5,0.5,a,,ATL,301.0,27,4,13.2,11.3,2.51,37,7.5
+370,Malik Dia,NOP,FC,4.5,0.1,a,,,0.0,0,0,0,0,0.0,0,0
+371,AJ Johnson,NOP,BC,4.5,0.6,a,,DAL,351.0,48,0,9.5,7.3,1.62,29,16.3
+373,Jaron Pierre Jr.,NOP,BC,4.5,0.4,a,,,0.0,0,0,0,0,0.0,0,0
+374,Solomon Washington,NOP,FC,4.5,0.0,u,,,0.0,0,0,0,0,0.0,0,0
+383,Pacome Dadiet,NYK,FC,4.5,0.2,a,,NYK,111.0,29,0,4.7,3.7,0.82,18,4.2
+384,Tyler Kolek,NYK,BC,4.5,7.6,a,,NYK,790.0,62,1,11.7,12.9,2.87,41,7.3
+386,Mohamed Diawara,NYK,FC,4.5,1.6,a,,NYK,515.0,69,7,9.2,7.5,1.67,0,0
+392,James Wiseman,NYK,FC,4.5,1.0,a,,IND,30.0,4,1,14.5,7.8,1.73,1,7.0
+403,Brooks Barnhizer,OKC,BC,4.5,0.3,a,,OKC,238.0,40,0,8.7,6.1,1.36,0,0
+406,Josh Dix,OKC,BC,4.5,0.1,a,,,0.0,0,0,0,0,0.0,0,0
+408,Otega Oweh,OKC,BC,4.5,0.1,a,,,0.0,0,0,0,0,0.0,0,0
+410,Cristoph Tilly,OKC,FC,4.5,0.1,a,,,0.0,0,0,0,0,0.0,0,0
+412,JD Davison,ORL,BC,4.5,0.2,a,,HOU,209.0,28,0,7.8,7.5,1.67,16,5.7
+415,Jamal Cain,ORL,FC,4.5,1.0,a,,ORL,396.0,40,1,12.2,10.0,2.22,37,11.2
+424,Alex Morales,ORL,BC,4.5,0.3,a,,ORL,19.0,4,0,6.0,4.8,1.07,0,0
+427,Colin Castleton,ORL,FC,4.5,0.1,a,,ORL,18.0,4,0,5.3,4.8,1.07,26,13.7
+428,Malaki Branham,ORL,BC,4.5,0.2,a,,WAS,257.0,28,0,9.8,9.3,2.07,47,8.3
+429,Izaiyah Nelson,ORL,BC,4.5,0.0,d,Ankle expected back 2026-11-01,,0.0,0,0,0,0,0.0,0,0
+435,Ariel Hukporti,PHI,FC,4.5,0.7,i,Achilles expected back 2027-10-01,NYK,439.0,54,5,9.2,8.2,1.82,25,6.5
+436,Dillon Jones,PHI,FC,4.5,0.2,a,,NYK,33.0,7,0,5.6,4.7,1.04,54,8.1
+444,Saint Thomas,PHI,FC,4.5,0.1,a,,,0.0,0,0,0,0,0.0,0,0
+446,Tacko Fall,PHI,FC,4.5,1.6,i,Hip expected back 2026-10-16,,0.0,0,0,0,0,0.0,0,0
+447,Duke Miles,PHI,BC,4.5,0.2,a,,,0.0,0,0,0,0,0.0,0,0
+448,Jameer Nelson Jr.,PHI,BC,4.5,0.3,a,,,0.0,0,0,0,0,0.0,0,0
+455,Jamaree Bouyea,PHX,BC,4.5,1.3,a,,PHX,644.0,46,1,14.0,13.8,3.07,5,12.0
+464,Koby Brea,PHX,BC,4.5,0.2,a,,PHX,76.0,12,0,7.0,6.4,1.42,0,0
+466,CJ Huntley,PHX,FC,4.5,0.2,a,,PHX,24.0,4,0,10.0,6.2,1.38,0,0
+471,Branden Carlson,POR,FC,4.5,1.2,a,,OKC,529.0,42,4,11.6,12.6,2.8,32,9.0
+473,Chris Youngblood,POR,BC,4.5,0.3,a,,POR,144.0,34,0,5.4,4.3,0.96,0,0
+484,Jayson Kent,POR,FC,4.5,0.1,a,,POR,21.0,5,0,4.4,4.2,0.93,0,0
+486,John Tonje,POR,BC,4.5,0.2,a,,BOS,31.0,6,0,7.0,5.0,1.11,0,0
+496,Adam Flagler,SAC,BC,4.5,0.7,a,,,0.0,0,0,0,0,0.0,37,4.0
+501,Emanuel Sharp,SAC,BC,4.5,0.8,a,,,0.0,0,0,0,0,0.0,0,0
+505,Taelon Peter,SAS,BC,4.5,0.3,a,,IND,400.0,38,0,12.9,10.7,2.38,0,0
+507,Jordan McLaughlin,SAS,BC,4.5,0.3,a,,SAS,262.0,44,0,6.4,6.0,1.33,46,5.9
+517,David Jones,SAS,FC,4.5,0.0,a,,SAS,102.0,11,0,6.2,9.1,2.02,0,0
+518,Maliq Brown,SAS,FC,4.5,0.2,d,Back expected back 2026-10-10,,0.0,0,0,0,0,0.0,0,0
+519,Ja'Kobi Gillespie,SAS,BC,4.5,0.6,a,,,0.0,0,0,0,0,0.0,0,0
+520,Jayden Quaintance,SAS,FC,4.5,0.2,i,Knee expected back 2026-12-01,,0.0,0,0,0,0,0.0,0,0
+521,Tarris Reed Jr.,SAS,FC,4.5,0.5,a,,,0.0,0,0,0,0,0.0,0,0
+522,Jayden Nunn,SAS,BC,4.5,0.0,u,,,0.0,0,0,0,0,0.0,0,0
+523,Miles Barnstable,SAS,BC,4.5,0.0,u,,,0.0,0,0,0,0,0.0,0,0
+525,Andre Jackson Jr.,TOR,BC,4.5,0.3,u,,MIL,340.0,48,1,8.5,7.2,1.6,67,10.6
+526,Trey Jemison,TOR,FC,4.5,0.1,a,,NYK,50.0,13,0,6.3,4.1,0.91,38,7.9
+532,Jamison Battle,TOR,FC,4.5,0.3,d,Back expected back 2026-10-10,TOR,359.0,61,2,8.5,5.7,1.27,59,13.1
+535,Chucky Hepburn,TOR,BC,4.5,0.1,a,,TOR,8.0,2,0,6.5,4.0,0.89,0,0
+536,Alijah Martin,TOR,BC,4.5,0.1,a,,TOR,132.0,23,0,6.3,5.6,1.24,0,0
+539,Nate Bittle,TOR,FC,4.5,0.1,d,Foot expected back 2026-10-10,,0.0,0,0,0,0,0.0,0,0
+540,Jaden Bradley,TOR,BC,4.5,0.9,a,,,0.0,0,0,0,0,0.0,0,0
+542,Malachi Smith,TOR,BC,4.5,0.3,a,,BKN,303.0,15,4,23.9,21.6,4.8,0,0
+544,Tamar Bates,UTA,BC,4.5,0.9,a,,,0.0,0,0,0,0,0.0,0,0
+547,Trey Alexander,UTA,BC,4.5,0.2,a,,NOP,100.0,9,0,12.3,11.1,2.47,24,3.1
+548,Harrison Ingram,UTA,FC,4.5,0.2,a,,SAS,16.0,7,0,3.7,2.2,0.49,5,5.6
+550,Mo Bamba,UTA,FC,4.5,1.3,a,,UTA,43.0,4,0,11.0,11.0,2.44,32,13.9
+559,Blake Hinson,UTA,FC,4.5,0.4,a,,UTA,253.0,14,3,20.4,18.0,4.0,0,0
+577,Felix Okpara,WAS,FC,4.5,0.8,a,,,0.0,0,0,0,0,0.0,0,0
+578,KeShawn Murphy,WAS,FC,4.5,0.0,u,,,0.0,0,0,0,0,0.0,0,0
