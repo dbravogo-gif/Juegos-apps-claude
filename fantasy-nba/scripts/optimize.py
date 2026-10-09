@@ -31,6 +31,9 @@ from pathlib import Path
 
 import pulp
 
+# Formación diaria máxima por posición. Nuestra liga juega 2 BC + 3 FC; el juego permite también 3-2.
+FORMATIONS = {"2-3": {"BC": 2, "FC": 3}, "libre": {"BC": 3, "FC": 3}}
+
 SEASON = Path(__file__).resolve().parents[1] / "2026-27"
 SHRINK_GAMES, REPLACEMENT_FPPG = 30, 12.0
 NEW_TEAM_MULT = 0.85
@@ -129,7 +132,7 @@ def solve(players, days, budget, must=(), exclude=(), dates=None, min_games=0):
         on = [(n, dd) for (n, dd) in y if dd == d]
         prob += pulp.lpSum(y[k] for k in on) <= 5
         for pos in ("BC", "FC"):
-            prob += pulp.lpSum(y[k] for k in on if by_name[k[0]]["pos"] == pos) <= 3
+            prob += pulp.lpSum(y[k] for k in on if by_name[k[0]]["pos"] == pos) <= FORMATIONS[formation][pos]
         # Suplentes automáticos: cubren, en esperanza, los titulares que no juegan
         prob += pulp.lpSum(sub[k] for k in on) <= pulp.lpSum((1 - by_name[k[0]]["avail"]) * y[k] for k in on)
     for (n, d), v in y.items():

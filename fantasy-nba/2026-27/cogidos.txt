@@ -1,0 +1,9 @@
+# Jugadores que ya tiene otro equipo de nuestra liga (no se pueden fichar). Un nombre por línea, como en el juego.
+Luka Doncic
+Nikola Jokic
+Cade Cunningham
+Dylan Harper
+Cason Wallace
+Ajay Mitchell
+Cameron Boozer
+Yaxel Lendeborg
