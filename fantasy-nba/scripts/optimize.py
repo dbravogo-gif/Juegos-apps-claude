@@ -31,8 +31,8 @@ from pathlib import Path
 
 import pulp
 
-# Formación diaria máxima por posición. Nuestra liga juega 2 BC + 3 FC; el juego permite también 3-2.
-FORMATIONS = {"2-3": {"BC": 2, "FC": 3}, "libre": {"BC": 3, "FC": 3}}
+# Formación diaria: 3 BC + 2 FC o 2 BC + 3 FC ("libre"); "2-3" fuerza 2 BC + 3 FC.
+FORMATIONS = {"libre": {"BC": 3, "FC": 3}, "2-3": {"BC": 2, "FC": 3}}
 
 SEASON = Path(__file__).resolve().parents[1] / "2026-27"
 SHRINK_GAMES, REPLACEMENT_FPPG = 30, 12.0

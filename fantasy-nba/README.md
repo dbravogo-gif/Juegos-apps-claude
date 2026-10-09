@@ -6,8 +6,7 @@ Inicio de temporada NBA: 20-oct-2026.
 ## Reglas de NUESTRA liga (prevalecen sobre las del juego)
 
 - **Jugadores exclusivos**: si otro equipo tiene a un jugador, no se puede fichar. Lista en `2026-27/cogidos.txt` (el optimizador la excluye sola). Actualizarla en cada cambio.
-- **Alineación fija 2 BC + 3 FC** cada jornada (el juego permite también 3-2, la liga no). El optimizador usa 2-3 por defecto.
-- Consecuencia: el FC pesa más (3 de 5 titulares). Cargar presupuesto en FC es correcto; en BC basta con 2 buenos y el resto para cubrir días.
+- **Alineación**: 3 BC + 2 FC o 2 BC + 3 FC (nunca 4 de una posición). Se elige cada día según quién juegue.
 
 ## Reglas que afectan a la estrategia
 
