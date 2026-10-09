@@ -215,6 +215,14 @@ button,input,select{font:inherit;color:inherit}
 
 /* Inicio */
 .modal-inicio{max-width:560px}
+.ficha-piloto{display:grid;grid-template-columns:118px minmax(0,1fr);gap:14px;align-items:end;margin:14px 0 4px;padding:10px;border-radius:10px;background:rgba(0,0,0,.25)}
+.ficha-piloto img{width:118px;aspect-ratio:2/3;object-fit:cover;border-radius:6px;display:block}
+.ficha-piloto figcaption{display:grid;gap:4px;min-width:0}
+.ficha-piloto-cargo{font:600 11px var(--f-cifra);letter-spacing:.14em;text-transform:uppercase;color:var(--ambar)}
+.ficha-piloto strong{font:800 28px/1 var(--f-titulo);text-transform:uppercase;letter-spacing:.02em}
+.foto-piloto{aspect-ratio:4/3}
+.foto-piloto img{object-position:50% 18%}
+.foto-piloto.recorte img{filter:grayscale(1) contrast(1.25) brightness(1.05)}
 .inicio-eyebrow{margin:0;font:600 12px var(--f-cifra);letter-spacing:.14em;text-transform:uppercase;color:var(--ambar)}
 .inicio-titulo{margin:0;font:800 clamp(48px,14vw,76px)/.9 var(--f-titulo);letter-spacing:.02em;text-transform:uppercase}
 .inicio-texto{margin:0;max-width:60ch;color:var(--tinta)}

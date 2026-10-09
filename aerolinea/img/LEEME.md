@@ -75,6 +75,15 @@ modo estándar, 2K, 6 créditos cada una) y reducidos a WebP de 900–960 px.
 | `historia/taller-hangar.webp` | Flota, revisión C o estructural | Hangar con el avión entre andamios y un motor desmontado |
 | `historia/taller-motor.webp` | Flota, motor a revisión general | Turbofán desmontado en el taller de motores |
 
+### Comandantes (`pilotos/`)
+
+Retratos de Jorge, Pinar y Óscar generados a partir de una foto suya (Wan 2.7 en modo estándar,
+6 créditos cada uno): de cuerpo entero (`<id>.webp`, ficha al fundar y noticias de los hitos) y
+en primer plano (`<id>-cara.webp`, del que salen los iconos `<id>-180/192/512.png`). Jorge, ante
+un birreactor moderno y con un tulipán rojo en la solapa (el símbolo del párkinson); Pinar,
+junto a un ATR 42-600; Óscar, en un hangar junto a un turbofán. Las fotos originales no se
+guardan en el repositorio.
+
 ### Descartes
 
 - Primer KR-134: salió con proporciones de reactor ejecutivo y unos winglets anacrónicos.
