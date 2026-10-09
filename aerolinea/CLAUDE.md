@@ -32,6 +32,9 @@ d3-geo y `node --test`.
   (fotos de Wikimedia o generadas con IA), en `img/LEEME.md`.
 - `herramientas/fotos/`: buscar fotos en Commons y cambiar el rótulo de la aerolínea por su
   nombre en el juego. Si se aprueba otro nombre, su foto se rehace con el `LEEME.md` de ahí.
+- Comandantes (`src/data/pilotos.js`): cada amigo entra por `aerolinea/piloto/<id>/`, página
+  que genera `tools/paginas-pilotos.mjs` al publicar, con su icono; sale al fundar y en los
+  hitos de `src/core/hitos.js`. Para añadir uno: retratos en `img/pilotos/` y su entrada.
 - `src/ui/marcas.js`: las colas de las aerolíneas, con los colores de la real en la que se
   inspira cada una y un logo parecido.
 - Mercado y competencia (v3): `mercado.js` reparte el pasaje, `competencia.js` mueve a las

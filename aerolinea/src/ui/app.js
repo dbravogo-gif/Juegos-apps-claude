@@ -16,6 +16,8 @@ import { panelMundo, htmlAvance } from './mundo.js';
 import { etiquetaGeneral } from '../core/reputacion.js';
 import { dinero, esc } from './formato.js';
 import { htmlMarca, htmlEditorMarca, conectarEditorMarca } from './marcas.js';
+import { pilotoDePagina, htmlFichaPiloto, htmlHitoPiloto } from './pilotos.js';
+import { hitosNuevos } from '../core/hitos.js';
 
 const CLAVE = 'aerolinea_partida_v1';
 // Minutos de juego por segundo real.
@@ -326,6 +328,8 @@ function siguienteModal() {
     abrirModal(`${htmlNoticia(item.accidente, estado)}<button class="btn" data-cerrar>Continuar</button>`, 'modal-tele');
   } else if (item.tipo === 'avance') {
     abrirModal(`${htmlAvance(item.noticia)}<button class="btn" data-cerrar>Continuar</button>`, 'modal-tele');
+  } else if (item.tipo === 'hito') {
+    abrirModal(`${htmlHitoPiloto(estado, item.hito)}<button class="btn" data-cerrar>Continuar</button>`, 'modal-tele');
   } else if (item.tipo === 'informe') {
     abrirModal(`${htmlInforme(item.accidente, estado)}<button class="btn" data-cerrar>Continuar</button>`, 'modal-tele');
   } else if (item.tipo === 'quiebra') {
@@ -426,6 +430,7 @@ function mostrarInicio() {
     <p class="inicio-eyebrow">Enero de 1976</p>
     <h1 class="inicio-titulo">App viación</h1>
     <p class="inicio-texto">Tienes 3 millones de dólares, un banco dispuesto a prestarte algo más y ningún avión. Cada vuelo que salga lo autorizas tú. Si el tiempo está feo, decides si se arriesga.</p>
+    ${htmlFichaPiloto(pilotoDePagina())}
     <label class="campo"><span>Nombre de la compañía</span><input id="nombre-compania" type="text" maxlength="28" value="Atlántica" autocomplete="off"></label>
     <div class="campo"><span>Tu marca: la cola de tus aviones</span><div id="editor-marca">${htmlEditorMarca(marca)}</div></div>
     <label class="campo"><span>Buscar base</span><input id="buscar-base" type="search" placeholder="Ciudad o código" autocomplete="off"></label>
@@ -466,6 +471,10 @@ function empezar(e) {
   // Las partidas de antes del creador de marca reciben la cola por defecto.
   estado.marca ??= marcaPorDefecto(estado.codigo);
   marcaPintada = '';
+  // El comandante viene de la página por la que se entra (piloto/<id>/). Una partida que no
+  // tenía hitos los da por celebrados hasta hoy, para no soltarlos todos de golpe.
+  estado.piloto ??= pilotoDePagina();
+  if (!estado.hitos) hitosNuevos(estado);
   cola = [];
   pintarBarra();
   globo?.marcarSucio();
@@ -498,6 +507,7 @@ function paso(ahora) {
       const diaAntes = Math.floor(estado.t / 1440);
       const eventos = avanzar(estado, minutos);
       procesar(eventos);
+      for (const hito of hitosNuevos(estado)) if (estado.piloto) encolar({ tipo: 'hito', hito });
       pintarBarra();
       panelSucio = true;
       if (Math.floor(estado.t / 1440) !== diaAntes) guardar();

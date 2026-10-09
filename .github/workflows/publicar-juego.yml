@@ -43,6 +43,8 @@ jobs:
           cp -r game/. web/
           mkdir web/aerolinea
           cp -r aerolinea/index.html aerolinea/manifest.webmanifest aerolinea/icon.svg aerolinea/src aerolinea/vendor aerolinea/img web/aerolinea/
+          # Una página por comandante (aerolinea/piloto/<id>/), con su icono para la pantalla de inicio.
+          node aerolinea/tools/paginas-pilotos.mjs web/aerolinea
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

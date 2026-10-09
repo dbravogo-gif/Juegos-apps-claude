@@ -335,6 +335,14 @@ mantiene estable.
   Tulipair, Ay Europa, Depie Air…). Se editan en local, sin créditos de IA, y quedan
   reproducibles en `herramientas/fotos/` por si cambia algún nombre. Créditos en `img/LEEME.md`.
 
+## Versión 3.3 — comandantes (hecho)
+
+- Cada amigo tiene su página (`piloto/jorge/`, `piloto/pinar/`, `piloto/oscar/`) con su
+  retrato como icono de la app. En la partida sale al fundar la compañía (ficha de cuerpo
+  entero), en el primer vuelo (recorte de periódico en blanco y negro) y en cuatro hitos:
+  primer avión de largo radio, diez aviones y aniversarios de 10 y 25 años. Es decorado: no
+  cambia el juego.
+
 ## Siguiente
 
 - Nombres pendientes de aprobar: 13 de las 22 compañías llevan `propuesta: true` en
