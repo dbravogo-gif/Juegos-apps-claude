@@ -370,11 +370,29 @@ mantiene estable.
   clima en la pantalla de fundar.
 - **Instructor**: la ayuda ya sale con su retrato.
 
+## Versión 3.6 — economía del arranque (hecho)
+
+`tools/economia.mjs` simula un jugador correcto pero no perfecto (revisiones a tiempo,
+inspecciona los indicios, retrasa con la previsión bajo mínimos) con aviones de segunda mano de
+diez años, desde Gran Canaria, seis semillas y dos años. Resultado de explotación por año, sin
+contar la compra:
+
+| Escenario (aviones) | Antes | Ahora | Se paga en |
+| --- | --- | --- | --- |
+| 2 F27: Tenerife Norte y Lanzarote (2,2 M$) | −0,3 / −0,1 M$ | 0,0 / +0,3 M$ | ~8 años (Tenerife está saturado) |
+| 2 F27: Lanzarote y Fuerteventura (2,2 M$) | +0,1 / +0,1 M$ | +0,4 / +0,4 M$ | ~5 años |
+| F27 a Fuerteventura y 737 a Barcelona (4,7 M$) | — | +3,1 / +3,4 M$ | ~1,4 años |
+| 2 737: Madrid y Barcelona (7,2 M$) | +3,1 / +4,0 M$ | igual | ~1,9 años |
+
+Con 3 M$ solo llegaba para turbohélices, que perdían dinero: arranque casi imposible. Cambios:
+caja inicial de **6 M$** (un reactor de segunda mano y un turbohélice con reserva) y el
+handling de los turbohélices a la mitad (`ESCALA_HANDLING.regional` 0,3 → 0,15). Los reactores
+no se tocan: ya se pagaban en menos de dos años. Los turbohélices quedan para rutas cortas y
+finas, que se pagan despacio; elegir bien la ruta (y no meterse en una saturada) importa.
+
 ## Siguiente
 
 - Nombres pendientes de aprobar: 13 de las 22 compañías llevan `propuesta: true` en
   `src/data/aerolineas.js`. Seis salen ya en fotos (Aviacutre, British Airgüeis, Lager,
   Pastalia, Tulipair y Delfín); si cambian, se rehacen con `herramientas/fotos/`.
-- Jugar la v3 y ajustar: el arranque interinsular con un solo F27 pierde dinero (la
-  estructura de la compañía pesa demasiado para un avión).
 - Abrir bases nuevas, personal (entrevistas y eventos) y retos cortos con semilla.

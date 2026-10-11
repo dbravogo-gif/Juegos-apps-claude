@@ -14,7 +14,7 @@ export function htmlInstructor(texto) {
 
 const SECCIONES = [
   ['Cómo se juega', `
-    <p>Diriges una aerolínea desde enero de 1976. Empiezas con 3 millones de dólares, una base y ningún avión. Ganas si la compañía crece sin quedarse sin dinero; pierdes si llegas a números rojos y el banco ya no te presta más.</p>
+    <p>Diriges una aerolínea desde enero de 1976. Empiezas con 6 millones de dólares, una base y ningún avión. Ganas si la compañía crece sin quedarse sin dinero; pierdes si llegas a números rojos y el banco ya no te presta más.</p>
     <ol class="pasos">
       <li><strong>Compra un avión</strong> en Aviones. Uno de segunda mano es barato, pero puede venir con sorpresas: inspecciónalo antes.</li>
       <li><strong>Estudia el destino</strong>: toca su aeropuerto en el globo. Gratis ves una idea del clima y del mercado; si quieres saber más, encarga los estudios.</li>

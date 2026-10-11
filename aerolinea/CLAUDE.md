@@ -48,5 +48,7 @@ d3-geo y `node --test`.
 
 - `npm test` dentro de `aerolinea/`.
 - `npm run calibrar` después de tocar el riesgo, el mantenimiento o las averías.
+- `node tools/economia.mjs` después de tocar precios, costes o demanda: cuánto gana un jugador
+  razonable con dos rutas y en cuánto se paga un avión.
 - Para ver la interfaz, sirve la carpeta con `python3 -m http.server` y ábrela con un
   viewport de móvil.

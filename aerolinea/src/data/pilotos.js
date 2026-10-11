@@ -32,6 +32,6 @@ export const PILOTOS = {
 
 // Quien explica la ayuda: retrato de mencey guanche generado con IA a partir de su foto. Sin foto, sale el
 // icono del juego.
-export const INSTRUCTOR = { nombre: 'El instructor', cara: 'img/pilotos/instructor-cara.webp' };
+export const INSTRUCTOR = { nombre: 'Mencey Danito', cara: 'img/pilotos/instructor-cara.webp' };
 
 export const pilotoDe = (id) => (id && Object.hasOwn(PILOTOS, id) ? PILOTOS[id] : null);

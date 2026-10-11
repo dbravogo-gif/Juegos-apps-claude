@@ -10,7 +10,10 @@ import { mes } from './tiempo.js';
 import { nivelCostes } from '../data/aeropuertos.js';
 import { enMercadoUnico, rentaEn } from '../data/paises.js';
 
-export const CAJA_INICIAL = 3e6;
+// Con 6 M$ se puede empezar con un reactor de segunda mano y un turbohélice, o tres
+// turbohélices, y guardar algo para estudios y sustos. Con 3 M$ solo llegaba para turbohélices
+// y el arranque era casi siempre en pérdidas (ver tools/economia.mjs).
+export const CAJA_INICIAL = 6e6;
 export const INTERES_ANUAL = 0.09;
 
 // IPC de EE. UU., media anual (CPI-U, 1982-84 = 100).
@@ -109,7 +112,9 @@ export function costeCatering(servicio, horas, aeropuerto, salidasDiarias, anio,
 
 // --- Costes de aeropuerto
 
-const ESCALA_HANDLING = { regional: 0.3, estrecho: 1, cuatrimotor: 1.5, ancho: 2.6, supersonico: 2.5 };
+// Un turbohélice de 40–50 plazas en un aeropuerto pequeño necesita mucho menos personal de rampa
+// y de mostrador que un reactor: sin pasarela, pocas maletas y escala corta.
+const ESCALA_HANDLING = { regional: 0.15, estrecho: 1, cuatrimotor: 1.5, ancho: 2.6, supersonico: 2.5 };
 
 export function tasasAeropuerto(tipo, aeropuerto, paxSalida, anio) {
   const nivel = nivelCostes(aeropuerto);
