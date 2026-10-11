@@ -13,6 +13,7 @@ import { climaEn, climaRuta, franja } from './clima.js';
 import { evaluarTramo, evaluarRuta, pistaEfectiva } from './operaciones.js';
 import { amenazas, estimar, resumirAmenazas, simular, minimos, visibilidad, bandaGrave, bandaIncidencia } from './riesgo.js';
 import { REGLAS, reglasPorDefecto, masPrudente } from './despacho.js';
+import { PRECIOS_INFORME, VIGENCIA_MERCADO } from './informes.js';
 import { investigar } from './investigacion.js';
 import { crearMundoNoticias, avanzarMundo, cierre } from './mundo.js';
 import { crearCompetencia, cicloCompetencia } from './competencia.js';
@@ -1172,6 +1173,33 @@ export function borrarRuta(estado, idRuta) {
   for (const a of estado.aviones) if (a.ruta === idRuta) a.ruta = null;
   estado.rutas = estado.rutas.filter((r) => r.id !== idRuta);
   apuntar(estado, `Cierras la ruta ${ruta.origen}–${ruta.destino}.`);
+}
+
+// ---------------------------------------------------------------- informes de aeropuerto
+
+// Lo que se sabe de un aeropuerto. De la base y de los destinos que ya vuelas lo sabes todo.
+export function informesDe(estado, id) {
+  const comprado = estado.informes?.[id] ?? {};
+  const propio = id === estado.base || estado.rutas.some((r) => r.destino === id || r.origen === id);
+  const hasta = comprado.mercado != null ? comprado.mercado + VIGENCIA_MERCADO : null;
+  return { propio, clima: propio || !!comprado.clima, mercado: propio || (hasta != null && estado.t < hasta), mercadoHasta: hasta };
+}
+
+export const precioInforme = (estado, tipo) => Math.round((PRECIOS_INFORME[tipo] * indice(anio(estado.t))) / 100) * 100;
+
+const NOMBRE_INFORME = { clima: 'el estudio meteorológico', mercado: 'el estudio de mercado', ambos: 'los estudios meteorológico y de mercado' };
+
+export function comprarInforme(estado, id, tipo) {
+  if (!POR_ID[id] || !PRECIOS_INFORME[tipo]) return 'Informe no válido';
+  const precio = precioInforme(estado, tipo);
+  if (estado.caja < precio) return 'No tienes caja suficiente';
+  gastar(estado, precio);
+  estado.informes ??= {};
+  const inf = (estado.informes[id] ??= {});
+  if (tipo !== 'mercado') inf.clima = true;
+  if (tipo !== 'clima') inf.mercado = estado.t;
+  apuntar(estado, `Encargas ${NOMBRE_INFORME[tipo]} de ${id} (${precio.toLocaleString('es-ES')} $).`);
+  return null;
 }
 
 export function cambiarRegla(estado, idRuta, regla, valor) {

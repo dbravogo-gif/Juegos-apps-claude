@@ -85,6 +85,9 @@ junto a un ATR 42-600; Óscar, en un hangar junto a un turbofán;
 Germán, enchufando un avión eléctrico a un cargador, con un portátil lleno de código. Las fotos originales no se
 guardan en el repositorio.
 
+El instructor de la ayuda (`instructor-cara.webp`, `instructor.webp`) sale igual: retrato con
+uniforme de comandante ante una pizarra de cartas de aproximación.
+
 ### Descartes
 
 - Primer KR-134: salió con proporciones de reactor ejecutivo y unos winglets anacrónicos.

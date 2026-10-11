@@ -359,6 +359,17 @@ mantiene estable.
   preguntar. Lo que queda en «auto» sigue el ajuste general; si se juntan varias, gana la más
   prudente. Sin reglas propias, el despacho es idéntico al de antes (hay pruebas).
 
+## Versión 3.5 — informes de aeropuerto e instructor (hecho)
+
+- **Informes** (`src/core/informes.js`): de un aeropuerto desconocido solo se ve gratis una
+  idea general (los fenómenos más frecuentes del año, en % del tiempo, y una horquilla de
+  pasajeros). En su ficha se encargan el estudio meteorológico (por estación: tiempo bajo
+  mínimos con su ILS, tiempo justo y cada fenómeno; se paga una vez, 5.000 $ de 1976) y el de
+  mercado (demanda, competidores y lo que te tocaría; vale doce meses, 15.000 $), o los dos por
+  17.000 $. La base y los destinos que ya vuelas se conocen gratis. Las bases posibles traen su
+  clima en la pantalla de fundar.
+- **Instructor**: la ayuda ya sale con su retrato.
+
 ## Siguiente
 
 - Nombres pendientes de aprobar: 13 de las 22 compañías llevan `propuesta: true` en

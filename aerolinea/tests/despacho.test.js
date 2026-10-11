@@ -36,3 +36,19 @@ test('despacho: si se juntan dos situaciones gana la más prudente', () => {
   const vencida = { codigo: 'revisionC', texto: 'Revisión C vencida' };
   assert.equal(accionDespacho(estado(), ctx({ irregularidades: [vencida] }), est(), { fueraNorma: 'cancelar' }), 'cancelar');
 });
+
+test('informes: se pagan, el de mercado caduca y la base se conoce gratis', async () => {
+  const { nuevaPartida, informesDe, comprarInforme, precioInforme } = await import('../src/core/sim.js');
+  const e = nuevaPartida({ nombre: 'Prueba', base: 'LPA' });
+  assert.deepEqual([informesDe(e, 'LPA').clima, informesDe(e, 'LPA').mercado], [true, true]);
+  assert.deepEqual([informesDe(e, 'TFN').clima, informesDe(e, 'TFN').mercado], [false, false]);
+  const caja = e.caja;
+  assert.equal(comprarInforme(e, 'TFN', 'ambos'), null);
+  assert.equal(caja - e.caja, precioInforme(e, 'ambos'));
+  assert.ok(precioInforme(e, 'ambos') < precioInforme(e, 'clima') + precioInforme(e, 'mercado'));
+  assert.deepEqual([informesDe(e, 'TFN').clima, informesDe(e, 'TFN').mercado], [true, true]);
+  e.t += 366 * 1440;
+  assert.deepEqual([informesDe(e, 'TFN').clima, informesDe(e, 'TFN').mercado], [true, false]);
+  e.caja = 10;
+  assert.equal(comprarInforme(e, 'MAD', 'clima'), 'No tienes caja suficiente');
+});

@@ -16,10 +16,11 @@ import {
 import { valorMercado, edad } from '../core/flota.js';
 import { resumenSeguridad } from '../core/seguridad.js';
 import { precioBillete, precioNuevo, precioGalon, indice, TARIFAS, SERVICIOS, liberalizado } from '../core/economia.js';
-import { demandaConEventos, paxJugador } from '../core/mercado.js';
+import { demandaConEventos, paxJugador, infoMercado } from '../core/mercado.js';
+import { climaResumen, climaEstudio, horquilla } from '../core/informes.js';
 import { etiquetaGeneral } from '../core/reputacion.js';
 import { htmlMercado, htmlEstimacion } from './mundo.js';
-import { limitePrestamo, patrimonio, puedeOperar, horariosRuta, costeReparar, costeInspeccionCompra } from '../core/sim.js';
+import { limitePrestamo, patrimonio, puedeOperar, horariosRuta, costeReparar, costeInspeccionCompra, informesDe, precioInforme } from '../core/sim.js';
 import { dinero, porcentaje, esc, km, htmlFoto } from './formato.js';
 import { htmlAvion } from './imagenes.js';
 import { escenaAeropuerto, escenaTaller } from '../data/imagenes.js';
@@ -168,14 +169,16 @@ export function panelRutas(estado) {
   const base = POR_ID[estado.base];
   const n = anio(estado.t);
   const opciones = destinosPosibles(estado).map(({ a, dist }) => {
-    const pax = redondo(demandaConEventos(estado, base, a, estado.t));
-    return `<option value="${a.id}">${a.id} · ${esc(a.ciudad)} · ${km(dist)} · ~${pax} pax/día</option>`;
+    const pax = demandaConEventos(estado, base, a, estado.t);
+    const [lo, hi] = horquilla(pax);
+    const texto = informesDe(estado, a.id).mercado ? `~${redondo(pax)}` : `${lo}–${hi}`;
+    return `<option value="${a.id}">${a.id} · ${esc(a.ciudad)} · ${km(dist)} · ${texto} pax/día</option>`;
   }).join('');
   const nueva = `
   <div class="nueva-ruta">
     <label class="campo"><span>Nueva ruta desde ${base.id}</span><select id="nueva-ruta-destino">${opciones}</select></label>
     <button class="btn" data-accion="crear-ruta">Abrir ruta</button>
-    <p class="nota">Pax/día: la demanda de todo el mercado en cada sentido, la compartes con las demás compañías. Toca un aeropuerto en el globo para ver quién opera y cuánto te tocaría.</p>
+    <p class="nota">Pax/día: la demanda de todo el mercado en cada sentido, la compartes con las demás compañías. Sin estudio de mercado solo sabes una horquilla; toca un aeropuerto en el globo para encargarlo y ver quién opera y cuánto te tocaría.</p>
   </div>`;
   if (!estado.rutas.length) return vacio('Sin rutas', 'Una ruta une tu base con un destino. Después le asignas un avión y decides cuántas vueltas hace al día.') + nueva;
 
@@ -372,6 +375,45 @@ export function panelDiario(estado) {
   return `<ol class="diario">${estado.diario.slice(0, 150).map((e) => `<li class="d-${e.tipo}"><time>${textoFecha(e.t, { corta: true })} ${textoHora(e.t)}</time><span>${esc(e.texto)}</span></li>`).join('')}</ol>`;
 }
 
+const pct = (x) => (x < 0.001 ? '0 %' : `${(x * 100).toLocaleString('es-ES', { maximumFractionDigits: x < 0.1 ? 1 : 0 })} %`);
+
+// El clima: una idea general gratis o el estudio por estaciones.
+function htmlClimaAeropuerto(estado, a) {
+  const resumen = climaResumen(a);
+  if (!informesDe(estado, a.id).clima) {
+    return `<p class="nota"><strong>Clima</strong> (idea general): ${resumen.length ? resumen.map((x) => `${x.nombre.toLowerCase()} ~${pct(x.p)}`).join(' · ') : 'casi siempre despejado'} del tiempo a lo largo del año.</p>`;
+  }
+  const top = resumen.map((x) => x.fenomeno);
+  const filas = climaEstudio(a).map((e) => `<tr><th scope="row">${e.nombre}</th><td>${pct(e.bajo)}</td><td>${pct(e.justo)}</td>${top.map((f) => `<td>${pct(e.frecuencias[f])}</td>`).join('')}</tr>`).join('');
+  return `
+    <h4 class="sub">Estudio meteorológico</h4>
+    <div class="tabla-envoltura"><table class="tabla-mercado"><thead><tr><th scope="col">Estación</th><th scope="col">Bajo mínimos</th><th scope="col">Justo</th>${resumen.map((x) => `<th scope="col">${x.nombre}</th>`).join('')}</tr></thead><tbody>${filas}</tbody></table></div>
+    <p class="nota">Porcentaje del tiempo. <strong>Bajo mínimos</strong>: no se puede aterrizar ni con su ILS. <strong>Justo</strong>: cerca de mínimos, tormenta fuerte o viento cruzado fuerte. Un avión que no admita su categoría de ILS lo tendrá peor.</p>`;
+}
+
+// El mercado: una horquilla gratis o el estudio completo.
+function htmlMercadoAeropuerto(estado, base, a, ruta) {
+  const inf = informesDe(estado, a.id);
+  if (!inf.mercado) {
+    const m = infoMercado(estado, base, a);
+    const [lo, hi] = horquilla(m.demanda);
+    return `<p class="nota"><strong>Mercado</strong> (idea general): entre ${lo} y ${hi} pasajeros al día por sentido · ${m.operadores.length ? `${m.operadores.length} compañía${m.operadores.length > 1 ? 's' : ''} ya vuela${m.operadores.length > 1 ? 'n' : ''} ${base.id}–${a.id}` : `nadie vuela ${base.id}–${a.id}`}.</p>`;
+  }
+  const caduca = !inf.propio && inf.mercadoHasta ? `<p class="nota">Estudio de mercado válido hasta ${textoFecha(inf.mercadoHasta)}.</p>` : '';
+  return htmlMercado(estado, base, a) + (ruta ? '' : htmlEstimacion(estado, base, a)) + caduca;
+}
+
+function htmlComprarInformes(estado, a) {
+  const inf = informesDe(estado, a.id);
+  const botones = [];
+  if (!inf.clima) botones.push(['clima', 'Estudio meteorológico']);
+  if (!inf.mercado) botones.push(['mercado', inf.mercadoHasta ? 'Renovar el estudio de mercado' : 'Estudio de mercado']);
+  if (botones.length === 2) botones.push(['ambos', 'Los dos']);
+  if (!botones.length) return '';
+  const ahorro = precioInforme(estado, 'clima') + precioInforme(estado, 'mercado') - precioInforme(estado, 'ambos');
+  return `<div class="fila-botones informes">${botones.map(([t, nombre]) => `<button class="btn-mini" data-accion="informe" data-destino="${a.id}" data-tipo="${t}" ${estado.caja < precioInforme(estado, t) ? 'disabled' : ''}>${nombre} · ${dinero(precioInforme(estado, t))}${t === 'ambos' ? ` <small>(ahorras ${dinero(ahorro)})</small>` : ''}</button>`).join('')}</div>`;
+}
+
 export function htmlAeropuerto(estado, id) {
   const a = POR_ID[id];
   const base = POR_ID[estado.base];
@@ -393,7 +435,9 @@ export function htmlAeropuerto(estado, id) {
     <div class="ap-cab"><div><h3>${a.id} · ${esc(a.ciudad)}</h3><p>${esc(a.nombre)}</p></div><button class="cerrar" data-accion="cerrar-ap" aria-label="Cerrar">×</button></div>
     ${htmlFoto(escenaAeropuerto(a, n), 'banda')}
     <p class="nota">Pista ${pistaEn(a, n).toLocaleString('es-ES')} m · ${ils}${a.montana ? ' · terreno montañoso' : ''}${a.elev > 500 ? ` · ${a.elev} m de altitud` : ''}${a.finPista === 'peligroso' ? ' · final de pista peligroso' : ''} · costes ${nivelCostes(a) > 1.2 ? 'altos' : nivelCostes(a) < 0.8 ? 'bajos' : 'medios'}${id !== estado.base ? ` · ${km(dist)} desde ${base.id}` : ''}</p>
-    ${id !== estado.base && abiertoEn(a, n) ? htmlMercado(estado, base, a) + (ruta ? '' : htmlEstimacion(estado, base, a)) : ''}
+    ${htmlClimaAeropuerto(estado, a)}
+    ${id !== estado.base && abiertoEn(a, n) ? htmlMercadoAeropuerto(estado, base, a, ruta) : ''}
+    ${id !== estado.base ? htmlComprarInformes(estado, a) : ''}
     ${compat.length ? `<ul class="lista-simple">${compat.join('')}</ul>` : ''}
     ${accion}`;
 }
