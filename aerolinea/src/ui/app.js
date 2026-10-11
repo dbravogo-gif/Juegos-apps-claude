@@ -21,7 +21,9 @@ import { hitosNuevos } from '../core/hitos.js';
 
 const CLAVE = 'aerolinea_partida_v1';
 // Minutos de juego por segundo real.
-const VELOCIDADES = [0, 60, 240, 720];
+// Minutos de juego por segundo real (×4 cuando no hay ningún avión en el aire). Con ▶ una hora
+// de vuelo dura 6 s; con ▶▶, un día pasa en medio minuto; ▶▶▶ es para dejar correr meses.
+const VELOCIDADES = [0, 10, 45, 720];
 
 const $ = (s) => document.querySelector(s);
 const ui = {
@@ -95,6 +97,11 @@ function pintarBarra() {
 function pintarGuia() {
   let texto = '';
   let ir = null;
+  // Sin partida (pantalla de fundar) no hay nada que guiar.
+  if (!estado) {
+    ui.guia.hidden = true;
+    return;
+  }
   if (!estado.aviones.length && !estado.rutas.length) {
     texto = 'Primer paso: compra un avión en la pestaña Aviones.';
     ir = 'mercado';
@@ -229,12 +236,7 @@ function manejarAccion(el) {
     case 'tarifa': return resultado(cambiarTarifa(estado, num('ruta'), d.tarifa));
     case 'prestamo': return resultado(pedirPrestamo(estado, num('cantidad')), 'Préstamo concedido.');
     case 'devolver': return resultado(devolverPrestamo(estado, num('cantidad')), 'Préstamo devuelto.');
-    case 'nueva-partida': return confirmar('¿Empezar otra partida?', 'Se pierde la actual. No hay vuelta atrás.', 'Empezar de nuevo', () => {
-      try { localStorage.removeItem(CLAVE); } catch { /* nada */ }
-      estado = null;
-      abrirPanel(panel);
-      mostrarInicio();
-    });
+    case 'nueva-partida': return confirmar('¿Empezar una partida nueva?', 'Se borra la partida guardada en este dispositivo y vuelves a enero de 1976. No hay vuelta atrás.', 'Borrar y empezar', nuevaPartidaDesdeCero);
     case 'cerrar-ap': ui.aeropuerto.hidden = true; globo?.seleccionar(null); return undefined;
     case 'editar-marca': return encolar({ tipo: 'marca', marca: { ...estado.marca } });
     default: return undefined;
@@ -344,6 +346,17 @@ function siguienteModal() {
   return undefined;
 }
 
+// Borra la partida guardada y vuelve a la pantalla de fundar la compañía.
+function nuevaPartidaDesdeCero() {
+  try { localStorage.removeItem(CLAVE); } catch { /* nada */ }
+  estado = null;
+  cola = [];
+  ui.modal.hidden = true;
+  modalActual = null;
+  if (panel) abrirPanel(panel);
+  mostrarInicio();
+}
+
 function confirmar(titulo, texto, boton, alAceptar) {
   encolar({ tipo: 'confirmar', titulo, texto, boton, alAceptar });
 }
@@ -383,12 +396,7 @@ ui.modal.addEventListener('click', (e) => {
     cerrarModal();
     fn();
   } else if (accion === 'reiniciar') {
-    try { localStorage.removeItem(CLAVE); } catch { /* nada */ }
-    estado = null;
-    cola = [];
-    ui.modal.hidden = true;
-    modalActual = null;
-    mostrarInicio();
+    nuevaPartidaDesdeCero();
   }
 });
 

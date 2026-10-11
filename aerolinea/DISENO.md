@@ -341,7 +341,11 @@ mantiene estable.
   retrato como icono de la app. En la partida sale al fundar la compañía (ficha de cuerpo
   entero), en el primer vuelo (recorte de periódico en blanco y negro) y en cuatro hitos:
   primer avión de largo radio, diez aviones y aniversarios de 10 y 25 años. Es decorado: no
-  cambia el juego.
+  cambia el juego. Germán se sumó después (`piloto/german/`).
+- **Nueva partida**: botón en Mundo, junto a la marca, con aviso de que borra la partida
+  guardada. El de Cuentas ya existía pero fallaba al volver a la pantalla de inicio.
+- **Velocidades**: ▶ pasa a 10 min de juego por segundo (una hora de vuelo en 6 s) y ▶▶ a 45
+  (un día en medio minuto); ▶▶▶ se queda en 720. Antes eran 60 y 240: demasiado rápido.
 
 ## Siguiente
 

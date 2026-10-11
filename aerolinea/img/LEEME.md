@@ -77,11 +77,12 @@ modo estándar, 2K, 6 créditos cada una) y reducidos a WebP de 900–960 px.
 
 ### Comandantes (`pilotos/`)
 
-Retratos de Jorge, Pinar y Óscar generados a partir de una foto suya (Wan 2.7 en modo estándar,
+Retratos de Jorge, Pinar, Óscar y Germán generados a partir de una foto suya (Wan 2.7 en modo estándar,
 6 créditos cada uno): de cuerpo entero (`<id>.webp`, ficha al fundar y noticias de los hitos) y
 en primer plano (`<id>-cara.webp`, del que salen los iconos `<id>-180/192/512.png`). Jorge, ante
 un birreactor moderno y con un tulipán rojo en la solapa (el símbolo del párkinson); Pinar,
-junto a un ATR 42-600; Óscar, en un hangar junto a un turbofán. Las fotos originales no se
+junto a un ATR 42-600; Óscar, en un hangar junto a un turbofán;
+Germán, enchufando un avión eléctrico a un cargador, con un portátil lleno de código. Las fotos originales no se
 guardan en el repositorio.
 
 ### Descartes
