@@ -106,7 +106,7 @@ function htmlReputacion(estado) {
 export function panelMundo(estado) {
   return `
   <h3 class="seccion">Tu compañía</h3>
-  <div class="tu-marca">${htmlMarca(estado.marca, 'marca-grande')}<div><strong>${esc(estado.nombre)}</strong><button class="btn-mini" data-accion="editar-marca">Cambiar la marca</button></div></div>
+  <div class="tu-marca">${htmlMarca(estado.marca, 'marca-grande')}<div><strong>${esc(estado.nombre)}</strong><div class="fila-botones"><button class="btn-mini" data-accion="editar-marca">Cambiar la marca</button><button class="btn-mini peligro" data-accion="nueva-partida">Nueva partida</button></div></div></div>
   ${htmlReputacion(estado)}
   <p class="nota">Con precios bajos y puntualidad se puede ganar a una grande; con servicio y prestigio se puede cobrar más. La seguridad pesa en todas.</p>
   <h3 class="seccion">Tus mercados</h3>

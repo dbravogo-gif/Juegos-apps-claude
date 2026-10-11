@@ -22,6 +22,12 @@ export const PILOTOS = {
     cara: 'img/pilotos/oscar-cara.webp',
     presentacion: 'Ingeniero de motores antes que piloto: antes de firmar el despacho, mira el boroscopio.',
   },
+  german: {
+    nombre: 'Germán',
+    cuerpo: 'img/pilotos/german.webp',
+    cara: 'img/pilotos/german-cara.webp',
+    presentacion: 'Ingeniero aeronáutico, programador y dueño de una red de cargadores: ya sueña con enchufar los aviones.',
+  },
 };
 
 export const pilotoDe = (id) => (id && Object.hasOwn(PILOTOS, id) ? PILOTOS[id] : null);
