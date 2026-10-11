@@ -231,7 +231,12 @@ function progresoEstimado(a, def) {
 
 // Probabilidades agregadas para el despacho.
 export function estimar(ctx, ruido = 0) {
-  const lista = amenazas(ctx, 'despacho');
+  return resumirAmenazas(amenazas(ctx, 'despacho'), ruido);
+}
+
+// Riesgo de un conjunto de amenazas: también sirve para ver qué queda al quitar las que una
+// regla de despacho ya tiene decididas.
+export function resumirAmenazas(lista, ruido = 0) {
   let pAccidente = 0;
   let pNada = 1;
   for (const e of lista) {

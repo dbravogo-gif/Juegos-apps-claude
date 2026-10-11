@@ -54,6 +54,17 @@ button,input,select{font:inherit;color:inherit}
 .b-cifras small{font:500 10px/1 var(--f-texto);letter-spacing:.08em;text-transform:uppercase;color:var(--suave);margin-right:5px}
 #b-caja.negativo{color:var(--rojo)}
 #b-rep{font:600 13px/1.2 var(--f-texto);letter-spacing:.02em}
+#b-ayuda{width:22px;height:22px;border-radius:50%;border:1px solid var(--linea);background:none;color:var(--ambar);font:700 13px/1 var(--f-texto);cursor:pointer;padding:0;align-self:center}
+.instructor{display:flex;gap:12px;align-items:flex-start;margin:10px 0 14px}
+.instructor-cara{width:64px;height:64px;border-radius:50%;object-fit:cover;flex:none;border:2px solid var(--ambar);background:var(--noche)}
+.instructor-cara.sin-foto{padding:10px;object-fit:contain}
+.instructor-bocadillo{min-width:0;background:rgba(255,255,255,.06);border-radius:4px 12px 12px 12px;padding:8px 12px}
+.instructor-bocadillo strong{font:700 12px var(--f-cifra);letter-spacing:.08em;text-transform:uppercase;color:var(--ambar)}
+.instructor-bocadillo p{margin:4px 0 0;line-height:1.45}
+.ayuda{display:grid;gap:8px;margin-bottom:14px}
+.ayuda ul,.ayuda ol,.como-se-juega ol{padding-left:20px;display:grid;gap:6px;line-height:1.45}
+.ayuda p,.como-se-juega p{line-height:1.5}
+.como-se-juega{margin:12px 0}
 #velocidad{grid-area:velocidad;display:flex;border:1px solid var(--linea);border-radius:8px;overflow:hidden}
 #velocidad button{background:none;border:0;padding:6px 4px;font:600 11px var(--f-cifra);color:var(--suave);cursor:pointer;min-width:28px;letter-spacing:-.08em}
 #velocidad button[aria-pressed="true"]{background:var(--ambar);color:var(--noche)}
@@ -307,6 +318,10 @@ button,input,select{font:inherit;color:inherit}
 
 /* Versión 2: mantenimiento, seguridad y despacho */
 .chip.aviso{background:var(--ambar-oscuro);color:var(--ambar)}
+.hd-pista{margin:10px 0 0;font-size:12px;line-height:1.4;opacity:.75}
+.campo.regla small{color:var(--suave);font-size:12px;line-height:1.35}
+details.reglas{margin-top:10px}
+details.reglas>summary small{font-weight:400;color:var(--suave);letter-spacing:0}
 details.bloque{border-top:1px solid var(--linea);padding-top:8px}
 details.bloque>summary{cursor:pointer;font:600 14px var(--f-texto);letter-spacing:.04em;color:var(--tinta);list-style:none;display:flex;align-items:center;gap:6px}
 details.bloque>summary::before{content:"▸";color:var(--suave);font-size:12px;transition:transform .2s}
@@ -355,6 +370,7 @@ details.bloque>*+*{margin-top:8px}
     <div class="b-cifras">
       <span id="b-caja" title="Caja">—</span>
       <span><small>Rep.</small><span id="b-rep">—</span></span>
+      <button id="b-ayuda" type="button" aria-label="Ayuda">?</button>
     </div>
     <div id="velocidad" role="group" aria-label="Velocidad">
       <button data-v="0" aria-label="Pausa">II</button>

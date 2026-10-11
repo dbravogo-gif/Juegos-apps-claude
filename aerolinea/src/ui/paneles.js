@@ -8,6 +8,7 @@ import { TECNOLOGIAS, ORDEN_TECNOLOGIAS, puedeInstalar } from '../data/tecnologi
 import { distanciaKm } from '../core/geo.js';
 import { anio, anioDecimal, dia, textoFecha, textoHora } from '../core/tiempo.js';
 import { evaluarRuta } from '../core/operaciones.js';
+import { REGLAS, reglasPorDefecto } from '../core/despacho.js';
 import {
   describir, puedeDiferir, metodoDe, tipoDiagnostico, costeRevision, diasRevision, costeRG, alquilerMotor,
   diasTallerMotor, irregularidades,
@@ -213,11 +214,29 @@ export function panelRutas(estado) {
         ${Object.entries(SERVICIOS).map(([k, s]) => `<button class="${r.servicio === k ? 'activo' : ''}" data-accion="servicio" data-ruta="${r.id}" data-servicio="${k}">${s.nombre}</button>`).join('')}
       </div>
       ${horas <= 3 ? `<label class="interruptor"><input type="checkbox" id="catering-base-${r.id}" data-accion="catering-base" data-ruta="${r.id}" ${r.cateringBase ? 'checked' : ''}> Cargar el catering de ida y vuelta en ${r.origen} <small>(${nivelCostes(d) > nivelCostes(base) ? `${d.id} es más caro` : `${d.id} no es más caro`})</small></label>` : ''}
+      ${htmlReglas(r)}
       <div class="ficha-pie"><span>${r.stats.vuelos} vuelos · ocupación ${ocupacion == null ? '—' : porcentaje(ocupacion)} · retraso medio ${Math.round(puntual)} min · ${r.stats.beneficio >= 0 ? 'beneficio' : 'pérdida'} ${dinero(r.stats.beneficio)}</span>
         <button class="btn-mini peligro" data-accion="borrar-ruta" data-ruta="${r.id}">Cerrar ruta</button></div>
     </article>`;
   }).join('');
   return lista + nueva;
+}
+
+// Qué hace el despachador en esta ruta sin preguntarte. Lo que queda en «auto» sigue el ajuste
+// general de Cuentas.
+function htmlReglas(r) {
+  const reglas = { ...reglasPorDefecto(), ...r.reglas };
+  const propias = Object.entries(reglas).filter(([k, v]) => v !== Object.keys(REGLAS[k].opciones)[0]).length;
+  const filas = Object.entries(REGLAS).map(([k, R]) => `
+    <label class="campo regla"><span>${R.titulo}</span>
+      <select data-accion="regla" data-ruta="${r.id}" data-regla="${k}">${Object.entries(R.opciones).map(([v, t]) => `<option value="${v}" ${reglas[k] === v ? 'selected' : ''}>${t}</option>`).join('')}</select>
+      <small>${R.ayuda}</small></label>`).join('');
+  return `
+      <details class="bloque reglas" data-clave="reglas-${r.id}">
+        <summary>Reglas de despacho <small>${propias ? `${propias} propia${propias > 1 ? 's' : ''}` : 'las del ajuste general'}</small></summary>
+        <p class="nota">Qué hace el despachador en esta ruta sin preguntarte. Si en un vuelo se juntan dos situaciones, gana la regla más prudente.</p>
+        ${filas}
+      </details>`;
 }
 
 function informeOferta(o) {
@@ -339,7 +358,7 @@ export function panelCuentas(estado) {
   <label class="campo"><span>Consultarme antes de despachar</span>
     <select id="consulta" data-accion="consulta">${CONSULTAS.map(([v, t]) => `<option value="${v}" ${estado.ajustes.consulta === v ? 'selected' : ''}>${t}</option>`).join('')}</select>
   </label>
-  <p class="nota">Cuando decide el despachador no firma nada fuera de norma: si la previsión en destino está por debajo de mínimos, retrasa el vuelo y, si no mejora, lo cancela; si va justa, carga combustible extra. Lo que esté fuera de norma por el avión o la tripulación te lo consulta siempre.</p>
+  <p class="nota">Cuando decide el despachador no firma nada fuera de norma: si la previsión en destino está por debajo de mínimos, retrasa el vuelo y, si no mejora, lo cancela; si va justa, carga combustible extra. Lo que esté fuera de norma por el avión o la tripulación te lo consulta siempre. Cada ruta puede tener sus propias reglas (Rutas → Reglas de despacho), y esas mandan sobre este ajuste.</p>
   <label class="interruptor"><input type="checkbox" id="revisiones-auto" data-accion="revisiones-auto" ${estado.ajustes.revisionesAuto ? 'checked' : ''}> Hacer las revisiones A de noche en la base, automáticamente</label>
   ${directivas ? `<h3 class="seccion">Directivas de aeronavegabilidad</h3><ul class="lista-simple">${directivas}</ul>` : ''}
   ${accidentes ? `<h3 class="seccion">Accidentes</h3><ul class="lista-simple">${accidentes}</ul>` : ''}

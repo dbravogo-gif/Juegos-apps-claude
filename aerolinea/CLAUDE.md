@@ -35,6 +35,9 @@ d3-geo y `node --test`.
 - Comandantes (`src/data/pilotos.js`): cada amigo entra por `aerolinea/piloto/<id>/`, página
   que genera `tools/paginas-pilotos.mjs` al publicar, con su icono; sale al fundar y en los
   hitos de `src/core/hitos.js`. Para añadir uno: retratos en `img/pilotos/` y su entrada.
+- Despacho: `src/core/despacho.js` define las reglas por ruta y `accionDespacho` (en `sim.js`)
+  decide si un vuelo sale, se retrasa, se cancela o te pregunta. La ayuda está en
+  `src/ui/ayuda.js`: si cambia una mecánica, actualiza su texto.
 - `src/ui/marcas.js`: las colas de las aerolíneas, con los colores de la real en la que se
   inspira cada una y un logo parecido.
 - Mercado y competencia (v3): `mercado.js` reparte el pasaje, `competencia.js` mueve a las
