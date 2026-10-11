@@ -85,8 +85,9 @@ junto a un ATR 42-600; Óscar, en un hangar junto a un turbofán;
 Germán, enchufando un avión eléctrico a un cargador, con un portátil lleno de código. Las fotos originales no se
 guardan en el repositorio.
 
-El instructor de la ayuda (`instructor-cara.webp`, `instructor.webp`) sale igual: retrato con
-uniforme de comandante ante una pizarra de cartas de aproximación.
+El instructor de la ayuda (`instructor-cara.webp`, `instructor.webp`) va vestido de mencey
+guanche: tamarco de piel de cabra, collar de cuentas de barro y conchas y la añepa, con el Teide
+y los pinos canarios detrás. Se descartó un primer retrato de comandante por el poco parecido.
 
 ### Descartes
 
