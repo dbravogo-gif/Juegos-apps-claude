@@ -11,7 +11,8 @@ import { MOTORES } from '../data/motores.js';
 import { azarDe, entre, entero, hash, generador, normal } from './azar.js';
 import { climaEn, climaRuta, franja } from './clima.js';
 import { evaluarTramo, evaluarRuta, pistaEfectiva } from './operaciones.js';
-import { amenazas, estimar, simular, minimos, visibilidad, bandaGrave, bandaIncidencia } from './riesgo.js';
+import { amenazas, estimar, resumirAmenazas, simular, minimos, visibilidad, bandaGrave, bandaIncidencia } from './riesgo.js';
+import { REGLAS, reglasPorDefecto, masPrudente } from './despacho.js';
 import { investigar } from './investigacion.js';
 import { crearMundoNoticias, avanzarMundo, cierre } from './mundo.js';
 import { crearCompetencia, cicloCompetencia } from './competencia.js';
@@ -313,16 +314,56 @@ function firmaAverias(a) {
   return a.averias.filter((x) => x.fase !== 'oculta').map((x) => `${x.id}:${x.fase}`).sort().join(',');
 }
 
-export function debePreguntar(estado, ctx, est) {
-  const modo = estado.ajustes.consulta;
+// Qué hacer con un vuelo que va a salir: 'preguntar', 'salir', 'salirExtra', 'retrasar' o
+// 'cancelar'. Primero las reglas de la ruta para cada situación que se da; lo que queda sin
+// regla lo decide el ajuste general. Si varias se juntan, gana la más prudente.
+export function accionDespacho(estado, ctx, est, reglas = {}, ruido = 0) {
+  const r = { ...reglasPorDefecto(), ...(reglas ?? {}) };
+  let acciones = 'salir';
+  let ctxResto = ctx;
+  let lista = est.lista;
+  const tecnicas = ctx.irregularidades.filter((x) => x.codigo !== 'minimos');
+  if (tecnicas.length) acciones = masPrudente(acciones, r.fueraNorma === 'cancelar' ? 'cancelar' : 'preguntar');
+  if (tecnicas.length && r.fueraNorma === 'cancelar') {
+    const irreg = ctx.irregularidades.filter((x) => x.codigo === 'minimos');
+    ctxResto = { ...ctxResto, irregularidades: irreg, despachoIrregular: irreg.length > 0 };
+  }
+  if (ctx.irregularidades.some((x) => x.codigo === 'minimos') && r.bajoMinimos !== 'auto') {
+    acciones = masPrudente(acciones, r.bajoMinimos === 'salir' ? 'salirExtra' : r.bajoMinimos);
+    const irreg = ctxResto.irregularidades.filter((x) => x.codigo !== 'minimos');
+    ctxResto = { ...ctxResto, irregularidades: irreg, despachoIrregular: irreg.length > 0 };
+    lista = lista.filter((e) => e.id !== 'bajoMinimos');
+  }
+  if (r.meteo !== 'auto' && lista.some((e) => e.origen === 'meteo' && e.p >= 0.1)) {
+    acciones = masPrudente(acciones, r.meteo);
+    lista = lista.filter((e) => e.origen !== 'meteo');
+  }
+  if (r.averias !== 'auto' && hayAveriaNueva(ctx.avion)) {
+    acciones = masPrudente(acciones, r.averias);
+    ctxResto = { ...ctxResto, avion: { ...ctx.avion, averiasAutorizadas: firmaAverias(ctx.avion) } };
+  }
+  // El resto, con el ajuste general. «En cada vuelo» no pisa a una ruta con reglas propias.
+  const propias = Object.entries(reglas ?? {}).some(([k, v]) => v && v !== Object.keys(REGLAS[k]?.opciones ?? {})[0]);
+  const estResto = lista === est.lista ? est : resumirAmenazas(lista, ruido);
+  if (debePreguntar(estado, ctxResto, estResto, propias)) return masPrudente(acciones, 'preguntar');
+  if (ctxResto.despachoIrregular) return masPrudente(acciones, 'retrasar');
+  return masPrudente(acciones, lista.some((e) => e.origen === 'meteo' && e.p >= 0.1) ? 'salirExtra' : 'salir');
+}
+
+function hayAveriaNueva(avion) {
+  const autorizadas = new Set((avion.averiasAutorizadas ?? '').split(','));
+  return firmaAverias(avion).split(',').some((x) => x && !autorizadas.has(x));
+}
+
+export function debePreguntar(estado, ctx, est, reglasPropias = false) {
+  let modo = estado.ajustes.consulta;
+  if (modo === 'siempre' && reglasPropias) modo = 'anormal';
   if (modo === 'siempre') return true;
   // Lo que está fuera de norma por el avión o la tripulación lo decides siempre tú. Si solo es
   // el tiempo, en modo «nunca» el despachador retiene el vuelo por su cuenta.
   if (modo === 'nunca') return ctx.irregularidades.some((x) => x.codigo !== 'minimos');
   if (modo === 'serio') return ctx.despachoIrregular || est.pAccidente >= 0.002;
-  const autorizadas = new Set((ctx.avion.averiasAutorizadas ?? '').split(','));
-  const novedades = firmaAverias(ctx.avion).split(',').some((x) => x && !autorizadas.has(x));
-  return ctx.despachoIrregular || novedades || est.pIncidencia >= 0.08 || est.pAccidente >= 0.0005;
+  return ctx.despachoIrregular || hayAveriaNueva(ctx.avion) || est.pIncidencia >= 0.08 || est.pAccidente >= 0.0005;
 }
 
 function prepararSalida(estado, a, destino, eventos) {
@@ -350,32 +391,37 @@ function prepararSalida(estado, a, destino, eventos) {
   }
   const ruido = normal(generador(hash(estado.semilla, 'estimacion', a.id, estado.t)));
   const est = estimar(ctx, ruido);
-  if (debePreguntar(estado, ctx, est)) {
+  const ruta = rutaDelTramo(estado, a.lugar, destino);
+  const accion = accionDespacho(estado, ctx, est, ruta?.reglas, ruido);
+  if (accion === 'preguntar') {
     a.estado = 'esperando';
     const decision = { id: estado.siguienteId++, avion: a.id, origen: a.lugar, destino, t: estado.t, ruido };
     estado.decisiones.push(decision);
     eventos.push({ tipo: 'decision', decision });
     return;
   }
-  // Decide el despachador: no firma nada fuera de norma y, si el tiempo en destino anda cerca
-  // del límite, carga combustible para esperar o desviarse.
-  if (ctx.despachoIrregular) {
-    retener(estado, a, ctx);
-    return;
+  // Decide el despachador, con las reglas de la ruta o, si no hay, sin firmar nada fuera de
+  // norma y cargando combustible extra si el tiempo en destino anda cerca del límite.
+  if (accion === 'retrasar') return retener(estado, a, ctx, est);
+  if (accion === 'cancelar') {
+    const motivo = ctx.irregularidades[0]?.texto ?? est.probable?.motivo ?? 'decisión del despachador';
+    apuntar(estado, `El despachador cancela el vuelo de ${a.matricula} a ${destino}: ${motivo.toLowerCase()}.`, 'aviso');
+    return cancelarVuelo(estado, a, a.lugar, destino);
   }
-  const margen = est.lista.some((e) => e.origen === 'meteo' && e.p >= 0.1);
-  despegar(estado, a, margen ? contextoVuelo(estado, a, destino, true) : ctx, { manual: false });
+  if (hayAveriaNueva(a)) a.averiasAutorizadas = firmaAverias(a);
+  despegar(estado, a, accion === 'salirExtra' ? contextoVuelo(estado, a, destino, true) : ctx, { manual: false });
 }
 
 // Con la previsión por debajo de mínimos el despachador retrasa la salida dos horas; si a la
 // tercera sigue igual, cancela.
-function retener(estado, a, ctx) {
+function retener(estado, a, ctx, est) {
   const ruta = rutaDelTramo(estado, ctx.origen.id, ctx.destino.id);
   const numero = numeroVuelo(estado, ruta, ctx.destino.id === estado.base);
   a.retenido = (a.retenido ?? 0) + 1;
   if (a.retenido <= 3) {
     a.libreEn = estado.t + 120;
-    apuntar(estado, `${numero} retenido dos horas: ${ctx.irregularidades[0].texto.toLowerCase()}.`, 'info');
+    const motivo = ctx.irregularidades[0]?.texto ?? est?.probable?.motivo ?? 'tiempo justo en destino';
+    apuntar(estado, `${numero} retenido dos horas: ${motivo.toLowerCase()}.`, 'info');
     return;
   }
   cancelarVuelo(estado, a, ctx.origen.id, ctx.destino.id);
@@ -403,7 +449,7 @@ export function informeDespacho(estado, decision) {
   const com = datosComerciales(estado, a, ctx);
   const comExtra = datosComerciales(estado, a, ctxExtra);
   return {
-    avion: a, ctx, est, estExtra, com,
+    avion: a, ctx, est, estExtra, com, ruta: com.ruta,
     traslado: puedeTrasladar(estado, a, ctx),
     taller: puedeIrAlTaller(estado, a, ctx),
     numero: numeroVuelo(estado, com.ruta, decision.destino === estado.base),
@@ -1113,7 +1159,7 @@ export function crearRuta(estado, destinoId, tarifa = 'normal') {
   const numero = estado.rutas.reduce((m, r) => Math.max(m, r.numero + 10), 100);
   estado.rutas.push({
     id: estado.siguienteId++, origen: estado.base, destino: destinoId, tarifa, avion: null, numero,
-    frecuencia: 2, salidas: { dia: -1, hechas: 0 }, servicio: 'estandar', cateringBase: false,
+    frecuencia: 2, salidas: { dia: -1, hechas: 0 }, servicio: 'estandar', cateringBase: false, reglas: reglasPorDefecto(),
     stats: { vuelos: 0, pax: 0, plazas: 0, beneficio: 0, retraso: 0 },
   });
   apuntar(estado, `Abres la ruta ${estado.base}–${destinoId}.`);
@@ -1126,6 +1172,13 @@ export function borrarRuta(estado, idRuta) {
   for (const a of estado.aviones) if (a.ruta === idRuta) a.ruta = null;
   estado.rutas = estado.rutas.filter((r) => r.id !== idRuta);
   apuntar(estado, `Cierras la ruta ${ruta.origen}–${ruta.destino}.`);
+}
+
+export function cambiarRegla(estado, idRuta, regla, valor) {
+  const ruta = estado.rutas.find((r) => r.id === idRuta);
+  if (!ruta || !REGLAS[regla]?.opciones[valor]) return 'Regla no válida';
+  ruta.reglas = { ...reglasPorDefecto(), ...ruta.reglas, [regla]: valor };
+  return null;
 }
 
 export function cambiarTarifa(estado, idRuta, tarifa) {

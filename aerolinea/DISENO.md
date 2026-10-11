@@ -347,6 +347,18 @@ mantiene estable.
 - **Velocidades**: ▶ pasa a 10 min de juego por segundo (una hora de vuelo en 6 s) y ▶▶ a 45
   (un día en medio minuto); ▶▶▶ se queda en 720. Antes eran 60 y 240: demasiado rápido.
 
+## Versión 3.4 — ayuda y reglas de despacho (hecho)
+
+- **Ayuda** (`src/ui/ayuda.js`): botón «?» en la barra con lo que hace cada cosa (hoja de
+  despacho, reglas, rutas y precios, mantenimiento, reputación, dinero, mundo y velocidad),
+  contada por un instructor. La pantalla de fundar trae el «¿Cómo se juega?» y la primera hoja
+  de despacho de cada partida, un consejo suyo.
+- **Reglas de despacho por ruta** (`src/core/despacho.js`): para cada situación (previsión
+  bajo mínimos, tiempo justo, avería nueva, avión o tripulación fuera de norma) se elige qué
+  hace el despachador sin preguntar: salir, salir con combustible extra, retrasar, cancelar o
+  preguntar. Lo que queda en «auto» sigue el ajuste general; si se juntan varias, gana la más
+  prudente. Sin reglas propias, el despacho es idéntico al de antes (hay pruebas).
+
 ## Siguiente
 
 - Nombres pendientes de aprobar: 13 de las 22 compañías llevan `propuesta: true` en

@@ -2,7 +2,7 @@
 
 import { AEROPUERTOS, POR_ID, REGIONES, abiertoEn } from '../data/aeropuertos.js';
 import {
-  nuevaPartida, avanzar, decidir, comprar, comprarNuevo, inspeccionar, vender, crearRuta, borrarRuta,
+  nuevaPartida, avanzar, decidir, cambiarRegla, comprar, comprarNuevo, inspeccionar, vender, crearRuta, borrarRuta,
   asignar, cambiarFrecuencia, cambiarTarifa, cambiarServicio, cambiarCateringBase, pedirPrestamo,
   devolverPrestamo, apuntar, VERSION, pedirInspeccion, pedirDiagnostico, pedirReparacion, diferir,
   pedirRevision, pedirMotor, pedirRetrofit, pedirDirectiva, cancelarTareas, codigoDe, marcaPorDefecto,
@@ -18,6 +18,7 @@ import { dinero, esc } from './formato.js';
 import { htmlMarca, htmlEditorMarca, conectarEditorMarca } from './marcas.js';
 import { pilotoDePagina, htmlFichaPiloto, htmlHitoPiloto } from './pilotos.js';
 import { hitosNuevos } from '../core/hitos.js';
+import { htmlAyuda, htmlConsejo, htmlComoSeJuega } from './ayuda.js';
 
 const CLAVE = 'aerolinea_partida_v1';
 // Minutos de juego por segundo real.
@@ -120,6 +121,25 @@ function pintarGuia() {
   ui.guia.dataset.ir = ir ?? '';
 }
 
+// La ayuda se abre al momento; si había una hoja de despacho abierta, vuelve después.
+$('#b-ayuda').addEventListener('click', () => {
+  if (modalActual?.tipo === 'ayuda') return;
+  if (modalActual?.tipo === 'inicio') {
+    const guia = ui.modalCaja.querySelector('.como-se-juega');
+    if (guia) { guia.open = true; guia.scrollIntoView({ behavior: 'smooth' }); }
+    return;
+  }
+  if (modalActual && modalActual.tipo !== 'decision') {
+    cola.unshift({ tipo: 'ayuda' });
+    return;
+  }
+  if (modalActual) cola.unshift(modalActual);
+  ui.modal.hidden = true;
+  modalActual = null;
+  cola.unshift({ tipo: 'ayuda' });
+  siguienteModal();
+});
+
 ui.velocidad.addEventListener('click', (e) => {
   const b = e.target.closest('button');
   if (!b) return;
@@ -158,9 +178,14 @@ function pintarPanel(forzar = false) {
   if (!forzar && document.activeElement?.tagName === 'SELECT' && ui.hoja.contains(document.activeElement)) return;
   if (!forzar && performance.now() - ultimoToque < 1500) return;
   const scroll = ui.hojaCuerpo.scrollTop;
+  // Los desplegables con data-clave se quedan como estaban (abiertos o cerrados) al repintar.
+  const plegables = new Map([...ui.hojaCuerpo.querySelectorAll('details[data-clave]')].map((d) => [d.dataset.clave, d.open]));
   const [titulo, fn] = PANELES[panel];
   ui.hojaTitulo.textContent = titulo;
   ui.hojaCuerpo.innerHTML = fn(estado);
+  for (const d of ui.hojaCuerpo.querySelectorAll('details[data-clave]')) {
+    if (plegables.has(d.dataset.clave)) d.open = plegables.get(d.dataset.clave);
+  }
   ui.hojaCuerpo.scrollTop = scroll;
   panelSucio = false;
 }
@@ -220,6 +245,7 @@ function manejarAccion(el) {
     case 'servicio': return resultado(cambiarServicio(estado, num('ruta'), d.servicio));
     case 'catering-base': return resultado(cambiarCateringBase(estado, num('ruta'), el.checked));
     case 'consulta': estado.ajustes.consulta = el.value; return resultado(null, 'Ajuste guardado.');
+    case 'regla': return resultado(cambiarRegla(estado, num('ruta'), d.regla, el.value), 'Regla guardada.');
     case 'revisiones-auto': estado.ajustes.revisionesAuto = el.checked; return resultado(null, 'Ajuste guardado.');
     case 'asignar': return resultado(asignar(estado, num('avion'), el.value === '' ? null : Number(el.value)));
     case 'asignar-libre': return resultado(asignar(estado, num('avion'), num('ruta')), 'Avión asignado.');
@@ -296,6 +322,18 @@ function siguienteModal() {
   const item = cola.shift();
   if (!item) return;
   modalActual = item;
+  // La primera hoja de despacho de la partida viene con un consejo del instructor.
+  if (item.tipo === 'decision' && estado && !(estado.consejos ??= []).includes('hoja')) {
+    estado.consejos.push('hoja');
+    cola.unshift(item);
+    modalActual = { tipo: 'consejo', id: 'hoja' };
+    abrirModal(htmlConsejo('hoja'), 'modal-aviso');
+    return undefined;
+  }
+  if (item.tipo === 'ayuda') {
+    abrirModal(htmlAyuda(), 'modal-aviso');
+    return undefined;
+  }
   if (item.tipo === 'decision') {
     const dec = estado.decisiones[0];
     if (!dec) {
@@ -391,6 +429,14 @@ ui.modal.addEventListener('click', (e) => {
     resultado(null, 'Marca guardada.');
     return;
   }
+  if (accion === 'ayuda') {
+    // La ayuda pasa por delante de lo que hubiera en cola (la hoja que espera, por ejemplo).
+    ui.modal.hidden = true;
+    modalActual = null;
+    cola.unshift({ tipo: 'ayuda' });
+    siguienteModal();
+    return;
+  }
   if (accion === 'confirmar') {
     const fn = modalActual.alAceptar;
     cerrarModal();
@@ -439,6 +485,7 @@ function mostrarInicio() {
     <h1 class="inicio-titulo">App viación</h1>
     <p class="inicio-texto">Tienes 3 millones de dólares, un banco dispuesto a prestarte algo más y ningún avión. Cada vuelo que salga lo autorizas tú. Si el tiempo está feo, decides si se arriesga.</p>
     ${htmlFichaPiloto(pilotoDePagina())}
+    ${htmlComoSeJuega()}
     <label class="campo"><span>Nombre de la compañía</span><input id="nombre-compania" type="text" maxlength="28" value="Atlántica" autocomplete="off"></label>
     <div class="campo"><span>Tu marca: la cola de tus aviones</span><div id="editor-marca">${htmlEditorMarca(marca)}</div></div>
     <label class="campo"><span>Buscar base</span><input id="buscar-base" type="search" placeholder="Ciudad o código" autocomplete="off"></label>

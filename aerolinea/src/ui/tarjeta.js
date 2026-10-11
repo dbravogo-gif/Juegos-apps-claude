@@ -113,6 +113,7 @@ export function htmlTarjeta(estado, dec) {
         <button class="btn btn-sec" data-decision="retrasar">Retrasar 2 h</button>
         <button class="btn btn-sec" data-decision="cancelar">Cancelar <small>−${dinero(inf.compensacion)} y reputación</small></button>
       </div>
+      ${inf.ruta ? '<p class="hd-pista">¿Siempre decides lo mismo? En Rutas → Reglas de despacho puedes dejarlo decidido para esta ruta.</p>' : ''}
     </div>
   </div>`;
 }

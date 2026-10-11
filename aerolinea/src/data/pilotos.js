@@ -30,4 +30,7 @@ export const PILOTOS = {
   },
 };
 
+// Quien explica la ayuda. Sin foto, sale el icono del juego.
+export const INSTRUCTOR = { nombre: 'El instructor', cara: null };
+
 export const pilotoDe = (id) => (id && Object.hasOwn(PILOTOS, id) ? PILOTOS[id] : null);
