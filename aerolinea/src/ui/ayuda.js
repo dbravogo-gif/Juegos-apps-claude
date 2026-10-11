@@ -17,7 +17,8 @@ const SECCIONES = [
     <p>Diriges una aerolínea desde enero de 1976. Empiezas con 3 millones de dólares, una base y ningún avión. Ganas si la compañía crece sin quedarse sin dinero; pierdes si llegas a números rojos y el banco ya no te presta más.</p>
     <ol class="pasos">
       <li><strong>Compra un avión</strong> en Aviones. Uno de segunda mano es barato, pero puede venir con sorpresas: inspecciónalo antes.</li>
-      <li><strong>Abre una ruta</strong> en Rutas, o tocando un aeropuerto en el globo, y <strong>asígnale el avión</strong>.</li>
+      <li><strong>Estudia el destino</strong>: toca su aeropuerto en el globo. Gratis ves una idea del clima y del mercado; si quieres saber más, encarga los estudios.</li>
+      <li><strong>Abre una ruta</strong> en Rutas, o desde la ficha del aeropuerto, y <strong>asígnale el avión</strong>.</li>
       <li>Elige cuántas <strong>vueltas al día</strong>, la tarifa y el servicio a bordo.</li>
       <li>Decide qué quieres que te pregunte el despachador: en <strong>Reglas de despacho</strong> de cada ruta o en el ajuste general de Cuentas.</li>
       <li>Dale a <strong>▶</strong>. Cuando un vuelo necesite tu firma, el juego se para y te enseña la hoja de despacho.</li>
@@ -40,6 +41,13 @@ const SECCIONES = [
       <li><strong>Avión o tripulación fuera de norma</strong>: preguntarte o cancelar y dejarlo en tierra.</li>
     </ul>
     <p>Lo que dejes en «Como el ajuste general» sigue el ajuste de Cuentas. Si en un vuelo se juntan dos situaciones, gana la regla más prudente.</p>`],
+  ['Informes de aeropuerto', `
+    <p>De un aeropuerto que no conoces solo tienes una idea general: los fenómenos que más se dan en el año y una horquilla de pasajeros. Para decidir bien, se encargan estudios en su ficha:</p>
+    <ul>
+      <li><strong>Estudio meteorológico</strong>: por estación, cuánto tiempo pasa <strong>bajo mínimos</strong> (no se puede aterrizar ni con su ILS), cuánto con el tiempo <strong>justo</strong> y la frecuencia de cada fenómeno. El clima no cambia: se paga una vez.</li>
+      <li><strong>Estudio de mercado</strong>: demanda, quién vuela allí, a qué precio y cuántos pasajeros te tocarían. El mercado se mueve: vale doce meses.</li>
+      <li>Los dos juntos salen más baratos. De tu base y de los destinos que ya vuelas lo sabes todo sin pagar.</li>
+    </ul>`],
   ['Rutas, precios y pasajeros', `
     <ul>
       <li><strong>Pasajeros al día</strong>: es la demanda de todo el mercado en cada sentido. La compartes con las otras compañías que vuelan la ruta; toca un aeropuerto en el globo para ver quién opera.</li>

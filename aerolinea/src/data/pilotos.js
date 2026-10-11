@@ -30,7 +30,8 @@ export const PILOTOS = {
   },
 };
 
-// Quien explica la ayuda. Sin foto, sale el icono del juego.
-export const INSTRUCTOR = { nombre: 'El instructor', cara: null };
+// Quien explica la ayuda (retrato generado con IA a partir de su foto). Sin foto, sale el
+// icono del juego.
+export const INSTRUCTOR = { nombre: 'El instructor', cara: 'img/pilotos/instructor-cara.webp' };
 
 export const pilotoDe = (id) => (id && Object.hasOwn(PILOTOS, id) ? PILOTOS[id] : null);

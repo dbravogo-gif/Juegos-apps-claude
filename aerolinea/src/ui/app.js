@@ -2,7 +2,7 @@
 
 import { AEROPUERTOS, POR_ID, REGIONES, abiertoEn } from '../data/aeropuertos.js';
 import {
-  nuevaPartida, avanzar, decidir, cambiarRegla, comprar, comprarNuevo, inspeccionar, vender, crearRuta, borrarRuta,
+  nuevaPartida, avanzar, decidir, cambiarRegla, comprarInforme, comprar, comprarNuevo, inspeccionar, vender, crearRuta, borrarRuta,
   asignar, cambiarFrecuencia, cambiarTarifa, cambiarServicio, cambiarCateringBase, pedirPrestamo,
   devolverPrestamo, apuntar, VERSION, pedirInspeccion, pedirDiagnostico, pedirReparacion, diferir,
   pedirRevision, pedirMotor, pedirRetrofit, pedirDirectiva, cancelarTareas, codigoDe, marcaPorDefecto,
@@ -18,6 +18,7 @@ import { dinero, esc } from './formato.js';
 import { htmlMarca, htmlEditorMarca, conectarEditorMarca } from './marcas.js';
 import { pilotoDePagina, htmlFichaPiloto, htmlHitoPiloto } from './pilotos.js';
 import { hitosNuevos } from '../core/hitos.js';
+import { climaResumen } from '../core/informes.js';
 import { htmlAyuda, htmlConsejo, htmlComoSeJuega } from './ayuda.js';
 
 const CLAVE = 'aerolinea_partida_v1';
@@ -246,6 +247,10 @@ function manejarAccion(el) {
     case 'catering-base': return resultado(cambiarCateringBase(estado, num('ruta'), el.checked));
     case 'consulta': estado.ajustes.consulta = el.value; return resultado(null, 'Ajuste guardado.');
     case 'regla': return resultado(cambiarRegla(estado, num('ruta'), d.regla, el.value), 'Regla guardada.');
+    case 'informe': {
+      const error = comprarInforme(estado, d.destino, d.tipo);
+      return resultado(error, 'Informe recibido.');
+    }
     case 'revisiones-auto': estado.ajustes.revisionesAuto = el.checked; return resultado(null, 'Ajuste guardado.');
     case 'asignar': return resultado(asignar(estado, num('avion'), el.value === '' ? null : Number(el.value)));
     case 'asignar-libre': return resultado(asignar(estado, num('avion'), num('ruta')), 'Avión asignado.');
@@ -471,6 +476,12 @@ function procesar(eventos) {
 
 // ---------------------------------------------------------------- inicio
 
+// Una pista del clima de cada base posible: los dos fenómenos que más se dan en el año.
+function climaCorto(a) {
+  const r = climaResumen(a).slice(0, 2);
+  return r.length ? ` · ${r.map((x) => `${x.nombre.toLowerCase()} ${Math.round(x.p * 100)} %`).join(', ')}` : ' · casi siempre despejado';
+}
+
 function mostrarInicio() {
   const marca = marcaPorDefecto(codigoDe('Atlántica'));
   let letrasPropias = false;
@@ -478,7 +489,7 @@ function mostrarInicio() {
     const lista = AEROPUERTOS.filter((a) => a.region === region && abiertoEn(a, 1976));
     return `<fieldset class="grupo-base"><legend>${region}</legend>${lista.map((a) => `
       <label class="opcion-base"><input type="radio" name="base" value="${a.id}" ${a.id === 'LPA' ? 'checked' : ''}>
-        <span><strong>${a.id}</strong> ${esc(a.ciudad)}<small>${esc(a.nombre)} · pista ${a.pista} m${a.ils ? '' : ' · sin ILS'}</small></span></label>`).join('')}</fieldset>`;
+        <span><strong>${a.id}</strong> ${esc(a.ciudad)}<small>${esc(a.nombre)} · pista ${a.pista} m${a.ils ? '' : ' · sin ILS'}${climaCorto(a)}</small></span></label>`).join('')}</fieldset>`;
   }).join('');
   abrirModal(`
     <p class="inicio-eyebrow">Enero de 1976</p>
