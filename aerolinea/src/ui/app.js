@@ -494,7 +494,7 @@ function mostrarInicio() {
   abrirModal(`
     <p class="inicio-eyebrow">Enero de 1976</p>
     <h1 class="inicio-titulo">App viación</h1>
-    <p class="inicio-texto">Tienes 3 millones de dólares, un banco dispuesto a prestarte algo más y ningún avión. Cada vuelo que salga lo autorizas tú. Si el tiempo está feo, decides si se arriesga.</p>
+    <p class="inicio-texto">Tienes 6 millones de dólares, un banco dispuesto a prestarte algo más y ningún avión. Cada vuelo que salga lo autorizas tú. Si el tiempo está feo, decides si se arriesga.</p>
     ${htmlFichaPiloto(pilotoDePagina())}
     ${htmlComoSeJuega()}
     <label class="campo"><span>Nombre de la compañía</span><input id="nombre-compania" type="text" maxlength="28" value="Atlántica" autocomplete="off"></label>
