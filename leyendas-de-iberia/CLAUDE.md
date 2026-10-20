@@ -9,14 +9,20 @@ tocan desde aquí.
 
 ## Estado actual
 
-- **Fase 0, diseño.** Todavía no hay código.
-- **Decidido:** las estadísticas funcionan como en Pokémon, con nombres propios: Vida, Fuerza,
-  Escudo, Magia, Resistencia mágica y Celeridad (`docs/PROTOTIPO.md` §3).
-- **Pendiente del visto bueno del autor:**
-  - las relaciones entre los 15 tipos y la definición de Plasma (`docs/GDD.md` §8);
-  - Phaser 4;
-  - empezar el prototipo «Granada, 1492».
-- **No se programa nada hasta que lo apruebe.**
+- **Fase 1, prototipo «Granada, 1492».** El hito 1, el laboratorio de combate, está hecho y se
+  puede jugar.
+  - Motor de combate completo en `src/core`, con 41 pruebas.
+  - 19 especies; los iniciales tienen tres formas cada uno.
+  - Pantallas de laboratorio y de combate, con captura, objetos, cambios, experiencia y
+    evolución.
+- **Siguiente: hito 2, la Vega** (`docs/PROTOTIPO.md` §5): mapa, encuentros, equipo y mesón.
+- **Decidido:**
+  - Estadísticas como en Pokémon, con nombres propios.
+  - Valía de 1 a 14.
+  - 15 tipos.
+  - Phaser 4.
+- **Pendiente del autor:** las relaciones entre tipos y la definición de Plasma (`docs/GDD.md`
+  §8). Mientras tanto, la tabla de `src/data/tipos.ts` es provisional.
 
 ## Antes de tocar nada
 
@@ -52,29 +58,43 @@ tocan desde aquí.
 - **Al final de cada sesión**, actualiza el apartado «Estado actual» de este archivo y el
   registro de cambios del GDD.
 
-## Estructura prevista
+## Estructura
 
-Hay que actualizar este apartado cuando se cree el proyecto.
+El código va en español: nombres, comentarios y textos.
 
-- `src/core/`: motor puro y determinista. Incluye el generador aleatorio, estadísticas, tipos,
-  combate (estado, acciones, resolución, IA), captura, progreso y guardado. Lleva pruebas en
-  `tests/`.
-- `src/data/`: criaturas, movimientos, tipos, entrenadores, objetos, zonas y el registro de
-  sprites.
-- `src/escenas/` y `src/ui/`: Phaser. Escenas, mando táctil y cajas de diálogo.
-- `src/assets/`:
-  - `criaturas/<id>.png`: si falta una imagen, se genera una provisional con el color del tipo.
-  - `mapas/`: en formato Tiled JSON.
-  - `tiles/`.
+- `src/core/`: motor puro y determinista, con pruebas en `tests/`.
+  - `modelo.ts`: los tipos de datos.
+  - `rng.ts`: el generador con semilla.
+  - `estadisticas.ts`: fórmulas, Valía y temperamento.
+  - `tipos.ts`, `danio.ts`, `captura.ts` y `progreso.ts` (experiencia, movimientos y
+    evolución).
+  - `criatura.ts`: crear y curar ejemplares.
+  - `combate.ts`: `iniciarCombate` y `resolverTurno`, que devuelven el estado nuevo y los
+    eventos.
+  - `ia.ts`: la IA del rival.
+- `src/data/`: `especies.ts`, `movimientos.ts`, `tipos.ts` (tabla provisional),
+  `temperamentos.ts` y `objetos.ts`. `index.ts` reúne todo en `DATOS`, que el motor recibe como
+  parámetro.
+- `src/escenas/`: escenas de Phaser.
+  - `Arranque` carga el arte.
+  - `Laboratorio` es donde se eligen los equipos.
+  - `Combate` pinta los eventos del motor, sin lógica de reglas.
+- `src/ui/`:
+  - `tema.ts`: medidas (1080 × 1920, escalado con FIT) y colores.
+  - `componentes.ts`: `Boton`, `Barra` y chips de tipo.
+  - `criaturaVisual.ts`: el arte de las criaturas.
+  - `textos.ts`: la frase que acompaña a cada evento.
+- `src/assets/criaturas/<id>.png`: arte de cada criatura. Se detecta solo. Si falta, se dibuja
+  una figura provisional con el color del tipo, más grande y con más adornos cuanto más
+  evolucionada.
 
 ## Comprobar
 
-Lo siguiente aplica cuando exista código.
-
-- `npm test`: Vitest contra `src/core`.
-- `npm run build`: el build tiene que funcionar con base relativa.
-- `npm run dev`: abre el juego con un viewport de móvil en vertical.
-- **Publicación.** Hay que añadirlo a `.github/workflows/publicar-juego.yml`:
+- `npm test`: Vitest contra `src/core` y la coherencia de los datos.
+- `npm run build`: `tsc` más `vite build`, con base relativa.
+- `npm run dev` o `npm run preview`: abre el juego con un viewport de móvil en vertical. Sin
+  móvil, se puede usar Playwright con un viewport de 390 × 844 y toques.
+- **Publicación** (hito 4). Hay que añadirlo a `.github/workflows/publicar-juego.yml`:
   - incluir `leyendas-de-iberia/**` en `paths`;
-  - hacer el build en un paso;
+  - hacer `npm ci`, `npm test` y `npm run build`;
   - copiar `dist/` a `web/leyendas-de-iberia/`.

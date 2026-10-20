@@ -1,7 +1,6 @@
 # Fase 1: prototipo «Granada, 1492»
 
-Estado: **pendiente de visto bueno.** Las estadísticas ya están decididas (§3). Faltan las
-relaciones entre tipos (§4) y el visto bueno para empezar a programar.
+Estado: **en curso.** Hito 1 hecho. Las relaciones entre tipos (§4) siguen siendo provisionales.
 
 ## 1. Objetivo
 
@@ -136,7 +135,7 @@ iniciales evolucionan en la fase 2, como en Pokémon, donde lo hacen después de
 
 Cada hito termina en algo que se puede abrir en el navegador y jugar.
 
-1. **Laboratorio de combate.**
+1. **Laboratorio de combate. Hecho (2026-10-20).**
    - El proyecto Vite + TS + Phaser, con el motor de combate en `src/core` y sus pruebas.
    - Una pantalla para elegir dos criaturas y combatir, que sirve para ajustar las cifras.
    - *Jugable:* combates sueltos contra criaturas salvajes.
