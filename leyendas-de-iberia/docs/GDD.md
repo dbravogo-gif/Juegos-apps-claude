@@ -94,7 +94,6 @@ Los líderes son sobre todo reyes y generales; los artistas salen como PNJ.
     donde Colón hizo escala en 1492. Se descubre en este capítulo y se abre del todo al final del
     juego. Allí se combate contra los equipos de los amigos y se juega el reto diario (§9).
   - **Más ideas:**
-    - La isla de San Borondón, la isla fantasma que aparece y desaparece, como zona secreta.
     - La Luz de Mafasca, de Fuerteventura, como ánima.
     - Fósiles canarios para el Dr. Jangel: la tortuga gigante y el lagarto gigante de
       Tenerife.
@@ -236,7 +235,14 @@ con la Guerra Civil.
 - **Progresión.** Experiencia, niveles y aprender movimientos. En el prototipo se evoluciona por
   nivel; otras condiciones vendrán después.
 - **Temperamento.** Equivale a la naturaleza de Pokémon: +10 % en una estadística y −10 % en
-  otra, con nombres propios. En el prototipo no hay IV ni EV; se pueden añadir más adelante.
+  otra, con nombres propios.
+- **Valía (de 1 a 14).** Es la versión simplificada de los IV y los EV de Pokémon: un solo
+  número que dice lo buena que es la criatura.
+  - Se decide al capturarla y no cambia.
+  - Lo normal es tener entre 6 y 9; los valores altos son raros.
+  - Mejora todas las estadísticas por igual.
+  - Se ve en la ficha, por ejemplo «Valía 11/14».
+  - Detalle en `PROTOTIPO.md` §3.
 - **Moneda.** Cambia de nombre con la época (maravedí, ducado, real, peseta, euro), pero por
   dentro es la misma. Es solo un detalle de ambientación.
 - **Insignias de gimnasio: blasones.**
@@ -321,4 +327,6 @@ con la Guerra Civil.
   - Menos peso a los animales en la historia.
   - Estadísticas como en Pokémon, con nombres propios: Vida, Fuerza, Escudo, Magia, Resistencia
     mágica y Celeridad. Se descartan los sistemas Guardia, Aliento y Línea de tiempo.
-  - El capítulo 5 pasa a transcurrir entero en Canarias: Teide y Guayota, buceo y Nelson.
+  - El capítulo 5 pasa a transcurrir entero en Canarias: Teide y Guayota, buceo y Nelson. Sin
+    San Borondón.
+  - Valía de 1 a 14 en lugar de IV y EV.

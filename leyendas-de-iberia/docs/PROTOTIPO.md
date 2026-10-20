@@ -85,7 +85,14 @@ iniciales evolucionan en la fase 2, como en Pokémon, donde lo hacen después de
   no del tipo.
 - **Cálculo de las estadísticas.** Se usa la fórmula de Pokémon a partir de las estadísticas
   base de la especie y del nivel, con un máximo de nivel 100.
-  - No hay IV ni EV en el prototipo.
+  - **Valía (de 1 a 14).** Sustituye a los IV y los EV: un solo número que dice lo buena que
+    es la criatura.
+    - Se tira al capturarla, con forma de campana: lo normal es entre 6 y 9, y el 14 es raro.
+    - No cambia después.
+    - Se suma a todas las estadísticas como un IV común: IV = (Valía − 1) × 31 ÷ 13. Una Valía
+      de 14 equivale a un IV de 31 en todo, y una de 1, a un 0.
+    - Las criaturas de los entrenadores llevan una Valía fija según su dificultad; los líderes,
+      alta.
   - El **temperamento** (+10 % en una estadística y −10 % en otra) equivale a la naturaleza.
 - **Daño.** Es la fórmula de Pokémon:
   `((2 × Nivel ÷ 5 + 2) × Poder × A ÷ D) ÷ 50 + 2`.
