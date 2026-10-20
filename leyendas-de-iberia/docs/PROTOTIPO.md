@@ -28,27 +28,34 @@ Es una sola zona con tres partes:
 - **La Vega y el Genil.** La ruta, con carrizales, acequias y olivares, y los dos entrenadores.
 - **La Alhambra.** El gimnasio de Boabdil, en el Patio de los Leones.
 
-### Criaturas (12, nombres provisionales)
+### Criaturas (13, nombres provisionales)
 
 | # | Criatura | Tipo | Inspiración | Papel |
 | --- | --- | --- | --- | --- |
-| 1 | Becerro de fuego | Fuego | Los toros de fuego de las fiestas populares | Inicial |
+| 1 | Becerro de fuego | Infernal | Los toros de fuego de las fiestas populares | Inicial |
 | 2 | Desmán | Agua | El desmán ibérico de los ríos del norte | Inicial |
-| 3 | Osezno | Tierra | El oso pardo. En la fase 2 evoluciona a oso y luego a Basajaun | Inicial |
+| 3 | Retoño de drago | Planta | El drago canario, cuya savia roja se tenía por sangre de dragón. Llega como regalo desde Gran Canaria, incorporada a la Corona en 1483. Evoluciona hasta el Drago milenario (Planta y Ancestral) | Inicial |
 | 4 | Libélula | Aire | Fauna | Común |
-| 5 | Caballuco del diablu | Aire | Mitología cántabra: las libélulas que montan los diablos la noche de San Juan | Evolución de 4 |
-| 6 | Topillo | Tierra | Fauna | Común |
+| 5 | Caballuco del diablu | Aire e Infernal | Mitología cántabra: las libélulas que montan los diablos la noche de San Juan | Evolución de 4 |
+| 6 | Topillo | Común | Fauna | Común |
 | 7 | Cangrejo de río | Agua | El cangrejo autóctono de las acequias | Común |
-| 8 | Abejaruco | Fuego | Ave de plumaje de colores vivos | Común |
-| 9 | Duende | Ánima | El duende del folclore de toda España | Poco común |
-| 10 | Trasgo | Ánima | El trasgu del folclore del norte | Evolución de 9 |
-| 11 | Galápago | Agua | El galápago leproso de balsas y acequias | Rara |
-| 12 | León de la fuente | Agua | Los leones de piedra del Patio de los Leones | Criatura estrella de Boabdil. No se puede capturar en el prototipo |
+| 8 | Abejaruco | Aire | Ave de plumaje de colores vivos | Común |
+| 9 | Duende | Oscuridad | El duende del folclore de toda España | Poco común |
+| 10 | Trasgo | Oscuridad | El trasgu del folclore del norte | Evolución de 9 |
+| 11 | Mandrágora | Planta | La raíz que, según la leyenda, grita al arrancarla | Poco común |
+| 12 | Galápago | Agua | El galápago leproso de balsas y acequias | Rara |
+| 13 | León de la fuente | Agua | Los leones de piedra del Patio de los Leones | Criatura estrella de Boabdil. No se puede capturar en el prototipo |
 
-Los tipos de esta tabla son los del primer borrador. Se reasignan cuando se cierre la tabla de
-tipos (§4).
+Los tipos usan las ideas de relaciones del GDD (§8), que aún no están cerradas.
 
-Con esto se prueban las dos evoluciones (4→5 y 9→10) y las tres rarezas. Los
+- **Iniciales.** Forman el triángulo clásico: el Agua apaga el fuego (Infernal), el fuego quema
+  la Planta y la Planta absorbe el Agua.
+- **El Osezno sale del prototipo.** Con las nuevas relaciones, el Agua es eficaz contra la
+  Tierra, así que tendría desventaja frente a Boabdil, igual que el Becerro. Lo sustituye el
+  drago, que además es un guiño a Canarias.
+- **El Osezno vuelve más adelante,** en los capítulos del norte, con su línea hasta Basajaun.
+
+Con esto se prueban las dos evoluciones (4→5 y 9→10), el tipo doble y las tres rarezas. Los
 iniciales evolucionan en la fase 2, como en Pokémon, donde lo hacen después del primer gimnasio.
 
 ### Personajes y objetos
@@ -58,8 +65,9 @@ iniciales evolucionan en la fase 2, como en Pokémon, donde lo hacen después de
   - Un mercader genovés: Libélula, Cangrejo y Duende.
 - **Líder: Boabdil**, de tipo Agua por las acequias, albercas y fuentes de la Alhambra. Lleva
   Cangrejo, Galápago y León de la fuente, entre los niveles 11 y 14.
-  - Frente a él, el Osezno (Tierra) tiene ventaja, el Becerro (Fuego) desventaja y el Desmán va
-    neutral. Es lo habitual en un primer gimnasio.
+  - Frente a él, el Retoño de drago (Planta) tiene ventaja, el Becerro (Infernal) desventaja y
+    el Desmán va neutral. Es lo habitual en un primer gimnasio. Quien elija el Becerro puede
+    capturar una Mandrágora en la Vega.
 - **PNJ:**
   - Isabel la Católica, la mentora. Te encarga el Bestiario y te da la criatura inicial.
   - El Gran Capitán, que negoció la entrega de Granada. Te da las primeras téseras.
@@ -106,7 +114,7 @@ iniciales evolucionan en la fase 2, como en Pokémon, donde lo hacen después de
 - **Igual que en Pokémon:**
   - Orden por Celeridad, con prioridad en algunos movimientos.
   - Precisión, PP y cambios de estadísticas en combate, de −6 a +6.
-- **Estados alterados en el prototipo:** Quemado (Fuego) y Dormido.
+- **Estados alterados en el prototipo:** Quemado (Infernal) y Dormido.
 - **Captura.** Fórmula al estilo de Pokémon: cada especie tiene un ratio de captura, y es más
   fácil cuanta menos Vida tiene la criatura y si sufre un estado alterado.
 - **Experiencia.** Fórmula al estilo de Pokémon, con una sola curva de nivel en el prototipo.
@@ -115,7 +123,7 @@ iniciales evolucionan en la fase 2, como en Pokémon, donde lo hacen después de
 
 ## 4. Tipos
 
-- **La lista.** Son los 12 del GDD (§8). Las relaciones entre ellos aún están por decidir.
+- **La lista.** Son los 15 del GDD (§8). Las relaciones entre ellos aún están por decidir.
 - **Tipo doble.** El motor admite dos tipos por criatura desde el principio. Cuesta poco y
   evita rehacerlo después.
 - **La tabla es un dato** (`src/data/tipos.ts`). Se puede cambiar sin tocar el motor, así que no
