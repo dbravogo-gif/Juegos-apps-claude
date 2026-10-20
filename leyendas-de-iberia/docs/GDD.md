@@ -22,7 +22,7 @@ autor y dos amigos, y se juega en el navegador del móvil y del PC.
 | Legendarios | Unos pocos. Son seres mitológicos o animales célebres, como Babieca, el caballo del Cid. |
 | Personajes históricos | **Nunca son capturables.** Son entrenadores, líderes de gimnasio, PNJ del mapa y parte de la trama. Tienen prioridad los reyes, los generales y los guerreros; algún artista sí, pero pocos. |
 | Mentores | Isabel la Católica en el capítulo 1 y un segundo mentor en el capítulo 4 o 5. Se propone Carlos III (§5). Se eligen por su peso histórico, no por su relación con los animales. |
-| Canarias | Al menos un gimnasio está allí, y también la torre de combates del final del juego (§4). |
+| Canarias | El capítulo 5 transcurre entero en Canarias: el Teide con Guayota, una zona de buceo y la invasión de Nelson. La torre de combates del final del juego también está allí (§4). |
 | Almacén de criaturas | Existe desde el minuto 1: las criaturas que no caben en el equipo se guardan en el Bestiario (§8). |
 | Época | De 1492 a hoy. Incluye la Guerra Civil, el franquismo y personajes actuales. |
 | Antes de 1492 | No hay capítulos. Atapuerca, Numancia o Mérida son ruinas y zonas opcionales. Los héroes anteriores, como el Cid, aparecen como ánimas que hacen de jefes opcionales (§4). |
@@ -30,7 +30,7 @@ autor y dos amigos, y se juega en el navegador del móvil y del PC.
 | Guerra Civil | El protagonista combate en el bando sublevado. A los tres jugadores les parece bien. |
 | Estructura | El mapa es España. Cada gimnasio es una época y una ciudad, en orden cronológico. |
 | Diseño visual | Las criaturas débiles son sencillas; las fuertes y las evoluciones finales, elaboradas y épicas. |
-| Estadísticas | Sistema propio y distinto del de Pokémon: pocas estadísticas, fáciles de leer, y la gracia en cómo interactúan. Cuál, está abierto (§3). |
+| Estadísticas | Funcionan como en Pokémon, pero con nombres propios: Vida, Fuerza, Escudo, Magia, Resistencia mágica y Celeridad (§8 y `PROTOTIPO.md`). |
 | Multijugador | Asíncrono entre los tres y en una fase posterior. Desde el principio se diseña con semilla determinista y equipos serializables (§9). |
 | Stack | Vite + TypeScript + Phaser. Build estático publicado en GitHub Pages (§10). |
 | Contenido | Va como datos separados del motor, para añadir contenido sin tocar la lógica. |
@@ -42,17 +42,14 @@ autor y dos amigos, y se juega en el navegador del móvil y del PC.
 
 Hay que preguntar antes de diseñar sobre ellas.
 
-1. **Sistema de estadísticas.** Hay tres propuestas en `PROTOTIPO.md`: A) Guardia, B) Aliento y
-   C) Línea de tiempo. Se recomienda la A.
-2. **Tipos.** Hay una tabla provisional de 5 tipos en `PROTOTIPO.md`. Los definitivos se
+1. **Tipos.** Hay una tabla provisional de 5 tipos en `PROTOTIPO.md`. Los definitivos se
    deciden más adelante.
-3. **Marco narrativo y segundo mentor** (se propone Carlos III). Propuesta en §5.
-4. **Líderes de los capítulos 2 a 8, miembros de la Liga y lo que pasa en Canarias.** Propuesta
-   en §4.
-5. **El Dr. Jangel:** quién es y en qué capítulo abre el laboratorio. Propuesta en §7.
-6. **Personajes actuales:** quiénes salen y con qué reglas. Propuesta en §6.
-7. **Phaser 3 o Phaser 4.** Ver §10.
-8. **Nombres definitivos de las criaturas.** Los del prototipo son provisionales.
+2. **Marco narrativo y segundo mentor** (se propone Carlos III). Propuesta en §5.
+3. **Líderes de los capítulos 2 a 8 y miembros de la Liga.** Propuesta en §4.
+4. **El Dr. Jangel:** quién es y en qué capítulo abre el laboratorio. Propuesta en §7.
+5. **Personajes actuales:** quiénes salen y con qué reglas. Propuesta en §6.
+6. **Phaser 3 o Phaser 4.** Ver §10.
+7. **Nombres definitivos de las criaturas.** Los del prototipo son provisionales.
 
 ## 4. Épocas y gimnasios (propuesta)
 
@@ -65,7 +62,7 @@ Los líderes son sobre todo reyes y generales; los artistas salen como PNJ.
 | 2 | Carlos V (1516–1556) | Toledo y Villalar | Carlos V | Los comuneros Juan de Padilla y María Pacheco; Hernán Cortés |
 | 3 | Felipe II (1556–1598) | El Escorial y Sevilla | Don Juan de Austria (Lepanto) | Felipe II, Álvaro de Bazán, el duque de Alba; Cervantes, soldado en Lepanto |
 | 4 | Los Austrias menores (1598–1700) | Madrid | Ambrosio Spínola (Breda) | Felipe IV, Olivares; los tercios; Velázquez |
-| 5 | Borbones (1700–1808) | Cádiz, Madrid y **Santa Cruz de Tenerife** | El general Gutiérrez, que rechazó a Nelson en 1797 | **Carlos III (mentor)**; Jorge Juan, el marino, en Cádiz; Blas de Lezo; Nelson, como antagonista |
+| 5 | Borbones: **Canarias** (1700–1808) | Tenerife, El Hierro y La Gomera, con un prólogo en Madrid y Cádiz | El general Gutiérrez, que rechazó a Nelson en 1797 | **Carlos III (mentor)** y Jorge Juan, en el prólogo; Nelson, como antagonista; las ánimas de los menceyes |
 | 6 | Independencia y siglo XIX (1808–1898) | Zaragoza | Agustina de Aragón | Palafox, Castaños (Bailén), el Empecinado, Prim; Goya |
 | 7 | Restauración, República y Guerra Civil (1898–1939) | Las Palmas y Madrid | Un general republicano (Miaja o Vicente Rojo) | Alfonso XIII. La guerra puede empezar en Las Palmas, de donde salió Franco el 18 de julio de 1936. El protagonista, en el bando sublevado (§6) |
 | 8 | Franquismo (1939–1975) | Por decidir | Por decidir (Franco, Carrero Blanco…) | Hay que decidir el enfoque: posguerra o desarrollismo. Félix Rodríguez de la Fuente, como personaje |
@@ -76,16 +73,31 @@ Los líderes son sobre todo reyes y generales; los artistas salen como PNJ.
 - **Saltos de tiempo dentro de un capítulo.** Un capítulo puede abarcar varias décadas de su
   época, con saltos de tiempo, y cada hecho conserva su fecha real. Así caben en la misma
   generación Jorge Juan, que murió en 1773, y el ataque de Nelson, en 1797.
-- **Canarias** (propuesta):
-  - **Gimnasio del capítulo 5, en Santa Cruz de Tenerife.** En 1797 el general Antonio Gutiérrez
-    rechazó el ataque de Nelson, que perdió allí el brazo derecho. Nelson es el antagonista del
-    capítulo.
-  - **La torre de combates del final del juego, en La Gomera.** Está en la Torre del Conde, del
-    siglo XV, en la isla donde Colón hizo escala en 1492. Allí se combate también contra los
-    equipos de los amigos y se juega el reto diario (§9).
-  - **El Teide, como zona opcional.** Guayota, el demonio guanche encerrado en el volcán, es un
-    legendario. Hay tibicenas, los perros demoníacos de la mitología canaria. Las ánimas de los
-    menceyes, como Bencomo, hacen de jefes opcionales.
+- **El capítulo 5 transcurre en Canarias** (los detalles son propuesta):
+  - **Prólogo en Madrid y Cádiz.** Carlos III renueva el encargo. Jorge Juan, el marino, que
+    dirigió en Cádiz la academia de guardias marinas, te enseña a navegar y te lleva a las islas.
+  - **El Teide y la Cueva del Viento: montaña y cueva.**
+    - Guayota, el demonio guanche encerrado en el volcán, es el legendario.
+    - Sus perros demoníacos, los tibicenas, salen como criaturas.
+    - Las ánimas de los menceyes, como Bencomo, hacen de jefes opcionales.
+    - La Cueva del Viento, en Icod de los Vinos, es uno de los tubos volcánicos más largos del
+      mundo.
+  - **Zona de buceo.** Es una mecánica nueva: se explora el fondo del mar, con criaturas propias
+    y pecios. Se propone el Mar de las Calmas, en El Hierro, que es reserva marina. Falta decidir
+    cómo se consigue la capacidad de bucear.
+  - **La invasión de Nelson (1797).** Es el clímax del capítulo:
+    - Una secuencia de combates en la defensa de Santa Cruz y, después, el gimnasio del general
+      Antonio Gutiérrez.
+    - Nelson perdió allí el brazo derecho.
+    - Se conserva el cañón Tigre, al que la tradición atribuye el disparo.
+  - **La torre de combates, en La Gomera.** Está en la Torre del Conde, del siglo XV, en la isla
+    donde Colón hizo escala en 1492. Se descubre en este capítulo y se abre del todo al final del
+    juego. Allí se combate contra los equipos de los amigos y se juega el reto diario (§9).
+  - **Más ideas:**
+    - La isla de San Borondón, la isla fantasma que aparece y desaparece, como zona secreta.
+    - La Luz de Mafasca, de Fuerteventura, como ánima.
+    - Fósiles canarios para el Dr. Jangel: la tortuga gigante y el lagarto gigante de
+      Tenerife.
 - **El capítulo 6 ya está pensado.** La zona de Zaragoza en 1808, con Agustina, Goya, Palafox y
   el Dragón de San Jorge, se diseñó en el primer borrador y se reutiliza ahí.
 - **Antes de 1492, como zonas opcionales.** Las ruinas existen en cualquier época:
@@ -110,10 +122,6 @@ protagoniza una generación posterior de la familia, que hereda el Bestiario y e
 criaturas, como son leyendas, no envejecen. Desde el primer momento, las que no caben en el
 equipo se guardan en las páginas del Bestiario (§8).
 
-**Carlos III es el segundo mentor**, en el capítulo 5 (propuesta). Es el gran rey reformista de
-la Ilustración: renueva el encargo de Isabel y guía la segunda mitad del juego. La alternativa
-sería que el mentor fuera Jorge Juan, en lugar de salir como personaje.
-
 - Explica de forma natural el salto entre épocas sin viajes en el tiempo.
 - Explica también el protagonista de 1936: es el miembro de la familia de esa generación, en el
   bando sublevado.
@@ -121,6 +129,10 @@ sería que el mentor fuera Jorge Juan, en lugar de salir como personaje.
   en cada época. En la fase multijugador, su equipo rival es el equipo real de ese amigo (§9).
 - **El Bestiario crece con la saga.** En el capítulo 6, Goya lo ilustra, enlazando con sus
   *Caprichos* («El sueño de la razón produce monstruos»).
+
+**Carlos III es el segundo mentor**, en el prólogo del capítulo 5 (propuesta). Es el gran rey
+reformista de la Ilustración: renueva el encargo de Isabel y guía la segunda mitad del juego. La
+alternativa sería que el mentor fuera Jorge Juan, en lugar de salir como personaje.
 - **Los gimnasios son pruebas, no enemigos.** El líder puede ser de cualquier bando. Por
   ejemplo, Boabdil acepta un último duelo de leyendas antes de entregar las llaves de Granada.
 
@@ -199,20 +211,32 @@ con la Guerra Civil.
   monte bajo o mieses. Hay PNJ, tiendas y **mesones**, que curan al equipo.
 - **Combate.** Uno contra uno y por turnos. Equipo de hasta 6 criaturas, con cambios, objetos y
   huida de los combates salvajes. Cada criatura tiene 4 movimientos, que caben bien como cuatro
-  botones en el móvil. El sistema de estadísticas está pendiente (§3).
+  botones en el móvil.
+- **Estadísticas.** Funcionan como en Pokémon, con nombres propios:
+
+  | Estadística | En Pokémon |
+  | --- | --- |
+  | Vida | PS |
+  | Fuerza | Ataque |
+  | Escudo | Defensa |
+  | Magia | Ataque especial |
+  | Resistencia mágica | Defensa especial |
+  | Celeridad | Velocidad |
+
+  Cada movimiento es físico, mágico o de estado. Las fórmulas están en `PROTOTIPO.md`.
 - **Almacén de criaturas, desde el minuto 1.** Las que no caben en el equipo de 6 viven en las
   páginas del Bestiario y se cambian en cualquier mesón. Es el equivalente a las cajas del PC de
   Pokémon.
-- **Aleatoriedad mínima y visible** (propuesta). Sin tirada de daño: el mismo golpe hace siempre
-  lo mismo. El azar queda para la captura, algunos efectos y los desempates. Así el combate se
-  lee mejor, la IA es más sencilla y el reto diario es más justo.
+- **Aleatoriedad.** Como en Pokémon: tirada de daño, golpes críticos, precisión y captura. Todo
+  sale del generador con semilla, así que una partida se puede reproducir y el reto diario
+  sigue siendo justo.
 - **Tipos.** Tabla provisional en `PROTOTIPO.md`.
 - **Captura con téseras.** Las téseras de hospitalidad eran pactos celtíberos de bronce, muchas
   con forma de animal. Aquí, lanzar una tésera es sellar un pacto con la criatura.
 - **Progresión.** Experiencia, niveles y aprender movimientos. En el prototipo se evoluciona por
   nivel; otras condiciones vendrán después.
-- **Temperamento** (propuesta). Cada ejemplar tiene uno, que da +10 % en una estadística. Da
-  variedad entre ejemplares sin IV ni EV.
+- **Temperamento.** Equivale a la naturaleza de Pokémon: +10 % en una estadística y −10 % en
+  otra, con nombres propios. En el prototipo no hay IV ni EV; se pueden añadir más adelante.
 - **Moneda.** Cambia de nombre con la época (maravedí, ducado, real, peseta, euro), pero por
   dentro es la misma. Es solo un detalle de ambientación.
 - **Insignias de gimnasio: blasones.**
@@ -295,3 +319,6 @@ con la Guerra Civil.
     Teide como zona opcional.
   - Jorge Juan, como personaje del capítulo 5.
   - Menos peso a los animales en la historia.
+  - Estadísticas como en Pokémon, con nombres propios: Vida, Fuerza, Escudo, Magia, Resistencia
+    mágica y Celeridad. Se descartan los sistemas Guardia, Aliento y Línea de tiempo.
+  - El capítulo 5 pasa a transcurrir entero en Canarias: Teide y Guayota, buceo y Nelson.

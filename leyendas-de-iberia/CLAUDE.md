@@ -10,10 +10,12 @@ tocan desde aquí.
 ## Estado actual
 
 - **Fase 0, diseño.** Todavía no hay código.
-- **Pendiente del visto bueno del autor** (`docs/PROTOTIPO.md`):
-  - el sistema de estadísticas (A, B o C; se recomienda la A, Guardia);
-  - la tabla de tipos provisional;
-  - el plan del prototipo «Granada, 1492».
+- **Decidido:** las estadísticas funcionan como en Pokémon, con nombres propios: Vida, Fuerza,
+  Escudo, Magia, Resistencia mágica y Celeridad (`docs/PROTOTIPO.md` §3).
+- **Pendiente del visto bueno del autor:**
+  - la tabla de tipos provisional (§4);
+  - Phaser 4;
+  - empezar el prototipo «Granada, 1492».
 - **No se programa nada hasta que lo apruebe.**
 
 ## Antes de tocar nada
