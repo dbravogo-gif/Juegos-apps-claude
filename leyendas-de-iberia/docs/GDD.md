@@ -2,21 +2,16 @@
 
 Última actualización: 2026-10-20. Estado: fase 0 (diseño). Todavía no hay código.
 
-> **Borrador en revisión.** Se está decidiendo el periodo: de 1808 a hoy, como figura abajo, o
-> de 1492 a hoy con las ruinas antiguas como zonas opcionales. Si se elige 1492, cambian los §4
-> y §5 y la zona del prototipo.
-
 Este documento recoge **qué** es el juego y **por qué**. El plan de la fase en curso está en
 `PROTOTIPO.md`.
 
 ## 1. Resumen
 
 Juego de criaturas por turnos al estilo Pokémon: explorar, capturar, entrenadores, gimnasios,
-evoluciones y legendarios. Está ambientado en la historia de España desde la Guerra de la
-Independencia (1808) hasta hoy. Las criaturas salen de la mitología y la fauna ibérica. Los
-personajes históricos son entrenadores, líderes de gimnasio, gente que te cruzas por el mapa y
-protagonistas de la trama. Es para el autor y dos amigos, y se juega en el navegador del móvil
-y del PC.
+evoluciones y legendarios. Está ambientado en la historia de España desde 1492 hasta hoy. Las
+criaturas salen de la mitología y la fauna ibérica. Los personajes históricos son entrenadores,
+líderes de gimnasio, gente que te cruzas por el mapa y protagonistas de la trama. Es para el
+autor y dos amigos, y se juega en el navegador del móvil y del PC.
 
 ## 2. Decisiones cerradas
 
@@ -26,7 +21,8 @@ y del PC.
 | Criaturas | Salen de la mitología y la fauna ibérica: Trasgu, Cuélebre, Basajaun, Tarasca, lince, toro… |
 | Legendarios | Unos pocos. Son seres mitológicos o animales célebres, como Babieca, el caballo del Cid. |
 | Personajes históricos | **Nunca son capturables.** Son entrenadores, líderes de gimnasio, PNJ del mapa y parte de la trama. |
-| Época | De 1808 a hoy. Incluye la Guerra Civil, el franquismo y personajes actuales. |
+| Época | De 1492 a hoy. Incluye la Guerra Civil, el franquismo y personajes actuales. |
+| La Antigüedad | Atapuerca, Numancia o Mérida aparecen como ruinas y zonas opcionales, no como capítulos (§4). |
 | Guerra Civil | El protagonista combate en el bando sublevado. A los tres jugadores les parece bien. |
 | Estructura | El mapa es España. Cada gimnasio es una época y una ciudad, en orden cronológico. |
 | Diseño visual | Las criaturas débiles son sencillas; las fuertes y las evoluciones finales, elaboradas y épicas. |
@@ -47,48 +43,61 @@ Hay que preguntar antes de diseñar sobre ellas.
 2. **Tipos.** Hay una tabla provisional de 5 tipos en `PROTOTIPO.md`. Los definitivos se
    deciden más adelante.
 3. **Marco narrativo.** Propuesta en §5.
-4. **Épocas, ciudades y líderes.** Propuesta en §4.
+4. **Líderes de los capítulos 2 a 8 y miembros de la Liga.** Propuesta en §4.
 5. **Personajes actuales:** quiénes salen y con qué reglas. Propuesta en §6.
 6. **Phaser 3 o Phaser 4.** Ver §10.
 7. **Nombres definitivos de las criaturas.** Los del prototipo son provisionales.
 
 ## 4. Épocas y gimnasios (propuesta)
 
-Son ocho gimnasios y una Liga final. Las fechas son orientativas y algunas se solapan.
+Son ocho gimnasios y una Liga final. Entre un capítulo y el siguiente pasan de 50 a 80 años.
 
 | # | Época | Ciudad | Líder (candidatos) | PNJ y trama |
 | --- | --- | --- | --- | --- |
-| 1 | Guerra de la Independencia (1808–1814) | Zaragoza | Agustina de Aragón | Goya, Palafox; los franceses |
-| 2 | Cádiz, la Pepa y Fernando VII (1810–1833) | Cádiz | Rafael del Riego, Mariana Pineda | Cortes de Cádiz, absolutistas y liberales |
-| 3 | Guerras carlistas (1833–1876) | Navarra o el Maestrazgo | Zumalacárregui, Ramón Cabrera | Espartero, Isabel II |
-| 4 | Sexenio y Primera República (1868–1874) | Cartagena | Antonete Gálvez (Cantón de Cartagena) | Prim, Castelar, Pi y Margall |
-| 5 | Restauración y el 98 (1874–1923) | Madrid o Barcelona | Ramón y Cajal, Pardo Bazán, Gaudí | Cánovas, Sagasta, Galdós |
-| 6 | Edad de Plata y Segunda República (1923–1936) | Madrid | Lorca, Clara Campoamor | Residencia de Estudiantes |
-| 7 | Guerra Civil (1936–1939) | Madrid o el Ebro | Un líder republicano, por decidir | El protagonista, en el bando sublevado (§6) |
+| 1 | Reyes Católicos (1491–1492) | Granada y Santa Fe | Boabdil | Isabel y Fernando, Colón, el Gran Capitán, Hernando de Talavera |
+| 2 | Carlos V (1516–1556) | Toledo y Villalar | María Pacheco o Juan de Padilla (comuneros) | Carlos V |
+| 3 | Felipe II (1556–1598) | Sevilla, puerto de Indias | Álvaro de Bazán | Cervantes (Lepanto), Teresa de Jesús, Felipe II; la Armada |
+| 4 | Siglo de Oro barroco (1598–1700) | Madrid | Velázquez, Quevedo o Lope de Vega | Olivares, Calderón |
+| 5 | Borbones e Ilustración (1700–1808) | Barcelona, Cádiz o Madrid | Blas de Lezo, Carlos III | Jorge Juan; Barcelona, 1714 |
+| 6 | Independencia y siglo XIX (1808–1898) | Zaragoza | Agustina de Aragón | Goya, Palafox; los carlistas; el 98 |
+| 7 | Edad de Plata, República y Guerra Civil (1898–1939) | Madrid | Un líder republicano, por decidir | Ramón y Cajal, Lorca, Clara Campoamor; el protagonista, en el bando sublevado (§6) |
 | 8 | Franquismo (1939–1975) | Por decidir | Por decidir | Hay que decidir el enfoque: posguerra o desarrollismo (turismo, fútbol, copla) |
 | Liga | Transición y democracia (1975–hoy) | Madrid | Cuatro rivales y un campeón, con personajes actuales | §6 |
 
-Las criaturas no pertenecen a ninguna época, porque son leyendas. Por eso Babieca puede salir
-aunque el juego empiece en 1808.
+- **Lo que queda apretado.** El XIX y el XX tienen un gimnasio cada uno. Si se quiere más
+  peso ahí, se pueden juntar los capítulos 3 y 4.
+- **El capítulo 6 ya está pensado.** La zona de Zaragoza en 1808, con Agustina, Goya, Palafox y
+  el Dragón de San Jorge, se diseñó en el primer borrador y se reutiliza ahí.
+- **La Antigüedad, como zonas opcionales.** Las ruinas existen en cualquier época:
+  - Atapuerca: fósiles que se reviven como uro, mamut u oso de las cavernas.
+  - Numancia: ánimas.
+  - El teatro romano de Mérida.
+  - Guaridas de legendarios.
+
+  Dan más criaturas sin quitar peso a la historia.
+- **Las criaturas no pertenecen a ninguna época**, porque son leyendas. Por eso Babieca puede
+  salir aunque el juego empiece en 1492.
 
 ## 5. Marco narrativo (propuesta)
 
-**Una saga familiar.** En 1808, en Zaragoza, Goya pone en manos de un joven aragonés un
-*Bestiario*: el registro de criaturas, el equivalente a la Pokédex. Cada capítulo lo protagoniza
-la siguiente generación de la familia, que hereda el Bestiario y el equipo. Las criaturas, como
-son leyendas, no envejecen.
+**Una saga familiar.** En 1491, en Santa Fe, frente a Granada, Hernando de Talavera, confesor
+de la reina, pone en manos de un joven un *Bestiario*: el registro de criaturas, el equivalente
+a la Pokédex. Cada capítulo lo protagoniza una generación posterior de la familia, que hereda el
+Bestiario y el equipo. Las criaturas, como son leyendas, no envejecen.
 
 - Explica de forma natural el salto entre épocas sin viajes en el tiempo.
 - Explica también el protagonista de 1936: es el miembro de la familia de esa generación, en el
   bando sublevado.
 - **Los rivales son los otros dos jugadores.** Cada amigo tiene su propia familia, que reaparece
   en cada época. En la fase multijugador, su equipo rival es el equipo real de ese amigo (§9).
-- Goya encaja como «profesor»: en octubre de 1808 viajó a Zaragoza llamado por Palafox, y sus
-  *Caprichos* están llenos de duendes y monstruos («El sueño de la razón produce monstruos»).
+- **El Bestiario crece con la saga.** En el capítulo 6, Goya lo ilustra, enlazando con sus
+  *Caprichos* («El sueño de la razón produce monstruos»).
+- **Los gimnasios son pruebas, no enemigos.** El líder puede ser de cualquier bando. Por
+  ejemplo, Boabdil acepta un último duelo de leyendas antes de entregar las llaves de Granada.
 
-La alternativa sería un viaje en el tiempo a través de ese «sueño de la razón». Se descarta
-como opción principal porque obliga a justificar cada salto y hace que el protagonista elija
-bando como viajero, lo que encaja peor con la Guerra Civil.
+La alternativa sería un viaje en el tiempo. Se descarta como opción principal porque obliga a
+justificar cada salto y hace que el protagonista elija bando como viajero, lo que encaja peor
+con la Guerra Civil.
 
 ## 6. Personajes reales y tono
 
@@ -143,7 +152,9 @@ bando como viajero, lo que encaja peor con la Guerra Civil.
   nivel; otras condiciones vendrán después.
 - **Temperamento** (propuesta). Cada ejemplar tiene uno, que da +10 % en una estadística. Da
   variedad entre ejemplares sin IV ni EV.
-- **Moneda: reales.**
+- **Moneda.** Cambia de nombre con la época (maravedí, ducado, real, peseta, euro), pero por
+  dentro es la misma. Es solo un detalle de ambientación.
+- **Insignias de gimnasio: blasones.**
 
 ## 9. Multijugador asíncrono (fase posterior)
 
@@ -192,17 +203,20 @@ bando como viajero, lo que encaja peor con la Guerra Civil.
 | Fase | Contenido | Termina en |
 | --- | --- | --- |
 | 0 | Diseño: este documento y `PROTOTIPO.md` | Visto bueno del plan |
-| 1 | Prototipo: Zaragoza, 1808 | Una zona jugable de principio a fin, con gimnasio |
-| 2 | El capítulo de 1808 completo: evoluciones de los iniciales, más criaturas, arte definitivo de las primeras | Primer gimnasio pulido |
+| 1 | Prototipo: Granada, 1492 | Una zona jugable de principio a fin, con gimnasio |
+| 2 | El capítulo 1 completo: evoluciones de los iniciales, más criaturas, arte definitivo de las primeras | Primer gimnasio pulido |
 | 3 | Multijugador sin backend: códigos de equipo y reto diario local | Combates contra los equipos de los amigos |
 | 4 | Backend: rankings y equipos compartidos | Reto diario con ranking |
-| 5+ | Una época por fase | Un gimnasio más por fase |
+| 5+ | Un capítulo por fase | Un gimnasio más por fase |
 
 ## 12. Registro de cambios
 
 - **2026-10-20.** Primera versión.
   - Pregunta 1 cerrada: las criaturas salen de la mitología y la fauna, y los legendarios son
     seres míticos o animales célebres.
-  - Época: de 1808 a hoy. Se descarta la línea Prehistoria → siglo XIX.
+  - Época: de 1492 a hoy.
+    - Prehistoria → hoy era demasiado amplio.
+    - 1808 → hoy obligaba a rellenar con épocas poco conocidas y visualmente parecidas.
+    - La Antigüedad queda como zonas opcionales.
   - Guerra Civil desde el bando sublevado; se incluyen personajes actuales.
   - Título provisional: *Leyendas de Iberia*.

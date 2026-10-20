@@ -1,4 +1,4 @@
-# Fase 1: prototipo «Zaragoza, 1808»
+# Fase 1: prototipo «Granada, 1492»
 
 Estado: **propuesta pendiente de visto bueno.** No se programa nada hasta que se elijan el
 sistema de estadísticas y la tabla de tipos, y se apruebe el plan.
@@ -7,14 +7,16 @@ sistema de estadísticas y la tabla de tipos, y se apruebe el plan.
 
 Que una partida corta funcione de principio a fin:
 
-1. Goya te da el Bestiario y una criatura inicial.
-2. Recorres la ribera del Ebro capturando criaturas.
+1. Hernando de Talavera te da el Bestiario y una criatura inicial.
+2. Recorres la Vega de Granada capturando criaturas.
 3. Ganas a dos entrenadores.
-4. Ganas a Agustina de Aragón en su gimnasio.
+4. Ganas a Boabdil en la Alhambra.
 5. Guardas y continúas otro día.
 
-Ambientación: Zaragoza en otoño de 1808, entre los dos Sitios. Ese octubre Goya visitó la
-ciudad, llamado por Palafox.
+Ambientación: invierno de 1491 a 1492. Los Reyes Católicos esperan en Santa Fe, la ciudad
+campamento levantada frente a Granada, mientras se negocia la entrega de la ciudad. Colón
+también está allí, esperando que los Reyes aprueben su viaje. Boabdil acepta un último duelo de
+leyendas antes de entregar las llaves.
 
 ## 2. Contenido
 
@@ -22,27 +24,26 @@ ciudad, llamado por Palafox.
 
 Es una sola zona con tres partes:
 
-- **Arrabal y ribera del Ebro.** La ruta, con carrizal donde salen las criaturas, el río y los
-  dos entrenadores.
-- **Zaragoza.** La plaza del Pilar, con un mesón que cura, una tienda, Goya y Palafox.
-- **Puerta del Portillo.** El gimnasio de Agustina.
+- **Santa Fe.** Un mesón que cura, una tienda, Talavera, Colón y el Gran Capitán.
+- **La Vega y el Genil.** La ruta, con carrizales, acequias y olivares, y los dos entrenadores.
+- **La Alhambra.** El gimnasio de Boabdil, en el Patio de los Leones.
 
 ### Criaturas (12, nombres provisionales)
 
 | # | Criatura | Tipo | Inspiración | Papel |
 | --- | --- | --- | --- | --- |
-| 1 | Becerro de fuego | Fuego | Los toros de fuego de las fiestas populares y el Torico de Teruel | Inicial |
-| 2 | Desmán | Agua | El desmán ibérico de los ríos del Pirineo | Inicial |
-| 3 | Osezno | Tierra | El oso pardo del Pirineo. En la fase 2 evoluciona a oso y luego a Basajaun | Inicial |
+| 1 | Becerro de fuego | Fuego | Los toros de fuego de las fiestas populares | Inicial |
+| 2 | Desmán | Agua | El desmán ibérico de los ríos del norte | Inicial |
+| 3 | Osezno | Tierra | El oso pardo. En la fase 2 evoluciona a oso y luego a Basajaun | Inicial |
 | 4 | Libélula | Aire | Fauna | Común |
 | 5 | Caballuco del diablu | Aire | Mitología cántabra: las libélulas que montan los diablos la noche de San Juan | Evolución de 4 |
 | 6 | Topillo | Tierra | Fauna | Común |
-| 7 | Cangrejo de río | Agua | El cangrejo autóctono | Común (río) |
+| 7 | Cangrejo de río | Agua | El cangrejo autóctono de las acequias | Común |
 | 8 | Abejaruco | Fuego | Ave de plumaje de colores vivos | Común |
-| 9 | Duende | Ánima | Los *Duendecitos* de los Caprichos de Goya | Poco común |
+| 9 | Duende | Ánima | El duende del folclore de toda España | Poco común |
 | 10 | Trasgo | Ánima | El trasgu del folclore del norte | Evolución de 9 |
-| 11 | Cigüeña | Aire | Los campanarios de Aragón | Rara |
-| 12 | Dragón de San Jorge | Fuego | La leyenda de San Jorge, patrón de Aragón | Criatura estrella de Agustina. No se puede capturar en el prototipo |
+| 11 | Galápago | Agua | El galápago leproso de balsas y acequias | Rara |
+| 12 | León de la fuente | Agua | Los leones de piedra del Patio de los Leones | Criatura estrella de Boabdil. No se puede capturar en el prototipo |
 
 Con esto se prueban las dos evoluciones (4→5 y 9→10), los 5 tipos y las tres rarezas. Los
 iniciales evolucionan en la fase 2, como en Pokémon, donde lo hacen después del primer gimnasio.
@@ -50,16 +51,20 @@ iniciales evolucionan en la fase 2, como en Pokémon, donde lo hacen después de
 ### Personajes y objetos
 
 - **Entrenadores:**
-  - Un baturro del arrabal: Topillo y Abejaruco.
-  - Un granadero francés: Libélula, Cangrejo y Duende.
-- **Líder: Agustina de Aragón**, de tipo Fuego por su cañón. Lleva Abejaruco, Becerro de fuego
-  y el Dragón de San Jorge, entre los niveles 11 y 14.
-- **PNJ:** Goya, que te da el Bestiario y la criatura inicial, y Palafox, que te da las
-  primeras téseras.
+  - Un ballestero del real de Santa Fe: Topillo y Abejaruco.
+  - Un mercader genovés: Libélula, Cangrejo y Duende.
+- **Líder: Boabdil**, de tipo Agua por las acequias, albercas y fuentes de la Alhambra. Lleva
+  Cangrejo, Galápago y León de la fuente, entre los niveles 11 y 14.
+  - Frente a él, el Osezno (Tierra) tiene ventaja, el Becerro (Fuego) desventaja y el Desmán va
+    neutral. Es lo habitual en un primer gimnasio.
+- **PNJ:**
+  - Hernando de Talavera, confesor de la reina. Te da el Bestiario y la criatura inicial.
+  - El Gran Capitán, que negoció la entrega de Granada. Te da las primeras téseras.
+  - Colón, que espera el sí de los Reyes.
 - **Objetos:**
   - Tésera, para capturar.
   - Ungüento, para curar.
-- **Moneda:** reales.
+- **Moneda:** maravedís.
 - **Estados alterados:** solo Quemado, que se suma a los estados propios del sistema elegido.
 - **Movimientos:** unos 25.
 
@@ -210,14 +215,15 @@ Cada hito termina en algo que se puede abrir en el navegador y jugar.
    - El proyecto Vite + TS + Phaser, con el motor de combate en `src/core` y sus pruebas.
    - Una pantalla para elegir dos criaturas y combatir, que sirve para ajustar las cifras.
    - *Jugable:* combates sueltos contra criaturas salvajes.
-2. **La ribera.**
+2. **La Vega.**
    - Mapa en Tiled y movimiento con el mando táctil o el teclado.
    - Encuentros en el carrizal, captura con téseras y equipo de hasta 6.
    - El mesón, que cura.
    - *Jugable:* explorar y capturar.
 3. **Progresión y gimnasio.**
    - Experiencia, niveles, movimientos nuevos y evolución.
-   - Los dos entrenadores, Agustina, Goya con la elección de la inicial, y Palafox.
+   - Los dos entrenadores y Boabdil.
+   - Talavera con la elección de la inicial, el Gran Capitán y Colón.
    - Guardado automático, más exportar e importar la partida.
    - *Jugable:* la partida completa del §1.
 4. **Móvil y publicación.**
