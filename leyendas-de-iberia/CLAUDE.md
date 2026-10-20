@@ -27,7 +27,11 @@ tocan desde aquí.
 - **Nada de Pokémon ni de PokéRogue:** ni nombres, ni diseños, ni sprites, ni música, ni
   textos. Solo se toman las mecánicas como inspiración.
 - **Los personajes históricos nunca son criaturas.** Son entrenadores, líderes, PNJ y trama.
-  Las criaturas salen de la mitología y la fauna ibérica.
+  Las criaturas salen de la mitología y la fauna ibérica, más los fósiles que revive el
+  Dr. Jangel.
+- **A quién elegir.** Primero reyes, generales y guerreros; artistas, pocos. Los mentores son
+  Isabel la Católica y Felipe II. Los héroes anteriores a 1492, como el Cid, solo salen como
+  ánimas en las zonas opcionales.
 - **Hechos y fechas reales correctos.** Lo fantástico son las criaturas, no la historia. Si un
   dato es dudoso, se marca como tal o se pregunta.
 - **Personas vivas:** solo figuras públicas y en su papel público, con retratos dibujados (nunca

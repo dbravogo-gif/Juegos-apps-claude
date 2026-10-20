@@ -20,9 +20,11 @@ autor y dos amigos, y se juega en el navegador del móvil y del PC.
 | Inspiración | De Pokémon y PokéRogue solo se toman las mecánicas. Nombres, diseños, sprites, música y textos son originales. |
 | Criaturas | Salen de la mitología y la fauna ibérica: Trasgu, Cuélebre, Basajaun, Tarasca, lince, toro… |
 | Legendarios | Unos pocos. Son seres mitológicos o animales célebres, como Babieca, el caballo del Cid. |
-| Personajes históricos | **Nunca son capturables.** Son entrenadores, líderes de gimnasio, PNJ del mapa y parte de la trama. |
+| Personajes históricos | **Nunca son capturables.** Son entrenadores, líderes de gimnasio, PNJ del mapa y parte de la trama. Tienen prioridad los reyes, los generales y los guerreros; algún artista sí, pero pocos. |
+| Mentores | Isabel la Católica, al empezar (1492), y Felipe II, en el capítulo 3 (§5). |
 | Época | De 1492 a hoy. Incluye la Guerra Civil, el franquismo y personajes actuales. |
-| La Antigüedad | Atapuerca, Numancia o Mérida aparecen como ruinas y zonas opcionales, no como capítulos (§4). |
+| Antes de 1492 | No hay capítulos. Atapuerca, Numancia o Mérida son ruinas y zonas opcionales. Los héroes anteriores, como el Cid, aparecen como ánimas que hacen de jefes opcionales (§4). |
+| Fósiles | Hay dinosaurios, dientes de sable y fauna prehistórica, como en Pokémon. Te dan el fósil y se descubre en el laboratorio del Dr. Jangel (§7). |
 | Guerra Civil | El protagonista combate en el bando sublevado. A los tres jugadores les parece bien. |
 | Estructura | El mapa es España. Cada gimnasio es una época y una ciudad, en orden cronológico. |
 | Diseño visual | Las criaturas débiles son sencillas; las fuertes y las evoluciones finales, elaboradas y épicas. |
@@ -44,46 +46,58 @@ Hay que preguntar antes de diseñar sobre ellas.
    deciden más adelante.
 3. **Marco narrativo.** Propuesta en §5.
 4. **Líderes de los capítulos 2 a 8 y miembros de la Liga.** Propuesta en §4.
-5. **Personajes actuales:** quiénes salen y con qué reglas. Propuesta en §6.
-6. **Phaser 3 o Phaser 4.** Ver §10.
-7. **Nombres definitivos de las criaturas.** Los del prototipo son provisionales.
+5. **El Dr. Jangel:** quién es y en qué capítulo abre el laboratorio. Propuesta en §7.
+6. **Personajes actuales:** quiénes salen y con qué reglas. Propuesta en §6.
+7. **Phaser 3 o Phaser 4.** Ver §10.
+8. **Nombres definitivos de las criaturas.** Los del prototipo son provisionales.
 
 ## 4. Épocas y gimnasios (propuesta)
 
 Son ocho gimnasios y una Liga final. Entre un capítulo y el siguiente pasan de 50 a 80 años.
+Los líderes son sobre todo reyes y generales; los artistas salen como PNJ.
 
 | # | Época | Ciudad | Líder (candidatos) | PNJ y trama |
 | --- | --- | --- | --- | --- |
-| 1 | Reyes Católicos (1491–1492) | Granada y Santa Fe | Boabdil | Isabel y Fernando, Colón, el Gran Capitán, Hernando de Talavera |
-| 2 | Carlos V (1516–1556) | Toledo y Villalar | María Pacheco o Juan de Padilla (comuneros) | Carlos V |
-| 3 | Felipe II (1556–1598) | Sevilla, puerto de Indias | Álvaro de Bazán | Cervantes (Lepanto), Teresa de Jesús, Felipe II; la Armada |
-| 4 | Siglo de Oro barroco (1598–1700) | Madrid | Velázquez, Quevedo o Lope de Vega | Olivares, Calderón |
-| 5 | Borbones e Ilustración (1700–1808) | Barcelona, Cádiz o Madrid | Blas de Lezo, Carlos III | Jorge Juan; Barcelona, 1714 |
-| 6 | Independencia y siglo XIX (1808–1898) | Zaragoza | Agustina de Aragón | Goya, Palafox; los carlistas; el 98 |
-| 7 | Edad de Plata, República y Guerra Civil (1898–1939) | Madrid | Un líder republicano, por decidir | Ramón y Cajal, Lorca, Clara Campoamor; el protagonista, en el bando sublevado (§6) |
-| 8 | Franquismo (1939–1975) | Por decidir | Por decidir | Hay que decidir el enfoque: posguerra o desarrollismo (turismo, fútbol, copla) |
-| Liga | Transición y democracia (1975–hoy) | Madrid | Cuatro rivales y un campeón, con personajes actuales | §6 |
+| 1 | Reyes Católicos (1491–1492) | Granada y Santa Fe | Boabdil | **Isabel la Católica (mentora)**, Fernando, el Gran Capitán, Colón |
+| 2 | Carlos V (1516–1556) | Toledo y Villalar | Carlos V | Los comuneros Juan de Padilla y María Pacheco; Hernán Cortés |
+| 3 | Felipe II (1556–1598) | El Escorial y Sevilla | Don Juan de Austria (Lepanto) | **Felipe II (mentor)**, Álvaro de Bazán, el duque de Alba; Cervantes, soldado en Lepanto |
+| 4 | Los Austrias menores (1598–1700) | Madrid | Ambrosio Spínola (Breda) | Felipe IV, Olivares; los tercios; Velázquez |
+| 5 | Borbones (1700–1808) | Barcelona y Cádiz | Blas de Lezo | Felipe V, Carlos III; Villarroel en la Barcelona de 1714 |
+| 6 | Independencia y siglo XIX (1808–1898) | Zaragoza | Agustina de Aragón | Palafox, Castaños (Bailén), el Empecinado, Prim; Goya |
+| 7 | Restauración, República y Guerra Civil (1898–1939) | Madrid | Un general republicano (Miaja o Vicente Rojo) | Alfonso XIII; el protagonista, en el bando sublevado (§6) |
+| 8 | Franquismo (1939–1975) | Por decidir | Por decidir (Franco, Carrero Blanco…) | Hay que decidir el enfoque: posguerra o desarrollismo |
+| Liga | Transición y democracia (1975–hoy) | Madrid | Cuatro rivales y un campeón: reyes, presidentes, Gutiérrez Mellado… | §6 |
 
 - **Lo que queda apretado.** El XIX y el XX tienen un gimnasio cada uno. Si se quiere más
   peso ahí, se pueden juntar los capítulos 3 y 4.
 - **El capítulo 6 ya está pensado.** La zona de Zaragoza en 1808, con Agustina, Goya, Palafox y
   el Dragón de San Jorge, se diseñó en el primer borrador y se reutiliza ahí.
-- **La Antigüedad, como zonas opcionales.** Las ruinas existen en cualquier época:
-  - Atapuerca: fósiles que se reviven como uro, mamut u oso de las cavernas.
-  - Numancia: ánimas.
+- **Antes de 1492, como zonas opcionales.** Las ruinas existen en cualquier época:
+  - Atapuerca.
+  - Numancia.
   - El teatro romano de Mérida.
   - Guaridas de legendarios.
 
-  Dan más criaturas sin quitar peso a la historia.
+  Allí aparecen **ánimas de héroes anteriores a 1492**, que hacen de jefes opcionales. El
+  principal es **el Cid**, en Burgos, con Babieca como legendario: la leyenda dice que ganó una
+  batalla después de muerto, montado en su caballo. Otros candidatos son Don Pelayo en
+  Covadonga y Viriato. Estas zonas dan más contenido sin quitar peso a la historia.
 - **Las criaturas no pertenecen a ninguna época**, porque son leyendas. Por eso Babieca puede
   salir aunque el juego empiece en 1492.
 
 ## 5. Marco narrativo (propuesta)
 
-**Una saga familiar.** En 1491, en Santa Fe, frente a Granada, Hernando de Talavera, confesor
-de la reina, pone en manos de un joven un *Bestiario*: el registro de criaturas, el equivalente
-a la Pokédex. Cada capítulo lo protagoniza una generación posterior de la familia, que hereda el
-Bestiario y el equipo. Las criaturas, como son leyendas, no envejecen.
+**Una saga familiar.** En 1491, en Santa Fe, frente a Granada, **Isabel la Católica** encarga a
+un joven un *Bestiario*: registrar las leyendas de sus reinos. Es el registro de criaturas, el
+equivalente a la Pokédex, y además la reina le da su primera criatura. Cada capítulo lo
+protagoniza una generación posterior de la familia, que hereda el Bestiario y el equipo. Las
+criaturas, como son leyendas, no envejecen.
+
+**Felipe II es el segundo mentor**, en el capítulo 3 (propuesta). Funda en El Escorial el
+archivo donde se guardan las criaturas que no caben en el equipo, el equivalente a las cajas
+del PC de Pokémon, y evalúa cómo va el Bestiario. Encaja con lo coleccionista que fue: llegó a
+tener en Madrid un rinoceronte, la Abada, que da nombre a una calle. A partir de ahí, el archivo
+de El Escorial sigue funcionando en todas las épocas.
 
 - Explica de forma natural el salto entre épocas sin viajes en el tiempo.
 - Explica también el protagonista de 1936: es el miembro de la familia de esa generación, en el
@@ -102,6 +116,8 @@ con la Guerra Civil.
 ## 6. Personajes reales y tono
 
 - **Papel.** Son entrenadores, líderes, PNJ y trama. Nunca son criaturas.
+- **A quién elegir.** Primero reyes, generales y guerreros. Los escritores y pintores salen de
+  vez en cuando, mejor si además fueron soldados, como Cervantes.
 - **Tono.** Desenfadado, con guiños históricos reales. Los hechos y las fechas son correctos;
   lo fantástico son las criaturas. Cada líder lleva una ficha con un dato real que el juego
   puede contar.
@@ -134,6 +150,33 @@ con la Guerra Civil.
   - **Evitar el toro de Osborne**, porque es una marca registrada.
 - **Ficha de cada criatura:** tipo, estadísticas base, movimientos por nivel, evolución, rareza
   y un texto del Bestiario con un dato real de folclore o de biología.
+
+### Fósiles y el laboratorio del Dr. Jangel
+
+- **Mecánica.** Durante la historia te regalan fósiles, y también hay alguno en las zonas
+  opcionales. Un fósil no sirve hasta que lo llevas al laboratorio del **Dr. Jangel**, que lo
+  «descubre»: lo identifica y lo revive como criatura.
+- **El Dr. Jangel** (propuesta). Es el único personaje inventado que se repite en todas las
+  épocas, con la ropa de cada una: alquimista en el XVI, naturalista en el XVIII y paleontólogo
+  en el XX. Nadie explica por qué no envejece, y es un chiste recurrente.
+- **Cuándo** (propuesta). El primer fósil te lo dan en el capítulo 1, porque en la provincia de
+  Granada están Orce y Padul. El laboratorio abre en el capítulo 2. Así hay un pequeño misterio
+  pendiente desde el principio.
+- **Fósiles basados en hallazgos reales de España:**
+
+| Fósil | Criatura | Yacimiento real |
+| --- | --- | --- |
+| Colmillo de sable | Felino con dientes de sable (*Machairodus*, *Homotherium*) | Cerro de los Batallones (Madrid), Orce (Granada) |
+| Hiena gigante | *Pachycrocuta* | Orce (Granada) |
+| Defensa de mamut | Mamut | Padul (Granada) |
+| Joroba de «Pepito» | *Concavenator*, terópodo con joroba | Las Hoyas (Cuenca) |
+| Mandíbula dentada | *Pelecanimimus*, con más de 200 dientes | Las Hoyas (Cuenca) |
+| Vértebra gigante | *Turiasaurus*, el mayor dinosaurio de Europa | Riodeva (Teruel) |
+| Hueso de Galve | *Aragosaurus*, el primer dinosaurio con nombre español | Galve (Teruel) |
+| Ala primitiva | *Iberomesornis*, ave del Cretácico | Las Hoyas (Cuenca) |
+
+- **Su tipo** se decide con los tipos definitivos. Podrían tener uno propio, por ejemplo
+  «Primigenio».
 
 ## 8. Mecánicas
 
@@ -220,3 +263,8 @@ con la Guerra Civil.
     - La Antigüedad queda como zonas opcionales.
   - Guerra Civil desde el bando sublevado; se incluyen personajes actuales.
   - Título provisional: *Leyendas de Iberia*.
+  - Confirmado el periodo 1492 → hoy.
+  - Mentores: Isabel la Católica y Felipe II.
+  - Prioridad a reyes y generales sobre los artistas.
+  - El Cid y otros héroes anteriores a 1492 salen como ánimas en zonas opcionales.
+  - Fósiles con el laboratorio del Dr. Jangel.

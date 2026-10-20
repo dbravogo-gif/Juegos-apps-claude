@@ -7,7 +7,7 @@ sistema de estadísticas y la tabla de tipos, y se apruebe el plan.
 
 Que una partida corta funcione de principio a fin:
 
-1. Hernando de Talavera te da el Bestiario y una criatura inicial.
+1. Isabel la Católica te encarga el Bestiario y te da una criatura inicial.
 2. Recorres la Vega de Granada capturando criaturas.
 3. Ganas a dos entrenadores.
 4. Ganas a Boabdil en la Alhambra.
@@ -24,7 +24,7 @@ leyendas antes de entregar las llaves.
 
 Es una sola zona con tres partes:
 
-- **Santa Fe.** Un mesón que cura, una tienda, Talavera, Colón y el Gran Capitán.
+- **Santa Fe.** Un mesón que cura, una tienda, Isabel, Colón y el Gran Capitán.
 - **La Vega y el Genil.** La ruta, con carrizales, acequias y olivares, y los dos entrenadores.
 - **La Alhambra.** El gimnasio de Boabdil, en el Patio de los Leones.
 
@@ -58,9 +58,11 @@ iniciales evolucionan en la fase 2, como en Pokémon, donde lo hacen después de
   - Frente a él, el Osezno (Tierra) tiene ventaja, el Becerro (Fuego) desventaja y el Desmán va
     neutral. Es lo habitual en un primer gimnasio.
 - **PNJ:**
-  - Hernando de Talavera, confesor de la reina. Te da el Bestiario y la criatura inicial.
+  - Isabel la Católica, la mentora. Te encarga el Bestiario y te da la criatura inicial.
   - El Gran Capitán, que negoció la entrega de Granada. Te da las primeras téseras.
   - Colón, que espera el sí de los Reyes.
+  - Un pastor de Orce, que te regala un colmillo de sable fósil. No sirve hasta el laboratorio
+    del Dr. Jangel, en el capítulo 2: es un anticipo.
 - **Objetos:**
   - Tésera, para capturar.
   - Ungüento, para curar.
@@ -223,7 +225,7 @@ Cada hito termina en algo que se puede abrir en el navegador y jugar.
 3. **Progresión y gimnasio.**
    - Experiencia, niveles, movimientos nuevos y evolución.
    - Los dos entrenadores y Boabdil.
-   - Talavera con la elección de la inicial, el Gran Capitán y Colón.
+   - Isabel con la elección de la inicial, el Gran Capitán, Colón y el fósil de Orce.
    - Guardado automático, más exportar e importar la partida.
    - *Jugable:* la partida completa del §1.
 4. **Móvil y publicación.**
@@ -256,6 +258,8 @@ leyendas-de-iberia/
 Quedan para fases posteriores:
 
 - Evoluciones de los iniciales y más zonas.
+- El laboratorio del Dr. Jangel y los fósiles revividos.
+- Las zonas opcionales anteriores a 1492, con el Cid y Babieca.
 - Tipos dobles.
 - Música.
 - Reto diario y multijugador.
