@@ -30,6 +30,7 @@ autor y dos amigos, y se juega en el navegador del móvil y del PC.
 | Guerra Civil | El protagonista combate en el bando sublevado. A los tres jugadores les parece bien. |
 | Estructura | El mapa es España. Cada gimnasio es una época y una ciudad, en orden cronológico. |
 | Diseño visual | Las criaturas débiles son sencillas; las fuertes y las evoluciones finales, elaboradas y épicas. |
+| Tipos | 12 provisionales: Agua, Tierra, Eléctrico, Planta, Hielo, Plasma, Mental, Luz, Oscuridad, Acero, Infernal y Mitológico. Puede haber tipo doble. Las relaciones están por decidir (§8). |
 | Estadísticas | Funcionan como en Pokémon, pero con nombres propios: Vida, Fuerza, Escudo, Magia, Resistencia mágica y Celeridad (§8 y `PROTOTIPO.md`). |
 | Multijugador | Asíncrono entre los tres y en una fase posterior. Desde el principio se diseña con semilla determinista y equipos serializables (§9). |
 | Stack | Vite + TypeScript + Phaser. Build estático publicado en GitHub Pages (§10). |
@@ -42,8 +43,8 @@ autor y dos amigos, y se juega en el navegador del móvil y del PC.
 
 Hay que preguntar antes de diseñar sobre ellas.
 
-1. **Tipos.** Hay una tabla provisional de 5 tipos en `PROTOTIPO.md`. Los definitivos se
-   deciden más adelante.
+1. **Tipos.** Faltan las relaciones entre los 12 tipos y decidir si se ajusta la lista: falta
+   Fuego, falta Aire y Mitológico es ambiguo. Ideas en §8.
 2. **Marco narrativo y segundo mentor** (se propone Carlos III). Propuesta en §5.
 3. **Líderes de los capítulos 2 a 8 y miembros de la Liga.** Propuesta en §4.
 4. **El Dr. Jangel:** quién es y en qué capítulo abre el laboratorio. Propuesta en §7.
@@ -201,8 +202,7 @@ con la Guerra Civil.
 | Hueso de Galve | *Aragosaurus*, el primer dinosaurio con nombre español | Galve (Teruel) |
 | Ala primitiva | *Iberomesornis*, ave del Cretácico | Las Hoyas (Cuenca) |
 
-- **Su tipo** se decide con los tipos definitivos. Podrían tener uno propio, por ejemplo
-  «Primigenio».
+- **Su tipo** se decide cuando esté cerrada la tabla de tipos.
 
 ## 8. Mecánicas
 
@@ -229,7 +229,38 @@ con la Guerra Civil.
 - **Aleatoriedad.** Como en Pokémon: tirada de daño, golpes críticos, precisión y captura. Todo
   sale del generador con semilla, así que una partida se puede reproducir y el reto diario
   sigue siendo justo.
-- **Tipos.** Tabla provisional en `PROTOTIPO.md`.
+- **Tipos (12, provisionales):** Agua, Tierra, Eléctrico, Planta, Hielo, Plasma, Mental, Luz,
+  Oscuridad, Acero, Infernal y Mitológico.
+  - Los multiplicadores son los de Pokémon: ×2, ×0,5 y quizá inmunidad (×0).
+  - Una criatura puede tener uno o dos tipos.
+  - Las relaciones entre tipos están por decidir.
+- **Dudas sobre la lista:**
+  - **No hay Fuego.** ¿Lo cubre Plasma? Si es así, propongo llamarlo Fuego: Plasma y Eléctrico
+    se confunden (un rayo es plasma), y Plasma suena a ciencia ficción en un juego histórico.
+  - **No hay Aire ni Volador.** Las aves, las libélulas o el Nuberu, el genio de las tormentas,
+    se quedan sin un tipo claro.
+  - **Mitológico choca con que casi todas las criaturas son mitológicas.** Propongo reservarlo a
+    los grandes seres de leyenda (dragones, cuélebres, gigantes) o llamarlo de otra forma, por
+    ejemplo Ancestral.
+  - **La fauna corriente (topillo, lince, toro) no tiene tipo propio.** Iría a Tierra, que
+    crecería mucho.
+- **Ideas para las relaciones.** Cada línea indica contra qué es eficaz un tipo:
+  - **Agua:** contra Tierra y Plasma. También contra Infernal, por el agua bendita.
+  - **Tierra:** contra Plasma, porque lo sofoca, y contra Eléctrico, por la toma de tierra.
+    Contra Eléctrico podría ser incluso inmunidad.
+  - **Eléctrico:** contra Agua, y contra Acero porque el rayo busca el hierro.
+  - **Planta:** contra Agua y Tierra.
+  - **Hielo:** contra Planta, porque las heladas arruinan la cosecha.
+  - **Plasma:** contra Planta, Hielo y Acero, porque lo funde.
+  - **Acero:** contra Hielo, y contra Mitológico porque en el folclore el hierro ahuyenta a
+    duendes y seres mágicos.
+  - **Luz:** contra Oscuridad e Infernal. Luz y Oscuridad podrían ser eficaces la una contra la
+    otra.
+  - **Oscuridad:** contra Mental, porque el miedo nubla la mente.
+  - **Infernal:** contra Mental, por la posesión.
+  - **Mental:** contra Mitológico, porque la astucia vence a los gigantes, como en las leyendas
+    del Tartalo.
+  - **Mitológico:** contra Mitológico, como en los duelos de dragones.
 - **Captura con téseras.** Las téseras de hospitalidad eran pactos celtíberos de bronce, muchas
   con forma de animal. Aquí, lanzar una tésera es sellar un pacto con la criatura.
 - **Progresión.** Experiencia, niveles y aprender movimientos. En el prototipo se evoluciona por
@@ -330,3 +361,5 @@ con la Guerra Civil.
   - El capítulo 5 pasa a transcurrir entero en Canarias: Teide y Guayota, buceo y Nelson. Sin
     San Borondón.
   - Valía de 1 a 14 en lugar de IV y EV.
+  - Tipos: Agua, Tierra, Eléctrico, Planta, Hielo, Plasma, Mental, Luz, Oscuridad, Acero,
+    Infernal y Mitológico. Se descarta la tabla de 5 tipos del primer borrador. Hay tipo doble.

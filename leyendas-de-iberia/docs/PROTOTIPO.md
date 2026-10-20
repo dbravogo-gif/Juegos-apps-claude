@@ -1,7 +1,7 @@
 # Fase 1: prototipo «Granada, 1492»
 
-Estado: **pendiente de visto bueno.** Las estadísticas ya están decididas (§3). Falta confirmar
-la tabla de tipos provisional (§4) y dar el visto bueno para empezar a programar.
+Estado: **pendiente de visto bueno.** Las estadísticas ya están decididas (§3). Faltan las
+relaciones entre tipos (§4) y el visto bueno para empezar a programar.
 
 ## 1. Objetivo
 
@@ -45,7 +45,10 @@ Es una sola zona con tres partes:
 | 11 | Galápago | Agua | El galápago leproso de balsas y acequias | Rara |
 | 12 | León de la fuente | Agua | Los leones de piedra del Patio de los Leones | Criatura estrella de Boabdil. No se puede capturar en el prototipo |
 
-Con esto se prueban las dos evoluciones (4→5 y 9→10), los 5 tipos y las tres rarezas. Los
+Los tipos de esta tabla son los del primer borrador. Se reasignan cuando se cierre la tabla de
+tipos (§4).
+
+Con esto se prueban las dos evoluciones (4→5 y 9→10) y las tres rarezas. Los
 iniciales evolucionan en la fase 2, como en Pokémon, donde lo hacen después del primer gimnasio.
 
 ### Personajes y objetos
@@ -110,35 +113,14 @@ iniciales evolucionan en la fase 2, como en Pokémon, donde lo hacen después de
 - **Toda la aleatoriedad sale del generador con semilla:** tirada, críticos, precisión y
   captura.
 
-## 4. Tabla de tipos provisional (5)
+## 4. Tipos
 
-Los cuatro elementos clásicos forman un ciclo: el Agua vence al Fuego, el Fuego al Aire, el
-Aire a la Tierra y la Tierra al Agua. A eso se suman dos relaciones extra y un quinto tipo,
-Ánima, para los espíritus.
-
-| Ataca ↓ / Defiende → | Fuego | Agua | Aire | Tierra | Ánima |
-| --- | --- | --- | --- | --- | --- |
-| **Fuego** | — | ×0,5 | **×2** | ×0,5 | **×2** |
-| **Agua** | **×2** | — | — | ×0,5 | — |
-| **Aire** | ×0,5 | — | — | **×2** | — |
-| **Tierra** | **×2** | **×2** | ×0,5 | — | ×0,5 |
-| **Ánima** | ×0,5 | — | — | **×2** | — |
-
-Por qué cada relación, en una frase:
-
-- El Agua apaga el Fuego.
-- El Fuego consume el Aire.
-- El Aire erosiona la Tierra.
-- La Tierra encauza el Agua.
-- La Tierra sofoca el Fuego.
-- Las hogueras de San Juan y la queimada espantan a las ánimas.
-- Lo terrenal teme a lo de ultratumba.
-
-La tabla es simétrica: si X es eficaz contra Y, Y es poco eficaz contra X. Además:
-
-- Ningún tipo es inmune a otro.
-- Los multiplicadores son los de Pokémon: ×2 y ×0,5. La afinidad se explica en el §3.
-- Fuego y Tierra tienen cuatro relaciones; el resto, dos. El balance neto es 0 para todos.
+- **La lista.** Son los 12 del GDD (§8). Las relaciones entre ellos aún están por decidir.
+- **Tipo doble.** El motor admite dos tipos por criatura desde el principio. Cuesta poco y
+  evita rehacerlo después.
+- **La tabla es un dato** (`src/data/tipos.ts`). Se puede cambiar sin tocar el motor, así que no
+  bloquea el laboratorio de combate.
+- **En el prototipo** se usará solo el subconjunto de tipos que necesiten sus 12 criaturas.
 
 ## 5. Hitos
 
@@ -192,7 +174,6 @@ Quedan para fases posteriores:
 - Evoluciones de los iniciales y más zonas.
 - El laboratorio del Dr. Jangel y los fósiles revividos.
 - Las zonas opcionales anteriores a 1492, con el Cid y Babieca.
-- Tipos dobles.
 - Música.
 - Reto diario y multijugador.
 - Backend.

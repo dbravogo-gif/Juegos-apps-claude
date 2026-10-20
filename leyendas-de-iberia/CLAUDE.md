@@ -13,7 +13,7 @@ tocan desde aquí.
 - **Decidido:** las estadísticas funcionan como en Pokémon, con nombres propios: Vida, Fuerza,
   Escudo, Magia, Resistencia mágica y Celeridad (`docs/PROTOTIPO.md` §3).
 - **Pendiente del visto bueno del autor:**
-  - la tabla de tipos provisional (§4);
+  - las relaciones entre los 12 tipos (`docs/GDD.md` §8);
   - Phaser 4;
   - empezar el prototipo «Granada, 1492».
 - **No se programa nada hasta que lo apruebe.**
