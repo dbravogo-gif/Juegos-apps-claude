@@ -28,17 +28,19 @@ Es una sola zona con tres partes:
 - **La Vega y el Genil.** La ruta, con carrizales, acequias y olivares, y los dos entrenadores.
 - **La Alhambra.** El gimnasio de Boabdil, en el Patio de los Leones.
 
-### Criaturas (13, nombres provisionales)
+### Criaturas (nombres provisionales)
+
+Son 13 en la zona y 19 especies si se cuentan las evoluciones de los iniciales.
 
 | # | Criatura | Tipo | Inspiración | Papel |
 | --- | --- | --- | --- | --- |
-| 1 | Becerro de fuego | Infernal | Los toros de fuego de las fiestas populares | Inicial |
-| 2 | Desmán | Agua | El desmán ibérico de los ríos del norte | Inicial |
-| 3 | Retoño de drago | Planta | El drago canario, cuya savia roja se tenía por sangre de dragón. Llega como regalo desde Gran Canaria, incorporada a la Corona en 1483. Evoluciona hasta el Drago milenario (Planta y Ancestral) | Inicial |
+| 1 | Becerro de fuego | Infernal | Los toros de fuego de las fiestas populares | Inicial. Evoluciona a Novillo embolado (nivel 16) y a Toro de fuego (nivel 36), de Infernal y Tierra |
+| 2 | Cangrejo | Agua | Los cangrejos de las costas españolas | Inicial. Evoluciona a Nécora (nivel 16) y a Centollo (nivel 36), de Agua y Acero |
+| 3 | Retoño de drago | Planta | El drago canario, cuya savia roja se tenía por sangre de dragón. Llega como regalo desde Gran Canaria, incorporada a la Corona en 1483 | Inicial. Evoluciona a Drago (nivel 16) y a Drago milenario (nivel 36), de Planta y Ancestral |
 | 4 | Libélula | Aire | Fauna | Común |
 | 5 | Caballuco del diablu | Aire e Infernal | Mitología cántabra: las libélulas que montan los diablos la noche de San Juan | Evolución de 4 |
 | 6 | Topillo | Común | Fauna | Común |
-| 7 | Cangrejo de río | Agua | El cangrejo autóctono de las acequias | Común |
+| 7 | Barbo | Agua | El pez de los ríos y acequias | Común |
 | 8 | Abejaruco | Aire | Ave de plumaje de colores vivos | Común |
 | 9 | Duende | Oscuridad | El duende del folclore de toda España | Poco común |
 | 10 | Trasgo | Oscuridad | El trasgu del folclore del norte | Evolución de 9 |
@@ -62,11 +64,11 @@ iniciales evolucionan en la fase 2, como en Pokémon, donde lo hacen después de
 
 - **Entrenadores:**
   - Un ballestero del real de Santa Fe: Topillo y Abejaruco.
-  - Un mercader genovés: Libélula, Cangrejo y Duende.
+  - Un mercader genovés: Libélula, Barbo y Duende.
 - **Líder: Boabdil**, de tipo Agua por las acequias, albercas y fuentes de la Alhambra. Lleva
-  Cangrejo, Galápago y León de la fuente, entre los niveles 11 y 14.
+  Barbo, Galápago y León de la fuente, entre los niveles 11 y 14.
   - Frente a él, el Retoño de drago (Planta) tiene ventaja, el Becerro (Infernal) desventaja y
-    el Desmán va neutral. Es lo habitual en un primer gimnasio. Quien elija el Becerro puede
+    el Cangrejo va neutral. Es lo habitual en un primer gimnasio. Quien elija el Becerro puede
     capturar una Mandrágora en la Vega.
 - **PNJ:**
   - Isabel la Católica, la mentora. Te encarga el Bestiario y te da la criatura inicial.

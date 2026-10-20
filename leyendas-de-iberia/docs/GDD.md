@@ -370,6 +370,8 @@ con la Guerra Civil.
   - El capítulo 5 pasa a transcurrir entero en Canarias: Teide y Guayota, buceo y Nelson. Sin
     San Borondón.
   - Valía de 1 a 14 en lugar de IV y EV.
+  - Iniciales con tres formas cada uno: Becerro de fuego, Cangrejo (hasta el Centollo) y Retoño
+    de drago. El Cangrejo sustituye al Desmán.
   - Tipos: Común, Agua, Tierra, Planta, Aire, Eléctrico, Hielo, Infernal (es el fuego),
     Plasma, Mental, Luz, Oscuridad, Espectral, Acero y Ancestral, que sustituye a Mitológico. Se
     descarta la tabla de 5 tipos del primer borrador. Hay tipo doble.
