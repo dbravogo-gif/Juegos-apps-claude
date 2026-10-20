@@ -220,6 +220,7 @@ Cada hito termina en algo que se puede abrir en el navegador y jugar.
 2. **La Vega.**
    - Mapa en Tiled y movimiento con el mando táctil o el teclado.
    - Encuentros en el carrizal, captura con téseras y equipo de hasta 6.
+   - Las demás criaturas se guardan en el Bestiario, que se gestiona en el mesón.
    - El mesón, que cura.
    - *Jugable:* explorar y capturar.
 3. **Progresión y gimnasio.**

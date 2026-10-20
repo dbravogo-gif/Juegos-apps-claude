@@ -21,7 +21,9 @@ autor y dos amigos, y se juega en el navegador del móvil y del PC.
 | Criaturas | Salen de la mitología y la fauna ibérica: Trasgu, Cuélebre, Basajaun, Tarasca, lince, toro… |
 | Legendarios | Unos pocos. Son seres mitológicos o animales célebres, como Babieca, el caballo del Cid. |
 | Personajes históricos | **Nunca son capturables.** Son entrenadores, líderes de gimnasio, PNJ del mapa y parte de la trama. Tienen prioridad los reyes, los generales y los guerreros; algún artista sí, pero pocos. |
-| Mentores | Isabel la Católica, al empezar (1492), y Felipe II, en el capítulo 3 (§5). |
+| Mentores | Isabel la Católica en el capítulo 1 y un segundo mentor en el capítulo 4 o 5. Se propone Carlos III (§5). Se eligen por su peso histórico, no por su relación con los animales. |
+| Canarias | Al menos un gimnasio está allí, y también la torre de combates del final del juego (§4). |
+| Almacén de criaturas | Existe desde el minuto 1: las criaturas que no caben en el equipo se guardan en el Bestiario (§8). |
 | Época | De 1492 a hoy. Incluye la Guerra Civil, el franquismo y personajes actuales. |
 | Antes de 1492 | No hay capítulos. Atapuerca, Numancia o Mérida son ruinas y zonas opcionales. Los héroes anteriores, como el Cid, aparecen como ánimas que hacen de jefes opcionales (§4). |
 | Fósiles | Hay dinosaurios, dientes de sable y fauna prehistórica, como en Pokémon. Te dan el fósil y se descubre en el laboratorio del Dr. Jangel (§7). |
@@ -44,8 +46,9 @@ Hay que preguntar antes de diseñar sobre ellas.
    C) Línea de tiempo. Se recomienda la A.
 2. **Tipos.** Hay una tabla provisional de 5 tipos en `PROTOTIPO.md`. Los definitivos se
    deciden más adelante.
-3. **Marco narrativo.** Propuesta en §5.
-4. **Líderes de los capítulos 2 a 8 y miembros de la Liga.** Propuesta en §4.
+3. **Marco narrativo y segundo mentor** (se propone Carlos III). Propuesta en §5.
+4. **Líderes de los capítulos 2 a 8, miembros de la Liga y lo que pasa en Canarias.** Propuesta
+   en §4.
 5. **El Dr. Jangel:** quién es y en qué capítulo abre el laboratorio. Propuesta en §7.
 6. **Personajes actuales:** quiénes salen y con qué reglas. Propuesta en §6.
 7. **Phaser 3 o Phaser 4.** Ver §10.
@@ -60,16 +63,29 @@ Los líderes son sobre todo reyes y generales; los artistas salen como PNJ.
 | --- | --- | --- | --- | --- |
 | 1 | Reyes Católicos (1491–1492) | Granada y Santa Fe | Boabdil | **Isabel la Católica (mentora)**, Fernando, el Gran Capitán, Colón |
 | 2 | Carlos V (1516–1556) | Toledo y Villalar | Carlos V | Los comuneros Juan de Padilla y María Pacheco; Hernán Cortés |
-| 3 | Felipe II (1556–1598) | El Escorial y Sevilla | Don Juan de Austria (Lepanto) | **Felipe II (mentor)**, Álvaro de Bazán, el duque de Alba; Cervantes, soldado en Lepanto |
+| 3 | Felipe II (1556–1598) | El Escorial y Sevilla | Don Juan de Austria (Lepanto) | Felipe II, Álvaro de Bazán, el duque de Alba; Cervantes, soldado en Lepanto |
 | 4 | Los Austrias menores (1598–1700) | Madrid | Ambrosio Spínola (Breda) | Felipe IV, Olivares; los tercios; Velázquez |
-| 5 | Borbones (1700–1808) | Barcelona y Cádiz | Blas de Lezo | Felipe V, Carlos III; Villarroel en la Barcelona de 1714 |
+| 5 | Borbones (1700–1808) | Cádiz, Madrid y **Santa Cruz de Tenerife** | El general Gutiérrez, que rechazó a Nelson en 1797 | **Carlos III (mentor)**; Jorge Juan, el marino, en Cádiz; Blas de Lezo; Nelson, como antagonista |
 | 6 | Independencia y siglo XIX (1808–1898) | Zaragoza | Agustina de Aragón | Palafox, Castaños (Bailén), el Empecinado, Prim; Goya |
-| 7 | Restauración, República y Guerra Civil (1898–1939) | Madrid | Un general republicano (Miaja o Vicente Rojo) | Alfonso XIII; el protagonista, en el bando sublevado (§6) |
-| 8 | Franquismo (1939–1975) | Por decidir | Por decidir (Franco, Carrero Blanco…) | Hay que decidir el enfoque: posguerra o desarrollismo |
+| 7 | Restauración, República y Guerra Civil (1898–1939) | Las Palmas y Madrid | Un general republicano (Miaja o Vicente Rojo) | Alfonso XIII. La guerra puede empezar en Las Palmas, de donde salió Franco el 18 de julio de 1936. El protagonista, en el bando sublevado (§6) |
+| 8 | Franquismo (1939–1975) | Por decidir | Por decidir (Franco, Carrero Blanco…) | Hay que decidir el enfoque: posguerra o desarrollismo. Félix Rodríguez de la Fuente, como personaje |
 | Liga | Transición y democracia (1975–hoy) | Madrid | Cuatro rivales y un campeón: reyes, presidentes, Gutiérrez Mellado… | §6 |
 
 - **Lo que queda apretado.** El XIX y el XX tienen un gimnasio cada uno. Si se quiere más
   peso ahí, se pueden juntar los capítulos 3 y 4.
+- **Saltos de tiempo dentro de un capítulo.** Un capítulo puede abarcar varias décadas de su
+  época, con saltos de tiempo, y cada hecho conserva su fecha real. Así caben en la misma
+  generación Jorge Juan, que murió en 1773, y el ataque de Nelson, en 1797.
+- **Canarias** (propuesta):
+  - **Gimnasio del capítulo 5, en Santa Cruz de Tenerife.** En 1797 el general Antonio Gutiérrez
+    rechazó el ataque de Nelson, que perdió allí el brazo derecho. Nelson es el antagonista del
+    capítulo.
+  - **La torre de combates del final del juego, en La Gomera.** Está en la Torre del Conde, del
+    siglo XV, en la isla donde Colón hizo escala en 1492. Allí se combate también contra los
+    equipos de los amigos y se juega el reto diario (§9).
+  - **El Teide, como zona opcional.** Guayota, el demonio guanche encerrado en el volcán, es un
+    legendario. Hay tibicenas, los perros demoníacos de la mitología canaria. Las ánimas de los
+    menceyes, como Bencomo, hacen de jefes opcionales.
 - **El capítulo 6 ya está pensado.** La zona de Zaragoza en 1808, con Agustina, Goya, Palafox y
   el Dragón de San Jorge, se diseñó en el primer borrador y se reutiliza ahí.
 - **Antes de 1492, como zonas opcionales.** Las ruinas existen en cualquier época:
@@ -91,13 +107,12 @@ Los líderes son sobre todo reyes y generales; los artistas salen como PNJ.
 un joven un *Bestiario*: registrar las leyendas de sus reinos. Es el registro de criaturas, el
 equivalente a la Pokédex, y además la reina le da su primera criatura. Cada capítulo lo
 protagoniza una generación posterior de la familia, que hereda el Bestiario y el equipo. Las
-criaturas, como son leyendas, no envejecen.
+criaturas, como son leyendas, no envejecen. Desde el primer momento, las que no caben en el
+equipo se guardan en las páginas del Bestiario (§8).
 
-**Felipe II es el segundo mentor**, en el capítulo 3 (propuesta). Funda en El Escorial el
-archivo donde se guardan las criaturas que no caben en el equipo, el equivalente a las cajas
-del PC de Pokémon, y evalúa cómo va el Bestiario. Encaja con lo coleccionista que fue: llegó a
-tener en Madrid un rinoceronte, la Abada, que da nombre a una calle. A partir de ahí, el archivo
-de El Escorial sigue funcionando en todas las épocas.
+**Carlos III es el segundo mentor**, en el capítulo 5 (propuesta). Es el gran rey reformista de
+la Ilustración: renueva el encargo de Isabel y guía la segunda mitad del juego. La alternativa
+sería que el mentor fuera Jorge Juan, en lugar de salir como personaje.
 
 - Explica de forma natural el salto entre épocas sin viajes en el tiempo.
 - Explica también el protagonista de 1936: es el miembro de la familia de esa generación, en el
@@ -185,6 +200,9 @@ con la Guerra Civil.
 - **Combate.** Uno contra uno y por turnos. Equipo de hasta 6 criaturas, con cambios, objetos y
   huida de los combates salvajes. Cada criatura tiene 4 movimientos, que caben bien como cuatro
   botones en el móvil. El sistema de estadísticas está pendiente (§3).
+- **Almacén de criaturas, desde el minuto 1.** Las que no caben en el equipo de 6 viven en las
+  páginas del Bestiario y se cambian en cualquier mesón. Es el equivalente a las cajas del PC de
+  Pokémon.
 - **Aleatoriedad mínima y visible** (propuesta). Sin tirada de daño: el mismo golpe hace siempre
   lo mismo. El azar queda para la captura, algunos efectos y los desempates. Así el combate se
   lee mejor, la IA es más sencilla y el reto diario es más justo.
@@ -207,6 +225,8 @@ con la Guerra Civil.
 - **Ranking verificable.** No se envía la puntuación, sino la semilla y la lista de acciones.
   Cualquiera puede volver a simularlas y comprobar el resultado.
 - **Combate contra el equipo de un amigo**, que controla la IA.
+- **Dónde se juega** (propuesta). En el mundo del juego, los dos modos están en la torre de
+  combates de La Gomera (§4).
 - **Plan escalonado:**
   1. Códigos de equipo para copiar y pegar, por ejemplo por WhatsApp. No hace falta backend.
   2. Supabase, para los rankings y los equipos publicados.
@@ -268,3 +288,10 @@ con la Guerra Civil.
   - Prioridad a reyes y generales sobre los artistas.
   - El Cid y otros héroes anteriores a 1492 salen como ánimas en zonas opcionales.
   - Fósiles con el laboratorio del Dr. Jangel.
+  - El segundo mentor pasa a un capítulo posterior: se propone Carlos III, en el capítulo 5.
+    Felipe II y Félix Rodríguez de la Fuente salen como personajes, no como mentores.
+  - El almacén de criaturas existe desde el minuto 1, en el Bestiario.
+  - Canarias: gimnasio del capítulo 5 en Tenerife (1797), torre de combates en La Gomera y el
+    Teide como zona opcional.
+  - Jorge Juan, como personaje del capítulo 5.
+  - Menos peso a los animales en la historia.
