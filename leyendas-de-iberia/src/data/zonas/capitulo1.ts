@@ -311,11 +311,12 @@ const VEGA: Zona = {
   encuentros: {
     tasa: 12,
     especies: [
-      { especie: 'topillo', min: 2, max: 4, peso: 30 },
-      { especie: 'libelula', min: 2, max: 4, peso: 25 },
-      { especie: 'abejaruco', min: 3, max: 5, peso: 20 },
-      { especie: 'mandragora', min: 3, max: 5, peso: 12 },
-      { especie: 'duende', min: 4, max: 5, peso: 8 },
+      { especie: 'topillo', min: 2, max: 4, peso: 28 },
+      { especie: 'libelula', min: 2, max: 4, peso: 22 },
+      { especie: 'abejaruco', min: 3, max: 5, peso: 18 },
+      { especie: 'escarabajo_pelotero', min: 3, max: 5, peso: 10 },
+      { especie: 'mandragora', min: 3, max: 5, peso: 10 },
+      { especie: 'duende', min: 4, max: 5, peso: 7 },
       { especie: 'galapago', min: 4, max: 6, peso: 5 },
     ],
   },
@@ -379,10 +380,12 @@ const ALHAMBRA: Zona = {
   encuentros: {
     tasa: 14,
     especies: [
-      { especie: 'duende', min: 5, max: 7, peso: 40 },
-      { especie: 'abejaruco', min: 5, max: 7, peso: 30 },
-      { especie: 'mandragora', min: 5, max: 7, peso: 20 },
+      { especie: 'duende', min: 5, max: 7, peso: 32 },
+      { especie: 'abejaruco', min: 5, max: 7, peso: 24 },
+      { especie: 'mandragora', min: 5, max: 7, peso: 16 },
       { especie: 'galapago', min: 6, max: 8, peso: 10 },
+      { especie: 'escarabajo_bronce', min: 6, max: 8, peso: 10 },
+      { especie: 'trasgo', min: 7, max: 8, peso: 8 },
     ],
   },
   pnj: [

@@ -103,7 +103,7 @@ const lista: Objeto[] = [
     nombre: 'Gorro colorado',
     categoria: 'evolucion',
     tipo: 'evolucion',
-    descripcion: 'El gorro rojo de los trasgos del norte. Hace evolucionar a un duende.',
+    descripcion: 'El gorro rojo de los trasgos del norte. Si se lo das a Brezuco, evoluciona a Trasgorn.',
   },
   // Combate: solo durante el combate y sobre la criatura que está luchando.
   { id: 'brebaje_fuerza', nombre: 'Brebaje de fuerza', categoria: 'combate', tipo: 'potenciador', estadistica: 'fuerza', cambio: 1, precio: 120, descripcion: 'Sube la Fuerza durante el combate.' },

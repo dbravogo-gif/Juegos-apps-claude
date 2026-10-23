@@ -4,10 +4,13 @@ Diseño de las 150 especies. Parte del prompt maestro que el autor preparó con 
 (2026-10-23) y lo ajusta a las decisiones cerradas del `GDD.md`.
 
 **Estado:**
-- Hecho: fase A (auditoría), fase B (tabla maestra) y fase C del capítulo 1, más Gofrón por
-  adelantado.
-- Siguiente: fichas del capítulo 2. El juego todavía usa los nombres antiguos; se cambian
-  cuando el autor dé el visto bueno a esta auditoría.
+- Hecho: fase A (auditoría), fase B (tabla maestra) y fase C del capítulo 1, más Gofrón, la
+  vieja, *Gallotia simonyi* y el Papemímico por adelantado.
+- **v2 (2026-10-23):** segunda revisión de variedad pedida por el autor (A.8). La numeración
+  cambia respecto a la v1.
+- El juego ya usa el capítulo 1 de esta tabla (nombres, estadísticas y movimientos). Los `id`
+  internos de `src/data/especies.ts` no cambian, para no romper partidas guardadas.
+- Siguiente: fichas del capítulo 2, cuando el autor dé el visto bueno.
 
 ## Convenciones
 
@@ -32,8 +35,8 @@ Diseño de las 150 especies. Parte del prompt maestro que el autor preparó con 
 - **Movimientos.** Se reutilizan los que ya existen en `src/data/movimientos.ts`. Los nuevos se
   marcan con *(nuevo)*, y solo usan efectos que el motor ya sabe hacer: daño, subir o bajar
   etapas, quemar, dormir, drenar, curar y prioridad.
-- **Debilidades de tipo.** Dependen de la tabla de tipos, que sigue siendo provisional
-  (`GDD.md` §8). Cuando se citan, es con esa tabla.
+- **Debilidades de tipo.** Salen de la tabla de tipos del autor (`src/data/tipos.ts`), que ya
+  está cerrada. Con dos tipos, los multiplicadores se multiplican.
 - **Marcas de verdad:**
   - *Hecho*: biología, paleontología o historia documentada.
   - *Tradición*: folclore recogido en fuentes.
@@ -66,15 +69,15 @@ Diseño de las 150 especies. Parte del prompt maestro que el autor preparó con 
 | **Tres líneas de cangrejo** que acaban en tanque Agua/Acero: Marzuko, Rivak y Marek. | Solo queda la inicial. Rivak sale. Marek se convierte en el angelote (Arenín → Escualión), el tiburón plano que se entierra en la arena y que tiene en Canarias su último refugio. |
 | **Dos anguilas eléctricas** (Anguélix, Ebralia). En los ríos de España no hay peces eléctricos. | La eléctrica pasa a ser la tremielga o torpedo (Tremolín → Tremielgón), que es real y marina. Anguélix queda como Agua/Espectral: la angula es transparente y nadie ha visto aún a la anguila desovar en el mar de los Sargazos **[VERIFICAR]**. Ebralia sale. |
 | **Dos líneas de carbón** (Carbonil, Carboria). | Queda Carboria, en Asturias. |
-| **Diez especies Tierra/Acero**, todas tanques. | Quedan tres, cada una con su papel: Escarbraz (defensor), Bastilag (el tanque) y Ferrumbrak (atacante). |
+| **Diez especies Tierra/Acero**, todas tanques. | Quedaron tres, cada una con su papel: Escarbraz (defensor), Bastilag (el tanque) y Ferrumbrak (atacante). En la v2 sale Ferrumbrak (A.8). |
 | **Tres aves que acababan en Aire/Luz** (Granalar, Lumitorre, Celestauro). | Queda una: Imperión, el águila imperial, por el águila de San Juan del escudo de los Reyes Católicos. Celestauro pasa a ser Plasma (A.5). |
 | **Dos córvidos Aire/Oscuridad** y dos golondrinas, con nombres casi iguales (Gorvín y Golvín). | Salen los córvidos y una golondrina. Golvín queda como vencejo. |
 | **Tres líneas de anfibio** y Niebrelago, un Agua/Hielo calcado de Nivamandra. | Queda la de la salamandra del Pirineo. |
 | **Doce especies Tierra/Ancestral**: todos los fósiles y las bestias de montaña. | Ancestral queda para los seres primordiales y los fósiles; el segundo tipo de cada fósil cambia según su biología. Tierra/Ancestral baja a 3. |
-| **Infernal/Ancestral** repetido (Vulcaris y Guayota), más tres Tierra/Infernal (Magmalión, Carboflama y Calderath). | Vulcaris y Calderath salen. Guayota pasa a Infernal/Oscuridad: secuestró al sol, Magec, y dejó el mundo a oscuras (*tradición*). |
+| **Infernal/Ancestral** repetido (Vulcaris y Guayota), más tres Tierra/Infernal (Magmalión, Carboflama y Calderath). | Vulcaris y Calderath salen, y Magmalión en la v2 (A.8). Guayota pasa a Infernal/Oscuridad: secuestró al sol, Magec, y dejó el mundo a oscuras (*tradición*). |
 | **Tres felinos de dientes de sable.** | Quedan dos con siluetas distintas: Machairodus, de Batallones, robusto, y Homotherium, de Orce, de patas largas. |
 | **Dos saurópodos** (Turiasaurus y Aragosaurus). | Queda Turiasaurus, el mayor dinosaurio de Europa. |
-| **Lagarto gigante canario**, como fósil y como especie viva a la vez. | Se queda el vivo de El Hierro (Lagartitán), redescubierto en 1975, en el capítulo 5. |
+| **Lagarto gigante canario**, como fósil y como especie viva a la vez. | Se queda el vivo de El Hierro, en el capítulo 5. En la v2 se llama por su nombre científico, *Gallotia simonyi*. |
 | **Nombres que se confundían:** Ferrumbra y Ferrumbrak; cinco nombres «Carbo-», cuatro «Noct-» y cuatro «Mare-»; Bastilag y Bastionix; Alabastrón y Alhambrón en el mismo capítulo; Pinariel y Fanariel; Fulgora y Fulgurón; Machairón y Majorón. | Se resuelven con los cambios de arriba y estos renombres: Alabastrón → Mocarabeo, Fanariel → Farolera, Majorón → Riscabra. |
 
 ### A.3 Líneas incoherentes
@@ -87,7 +90,7 @@ Diseño de las 150 especies. Parte del prompt maestro que el autor preparó con 
 | Fulgora → Fanariel → Fanaluz | Pasa de insecto a farol y de farol a faro. | Fulgora → Farolera: dos formas de luciérnaga. |
 | Velaria → Tapizombra → Ilusaria | Oruga, capullo y mariposa es la estructura de una línea concreta de Pokémon. | Velaria → Ilusaria: de la oruga a la mariposa isabelina, dedicada a Isabel II en 1849. |
 | Grajombra → Nocturiel → Nocturnarca | Pasa de grajilla a ave fantasma. | Sale. Lo espectral de Asturias lo cubre Cirialma (la Güestia). |
-| Peláris → Abisarda → Talasonda | Talasonda no tenía ficha: el inventario solo tenía 149 conceptos. | Dos formas. |
+| Peláris → Abisarda → Talasonda | Talasonda no tenía ficha: el inventario solo tenía 149 conceptos. | Dos formas. Talasonda queda eliminada del todo (A.8). |
 
 ### A.4 Tipos y nombres revisados (los principales)
 
@@ -115,7 +118,7 @@ Plasma solo se usa cuando se ve gas ionizado: filamentos, coronas o halos azul v
 
 | Especie | Por qué es Plasma |
 | --- | --- |
-| Telmario → Corposanto | El fuego de San Telmo, que los marineros llamaban *corposanto*: penachos azulados en la punta de los mástiles durante las tormentas. San Telmo es el patrón de los navegantes (*tradición*). |
+| Telmario → Corposanto | El fuego de San Telmo, que los marineros llamaban *corposanto*: penachos azulados en la punta de los mástiles durante las tormentas. San Telmo es el patrón de los navegantes (*tradición*). La línea es la carabela portuguesa, cuya cresta de gas hace de mástil. |
 | Coronazul | Cresta como la corona solar, que es plasma (*hecho*). El Teide alberga observatorios solares. |
 | Centellón | La centella o rayo en bola de las tormentas de montaña. |
 | Mafasco | La Luz de Mafasca, en Fuerteventura: una luz azulada que acompaña a los caminantes de noche (*tradición*). |
@@ -132,33 +135,92 @@ Plasma solo se usa cuando se ve gas ionizado: filamentos, coronas o halos azul v
 | 4 | — | Madroñal | — |
 | 5 | Gofrón | Viejarrón | — |
 | 6 | Basajaur | Nivamandra | — |
-| 7 | Silurón | — | Palmerón |
+| 7 | Silurón | — | Tamborón |
 | 8 | — | Arquiteuto | Tronador |
 | Rutas | — | — | Encinarca |
 | Legendarios y fósiles | Cuélebre, Tarasca, Copito de Nieve, Padulonte, Testudrago | Mari | Turiasar |
 
 Ningún capítulo se queda sin tanque. Los Tierra y Acero ya no son tanques por defecto:
-Ferrumbrak, Escarbraz y Bombardrak atacan o defienden, pero no son tanques.
+Escarbraz y Bombardrak atacan o defienden, pero no son tanques.
 
 ### A.7 Reparto por tipos
 
-Recuento de especies que tienen cada tipo, ya sea como primero o como segundo:
+Recuento de especies que tienen cada tipo, ya sea como primero o como segundo (v2):
 
 | Tipo | Especies | Tipo | Especies | Tipo | Especies |
 | --- | --- | --- | --- | --- | --- |
-| Tierra | 33 | Oscuridad | 22 | Acero | 9 |
-| Aire | 32 | Ancestral | 15 | Espectral | 7 |
-| Agua | 26 | Planta | 14 | Luz | 6 |
-| Común | 26 | Infernal | 12 | Eléctrico | 6 |
-| | | Mental | 12 | Plasma | 6 |
+| Tierra | 31 | Oscuridad | 23 | Acero | 9 |
+| Agua | 31 | Ancestral | 16 | Luz | 7 |
+| Común | 27 | Planta | 15 | Espectral | 7 |
+| Aire | 24 | Mental | 13 | Eléctrico | 6 |
+| | | Infernal | 11 | Plasma | 6 |
 | | | | | Hielo | 6 |
 
-- **Ningún par de tipos aparece en más de tres líneas distintas.** Los que llegan a tres son:
-  Infernal/Tierra, Común/Tierra, Agua/Tierra, Tierra/Acero y Ancestral/Tierra.
+- **Ningún par de tipos aparece en más de tres líneas distintas.** Llegan a tres:
+  Común/Tierra, Agua/Tierra, Mental/Oscuridad y Ancestral/Tierra.
 - **Los tipos menos evidentes** (Hielo, Luz, Eléctrico, Plasma y Espectral) tienen entre 6 y 7
   especies cada uno, repartidas en al menos cuatro capítulos o zonas.
-- **Tierra y Aire son los más abundantes**, por las aves y los reptiles. Si hay que recortar
-  algo en el futuro, que sea por ahí.
+- **Aire baja de 32 a 24** con la revisión de las aves. **Agua sube a 31** por la fauna de
+  buceo de Canarias y la carabela portuguesa.
+- Con la tabla del autor, **Común no tiene debilidades** y solo Espectral le resiste del todo;
+  es el tipo más seguro para defender, y por eso abunda en las formas débiles.
+
+### A.8 Segunda revisión: variedad del catálogo (v2)
+
+El autor pidió revisar las 150 entradas comparando inspiración, silueta, hábitat, tipos, rol,
+región y concepto visual, y recortar los motivos repetidos. Resultado:
+
+| Motivo repetido | En la v1 | Cambio |
+| --- | --- | --- |
+| **Línea del drago** | Tres formas (Dralín → Dracauro → Dracendro). Dracauro solo era un drago a medio camino, sin idea propia. | Dos formas: Dralín → Dracendro, al nivel 26. Dracauro sale y sus rasgos pasan a las otras dos fichas. |
+| **Aves** | 32 especies con Aire. Había cuatro aves marinas (Peláris, Paíñel, Gavirol y Aeralmar) y dos que ocupaban un hueco ya cubierto: Nidaltar, la cigüeña de campanario, y Cielazul, la forma intermedia del pinzón azul. | Salen Gavirol y Aeralmar (gaviotas), Nidaltar y Cielazul. Timplario, el canario convertido en timple, también sale: Canarín va solo. Aire baja a 24. |
+| **Voladores con forma de torre** | Altatorre (vencejo «de torre») y Nidaltar (campanario). | Nidaltar sale. Altatorre pasa a llamarse **Falcivento**: el mismo vencejo, con nombre por sus alas en hoz y no por la torre. |
+| **Rapaces** | Águila (Aquilín → Imperión), quebrantahuesos (Quebravén → Osifrago) y búho en tres formas (Noctiván → Archivex → Noctilex). | El búho queda en dos formas: sale Archivex, que no añadía nada entre las otras dos. Quedan tres rapaces con siluetas distintas: águila, buitre y búho. |
+| **Córvidos** | Ya se habían quitado en la v1. | Se comprueba que no queda ninguno. |
+| **Monstruos acorazados y fortalezas** | Muralliz (el lagarto muralla de Toledo) y Ferrumbrak (el topo de hierro), además de Bastilag, Talascrón, Mocarabeo y Guisandor. | Salen Muralliz y Ferrumbrak. Lizarco evoluciona directamente a Bastilag (nivel 30), y Toprón va solo. Tierra/Acero queda en dos especies. |
+| **Serpientes marinas** | Ninguna repetida: el Cuélebre es alado y de río, Anguélix es una anguila y Arquiteuto un calamar. | Sin cambios. |
+| **Crustáceos** | Solo la línea inicial y el percebe (la v1 ya había quitado otros dos cangrejos). | Sin cambios. |
+| **Volcánicos y de carbón** | Magmalión (el geco que se volvía león de lava), Carboria → Grisón, Teazón, Guayota. | Sale Magmalión: Periván, el perenquén, va solo. Queda un volcánico, Guayota, y la línea del carbón en Asturias. |
+| **Árboles que caminan** | Cuatro: Dracendro, Teazón, Encinarca y Palmerón. | Sale Palmerón. Quedan tres, con siluetas distintas: drago en paraguas, pino alto y recto, y encina ancha. |
+| **Línea de San Telmo** | Paíñel → Telmario → Corposanto era otra ave marina más. | El fuego de San Telmo pasa a la **carabela portuguesa**, también llamada fragata portuguesa (Fragatín → Telmario → Corposanto), cuya vela de gas recuerda el mástil donde aparecía el fuego. Es Agua desde la primera forma y Plasma en las dos siguientes. |
+
+**Lo que se queda aunque se parezca, y por qué:**
+- **Dos cabras.** Baifín → Riscabra es la cabra doméstica de las majadas canarias; Carámbex →
+  Nevárion es la cabra montés de Guadarrama, de tipo Hielo. Distinto hábitat, tipo y papel.
+- **Dos escarabajos.** Broncero → Mocarabeo es un escarabajo pelotero de bronce y joya;
+  Bombarín → Bombardrak es el escarabajo bombardero, que dispara un chorro hirviendo.
+- **Tres lagartos.** Lizarco → Bastilag (lagarto ocelado de Castilla), Periván (un geco
+  plano, de dedos adhesivos) y *Gallotia simonyi* (el gigante de El Hierro).
+
+**Entradas nuevas.** Cubren huecos de fauna y folclore que no tenían representante:
+
+| Especie | Qué es | Hueco que cubre |
+| --- | --- | --- |
+| Tarantón | La tarántula ibérica (*Lycosa tarantula*). *Tradición*: el tarantismo, el baile para curar su picadura **[VERIFICAR en La Mancha]**. | No había ningún arácnido. |
+| Pinchorro | El erizo europeo. | Mamífero pequeño de huerta para el capítulo 2. |
+| Meloncillo | *Herpestes ichneumon*, la única mangosta de Europa, de Doñana y Sierra Morena. | Fauna ibérica singular. |
+| Basiliscón | *Tradición*: el basilisco que, según la leyenda, vivía en un pozo de la calle del Basilisco de Madrid **[VERIFICAR]**. | Folclore de Madrid para el capítulo 4. |
+| Almadrabón | El atún rojo de la almadraba de Cádiz. | Pez grande y rápido; Cádiz era el puerto de las Indias en el siglo XVIII. |
+| Oronjín → Matamoscón | La falsa oronja o matamoscas (*Amanita muscaria*): sale cerrada, como un huevo, y se abre en un sombrero rojo con motas blancas. Es tóxica y psicoactiva (*hecho*), de ahí Mental. | No había setas. |
+| Tamborón | El tamboril, el pez globo de las costas canarias. | Tanque del capítulo 7. |
+| Malpaisín | La musaraña canaria (*Crocidura canariensis*), endémica de Fuerteventura y Lanzarote, que vive en los malpaíses. | Fauna canaria endémica para la zona de Mafasca. |
+| Magec | *Tradición guanche*: el sol, al que Guayota secuestró en el Teide. | Pareja de Guayota; sin él, la leyenda quedaba a medias. |
+| Papemímico | Un recipiente que muerde. *Licencia*. | La sorpresa de las tinajas y papeleras (ver su ficha). |
+
+**Cambios en especies que se quedan:**
+- **Lagartitán → *Gallotia simonyi*.** El autor pidió el lagarto gigante de El Hierro con su
+  nombre científico. Es la única especie del juego con nombre real; en pantalla va sin
+  cursiva.
+- **Viejarrón:** de Agua a Agua/Planta. Es la vieja canaria (*Sparisoma cretense*), un pez loro
+  que raspa algas de las rocas.
+- **Brezuco → Trasgorn:** ya no evoluciona por nivel, sino con el **Gorro colorado**, el gorro
+  rojo del trasgu, que está escondido en la Alhambra.
+- **Talasonda:** eliminada del todo. No tenía concepto propio y las aves marinas sobraban;
+  Peláris → Abisarda se queda en dos formas.
+- **Tamborón** hace de tanque mixto del capítulo 7, el hueco que dejaba Palmerón.
+
+**Longitud de las líneas.** De las 103 líneas, 63 son de una sola especie, 33 de dos formas y
+7 de tres: las dos iniciales que no son el drago, Viperel, Lobaz, Fragatín, Ursalín y Broncero.
 
 ---
 
@@ -168,221 +230,226 @@ Los niveles de evolución son propuestas. «Final» significa que es la última 
 
 ### Iniciales (los da Isabel en Santa Fe, capítulo 1)
 
-| Nº | Nombre | Tipos | Línea | Dónde aparece | Rareza | Rol |
-| --- | --- | --- | --- | --- | --- | --- |
-| 001 | Ignibue | Infernal | → Braverno (16) | Santa Fe | Inicial | Atacante físico |
-| 002 | Braverno | Infernal/Tierra | → Ignivárgoth (36) | — | Inicial | Atacante físico resistente |
-| 003 | Ignivárgoth | Infernal/Tierra | Final | — | Inicial | Atacante físico pesado |
-| 004 | Marzuko | Agua | → Nakarra (16) | Santa Fe | Inicial | Explorador físico |
-| 005 | Nakarra | Agua | → Talascrón (36) | — | Inicial | Defensor físico |
-| 006 | Talascrón | Agua/Acero | Final | — | Inicial | Tanque físico |
-| 007 | Dralín | Planta | → Dracauro (16) | Santa Fe | Inicial | Apoyo |
-| 008 | Dracauro | Planta | → Dracendro (36) | — | Inicial | Apoyo resistente |
-| 009 | Dracendro | Planta/Ancestral | Final | — | Inicial | Tanque mixto y apoyo |
+| Nº | Nombre | Tipos | Línea | Dónde aparece | Rareza | Rol | Silueta | Origen |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 001 | Ignibue | Infernal | → Braverno (16) | Santa Fe | Inicial | Atacante físico | Cuadrúpedo: becerro | Península |
+| 002 | Braverno | Infernal/Tierra | → Ignivárgoth (36) | — | Inicial | Atacante físico resistente | Cuadrúpedo: toro joven | Península |
+| 003 | Ignivárgoth | Infernal/Tierra | Final | — | Inicial | Atacante físico pesado | Cuadrúpedo: toro colosal | Península |
+| 004 | Marzuko | Agua | → Nakarra (16) | Santa Fe | Inicial | Explorador físico | Crustáceo pequeño | Costa atlántica |
+| 005 | Nakarra | Agua | → Talascrón (36) | — | Inicial | Defensor físico | Crustáceo nadador | Costa atlántica |
+| 006 | Talascrón | Agua/Acero | Final | — | Inicial | Tanque físico | Crustáceo ancho y bajo | Costa atlántica |
+| 007 | Dralín | Planta | → Dracendro (26) | Santa Fe | Inicial | Apoyo resistente | Árbol joven | Canarias |
+| 008 | Dracendro | Planta/Ancestral | Final | — | Inicial | Tanque mixto y apoyo | Árbol colosal que camina | Canarias |
 
 ### Capítulo 1. Granada, Santa Fe, la Vega y la Alhambra (1491–1492)
 
-| Nº | Nombre | Tipos | Línea | Dónde aparece | Rareza | Rol |
-| --- | --- | --- | --- | --- | --- | --- |
-| 010 | Zumbrel | Aire | → Diablisca (12) | Vega, acequias | Común | Velocista físico |
-| 011 | Diablisca | Aire/Infernal | Final | — | Poco común | Atacante rápido mixto |
-| 012 | Brezuco | Oscuridad | → Trasgorn (14) | Santa Fe y la Vega, de noche | Común | Apoyo evasivo |
-| 013 | Trasgorn | Oscuridad | Final | Alhambra | Poco común | Control y engaño |
-| 014 | Túmbriz | Común/Tierra | No evoluciona | Vega, mieses | Muy común | Explorador débil |
-| 015 | Barbaflux | Agua | No evoluciona | Río Genil | Común | Atacante físico |
-| 016 | Abezar | Aire | No evoluciona | Vega, taludes | Común | Velocista |
-| 017 | Mandragor | Planta/Mental | No evoluciona | Vega, lindes y olivares | Rara | Control de estado |
-| 018 | Carapachón | Agua | No evoluciona | Acequias | Poco común | Tanque físico |
-| 019 | Alhambrón | Agua/Tierra | No evoluciona | Alhambra: es el de Boabdil, y sale salvaje en el Generalife cuando se le vence | Muy rara | Atacante resistente |
-| 020 | Broncero | Tierra | → Escarbraz (18) | Vega, caminos de tierra | Común | Atacante físico |
-| 021 | Escarbraz | Tierra/Acero | → Mocarabeo (34) | Alhambra, adarves | Poco común | Defensor físico |
-| 022 | Mocarabeo | Acero/Luz | Final | — | Rara | Tanque de apoyo |
+| Nº | Nombre | Tipos | Línea | Dónde aparece | Rareza | Rol | Silueta | Origen |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 009 | Zumbrel | Aire | → Diablisca (12) | Vega, acequias | Común | Velocista físico | Insecto volador | Andalucía |
+| 010 | Diablisca | Aire/Infernal | Final | — | Poco común | Atacante rápido mixto | Insecto con cabeza de caballo | Cantabria (folclore) |
+| 011 | Brezuco | Oscuridad | → Trasgorn (con el Gorro colorado) | Santa Fe y la Vega, de noche | Común | Apoyo evasivo | Duende encapuchado | Folclore peninsular |
+| 012 | Trasgorn | Oscuridad | Final | Alhambra | Poco común | Control y engaño | Trasgo cojo de gorro rojo | Asturias y Cantabria (folclore) |
+| 013 | Túmbriz | Común/Tierra | No evoluciona | Vega, mieses | Muy común | Explorador débil | Roedor excavador | Andalucía |
+| 014 | Barbaflux | Agua | No evoluciona | Río Genil | Común | Atacante físico | Pez de río | Andalucía |
+| 015 | Abezar | Aire | No evoluciona | Vega, taludes | Común | Velocista | Ave pequeña | Península |
+| 016 | Mandragor | Planta/Mental | No evoluciona | Vega, lindes y olivares | Rara | Control de estado | Raíz que camina | Mediterráneo |
+| 017 | Carapachón | Agua | No evoluciona | Acequias | Poco común | Tanque físico | Galápago | Sur peninsular |
+| 018 | Alhambrón | Agua/Tierra | No evoluciona | Alhambra: el de Boabdil; salvaje en el Generalife tras vencerle | Muy rara | Atacante resistente | Escultura viva: león | Granada |
+| 019 | Broncero | Tierra | → Escarbraz (18) | Vega, caminos de tierra | Común | Atacante físico | Escarabajo | Sur peninsular |
+| 020 | Escarbraz | Tierra/Acero | → Mocarabeo (34) | Alhambra, adarves | Poco común | Defensor físico | Escarabajo de bronce | Sur peninsular |
+| 021 | Mocarabeo | Acero/Luz | Final | — | Rara | Tanque de apoyo | Escarabajo joya | Granada |
 
 ### Capítulo 2. Toledo y Castilla (1516–1556)
 
-| Nº | Nombre | Tipos | Línea | Dónde aparece | Rareza | Rol |
-| --- | --- | --- | --- | --- | --- | --- |
-| 023 | Lizarco | Tierra | → Muralliz (18) | Campos de Castilla | Común | Explorador |
-| 024 | Muralliz | Tierra | → Bastilag (34) | Murallas de Toledo | Poco común | Defensor físico |
-| 025 | Bastilag | Tierra/Acero | Final | — | Rara | Tanque físico |
-| 026 | Viperel | Oscuridad | → Viperion (20) | Cerros de Toledo | Común | Atacante de emboscada |
-| 027 | Viperion | Oscuridad | → Sierpeira (36) | — | Poco común | Atacante físico |
-| 028 | Sierpeira | Oscuridad/Tierra | Final | — | Rara | Atacante de control |
-| 029 | Grávico | Común | → Gravitardo (24) | Llanos de Villalar | Común | Atacante físico |
-| 030 | Gravitardo | Común/Aire | Final | — | Poco común | Atacante resistente |
-| 031 | Aquilín | Aire | → Imperión (30) | Montes de Toledo | Rara | Velocista |
-| 032 | Imperión | Aire/Luz | Final | — | Muy rara | Atacante rápido y apoyo |
-| 033 | Lobaz | Común | → Lobregón (22) | Castilla, de noche | Común | Atacante físico |
-| 034 | Lobregón | Común/Oscuridad | → Lobánima (38, en el Monte de las Ánimas) | — | Poco común | Atacante físico |
-| 035 | Lobánima | Espectral/Oscuridad | Final | Soria (zona opcional) | Muy rara | Atacante mágico |
-| 036 | Nidaltar | Aire | No evoluciona | Campanarios | Común | Apoyo |
-| 037 | Guisandor | Tierra | No evoluciona | Toros de Guisando (Ávila) | Muy rara | Tanque físico |
+| Nº | Nombre | Tipos | Línea | Dónde aparece | Rareza | Rol | Silueta | Origen |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 022 | Lizarco | Tierra | → Bastilag (30) | Campos de Castilla | Común | Explorador | Lagarto | Península |
+| 023 | Bastilag | Tierra/Acero | Final | — | Rara | Tanque físico | Lagarto con cresta almenada | Castilla |
+| 024 | Viperel | Oscuridad | → Viperion (20) | Cerros de Toledo | Común | Atacante de emboscada | Serpiente pequeña | Península |
+| 025 | Viperion | Oscuridad | → Sierpeira (36) | — | Poco común | Atacante físico | Serpiente | Península |
+| 026 | Sierpeira | Oscuridad/Tierra | Final | — | Rara | Atacante de control | Sierpe con cuernos | Leyendas de sierpes |
+| 027 | Grávico | Común | → Gravitardo (24) | Llanos de Villalar | Común | Atacante físico | Ave esteparia | Castilla |
+| 028 | Gravitardo | Común/Aire | Final | — | Poco común | Atacante resistente | Ave grande y pesada | Castilla |
+| 029 | Aquilín | Aire | → Imperión (30) | Montes de Toledo | Rara | Velocista | Rapaz joven | Península (endémica) |
+| 030 | Imperión | Aire/Luz | Final | — | Muy rara | Atacante rápido y apoyo | Águila heráldica | Península (endémica) |
+| 031 | Lobaz | Común | → Lobregón (22) | Castilla, de noche | Común | Atacante físico | Cánido | Península |
+| 032 | Lobregón | Común/Oscuridad | → Lobánima (nivel 38 en el Monte de las Ánimas) | — | Poco común | Atacante físico | Lobo | Península |
+| 033 | Lobánima | Espectral/Oscuridad | Final | Soria (zona opcional) | Muy rara | Atacante mágico | Lobo espectral | Soria (Bécquer) |
+| 034 | Guisandor | Tierra | No evoluciona | Toros de Guisando (Ávila) | Muy rara | Tanque físico | Escultura viva: toro de granito | Ávila |
+| 035 | Tarantón | Oscuridad/Mental | No evoluciona | La Mancha, en los rastrojos | Poco común | Control | Araña lobo | Península |
+| 036 | Pinchorro | Común | No evoluciona | Huertas de Castilla, de noche | Común | Defensor | Erizo | Península |
 
 ### Capítulo 3. El Escorial, Sevilla y el Guadalquivir (1556–1598)
 
-| Nº | Nombre | Tipos | Línea | Dónde aparece | Rareza | Rol |
-| --- | --- | --- | --- | --- | --- | --- |
-| 038 | Anguélix | Agua/Espectral | → Sargazón (26) | Guadalquivir | Común | Velocista mágico |
-| 039 | Sargazón | Agua/Espectral | Final | — | Poco común | Atacante mágico |
-| 040 | Tremolín | Agua/Eléctrico | → Tremielgón (28) | Desembocadura, en Sanlúcar | Poco común | Atacante mágico |
-| 041 | Tremielgón | Agua/Eléctrico | Final | — | Rara | Control |
-| 042 | Golvín | Aire | → Altatorre (20) | Torres de Sevilla y El Escorial | Común | Velocista |
-| 043 | Altatorre | Aire | Final | — | Poco común | Atacante rápido |
-| 044 | Lincel | Común | → Pardalión (30) | Doñana | Rara | Velocista físico |
-| 045 | Pardalión | Común/Mental | Final | — | Muy rara | Atacante físico veloz |
-| 046 | Noctiván | Oscuridad | → Archivex (20) | Bosque de La Herrería, en El Escorial | Poco común | Atacante mágico |
-| 047 | Archivex | Oscuridad/Mental | → Noctilex (36) | — | Rara | Control y apoyo |
-| 048 | Noctilex | Mental/Oscuridad | Final | — | Rara | Tanque mágico |
-| 049 | Paíñel | Aire | → Telmario (22) | Sanlúcar, con temporal | Poco común | Explorador |
-| 050 | Telmario | Aire/Plasma | → Corposanto (38) | — | Rara | Atacante mágico |
-| 051 | Corposanto | Plasma/Aire | Final | — | Muy rara | Atacante mágico veloz |
+| Nº | Nombre | Tipos | Línea | Dónde aparece | Rareza | Rol | Silueta | Origen |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 037 | Anguélix | Agua/Espectral | → Sargazón (26) | Guadalquivir | Común | Velocista mágico | Angula transparente | Atlántico y ríos |
+| 038 | Sargazón | Agua/Espectral | Final | — | Poco común | Atacante mágico | Anguila | Atlántico y ríos |
+| 039 | Tremolín | Agua/Eléctrico | → Tremielgón (28) | Desembocadura, en Sanlúcar | Poco común | Atacante mágico | Raya pequeña | Atlántico y Mediterráneo |
+| 040 | Tremielgón | Agua/Eléctrico | Final | — | Rara | Control | Raya eléctrica | Atlántico y Mediterráneo |
+| 041 | Golvín | Aire | → Falcivento (20) | Torres de Sevilla y El Escorial | Común | Velocista | Ave de alas en hoz | Península |
+| 042 | Falcivento | Aire | Final | — | Poco común | Atacante rápido | Vencejo grande | Península |
+| 043 | Lincel | Común | → Pardalión (30) | Doñana | Rara | Velocista físico | Felino joven | Península (endémico) |
+| 044 | Pardalión | Común/Mental | Final | — | Muy rara | Atacante físico veloz | Lince | Península (endémico) |
+| 045 | Noctiván | Oscuridad | → Noctilex (30) | Bosque de La Herrería, en El Escorial | Poco común | Atacante mágico | Búho | Península |
+| 046 | Noctilex | Mental/Oscuridad | Final | Real Biblioteca de El Escorial | Rara | Tanque mágico | Búho guardián de páginas | El Escorial |
+| 047 | Fragatín | Agua | → Telmario (22) | Sanlúcar, con temporal | Poco común | Explorador | Flotador pequeño con tentáculos | Atlántico y Canarias |
+| 048 | Telmario | Agua/Plasma | → Corposanto (38) | — | Rara | Atacante mágico | Flotador con cresta como una vela | Atlántico y Canarias |
+| 049 | Corposanto | Plasma/Agua | Final | — | Muy rara | Atacante mágico veloz | Flotador con cresta de plasma | Atlántico y Canarias |
+| 050 | Meloncillo | Común | No evoluciona | Doñana y Sierra Morena | Poco común | Velocista | Mangosta | Sur peninsular |
 
 ### Capítulo 4. Madrid y su sierra (1598–1700)
 
-| Nº | Nombre | Tipos | Línea | Dónde aparece | Rareza | Rol |
-| --- | --- | --- | --- | --- | --- | --- |
-| 052 | Ardélix | Común | → Pinariel (20) | Casa de Campo y pinares | Común | Velocista físico |
-| 053 | Pinariel | Común/Planta | Final | — | Poco común | Apoyo |
-| 054 | Umbrel | Oscuridad | → Sonumbra (22) | Cuevas de la sierra, en Patones | Común | Velocista |
-| 055 | Sonumbra | Oscuridad/Aire | Final | — | Poco común | Atacante mágico veloz |
-| 056 | Carámbex | Hielo | → Nevárion (30) | Peñalara | Poco común | Atacante veloz |
-| 057 | Nevárion | Hielo/Tierra | Final | — | Rara | Atacante físico resistente |
-| 058 | Fulgora | Luz | → Farolera (24) | Sierra, en noches de verano | Poco común | Apoyo |
-| 059 | Farolera | Luz/Aire | Final | — | Rara | Apoyo y control |
-| 060 | Velaria | Planta | → Ilusaria (22) | Pinares de Guadarrama | Poco común | Apoyo |
-| 061 | Ilusaria | Aire/Mental | Final | — | Rara | Control de estado |
-| 062 | Madroñal | Planta | No evoluciona | Monte de El Pardo | Común | Tanque mágico y apoyo |
-| 063 | Orantis | Común | → Mantisanta (26) | Matorral de la sierra | Poco común | Atacante físico |
-| 064 | Mantisanta | Mental | Final | — | Rara | Atacante físico y control |
+| Nº | Nombre | Tipos | Línea | Dónde aparece | Rareza | Rol | Silueta | Origen |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 051 | Ardélix | Común | → Pinariel (20) | Casa de Campo y pinares | Común | Velocista físico | Ardilla | Península |
+| 052 | Pinariel | Común/Planta | Final | — | Poco común | Apoyo | Ardilla con agujas de pino | Península |
+| 053 | Umbrel | Oscuridad | → Sonumbra (22) | Cuevas de la sierra, en Patones | Común | Velocista | Murciélago | Península |
+| 054 | Sonumbra | Oscuridad/Aire | Final | — | Poco común | Atacante mágico veloz | Murciélago grande | Península |
+| 055 | Carámbex | Hielo | → Nevárion (30) | Peñalara | Poco común | Atacante veloz | Cabra joven | Sierra de Guadarrama |
+| 056 | Nevárion | Hielo/Tierra | Final | — | Rara | Atacante físico resistente | Cabra montés | Sierra de Guadarrama |
+| 057 | Fulgora | Luz | → Farolera (24) | Sierra, en noches de verano | Poco común | Apoyo | Gusano de luz | Península |
+| 058 | Farolera | Luz/Aire | Final | — | Rara | Apoyo y control | Luciérnaga farol | Península |
+| 059 | Velaria | Planta | → Ilusaria (22) | Pinares de Guadarrama | Poco común | Apoyo | Oruga | Centro peninsular |
+| 060 | Ilusaria | Aire/Mental | Final | — | Rara | Control de estado | Mariposa nocturna | Centro peninsular |
+| 061 | Madroñal | Planta | No evoluciona | Monte de El Pardo | Común | Tanque mágico y apoyo | Arbusto con frutos | Madrid |
+| 062 | Orantis | Común | → Mantisanta (26) | Matorral de la sierra | Poco común | Atacante físico | Insecto orante pequeño | Península |
+| 063 | Mantisanta | Mental | Final | — | Rara | Atacante físico y control | Mantis | Península |
+| 064 | Basiliscón | Tierra/Mental | No evoluciona | Madrid, en un pozo de la calle del Basilisco | Muy rara | Control | Gallo serpiente | Madrid (leyenda) |
 
 ### Capítulo 5. Canarias (1700–1808)
 
-| Nº | Nombre | Tipos | Línea | Dónde aparece | Rareza | Rol |
-| --- | --- | --- | --- | --- | --- | --- |
-| 065 | Baifín | Común | → Riscabra (20) | Majadas de Tenerife | Muy común | Atacante físico |
-| 066 | Riscabra | Común | Final | — | Común | Atacante resistente |
-| 067 | Periván | Tierra | → Magmalión (26) | Santa Cruz: muros y malpaíses | Común | Explorador |
-| 068 | Magmalión | Tierra/Infernal | Final | — | Poco común | Atacante físico |
-| 069 | Peláris | Aire | → Abisarda (24) | Costas de La Gomera y El Hierro | Común | Explorador |
-| 070 | Abisarda | Agua/Aire | Final | — | Poco común | Atacante mágico |
-| 071 | Azulina | Aire | → Cielazul (18) | Pinar de Las Cañadas | Poco común | Velocista |
-| 072 | Cielazul | Aire | → Coronazul (36) | — | Rara | Atacante rápido |
-| 073 | Coronazul | Aire/Plasma | Final | Teide | Muy rara | Atacante mágico y apoyo |
-| 074 | Canarín | Aire | → Timplario (22) | Tenerife y La Gomera | Común | Apoyo |
-| 075 | Timplario | Aire/Mental | Final | — | Poco común | Apoyo y control |
-| 076 | Guacán | Oscuridad | → Tibicán (30) | Cueva del Viento, de noche | Poco común | Atacante físico |
-| 077 | Tibicán | Oscuridad/Infernal | Final | — | Rara | Atacante físico |
-| 078 | Gofrón | Planta/Tierra | No evoluciona | Medianías del norte de Tenerife | Poco común | Tanque físico |
-| 079 | Teazón | Planta/Infernal | No evoluciona | Pinar canario | Poco común | Atacante resistente |
-| 080 | Lagartitán | Tierra | No evoluciona | El Hierro, en la Fuga de Gorreta | Muy rara | Atacante resistente |
-| 081 | Arenín | Agua | → Escualión (30) | Buceo en el Mar de las Calmas | Poco común | Atacante de emboscada |
-| 082 | Escualión | Agua/Tierra | Final | — | Rara | Atacante físico |
-| 083 | Viejarrón | Agua | No evoluciona | Buceo en el Mar de las Calmas | Común | Tanque mágico |
+| Nº | Nombre | Tipos | Línea | Dónde aparece | Rareza | Rol | Silueta | Origen |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 065 | Baifín | Común | → Riscabra (20) | Majadas de Tenerife | Muy común | Atacante físico | Cabrito | Canarias |
+| 066 | Riscabra | Común | Final | — | Común | Atacante resistente | Cabra | Canarias |
+| 067 | Periván | Tierra | No evoluciona | Santa Cruz: muros y malpaíses | Común | Explorador | Geco | Canarias |
+| 068 | Peláris | Aire | → Abisarda (24) | Costas de La Gomera y El Hierro | Común | Explorador | Ave marina | Canarias |
+| 069 | Abisarda | Agua/Aire | Final | — | Poco común | Atacante mágico | Ave buceadora | Canarias |
+| 070 | Azulina | Aire | → Coronazul (32) | Pinar de Las Cañadas | Poco común | Velocista | Pinzón | Tenerife (endémico) |
+| 071 | Coronazul | Aire/Plasma | Final | Teide | Muy rara | Atacante mágico y apoyo | Ave de corona solar | Tenerife |
+| 072 | Canarín | Aire | No evoluciona | Tenerife y La Gomera | Común | Apoyo | Pájaro cantor | Canarias |
+| 073 | Guacán | Oscuridad | → Tibicán (30) | Cueva del Viento, de noche | Poco común | Atacante físico | Perro lanudo | Canarias (folclore) |
+| 074 | Tibicán | Oscuridad/Infernal | Final | — | Rara | Atacante físico | Perro demoníaco | Canarias (folclore) |
+| 075 | Gofrón | Planta/Tierra | No evoluciona | Medianías del norte de Tenerife | Poco común | Tanque físico | Cuadrúpedo con muela de molino | Canarias |
+| 076 | Teazón | Planta/Infernal | No evoluciona | Pinar canario | Poco común | Atacante resistente | Pino que camina | Canarias |
+| 077 | Gallotia simonyi | Tierra | No evoluciona | El Hierro, en la Fuga de Gorreta | Muy rara | Atacante resistente | Lagarto gigante | El Hierro (endémico) |
+| 078 | Arenín | Agua | → Escualión (30) | Buceo en el Mar de las Calmas | Poco común | Atacante de emboscada | Tiburón plano joven | Canarias |
+| 079 | Escualión | Agua/Tierra | Final | — | Rara | Atacante físico | Angelote | Canarias |
+| 080 | Viejarrón | Agua/Planta | No evoluciona | Buceo en el Mar de las Calmas | Común | Tanque mágico | Pez loro | Canarias |
+| 081 | Almadrabón | Agua | No evoluciona | Prólogo en Cádiz: la almadraba | Rara | Velocista físico | Atún | Estrecho de Gibraltar |
 
 ### Capítulo 6. Zaragoza, Aragón y el Pirineo (1808–1898)
 
-| Nº | Nombre | Tipos | Línea | Dónde aparece | Rareza | Rol |
-| --- | --- | --- | --- | --- | --- | --- |
-| 084 | Ursalín | Común | → Ursabral (22) | Pirineo: valles de Ansó y Hecho | Poco común | Atacante físico |
-| 085 | Ursabral | Común/Tierra | → Basajaur (40) | — | Rara | Atacante resistente |
-| 086 | Basajaur | Ancestral/Tierra | Final | — | Muy rara | Tanque físico |
-| 087 | Quebravén | Aire | → Osifrago (30) | Ordesa | Poco común | Atacante físico |
-| 088 | Osifrago | Aire/Tierra | Final | — | Rara | Atacante que rompe defensas |
-| 089 | Brumandra | Agua | → Nivamandra (28) | Ibones del Pirineo | Común | Apoyo |
-| 090 | Nivamandra | Agua/Hielo | Final | — | Poco común | Tanque mágico |
-| 091 | Armiñel | Hielo | No evoluciona | Pirineo, en invierno | Rara | Velocista |
-| 092 | Marmel | Común | No evoluciona | Pirineo, en Benasque | Común | Defensor pequeño |
-| 093 | Bombarín | Infernal | → Bombardrak (26) | Riberas de Zaragoza | Común | Atacante mágico |
-| 094 | Bombardrak | Acero/Infernal | Final | — | Poco común | Atacante resistente |
-| 095 | Cocorán | Oscuridad/Espectral | No evoluciona | Fuendetodos, de noche | Rara | Control |
-| 096 | Centellón | Plasma/Eléctrico | No evoluciona | Puertos del Pirineo, con tormenta | Muy rara | Atacante mágico veloz |
+| Nº | Nombre | Tipos | Línea | Dónde aparece | Rareza | Rol | Silueta | Origen |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 082 | Ursalín | Común | → Ursabral (22) | Pirineo: valles de Ansó y Hecho | Poco común | Atacante físico | Osezno | Pirineo |
+| 083 | Ursabral | Común/Tierra | → Basajaur (40) | — | Rara | Atacante resistente | Oso pardo | Pirineo |
+| 084 | Basajaur | Ancestral/Tierra | Final | — | Muy rara | Tanque físico | Gigante del bosque | País Vasco y Navarra (folclore) |
+| 085 | Quebravén | Aire | → Osifrago (30) | Ordesa | Poco común | Atacante físico | Buitre joven | Pirineo |
+| 086 | Osifrago | Aire/Tierra | Final | — | Rara | Atacante que rompe defensas | Quebrantahuesos | Pirineo |
+| 087 | Brumandra | Agua | → Nivamandra (28) | Ibones del Pirineo | Común | Apoyo | Salamandra | Pirineo |
+| 088 | Nivamandra | Agua/Hielo | Final | — | Poco común | Tanque mágico | Salamandra de escarcha | Pirineo |
+| 089 | Armiñel | Hielo | No evoluciona | Pirineo, en invierno | Rara | Velocista | Armiño | Pirineo |
+| 090 | Marmel | Común | No evoluciona | Pirineo, en Benasque | Común | Defensor pequeño | Marmota | Pirineo |
+| 091 | Bombarín | Infernal | → Bombardrak (26) | Riberas de Zaragoza | Común | Atacante mágico | Escarabajo pequeño | Península |
+| 092 | Bombardrak | Acero/Infernal | Final | — | Poco común | Atacante resistente | Escarabajo cañón | Península |
+| 093 | Cocorán | Oscuridad/Espectral | No evoluciona | Fuendetodos, de noche | Rara | Control | Sombra con forma (el Coco) | Folclore peninsular |
+| 094 | Centellón | Plasma/Eléctrico | No evoluciona | Puertos del Pirineo, con tormenta | Muy rara | Atacante mágico veloz | Esfera de plasma | Pirineo |
+| 095 | Oronjín | Planta | → Matamoscón (24) | Bosques del Pirineo, en otoño | Común | Apoyo | Seta cerrada, como un huevo | Pirineo y Cataluña |
+| 096 | Matamoscón | Planta/Mental | Final | — | Poco común | Control de estado | Seta de sombrero rojo | Pirineo y Cataluña |
 
 ### Capítulo 7. Las Palmas, Madrid y el Ebro (1898–1939)
 
-| Nº | Nombre | Tipos | Línea | Dónde aparece | Rareza | Rol |
-| --- | --- | --- | --- | --- | --- | --- |
-| 097 | Gavirol | Común/Aire | → Aeralmar (22) | Puerto de la Luz, en Las Palmas | Muy común | Explorador |
-| 098 | Aeralmar | Común/Aire | Final | — | Común | Atacante rápido |
-| 099 | Pulpensa | Agua/Mental | No evoluciona | Playa de Las Canteras | Poco común | Control |
-| 100 | Palmerón | Planta | No evoluciona | Palmerales de Las Palmas | Común | Tanque mixto |
-| 101 | Nutrín | Agua | → Lutrón (26) | Ebro | Poco común | Velocista físico |
-| 102 | Lutrón | Agua | Final | — | Rara | Atacante físico veloz |
-| 103 | Grulín | Aire | → Grúvex (30) | Ebro, en invierno | Común | Explorador |
-| 104 | Grúvex | Aire/Acero | Final | — | Poco común | Defensor |
-| 105 | Silurón | Agua | No evoluciona | Embalses del Ebro, en Mequinenza | Rara | Tanque físico |
-| 106 | Jabatón | Común | → Jabalión (24) | Riberas del Ebro y la Casa de Campo | Muy común | Atacante físico |
-| 107 | Jabalión | Común/Tierra | Final | — | Común | Atacante físico |
+| Nº | Nombre | Tipos | Línea | Dónde aparece | Rareza | Rol | Silueta | Origen |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 097 | Pulpensa | Agua/Mental | No evoluciona | Playa de Las Canteras | Poco común | Control | Pulpo | Canarias |
+| 098 | Tamborón | Agua | No evoluciona | Playa de Las Canteras | Común | Tanque mixto | Pez globo | Canarias |
+| 099 | Nutrín | Agua | → Lutrón (26) | Ebro | Poco común | Velocista físico | Nutria joven | Península |
+| 100 | Lutrón | Agua | Final | — | Rara | Atacante físico veloz | Nutria | Península |
+| 101 | Grulín | Aire | → Grúvex (30) | Ebro, en invierno | Común | Explorador | Grulla joven | Península |
+| 102 | Grúvex | Aire/Acero | Final | — | Poco común | Defensor | Grulla de cuello de grúa | Península |
+| 103 | Silurón | Agua | No evoluciona | Embalses del Ebro, en Mequinenza | Rara | Tanque físico | Siluro | Ebro (introducido) |
+| 104 | Jabatón | Común | → Jabalión (24) | Riberas del Ebro y la Casa de Campo | Muy común | Atacante físico | Jabato | Península |
+| 105 | Jabalión | Común/Tierra | Final | — | Común | Atacante físico | Jabalí | Península |
 
 ### Capítulo 8. Asturias (1939–1975, propuesta)
 
 El GDD tenía el capítulo 8 por decidir. El prompt propone Asturias; aquí se da por buena,
 pendiente del autor.
 
-| Nº | Nombre | Tipos | Línea | Dónde aparece | Rareza | Rol |
-| --- | --- | --- | --- | --- | --- | --- |
-| 108 | Toprón | Tierra | → Ferrumbrak (30) | Cuencas mineras | Común | Explorador subterráneo |
-| 109 | Ferrumbrak | Tierra/Acero | Final | — | Poco común | Atacante físico resistente |
-| 110 | Carboria | Tierra | → Grisón (30) | Minas | Común | Atacante de desgaste |
-| 111 | Grisón | Tierra/Infernal | Final | — | Poco común | Atacante pesado |
-| 112 | Rayolito | Tierra/Eléctrico | → Tronador (32) | Prados tras la tormenta | Poco común | Defensor |
-| 113 | Tronador | Eléctrico/Tierra | Final | — | Rara | Tanque mixto |
-| 114 | Ambladín | Común | No evoluciona | Sierra del Sueve | Poco común | Velocista |
-| 115 | Urogallón | Aire/Planta | No evoluciona | Bosque de Muniellos | Rara | Atacante resistente |
-| 116 | Cirialma | Espectral/Luz | No evoluciona | Caminos, de noche | Rara | Apoyo y control |
-| 117 | Arquiteuto | Agua/Oscuridad | No evoluciona | Costa de Luarca, de noche | Muy rara | Tanque mágico |
-| 118 | Musguín | Planta/Oscuridad | No evoluciona | Picos de Europa | Poco común | Control |
+| Nº | Nombre | Tipos | Línea | Dónde aparece | Rareza | Rol | Silueta | Origen |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 106 | Toprón | Tierra | No evoluciona | Cuencas mineras | Común | Explorador subterráneo | Topo | Península (endémico) |
+| 107 | Carboria | Tierra | → Grisón (30) | Minas | Común | Atacante de desgaste | Criatura de carbón | Asturias |
+| 108 | Grisón | Tierra/Infernal | Final | — | Poco común | Atacante pesado | Criatura de grisú | Asturias |
+| 109 | Rayolito | Tierra/Eléctrico | → Tronador (32) | Prados tras la tormenta | Poco común | Defensor | Piedra viva | Asturias y Galicia (folclore) |
+| 110 | Tronador | Eléctrico/Tierra | Final | — | Rara | Tanque mixto | Gólem de piedra del rayo | Asturias y Galicia (folclore) |
+| 111 | Ambladín | Común | No evoluciona | Sierra del Sueve | Poco común | Velocista | Poni | Asturias |
+| 112 | Urogallón | Aire/Planta | No evoluciona | Bosque de Muniellos | Rara | Atacante resistente | Gallo del bosque | Cordillera Cantábrica |
+| 113 | Cirialma | Espectral/Luz | No evoluciona | Caminos, de noche | Rara | Apoyo y control | Procesión de luces | Asturias y Galicia (folclore) |
+| 114 | Arquiteuto | Agua/Oscuridad | No evoluciona | Costa de Luarca, de noche | Muy rara | Tanque mágico | Calamar gigante | Cantábrico |
+| 115 | Musguín | Planta/Oscuridad | No evoluciona | Picos de Europa | Poco común | Control | Duende de musgo | Cantabria (folclore) |
 
 ### Rutas entre capítulos (mitología de otras regiones)
 
-| Nº | Nombre | Tipos | Línea | Dónde aparece | Rareza | Rol |
-| --- | --- | --- | --- | --- | --- | --- |
-| 119 | Percebín | Agua/Tierra | → Barnaclán (28) | Ruta de Galicia: Costa da Morte | Común | Defensor |
-| 120 | Barnaclán | Agua/Aire | Final | — | Poco común | Explorador rápido |
-| 121 | Pesantón | Mental/Oscuridad | No evoluciona | Ruta de Cataluña | Rara | Control (sueño) |
-| 122 | Yunquín | Agua/Acero | No evoluciona | Ruta de Mallorca: Serra de Tramuntana | Muy rara | Apoyo |
-| 123 | Fameliet | Mental | No evoluciona | Ruta de Mallorca | Rara | Apoyo |
-| 124 | Bellotín | Planta | → Encinarca (28) | Ruta de Extremadura: la dehesa | Común | Apoyo |
-| 125 | Encinarca | Planta/Tierra | Final | — | Poco común | Tanque mixto |
-| 126 | Ojancón | Ancestral/Oscuridad | No evoluciona | Ruta de Cantabria | Muy rara | Atacante físico pesado |
+| Nº | Nombre | Tipos | Línea | Dónde aparece | Rareza | Rol | Silueta | Origen |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 116 | Percebín | Agua/Tierra | → Barnaclán (28) | Ruta de Galicia: Costa da Morte | Común | Defensor | Percebe | Galicia |
+| 117 | Barnaclán | Agua/Aire | Final | — | Poco común | Explorador rápido | Ganso | Leyenda medieval |
+| 118 | Pesantón | Mental/Oscuridad | No evoluciona | Ruta de Cataluña | Rara | Control (sueño) | Gato de pesadilla | Cataluña (folclore) |
+| 119 | Yunquín | Agua/Acero | No evoluciona | Ruta de Mallorca: Serra de Tramuntana | Muy rara | Apoyo | Sapo pequeño | Mallorca (endémico) |
+| 120 | Fameliet | Mental | No evoluciona | Ruta de Mallorca | Rara | Apoyo | Espíritu diminuto | Mallorca (folclore) |
+| 121 | Bellotín | Planta | → Encinarca (28) | Ruta de Extremadura: la dehesa | Común | Apoyo | Bellota | Extremadura |
+| 122 | Encinarca | Planta/Tierra | Final | — | Poco común | Tanque mixto | Encina que camina | Extremadura |
+| 123 | Ojancón | Ancestral/Oscuridad | No evoluciona | Ruta de Cantabria | Muy rara | Atacante físico pesado | Gigante de un ojo | Cantabria (folclore) |
 
 ### Zonas opcionales
 
-| Nº | Nombre | Tipos | Dónde aparece | Rareza | Rol |
-| --- | --- | --- | --- | --- | --- |
-| 127 | Huesombra | Tierra/Espectral | Atapuerca | Rara | Control defensivo |
-| 128 | Eulalba | Luz/Hielo | Mérida | Rara | Apoyo |
-| 129 | Gárgoxel | Tierra/Oscuridad | Burgos | Rara | Defensor de emboscada |
-| 130 | Mafasco | Plasma/Espectral | Llanos de Mafasca, en Fuerteventura (zona nueva, propuesta) | Muy rara | Atacante mágico y control |
+| Nº | Nombre | Tipos | Línea | Dónde aparece | Rareza | Rol | Silueta | Origen |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 124 | Huesombra | Tierra/Espectral | No evoluciona | Atapuerca | Rara | Control defensivo | Animal de cueva | Invención del juego |
+| 125 | Eulalba | Luz/Hielo | No evoluciona | Mérida | Rara | Apoyo | Paloma | Mérida (tradición) |
+| 126 | Gárgoxel | Tierra/Oscuridad | No evoluciona | Burgos | Rara | Defensor de emboscada | Gárgola | Burgos |
+| 127 | Mafasco | Plasma/Espectral | No evoluciona | Llanos de Mafasca, en Fuerteventura (zona nueva, propuesta) | Muy rara | Atacante mágico y control | Luz errante | Fuerteventura (folclore) |
+| 128 | Malpaisín | Común | No evoluciona | Llanos de Mafasca: el malpaís | Rara | Velocista | Musaraña | Fuerteventura y Lanzarote (endémica) |
+
+### Especial
+
+| Nº | Nombre | Tipos | Línea | Dónde aparece | Rareza | Rol | Silueta | Origen |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 129 | Papemímico | Oscuridad/Acero | No evoluciona | Dentro de tinajas y papeleras de cualquier capítulo (10 % al registrarlas) | Especial | Atacante resistente | Recipiente con mandíbula | Invención del juego |
 
 ### Legendarios (uno por partida)
 
-| Nº | Nombre | Tipos | Dónde aparece | Rol |
-| --- | --- | --- | --- | --- |
-| 131 | Mari | Mental/Plasma **[VERIFICAR]** | Anboto (guarida de legendario) | Tanque mágico y control |
-| 132 | Cuélebre | Ancestral/Agua | Covadonga | Tanque físico |
-| 133 | Guayota | Infernal/Oscuridad | Teide, tras el capítulo 5 | Atacante pesado mixto |
-| 134 | Nuberu | Eléctrico/Aire | Puertos de Asturias, con tormenta | Atacante mágico y control |
-| 135 | Tarasca | Ancestral/Oscuridad | Granada, en el Corpus, tras la Liga | Tanque físico y control |
-| 136 | Alcorax | Ancestral/Infernal | Zaragoza, tras el gimnasio | Atacante mágico pesado |
-| 137 | Babieca | Común/Acero | Burgos (San Pedro de Cardeña), con el ánima del Cid | Velocista físico |
-| 138 | Rocinante | Común | La Mancha, ruta del capítulo 4 | Apoyo evasivo |
-| 139 | Platero | Común | Moguer, desde el capítulo 3 | Apoyo defensivo |
-| 140 | Copito de Nieve | Común | Barcelona, tras la Liga | Tanque físico |
-| 141 | Ratón Pérez | Común/Mental | Madrid, en la calle del Arenal (capítulo 7) | Apoyo veloz |
+| Nº | Nombre | Tipos | Dónde aparece | Rol | Silueta | Origen |
+| --- | --- | --- | --- | --- | --- | --- |
+| 130 | Mari | Mental/Plasma **[VERIFICAR]** | Anboto (guarida de legendario) | Tanque mágico y control | Diosa de agua y niebla | País Vasco (mitología) |
+| 131 | Cuélebre | Ancestral/Agua | Covadonga | Tanque físico | Serpiente alada | Asturias y Cantabria (mitología) |
+| 132 | Guayota | Infernal/Oscuridad | Teide, tras el capítulo 5 | Atacante pesado mixto | Volcán con forma | Tenerife (mitología guanche) |
+| 133 | Magec | Luz/Ancestral | Cumbre del Teide, al amanecer, tras vencer a Guayota | Atacante mágico | Disco solar con forma | Tenerife (mitología guanche) |
+| 134 | Nuberu | Eléctrico/Aire | Puertos de Asturias, con tormenta | Atacante mágico y control | Nube de tormenta | Asturias (mitología) |
+| 135 | Tarasca | Ancestral/Oscuridad | Granada, en el Corpus, tras la Liga | Tanque físico y control | Dragón de procesión | Corpus Christi |
+| 136 | Alcorax | Ancestral/Infernal | Zaragoza, tras el gimnasio | Atacante mágico pesado | Dragón alado | Aragón (tradición de San Jorge) |
+| 137 | Babieca | Común/Acero | Burgos (San Pedro de Cardeña), con el ánima del Cid | Velocista físico | Caballo de guerra | Castilla |
+| 138 | Rocinante | Común | La Mancha, ruta del capítulo 4 | Apoyo evasivo | Caballo flaco | El Quijote |
+| 139 | Platero | Común | Moguer, desde el capítulo 3 | Apoyo defensivo | Burro | Platero y yo |
+| 140 | Copito de Nieve | Común | Barcelona, tras la Liga | Tanque físico | Gorila albino | Zoo de Barcelona |
+| 141 | Ratón Pérez | Común/Mental | Madrid, en la calle del Arenal (capítulo 7) | Apoyo veloz | Ratón | Madrid (Luis Coloma) |
 
 ### Fósiles (los revive el Dr. Jangel)
 
-| Nº | Nombre | Tipos | Taxón y yacimiento | Dónde se consigue | Rol |
+| Nº | Nombre | Tipos | Taxón, yacimiento y dónde se consigue | Rol | Silueta |
 | --- | --- | --- | --- | --- | --- |
-| 142 | Orcegar | Ancestral | *Homotherium latidens*, Venta Micena (Orce) | Regalo del pastor de Orce, capítulo 1 | Velocista físico |
-| 143 | Machairón | Ancestral/Común | *Machairodus aphanistus*, Cerro de los Batallones (Madrid) | Capítulo 4 | Atacante físico pesado |
-| 144 | Hienarca | Ancestral | *Pachycrocuta brevirostris*, Venta Micena | Orce, al volver con el laboratorio abierto | Atacante resistente |
-| 145 | Padulonte | Ancestral/Hielo | Mamut lanudo de Padul (Granada) **[VERIFICAR especie]** | Padul, al volver | Tanque físico |
-| 146 | Concavex | Ancestral | *Concavenator corcovatus*, Las Hoyas (Cuenca) | Ruta del capítulo 2 | Atacante físico |
-| 147 | Pelicanox | Ancestral/Agua | *Pelecanimimus polyodon*, Las Hoyas | Ruta del capítulo 2 | Velocista |
-| 148 | Iberomés | Ancestral/Aire | *Iberomesornis romerali*, Las Hoyas | Ruta del capítulo 2 | Velocista |
-| 149 | Turiasar | Ancestral/Tierra | *Turiasaurus riodevensis*, Riodeva (Teruel) | Capítulo 6 | Tanque mixto |
-| 150 | Testudrago | Ancestral/Tierra | *Centrochelys burchardi*, Tenerife | Capítulo 5 | Tanque físico |
+| 142 | Orcegar | Ancestral | *Homotherium latidens*, Venta Micena (Orce). Regalo del pastor de Orce, capítulo 1 | Velocista físico | Felino de dientes de cimitarra |
+| 143 | Machairón | Ancestral/Común | *Machairodus aphanistus*, Cerro de los Batallones (Madrid). Capítulo 4 | Atacante físico pesado | Felino de dientes de sable |
+| 144 | Hienarca | Ancestral | *Pachycrocuta brevirostris*, Venta Micena. Orce, al volver con el laboratorio abierto | Atacante resistente | Hiena gigante |
+| 145 | Padulonte | Ancestral/Hielo | Mamut lanudo de Padul (Granada) [VERIFICAR especie]. Padul, al volver | Tanque físico | Mamut |
+| 146 | Concavex | Ancestral | *Concavenator corcovatus*, Las Hoyas (Cuenca). Ruta del capítulo 2 | Atacante físico | Terópodo con joroba |
+| 147 | Pelicanox | Ancestral/Agua | *Pelecanimimus polyodon*, Las Hoyas. Ruta del capítulo 2 | Velocista | Dinosaurio de hocico largo |
+| 148 | Iberomés | Ancestral/Aire | *Iberomesornis romerali*, Las Hoyas. Ruta del capítulo 2 | Velocista | Ave primitiva |
+| 149 | Turiasar | Ancestral/Tierra | *Turiasaurus riodevensis*, Riodeva (Teruel). Capítulo 6 | Tanque mixto | Saurópodo |
+| 150 | Testudrago | Ancestral/Tierra | *Centrochelys burchardi*, Tenerife. Capítulo 5 | Tanque físico | Tortuga gigante |
 
 ---
 
@@ -582,7 +649,7 @@ pendiente del autor.
 5. **Ubicación y rareza:** evolución final de inicial.
 6. **Rol:** tanque físico.
    - Puntos débiles: es lento (Celeridad 60) y tiene poca Magia.
-   - Con la tabla provisional, es débil a Eléctrico y a Tierra.
+   - Con la tabla del autor, es muy débil a Plasma (×4) y débil a Tierra y Eléctrico.
 7. **Estadísticas:** 100 / 95 / 130 / 55 / 90 / 60 = **530**.
 8. **EXP:** ×1,20.
 9. **Movimientos:**
@@ -617,26 +684,31 @@ pendiente del autor.
 
 1. **Nombre:** Dralín.
 2. **Tipos:** Planta. Es un retoño de drago.
-3. **Línea:** Dralín → Dracauro (nivel 16) → Dracendro (nivel 36).
+3. **Línea:** Dralín → Dracendro (nivel 26). Es la única inicial de dos formas: evoluciona
+   más tarde que las otras a su segunda forma, pero esa ya es la final.
 4. **Inspiración:** *Hecho*: el drago canario (*Dracaena draco*) y su savia roja.
 5. **Ubicación y rareza:** inicial.
-6. **Rol:** apoyo. Aguanta y desgasta más que pega.
-7. **Estadísticas:** 50 / 42 / 52 / 60 / 62 / 44 = **310**.
+6. **Rol:** apoyo resistente. Aguanta y desgasta más que pega.
+7. **Estadísticas:** 54 / 44 / 56 / 62 / 66 / 48 = **330**. Algo más que las otras iniciales,
+   porque pasa diez niveles más en su primera forma.
 8. **EXP:** ×1,00.
 9. **Movimientos:**
    - **Varazo** (Planta, físico, 45).
    - **Hojarasca** (Planta, mágico, 55).
    - **Sopor** (Planta, estado, 75 %): duerme al rival.
    - **Desplante** (Común, estado): −1 al Escudo del rival.
-10. **Bestiario:** «El drago crece en Canarias, Madeira, Cabo Verde y Marruecos. Su savia se
-    vuelve roja al secarse, y se vendía como “sangre de drago”».
+   - **Savia de dragón** (Planta, mágico, 60): recupera la mitad del daño que hace. La aprende
+     al nivel 20.
+10. **Bestiario:** «El drago crece en Canarias, Madeira, Cabo Verde y Marruecos. No forma
+    anillos en el tronco: su edad solo se estima contando las veces que se ha ramificado. Su
+    savia se vuelve roja al secarse, y se vendía como “sangre de drago”».
 11. **Imagen:**
     - **Silueta:** retoño pequeño y rechoncho: tronco corto y gordo sobre raíces que hacen de
       pies.
     - **Paleta:** tronco gris plata con la base rojiza; hojas verde azulado.
     - **Detalles:**
       - Penacho de hojas largas y rígidas como espadas, abierto en abanico.
-      - Ya tiene una pequeña bifurcación en la copa.
+      - Ya tiene una pequeña bifurcación en la copa: la primera de muchas.
       - Una gota de savia roja en una herida de la corteza.
     - **Cara:** dos ojos oscuros y redondos en el tronco, bajo las hojas; sin boca visible.
     - **Postura:** erguido y con los «pies» de raíz bien plantados, como un niño que aguanta el
@@ -645,48 +717,13 @@ pendiente del autor.
     - [El Drago Milenario (Wikipedia)](https://en.wikipedia.org/wiki/El_Drago_Milenario).
     - [Estudio sobre el drago, ULPGC](https://mdc.ulpgc.es/files/original/b3874bba159d4212f63383b14ff7522cf5d38bcb.pdf).
 
-#### 008 Dracauro
-
-1. **Nombre:** Dracauro.
-2. **Tipos:** Planta.
-3. **Línea:** viene de Dralín (nivel 16) y evoluciona a Dracendro (nivel 36).
-4. **Inspiración:** *Hecho*: el drago joven, que ramifica en copa.
-5. **Ubicación y rareza:** evolución de inicial.
-6. **Rol:** apoyo resistente.
-7. **Estadísticas:** 70 / 55 / 72 / 78 / 80 / 50 = **405**.
-8. **EXP:** ×1,10.
-9. **Movimientos:**
-   - **Hojarasca** (Planta, mágico, 55).
-   - **Savia de dragón** (Planta, mágico, 60): recupera la mitad del daño que hace.
-   - **Sopor** (Planta, estado, 75 %): duerme al rival.
-   - **Polvareda** (Tierra, mágico, 45).
-10. **Bestiario:** «El drago no forma anillos en el tronco. Su edad solo se puede estimar
-    contando las veces que se ha ramificado».
-11. **Imagen:**
-    - **Silueta:** tronco grueso y corto, y una copa en forma de paraguas que ya se abre en
-      varias ramas.
-    - **Paleta:** corteza gris plata con vetas rojizas, hojas verde azulado y resina roja
-      brillante.
-    - **Detalles:**
-      - Las ramas forman una corona irregular.
-      - Hojas lanceoladas en penachos al final de cada rama.
-      - Raíces más largas que sostienen el cuerpo como cuatro patas cortas.
-      - Resina roja que gotea de dos o tres cortes.
-    - **Cara:** ojos verdes y serenos en el tronco, bajo la copa.
-    - **Postura:** inmóvil y protectora, con la copa inclinada como para dar sombra.
-    - **Diferencia con Dralín:** el tronco engrosa, la copa se ramifica en paraguas y las raíces
-      se vuelven patas.
-12. **Fuentes:**
-    - [El Drago Milenario (Wikipedia)](https://en.wikipedia.org/wiki/El_Drago_Milenario).
-    - [Drago Milenario (Atlas Obscura)](https://www.atlasobscura.com/places/drago-milenario-millennial-dragon-tree).
-
-#### 009 Dracendro
+#### 008 Dracendro
 
 1. **Nombre:** Dracendro.
 2. **Tipos:**
    - Planta.
    - Ancestral: un drago de siglos, unido al mito del dragón Ladón.
-3. **Línea:** forma final. Viene de Dracauro (nivel 36).
+3. **Línea:** forma final. Viene de Dralín (nivel 26).
 4. **Inspiración:**
    - *Hecho*: el Drago Milenario de Icod de los Vinos.
    - *Tradición*: la leyenda que hace nacer los dragos de la sangre del dragón Ladón, que
@@ -694,7 +731,7 @@ pendiente del autor.
 5. **Ubicación y rareza:** evolución final de inicial.
 6. **Rol:** tanque mixto y apoyo. Aguanta golpes de los dos tipos y se cura.
    - Puntos débiles: es lento y tiene poca Fuerza.
-   - Con la tabla provisional, es débil a Infernal, Aire, Hielo, Acero y Mental.
+   - Con la tabla del autor, es muy débil a Hielo (×4) y débil a Ancestral.
 7. **Estadísticas:** 100 / 70 / 100 / 100 / 105 / 55 = **530**.
 8. **EXP:** ×1,20.
 9. **Movimientos:**
@@ -720,14 +757,15 @@ pendiente del autor.
     - **Postura:** majestuosa e inmóvil, como un monumento.
     - **Lo que no debe tener:** alas, cabeza de reptil ni anatomía de dragón. Lo «dragón» es
       solo el nombre y la sangre roja.
-    - **Diferencia con Dracauro:** la escala, la copa de muchos brazos y las raíces columna.
+    - **Diferencia con Dralín:** la escala; el tronco engrosa y se retuerce, la copa se
+      ramifica en muchos brazos y las raíces se vuelven columnas.
 12. **Fuentes:**
     - [El Drago Milenario (Wikipedia)](https://en.wikipedia.org/wiki/El_Drago_Milenario).
     - [Drago Milenario (Atlas Obscura)](https://www.atlasobscura.com/places/drago-milenario-millennial-dragon-tree).
 
 ### Capítulo 1
 
-#### 010 Zumbrel
+#### 009 Zumbrel
 
 1. **Nombre:** Zumbrel.
 2. **Tipos:** Aire. Es un insecto volador.
@@ -757,7 +795,7 @@ pendiente del autor.
     - [Natural History Museum, 2018](https://www.nhm.ac.uk/discover/news/2018/june/dragonfly-wings-could-inspire-new-aeroplane-flight-control).
     - [Estudio sobre el vuelo de las libélulas (PMC)](https://pmc.ncbi.nlm.nih.gov/articles/PMC2607445).
 
-#### 011 Diablisca
+#### 010 Diablisca
 
 1. **Nombre:** Diablisca.
 2. **Tipos:**
@@ -798,11 +836,12 @@ pendiente del autor.
     - [Caballucos del Diablo (es-academic)](https://es-academic.com/dic.nsf/eswiki/200500).
     - **[VERIFICAR]** con bibliografía etnográfica cántabra, por ejemplo Manuel Llano.
 
-#### 012 Brezuco
+#### 011 Brezuco
 
 1. **Nombre:** Brezuco.
 2. **Tipos:** Oscuridad. Es travieso, nocturno y escurridizo.
-3. **Línea:** Brezuco → Trasgorn (nivel 14).
+3. **Línea:** Brezuco → Trasgorn, con el **Gorro colorado** (objeto de evolución escondido en
+   la Alhambra).
 4. **Inspiración:**
    - *Tradición*: el duende doméstico.
    - *Licencia*: la capucha de brezo.
@@ -829,12 +868,12 @@ pendiente del autor.
     - **Postura:** agazapado, con algo robado entre las manos (una llave o una cuchara).
 12. **Fuentes:** [*Duende*, Diccionario de la lengua española](https://dle.rae.es/duende).
 
-#### 013 Trasgorn
+#### 012 Trasgorn
 
 1. **Nombre:** Trasgorn.
 2. **Tipos:** Oscuridad. Se quita el Espectral del prompt: el trasgu es un trasgo, no un
    alma.
-3. **Línea:** viene de Brezuco (nivel 14). Forma final.
+3. **Línea:** viene de Brezuco cuando se le da el Gorro colorado. Forma final.
 4. **Inspiración:** *Tradición asturiana, cántabra y gallega*: el trasgu.
    - Cojo, con un gorro rojo picudo y un agujero en la mano izquierda.
    - Revuelve la casa por la noche.
@@ -865,15 +904,15 @@ pendiente del autor.
     - **Postura:** saltando sobre un pie, con unos granos que se le escapan de la mano agujereada.
     - **Lo que no debe ser:** un demonio genérico ni un humano disfrazado. Es una criatura del
       hogar.
-    - **Diferencia con Brezuco:** se quita la capucha y aparece el gorro rojo. Crece en altura y
-      en descaro.
+    - **Diferencia con Brezuco:** cambia la capucha de brezo por el gorro rojo. Crece en altura
+      y en descaro.
 12. **Fuentes:**
     - [Trasgu (Wikipedia)](https://en.wikipedia.org/wiki/Trasgu).
     - [Trasgo (EcuRed)](https://www.ecured.cu/Trasgo).
     - **[VERIFICAR]** la tarea de la linaza en una recopilación académica, por ejemplo la de
       Aurelio de Llano.
 
-#### 014 Túmbriz
+#### 013 Túmbriz
 
 1. **Nombre:** Túmbriz.
 2. **Tipos:**
@@ -905,7 +944,7 @@ pendiente del autor.
     - [Topillo (EcuRed)](https://www.ecured.cu/Topillo).
     - [Revista *Vida Rural*, MAPA, 2011](https://mapa.gob.es/ministerio/pags/Biblioteca/Revistas/pdf%5FVrural%2FVrural%5F2011%5F330E%5F14%5F18%2Epdf).
 
-#### 015 Barbaflux
+#### 014 Barbaflux
 
 1. **Nombre:** Barbaflux.
 2. **Tipos:** Agua. Es un pez de río.
@@ -936,7 +975,7 @@ pendiente del autor.
     - [Barbo gitano (Wikipedia)](https://en.wikipedia.org/wiki/Andalusian_barbel).
     - [Ficha de *Barbus sclateri* (UICN)](https://www.uicnmed.org/web2007/cd_fwfish/materials/summery/b/Barbus_sclateri.pdf).
 
-#### 016 Abezar
+#### 015 Abezar
 
 1. **Nombre:** Abezar.
 2. **Tipos:** Aire.
@@ -967,7 +1006,7 @@ pendiente del autor.
     - [El abejaruco europeo, MITECO](https://www.miteco.gob.es/content/dam/miteco/es/biodiversidad/publicaciones/especies/abejaruco_europeo_tcm30-100073.pdf).
     - [Gordo et al., 2021](https://www.do-g.de/fileadmin/Ablage/Veroeffentlichen/Vogelwarte/2021_Band_59/Gordo_et_al_The_European_Bee-eater_Merops_apiaster_in_Spain_Spanish_version.pdf).
 
-#### 017 Mandragor
+#### 016 Mandragor
 
 1. **Nombre:** Mandragor.
 2. **Tipos:**
@@ -1004,7 +1043,7 @@ pendiente del autor.
     - [Herbario de la Universidad de Granada](https://herbarium.ugr.es/pages/taxones/flora-singular-de-andalucia-imagenes/pliegos_mandragora_autumnalis?theme=pdf).
     - [Gran Enciclopèdia Catalana](https://www.enciclopedia.cat/gran-enciclopedia-catalana/mandragora).
 
-#### 018 Carapachón
+#### 017 Carapachón
 
 1. **Nombre:** Carapachón. Sustituye a «Tortuluz».
 2. **Tipos:** Agua. Se quita Tierra: el galápago leproso es acuático, y así no repite el tipo
@@ -1040,7 +1079,7 @@ pendiente del autor.
     - [Ficha de *Mauremys leprosa*, Aranzadi](https://monteriza.aranzadi.eus/wp-content/uploads/reptiles/075.mauremys-leprosa.pdf).
     - [Inventario nacional de reptiles, MITECO](https://www.miteco.gob.es/content/dam/miteco/es/biodiversidad/temas/inventarios-nacionales/reptil_2_tcm30-98907.pdf).
 
-#### 019 Alhambrón
+#### 018 Alhambrón
 
 1. **Nombre:** Alhambrón.
 2. **Tipos:**
@@ -1056,7 +1095,7 @@ pendiente del autor.
    - Tras vencerle, aparece salvaje un ejemplar en el Generalife.
 6. **Rol:** atacante resistente: pega y aguanta.
    - Punto débil: es lento.
-   - Con la tabla provisional, es débil a Planta.
+   - Con la tabla del autor, es muy débil a Planta (×4), débil a Aire e inmune a Eléctrico.
 7. **Estadísticas:** 85 / 90 / 95 / 70 / 85 / 55 = **480**. Es el mismo total que ya tiene en
    el juego, que está probado.
 8. **EXP:** ×1,40.
@@ -1085,7 +1124,7 @@ pendiente del autor.
     - [Fernández Puertas, Universidad de Granada](https://digibug.ugr.es/bitstream/handle/10481/2763/Fernndez-Puertas.09.pdf?sequence=1).
     - **[VERIFICAR]** la hipótesis del siglo XI (Bermúdez Pareja, 1967).
 
-#### 020 Broncero
+#### 019 Broncero
 
 1. **Nombre:** Broncero.
 2. **Tipos:** Tierra. Vive en la arena y entierra lo que encuentra.
@@ -1118,7 +1157,7 @@ pendiente del autor.
     - [Seguimiento de peloteros en Doñana (DEIMS)](https://deims.org/dataset/30788977-eda8-4f31-87be-4fb055d14536).
     - [*Anales de Biología*, Universidad de Murcia](https://revistas.um.es/analesbio/article/download/34601/33131/155041).
 
-#### 021 Escarbraz
+#### 020 Escarbraz
 
 1. **Nombre:** Escarbraz.
 2. **Tipos:**
@@ -1150,7 +1189,7 @@ pendiente del autor.
     - **Diferencia con Broncero:** el bronce, el tamaño y el cuerno.
 12. **Fuentes:** [*Scarabaeus sacer* (Wikipedia)](https://en.wikipedia.org/wiki/Scarabaeus_sacer).
 
-#### 022 Mocarabeo
+#### 021 Mocarabeo
 
 1. **Nombre:** Mocarabeo. Sustituye a «Alabastrón», que se confundía con Alhambrón.
 2. **Tipos:**
@@ -1164,7 +1203,7 @@ pendiente del autor.
 5. **Ubicación y rareza:** por evolución. Rara.
 6. **Rol:** tanque de apoyo. Aguanta mucho y cura.
    - Puntos débiles: muy lento (Celeridad 40) y con poca ofensiva.
-   - Con la tabla provisional, es débil a Infernal y a Eléctrico.
+   - Con la tabla del autor, es débil a Tierra, Infernal y Plasma.
 7. **Estadísticas:** 95 / 75 / 120 / 70 / 110 / 40 = **510**.
 8. **EXP:** ×1,20.
 9. **Movimientos:**
@@ -1195,9 +1234,9 @@ pendiente del autor.
     - [Sala de las Dos Hermanas](https://alhambradegranada.org/en/info/nasridpalaces/hallofthetwosisters.asp).
     - [*Cuadernos de la Alhambra*, n.º 50](https://cuadernosdelaalhambra.alhambra-patronato.es/index.php/cdalhambra/article/download/54/101?inline=1).
 
-### Adelanto del capítulo 5: Gofrón
+### Adelanto del capítulo 5: Gofrón, *Gallotia simonyi* y Viejarrón
 
-#### 078 Gofrón
+#### 075 Gofrón
 
 1. **Nombre:** Gofrón.
 2. **Tipos:**
@@ -1216,7 +1255,7 @@ pendiente del autor.
      - Celeridad 20: casi siempre actúa el último.
      - Magia 30: su ofensiva es solo física y moderada.
      - Resistencia mágica 75, regular: los atacantes mágicos le hacen daño de verdad.
-     - Con la tabla provisional, es débil a Planta, Aire y Hielo.
+     - Con la tabla del autor, es muy débil a Aire y a Hielo (×4) e inmune a Eléctrico.
 7. **Estadísticas:** 130 / 90 / 135 / 30 / 75 / 20 = **480**.
 8. **EXP:** ×1,15.
 9. **Movimientos:**
@@ -1252,9 +1291,140 @@ pendiente del autor.
     - [Estudio sobre los molinos aborígenes, ULPGC](https://mdc.ulpgc.es/files/original/8e4d35b7952d2c8ded8bf1a8ee344ab28e0085fd.pdf).
     - [Diccionario histórico del español de Canarias, RAE](https://www.rae.es/tdhle/goffio).
 
-### Movimientos nuevos del capítulo 1
+#### 077 Gallotia simonyi
 
-Usan solo efectos que ya existen en el motor.
+1. **Nombre:** *Gallotia simonyi*, su nombre científico, a petición del autor. Es la única
+   especie del juego con nombre real; en pantalla va sin cursiva.
+2. **Tipos:** Tierra. Vive en riscos y laderas de roca.
+3. **Línea:** no evoluciona.
+4. **Inspiración:** *Hecho*: el lagarto gigante de El Hierro.
+   - Lo describió Steindachner en 1889 con el apellido del naturalista Oscar Simony.
+   - Se dio por extinguido en el siglo XX y se redescubrió en los años setenta en el Risco de
+     Tibataje, en la Fuga de Gorreta **[VERIFICAR el año exacto: 1974 o 1975]**.
+   - Está en peligro crítico y se cría en un centro de recuperación de El Hierro.
+5. **Ubicación y rareza:** El Hierro, en la Fuga de Gorreta. Muy rara.
+6. **Rol:** atacante resistente. Pega fuerte, aguanta golpes físicos y se calienta al sol para
+   ir a más.
+   - Puntos débiles: Magia baja; con la tabla del autor, es débil a Agua, Planta, Aire y Hielo,
+     e inmune a Eléctrico.
+7. **Estadísticas:** 95 / 105 / 100 / 45 / 80 / 75 = **500**.
+8. **EXP:** ×1,20.
+9. **Movimientos:**
+   - **Dentellada** (Común, físico, 60).
+   - **Terronazo** (Tierra, físico, 55, 95 %).
+   - **Risco** *(nuevo)* (Tierra, físico, 85, 90 %). Por el Risco de Tibataje.
+   - **Solana** *(nuevo)* (Común, estado): +1 a la Fuerza y +1 a la Celeridad propias. Como
+     todo reptil, se calienta al sol para moverse.
+10. **Bestiario:** «Lo dieron por extinguido durante buena parte del siglo XX, hasta que
+    apareció en un risco de El Hierro casi inaccesible. Hoy se cría para devolverlo a la
+    isla».
+11. **Imagen:**
+    - **Silueta:** lagarto grande y macizo, de cabeza ancha y alta, cuello grueso y cola larga.
+      Pegado al suelo.
+    - **Paleta:** pardo oscuro y gris, con manchas laterales más claras **[VERIFICAR el
+      patrón]**.
+    - **Detalles:**
+      - Escamas pequeñas y granulosas en el lomo; placas más grandes en la cabeza.
+      - Mejillas abultadas, como las de los machos adultos.
+      - Garras cortas y fuertes, de trepar por roca volcánica.
+    - **Cara:** ojo pequeño y vivo, boca larga.
+    - **Postura:** al sol, sobre una roca, con la cabeza alta.
+    - **Lo que no debe ser:** un dragón ni un dinosaurio. Es un lagarto real, solo que muy
+      grande.
+12. **Fuentes:**
+    - [Lagarto gigante de El Hierro (Wikipedia)](https://en.wikipedia.org/wiki/Simony%27s_giant_lizard).
+    - [Camino natural de El Hierro, MAPA](https://www.mapa.gob.es/en/desarrollo-rural/temas/caminos-naturales/caminos-naturales/sector-canario/hierro/etapa14-circular/default.aspx).
+
+#### 080 Viejarrón
+
+1. **Nombre:** Viejarrón, de *vieja*, el nombre canario del pez.
+2. **Tipos:**
+   - Agua: es un pez de arrecife.
+   - Planta: es herbívoro y pasa el día raspando algas de las rocas. *Licencia*: lleva un
+     césped de algas en el lomo.
+3. **Línea:** no evoluciona.
+4. **Inspiración:** *Hecho*: la vieja (*Sparisoma cretense*), un pez loro del Atlántico
+   oriental y el Mediterráneo, muy común en Canarias y de los pescados más apreciados allí.
+   Sus dientes están soldados en un pico, como el de un loro.
+5. **Ubicación y rareza:** buceando en el Mar de las Calmas (El Hierro). Común.
+6. **Rol:** tanque mágico. Aguanta la magia y se cura; pega poco.
+   - Puntos débiles: Fuerza y Celeridad bajas.
+   - Con la tabla del autor, es débil a Aire y Plasma, y resiste Agua, Tierra y Acero.
+7. **Estadísticas:** 95 / 55 / 70 / 70 / 110 / 60 = **460**.
+8. **EXP:** ×1,05.
+9. **Movimientos:**
+   - **Pico de loro** *(nuevo)* (Agua, físico, 70, 100 %): 20 % de bajar un nivel el Escudo
+     del rival. Raspa como raspa la roca.
+   - **Marejada** (Agua, mágico, 65).
+   - **Hojarasca** (Planta, mágico, 55).
+   - **Remanso** (Agua, estado): recupera la mitad de la Vida.
+   - **Camuflaje de algas** (Agua, estado): +1 al Escudo y +1 a la Resistencia mágica propios.
+10. **Bestiario:** «La vieja tiene los dientes soldados en un pico, como el de un loro, y con
+    él raspa las algas de las rocas. En Canarias es de los pescados más apreciados».
+11. **Imagen:**
+    - **Silueta:** pez de cuerpo ovalado, alto y comprimido de lado, con aletas de pez de
+      verdad: dorsal larga, caudal recta y pectorales que abanica para nadar.
+    - **Paleta:** la de la hembra, que es la más vistosa: rojo en el cuerpo, una mancha amarilla
+      y zonas grises **[VERIFICAR el dibujo exacto de las manchas]**.
+    - **Detalles:**
+      - Escamas grandes y bien marcadas, como tejas.
+      - El pico: los dientes soldados en dos placas blancas que asoman de la boca.
+      - Un césped corto de algas verdes en el lomo, que es licencia.
+    - **Cara:** ojo grande y redondo, de expresión tranquila, casi de abuela; de ahí el nombre
+      en el juego.
+    - **Postura:** nadando de lado, con el pico pegado a una roca.
+    - **Lo que no debe ser:** un loro con aletas ni un pez con hojas pegadas. Es un pez real y
+      reconocible.
+12. **Fuentes:** [*Sparisoma cretense* (Wikipedia)](https://en.wikipedia.org/wiki/Sparisoma_cretense).
+
+### Especial: el Papemímico
+
+#### 129 Papemímico
+
+1. **Nombre:** Papemímico, de *papelera* y *mímico*. Se llama igual en todas las épocas, aunque
+   en los capítulos antiguos se esconda en tinajas.
+2. **Tipos:**
+   - Oscuridad: vive del engaño y ataca a traición.
+   - Acero: su cuerpo es el recipiente, duro como un caldero.
+3. **Línea:** no evoluciona.
+4. **Inspiración:** *Licencia*. Un recipiente vivo que se hace pasar por uno corriente.
+5. **Ubicación y rareza:** dentro de tinajas y papeleras de cualquier capítulo. Al registrar
+   una, hay un 10 % de que sea él (`src/data/recipientes.ts`). Especial.
+6. **Rol:** atacante resistente. Es más duro que lo normal en su zona, pero justo:
+   - Sale al nivel de la zona, o dos por encima de tu criatura más fuerte si es más alto.
+   - Elige sus movimientos como un entrenador, no al azar.
+   - Puntos débiles: Celeridad muy baja; con la tabla del autor, es débil a Tierra, Infernal
+     y Plasma.
+7. **Estadísticas:** 120 / 105 / 115 / 65 / 95 / 45 = **545**.
+8. **EXP:** ×1,40.
+9. **Movimientos:**
+   - **Tapazo** (Acero, físico, 85, 90 %): cierra la tapa como una mandíbula.
+   - **Emboscada** (Oscuridad, físico, 70).
+   - **Mal de ojo** (Oscuridad, mágico, 65): 20 % de bajar la Resistencia mágica del rival.
+   - **Escondite** (Oscuridad, estado): se mete dentro de sí mismo; +1 al Escudo y +1 a la
+     Resistencia mágica propios.
+10. **Bestiario:** «Nadie sabe qué come cuando no hay nadie cerca. Lo que sí se sabe es que
+    guarda dulces: quien lo vence encuentra dentro tres turrones».
+11. **Recompensa:** al vencerlo o capturarlo, da exactamente **3 Turrones** (el objeto que sube
+    un nivel). Solo una vez por recipiente: la bandera `mimico:<zona>:<id>` lo impide.
+12. **Emboscada en el mapa:** el recipiente tiembla, se abre de golpe, salta un «!», la pantalla
+    destella en rojo y tiembla, y aparece el texto «¡La tinaja tenía dientes!».
+13. **Imagen:**
+    - **Silueta:** la de su recipiente, con la boca convertida en mandíbula. En el capítulo 1,
+      una tinaja de barro; en los modernos, una papelera de metal.
+    - **Paleta:** barro rojizo o metal gris, con el interior negro y la lengua granate.
+    - **Detalles:**
+      - Dientes de tiesto roto alrededor de la boca, irregulares.
+      - Una lengua larga, como un trapo enrollado, que asoma.
+      - Dos ojillos amarillos en la oscuridad del fondo.
+      - Patas cortas y torcidas que salen de la base solo cuando ataca.
+    - **Postura:** inclinado hacia delante, con la boca abierta de par en par.
+    - **Lo que no debe ser:** un cofre del tesoro con dientes. Es siempre un recipiente de uso
+      diario de la época.
+
+### Movimientos nuevos de las fichas
+
+Usan solo efectos que ya existen en el motor. Los del capítulo 1 ya están en el juego.
 
 | Movimiento | Tipo | Categoría | Poder | Precisión | Efecto |
 | --- | --- | --- | --- | --- | --- |
@@ -1269,6 +1439,9 @@ Usan solo efectos que ya existen en el motor.
 | Compactar | Tierra | Estado | — | — | +2 al Escudo propio (Gofrón) |
 | Pella | Planta | Estado | — | — | Cura la mitad de la Vida (Gofrón) |
 | Nube de gofio | Planta | Estado | — | 100 % | −1 a la Fuerza del rival (Gofrón) |
+| Pico de loro | Agua | Físico | 70 | 100 % | 20 % de −1 al Escudo del rival (Viejarrón) |
+| Risco | Tierra | Físico | 85 | 90 % | — (*Gallotia simonyi*) |
+| Solana | Común | Estado | — | — | +1 a la Fuerza y +1 a la Celeridad propias (*Gallotia simonyi*) |
 
 ---
 
@@ -1276,15 +1449,23 @@ Usan solo efectos que ya existen en el motor.
 
 ### Decisiones del autor
 
-1. Dar el visto bueno a la auditoría (A.1 a A.7) y a los nombres nuevos: Brezuco, Carapachón,
+1. Dar el visto bueno a la auditoría (A.1 a A.8) y a los nombres nuevos: Brezuco, Carapachón,
    Mocarabeo, Farolera, Riscabra, Coronazul y todos los que no venían en el prompt.
-2. **Capítulo 8 en Asturias.** El prompt lo propone y aquí se da por bueno.
-3. **Fuerteventura.** ¿Una zona opcional nocturna en los llanos de Mafasca, para la Luz de
+2. **v2: las once entradas nuevas** (A.8), sobre todo Oronjín → Matamoscón, Fragatín (antes
+   Paíñel), Almadrabón y Basiliscón. Fragatín y Almadrabón se llaman así para no confundirse con
+   Carapachón y Barbaflux.
+3. **Dralín con dos formas** frente a las tres de las otras iniciales. Se compensa con algo más
+   de estadísticas en la primera forma y la evolución al 26. Si prefieres que las tres iniciales
+   sean iguales, hay que recuperar una forma intermedia con concepto propio.
+4. **El Papemímico se puede capturar.** Si se captura, también da los 3 Turrones. ¿Debería
+   poder capturarse?
+5. **Capítulo 8 en Asturias.** El prompt lo propone y aquí se da por bueno.
+6. **Fuerteventura.** ¿Una zona opcional nocturna en los llanos de Mafasca, para la Luz de
    Mafasca?
-4. **Islero fuera, Ratón Pérez dentro.** ¿Te parece bien?
-5. **Rutas entre capítulos.** ¿Se diseñan como zonas pequeñas de paso (Galicia, Cataluña,
+7. **Islero fuera, Ratón Pérez dentro.** ¿Te parece bien?
+8. **Rutas entre capítulos.** ¿Se diseñan como zonas pequeñas de paso (Galicia, Cataluña,
    Mallorca, Extremadura, Cantabria) o se reparten esas criaturas por los capítulos?
-6. **Evoluciones por lugar.** Lobánima (Monte de las Ánimas) y Noctilex (Real Biblioteca) están
+9. **Evoluciones por lugar.** Lobánima (Monte de las Ánimas) y Noctilex (Real Biblioteca) están
    pensadas para evolucionar en un lugar concreto. Es una mecánica nueva. Si no se quiere, se
    deja por nivel.
 
@@ -1301,6 +1482,10 @@ Usan solo efectos que ya existen en el motor.
 - **Helike:** la cita exacta de Diodoro sobre los carros de bueyes en llamas.
 - **Padul:** la especie del mamut.
 - **Anguila:** si sigue sin observarse el desove en libertad.
+- **Vieja:** el dibujo exacto de las manchas de la hembra de *Sparisoma cretense*.
+- ***Gallotia simonyi*:** el año del redescubrimiento (1974 o 1975) y el patrón de color.
+- **Basilisco de Madrid:** la leyenda de la calle del Basilisco, en una fuente sobre Madrid.
+- **Tarantismo:** si se documenta en La Mancha o solo en otras zonas.
 
 ### Fuentes de la auditoría
 
@@ -1316,3 +1501,8 @@ Usan solo efectos que ya existen en el motor.
 - **Lagarto gigante de El Hierro:** [MAPA](https://www.mapa.gob.es/en/desarrollo-rural/temas/caminos-naturales/caminos-naturales/sector-canario/hierro/etapa14-circular/default.aspx),
   [Wikipedia](https://en.wikipedia.org/wiki/Simony%27s_giant_lizard).
 - **Tortuga gigante de Tenerife:** [Wikipedia](https://en.wikipedia.org/wiki/Centrochelys_burchardi).
+- **Vieja:** [*Sparisoma cretense* (Wikipedia)](https://en.wikipedia.org/wiki/Sparisoma_cretense).
+- **Musaraña canaria:** [*Crocidura canariensis* (Wikipedia)](https://en.wikipedia.org/wiki/Canary_shrew).
+- **Meloncillo:** [*Herpestes ichneumon* (Wikipedia)](https://en.wikipedia.org/wiki/Egyptian_mongoose).
+- **Falsa oronja:** [*Amanita muscaria* (Wikipedia)](https://en.wikipedia.org/wiki/Amanita_muscaria).
+- **Carabela portuguesa:** [*Physalia physalis* (Wikipedia)](https://en.wikipedia.org/wiki/Portuguese_man_o%27_war).

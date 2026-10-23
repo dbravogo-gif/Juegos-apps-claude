@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { DATOS } from '../src/data';
-import { INICIALES } from '../src/data/especies';
+import { ESPECIES_RETIRADAS, INICIALES } from '../src/data/especies';
 
 // Comprueba que el contenido es coherente, para poder añadir criaturas sin miedo.
 describe('datos', () => {
@@ -34,15 +34,23 @@ describe('datos', () => {
     }
   });
 
-  it('los iniciales tienen tres formas', () => {
-    for (const id of INICIALES) {
+  it('los iniciales tienen tres formas, salvo el drago, que tiene dos', () => {
+    const formas = INICIALES.map((id) => {
       let actual = DATOS.especies[id];
-      let formas = 1;
+      let n = 1;
       while (actual.evoluciona) {
         actual = DATOS.especies[actual.evoluciona.a];
-        formas++;
+        n++;
       }
-      expect(formas, id).toBe(3);
+      return n;
+    });
+    expect(formas).toEqual([3, 3, 2]);
+  });
+
+  it('las especies retiradas pasan a especies que existen', () => {
+    for (const [id, opciones] of Object.entries(ESPECIES_RETIRADAS)) {
+      expect(DATOS.especies[id], id).toBeUndefined();
+      for (const o of opciones) expect(DATOS.especies[o.a], o.a).toBeDefined();
     }
   });
 

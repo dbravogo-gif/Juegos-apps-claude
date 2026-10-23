@@ -4,6 +4,7 @@
 import type { Criatura, DatosJuego } from './modelo';
 import { crearRng, elegirPonderado, entero, probabilidad, type EstadoRng } from './rng';
 import { crearCriatura, curarDelTodo } from './criatura';
+import { vidaMaxima } from './estadisticas';
 import type { DefEntrenador, Dir, TablaEncuentros } from './mundo';
 import type { ResultadoCombate } from './combate';
 
@@ -81,6 +82,23 @@ export function anadirCriatura(p: Partida, c: Criatura): 'equipo' | 'almacen' {
   }
   p.almacen.push(c);
   return 'almacen';
+}
+
+/**
+ * Pone al día una partida cargada con los datos actuales: las criaturas de especies retiradas
+ * pasan a su sustituta, y la Vida no pasa de la máxima, por si han cambiado las estadísticas.
+ */
+export function ajustarADatos(p: Partida, datos: DatosJuego, retiradas: Record<string, { desdeNivel: number; a: string }[]>): void {
+  for (const c of [...p.equipo, ...p.almacen]) {
+    const opciones = retiradas[c.especie];
+    if (opciones) c.especie = (opciones.find((o) => c.nivel >= o.desdeNivel) ?? opciones[opciones.length - 1]).a;
+    c.vida = Math.min(c.vida, vidaMaxima(c, datos));
+  }
+  const sustituir = (ids: string[]) =>
+    [...new Set(ids.map((id) => retiradas[id]?.at(-1)?.a ?? id))].filter((id) => datos.especies[id]);
+  p.vistos = sustituir(p.vistos);
+  p.capturados = sustituir(p.capturados);
+  for (const c of [...p.equipo, ...p.almacen]) marcarCapturado(p, c.especie);
 }
 
 export function darObjeto(p: Partida, objeto: string, cantidad: number): void {

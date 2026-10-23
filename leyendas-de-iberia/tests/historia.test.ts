@@ -4,6 +4,7 @@ import { ASPECTOS } from '../src/data/aspectos';
 import { CASILLAS, ENTRENADORES, INICIO, ZONAS } from '../src/data/mundo';
 import { enLineaDeVision, esSolida, validarZona, type Guion, type Paso } from '../src/core/mundo';
 import {
+  ajustarADatos,
   anadirCriatura,
   aplicarCombate,
   equipoEntrenador,
@@ -12,6 +13,8 @@ import {
   tirarEncuentro,
 } from '../src/core/partida';
 import { deserializar, serializar } from '../src/core/guardado';
+import { ESPECIES_RETIRADAS } from '../src/data/especies';
+import { vidaMaxima } from '../src/core/estadisticas';
 import { ESPECIE_MIMICO, registrarRecipiente, revisado } from '../src/core/recipientes';
 import { OBJETOS_RECIPIENTE, PROB_RECIPIENTE, RECOMPENSA_MIMICO } from '../src/data/recipientes';
 import { crearCriatura } from '../src/core/criatura';
@@ -194,6 +197,22 @@ describe('guardado', () => {
     p.equipo = [crearCriatura(DATOS, 'retono_drago', 5, crearRng(3))];
     p.banderas.inicial = true;
     expect(deserializar(serializar(p))).toEqual(p);
+  });
+
+  it('una partida antigua con la forma retirada del drago se pone al día', () => {
+    const p = nuevaPartida('Antigua', 9, INICIO);
+    const joven = crearCriatura(DATOS, 'retono_drago', 20, crearRng(3));
+    const mayor = crearCriatura(DATOS, 'retono_drago', 30, crearRng(4));
+    p.equipo = [{ ...joven, especie: 'drago', vida: 999 }];
+    p.almacen = [{ ...mayor, especie: 'drago' }];
+    p.vistos = ['retono_drago', 'drago'];
+    p.capturados = ['drago'];
+    ajustarADatos(p, DATOS, ESPECIES_RETIRADAS);
+    expect(p.equipo[0].especie).toBe('retono_drago');
+    expect(p.equipo[0].vida).toBe(vidaMaxima(p.equipo[0], DATOS));
+    expect(p.almacen[0].especie).toBe('drago_milenario');
+    expect(p.vistos).not.toContain('drago');
+    expect(p.capturados.sort()).toEqual(['drago_milenario', 'retono_drago']);
   });
 
   it('rechaza textos que no son una partida', () => {

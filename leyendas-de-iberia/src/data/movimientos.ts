@@ -33,6 +33,11 @@ const MOVIMIENTOS_DEF = {
     nombre: 'Hoguera', tipo: 'infernal', categoria: 'magico', poder: 90, precision: 85, pp: 5,
     efectos: [{ tipo: 'estado', estado: 'quemado', prob: 10 }],
   },
+  colada: {
+    nombre: 'Colada', tipo: 'infernal', categoria: 'fisico', poder: 100, precision: 85, pp: 5,
+    efectos: [{ tipo: 'estado', estado: 'quemado', prob: 10 }],
+    descripcion: 'Embiste como una lengua de lava.',
+  },
   tizne: {
     nombre: 'Tizne', tipo: 'infernal', categoria: 'estado', poder: 0, precision: 85, pp: 15,
     efectos: [{ tipo: 'estado', estado: 'quemado', prob: 100 }],
@@ -43,10 +48,22 @@ const MOVIMIENTOS_DEF = {
   rociada: { nombre: 'Rociada', tipo: 'agua', categoria: 'magico', poder: 40, precision: 100, pp: 25 },
   marejada: { nombre: 'Marejada', tipo: 'agua', categoria: 'magico', poder: 65, precision: 100, pp: 20 },
   golpe_de_mar: { nombre: 'Golpe de mar', tipo: 'agua', categoria: 'fisico', poder: 80, precision: 90, pp: 15 },
+  brazada: {
+    nombre: 'Brazada', tipo: 'agua', categoria: 'fisico', poder: 40, precision: 100, pp: 30, prioridad: 1,
+    descripcion: 'Nada con las patas remo y ataca siempre primero.',
+  },
   caparazon: {
     nombre: 'Caparazón', tipo: 'agua', categoria: 'estado', poder: 0, precision: null, pp: 20,
     efectos: [{ tipo: 'etapa', objetivo: 'propio', estadistica: 'escudo', cambio: 1, prob: 100 }],
     descripcion: 'Sube el propio Escudo.',
+  },
+  camuflaje_algas: {
+    nombre: 'Camuflaje de algas', tipo: 'agua', categoria: 'estado', poder: 0, precision: null, pp: 15,
+    efectos: [
+      { tipo: 'etapa', objetivo: 'propio', estadistica: 'escudo', cambio: 1, prob: 100 },
+      { tipo: 'etapa', objetivo: 'propio', estadistica: 'resMagica', cambio: 1, prob: 100 },
+    ],
+    descripcion: 'Se cubre de algas: sube el propio Escudo y la Resistencia mágica.',
   },
   remanso: {
     nombre: 'Remanso', tipo: 'agua', categoria: 'estado', poder: 0, precision: null, pp: 10,
@@ -77,6 +94,12 @@ const MOVIMIENTOS_DEF = {
   },
 
   // Ancestral
+  resina_roja: {
+    nombre: 'Resina roja', tipo: 'planta', categoria: 'estado', poder: 0, precision: null, pp: 10,
+    efectos: [{ tipo: 'curar', fraccion: 0.5 }],
+    descripcion: 'La sangre de drago, que se usó como remedio. Recupera la mitad de la Vida.',
+  },
+
   ira_ancestral: { nombre: 'Ira ancestral', tipo: 'ancestral', categoria: 'magico', poder: 85, precision: 100, pp: 10 },
 
   // Aire
@@ -109,9 +132,27 @@ const MOVIMIENTOS_DEF = {
       { tipo: 'etapa', objetivo: 'propio', estadistica: 'resMagica', cambio: 1, prob: 100 },
     ],
   },
+  tarea_imposible: {
+    nombre: 'Tarea imposible', tipo: 'oscuridad', categoria: 'estado', poder: 0, precision: 90, pp: 15,
+    efectos: [
+      { tipo: 'etapa', objetivo: 'rival', estadistica: 'fuerza', cambio: -1, prob: 100 },
+      { tipo: 'etapa', objetivo: 'rival', estadistica: 'celeridad', cambio: -1, prob: 100 },
+    ],
+    descripcion: 'Le encarga al rival una tarea que nunca acaba: baja su Fuerza y su Celeridad.',
+  },
   emboscada: { nombre: 'Emboscada', tipo: 'oscuridad', categoria: 'fisico', poder: 70, precision: 100, pp: 15 },
 
   // Mental
+  mocarabe: {
+    nombre: 'Mocárabe', tipo: 'luz', categoria: 'magico', poder: 80, precision: 100, pp: 15,
+    descripcion: 'Un rayo de luz que se quiebra en mil celdas, como una cúpula de mocárabes.',
+  },
+  amanecer: {
+    nombre: 'Amanecer', tipo: 'luz', categoria: 'estado', poder: 0, precision: null, pp: 10,
+    efectos: [{ tipo: 'curar', fraccion: 0.5 }],
+    descripcion: 'Recupera la mitad de la Vida.',
+  },
+
   alarido: {
     nombre: 'Alarido', tipo: 'mental', categoria: 'magico', poder: 60, precision: 100, pp: 20,
     efectos: [{ tipo: 'etapa', objetivo: 'rival', estadistica: 'fuerza', cambio: -1, prob: 10 }],

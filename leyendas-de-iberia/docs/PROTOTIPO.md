@@ -27,32 +27,33 @@ Es una sola zona con tres partes:
 - **La Vega y el Genil.** La ruta, con carrizales, acequias y olivares, y los dos entrenadores.
 - **La Alhambra.** El gimnasio de Boabdil, en el Patio de los Leones.
 
-### Criaturas (nombres provisionales)
+### Criaturas
 
-Son 13 en la zona y 19 especies si se cuentan las evoluciones de los iniciales.
+Las del capítulo 1 del Bestiario (`BESTIARIO.md`, números 001 a 021), más el Papemímico, que
+sale de las tinajas. Entre paréntesis, el `id` interno, que no cambia.
 
-| # | Criatura | Tipo | Inspiración | Papel |
-| --- | --- | --- | --- | --- |
-| 1 | Ascuerno | Infernal | Los toros de fuego de las fiestas populares | Inicial. Evoluciona a Embolado (nivel 16) y a Pirotauro (nivel 36), de Infernal y Tierra |
-| 2 | Caparín | Agua | Los cangrejos de las costas españolas | Inicial. Evoluciona a Tenazor (nivel 16) y a Centurión (nivel 36), de Agua y Acero |
-| 3 | Draguillo | Planta | El drago canario, cuya savia roja se tenía por sangre de dragón. Llega como regalo desde Gran Canaria, incorporada a la Corona en 1483 | Inicial. Evoluciona a Dracena (nivel 16) y a Ladón (nivel 36), de Planta y Ancestral |
-| 4 | Vitralina | Aire | Fauna | Común |
-| 5 | Caballuco | Aire e Infernal | Mitología cántabra: las libélulas que montan los diablos la noche de San Juan | Evolución de 4 |
-| 6 | Rastrojín | Común | Fauna | Común |
-| 7 | Barbudo | Agua | El pez de los ríos y acequias | Común |
-| 8 | Abejarco | Aire | Ave de plumaje de colores vivos | Común |
-| 9 | Diañu | Oscuridad | El diañu burllón del folclore asturiano, que se transforma para engañar | Poco común |
-| 10 | Trasgu | Oscuridad | El trasgu del folclore del norte | Evolución de 9 |
-| 11 | Mandrágora | Planta | La raíz que, según la leyenda, grita al arrancarla | Poco común |
-| 12 | Carapachón | Agua | El galápago leproso de balsas y acequias | Rara |
-| 13 | León Nazarí | Agua | Los leones de piedra del Patio de los Leones | Criatura estrella de Boabdil. No se puede capturar en el prototipo |
+| Nº | Criatura | Tipo | Papel |
+| --- | --- | --- | --- |
+| 001–003 | Ignibue → Braverno → Ignivárgoth (`becerro_igneo`…) | Infernal; Infernal y Tierra | Inicial. Evoluciona a los niveles 16 y 36 |
+| 004–006 | Marzuko → Nakarra → Talascrón (`cangrejo`…) | Agua; la final, Agua y Acero | Inicial. Evoluciona a los niveles 16 y 36 |
+| 007–008 | Dralín → Dracendro (`retono_drago`, `drago_milenario`) | Planta; la final, Planta y Ancestral | Inicial. Evoluciona al nivel 26 |
+| 009–010 | Zumbrel → Diablisca (`libelula`, `caballuco_diablu`) | Aire; Aire e Infernal | Común en la Vega. Evoluciona al nivel 12 |
+| 011–012 | Brezuco → Trasgorn (`duende`, `trasgo`) | Oscuridad | Evoluciona con el Gorro colorado. Trasgorn sale en la Alhambra |
+| 013 | Túmbriz (`topillo`) | Común y Tierra | Muy común en la Vega |
+| 014 | Barbaflux (`barbo`) | Agua | De entrenadores; en la Vega no hay pesca todavía |
+| 015 | Abezar (`abejaruco`) | Aire | Común |
+| 016 | Mandragor (`mandragora`) | Planta y Mental | Rara |
+| 017 | Carapachón (`galapago`) | Agua | Poco común |
+| 018 | Alhambrón (`leon_fuente`) | Agua y Tierra | Criatura estrella de Boabdil |
+| 019–021 | Broncero → Escarbraz → Mocarabeo (`escarabajo_pelotero`…) | Tierra; Tierra y Acero; Acero y Luz | Broncero en la Vega, Escarbraz en la Alhambra. Evoluciona a los niveles 18 y 34 |
+| 129 | Papemímico (`papemimico`) | Oscuridad y Acero | Dentro de una de cada diez tinajas |
 
-Los tipos usan las ideas de relaciones del GDD (§8), que aún no están cerradas.
+Los tipos usan la tabla del autor (`src/data/tipos.ts`).
 
 - **Iniciales.** Forman el triángulo clásico: el Agua apaga el fuego (Infernal), el fuego quema
   la Planta y la Planta absorbe el Agua.
 - **El Osezno sale del prototipo.** Con las nuevas relaciones, el Agua es eficaz contra la
-  Tierra, así que tendría desventaja frente a Boabdil, igual que el Ascuerno. Lo sustituye el
+  Tierra, así que tendría desventaja frente a Boabdil, igual que Ignibue. Lo sustituye el
   drago, que además es un guiño a Canarias.
 - **El Osezno vuelve más adelante,** en los capítulos del norte, con su línea hasta Basajaun.
 
@@ -62,13 +63,13 @@ iniciales evolucionan en la fase 2, como en Pokémon, donde lo hacen después de
 ### Personajes y objetos
 
 - **Entrenadores:**
-  - Un ballestero del real de Santa Fe: Rastrojín y Abejarco.
-  - Un mercader genovés: Vitralina, Barbudo y Diañu.
+  - Un ballestero del real de Santa Fe: dos Túmbriz.
+  - Un mercader genovés: Zumbrel, Barbaflux y Brezuco.
 - **Líder: Boabdil**, de tipo Agua por las acequias, albercas y fuentes de la Alhambra. Lleva
-  Barbudo, Carapachón y León Nazarí, entre los niveles 11 y 14.
-  - Frente a él, el Draguillo (Planta) tiene ventaja, el Ascuerno (Infernal) desventaja y
-    el Caparín va neutral. Es lo habitual en un primer gimnasio. Quien elija el Ascuerno puede
-    capturar una Mandrágora en la Vega.
+  Barbaflux, Carapachón y Alhambrón, entre los niveles 9 y 11.
+  - Frente a él, Dralín (Planta) tiene ventaja, Ignibue (Infernal) desventaja y Marzuko va
+    neutral. Es lo habitual en un primer gimnasio. Alhambrón, de Agua y Tierra, resiste mucho a
+    Ignibue (×¼): quien lo elija puede capturar un Mandragor en la Vega, que le hace ×4.
 - **PNJ:**
   - Isabel la Católica, la mentora. Te encarga el Bestiario y te da la criatura inicial.
   - El Gran Capitán, que negoció la entrega de Granada. Te da las primeras téseras.
