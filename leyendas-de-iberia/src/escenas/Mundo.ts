@@ -58,6 +58,8 @@ export class Mundo extends Phaser.Scene {
   private personas: PersonaEnMapa[] = [];
   private moviendo = false;
   private ocupado = false;
+  /** Dinero perdido en la última derrota, para contarlo al volver al mesón. */
+  private perdido = 0;
   /** A pulsado a mitad de un paso: se atiende al llegar. */
   private aPendiente = false;
   private listo = false;
@@ -461,7 +463,7 @@ export class Mundo extends Phaser.Scene {
             this.scene.stop('Combate');
             this.scene.wake();
             this.scene.wake('Interfaz');
-            aplicarCombate(p, { ...r, entrenador: def }, DATOS);
+            this.perdido = aplicarCombate(p, { ...r, entrenador: def }, DATOS).perdido;
             guardarPartida(p);
             resolve(r.resultado);
           },
@@ -471,7 +473,8 @@ export class Mundo extends Phaser.Scene {
   }
 
   private async trasDerrota(): Promise<void> {
-    await this.ui.decir('No te quedan criaturas en pie… Vuelves a toda prisa al último mesón.');
+    const perdida = this.perdido > 0 ? ` Por el camino pierdes ${this.perdido} ${MONEDA}.` : '';
+    await this.ui.decir(`No te quedan criaturas en pie… Vuelves a toda prisa al último mesón.${perdida}`);
     this.ui.cerrarDialogo();
     this.cargarZona(this.p.posicion);
     guardarPartida(this.p);

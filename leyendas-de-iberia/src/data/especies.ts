@@ -37,7 +37,7 @@ const LINEA_DUENDE: Aprende = [[1, 'trastada'], [4, 'desplante'], [8, 'mal_de_oj
 
 const DEF = {
   becerro_igneo: {
-    nombre: 'Becerro ígneo',
+    nombre: 'Ascuerno',
     tipos: ['infernal'],
     base: [44, 60, 45, 50, 45, 66],
     expBase: 62,
@@ -47,7 +47,7 @@ const DEF = {
     descripcion: 'Nace con los cuernos encendidos, como los toros de fuego de las fiestas de tantos pueblos de España.',
   },
   novillo_embolado: {
-    nombre: 'Novillo embolado',
+    nombre: 'Embolado',
     tipos: ['infernal'],
     base: [60, 82, 58, 64, 56, 85],
     expBase: 142,
@@ -57,7 +57,7 @@ const DEF = {
     descripcion: 'Lleva bolas de fuego en los cuernos, como el toro embolado de las fiestas del Levante.',
   },
   toro_de_fuego: {
-    nombre: 'Toro de fuego',
+    nombre: 'Pirotauro',
     tipos: ['infernal', 'tierra'],
     base: [80, 115, 80, 85, 70, 100],
     expBase: 263,
@@ -67,7 +67,7 @@ const DEF = {
   },
 
   cangrejo: {
-    nombre: 'Cangrejo',
+    nombre: 'Caparín',
     tipos: ['agua'],
     base: [46, 58, 66, 44, 52, 44],
     expBase: 63,
@@ -77,7 +77,7 @@ const DEF = {
     descripcion: 'Corretea de lado entre las rocas de la costa y se esconde en cualquier grieta.',
   },
   necora: {
-    nombre: 'Nécora',
+    nombre: 'Tenazor',
     tipos: ['agua'],
     base: [62, 78, 86, 58, 66, 55],
     expBase: 142,
@@ -87,7 +87,7 @@ const DEF = {
     descripcion: 'Tiene las patas traseras aplanadas como remos y nada con soltura.',
   },
   centollo: {
-    nombre: 'Centollo',
+    nombre: 'Centurión',
     tipos: ['agua', 'acero'],
     base: [84, 105, 115, 75, 86, 65],
     expBase: 265,
@@ -97,7 +97,7 @@ const DEF = {
   },
 
   retono_drago: {
-    nombre: 'Retoño de drago',
+    nombre: 'Draguillo',
     tipos: ['planta'],
     base: [48, 44, 52, 62, 62, 42],
     expBase: 64,
@@ -107,27 +107,27 @@ const DEF = {
     descripcion: 'Brote de drago traído de Gran Canaria. Su savia se vuelve roja al secarse: la llamaban sangre de dragón.',
   },
   drago: {
-    nombre: 'Drago',
+    nombre: 'Dracena',
     tipos: ['planta'],
     base: [64, 58, 70, 82, 80, 51],
     expBase: 142,
     ratioCaptura: 45,
     aprende: LINEA_DRAGO,
     evoluciona: { a: 'drago_milenario', nivel: 36 },
-    descripcion: 'El drago no forma anillos en el tronco como otros árboles, así que su edad solo se puede estimar.',
+    descripcion: 'Su nombre científico es Dracaena: «dragona». No forma anillos en el tronco, así que su edad solo se puede estimar.',
   },
   drago_milenario: {
-    nombre: 'Drago milenario',
+    nombre: 'Ladón',
     tipos: ['planta', 'ancestral'],
     base: [90, 80, 95, 110, 95, 60],
     expBase: 263,
     ratioCaptura: 45,
     aprende: [...LINEA_DRAGO, [36, 'ira_ancestral']],
-    descripcion: 'Como el Drago Milenario de Icod de los Vinos, en Tenerife, el más célebre de Canarias.',
+    descripcion: 'Según el mito, los dragos nacieron de la sangre de Ladón, el dragón que guardaba el jardín de las Hespérides, que muchos situaban en Canarias.',
   },
 
   libelula: {
-    nombre: 'Libélula',
+    nombre: 'Vitralina',
     tipos: ['aire'],
     base: [36, 40, 32, 45, 35, 70],
     expBase: 50,
@@ -137,7 +137,7 @@ const DEF = {
     descripcion: 'Caza otros insectos al vuelo y es capaz de volar hacia atrás.',
   },
   caballuco_diablu: {
-    nombre: 'Caballuco del diablu',
+    nombre: 'Caballuco',
     tipos: ['aire', 'infernal'],
     base: [60, 65, 55, 80, 60, 100],
     expBase: 150,
@@ -146,7 +146,7 @@ const DEF = {
     descripcion: 'Según la tradición cántabra, en la noche de San Juan los diablos cabalgan estas libélulas.',
   },
   topillo: {
-    nombre: 'Topillo',
+    nombre: 'Rastrojín',
     tipos: ['comun'],
     base: [32, 50, 35, 25, 35, 70],
     expBase: 45,
@@ -155,7 +155,7 @@ const DEF = {
     descripcion: 'Roedor de campo. Algunos años sus plagas arrasan cosechas enteras en Castilla.',
   },
   barbo: {
-    nombre: 'Barbo',
+    nombre: 'Barbudo',
     tipos: ['agua'],
     base: [45, 55, 45, 40, 45, 60],
     expBase: 55,
@@ -164,7 +164,7 @@ const DEF = {
     descripcion: 'Pez de río con barbillas junto a la boca, con las que tantea el fondo.',
   },
   abejaruco: {
-    nombre: 'Abejaruco',
+    nombre: 'Abejarco',
     tipos: ['aire'],
     base: [40, 55, 38, 40, 38, 75],
     expBase: 55,
@@ -173,17 +173,17 @@ const DEF = {
     descripcion: 'Atrapa abejas al vuelo y les quita el aguijón golpeándolas contra una rama.',
   },
   duende: {
-    nombre: 'Duende',
+    nombre: 'Diañu',
     tipos: ['oscuridad'],
     base: [40, 52, 40, 55, 45, 68],
     expBase: 60,
     ratioCaptura: 120,
     aprende: LINEA_DUENDE,
     evoluciona: { a: 'trasgo', nivel: 14 },
-    descripcion: 'Goya los dibujó en sus Caprichos. Esconde cosas en las casas y se ríe cuando las buscas.',
+    descripcion: 'El diañu burllón del folclore asturiano se convierte en animal para engañar a los caminantes y se ríe cuando le descubren.',
   },
   trasgo: {
-    nombre: 'Trasgo',
+    nombre: 'Trasgu',
     tipos: ['oscuridad'],
     base: [65, 80, 60, 82, 68, 95],
     expBase: 155,
@@ -201,7 +201,7 @@ const DEF = {
     descripcion: 'Su raíz recuerda a una figura humana y se usó como somnífero. La leyenda dice que grita al arrancarla.',
   },
   galapago: {
-    nombre: 'Galápago',
+    nombre: 'Carapachón',
     tipos: ['agua'],
     base: [60, 50, 90, 45, 70, 25],
     expBase: 85,
@@ -210,7 +210,7 @@ const DEF = {
     descripcion: 'El galápago leproso vive en ríos, balsas y acequias del sur de la península.',
   },
   leon_fuente: {
-    nombre: 'León de la fuente',
+    nombre: 'León Nazarí',
     tipos: ['agua'],
     base: [80, 85, 85, 90, 80, 60],
     expBase: 180,

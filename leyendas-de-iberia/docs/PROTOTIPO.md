@@ -33,26 +33,26 @@ Son 13 en la zona y 19 especies si se cuentan las evoluciones de los iniciales.
 
 | # | Criatura | Tipo | Inspiración | Papel |
 | --- | --- | --- | --- | --- |
-| 1 | Becerro de fuego | Infernal | Los toros de fuego de las fiestas populares | Inicial. Evoluciona a Novillo embolado (nivel 16) y a Toro de fuego (nivel 36), de Infernal y Tierra |
-| 2 | Cangrejo | Agua | Los cangrejos de las costas españolas | Inicial. Evoluciona a Nécora (nivel 16) y a Centollo (nivel 36), de Agua y Acero |
-| 3 | Retoño de drago | Planta | El drago canario, cuya savia roja se tenía por sangre de dragón. Llega como regalo desde Gran Canaria, incorporada a la Corona en 1483 | Inicial. Evoluciona a Drago (nivel 16) y a Drago milenario (nivel 36), de Planta y Ancestral |
-| 4 | Libélula | Aire | Fauna | Común |
-| 5 | Caballuco del diablu | Aire e Infernal | Mitología cántabra: las libélulas que montan los diablos la noche de San Juan | Evolución de 4 |
-| 6 | Topillo | Común | Fauna | Común |
-| 7 | Barbo | Agua | El pez de los ríos y acequias | Común |
-| 8 | Abejaruco | Aire | Ave de plumaje de colores vivos | Común |
-| 9 | Duende | Oscuridad | El duende del folclore de toda España | Poco común |
-| 10 | Trasgo | Oscuridad | El trasgu del folclore del norte | Evolución de 9 |
+| 1 | Ascuerno | Infernal | Los toros de fuego de las fiestas populares | Inicial. Evoluciona a Embolado (nivel 16) y a Pirotauro (nivel 36), de Infernal y Tierra |
+| 2 | Caparín | Agua | Los cangrejos de las costas españolas | Inicial. Evoluciona a Tenazor (nivel 16) y a Centurión (nivel 36), de Agua y Acero |
+| 3 | Draguillo | Planta | El drago canario, cuya savia roja se tenía por sangre de dragón. Llega como regalo desde Gran Canaria, incorporada a la Corona en 1483 | Inicial. Evoluciona a Dracena (nivel 16) y a Ladón (nivel 36), de Planta y Ancestral |
+| 4 | Vitralina | Aire | Fauna | Común |
+| 5 | Caballuco | Aire e Infernal | Mitología cántabra: las libélulas que montan los diablos la noche de San Juan | Evolución de 4 |
+| 6 | Rastrojín | Común | Fauna | Común |
+| 7 | Barbudo | Agua | El pez de los ríos y acequias | Común |
+| 8 | Abejarco | Aire | Ave de plumaje de colores vivos | Común |
+| 9 | Diañu | Oscuridad | El diañu burllón del folclore asturiano, que se transforma para engañar | Poco común |
+| 10 | Trasgu | Oscuridad | El trasgu del folclore del norte | Evolución de 9 |
 | 11 | Mandrágora | Planta | La raíz que, según la leyenda, grita al arrancarla | Poco común |
-| 12 | Galápago | Agua | El galápago leproso de balsas y acequias | Rara |
-| 13 | León de la fuente | Agua | Los leones de piedra del Patio de los Leones | Criatura estrella de Boabdil. No se puede capturar en el prototipo |
+| 12 | Carapachón | Agua | El galápago leproso de balsas y acequias | Rara |
+| 13 | León Nazarí | Agua | Los leones de piedra del Patio de los Leones | Criatura estrella de Boabdil. No se puede capturar en el prototipo |
 
 Los tipos usan las ideas de relaciones del GDD (§8), que aún no están cerradas.
 
 - **Iniciales.** Forman el triángulo clásico: el Agua apaga el fuego (Infernal), el fuego quema
   la Planta y la Planta absorbe el Agua.
 - **El Osezno sale del prototipo.** Con las nuevas relaciones, el Agua es eficaz contra la
-  Tierra, así que tendría desventaja frente a Boabdil, igual que el Becerro. Lo sustituye el
+  Tierra, así que tendría desventaja frente a Boabdil, igual que el Ascuerno. Lo sustituye el
   drago, que además es un guiño a Canarias.
 - **El Osezno vuelve más adelante,** en los capítulos del norte, con su línea hasta Basajaun.
 
@@ -62,12 +62,12 @@ iniciales evolucionan en la fase 2, como en Pokémon, donde lo hacen después de
 ### Personajes y objetos
 
 - **Entrenadores:**
-  - Un ballestero del real de Santa Fe: Topillo y Abejaruco.
-  - Un mercader genovés: Libélula, Barbo y Duende.
+  - Un ballestero del real de Santa Fe: Rastrojín y Abejarco.
+  - Un mercader genovés: Vitralina, Barbudo y Diañu.
 - **Líder: Boabdil**, de tipo Agua por las acequias, albercas y fuentes de la Alhambra. Lleva
-  Barbo, Galápago y León de la fuente, entre los niveles 11 y 14.
-  - Frente a él, el Retoño de drago (Planta) tiene ventaja, el Becerro (Infernal) desventaja y
-    el Cangrejo va neutral. Es lo habitual en un primer gimnasio. Quien elija el Becerro puede
+  Barbudo, Carapachón y León Nazarí, entre los niveles 11 y 14.
+  - Frente a él, el Draguillo (Planta) tiene ventaja, el Ascuerno (Infernal) desventaja y
+    el Caparín va neutral. Es lo habitual en un primer gimnasio. Quien elija el Ascuerno puede
     capturar una Mandrágora en la Vega.
 - **PNJ:**
   - Isabel la Católica, la mentora. Te encarga el Bestiario y te da la criatura inicial.

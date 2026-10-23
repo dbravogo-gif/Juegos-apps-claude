@@ -101,21 +101,21 @@ Los movimientos son físicos, mágicos o de estado.
 No repitas estas criaturas. Puedes proponer mejoras si ves algo flojo.
 
 **Iniciales.** Ya están decididos y tienen tres formas cada uno:
-- Becerro ígneo → Novillo embolado → Toro de fuego. Es de tipo Infernal; la forma final, de
+- Becerro ígneo → Embolado → Pirotauro. Es de tipo Infernal; la forma final, de
   Infernal y Tierra.
-- Cangrejo → Nécora → Centollo. Es de tipo Agua; la forma final, de Agua y Acero.
-- Retoño de drago → Drago → Drago milenario. Es de tipo Planta; la forma final, de Planta y
+- Caparín → Tenazor → Centurión. Es de tipo Agua; la forma final, de Agua y Acero.
+- Draguillo → Dracena → Ladón. Es de tipo Planta; la forma final, de Planta y
   Ancestral. El drago es un árbol canario.
 
 **Capítulo 1:**
-- Libélula → Caballuco del diablu (Aire; la segunda forma, de Aire e Infernal).
-- Topillo (Común).
-- Barbo (Agua).
-- Abejaruco (Aire).
-- Duende → Trasgo (Oscuridad).
+- Vitralina → Caballuco (Aire; la segunda forma, de Aire e Infernal).
+- Rastrojín (Común).
+- Barbudo (Agua).
+- Abejarco (Aire).
+- Diañu → Trasgu (Oscuridad).
 - Mandrágora (Planta).
-- Galápago (Agua).
-- León de la fuente (Agua). Es la criatura estrella de Boabdil, inspirada en los leones de la
+- Carapachón (Agua).
+- León Nazarí (Agua). Es la criatura estrella de Boabdil, inspirada en los leones de la
   Alhambra.
 
 **Más adelante**, en los capítulos del norte: Osezno → Oso pardo → Basajaun.
@@ -157,8 +157,10 @@ No repitas estas criaturas. Puedes proponer mejoras si ves algo flojo.
 4. **Cada capítulo con criaturas comunes desde el principio** y alguna rara que valga la pena
    buscar.
 5. **Una ficha por especie**, con estos campos:
-   - **Nombre:** en español, original y fácil de entender, de 18 caracteres como máximo para
-     que quepa en pantalla.
+   - **Nombre:** inventado, sonoro y con gancho, no el nombre del animal tal cual. Por
+     ejemplo, nada de «Cangrejo»: mejor algo como «Caparín» o «Centurión». Las formas finales y
+     los legendarios tienen que sonar épicos. En español o con raíces de aquí, y de 18
+     caracteres como máximo para que quepa en pantalla.
    - **Tipos:** uno o dos de la lista.
    - **Línea evolutiva:** de qué evoluciona, a qué, y en qué nivel. Normalmente entre 14 y 20
      para la segunda forma y entre 30 y 40 para la tercera.

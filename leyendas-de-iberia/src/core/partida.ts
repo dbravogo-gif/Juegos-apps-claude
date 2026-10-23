@@ -116,22 +116,30 @@ export interface ResultadoParaPartida {
   entrenador?: DefEntrenador;
 }
 
-/** Vuelca el resultado de un combate en la partida. Devuelve el premio en dinero, si lo hay. */
-export function aplicarCombate(p: Partida, r: ResultadoParaPartida, datos: DatosJuego): number {
+/** Lo que se pierde al caer derrotado: una décima parte del dinero. */
+export const PERDIDA_DERROTA = 0.1;
+
+/**
+ * Vuelca el resultado de un combate en la partida. Devuelve el premio ganado y el dinero
+ * perdido, para que la interfaz lo cuente.
+ */
+export function aplicarCombate(p: Partida, r: ResultadoParaPartida, datos: DatosJuego): { premio: number; perdido: number } {
   p.equipo = r.equipo;
   p.objetos = { ...r.objetos };
   for (const e of r.rivales) marcarVisto(p, e);
   if (r.capturada) anadirCriatura(p, r.capturada);
   let premio = 0;
+  let perdido = 0;
   if (r.resultado === 'victoria' && r.entrenador) {
     if (!p.vencidos.includes(r.entrenador.id)) p.vencidos.push(r.entrenador.id);
     premio = r.entrenador.premio;
     p.dinero += premio;
   }
   if (r.resultado === 'derrota') {
-    p.dinero = Math.floor(p.dinero / 2);
+    perdido = Math.floor(p.dinero * PERDIDA_DERROTA);
+    p.dinero -= perdido;
     p.posicion = { ...p.regreso };
     curarEquipo(p, datos);
   }
-  return premio;
+  return { premio, perdido };
 }

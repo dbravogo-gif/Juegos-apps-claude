@@ -380,3 +380,9 @@ con la Guerra Civil.
   - En combate, mantener pulsado un movimiento muestra qué hace; al subir de nivel con cuatro
     movimientos, se elige cuál olvidar.
   - Prompt para diseñar el Bestiario con otra IA: `PROMPT-CRIATURAS.md`.
+- **2026-10-23 (2).**
+  - Nombres propios y épicos para las criaturas, sobre todo los iniciales:
+    - Ascuerno → Embolado → Pirotauro.
+    - Caparín → Tenazor → Centurión.
+    - Draguillo → Dracena → Ladón.
+  - Perder un combate cuesta un 10 % del dinero, no la mitad.

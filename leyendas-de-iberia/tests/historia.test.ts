@@ -109,11 +109,11 @@ describe('partida', () => {
     expect(a.every((c) => c.valia === ENTRENADORES.boabdil.valia)).toBe(true);
   });
 
-  it('vencer a un entrenador da su premio y lo marca; perder te devuelve al mesón con medio dinero', () => {
+  it('vencer a un entrenador da su premio y lo marca; perder te devuelve al mesón y cuesta un 10 %', () => {
     const p = nuevaPartida('X', 1, INICIO);
     p.regreso = { zona: 'meson_santa_fe', x: 4, y: 3, dir: 'arriba' };
     p.equipo = [crearCriatura(DATOS, 'cangrejo', 5, crearRng(1))];
-    const premio = aplicarCombate(
+    const { premio } = aplicarCombate(
       p,
       { resultado: 'victoria', equipo: p.equipo, objetos: {}, capturada: null, rivales: ['topillo'], entrenador: ENTRENADORES.ballestero_sancho },
       DATOS,
@@ -124,8 +124,9 @@ describe('partida', () => {
     expect(p.vistos).toContain('topillo');
 
     const herido = { ...p.equipo[0], vida: 0 };
-    aplicarCombate(p, { resultado: 'derrota', equipo: [herido], objetos: {}, capturada: null, rivales: [] }, DATOS);
-    expect(p.dinero).toBe(210);
+    const { perdido } = aplicarCombate(p, { resultado: 'derrota', equipo: [herido], objetos: {}, capturada: null, rivales: [] }, DATOS);
+    expect(perdido).toBe(42);
+    expect(p.dinero).toBe(378);
     expect(p.posicion.zona).toBe('meson_santa_fe');
     expect(p.equipo[0].vida).toBeGreaterThan(0);
   });
