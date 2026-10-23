@@ -1,6 +1,6 @@
 # Leyendas de Iberia: documento de diseño (GDD)
 
-Última actualización: 2026-10-20. Estado: fase 0 (diseño). Todavía no hay código.
+Última actualización: 2026-10-23. Estado: fase 1 (prototipo jugable del capítulo 1).
 
 Este documento recoge **qué** es el juego y **por qué**. El plan de la fase en curso está en
 `PROTOTIPO.md`.
@@ -43,13 +43,15 @@ autor y dos amigos, y se juega en el navegador del móvil y del PC.
 
 Hay que preguntar antes de diseñar sobre ellas.
 
-1. **Tipos.** Faltan las relaciones entre los 15 tipos y definir Plasma. Ideas en §8.
+1. **Tipos.** Faltan las relaciones entre los 15 tipos. Ideas en §8. Plasma ya tiene
+   definición, propuesta en `BESTIARIO.md`.
 2. **Marco narrativo y segundo mentor** (se propone Carlos III). Propuesta en §5.
 3. **Líderes de los capítulos 2 a 8 y miembros de la Liga.** Propuesta en §4.
 4. **El Dr. Jangel:** quién es y en qué capítulo abre el laboratorio. Propuesta en §7.
 5. **Personajes actuales:** quiénes salen y con qué reglas. Propuesta en §6.
 6. **Phaser 3 o Phaser 4.** Ver §10.
-7. **Nombres definitivos de las criaturas.** Los del prototipo son provisionales.
+7. **Bestiario.** La propuesta completa de 150 especies está en `BESTIARIO.md`, pendiente
+   del visto bueno del autor.
 
 ## 4. Épocas y gimnasios (propuesta)
 
@@ -65,7 +67,7 @@ Los líderes son sobre todo reyes y generales; los artistas salen como PNJ.
 | 5 | Borbones: **Canarias** (1700–1808) | Tenerife, El Hierro y La Gomera, con un prólogo en Madrid y Cádiz | El general Gutiérrez, que rechazó a Nelson en 1797 | **Carlos III (mentor)** y Jorge Juan, en el prólogo; Nelson, como antagonista; las ánimas de los menceyes |
 | 6 | Independencia y siglo XIX (1808–1898) | Zaragoza | Agustina de Aragón | Palafox, Castaños (Bailén), el Empecinado, Prim; Goya |
 | 7 | Restauración, República y Guerra Civil (1898–1939) | Las Palmas y Madrid | Un general republicano (Miaja o Vicente Rojo) | Alfonso XIII. La guerra puede empezar en Las Palmas, de donde salió Franco el 18 de julio de 1936. El protagonista, en el bando sublevado (§6) |
-| 8 | Franquismo (1939–1975) | Por decidir | Por decidir (Franco, Carrero Blanco…) | Hay que decidir el enfoque: posguerra o desarrollismo. Félix Rodríguez de la Fuente, como personaje |
+| 8 | Franquismo (1939–1975) | Asturias (propuesta del Bestiario) | Por decidir (Franco, Carrero Blanco…) | Hay que decidir el enfoque: posguerra o desarrollismo. Félix Rodríguez de la Fuente, como personaje |
 | Liga | Transición y democracia (1975–hoy) | Madrid | Cuatro rivales y un campeón: reyes, presidentes, Gutiérrez Mellado… | §6 |
 
 - **Lo que queda apretado.** El XIX y el XX tienen un gimnasio cada uno. Si se quiere más
@@ -169,10 +171,12 @@ con la Guerra Civil.
   culebra → … → Cuélebre. Encaja con el principio de que lo débil es sencillo y lo final, épico.
 - **Diseño visual por niveles.** El primer estadio tiene silueta simple y pocos colores; el
   intermedio añade rasgos; el final es grande y detallado, con efectos.
-- **Legendarios** (ideas):
-  - Seres mitológicos: Mari, Cuélebre, Guayota.
-  - Animales célebres: Babieca, Rocinante, Platero, Islero o Copito de Nieve.
-  - Toros de Guisando (de piedra).
+- **Legendarios** (propuesta en `BESTIARIO.md`):
+  - Seres mitológicos, con 580–600 de total: Mari, Cuélebre, Guayota, Nuberu, Tarasca y Alcorax
+    (el Dragón de San Jorge).
+  - Animales célebres, con 540–570: Babieca, Rocinante, Platero, Copito de Nieve y el Ratón
+    Pérez. Islero queda fuera.
+  - Los Toros de Guisando pasan a ser una criatura rara, Guisandor.
   - **Evitar el toro de Osborne**, porque es una marca registrada.
 - **Ficha de cada criatura:** tipo, estadísticas base, movimientos por nivel, evolución, rareza
   y un texto del Bestiario con un dato real de folclore o de biología.
@@ -192,16 +196,20 @@ con la Guerra Civil.
 
 | Fósil | Criatura | Yacimiento real |
 | --- | --- | --- |
-| Colmillo de sable | Felino con dientes de sable (*Machairodus*, *Homotherium*) | Cerro de los Batallones (Madrid), Orce (Granada) |
-| Hiena gigante | *Pachycrocuta* | Orce (Granada) |
-| Defensa de mamut | Mamut | Padul (Granada) |
-| Joroba de «Pepito» | *Concavenator*, terópodo con joroba | Las Hoyas (Cuenca) |
-| Mandíbula dentada | *Pelecanimimus*, con más de 200 dientes | Las Hoyas (Cuenca) |
-| Vértebra gigante | *Turiasaurus*, el mayor dinosaurio de Europa | Riodeva (Teruel) |
-| Hueso de Galve | *Aragosaurus*, el primer dinosaurio con nombre español | Galve (Teruel) |
-| Ala primitiva | *Iberomesornis*, ave del Cretácico | Las Hoyas (Cuenca) |
+| Colmillo de cimitarra | Orcegar: *Homotherium latidens* | Venta Micena, Orce (Granada) |
+| Colmillo de sable | Machairón: *Machairodus aphanistus* | Cerro de los Batallones (Madrid) |
+| Hiena gigante | Hienarca: *Pachycrocuta brevirostris* | Venta Micena, Orce (Granada) |
+| Defensa de mamut | Padulonte: mamut | Padul (Granada) |
+| Joroba de «Pepito» | Concavex: *Concavenator*, terópodo con joroba | Las Hoyas (Cuenca) |
+| Mandíbula dentada | Pelicanox: *Pelecanimimus*, con más de 200 dientes | Las Hoyas (Cuenca) |
+| Ala primitiva | Iberomés: *Iberomesornis*, ave del Cretácico | Las Hoyas (Cuenca) |
+| Vértebra gigante | Turiasar: *Turiasaurus*, el mayor dinosaurio de Europa | Riodeva (Teruel) |
+| Caparazón gigante | Testudrago: *Centrochelys burchardi*, tortuga gigante | Tenerife |
 
-- **Su tipo** se decide cuando esté cerrada la tabla de tipos.
+- **Su tipo.** Todos son Ancestral, más un segundo tipo según su biología (`BESTIARIO.md`).
+- **Fuera de la lista:**
+  - *Aragosaurus*, porque repetía saurópodo.
+  - El lagarto gigante fósil, porque el de El Hierro sigue vivo y sale en el capítulo 5.
 
 ## 8. Mecánicas
 
@@ -241,7 +249,7 @@ con la Guerra Civil.
   | Eléctrico | Tormentas y rayos: el Nuberu |
   | Hielo | La nieve y el frío de las cumbres |
   | Infernal | Es el tipo **fuego**, y además los demonios: los toros de fuego, Guayota |
-  | Plasma | Por definir. Idea: fuegos que no queman, como el fuego de San Telmo de los marineros y las centellas o rayos en bola. Si no encuentra hueco, se quita |
+  | Plasma | Gas ionizado que se ve: el fuego de San Telmo (el *corposanto* de los marineros), las centellas o rayos en bola y las coronas. No es magia, ni luz, ni fuego corriente (propuesta en `BESTIARIO.md`) |
   | Mental | Hechizos, adivinación y astucia |
   | Luz | Lo sagrado y el sol |
   | Oscuridad | La noche, la sombra y el engaño: duendes, trasgos, el Coco |
@@ -386,3 +394,13 @@ con la Guerra Civil.
     - Caparín → Tenazor → Centurión.
     - Draguillo → Dracena → Ladón.
   - Perder un combate cuesta un 10 % del dinero, no la mitad.
+- **2026-10-23 (3).** Bestiario: auditoría y tabla de 150 especies (`BESTIARIO.md`), a partir
+  del prompt hecho con ChatGPT.
+  - Iniciales: Ignibue → Braverno → Ignivárgoth, Marzuko → Nakarra → Talascrón y
+    Dralín → Dracauro → Dracendro.
+  - Fuera los constructos sin raíz en fauna ni folclore.
+  - Entran los perros de Guayota y el Dragón de San Jorge (Alcorax).
+  - Plasma, con definición y 6 especies.
+  - Capítulo 8 en Asturias, como propuesta.
+  - Legendarios: Islero fuera y el Ratón Pérez dentro. Los animales célebres bajan a 540–570.
+  - Fichas completas del capítulo 1 y de Gofrón.

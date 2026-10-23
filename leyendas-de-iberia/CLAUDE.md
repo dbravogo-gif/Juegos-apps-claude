@@ -28,18 +28,29 @@ tocan desde aquí.
   - Mapa y personajes que caminan: un paquete libre (CC0) retocado o pixel art hecho por
     código. Kenney y OpenGameArt no son accesibles desde el entorno; el autor tendría que subir
     el paquete.
-  - Criaturas y retratos: OpenArt, cuando el autor traiga el Bestiario hecho con
-    `docs/PROMPT-CRIATURAS.md`.
+  - Criaturas y retratos: OpenArt, a partir de las descripciones visuales de
+    `docs/BESTIARIO.md`.
+- **Bestiario (`docs/BESTIARIO.md`), en curso:**
+  - Hecho: la auditoría del prompt de ChatGPT, la tabla de 150 especies y las fichas del
+    capítulo 1 y de Gofrón.
+  - Siguiente: fichas del capítulo 2, cuando el autor dé el visto bueno.
+  - El código aún usa los nombres antiguos (Ascuerno, Caparín, Draguillo…). Al aprobarse, se
+    pasa el capítulo 1 al juego: nombres, estadísticas y movimientos nuevos. Los `id` internos
+    no cambian, para no romper las partidas guardadas.
 - **El laboratorio de combate** es solo una herramienta de pruebas, con un enlace pequeño en el
   título. No es prioridad.
-- **Pendiente del autor:** las relaciones entre tipos y la definición de Plasma (`docs/GDD.md`
-  §8). La tabla de `src/data/tipos.ts` es provisional.
+- **Pendiente del autor:**
+  - Las relaciones entre tipos (`docs/GDD.md` §8). La tabla de `src/data/tipos.ts` es
+    provisional.
+  - Las decisiones abiertas al final de `docs/BESTIARIO.md`.
 
 ## Antes de tocar nada
 
 - Lee `docs/GDD.md`: las decisiones cerradas y las abiertas. Si una idea nueva choca con una
   decisión cerrada, pregunta antes de seguir. No diseñes sobre las abiertas sin preguntar.
 - Lee `docs/PROTOTIPO.md`: el plan de la fase en curso.
+- Para criaturas, lee `docs/BESTIARIO.md`. Es la fuente de verdad de nombres, tipos, roles y
+  fichas, y `src/data/especies.ts` debe seguirla.
 
 ## Reglas que más se olvidan
 
