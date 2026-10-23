@@ -9,6 +9,8 @@ export interface DatosCaptura {
   /** Bonificación del objeto de captura (la tésera normal vale 1). */
   bonus: number;
   estado: EstadoCriatura | null;
+  /** Captura sin fallo posible (la Tésera real). */
+  segura?: boolean;
 }
 
 /** Valor «a» de la fórmula de Pokémon (tercera y cuarta generación). 255 o más: captura segura. */
@@ -38,6 +40,7 @@ function umbralSacudida(a: number): number {
  * cuántas veces se agita la tésera antes de soltarse, para la animación.
  */
 export function intentarCaptura(d: DatosCaptura, rng: EstadoRng): { exito: boolean; sacudidas: number } {
+  if (d.segura) return { exito: true, sacudidas: 3 };
   const a = valorCaptura(d);
   if (a >= 255) return { exito: true, sacudidas: 3 };
   const b = umbralSacudida(a);

@@ -30,7 +30,8 @@ export type Paso =
   | { tipo: 'dinero'; cantidad: number }
   | { tipo: 'elegirInicial' }
   | { tipo: 'combate'; entrenador: string }
-  | { tipo: 'tienda'; productos: { objeto: string; precio: number }[] }
+  /** Ids de objeto; el precio sale de los datos del objeto. */
+  | { tipo: 'tienda'; productos: string[] }
   | { tipo: 'regreso' }
   /** Ordenar el equipo con las criaturas guardadas en el Bestiario. */
   | { tipo: 'almacen' }
@@ -47,6 +48,8 @@ export interface DefEntrenador {
   /** Valía fija de sus criaturas: lo entrenadas que están. */
   valia: number;
   premio: number;
+  /** Objetos que regala la primera vez que se le vence. */
+  objetos?: Record<string, number>;
   antes: string[];
   derrota: string[];
   /** Lo que dice si le hablas cuando ya le has vencido. */
@@ -99,6 +102,8 @@ export interface Zona {
   pnj: Pnj[];
   salidas: Salida[];
   carteles: { x: number; y: number; texto: string[] }[];
+  /** Objetos escondidos: se encuentran mirando la casilla y pulsando A (bandera `oculto:<zona>:<id>`). */
+  ocultos?: { id: string; x: number; y: number; objeto: string; cantidad?: number }[];
   /** Guion que se ejecuta la primera vez que se entra (usa la bandera `visto:<id>`). */
   alEntrar?: Guion;
 }
@@ -164,6 +169,9 @@ export function validarZona(
       continue;
     }
     if (esSolida(destino, s.ax, s.ay, casillas)) errores.push(`${z.id}: la salida a ${s.zona} cae en una casilla sólida`);
+  }
+  for (const o of z.ocultos ?? []) {
+    if (esSolida(z, o.x, o.y, casillas)) errores.push(`${z.id}: el objeto oculto ${o.id} está en una casilla sólida`);
   }
   for (const p of z.pnj) {
     if (esSolida(z, p.x, p.y, casillas)) errores.push(`${z.id}: ${p.id} está sobre una casilla sólida`);

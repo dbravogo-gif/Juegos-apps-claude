@@ -16,11 +16,21 @@ describe('datos', () => {
     }
   });
 
-  it('las evoluciones apuntan a especies que existen y a un nivel mayor que 1', () => {
+  it('las evoluciones apuntan a especies que existen, por nivel mayor que 1 o con un objeto de evolución', () => {
     for (const e of Object.values(DATOS.especies)) {
       if (!e.evoluciona) continue;
-      expect(DATOS.especies[e.evoluciona.a], `${e.id} → ${e.evoluciona.a}`).toBeDefined();
-      expect(e.evoluciona.nivel).toBeGreaterThan(1);
+      const { a, nivel, objeto } = e.evoluciona;
+      expect(DATOS.especies[a], `${e.id} → ${a}`).toBeDefined();
+      expect(nivel !== undefined || objeto !== undefined, e.id).toBe(true);
+      if (nivel !== undefined) expect(nivel).toBeGreaterThan(1);
+      if (objeto !== undefined) expect(DATOS.objetos[objeto]?.tipo, objeto).toBe('evolucion');
+    }
+  });
+
+  it('cada objeto de evolución sirve al menos a una especie', () => {
+    for (const o of Object.values(DATOS.objetos)) {
+      if (o.tipo !== 'evolucion') continue;
+      expect(Object.values(DATOS.especies).some((e) => e.evoluciona?.objeto === o.id), o.id).toBe(true);
     }
   });
 

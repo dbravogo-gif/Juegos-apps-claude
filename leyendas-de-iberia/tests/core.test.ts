@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { crearRng, entero, siguiente } from '../src/core/rng';
 import { estadisticasDe, ivDeValia, multiplicadorEtapa, PESOS_VALIA, tirarValia } from '../src/core/estadisticas';
-import { eficacia, multiplicadorTipo } from '../src/core/tipos';
+import { debilidades, eficacia, multiplicadorTipo, resumenTipo } from '../src/core/tipos';
 import { calcularDanio } from '../src/core/danio';
 import { intentarCaptura, probabilidadCaptura, valorCaptura } from '../src/core/captura';
 import { aplicarExperiencia, evolucionar, evolucionPendiente, expParaNivel, movimientosIniciales } from '../src/core/progreso';
@@ -94,26 +94,61 @@ describe('estadísticas', () => {
 
 describe('tabla de tipos', () => {
   const t = DATOS.tipos;
-  it('eficaz, poco eficaz e inmune', () => {
+  it('sigue la tabla del autor: eficaz, poco eficaz e inmune', () => {
     expect(multiplicadorTipo(t, 'agua', 'infernal')).toBe(2);
     expect(multiplicadorTipo(t, 'infernal', 'agua')).toBe(0.5);
     expect(multiplicadorTipo(t, 'tierra', 'aire')).toBe(0);
+    expect(multiplicadorTipo(t, 'electrico', 'tierra')).toBe(0);
     expect(multiplicadorTipo(t, 'comun', 'espectral')).toBe(0);
+    expect(multiplicadorTipo(t, 'espectral', 'comun')).toBe(0);
     expect(multiplicadorTipo(t, 'espectral', 'espectral')).toBe(2);
+    expect(multiplicadorTipo(t, 'tierra', 'plasma')).toBe(2);
+    expect(multiplicadorTipo(t, 'plasma', 'tierra')).toBe(0.5);
+    expect(multiplicadorTipo(t, 'comun', 'acero')).toBe(0.5);
     expect(multiplicadorTipo(t, 'comun', 'agua')).toBe(1);
     expect(multiplicadorTipo(t, '', 'agua')).toBe(1);
   });
 
-  it('con dos tipos se multiplican', () => {
-    expect(eficacia(t, 'electrico', ['agua', 'acero'])).toBe(4);
-    expect(eficacia(t, 'infernal', ['planta', 'ancestral'])).toBe(2);
+  it('no es simétrica: Mental vence a Oscuridad y Oscuridad a Mental', () => {
+    expect(multiplicadorTipo(t, 'mental', 'oscuridad')).toBe(2);
+    expect(multiplicadorTipo(t, 'oscuridad', 'mental')).toBe(2);
+    expect(multiplicadorTipo(t, 'acero', 'luz')).toBe(2);
+    expect(multiplicadorTipo(t, 'luz', 'acero')).toBe(0.5);
   });
 
-  it('todos los tipos usados existen', () => {
+  it('Ancestral contra Ancestral queda en ×2', () => {
+    expect(multiplicadorTipo(t, 'ancestral', 'ancestral')).toBe(2);
+  });
+
+  it('con dos tipos se multiplican: ×4, ×0,25 y ×0', () => {
+    expect(eficacia(t, 'tierra', ['infernal', 'acero'])).toBe(4);
+    expect(eficacia(t, 'agua', ['agua', 'planta'])).toBe(0.25);
+    expect(eficacia(t, 'tierra', ['agua', 'aire'])).toBe(0);
+    expect(eficacia(t, 'hielo', ['planta', 'ancestral'])).toBe(4);
+  });
+
+  it('cada tipo tiene su fila y solo nombra tipos que existen', () => {
     const ids = new Set(t.tipos.map((x) => x.id));
-    for (const [a, d] of [...t.eficaces, ...t.inmunidades]) {
-      expect(ids.has(a) && ids.has(d)).toBe(true);
+    expect(Object.keys(t.relaciones).sort()).toEqual([...ids].sort());
+    for (const r of Object.values(t.relaciones)) {
+      const todos = [...r.eficaz, ...r.pocoEficaz, ...r.sinEfecto];
+      for (const d of todos) expect(ids.has(d), d).toBe(true);
+      expect(new Set(todos).size).toBe(todos.length);
     }
+  });
+
+  it('el resumen de un tipo cuadra con la tabla', () => {
+    const r = resumenTipo(t, 'tierra');
+    expect(r.ataque.eficaz).toEqual(['electrico', 'infernal', 'plasma', 'acero']);
+    expect(r.ataque.sinEfecto).toEqual(['aire']);
+    expect(r.defensa.debil).toEqual(['agua', 'planta', 'aire', 'hielo']);
+    expect(r.defensa.inmune).toEqual(['electrico']);
+  });
+
+  it('las debilidades de una especie combinan sus dos tipos', () => {
+    const d = debilidades(t, ['infernal', 'tierra']);
+    expect(d.find((x) => x.tipo === 'agua')?.multiplicador).toBe(4);
+    expect(d.find((x) => x.tipo === 'electrico')?.multiplicador).toBe(0);
   });
 });
 

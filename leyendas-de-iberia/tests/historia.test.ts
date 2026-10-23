@@ -48,13 +48,17 @@ describe('zonas del capítulo 1', () => {
       for (const p of guiones.flatMap(pasosDe)) {
         if (p.tipo === 'dar') expect(DATOS.objetos[p.objeto], p.objeto).toBeDefined();
         if (p.tipo === 'combate') expect(ENTRENADORES[p.entrenador], p.entrenador).toBeDefined();
-        if (p.tipo === 'tienda') for (const x of p.productos) expect(DATOS.objetos[x.objeto]).toBeDefined();
+        if (p.tipo === 'tienda') {
+          for (const id of p.productos) expect(DATOS.objetos[id]?.precio, `${id} sin precio`).toBeGreaterThan(0);
+        }
       }
       for (const e of z.encuentros?.especies ?? []) expect(DATOS.especies[e.especie], e.especie).toBeDefined();
       for (const pnj of z.pnj) expect(ASPECTOS, `${z.id}/${pnj.id}`).toContain(pnj.aspecto);
+      for (const o of z.ocultos ?? []) expect(DATOS.objetos[o.objeto], o.objeto).toBeDefined();
     }
     for (const e of Object.values(ENTRENADORES)) {
       for (const c of e.equipo) expect(DATOS.especies[c.especie], c.especie).toBeDefined();
+      for (const id of Object.keys(e.objetos ?? {})) expect(DATOS.objetos[id], id).toBeDefined();
     }
   });
 

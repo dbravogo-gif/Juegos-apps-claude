@@ -7,7 +7,7 @@ import { crearCriatura, curarDelTodo } from './criatura';
 import type { DefEntrenador, Dir, TablaEncuentros } from './mundo';
 import type { ResultadoCombate } from './combate';
 
-export const VERSION_PARTIDA = 1;
+export const VERSION_PARTIDA = 2;
 export const MAX_EQUIPO = 6;
 
 export interface Posicion {
@@ -35,6 +35,8 @@ export interface Partida {
   vencidos: string[];
   blasones: string[];
   pasos: number;
+  /** Pasos que le quedan al repelente en uso (Ruda, Romero…). */
+  repelente: number;
 }
 
 export function nuevaPartida(nombre: string, semilla: number | string, inicio: Posicion): Partida {
@@ -54,6 +56,7 @@ export function nuevaPartida(nombre: string, semilla: number | string, inicio: P
     vencidos: [],
     blasones: [],
     pasos: 0,
+    repelente: 0,
   };
 }
 
@@ -94,6 +97,22 @@ export function semillaCombate(p: Partida): number {
   return entero(p.rng, 0, 0x7fffffff);
 }
 
+/**
+ * Gasta un paso del repelente. Devuelve `true` si se acaba justo ahora, para avisar.
+ */
+export function pasoRepelente(p: Partida): boolean {
+  if (p.repelente <= 0) return false;
+  p.repelente -= 1;
+  return p.repelente === 0;
+}
+
+/** Con repelente, no aparecen criaturas de menos nivel que la primera del equipo en pie. */
+export function repelida(p: Partida, salvaje: Criatura): boolean {
+  if (p.repelente <= 0) return false;
+  const primera = p.equipo.find((c) => c.vida > 0);
+  return primera !== undefined && salvaje.nivel < primera.nivel;
+}
+
 /** Un paso por hierba alta: devuelve la criatura salvaje que aparece, o `null`. */
 export function tirarEncuentro(p: Partida, tabla: TablaEncuentros, datos: DatosJuego): Criatura | null {
   if (!probabilidad(p.rng, tabla.tasa)) return null;
@@ -123,17 +142,29 @@ export const PERDIDA_DERROTA = 0.1;
  * Vuelca el resultado de un combate en la partida. Devuelve el premio ganado y el dinero
  * perdido, para que la interfaz lo cuente.
  */
-export function aplicarCombate(p: Partida, r: ResultadoParaPartida, datos: DatosJuego): { premio: number; perdido: number } {
+export function aplicarCombate(
+  p: Partida,
+  r: ResultadoParaPartida,
+  datos: DatosJuego,
+): { premio: number; perdido: number; regalos: Record<string, number> } {
   p.equipo = r.equipo;
   p.objetos = { ...r.objetos };
   for (const e of r.rivales) marcarVisto(p, e);
+  // Las que han evolucionado durante el combate cuentan como capturadas en su nueva forma.
+  for (const c of p.equipo) marcarCapturado(p, c.especie);
   if (r.capturada) anadirCriatura(p, r.capturada);
   let premio = 0;
   let perdido = 0;
+  let regalos: Record<string, number> = {};
   if (r.resultado === 'victoria' && r.entrenador) {
-    if (!p.vencidos.includes(r.entrenador.id)) p.vencidos.push(r.entrenador.id);
+    const primeraVez = !p.vencidos.includes(r.entrenador.id);
+    if (primeraVez) p.vencidos.push(r.entrenador.id);
     premio = r.entrenador.premio;
     p.dinero += premio;
+    if (primeraVez && r.entrenador.objetos) {
+      regalos = { ...r.entrenador.objetos };
+      for (const [id, n] of Object.entries(regalos)) darObjeto(p, id, n);
+    }
   }
   if (r.resultado === 'derrota') {
     perdido = Math.floor(p.dinero * PERDIDA_DERROTA);
@@ -141,5 +172,5 @@ export function aplicarCombate(p: Partida, r: ResultadoParaPartida, datos: Datos
     p.posicion = { ...p.regreso };
     curarEquipo(p, datos);
   }
-  return { premio, perdido };
+  return { premio, perdido, regalos };
 }

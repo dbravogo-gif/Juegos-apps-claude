@@ -142,6 +142,7 @@ const SANTA_FE: Zona = {
     { x: 10, y: 5, texto: ['Santa Fe.', 'Ciudad levantada en 1491 por los Reyes Católicos frente a Granada.'] },
     { x: 4, y: 5, texto: ['Mesón de Santa Fe.', 'Cama, comida y descanso para tus criaturas.'] },
   ],
+  ocultos: [{ id: 'azabache', x: 21, y: 11, objeto: 'azabache' }],
   alEntrar: decir(
     undefined,
     'Invierno de 1491. Los Reyes Católicos asedian Granada, el último reino nazarí de la Península.',
@@ -199,10 +200,7 @@ const MESON: Zona = {
         ...decir('Tendero', 'Téseras de bronce y ungüentos del boticario. ¿Qué te pongo?'),
         {
           tipo: 'tienda',
-          productos: [
-            { objeto: 'tesera', precio: 50 },
-            { objeto: 'unguento', precio: 60 },
-          ],
+          productos: ['tesera', 'tesera_plata', 'unguento', 'emplasto', 'aloe', 'sales', 'ruda', 'ovillo', 'brebaje_fuerza', 'brebaje_escudo'],
         },
       ],
     },
@@ -345,6 +343,11 @@ const VEGA: Zona = {
     { x: 7, y: 0, zona: 'alhambra', ax: 6, ay: 10, dir: 'arriba' },
   ],
   carteles: [{ x: 8, y: 26, texto: ['La Vega de Granada.', 'Al norte, la Alhambra.'] }],
+  ocultos: [
+    { id: 'higo', x: 14, y: 15, objeto: 'higo' },
+    { id: 'endrina', x: 1, y: 20, objeto: 'endrina' },
+    { id: 'ruda', x: 13, y: 7, objeto: 'ruda' },
+  ],
 };
 
 const ALHAMBRA: Zona = {
@@ -391,6 +394,10 @@ const ALHAMBRA: Zona = {
     { x: 6, y: 0, zona: 'patio_leones', ax: 5, ay: 10, dir: 'arriba' },
   ],
   carteles: [{ x: 5, y: 10, texto: ['La Alhambra.', 'Palacio de los reyes nazaríes de Granada.'] }],
+  ocultos: [
+    { id: 'gorro', x: 2, y: 9, objeto: 'gorro_colorado' },
+    { id: 'tuno', x: 11, y: 2, objeto: 'tuno' },
+  ],
 };
 
 const PATIO_LEONES: Zona = {
@@ -426,6 +433,9 @@ const PATIO_LEONES: Zona = {
             ...decir('Boabdil', 'Toma este blasón. Que se sepa que venciste en la Alhambra.'),
             { tipo: 'blason', id: 'alhambra', nombre: 'Blasón de la Alhambra' },
             bandera('blason_alhambra'),
+            ...decir(undefined, 'Un mensajero llega del real de Santa Fe con un regalo de la reina.'),
+            dar('tesera_real', 1),
+            ...decir('Mensajero', 'Una Tésera real, con el sello de doña Isabel. Ninguna criatura salvaje rechaza ese pacto. Úsala bien: no hay otra.'),
             {
               tipo: 'fin',
               texto: [
@@ -442,6 +452,7 @@ const PATIO_LEONES: Zona = {
   ],
   salidas: [{ x: 5, y: 11, zona: 'alhambra', ax: 6, ay: 1, dir: 'abajo' }],
   carteles: [],
+  ocultos: [{ id: 'turron', x: 1, y: 10, objeto: 'turron' }],
 };
 
 export const ZONAS_CAPITULO_1: Zona[] = [SANTA_FE, MESON, PABELLON, VEGA, ALHAMBRA, PATIO_LEONES];

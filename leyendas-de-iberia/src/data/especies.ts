@@ -15,7 +15,7 @@ interface DefEspecie {
   expBase: number;
   ratioCaptura: number;
   aprende: Aprende;
-  evoluciona?: { a: string; nivel: number };
+  evoluciona?: { a: string; nivel?: number; objeto?: string };
   descripcion: string;
 }
 
@@ -179,7 +179,8 @@ const DEF = {
     expBase: 60,
     ratioCaptura: 120,
     aprende: LINEA_DUENDE,
-    evoluciona: { a: 'trasgo', nivel: 14 },
+    // El trasgu del folclore lleva un gorro rojo: el duende evoluciona al ponérselo.
+    evoluciona: { a: 'trasgo', objeto: 'gorro_colorado' },
     descripcion: 'El diañu burllón del folclore asturiano se convierte en animal para engañar a los caminantes y se ríe cuando le descubren.',
   },
   trasgo: {

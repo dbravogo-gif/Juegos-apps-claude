@@ -25,6 +25,8 @@ import {
   darObjeto,
   equipoEnPie,
   equipoEntrenador,
+  pasoRepelente,
+  repelida,
   semillaCombate,
   tirarEncuentro,
   type Partida,
@@ -33,6 +35,7 @@ import {
 import { dibujarZona, TAM_CASILLA } from '../ui/casillasVisual';
 import { Persona } from '../ui/personaVisual';
 import { guardarPartida, sesion } from '../ui/sesion';
+import { conArticulo } from '../ui/textos';
 import { ANCHO, COLOR, estiloTexto } from '../ui/tema';
 import { ALTO_MAPA, MONEDA, type Interfaz } from './Interfaz';
 import type { ResultadoHistoria } from './Combate';
@@ -60,6 +63,8 @@ export class Mundo extends Phaser.Scene {
   private ocupado = false;
   /** Dinero perdido en la última derrota, para contarlo al volver al mesón. */
   private perdido = 0;
+  /** Objetos regalados por el último entrenador vencido. */
+  private regalos: Record<string, number> = {};
   /** A pulsado a mitad de un paso: se atiende al llegar. */
   private aPendiente = false;
   private listo = false;
@@ -226,10 +231,14 @@ export class Mundo extends Phaser.Scene {
       await this.conBloqueo(() => this.cambiarZona(salida));
       return;
     }
+    if (pasoRepelente(p)) await this.conBloqueo(async () => {
+      await this.ui.decir('El repelente ha dejado de hacer efecto.');
+      this.ui.cerrarDialogo();
+    });
     if (await this.comprobarEntrenadores()) return;
     if (this.zona.encuentros && esHierba(this.zona, p.posicion.x, p.posicion.y, CASILLAS) && equipoEnPie(p)) {
       const salvaje = tirarEncuentro(p, this.zona.encuentros, DATOS);
-      if (salvaje) await this.conBloqueo(() => this.combateSalvaje(salvaje));
+      if (salvaje && !repelida(p, salvaje)) await this.conBloqueo(() => this.combateSalvaje(salvaje));
     }
   }
 
@@ -276,12 +285,43 @@ export class Mundo extends Phaser.Scene {
       return;
     }
     const cartel = this.zona.carteles.find((c) => c.x === tx && c.y === ty);
-    if (cartel) void this.conBloqueo(() => this.ejecutarGuion(cartel.texto.map((texto) => ({ tipo: 'decir', texto }) as Paso)));
+    if (cartel) {
+      void this.conBloqueo(() => this.ejecutarGuion(cartel.texto.map((texto) => ({ tipo: 'decir', texto }) as Paso)));
+      return;
+    }
+    const oculto = (this.zona.ocultos ?? []).find((o) => o.x === tx && o.y === ty && !this.p.banderas[`oculto:${this.zona.id}:${o.id}`]);
+    if (oculto) void this.conBloqueo(() => this.encontrarOculto(oculto));
+  }
+
+  private async encontrarOculto(o: NonNullable<Zona['ocultos']>[number]): Promise<void> {
+    const p = this.p;
+    p.banderas[`oculto:${this.zona.id}:${o.id}`] = true;
+    darObjeto(p, o.objeto, o.cantidad ?? 1);
+    await this.ui.decir(`¡Has encontrado ${conArticulo(DATOS.objetos[o.objeto].nombre)}!`);
+    this.ui.cerrarDialogo();
+    guardarPartida(p);
   }
 
   private alPulsarMenu(): void {
     if (!this.listo || this.moviendo || this.ocupado) return;
-    void this.conBloqueo(() => this.ui.menu(this.p));
+    void this.conBloqueo(async () => {
+      const ovilloPermitido = Boolean(this.zona.encuentros) && !this.zona.interior;
+      const accion = await this.ui.menu(this.p, { ovilloPermitido });
+      if (accion === 'ovillo') await this.usarOvillo();
+    });
+  }
+
+  /** El Ovillo devuelve al último mesón. */
+  private async usarOvillo(): Promise<void> {
+    const cam = this.cameras.main;
+    await this.ui.decir('Sigues el hilo del Ovillo de vuelta al mesón…');
+    this.ui.cerrarDialogo();
+    cam.fadeOut(250, 0, 0, 0);
+    await this.esperar(280);
+    this.p.posicion = { ...this.p.regreso };
+    this.cargarZona(this.p.posicion);
+    cam.fadeIn(250, 0, 0, 0);
+    guardarPartida(this.p);
   }
 
   private async hablarCon(pe: PersonaEnMapa): Promise<void> {
@@ -441,6 +481,10 @@ export class Mundo extends Phaser.Scene {
     p.banderas[`vencido:${def.id}`] = true;
     for (const t of def.derrota) await this.ui.decir(t, def.nombre);
     await this.ui.decir(`Recibes ${def.premio} ${MONEDA}.`);
+    for (const [id, n] of Object.entries(this.regalos)) {
+      await this.ui.decir(`${def.nombre} te da ${n > 1 ? `${DATOS.objetos[id].nombre} ×${n}` : conArticulo(DATOS.objetos[id].nombre)}.`);
+    }
+    this.regalos = {};
     return true;
   }
 
@@ -469,7 +513,9 @@ export class Mundo extends Phaser.Scene {
             this.scene.stop('Combate');
             this.scene.wake();
             this.scene.wake('Interfaz');
-            this.perdido = aplicarCombate(p, { ...r, entrenador: def }, DATOS).perdido;
+            const aplicado = aplicarCombate(p, { ...r, entrenador: def }, DATOS);
+            this.perdido = aplicado.perdido;
+            this.regalos = aplicado.regalos;
             guardarPartida(p);
             resolve(r.resultado);
           },
