@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { DATOS } from '../data';
+import { ASPECTO_JUGADOR } from '../data/aspectos';
 import { CASILLAS, ENTRENADORES, ZONAS } from '../data/mundo';
 import { crearCriatura, nombreDe } from '../core/criatura';
 import type { Criatura } from '../core/modelo';
@@ -29,7 +30,7 @@ import {
   type Partida,
   type Posicion,
 } from '../core/partida';
-import { claveCasilla, TAM_CASILLA } from '../ui/casillasVisual';
+import { dibujarZona, TAM_CASILLA } from '../ui/casillasVisual';
 import { Persona } from '../ui/personaVisual';
 import { guardarPartida, sesion } from '../ui/sesion';
 import { ANCHO, COLOR, estiloTexto } from '../ui/tema';
@@ -41,7 +42,6 @@ import type { ResultadoHistoria } from './Combate';
 
 const T = TAM_CASILLA;
 const MS_PASO = 170;
-const COLOR_JUGADOR = 0x2f5fa0;
 
 interface PersonaEnMapa {
   pnj: Pnj;
@@ -97,9 +97,10 @@ export class Mundo extends Phaser.Scene {
   }
 
   update(): void {
-    if (!this.listo || this.moviendo || this.ocupado || this.ui.ocupado) return;
-    const dir = this.ui.direccion();
+    if (!this.listo || this.moviendo) return;
+    const dir = this.ocupado || this.ui.ocupado ? null : this.ui.direccion();
     if (dir) this.intentarMover(dir);
+    else this.jugador?.parar();
   }
 
   /** Ejecuta algo con el mapa bloqueado (sin moverse ni abrir menús). */
@@ -121,18 +122,16 @@ export class Mundo extends Phaser.Scene {
     this.zona = zona;
     const capa = this.add.container(0, 0);
     this.capa = capa;
-    zona.mapa.forEach((fila, y) => {
-      [...fila].forEach((c, x) => capa.add(this.add.image(x * T + T / 2, y * T + T / 2, claveCasilla(c))));
-    });
+    dibujarZona(this, zona, capa);
     for (const cartel of zona.carteles) capa.add(this.dibujarCartel(cartel.x, cartel.y));
 
     for (const pnj of zona.pnj) {
       if (!this.pnjVisible(pnj)) continue;
-      const figura = new Persona(this, pnj.x * T + T / 2, pnj.y * T + T / 2, pnj.color, pnj.tocado, pnj.dir);
+      const figura = new Persona(this, pnj.x * T + T / 2, pnj.y * T + T / 2, pnj.aspecto, pnj.dir);
       capa.add(figura);
       this.personas.push({ pnj, figura, x: pnj.x, y: pnj.y });
     }
-    this.jugador = new Persona(this, pos.x * T + T / 2, pos.y * T + T / 2, COLOR_JUGADOR, undefined, pos.dir);
+    this.jugador = new Persona(this, pos.x * T + T / 2, pos.y * T + T / 2, ASPECTO_JUGADOR, pos.dir);
     capa.add(this.jugador);
     this.ordenarProfundidad();
 
@@ -141,6 +140,7 @@ export class Mundo extends Phaser.Scene {
     const w = zona.mapa[0].length * T;
     const h = zona.mapa.length * T;
     cam.stopFollow();
+    cam.setRoundPixels(true);
     cam.setBounds(Math.min(0, (w - ANCHO) / 2), Math.min(0, (h - ALTO_MAPA) / 2), Math.max(w, ANCHO), Math.max(h, ALTO_MAPA));
     cam.startFollow(this.jugador, true);
   }
@@ -192,8 +192,12 @@ export class Mundo extends Phaser.Scene {
     const [dx, dy] = DELTA[dir];
     const nx = pos.x + dx;
     const ny = pos.y + dy;
-    if (esSolida(this.zona, nx, ny, CASILLAS) || this.ocupadaPorAlguien(nx, ny)) return;
+    if (esSolida(this.zona, nx, ny, CASILLAS) || this.ocupadaPorAlguien(nx, ny)) {
+      this.jugador.parar();
+      return;
+    }
     this.moviendo = true;
+    this.jugador.andar(dir);
     pos.x = nx;
     pos.y = ny;
     this.ordenarProfundidad();
@@ -329,6 +333,7 @@ export class Mundo extends Phaser.Scene {
   private async acercarse(pe: PersonaEnMapa): Promise<void> {
     const [dx, dy] = DELTA[pe.figura.dir];
     const pos = this.p.posicion;
+    pe.figura.andar(pe.figura.dir);
     while (Math.abs(pos.x - pe.x) + Math.abs(pos.y - pe.y) > 1) {
       pe.x += dx;
       pe.y += dy;
@@ -336,6 +341,7 @@ export class Mundo extends Phaser.Scene {
         this.tweens.add({ targets: pe.figura, x: pe.x * T + T / 2, y: pe.y * T + T / 2, duration: MS_PASO, onComplete: () => resolve() }),
       );
     }
+    pe.figura.parar();
     this.ordenarProfundidad();
   }
 

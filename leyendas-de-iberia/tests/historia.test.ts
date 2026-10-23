@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { DATOS } from '../src/data';
+import { ASPECTOS } from '../src/data/aspectos';
 import { CASILLAS, ENTRENADORES, INICIO, ZONAS } from '../src/data/mundo';
 import { enLineaDeVision, esSolida, validarZona, type Guion, type Paso } from '../src/core/mundo';
 import {
@@ -50,6 +51,7 @@ describe('zonas del capítulo 1', () => {
         if (p.tipo === 'tienda') for (const x of p.productos) expect(DATOS.objetos[x.objeto]).toBeDefined();
       }
       for (const e of z.encuentros?.especies ?? []) expect(DATOS.especies[e.especie], e.especie).toBeDefined();
+      for (const pnj of z.pnj) expect(ASPECTOS, `${z.id}/${pnj.id}`).toContain(pnj.aspecto);
     }
     for (const e of Object.values(ENTRENADORES)) {
       for (const c of e.equipo) expect(DATOS.especies[c.especie], c.especie).toBeDefined();

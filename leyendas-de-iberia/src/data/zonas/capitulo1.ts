@@ -36,8 +36,7 @@ const SANTA_FE: Zona = {
       x: 11,
       y: 1,
       dir: 'abajo',
-      color: 0x8a2b20,
-      tocado: 'casco',
+      aspecto: 'soldado',
       ocultoSi: 'inicial',
       guion: decir('Centinela', 'Sin licencia de la reina no sale nadie de Santa Fe.', 'Su pabellón es la tienda grande, al noreste de la plaza.'),
     },
@@ -47,8 +46,7 @@ const SANTA_FE: Zona = {
       x: 14,
       y: 9,
       dir: 'izquierda',
-      color: 0x6d1f1f,
-      tocado: 'casco',
+      aspecto: 'caballero',
       guion: [
         si(
           'teseras',
@@ -82,8 +80,7 @@ const SANTA_FE: Zona = {
       x: 7,
       y: 12,
       dir: 'abajo',
-      color: 0x3d4a7a,
-      tocado: 'gorro',
+      aspecto: 'explorador',
       guion: [
         si('colon', decir('Colón', 'Cuando la reina me dé su licencia, cruzaré el océano hacia el oeste. ¡Ya lo verás!'), [
           ...decir(
@@ -103,8 +100,7 @@ const SANTA_FE: Zona = {
       x: 9,
       y: 2,
       dir: 'abajo',
-      color: 0x7a6a3a,
-      tocado: 'sombrero',
+      aspecto: 'anciano',
       guion: [
         si('fosil', decir('Pastor', 'En Orce aparecen huesos de bestias que ya no existen. Mi abuelo decía que eran de gigantes.'), [
           si(
@@ -129,8 +125,7 @@ const SANTA_FE: Zona = {
       x: 19,
       y: 17,
       dir: 'izquierda',
-      color: 0x5b7a3a,
-      tocado: 'toca',
+      aspecto: 'mujer',
       guion: decir(
         'Vecina',
         'El verano pasado ardió el campamento real entero.',
@@ -176,8 +171,7 @@ const MESON: Zona = {
       x: 3,
       y: 2,
       dir: 'abajo',
-      color: 0x9c4a6b,
-      tocado: 'toca',
+      aspecto: 'anciana',
       guion: [
         {
           tipo: 'elegir',
@@ -200,8 +194,7 @@ const MESON: Zona = {
       x: 6,
       y: 2,
       dir: 'abajo',
-      color: 0x4a6b3a,
-      tocado: 'gorro',
+      aspecto: 'monje',
       guion: [
         ...decir('Tendero', 'Téseras de bronce y ungüentos del boticario. ¿Qué te pongo?'),
         {
@@ -239,8 +232,7 @@ const PABELLON: Zona = {
       x: 4,
       y: 2,
       dir: 'abajo',
-      color: 0x7a1f3d,
-      tocado: 'corona',
+      aspecto: 'dama',
       guion: [
         si(
           'inicial',
@@ -272,8 +264,7 @@ const PABELLON: Zona = {
       x: 6,
       y: 2,
       dir: 'abajo',
-      color: 0x8a6a1f,
-      tocado: 'corona',
+      aspecto: 'noble',
       guion: decir('Fernando', 'La reina confía en ti. Y yo confío en la reina.', 'Tanto monta, monta tanto.'),
     },
   ],
@@ -332,8 +323,7 @@ const VEGA: Zona = {
       x: 9,
       y: 20,
       dir: 'izquierda',
-      color: 0x8a2b20,
-      tocado: 'casco',
+      aspecto: 'ballestero',
       entrenador: 'ballestero_sancho',
       vision: 3,
       guion: [],
@@ -344,8 +334,7 @@ const VEGA: Zona = {
       x: 13,
       y: 10,
       dir: 'izquierda',
-      color: 0x1f5a6d,
-      tocado: 'gorro',
+      aspecto: 'mercader',
       entrenador: 'mercader_genoves',
       vision: 3,
       guion: [],
@@ -391,8 +380,7 @@ const ALHAMBRA: Zona = {
       x: 7,
       y: 3,
       dir: 'izquierda',
-      color: 0x1f6d4a,
-      tocado: 'turbante',
+      aspecto: 'guardia_nazari',
       entrenador: 'guardia_alhambra',
       vision: 2,
       guion: [],
@@ -430,8 +418,7 @@ const PATIO_LEONES: Zona = {
       x: 5,
       y: 2,
       dir: 'abajo',
-      color: 0x1f4a6d,
-      tocado: 'turbante',
+      aspecto: 'sultan',
       guion: [
         si('blason_alhambra', decir('Boabdil', 'Cuida de este patio. Doce leones lo han guardado durante más de cien años.'), [
           { tipo: 'combate', entrenador: 'boabdil' },

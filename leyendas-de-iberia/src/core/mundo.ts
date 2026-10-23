@@ -59,10 +59,8 @@ export interface Pnj {
   x: number;
   y: number;
   dir: Dir;
-  /** Color principal de la figura provisional. */
-  color: number;
-  /** Detalle de la figura: corona, casco, turbante… */
-  tocado?: 'corona' | 'casco' | 'turbante' | 'sombrero' | 'toca' | 'gorro';
+  /** Hoja de sprites con la que se dibuja (`ASPECTOS` en `src/data/aspectos.ts`). */
+  aspecto: string;
   guion: Guion;
   /** Id de un entrenador: si te ve, te reta. */
   entrenador?: string;
