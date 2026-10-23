@@ -1,0 +1,130 @@
+# Leyendas de Iberia (carpeta leyendas-de-iberia/)
+
+Juego de criaturas al estilo Pokémon ambientado en la historia de España, de 1492 a hoy. Es para
+el autor y dos amigos, y se juega en el navegador del móvil y del PC. Usa Vite + TypeScript +
+Phaser y se publica como web estática en GitHub Pages.
+
+El resto del repositorio (`game/`, `aerolinea/`, `Bulk-up-main/`) son otros proyectos. No se
+tocan desde aquí.
+
+## Estado actual
+
+- **Fase 1, prototipo «Granada, 1492».** Los hitos 1 a 3 están hechos y el modo historia se juega
+  de principio a fin:
+  - Título, nueva partida con nombre y guardado automático.
+  - Santa Fe: Isabel y la elección de compañera, el Gran Capitán, Colón, el pastor de Orce, y el
+    mesón con su tienda.
+  - La Vega, con encuentros, ballestero y mercader.
+  - La Alhambra, con su guardia.
+  - El Patio de los Leones: Boabdil, el blasón y el final.
+- **Hito 4, en curso:**
+  - Hecho: el juego ocupa toda la pantalla del móvil.
+  - Hecho: es una web instalable (PWA), con manifiesto, iconos y service worker para jugar sin
+    conexión.
+  - Hecho: se publica en Pages con el resto del repositorio, en
+    `…/Juegos-apps-claude/leyendas-de-iberia/`.
+  - Falta ajustar el equilibrio jugando.
+- **Arte, pendiente de decidir:**
+  - Mapa y personajes que caminan: un paquete libre (CC0) retocado o pixel art hecho por
+    código. Kenney y OpenGameArt no son accesibles desde el entorno; el autor tendría que subir
+    el paquete.
+  - Criaturas y retratos: OpenArt, cuando el autor traiga el Bestiario hecho con
+    `docs/PROMPT-CRIATURAS.md`.
+- **El laboratorio de combate** es solo una herramienta de pruebas, con un enlace pequeño en el
+  título. No es prioridad.
+- **Pendiente del autor:** las relaciones entre tipos y la definición de Plasma (`docs/GDD.md`
+  §8). La tabla de `src/data/tipos.ts` es provisional.
+
+## Antes de tocar nada
+
+- Lee `docs/GDD.md`: las decisiones cerradas y las abiertas. Si una idea nueva choca con una
+  decisión cerrada, pregunta antes de seguir. No diseñes sobre las abiertas sin preguntar.
+- Lee `docs/PROTOTIPO.md`: el plan de la fase en curso.
+
+## Reglas que más se olvidan
+
+- **Nada de Pokémon ni de PokéRogue:** ni nombres, ni diseños, ni sprites, ni música, ni
+  textos. Solo se toman las mecánicas como inspiración.
+- **Los personajes históricos nunca son criaturas.** Son entrenadores, líderes, PNJ y trama.
+  Las criaturas salen de la mitología y la fauna ibérica, más los fósiles que revive el
+  Dr. Jangel.
+- **A quién elegir.** Primero reyes, generales y guerreros; artistas, pocos.
+  - Se eligen por su peso histórico. No hace falta buscarles relación con los animales.
+  - Los mentores son Isabel la Católica (capítulo 1) y, según la propuesta, Carlos III
+    (capítulo 5).
+  - Los héroes anteriores a 1492, como el Cid, solo salen como ánimas en las zonas opcionales.
+- **Canarias.** Los jugadores son de allí, y al menos un gimnasio tiene que estar en las islas.
+- **Hechos y fechas reales correctos.** Lo fantástico son las criaturas, no la historia. Si un
+  dato es dudoso, se marca como tal o se pregunta.
+- **Personas vivas:** solo figuras públicas y en su papel público, con retratos dibujados (nunca
+  fotos) y caricatura amable. La web pública lleva `noindex`.
+- **Determinismo en `src/core`.** Prohibido usar `Math.random`, `Date.now` o Phaser ahí. Toda la
+  aleatoriedad sale del generador con semilla, cuyo estado viaja dentro del estado del juego. El
+  estado se serializa a JSON: nada de clases con métodos ni funciones dentro. Es la base del
+  multijugador y del reto diario.
+- **El contenido son datos (`src/data`).** Añadir una criatura, un movimiento o un entrenador
+  no debe obligar a tocar el motor.
+- **Móvil primero.** Todo lo jugable funciona con el mando táctil y con el teclado.
+- **Cada fase termina en algo jugable.**
+- **Al final de cada sesión**, actualiza el apartado «Estado actual» de este archivo y el
+  registro de cambios del GDD.
+
+## Estructura
+
+El código va en español: nombres, comentarios y textos.
+
+- `src/core/`: motor puro y determinista, con pruebas en `tests/`.
+  - `modelo.ts`: los tipos de datos.
+  - `rng.ts`: el generador con semilla.
+  - `estadisticas.ts`, `tipos.ts`, `danio.ts`, `captura.ts`, `progreso.ts` y `criatura.ts`.
+  - `combate.ts` e `ia.ts`: el combate, como (estado, acción) → (estado, eventos).
+  - `mundo.ts`: zonas, personajes, salidas, guiones (`Paso`) y línea de visión.
+  - `partida.ts`: el estado de la partida, los encuentros y el resultado de los combates.
+  - `guardado.ts`: serializar y migrar partidas.
+- `src/data/`:
+  - Contenido de combate: `especies.ts`, `movimientos.ts`, `tipos.ts`, `temperamentos.ts` y
+    `objetos.ts`, reunidos en `DATOS` (`index.ts`).
+  - Contenido del mundo: `casillas.ts` (la leyenda de los mapas), `entrenadores.ts`,
+    `zonas/capitulo1.ts` y `guion.ts` (atajos para escribir guiones). Se reúnen en `mundo.ts`.
+- `src/escenas/`:
+  - `Arranque`.
+  - `Titulo`.
+  - `Mundo`: el mapa y los guiones.
+  - `Interfaz`: el mando, los diálogos y los menús, encima del mapa.
+  - `Combate`: modo historia o laboratorio.
+  - `Laboratorio`.
+- `src/ui/`:
+  - `tema.ts`: medidas (1080 × 1920; el mapa ocupa los 1240 de arriba) y colores.
+  - `componentes.ts`: `Boton`, que admite mantener pulsado; `Barra`; chips de tipo.
+  - `casillasVisual.ts` y `personaVisual.ts`: arte provisional por código.
+  - `criaturaVisual.ts`: los PNG de `src/assets/criaturas/` o una figura provisional.
+  - `textos.ts`: frases de combate y `describirMovimiento`.
+  - `sesion.ts`: la partida en curso y el `localStorage`.
+  - `pedirNombre.ts`.
+- **Añadir una zona:**
+  - Se dibuja en texto con los caracteres de `casillas.ts`.
+  - Cada salida necesita su vuelta en la otra zona.
+  - Las pruebas (`tests/historia.test.ts`) comprueban filas, caracteres, salidas, personajes y
+    guiones.
+- **Banderas de la historia:**
+  - `inicial`, `teseras`, `colon`, `fosil`.
+  - `visto:<zona>`: el guion de entrada ya se ha visto.
+  - `vencido:<entrenador>`.
+  - `blason_alhambra`.
+
+## Comprobar
+
+- `npm test`: Vitest contra `src/core` y la coherencia de los datos.
+- `npm run build`: `tsc` más `vite build`, con base relativa.
+- `npm run dev` o `npm run preview`: abre el juego con un viewport de móvil en vertical.
+- **Sin móvil, con Playwright:**
+  - Usa un viewport de 390 × 844, con toques y teclado: flechas, Intro (A), Esc (B) y M (menú).
+  - `window.juego` da acceso a las escenas para comprobar el estado; por ejemplo,
+    `juego.scene.getScene('Mundo').p` es la partida.
+- **Publicación.** `.github/workflows/publicar-juego.yml` publica al hacer push a `main`:
+  - Ejecuta `npm ci`, `npm test` y `npm run build` aquí.
+  - Copia `dist/` a `web/leyendas-de-iberia/`.
+  - El service worker del juego de la raíz (`game/sw.js`) ignora esta carpeta.
+- **Alto de pantalla.** El alto lógico se adapta al móvil: `ALTO` en `tema.ts`, entre 1920 y
+  2400. Las pantallas fijas (título, combate, laboratorio) están diseñadas a 1920 y se centran
+  con `MARGEN_VERTICAL`. El mapa usa todo el alto que sobra.

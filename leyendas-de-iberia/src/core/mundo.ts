@@ -1,0 +1,175 @@
+// Modelo del mundo explorable: zonas dibujadas como texto, personajes, salidas y guiones.
+// Todo son datos JSON; la escena de Phaser solo los pinta y los recorre.
+
+export type Dir = 'arriba' | 'abajo' | 'izquierda' | 'derecha';
+
+export const DELTA: Record<Dir, [number, number]> = {
+  arriba: [0, -1],
+  abajo: [0, 1],
+  izquierda: [-1, 0],
+  derecha: [1, 0],
+};
+
+export const OPUESTA: Record<Dir, Dir> = { arriba: 'abajo', abajo: 'arriba', izquierda: 'derecha', derecha: 'izquierda' };
+
+/** Cómo se comporta un carácter del mapa. El aspecto lo decide la interfaz. */
+export interface DefCasilla {
+  nombre: string;
+  solido: boolean;
+  /** Hierba alta: puede saltar un encuentro. */
+  hierba?: boolean;
+}
+
+export type Paso =
+  | { tipo: 'decir'; texto: string; quien?: string }
+  | { tipo: 'elegir'; pregunta: string; quien?: string; opciones: { texto: string; pasos: Paso[] }[] }
+  | { tipo: 'si'; bandera: string; entonces: Paso[]; sino?: Paso[] }
+  | { tipo: 'bandera'; nombre: string; valor?: boolean }
+  | { tipo: 'curar' }
+  | { tipo: 'dar'; objeto: string; cantidad: number }
+  | { tipo: 'dinero'; cantidad: number }
+  | { tipo: 'elegirInicial' }
+  | { tipo: 'combate'; entrenador: string }
+  | { tipo: 'tienda'; productos: { objeto: string; precio: number }[] }
+  | { tipo: 'regreso' }
+  /** Ordenar el equipo con las criaturas guardadas en el Bestiario. */
+  | { tipo: 'almacen' }
+  | { tipo: 'blason'; id: string; nombre: string }
+  | { tipo: 'guardar' }
+  | { tipo: 'fin'; texto: string[] };
+
+export type Guion = Paso[];
+
+export interface DefEntrenador {
+  id: string;
+  nombre: string;
+  equipo: { especie: string; nivel: number }[];
+  /** Valía fija de sus criaturas: lo entrenadas que están. */
+  valia: number;
+  premio: number;
+  antes: string[];
+  derrota: string[];
+  /** Lo que dice si le hablas cuando ya le has vencido. */
+  despues: string[];
+}
+
+export interface Pnj {
+  id: string;
+  nombre: string;
+  x: number;
+  y: number;
+  dir: Dir;
+  /** Color principal de la figura provisional. */
+  color: number;
+  /** Detalle de la figura: corona, casco, turbante… */
+  tocado?: 'corona' | 'casco' | 'turbante' | 'sombrero' | 'toca' | 'gorro';
+  guion: Guion;
+  /** Id de un entrenador: si te ve, te reta. */
+  entrenador?: string;
+  /** Casillas que alcanza su vista. */
+  vision?: number;
+  /** Solo aparece si la bandera está puesta. */
+  visibleSi?: string;
+  /** Desaparece cuando la bandera está puesta. */
+  ocultoSi?: string;
+}
+
+export interface Salida {
+  x: number;
+  y: number;
+  zona: string;
+  ax: number;
+  ay: number;
+  dir: Dir;
+}
+
+export interface TablaEncuentros {
+  /** Probabilidad, sobre 100, de que salte un encuentro en cada paso por hierba alta. */
+  tasa: number;
+  especies: { especie: string; min: number; max: number; peso: number }[];
+}
+
+export interface Zona {
+  id: string;
+  nombre: string;
+  /** Filas de caracteres, todas del mismo ancho. */
+  mapa: string[];
+  interior?: boolean;
+  /** Color del suelo fuera del mapa y de fondo. */
+  fondo?: number;
+  encuentros?: TablaEncuentros;
+  pnj: Pnj[];
+  salidas: Salida[];
+  carteles: { x: number; y: number; texto: string[] }[];
+  /** Guion que se ejecuta la primera vez que se entra (usa la bandera `visto:<id>`). */
+  alEntrar?: Guion;
+}
+
+export function ancho(z: Zona): number {
+  return z.mapa[0]?.length ?? 0;
+}
+
+export function alto(z: Zona): number {
+  return z.mapa.length;
+}
+
+/** Carácter de la casilla; fuera del mapa cuenta como muro. */
+export function casillaEn(z: Zona, x: number, y: number): string {
+  if (y < 0 || y >= z.mapa.length || x < 0 || x >= z.mapa[y].length) return '#';
+  return z.mapa[y][x];
+}
+
+export function esSolida(z: Zona, x: number, y: number, casillas: Record<string, DefCasilla>): boolean {
+  return casillas[casillaEn(z, x, y)]?.solido ?? true;
+}
+
+export function esHierba(z: Zona, x: number, y: number, casillas: Record<string, DefCasilla>): boolean {
+  return Boolean(casillas[casillaEn(z, x, y)]?.hierba);
+}
+
+/** ¿Está el jugador en línea recta delante del entrenador, sin nada sólido en medio? */
+export function enLineaDeVision(
+  z: Zona,
+  casillas: Record<string, DefCasilla>,
+  desde: { x: number; y: number; dir: Dir },
+  vision: number,
+  objetivo: { x: number; y: number },
+  bloqueos: (x: number, y: number) => boolean = () => false,
+): boolean {
+  const [dx, dy] = DELTA[desde.dir];
+  for (let i = 1; i <= vision; i++) {
+    const x = desde.x + dx * i;
+    const y = desde.y + dy * i;
+    if (x === objetivo.x && y === objetivo.y) return true;
+    if (esSolida(z, x, y, casillas) || bloqueos(x, y)) return false;
+  }
+  return false;
+}
+
+/** Errores de coherencia de una zona. Lista vacía si todo está bien. */
+export function validarZona(
+  z: Zona,
+  casillas: Record<string, DefCasilla>,
+  zonas: Record<string, Zona>,
+  entrenadores: Record<string, DefEntrenador>,
+): string[] {
+  const errores: string[] = [];
+  const w = ancho(z);
+  z.mapa.forEach((fila, y) => {
+    if (fila.length !== w) errores.push(`${z.id}: la fila ${y} mide ${fila.length} y no ${w}`);
+    for (const c of fila) if (!casillas[c]) errores.push(`${z.id}: carácter desconocido «${c}» en la fila ${y}`);
+  });
+  for (const s of z.salidas) {
+    const destino = zonas[s.zona];
+    if (!destino) {
+      errores.push(`${z.id}: salida a una zona que no existe (${s.zona})`);
+      continue;
+    }
+    if (esSolida(destino, s.ax, s.ay, casillas)) errores.push(`${z.id}: la salida a ${s.zona} cae en una casilla sólida`);
+  }
+  for (const p of z.pnj) {
+    if (esSolida(z, p.x, p.y, casillas)) errores.push(`${z.id}: ${p.id} está sobre una casilla sólida`);
+    if (p.entrenador && !entrenadores[p.entrenador]) errores.push(`${z.id}: ${p.id} usa un entrenador que no existe`);
+  }
+  return errores;
+}

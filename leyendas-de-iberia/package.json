@@ -1,0 +1,22 @@
+{
+  "name": "leyendas-de-iberia",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Juego de criaturas ambientado en la historia de España. Vite + TypeScript + Phaser.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "phaser": "4.2.1"
+  },
+  "devDependencies": {
+    "typescript": "6.0.3",
+    "vite": "8.3.4",
+    "vitest": "5.0.5"
+  }
+}

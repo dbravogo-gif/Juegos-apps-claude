@@ -1,14 +1,15 @@
-# Publica en GitHub Pages los dos juegos del repositorio cada vez que cambian en main:
-#   game/       en la raíz:          https://dbravogo-gif.github.io/Juegos-apps-claude/
-#   aerolinea/  en /aerolinea/:      https://dbravogo-gif.github.io/Juegos-apps-claude/aerolinea/
+# Publica en GitHub Pages los juegos del repositorio cada vez que cambian en main:
+#   game/                en la raíz:                https://dbravogo-gif.github.io/Juegos-apps-claude/
+#   aerolinea/           en /aerolinea/:            https://dbravogo-gif.github.io/Juegos-apps-claude/aerolinea/
+#   leyendas-de-iberia/  en /leyendas-de-iberia/:   https://dbravogo-gif.github.io/Juegos-apps-claude/leyendas-de-iberia/
 # Un repositorio solo tiene un sitio de Pages, así que se publican juntos. Antes pasan los
-# tests de los dos: si fallan, no se despliega.
+# tests de todos: si fallan, no se despliega.
 name: Publicar juegos
 
 on:
   push:
     branches: [main]
-    paths: ['game/**', 'aerolinea/**', '.github/workflows/publicar-juego.yml']
+    paths: ['game/**', 'aerolinea/**', 'leyendas-de-iberia/**', '.github/workflows/publicar-juego.yml']
   workflow_dispatch:
 
 permissions:
@@ -37,6 +38,12 @@ jobs:
       - name: Tests de App viación
         working-directory: aerolinea
         run: npm test
+      - name: Tests y build de Leyendas de Iberia
+        working-directory: leyendas-de-iberia
+        run: |
+          npm ci
+          npm test
+          npm run build
       - name: Montar el sitio
         run: |
           mkdir web
@@ -45,6 +52,8 @@ jobs:
           cp -r aerolinea/index.html aerolinea/manifest.webmanifest aerolinea/icon.svg aerolinea/src aerolinea/vendor aerolinea/img web/aerolinea/
           # Una página por comandante (aerolinea/piloto/<id>/), con su icono para la pantalla de inicio.
           node aerolinea/tools/paginas-pilotos.mjs web/aerolinea
+          mkdir web/leyendas-de-iberia
+          cp -r leyendas-de-iberia/dist/. web/leyendas-de-iberia/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
