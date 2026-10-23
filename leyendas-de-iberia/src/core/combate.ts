@@ -84,10 +84,11 @@ export type Evento =
   | { tipo: 'despierta'; lado: Lado; nombre: string }
   | { tipo: 'etapa'; lado: Lado; nombre: string; estadistica: EstadisticaCombate; cambio: number; intento: number }
   | { tipo: 'debilitado'; lado: Lado; nombre: string }
-  | { tipo: 'experiencia'; nombre: string; cantidad: number }
-  | { tipo: 'nivel'; nombre: string; nivel: number; vida: number; vidaMax: number }
-  | { tipo: 'aprende'; nombre: string; movimiento: string }
-  | { tipo: 'noAprende'; nombre: string; movimiento: string }
+  | { tipo: 'experiencia'; indice: number; nombre: string; cantidad: number }
+  | { tipo: 'nivel'; indice: number; nombre: string; nivel: number; vida: number; vidaMax: number }
+  | { tipo: 'aprende'; indice: number; nombre: string; movimiento: string }
+  /** Ya sabe cuatro movimientos: la interfaz pregunta si olvida uno al acabar el combate. */
+  | { tipo: 'noAprende'; indice: number; nombre: string; movimiento: string; movimientoId: string }
   | { tipo: 'objeto'; lado: Lado; objeto: string }
   | { tipo: 'captura'; nombre: string; sacudidas: number; exito: boolean }
   | { tipo: 'huida'; exito: boolean }
@@ -194,7 +195,7 @@ export function accionesDisponibles(e: EstadoCombate, datos: DatosJuego): Accion
   const objetos: Record<string, boolean> = {};
   for (const [id, n] of Object.entries(e.jugador.objetos)) {
     const obj = datos.objetos[id];
-    if (!obj || n <= 0) continue;
+    if (!obj || n <= 0 || obj.tipo === 'clave') continue;
     objetos[id] = obj.tipo === 'captura' ? e.salvaje : e.jugador.equipo.some((c) => vivo(c) && c.vida < vidaMax(c, datos));
   }
   return {
@@ -225,6 +226,7 @@ function validar(e: EstadoCombate, accion: Accion, datos: DatosJuego): void {
     case 'objeto': {
       const obj = datos.objetos[accion.objeto];
       if (!obj || (j.objetos[accion.objeto] ?? 0) <= 0) throw new Error('No te quedan de ese objeto');
+      if (obj.tipo === 'clave') throw new Error('Ese objeto no se usa en combate');
       if (obj.tipo === 'captura' && !e.salvaje) throw new Error('No se puede capturar la criatura de otro entrenador');
       if (obj.tipo === 'curar') {
         const c = j.equipo[accion.objetivo ?? j.activo];
@@ -339,6 +341,7 @@ function huir(e: EstadoCombate, datos: DatosJuego, ev: Evento[]): boolean {
 /** Devuelve `true` si el objeto termina el combate (una captura con éxito). */
 function usarObjeto(e: EstadoCombate, accion: Extract<Accion, { tipo: 'objeto' }>, datos: DatosJuego, ev: Evento[]): boolean {
   const obj = datos.objetos[accion.objeto];
+  if (obj.tipo === 'clave') return false;
   e.jugador.objetos[accion.objeto] -= 1;
   ev.push({ tipo: 'objeto', lado: 'jugador', objeto: obj.nombre });
   if (obj.tipo === 'curar') {
@@ -518,11 +521,14 @@ function darExperiencia(e: EstadoCombate, derrotado: Criatura, datos: DatosJuego
   const { criatura, subidas } = aplicarExperiencia(receptor, cantidad, datos);
   Object.assign(receptor, criatura);
   const nombre = nombreDe(receptor, datos);
-  ev.push({ tipo: 'experiencia', nombre, cantidad });
+  const indice = e.jugador.activo;
+  ev.push({ tipo: 'experiencia', indice, nombre, cantidad });
   for (const s of subidas) {
-    ev.push({ tipo: 'nivel', nombre, nivel: s.nivel, vida: s.vida, vidaMax: s.vidaMax });
-    for (const m of s.aprendidos) ev.push({ tipo: 'aprende', nombre, movimiento: datos.movimientos[m].nombre });
-    for (const m of s.pendientes) ev.push({ tipo: 'noAprende', nombre, movimiento: datos.movimientos[m].nombre });
+    ev.push({ tipo: 'nivel', indice, nombre, nivel: s.nivel, vida: s.vida, vidaMax: s.vidaMax });
+    for (const m of s.aprendidos) ev.push({ tipo: 'aprende', indice, nombre, movimiento: datos.movimientos[m].nombre });
+    for (const m of s.pendientes) {
+      ev.push({ tipo: 'noAprende', indice, nombre, movimiento: datos.movimientos[m].nombre, movimientoId: m });
+    }
   }
 }
 

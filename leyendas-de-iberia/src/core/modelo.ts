@@ -81,7 +81,9 @@ export interface DefTablaTipos {
 
 export type Objeto =
   | { id: string; nombre: string; tipo: 'curar'; cantidad: number; descripcion: string }
-  | { id: string; nombre: string; tipo: 'captura'; bonus: number; descripcion: string };
+  | { id: string; nombre: string; tipo: 'captura'; bonus: number; descripcion: string }
+  /** Objeto de la historia: no se usa en combate. */
+  | { id: string; nombre: string; tipo: 'clave'; descripcion: string };
 
 export interface DatosJuego {
   especies: Record<string, Especie>;
