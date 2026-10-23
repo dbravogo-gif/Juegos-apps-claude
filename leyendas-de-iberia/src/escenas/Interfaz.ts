@@ -15,17 +15,20 @@ import { describirMovimiento } from '../ui/textos';
 import { guardarPartida } from '../ui/sesion';
 import { aclarar, ALTO, ANCHO, COLOR, estiloTexto } from '../ui/tema';
 
+/** Alto del mando, abajo del todo. El mapa ocupa el resto. */
+const ALTO_MANDO = 680;
+
 // Capa de interfaz del modo historia, por encima del mapa: mando táctil, teclado, diálogos,
 // elecciones y menús. El mapa le pregunta por la dirección pulsada y escucha los eventos «a» y
 // «menu». Todo lo que espera al jugador devuelve una promesa.
 
-/** Alto de la zona del mapa; debajo va el mando. */
-export const ALTO_MAPA = 1240;
+/** Alto de la zona del mapa; debajo va el mando. En móviles alargados el mapa gana alto. */
+export const ALTO_MAPA = ALTO - ALTO_MANDO;
 export const MONEDA = 'maravedís';
 
-const CRUCETA = { x: 250, y: 1560, radio: 200 };
-const BOTON_A = { x: 880, y: 1490, radio: 100 };
-const BOTON_B = { x: 690, y: 1640, radio: 82 };
+const CRUCETA = { x: 250, y: ALTO_MAPA + 320, radio: 200 };
+const BOTON_A = { x: 880, y: ALTO_MAPA + 250, radio: 100 };
+const BOTON_B = { x: 690, y: ALTO_MAPA + 400, radio: 82 };
 
 export class Interfaz extends Phaser.Scene {
   private dirTactil: Dir | null = null;
@@ -122,7 +125,7 @@ export class Interfaz extends Phaser.Scene {
 
     this.botonRedondo(BOTON_A.x, BOTON_A.y, BOTON_A.radio, COLOR.rojo, 'A', 'Hablar', () => this.pulsarA());
     this.botonRedondo(BOTON_B.x, BOTON_B.y, BOTON_B.radio, COLOR.bronce, 'B', 'Volver', () => this.pulsarB());
-    new Boton(this, 880, 1810, { ancho: 260, alto: 100, texto: 'Menú', tamano: 38, alPulsar: () => this.pulsarMenu() });
+    new Boton(this, 880, ALTO_MAPA + 570, { ancho: 260, alto: 100, texto: 'Menú', tamano: 38, alPulsar: () => this.pulsarMenu() });
   }
 
   private dibujarFlecha(g: Phaser.GameObjects.Graphics, x: number, y: number, dir: Dir, activa: boolean): void {

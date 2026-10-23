@@ -1,8 +1,24 @@
-// Medidas y colores de la interfaz. El juego se dibuja a 1080 × 1920 y se escala a la
+// Medidas y colores de la interfaz. El juego se dibuja a 1080 de ancho y se escala a la
 // pantalla: en la mayoría de móviles eso queda casi a un píxel por píxel físico.
 
 export const ANCHO = 1080;
-export const ALTO = 1920;
+/** Alto de diseño de las pantallas fijas (título, combate, laboratorio). */
+export const ALTO_DISENO = 1920;
+
+/**
+ * Alto real del juego: 1920 como mínimo y más en móviles alargados, para que no queden bandas
+ * negras. Se calcula una vez al cargar.
+ */
+export const ALTO = calcularAlto();
+
+function calcularAlto(): number {
+  if (typeof window === 'undefined' || !window.innerWidth) return ALTO_DISENO;
+  const proporcion = window.innerHeight / window.innerWidth;
+  return Math.round(Math.min(2400, Math.max(ALTO_DISENO, ANCHO * proporcion)));
+}
+
+/** Lo que hay que bajar una pantalla de 1920 de alto para centrarla en el alto real. */
+export const MARGEN_VERTICAL = Math.round((ALTO - ALTO_DISENO) / 2);
 
 export const COLOR = {
   fondo: 0x1d1611,

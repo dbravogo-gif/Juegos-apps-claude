@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import { DATOS } from '../data';
 import { Boton, panel } from '../ui/componentes';
 import { crearCriaturaVisual } from '../ui/criaturaVisual';
-import { ANCHO, COLOR, estiloTexto, oscurecer } from '../ui/tema';
+import { ANCHO, COLOR, estiloTexto, MARGEN_VERTICAL, oscurecer } from '../ui/tema';
 
 // Laboratorio de combate: eliges tu equipo y el del rival y combates. Sirve para probar el
 // motor y ajustar cifras antes de tener el mapa.
@@ -64,6 +64,7 @@ export class Laboratorio extends Phaser.Scene {
   create(): void {
     this.config = cargarConfig();
     this.cameras.main.setBackgroundColor(COLOR.fondo);
+    this.cameras.main.setScroll(0, -MARGEN_VERTICAL);
 
     this.add.text(ANCHO / 2, 70, 'Laboratorio de combate', estiloTexto(64, COLOR.pergamino, true)).setOrigin(0.5);
     this.add.text(ANCHO / 2, 135, 'Leyendas de Iberia · herramienta de pruebas', estiloTexto(34, COLOR.oro)).setOrigin(0.5);

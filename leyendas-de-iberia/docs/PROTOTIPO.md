@@ -151,7 +151,7 @@ Cada hito termina en algo que se puede abrir en el navegador y jugar.
    - Isabel con la elección de la inicial, el Gran Capitán, Colón y el fósil de Orce.
    - Guardado automático, más exportar e importar la partida.
    - *Jugable:* la partida completa del §1.
-4. **Móvil y publicación.**
+4. **Móvil y publicación. Casi hecho (2026-10-23): pantalla completa, web instalable y despliegue; falta el equilibrio.**
    - Pulir el mando táctil y el escalado.
    - Añadir el juego al workflow de Pages, con `noindex`.
    - *Jugable:* el enlace para los tres.

@@ -17,12 +17,19 @@ tocan desde aquí.
   - La Vega, con encuentros, ballestero y mercader.
   - La Alhambra, con su guardia.
   - El Patio de los Leones: Boabdil, el blasón y el final.
-- **Siguiente:** el hito 4 (`docs/PROTOTIPO.md` §5):
-  - Quitar las bandas negras en el móvil.
-  - Publicar en Pages con `noindex`.
-  - Ajustar el equilibrio jugando.
-  - Después, el arte de verdad. Los autores preparan el Bestiario con
-    `docs/PROMPT-CRIATURAS.md`; luego se generarán las imágenes con OpenArt.
+- **Hito 4, en curso:**
+  - Hecho: el juego ocupa toda la pantalla del móvil.
+  - Hecho: es una web instalable (PWA), con manifiesto, iconos y service worker para jugar sin
+    conexión.
+  - Hecho: se publica en Pages con el resto del repositorio, en
+    `…/Juegos-apps-claude/leyendas-de-iberia/`.
+  - Falta ajustar el equilibrio jugando.
+- **Arte, pendiente de decidir:**
+  - Mapa y personajes que caminan: un paquete libre (CC0) retocado o pixel art hecho por
+    código. Kenney y OpenGameArt no son accesibles desde el entorno; el autor tendría que subir
+    el paquete.
+  - Criaturas y retratos: OpenArt, cuando el autor traiga el Bestiario hecho con
+    `docs/PROMPT-CRIATURAS.md`.
 - **El laboratorio de combate** es solo una herramienta de pruebas, con un enlace pequeño en el
   título. No es prioridad.
 - **Pendiente del autor:** las relaciones entre tipos y la definición de Plasma (`docs/GDD.md`
@@ -114,7 +121,10 @@ El código va en español: nombres, comentarios y textos.
   - Usa un viewport de 390 × 844, con toques y teclado: flechas, Intro (A), Esc (B) y M (menú).
   - `window.juego` da acceso a las escenas para comprobar el estado; por ejemplo,
     `juego.scene.getScene('Mundo').p` es la partida.
-- **Publicación** (hito 4). Hay que añadirlo a `.github/workflows/publicar-juego.yml`:
-  - incluir `leyendas-de-iberia/**` en `paths`;
-  - hacer `npm ci`, `npm test` y `npm run build`;
-  - copiar `dist/` a `web/leyendas-de-iberia/`.
+- **Publicación.** `.github/workflows/publicar-juego.yml` publica al hacer push a `main`:
+  - Ejecuta `npm ci`, `npm test` y `npm run build` aquí.
+  - Copia `dist/` a `web/leyendas-de-iberia/`.
+  - El service worker del juego de la raíz (`game/sw.js`) ignora esta carpeta.
+- **Alto de pantalla.** El alto lógico se adapta al móvil: `ALTO` en `tema.ts`, entre 1920 y
+  2400. Las pantallas fijas (título, combate, laboratorio) están diseñadas a 1920 y se centran
+  con `MARGEN_VERTICAL`. El mapa usa todo el alto que sobra.

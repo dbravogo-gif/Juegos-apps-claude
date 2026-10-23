@@ -21,7 +21,7 @@ import {
 import { Barra, Boton, filaTipos, panel } from '../ui/componentes';
 import { crearCriaturaVisual } from '../ui/criaturaVisual';
 import { describirMovimiento, textosEvento, type ContextoTextos } from '../ui/textos';
-import { aclarar, ANCHO, COLOR, estiloTexto } from '../ui/tema';
+import { aclarar, ANCHO, COLOR, estiloTexto, MARGEN_VERTICAL } from '../ui/tema';
 import type { ConfigLaboratorio } from './Laboratorio';
 
 const OBJETOS_INICIALES = { tesera: 5, unguento: 3 };
@@ -156,9 +156,11 @@ export class Combate extends Phaser.Scene {
   create(): void {
     const { semilla } = this.entrada;
     this.cameras.main.setBackgroundColor(COLOR.fondo);
+    // Diseñada a 1920 de alto: en pantallas más altas se centra y el cielo llega hasta arriba.
+    this.cameras.main.setScroll(0, -MARGEN_VERTICAL);
 
     // Campo de batalla.
-    this.add.rectangle(0, 0, ANCHO, 990, COLOR.cielo).setOrigin(0, 0);
+    this.add.rectangle(0, -MARGEN_VERTICAL, ANCHO, 990 + MARGEN_VERTICAL, COLOR.cielo).setOrigin(0, 0);
     this.add.rectangle(0, 560, ANCHO, 430, aclarar(COLOR.suelo, 0.35)).setOrigin(0, 0);
     this.add.ellipse(POSICION.rival.x, POSICION.rival.y + 150, 440, 110, COLOR.suelo);
     this.add.ellipse(POSICION.jugador.x, POSICION.jugador.y + 175, 500, 120, COLOR.suelo);

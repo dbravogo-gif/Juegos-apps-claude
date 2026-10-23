@@ -1,4 +1,4 @@
-const VERSION = 'v0.9.1';
+const VERSION = 'v0.9.2';
 const CACHE = `constant-${VERSION}`;
 const ESENCIALES = [
   '.',
@@ -26,8 +26,9 @@ self.addEventListener('activate', (evento) => {
 // Red primero para que una versión nueva se recoja al momento; la caché es el respaldo sin conexión.
 self.addEventListener('fetch', (evento) => {
   if (evento.request.method !== 'GET') return;
-  // App viación vive en /aerolinea/ dentro del mismo sitio: no es de este juego.
-  if (new URL(evento.request.url).pathname.includes('/aerolinea/')) return;
+  // App viación y Leyendas de Iberia viven en subcarpetas del mismo sitio: no son de este juego.
+  const ruta = new URL(evento.request.url).pathname;
+  if (ruta.includes('/aerolinea/') || ruta.includes('/leyendas-de-iberia/')) return;
 
   evento.respondWith(
     fetch(evento.request)

@@ -24,3 +24,8 @@ const juego = new Phaser.Game({
 
 // Acceso desde la consola del navegador, para depurar y para las pruebas automáticas.
 (window as unknown as { juego?: Phaser.Game }).juego = juego;
+
+// Para poder instalarlo y jugar sin conexión. Donde no se permite (vistas previas), no pasa nada.
+if ('serviceWorker' in navigator && import.meta.env.PROD) {
+  navigator.serviceWorker.register('./sw.js').catch(() => {});
+}
