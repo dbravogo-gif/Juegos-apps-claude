@@ -1,7 +1,8 @@
 import Phaser from 'phaser';
 import { claveSprite, SPRITES } from '../ui/criaturaVisual';
+import { generarTexturasCasillas } from '../ui/casillasVisual';
 
-/** Carga el arte que exista y pasa al laboratorio. */
+/** Carga el arte que exista, genera las casillas provisionales y pasa al título. */
 export class Arranque extends Phaser.Scene {
   constructor() {
     super('Arranque');
@@ -16,6 +17,7 @@ export class Arranque extends Phaser.Scene {
     for (const id of Object.keys(SPRITES)) {
       this.textures.get(claveSprite(id)).setFilter(Phaser.Textures.FilterMode.NEAREST);
     }
-    this.scene.start('Laboratorio');
+    generarTexturasCasillas(this);
+    this.scene.start('Titulo');
   }
 }

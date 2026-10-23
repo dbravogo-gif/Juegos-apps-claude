@@ -32,6 +32,8 @@ export type Paso =
   | { tipo: 'combate'; entrenador: string }
   | { tipo: 'tienda'; productos: { objeto: string; precio: number }[] }
   | { tipo: 'regreso' }
+  /** Ordenar el equipo con las criaturas guardadas en el Bestiario. */
+  | { tipo: 'almacen' }
   | { tipo: 'blason'; id: string; nombre: string }
   | { tipo: 'guardar' }
   | { tipo: 'fin'; texto: string[] };

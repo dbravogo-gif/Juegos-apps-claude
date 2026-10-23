@@ -1,10 +1,13 @@
 import Phaser from 'phaser';
 import { Arranque } from './escenas/Arranque';
 import { Combate } from './escenas/Combate';
+import { Interfaz } from './escenas/Interfaz';
 import { Laboratorio } from './escenas/Laboratorio';
+import { Mundo } from './escenas/Mundo';
+import { Titulo } from './escenas/Titulo';
 import { ALTO, ANCHO, COLOR, css } from './ui/tema';
 
-new Phaser.Game({
+const juego = new Phaser.Game({
   type: Phaser.AUTO,
   parent: 'juego',
   width: ANCHO,
@@ -14,5 +17,10 @@ new Phaser.Game({
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  scene: [Arranque, Laboratorio, Combate],
+  input: { activePointers: 3 },
+  // El orden decide qué se pinta encima: la interfaz sobre el mapa y el combate sobre todo.
+  scene: [Arranque, Titulo, Mundo, Interfaz, Combate, Laboratorio],
 });
+
+// Acceso desde la consola del navegador, para depurar y para las pruebas automáticas.
+(window as unknown as { juego?: Phaser.Game }).juego = juego;

@@ -3,7 +3,8 @@ import { DATOS } from '../data';
 import { crearRng } from '../core/rng';
 import { crearCriatura, nombreDe } from '../core/criatura';
 import { calcularEstadisticas } from '../core/estadisticas';
-import { evolucionar, evolucionPendiente, expParaNivel } from '../core/progreso';
+import { aprenderMovimiento, evolucionar, evolucionPendiente, expParaNivel } from '../core/progreso';
+import type { Criatura, Movimiento } from '../core/modelo';
 import { eficacia } from '../core/tipos';
 import {
   accionesDisponibles,
@@ -15,14 +16,37 @@ import {
   type Evento,
   type FichaCombate,
   type Lado,
+  type ResultadoCombate,
 } from '../core/combate';
 import { Barra, Boton, filaTipos, panel } from '../ui/componentes';
 import { crearCriaturaVisual } from '../ui/criaturaVisual';
-import { textosEvento, type ContextoTextos } from '../ui/textos';
+import { describirMovimiento, textosEvento, type ContextoTextos } from '../ui/textos';
 import { aclarar, ANCHO, COLOR, estiloTexto } from '../ui/tema';
 import type { ConfigLaboratorio } from './Laboratorio';
 
 const OBJETOS_INICIALES = { tesera: 5, unguento: 3 };
+
+export interface ResultadoHistoria {
+  resultado: ResultadoCombate;
+  equipo: Criatura[];
+  objetos: Record<string, number>;
+  capturada: Criatura | null;
+  /** Especies rivales que han salido: van al Bestiario como vistas. */
+  rivales: string[];
+}
+
+export type DatosCombate =
+  | { modo: 'laboratorio'; config: ConfigLaboratorio; semilla: number }
+  | {
+      modo: 'historia';
+      semilla: number;
+      equipo: Criatura[];
+      objetos: Record<string, number>;
+      rival: Criatura[];
+      salvaje: boolean;
+      nombreRival: string;
+      alTerminar: (r: ResultadoHistoria) => void;
+    };
 
 const POSICION: Record<Lado, { x: number; y: number; tam: number }> = {
   rival: { x: 770, y: 370, tam: 330 },
@@ -100,13 +124,17 @@ class Ficha {
 }
 
 export class Combate extends Phaser.Scene {
-  private entrada!: { config: ConfigLaboratorio; semilla: number };
+  private entrada!: DatosCombate;
+  private rivalesVistos = new Set<string>();
+  private pendientesAprender: { indice: number; movimientoId: string }[] = [];
+
   private estado!: EstadoCombate;
   private ctx!: ContextoTextos;
   private visual: Record<Lado, Phaser.GameObjects.Container | null> = { jugador: null, rival: null };
   private ficha!: Record<Lado, Ficha>;
   private activoVisual: Record<Lado, number> = { jugador: 0, rival: 0 };
   private texto!: Phaser.GameObjects.Text;
+  private info!: Phaser.GameObjects.Text;
   private menu?: Phaser.GameObjects.Container;
   private saltar: (() => void) | null = null;
   private ocupado = false;
@@ -115,8 +143,10 @@ export class Combate extends Phaser.Scene {
     super('Combate');
   }
 
-  init(data: { config: ConfigLaboratorio; semilla: number }): void {
+  init(data: DatosCombate): void {
     this.entrada = data;
+    this.rivalesVistos = new Set();
+    this.pendientesAprender = [];
     this.visual = { jugador: null, rival: null };
     this.menu = undefined;
     this.saltar = null;
@@ -124,7 +154,7 @@ export class Combate extends Phaser.Scene {
   }
 
   create(): void {
-    const { config, semilla } = this.entrada;
+    const { semilla } = this.entrada;
     this.cameras.main.setBackgroundColor(COLOR.fondo);
 
     // Campo de batalla.
@@ -146,29 +176,49 @@ export class Combate extends Phaser.Scene {
       wordWrap: { width: ANCHO - 140 },
       lineSpacing: 10,
     });
+    this.info = this.add
+      .text(70, 1035, '', { ...estiloTexto(33, COLOR.tinta), wordWrap: { width: ANCHO - 140 }, lineSpacing: 6 })
+      .setVisible(false);
 
     this.add
       .text(ANCHO - 40, 1900, `Semilla ${semilla}`, estiloTexto(24, COLOR.tintaSuave))
       .setOrigin(1, 1);
 
+
     // Tocar la pantalla adelanta el texto.
     this.input.on('pointerdown', () => this.saltar?.());
 
-    const rng = crearRng(`${semilla}:criaturas`);
-    const equipoJugador = config.jugador.map((id) => crearCriatura(DATOS, id, config.nivelJugador, rng));
-    const equipoRival = config.rival.map((id) => crearCriatura(DATOS, id, config.nivelRival, rng));
-    const nombreRival = config.salvaje ? 'Salvaje' : 'El ballestero';
+    let equipoJugador: Criatura[];
+    let equipoRival: Criatura[];
+    let objetos: Record<string, number>;
+    let salvaje: boolean;
+    let nombreRival: string;
+    if (this.entrada.modo === 'laboratorio') {
+      const { config } = this.entrada;
+      const rng = crearRng(`${semilla}:criaturas`);
+      equipoJugador = config.jugador.map((id) => crearCriatura(DATOS, id, config.nivelJugador, rng));
+      equipoRival = config.rival.map((id) => crearCriatura(DATOS, id, config.nivelRival, rng));
+      objetos = { ...OBJETOS_INICIALES };
+      salvaje = config.salvaje;
+      nombreRival = salvaje ? 'Salvaje' : 'El ballestero';
+    } else {
+      equipoJugador = this.entrada.equipo;
+      equipoRival = this.entrada.rival;
+      objetos = this.entrada.objetos;
+      salvaje = this.entrada.salvaje;
+      nombreRival = this.entrada.nombreRival;
+    }
     const inicio = iniciarCombate(
       {
         semilla,
-        jugador: { nombre: 'Tú', equipo: equipoJugador, objetos: { ...OBJETOS_INICIALES } },
+        jugador: { nombre: 'Tú', equipo: equipoJugador, objetos },
         rival: { nombre: nombreRival, equipo: equipoRival },
-        salvaje: config.salvaje,
+        salvaje,
       },
       DATOS,
     );
     this.estado = inicio.estado;
-    this.ctx = { salvaje: config.salvaje, nombreRival };
+    this.ctx = { salvaje, nombreRival };
     void this.reproducir(inicio.eventos);
   }
 
@@ -212,6 +262,8 @@ export class Combate extends Phaser.Scene {
 
   private async reproducirEvento(ev: Evento): Promise<void> {
     const frases = textosEvento(ev, this.ctx);
+    if (ev.tipo === 'entrada' && ev.lado === 'rival') this.rivalesVistos.add(ev.ficha.especie);
+    if (ev.tipo === 'noAprende') this.pendientesAprender.push({ indice: ev.indice, movimientoId: ev.movimientoId });
     switch (ev.tipo) {
       case 'entrada':
         await this.mostrarEntrada(ev.lado, ev.indice, ev.ficha);
@@ -351,6 +403,11 @@ export class Combate extends Phaser.Scene {
     const rival = activoDe(this.estado, 'rival');
     const disp = accionesDisponibles(this.estado, DATOS);
     this.texto.setText(`¿Qué hará ${nombreDe(yo, DATOS)}?`);
+    menu.add(
+      this.add
+        .text(ANCHO / 2, 1268, 'Mantén pulsado un movimiento para ver qué hace', estiloTexto(26, COLOR.pergaminoOscuro))
+        .setOrigin(0.5, 0.5),
+    );
 
     yo.movimientos.forEach((m, i) => {
       const mov = DATOS.movimientos[m.id];
@@ -365,6 +422,8 @@ export class Combate extends Phaser.Scene {
         color: aclarar(tipo?.color ?? COLOR.pergaminoOscuro, 0.35),
         tamano: 42,
         alPulsar: () => void this.ejecutar({ tipo: 'movimiento', indice: i }),
+        alMantener: () => this.mostrarInfo(mov, m.pp),
+        alSoltar: () => this.ocultarInfo(),
       }).setActivo(disp.movimientos[i] || disp.sinPP);
       menu.add(b);
       if (mov.categoria !== 'estado') {
@@ -400,7 +459,9 @@ export class Combate extends Phaser.Scene {
     const menu = this.nuevoMenu();
     const disp = accionesDisponibles(this.estado, DATOS);
     this.texto.setText('¿Qué objeto usas?');
-    const objetos = Object.entries(this.estado.jugador.objetos);
+    const objetos = Object.entries(this.estado.jugador.objetos).filter(
+      ([id, n]) => n > 0 && DATOS.objetos[id] && DATOS.objetos[id].tipo !== 'clave',
+    );
     objetos.forEach(([id, n], i) => {
       const obj = DATOS.objetos[id];
       const b = new Boton(this, ANCHO / 2, 1360 + i * 190, {
@@ -463,27 +524,62 @@ export class Combate extends Phaser.Scene {
     await this.reproducir(r.eventos);
   }
 
+  // ---------- Ayuda de movimientos ----------
+
+  private mostrarInfo(mov: Movimiento, pp?: number): void {
+    const d = describirMovimiento(mov, pp);
+    this.info.setText(`${d.titulo}\n${d.cifras}\n${d.efecto}`).setVisible(true);
+    this.texto.setVisible(false);
+  }
+
+  private ocultarInfo(): void {
+    this.info.setVisible(false);
+    this.texto.setVisible(true);
+  }
+
   // ---------- Final ----------
 
   private async terminar(): Promise<void> {
     this.ocupado = true;
     if (this.estado.fin === 'victoria' || this.estado.fin === 'captura') await this.evoluciones();
+    await this.aprenderPendientes();
     this.ocupado = false;
     const textos: Record<string, string> = {
       victoria: '¡Victoria!',
-      derrota: 'Derrota',
-      huida: 'Has huido',
+      derrota: 'Derrota…',
+      huida: 'Has huido.',
       captura: '¡Captura!',
     };
     this.texto.setText(textos[this.estado.fin ?? ''] ?? '');
     const menu = this.nuevoMenu();
+    const entrada = this.entrada;
+    if (entrada.modo === 'historia') {
+      menu.add(
+        new Boton(this, ANCHO / 2, 1500, {
+          ancho: 600,
+          alto: 170,
+          texto: 'Continuar',
+          color: COLOR.rojo,
+          alPulsar: () =>
+            entrada.alTerminar({
+              resultado: this.estado.fin ?? 'huida',
+              equipo: this.estado.jugador.equipo,
+              objetos: this.estado.jugador.objetos,
+              capturada: this.estado.capturada,
+              rivales: [...this.rivalesVistos],
+            }),
+        }),
+      );
+      return;
+    }
+    const config = entrada.config;
     menu.add(
       new Boton(this, 280, 1500, {
         ancho: 500,
         alto: 170,
         texto: 'Otra vez',
         color: COLOR.rojo,
-        alPulsar: () => this.scene.start('Combate', { config: this.entrada.config, semilla: Math.floor(Math.random() * 1e9) }),
+        alPulsar: () => this.scene.start('Combate', { modo: 'laboratorio', config, semilla: Math.floor(Math.random() * 1e9) }),
       }),
     );
     menu.add(
@@ -494,6 +590,61 @@ export class Combate extends Phaser.Scene {
         alPulsar: () => this.scene.start('Laboratorio'),
       }),
     );
+  }
+
+  /** Movimientos que no cabían: el jugador elige cuál olvida, o no aprende el nuevo. */
+  private async aprenderPendientes(): Promise<void> {
+    for (const { indice, movimientoId } of this.pendientesAprender) {
+      const c = this.estado.jugador.equipo[indice];
+      if (!c || c.movimientos.some((m) => m.id === movimientoId)) continue;
+      const nuevo = DATOS.movimientos[movimientoId];
+      const nombre = nombreDe(c, DATOS);
+      const eleccion = await new Promise<number>((resolve) => {
+        const menu = this.nuevoMenu();
+        this.texto.setText(`${nombre} quiere aprender ${nuevo.nombre}. ¿Qué movimiento olvida?`);
+        c.movimientos.forEach((m, i) => {
+          const mov = DATOS.movimientos[m.id];
+          const tipo = DATOS.tipos.tipos.find((t) => t.id === mov.tipo);
+          menu.add(
+            new Boton(this, i % 2 === 0 ? 280 : 800, i < 2 ? 1370 : 1555, {
+              ancho: 500,
+              alto: 170,
+              texto: mov.nombre,
+              subtexto: `${tipo?.nombre ?? ''} · PP ${m.pp}/${mov.pp}`,
+              color: aclarar(tipo?.color ?? COLOR.pergaminoOscuro, 0.35),
+              tamano: 42,
+              alPulsar: () => resolve(i),
+              alMantener: () => this.mostrarInfo(mov, m.pp),
+              alSoltar: () => this.ocultarInfo(),
+            }),
+          );
+        });
+        const tipoNuevo = DATOS.tipos.tipos.find((t) => t.id === nuevo.tipo);
+        menu.add(
+          new Boton(this, 280, 1765, {
+            ancho: 500,
+            alto: 140,
+            texto: `Ver ${nuevo.nombre}`,
+            subtexto: tipoNuevo?.nombre ?? '',
+            tamano: 34,
+            alPulsar: () => this.mostrarInfo(nuevo),
+            alMantener: () => this.mostrarInfo(nuevo),
+            alSoltar: () => this.ocultarInfo(),
+          }),
+        );
+        menu.add(new Boton(this, 800, 1765, { ancho: 500, alto: 140, texto: 'No aprenderlo', alPulsar: () => resolve(-1) }));
+      });
+      this.ocultarInfo();
+      this.limpiarMenu();
+      if (eleccion < 0) {
+        await this.decir(`${nombre} no aprende ${nuevo.nombre}.`);
+        continue;
+      }
+      const olvidado = DATOS.movimientos[c.movimientos[eleccion].id].nombre;
+      this.estado.jugador.equipo[indice] = aprenderMovimiento(c, movimientoId, eleccion, DATOS);
+      await this.decir(`${nombre} olvida ${olvidado} y aprende ${nuevo.nombre}.`, 1600);
+    }
+    this.pendientesAprender = [];
   }
 
   /** Como en Pokémon, las evoluciones se ven al acabar el combate. */

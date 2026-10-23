@@ -10,7 +10,15 @@ export interface OpcionesBoton {
   color?: number;
   tamano?: number;
   alPulsar: () => void;
+  /** Mantener pulsado medio segundo: para mostrar ayuda. Funciona aunque el botón esté apagado. */
+  alMantener?: () => void;
+  /** Al soltar después de mantener. */
+  alSoltar?: () => void;
 }
+
+const MS_MANTENER = 450;
+/** Algunos navegadores mandan el mismo toque dos veces (táctil y ratón): se ignora el segundo. */
+const MS_REBOTE = 350;
 
 /** Botón táctil: se activa al soltar el dedo encima, como los botones del sistema. */
 export class Boton extends Phaser.GameObjects.Container {
@@ -19,13 +27,20 @@ export class Boton extends Phaser.GameObjects.Container {
   private sub?: Phaser.GameObjects.Text;
   private activo = true;
   private pulsado = false;
+  private mantenido = false;
+  private temporizador?: Phaser.Time.TimerEvent;
+  private ultimaPulsacion = -Infinity;
   private alPulsar: () => void;
+  private alMantener?: () => void;
+  private alSoltar?: () => void;
 
   constructor(scene: Phaser.Scene, x: number, y: number, op: OpcionesBoton) {
     super(scene, x, y);
     const color = op.color ?? COLOR.pergaminoOscuro;
     const tinta = textoSobre(color);
     this.alPulsar = op.alPulsar;
+    this.alMantener = op.alMantener;
+    this.alSoltar = op.alSoltar;
     this.fondo = scene.add
       .rectangle(0, 0, op.ancho, op.alto, color)
       .setRounded(22)
@@ -42,20 +57,36 @@ export class Boton extends Phaser.GameObjects.Container {
     this.setSize(op.ancho, op.alto);
     this.fondo.setInteractive({ useHandCursor: true });
     this.fondo.on('pointerdown', () => {
-      if (!this.activo) return;
+      if (!this.activo && !this.alMantener) return;
       this.pulsado = true;
+      this.mantenido = false;
       this.setScale(0.97);
+      if (this.alMantener) {
+        this.temporizador = scene.time.delayedCall(MS_MANTENER, () => {
+          if (!this.pulsado) return;
+          this.mantenido = true;
+          this.alMantener?.();
+        });
+      }
     });
-    this.fondo.on('pointerout', () => {
-      this.pulsado = false;
-      this.setScale(1);
-    });
-    this.fondo.on('pointerup', () => {
+    const soltar = (pulsar: boolean) => {
       const pulsado = this.pulsado;
       this.pulsado = false;
+      this.temporizador?.remove(false);
       this.setScale(1);
-      if (pulsado && this.activo) this.alPulsar();
-    });
+      if (this.mantenido) {
+        this.mantenido = false;
+        this.alSoltar?.();
+        return;
+      }
+      if (!pulsar || !pulsado || !this.activo) return;
+      const ahora = this.scene.time.now;
+      if (ahora - this.ultimaPulsacion < MS_REBOTE) return;
+      this.ultimaPulsacion = ahora;
+      this.alPulsar();
+    };
+    this.fondo.on('pointerout', () => soltar(false));
+    this.fondo.on('pointerup', () => soltar(true));
     scene.add.existing(this);
   }
 

@@ -1,5 +1,6 @@
 import type { Evento } from '../core/combate';
-import type { EstadisticaCombate } from '../core/modelo';
+import type { EstadisticaCombate, Movimiento } from '../core/modelo';
+import { DATOS } from '../data';
 
 const ESTADISTICA: Record<EstadisticaCombate, string> = {
   fuerza: 'La Fuerza',
@@ -90,4 +91,65 @@ export function textosEvento(ev: Evento, ctx: ContextoTextos): string[] {
       if (ev.resultado === 'derrota') return ['No te quedan criaturas en pie…'];
       return [];
   }
+}
+
+const CATEGORIA: Record<Movimiento['categoria'], string> = {
+  fisico: 'Física',
+  magico: 'Mágica',
+  estado: 'De estado',
+};
+
+const ESTADISTICA_MINUSCULA: Record<EstadisticaCombate, string> = {
+  fuerza: 'la Fuerza',
+  escudo: 'el Escudo',
+  magia: 'la Magia',
+  resMagica: 'la Resistencia mágica',
+  celeridad: 'la Celeridad',
+};
+
+function fraccionTexto(f: number): string {
+  if (f === 0.5) return 'la mitad';
+  if (f === 0.25) return 'una cuarta parte';
+  if (f === 1) return 'toda';
+  return `un ${Math.round(f * 100)} %`;
+}
+
+/** Ficha de un movimiento para la ayuda: tipo, categoría, cifras y qué hace. */
+export function describirMovimiento(mov: Movimiento, ppActuales?: number): { titulo: string; cifras: string; efecto: string } {
+  const tipo = DATOS.tipos.tipos.find((t) => t.id === mov.tipo)?.nombre ?? 'Sin tipo';
+  const cifras: string[] = [];
+  if (mov.categoria !== 'estado') cifras.push(`Poder ${mov.poder}`);
+  cifras.push(mov.precision === null ? 'No falla' : `Precisión ${mov.precision} %`);
+  cifras.push(`PP ${ppActuales ?? mov.pp}/${mov.pp}`);
+
+  const frases: string[] = [];
+  if ((mov.prioridad ?? 0) > 0) frases.push('Ataca siempre primero.');
+  for (const f of mov.efectos ?? []) {
+    switch (f.tipo) {
+      case 'estado': {
+        const verbo = f.estado === 'quemado' ? 'quemar' : 'dormir';
+        frases.push(f.prob >= 100 ? `${verbo === 'quemar' ? 'Quema' : 'Duerme'} al rival.` : `${f.prob} % de probabilidad de ${verbo} al rival.`);
+        break;
+      }
+      case 'etapa': {
+        const sube = f.cambio > 0;
+        const cuanto = Math.abs(f.cambio) >= 2 ? ' mucho' : '';
+        const quien = f.objetivo === 'propio' ? 'propia' : 'del rival';
+        const est = ESTADISTICA_MINUSCULA[f.estadistica];
+        const base = f.objetivo === 'propio' ? `${sube ? 'Sube' : 'Baja'}${cuanto} tu ${est.replace(/^(la|el) /, '')}` : `${sube ? 'Sube' : 'Baja'}${cuanto} ${est} ${quien}`;
+        frases.push(f.prob >= 100 ? `${base}.` : `${f.prob} % de probabilidad: ${base.charAt(0).toLowerCase()}${base.slice(1)}.`);
+        break;
+      }
+      case 'drenar':
+        frases.push(`Recuperas ${fraccionTexto(f.fraccion)} del daño que causa.`);
+        break;
+      case 'curar':
+        frases.push(`Recuperas ${fraccionTexto(f.fraccion)} de tu Vida máxima.`);
+        break;
+    }
+  }
+  if (frases.length === 0) frases.push(mov.categoria === 'estado' ? 'Sin efecto conocido.' : 'Ataque directo, sin efectos añadidos.');
+  if (mov.categoria === 'fisico') frases.push('Usa tu Fuerza contra el Escudo del rival.');
+  if (mov.categoria === 'magico') frases.push('Usa tu Magia contra la Resistencia mágica del rival.');
+  return { titulo: `${mov.nombre} · ${tipo} · ${CATEGORIA[mov.categoria]}`, cifras: cifras.join(' · '), efecto: frases.join(' ') };
 }

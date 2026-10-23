@@ -29,7 +29,7 @@ const LINEA_CANGREJO: Aprende = [
   [19, 'dentellada'], [24, 'golpe_de_mar'], [30, 'remanso'],
 ];
 const LINEA_DRAGO: Aprende = [
-  [1, 'varazo'], [1, 'desplante'], [5, 'hojarasca'], [9, 'sopor'], [13, 'savia_de_dragon'],
+  [1, 'topetazo'], [1, 'desplante'], [4, 'varazo'], [7, 'hojarasca'], [10, 'sopor'], [13, 'savia_de_dragon'],
   [19, 'polvareda'], [24, 'caparazon'], [30, 'remanso'],
 ];
 const LINEA_LIBELULA: Aprende = [[1, 'aletazo'], [4, 'revoloteo'], [8, 'ventolera']];

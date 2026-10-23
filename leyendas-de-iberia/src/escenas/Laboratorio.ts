@@ -66,7 +66,8 @@ export class Laboratorio extends Phaser.Scene {
     this.cameras.main.setBackgroundColor(COLOR.fondo);
 
     this.add.text(ANCHO / 2, 70, 'Laboratorio de combate', estiloTexto(64, COLOR.pergamino, true)).setOrigin(0.5);
-    this.add.text(ANCHO / 2, 135, 'Leyendas de Iberia · prototipo', estiloTexto(34, COLOR.oro)).setOrigin(0.5);
+    this.add.text(ANCHO / 2, 135, 'Leyendas de Iberia · herramienta de pruebas', estiloTexto(34, COLOR.oro)).setOrigin(0.5);
+    new Boton(this, 110, 70, { ancho: 160, alto: 80, texto: '‹ Salir', tamano: 30, alPulsar: () => this.scene.start('Titulo') });
 
     this.dibujarEquipos();
     this.dibujarCatalogo();
@@ -228,6 +229,6 @@ export class Laboratorio extends Phaser.Scene {
   private combatir(): void {
     // La semilla es lo único al azar: con la misma semilla el combate se repite igual.
     const semilla = Math.floor(Math.random() * 1e9);
-    this.scene.start('Combate', { config: structuredClone(this.config), semilla });
+    this.scene.start('Combate', { modo: 'laboratorio', config: structuredClone(this.config), semilla });
   }
 }
