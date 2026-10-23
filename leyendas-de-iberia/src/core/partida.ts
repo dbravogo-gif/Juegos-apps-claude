@@ -37,6 +37,8 @@ export interface Partida {
   pasos: number;
   /** Pasos que le quedan al repelente en uso (Ruda, Romero…). */
   repelente: number;
+  /** Recipientes ya registrados, como `zona:id`. */
+  revisados: string[];
 }
 
 export function nuevaPartida(nombre: string, semilla: number | string, inicio: Posicion): Partida {
@@ -57,6 +59,7 @@ export function nuevaPartida(nombre: string, semilla: number | string, inicio: P
     blasones: [],
     pasos: 0,
     repelente: 0,
+    revisados: [],
   };
 }
 

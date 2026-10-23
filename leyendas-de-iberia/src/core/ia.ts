@@ -13,7 +13,7 @@ export function elegirAccionIA(e: EstadoCombate, datos: DatosJuego): Accion {
   const yo = e.rival.equipo[e.rival.activo];
   const usables = yo.movimientos.map((m, i) => (m.pp > 0 ? i : -1)).filter((i) => i >= 0);
   if (usables.length === 0) return { tipo: 'movimiento', indice: -1 };
-  if (e.salvaje || probabilidad(e.rng, DESPISTE_ENTRENADOR)) {
+  if ((e.salvaje && !e.iaAstuta) || probabilidad(e.rng, DESPISTE_ENTRENADOR)) {
     return { tipo: 'movimiento', indice: elegir(e.rng, usables) };
   }
   let mejor = usables[0];

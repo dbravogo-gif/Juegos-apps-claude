@@ -45,6 +45,8 @@ export interface EstadoCombate {
   intentosHuida: number;
   fin: ResultadoCombate | null;
   capturada: Criatura | null;
+  /** El rival salvaje elige sus movimientos como un entrenador (el Papemímico). */
+  iaAstuta?: boolean;
 }
 
 export type Accion =
@@ -155,7 +157,7 @@ export interface ParticipanteInicial {
 }
 
 export function iniciarCombate(
-  op: { semilla: number | string; jugador: ParticipanteInicial; rival: ParticipanteInicial; salvaje: boolean },
+  op: { semilla: number | string; jugador: ParticipanteInicial; rival: ParticipanteInicial; salvaje: boolean; iaAstuta?: boolean },
   datos: DatosJuego,
 ): Resultado {
   const lado = (p: ParticipanteInicial): LadoCombate => {
@@ -182,6 +184,7 @@ export function iniciarCombate(
     fin: null,
     capturada: null,
   };
+  if (op.iaAstuta) estado.iaAstuta = true;
   const eventos: Evento[] = [
     { tipo: 'entrada', lado: 'rival', indice: estado.rival.activo, ficha: fichaDe(activoDe(estado, 'rival'), datos) },
     { tipo: 'entrada', lado: 'jugador', indice: estado.jugador.activo, ficha: fichaDe(activoDe(estado, 'jugador'), datos) },

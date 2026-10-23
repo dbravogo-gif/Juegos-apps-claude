@@ -4,8 +4,8 @@ import { VERSION_PARTIDA } from './partida';
 // Cada cambio en la forma de la partida sube VERSION_PARTIDA y añade aquí su migración, para
 // que las partidas guardadas sigan abriéndose.
 const MIGRACIONES: Record<number, (p: Record<string, unknown>) => Record<string, unknown>> = {
-  // v2: repelentes.
-  1: (p) => ({ ...p, repelente: 0 }),
+  // v2: repelentes y recipientes registrados.
+  1: (p) => ({ ...p, repelente: 0, revisados: [] }),
 };
 
 export function serializar(p: Partida): string {

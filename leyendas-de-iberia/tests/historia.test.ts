@@ -12,6 +12,8 @@ import {
   tirarEncuentro,
 } from '../src/core/partida';
 import { deserializar, serializar } from '../src/core/guardado';
+import { ESPECIE_MIMICO, registrarRecipiente, revisado } from '../src/core/recipientes';
+import { OBJETOS_RECIPIENTE, PROB_RECIPIENTE, RECOMPENSA_MIMICO } from '../src/data/recipientes';
 import { crearCriatura } from '../src/core/criatura';
 import { crearRng } from '../src/core/rng';
 
@@ -67,6 +69,54 @@ describe('zonas del capítulo 1', () => {
       for (const s of z.salidas) {
         expect(ZONAS[s.zona].salidas.some((v) => v.zona === z.id), `${z.id} → ${s.zona}`).toBe(true);
       }
+    }
+  });
+});
+
+describe('recipientes', () => {
+  it('las probabilidades suman 100 y los objetos existen', () => {
+    expect(PROB_RECIPIENTE.objeto + PROB_RECIPIENTE.nada + PROB_RECIPIENTE.mimico).toBe(100);
+    for (const lista of Object.values(OBJETOS_RECIPIENTE)) for (const o of lista) expect(DATOS.objetos[o.objeto], o.objeto).toBeDefined();
+    expect(DATOS.objetos[RECOMPENSA_MIMICO.objeto]).toBeDefined();
+    expect(DATOS.especies[ESPECIE_MIMICO]).toBeDefined();
+  });
+
+  it('cada zona con recipientes tiene su tabla de objetos', () => {
+    for (const z of Object.values(ZONAS)) if (z.recipientes?.length) expect(OBJETOS_RECIPIENTE[z.id], z.id).toBeDefined();
+  });
+
+  it('salen los tres resultados con más o menos sus probabilidades', () => {
+    const cuenta = { objeto: 0, nada: 0, mimico: 0 };
+    const p = nuevaPartida('X', 'recipientes', INICIO);
+    p.equipo = [crearCriatura(DATOS, 'cangrejo', 10, crearRng(1))];
+    for (let i = 0; i < 2000; i++) {
+      const r = registrarRecipiente(p, 'vega', `r${i}`, { prob: PROB_RECIPIENTE, objetos: OBJETOS_RECIPIENTE.vega }, DATOS);
+      cuenta[r.tipo] += 1;
+    }
+    expect(cuenta.objeto / 2000).toBeGreaterThan(0.55);
+    expect(cuenta.objeto / 2000).toBeLessThan(0.65);
+    expect(cuenta.mimico / 2000).toBeGreaterThan(0.07);
+    expect(cuenta.mimico / 2000).toBeLessThan(0.13);
+  });
+
+  it('un recipiente registrado no vuelve a dar nada, ni tras guardar y cargar', () => {
+    const p = nuevaPartida('X', 7, INICIO);
+    p.equipo = [crearCriatura(DATOS, 'cangrejo', 10, crearRng(1))];
+    registrarRecipiente(p, 'vega', 'puente', { prob: { objeto: 100, nada: 0, mimico: 0 }, objetos: OBJETOS_RECIPIENTE.vega }, DATOS);
+    const cargada = deserializar(serializar(p))!;
+    expect(revisado(cargada, 'vega', 'puente')).toBe(true);
+    const r = registrarRecipiente(cargada, 'vega', 'puente', { prob: { objeto: 100, nada: 0, mimico: 0 }, objetos: OBJETOS_RECIPIENTE.vega }, DATOS);
+    expect(r.tipo).toBe('nada');
+  });
+
+  it('el Papemímico sale por encima del nivel del equipo', () => {
+    const p = nuevaPartida('X', 3, INICIO);
+    p.equipo = [crearCriatura(DATOS, 'cangrejo', 12, crearRng(1))];
+    const r = registrarRecipiente(p, 'vega', 'x', { prob: { objeto: 0, nada: 0, mimico: 100 }, objetos: OBJETOS_RECIPIENTE.vega }, DATOS);
+    expect(r.tipo).toBe('mimico');
+    if (r.tipo === 'mimico') {
+      expect(r.criatura.especie).toBe(ESPECIE_MIMICO);
+      expect(r.criatura.nivel).toBe(14);
     }
   });
 });

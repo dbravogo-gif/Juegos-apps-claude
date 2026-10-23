@@ -48,6 +48,8 @@ export type DatosCombate =
       rival: Criatura[];
       salvaje: boolean;
       nombreRival: string;
+      /** El rival salvaje elige sus movimientos como un entrenador. */
+      iaAstuta?: boolean;
       alTerminar: (r: ResultadoHistoria) => void;
     };
 
@@ -219,6 +221,7 @@ export class Combate extends Phaser.Scene {
         jugador: { nombre: 'Tú', equipo: equipoJugador, objetos },
         rival: { nombre: nombreRival, equipo: equipoRival },
         salvaje,
+        iaAstuta: this.entrada.modo === 'historia' && this.entrada.iaAstuta,
       },
       DATOS,
     );
@@ -410,10 +413,9 @@ export class Combate extends Phaser.Scene {
     this.texto.setText(`¿Qué hará ${nombreDe(yo, DATOS)}?`);
     menu.add(
       this.add
-        .text(40, 1268, 'Mantén pulsado un movimiento para ver qué hace', estiloTexto(26, COLOR.pergaminoOscuro))
-        .setOrigin(0, 0.5),
+        .text(ANCHO / 2, 1268, 'Mantén pulsado un movimiento para ver qué hace', estiloTexto(26, COLOR.pergaminoOscuro))
+        .setOrigin(0.5, 0.5),
     );
-    menu.add(new Boton(this, 940, 1268, { ancho: 220, alto: 66, texto: 'Tipos', tamano: 30, alPulsar: () => this.verTablaTipos() }));
 
     yo.movimientos.forEach((m, i) => {
       const mov = DATOS.movimientos[m.id];
@@ -444,21 +446,15 @@ export class Combate extends Phaser.Scene {
       }
     });
 
-    menu.add(
-      new Boton(this, 190, 1765, { ancho: 320, alto: 140, texto: 'Mochila', alPulsar: () => this.menuMochila() }).setActivo(
-        Object.values(disp.objetos).some(Boolean),
-      ),
-    );
-    menu.add(
-      new Boton(this, 540, 1765, { ancho: 320, alto: 140, texto: 'Equipo', alPulsar: () => this.menuEquipo('cambio') }).setActivo(
-        disp.cambios.some(Boolean),
-      ),
-    );
-    menu.add(
-      new Boton(this, 890, 1765, { ancho: 320, alto: 140, texto: 'Huir', alPulsar: () => void this.ejecutar({ tipo: 'huir' }) }).setActivo(
-        disp.huir,
-      ),
-    );
+    const inferior: [string, () => void, boolean][] = [
+      ['Mochila', () => this.menuMochila(), Object.values(disp.objetos).some(Boolean)],
+      ['Equipo', () => this.menuEquipo('cambio'), disp.cambios.some(Boolean)],
+      ['Tipos', () => this.verTablaTipos(), true],
+      ['Huir', () => void this.ejecutar({ tipo: 'huir' }), disp.huir],
+    ];
+    inferior.forEach(([texto, alPulsar, activo], i) => {
+      menu.add(new Boton(this, 145 + i * 263, 1765, { ancho: 245, alto: 140, texto, tamano: 38, alPulsar }).setActivo(activo));
+    });
   }
 
   private menuMochila(pagina = 0): void {

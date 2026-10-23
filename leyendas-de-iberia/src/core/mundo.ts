@@ -104,6 +104,10 @@ export interface Zona {
   carteles: { x: number; y: number; texto: string[] }[];
   /** Objetos escondidos: se encuentran mirando la casilla y pulsando A (bandera `oculto:<zona>:<id>`). */
   ocultos?: { id: string; x: number; y: number; objeto: string; cantidad?: number }[];
+  /** Tinajas o papeleras que se pueden registrar una vez (`src/data/recipientes.ts`). Bloquean el paso. */
+  recipientes?: { id: string; x: number; y: number }[];
+  /** Cómo se llaman los recipientes en esta época: tinajas antes, papeleras hoy. */
+  recipiente?: 'tinaja' | 'papelera';
   /** Guion que se ejecuta la primera vez que se entra (usa la bandera `visto:<id>`). */
   alEntrar?: Guion;
 }
@@ -172,6 +176,11 @@ export function validarZona(
   }
   for (const o of z.ocultos ?? []) {
     if (esSolida(z, o.x, o.y, casillas)) errores.push(`${z.id}: el objeto oculto ${o.id} está en una casilla sólida`);
+  }
+  const ocupadas = new Set([...z.pnj, ...z.carteles, ...(z.ocultos ?? [])].map((o) => `${o.x},${o.y}`));
+  for (const r of z.recipientes ?? []) {
+    if (esSolida(z, r.x, r.y, casillas)) errores.push(`${z.id}: el recipiente ${r.id} está en una casilla sólida`);
+    if (ocupadas.has(`${r.x},${r.y}`)) errores.push(`${z.id}: el recipiente ${r.id} pisa a otro elemento`);
   }
   for (const p of z.pnj) {
     if (esSolida(z, p.x, p.y, casillas)) errores.push(`${z.id}: ${p.id} está sobre una casilla sólida`);

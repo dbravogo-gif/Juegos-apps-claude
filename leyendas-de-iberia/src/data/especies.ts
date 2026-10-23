@@ -219,6 +219,17 @@ const DEF = {
     aprende: [[1, 'dentellada'], [1, 'bramido'], [1, 'rociada'], [10, 'marejada'], [14, 'remanso'], [20, 'golpe_de_mar']],
     descripcion: 'Nacido de los doce leones de piedra que sostienen la fuente del Patio de los Leones, en la Alhambra.',
   },
+
+  // Encuentro especial: se esconde en tinajas y papeleras (ver src/data/recipientes.ts).
+  papemimico: {
+    nombre: 'Papemímico',
+    tipos: ['oscuridad', 'acero'],
+    base: [120, 105, 115, 65, 95, 45],
+    expBase: 220,
+    ratioCaptura: 3,
+    aprende: [[1, 'tapazo'], [1, 'emboscada'], [1, 'mal_de_ojo'], [1, 'escondite']],
+    descripcion: 'Se hace pasar por un recipiente cualquiera: una tinaja en 1492, una papelera hoy. Quien mete la mano se lleva un susto… y, si lo vence, un buen premio.',
+  },
 } satisfies Record<string, DefEspecie>;
 
 export type EspecieId = keyof typeof DEF;

@@ -95,6 +95,20 @@ const MOVIMIENTOS_DEF = {
     nombre: 'Mal de ojo', tipo: 'oscuridad', categoria: 'magico', poder: 65, precision: 100, pp: 15,
     efectos: [{ tipo: 'etapa', objetivo: 'rival', estadistica: 'resMagica', cambio: -1, prob: 20 }],
   },
+  tapazo: { nombre: 'Tapazo', tipo: 'acero', categoria: 'fisico', poder: 85, precision: 90, pp: 15, descripcion: 'Cierra la tapa como una mandíbula.' },
+  escondite: {
+    nombre: 'Escondite',
+    tipo: 'oscuridad',
+    categoria: 'estado',
+    poder: 0,
+    precision: null,
+    pp: 10,
+    descripcion: 'Se mete dentro de sí mismo y se protege.',
+    efectos: [
+      { tipo: 'etapa', objetivo: 'propio', estadistica: 'escudo', cambio: 1, prob: 100 },
+      { tipo: 'etapa', objetivo: 'propio', estadistica: 'resMagica', cambio: 1, prob: 100 },
+    ],
+  },
   emboscada: { nombre: 'Emboscada', tipo: 'oscuridad', categoria: 'fisico', poder: 70, precision: 100, pp: 15 },
 
   // Mental

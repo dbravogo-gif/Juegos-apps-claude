@@ -143,6 +143,11 @@ const SANTA_FE: Zona = {
     { x: 4, y: 5, texto: ['Mesón de Santa Fe.', 'Cama, comida y descanso para tus criaturas.'] },
   ],
   ocultos: [{ id: 'azabache', x: 21, y: 11, objeto: 'azabache' }],
+  recipientes: [
+    { id: 'meson', x: 7, y: 5 },
+    { id: 'plaza', x: 3, y: 10 },
+    { id: 'huerto', x: 20, y: 16 },
+  ],
   alEntrar: decir(
     undefined,
     'Invierno de 1491. Los Reyes Católicos asedian Granada, el último reino nazarí de la Península.',
@@ -348,6 +353,10 @@ const VEGA: Zona = {
     { id: 'endrina', x: 1, y: 20, objeto: 'endrina' },
     { id: 'ruda', x: 13, y: 7, objeto: 'ruda' },
   ],
+  recipientes: [
+    { id: 'puente', x: 8, y: 5 },
+    { id: 'acequia', x: 6, y: 18 },
+  ],
 };
 
 const ALHAMBRA: Zona = {
@@ -398,6 +407,7 @@ const ALHAMBRA: Zona = {
     { id: 'gorro', x: 2, y: 9, objeto: 'gorro_colorado' },
     { id: 'tuno', x: 11, y: 2, objeto: 'tuno' },
   ],
+  recipientes: [{ id: 'adarve', x: 8, y: 4 }],
 };
 
 const PATIO_LEONES: Zona = {

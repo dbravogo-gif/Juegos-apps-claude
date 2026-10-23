@@ -251,3 +251,18 @@ export function dibujarZona(scene: Phaser.Scene, zona: Zona, capa: Phaser.GameOb
     }
   });
 }
+
+const TINAJA = p('elementos', 1, 0);
+const TINAJA_ABIERTA = p('elementos', 4, 0);
+
+/** Recipiente registrable, apoyado en el borde inferior de su casilla. */
+export function dibujarRecipiente(scene: Phaser.Scene, x: number, y: number, abierto: boolean): Phaser.GameObjects.Image {
+  const pieza = abierto ? TINAJA_ABIERTA : TINAJA;
+  return scene.add.image(x, y, claveHoja(pieza.hoja), frameDe(scene, pieza)).setOrigin(0.5, 1).setScale(ESCALA);
+}
+
+export function abrirRecipiente(figura: Phaser.GameObjects.Image): void {
+  // Si la zona se ha vuelto a dibujar mientras tanto, la figura ya no existe.
+  if (!figura.scene) return;
+  figura.setFrame(frameDe(figura.scene, TINAJA_ABIERTA));
+}
