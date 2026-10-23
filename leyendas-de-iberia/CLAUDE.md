@@ -9,20 +9,24 @@ tocan desde aquí.
 
 ## Estado actual
 
-- **Fase 1, prototipo «Granada, 1492».** El hito 1, el laboratorio de combate, está hecho y se
-  puede jugar.
-  - Motor de combate completo en `src/core`, con 41 pruebas.
-  - 19 especies; los iniciales tienen tres formas cada uno.
-  - Pantallas de laboratorio y de combate, con captura, objetos, cambios, experiencia y
-    evolución.
-- **Siguiente: hito 2, la Vega** (`docs/PROTOTIPO.md` §5): mapa, encuentros, equipo y mesón.
-- **Decidido:**
-  - Estadísticas como en Pokémon, con nombres propios.
-  - Valía de 1 a 14.
-  - 15 tipos.
-  - Phaser 4.
+- **Fase 1, prototipo «Granada, 1492».** Los hitos 1 a 3 están hechos y el modo historia se juega
+  de principio a fin:
+  - Título, nueva partida con nombre y guardado automático.
+  - Santa Fe: Isabel y la elección de compañera, el Gran Capitán, Colón, el pastor de Orce, y el
+    mesón con su tienda.
+  - La Vega, con encuentros, ballestero y mercader.
+  - La Alhambra, con su guardia.
+  - El Patio de los Leones: Boabdil, el blasón y el final.
+- **Siguiente:** el hito 4 (`docs/PROTOTIPO.md` §5):
+  - Quitar las bandas negras en el móvil.
+  - Publicar en Pages con `noindex`.
+  - Ajustar el equilibrio jugando.
+  - Después, el arte de verdad. Los autores preparan el Bestiario con
+    `docs/PROMPT-CRIATURAS.md`; luego se generarán las imágenes con OpenArt.
+- **El laboratorio de combate** es solo una herramienta de pruebas, con un enlace pequeño en el
+  título. No es prioridad.
 - **Pendiente del autor:** las relaciones entre tipos y la definición de Plasma (`docs/GDD.md`
-  §8). Mientras tanto, la tabla de `src/data/tipos.ts` es provisional.
+  §8). La tabla de `src/data/tipos.ts` es provisional.
 
 ## Antes de tocar nada
 
@@ -65,35 +69,51 @@ El código va en español: nombres, comentarios y textos.
 - `src/core/`: motor puro y determinista, con pruebas en `tests/`.
   - `modelo.ts`: los tipos de datos.
   - `rng.ts`: el generador con semilla.
-  - `estadisticas.ts`: fórmulas, Valía y temperamento.
-  - `tipos.ts`, `danio.ts`, `captura.ts` y `progreso.ts` (experiencia, movimientos y
-    evolución).
-  - `criatura.ts`: crear y curar ejemplares.
-  - `combate.ts`: `iniciarCombate` y `resolverTurno`, que devuelven el estado nuevo y los
-    eventos.
-  - `ia.ts`: la IA del rival.
-- `src/data/`: `especies.ts`, `movimientos.ts`, `tipos.ts` (tabla provisional),
-  `temperamentos.ts` y `objetos.ts`. `index.ts` reúne todo en `DATOS`, que el motor recibe como
-  parámetro.
-- `src/escenas/`: escenas de Phaser.
-  - `Arranque` carga el arte.
-  - `Laboratorio` es donde se eligen los equipos.
-  - `Combate` pinta los eventos del motor, sin lógica de reglas.
+  - `estadisticas.ts`, `tipos.ts`, `danio.ts`, `captura.ts`, `progreso.ts` y `criatura.ts`.
+  - `combate.ts` e `ia.ts`: el combate, como (estado, acción) → (estado, eventos).
+  - `mundo.ts`: zonas, personajes, salidas, guiones (`Paso`) y línea de visión.
+  - `partida.ts`: el estado de la partida, los encuentros y el resultado de los combates.
+  - `guardado.ts`: serializar y migrar partidas.
+- `src/data/`:
+  - Contenido de combate: `especies.ts`, `movimientos.ts`, `tipos.ts`, `temperamentos.ts` y
+    `objetos.ts`, reunidos en `DATOS` (`index.ts`).
+  - Contenido del mundo: `casillas.ts` (la leyenda de los mapas), `entrenadores.ts`,
+    `zonas/capitulo1.ts` y `guion.ts` (atajos para escribir guiones). Se reúnen en `mundo.ts`.
+- `src/escenas/`:
+  - `Arranque`.
+  - `Titulo`.
+  - `Mundo`: el mapa y los guiones.
+  - `Interfaz`: el mando, los diálogos y los menús, encima del mapa.
+  - `Combate`: modo historia o laboratorio.
+  - `Laboratorio`.
 - `src/ui/`:
-  - `tema.ts`: medidas (1080 × 1920, escalado con FIT) y colores.
-  - `componentes.ts`: `Boton`, `Barra` y chips de tipo.
-  - `criaturaVisual.ts`: el arte de las criaturas.
-  - `textos.ts`: la frase que acompaña a cada evento.
-- `src/assets/criaturas/<id>.png`: arte de cada criatura. Se detecta solo. Si falta, se dibuja
-  una figura provisional con el color del tipo, más grande y con más adornos cuanto más
-  evolucionada.
+  - `tema.ts`: medidas (1080 × 1920; el mapa ocupa los 1240 de arriba) y colores.
+  - `componentes.ts`: `Boton`, que admite mantener pulsado; `Barra`; chips de tipo.
+  - `casillasVisual.ts` y `personaVisual.ts`: arte provisional por código.
+  - `criaturaVisual.ts`: los PNG de `src/assets/criaturas/` o una figura provisional.
+  - `textos.ts`: frases de combate y `describirMovimiento`.
+  - `sesion.ts`: la partida en curso y el `localStorage`.
+  - `pedirNombre.ts`.
+- **Añadir una zona:**
+  - Se dibuja en texto con los caracteres de `casillas.ts`.
+  - Cada salida necesita su vuelta en la otra zona.
+  - Las pruebas (`tests/historia.test.ts`) comprueban filas, caracteres, salidas, personajes y
+    guiones.
+- **Banderas de la historia:**
+  - `inicial`, `teseras`, `colon`, `fosil`.
+  - `visto:<zona>`: el guion de entrada ya se ha visto.
+  - `vencido:<entrenador>`.
+  - `blason_alhambra`.
 
 ## Comprobar
 
 - `npm test`: Vitest contra `src/core` y la coherencia de los datos.
 - `npm run build`: `tsc` más `vite build`, con base relativa.
-- `npm run dev` o `npm run preview`: abre el juego con un viewport de móvil en vertical. Sin
-  móvil, se puede usar Playwright con un viewport de 390 × 844 y toques.
+- `npm run dev` o `npm run preview`: abre el juego con un viewport de móvil en vertical.
+- **Sin móvil, con Playwright:**
+  - Usa un viewport de 390 × 844, con toques y teclado: flechas, Intro (A), Esc (B) y M (menú).
+  - `window.juego` da acceso a las escenas para comprobar el estado; por ejemplo,
+    `juego.scene.getScene('Mundo').p` es la partida.
 - **Publicación** (hito 4). Hay que añadirlo a `.github/workflows/publicar-juego.yml`:
   - incluir `leyendas-de-iberia/**` en `paths`;
   - hacer `npm ci`, `npm test` y `npm run build`;

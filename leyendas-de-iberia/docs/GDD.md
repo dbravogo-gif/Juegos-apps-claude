@@ -375,3 +375,8 @@ con la Guerra Civil.
   - Tipos: Común, Agua, Tierra, Planta, Aire, Eléctrico, Hielo, Infernal (es el fuego),
     Plasma, Mental, Luz, Oscuridad, Espectral, Acero y Ancestral, que sustituye a Mitológico. Se
     descarta la tabla de 5 tipos del primer borrador. Hay tipo doble.
+- **2026-10-23.** Modo historia del capítulo 1 jugable de principio a fin.
+  - El laboratorio de combate queda como herramienta de pruebas.
+  - En combate, mantener pulsado un movimiento muestra qué hace; al subir de nivel con cuatro
+    movimientos, se elige cuál olvidar.
+  - Prompt para diseñar el Bestiario con otra IA: `PROMPT-CRIATURAS.md`.

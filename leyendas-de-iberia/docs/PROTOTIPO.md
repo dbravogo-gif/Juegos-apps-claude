@@ -1,6 +1,6 @@
 # Fase 1: prototipo «Granada, 1492»
 
-Estado: **en curso.** Hito 1 hecho. Las relaciones entre tipos (§4) siguen siendo provisionales.
+Estado: **en curso.** Los hitos 1 a 3 están hechos y el modo historia se juega entero. Falta el hito 4. Las relaciones entre tipos (§4) siguen siendo provisionales.
 
 ## 1. Objetivo
 
@@ -139,13 +139,13 @@ Cada hito termina en algo que se puede abrir en el navegador y jugar.
    - El proyecto Vite + TS + Phaser, con el motor de combate en `src/core` y sus pruebas.
    - Una pantalla para elegir dos criaturas y combatir, que sirve para ajustar las cifras.
    - *Jugable:* combates sueltos contra criaturas salvajes.
-2. **La Vega.**
+2. **La Vega. Hecho (2026-10-23).**
    - Mapa en Tiled y movimiento con el mando táctil o el teclado.
    - Encuentros en el carrizal, captura con téseras y equipo de hasta 6.
    - Las demás criaturas se guardan en el Bestiario, que se gestiona en el mesón.
    - El mesón, que cura.
    - *Jugable:* explorar y capturar.
-3. **Progresión y gimnasio.**
+3. **Progresión y gimnasio. Hecho (2026-10-23).**
    - Experiencia, niveles, movimientos nuevos y evolución.
    - Los dos entrenadores y Boabdil.
    - Isabel con la elección de la inicial, el Gran Capitán, Colón y el fósil de Orce.
