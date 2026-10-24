@@ -35,8 +35,8 @@ Diseño de las 150 especies. Parte del prompt maestro que el autor preparó con 
 - **Movimientos.** Se reutilizan los que ya existen en `src/data/movimientos.ts`. Los nuevos se
   marcan con *(nuevo)*, y solo usan efectos que el motor ya sabe hacer: daño, subir o bajar
   etapas, quemar, dormir, drenar, curar y prioridad.
-- **Debilidades de tipo.** Salen de la tabla de tipos del autor (`src/data/tipos.ts`), que ya
-  está cerrada. Con dos tipos, los multiplicadores se multiplican.
+- **Debilidades de tipo.** Salen de la tabla de tipos (`src/data/tipos.ts`): la del autor,
+  reducida el 2026-10-24. Con dos tipos, los multiplicadores se multiplican.
 - **Marcas de verdad:**
   - *Hecho*: biología, paleontología o historia documentada.
   - *Tradición*: folclore recogido en fuentes.
@@ -162,7 +162,7 @@ Recuento de especies que tienen cada tipo, ya sea como primero o como segundo (v
   especies cada uno, repartidas en al menos cuatro capítulos o zonas.
 - **Aire baja de 32 a 24** con la revisión de las aves. **Agua sube a 31** por la fauna de
   buceo de Canarias y la carabela portuguesa.
-- Con la tabla del autor, **Común no tiene debilidades** y solo Espectral le resiste del todo;
+- Con la tabla de tipos, **Común no tiene debilidades** y solo Espectral le resiste del todo;
   es el tipo más seguro para defender, y por eso abunda en las formas débiles.
 
 ### A.8 Segunda revisión: variedad del catálogo (v2)
@@ -205,7 +205,7 @@ región y concepto visual, y recortar los motivos repetidos. Resultado:
 | Tamborón | El tamboril, el pez globo de las costas canarias. | Tanque del capítulo 7. |
 | Malpaisín | La musaraña canaria (*Crocidura canariensis*), endémica de Fuerteventura y Lanzarote, que vive en los malpaíses. | Fauna canaria endémica para la zona de Mafasca. |
 | Magec | *Tradición guanche*: el sol, al que Guayota secuestró en el Teide. | Pareja de Guayota; sin él, la leyenda quedaba a medias. |
-| Papemímico | Un recipiente que muerde. *Licencia*. | La sorpresa de las tinajas y papeleras (ver su ficha). |
+| Papemímico | Un recipiente que muerde. *Licencia*. | La sorpresa de las tinajas (ver su ficha). |
 
 **Cambios en especies que se quedan:**
 - **Lagartitán → *Gallotia simonyi*.** El autor pidió el lagarto gigante de El Hierro con su
@@ -418,7 +418,7 @@ pendiente del autor.
 
 | Nº | Nombre | Tipos | Línea | Dónde aparece | Rareza | Rol | Silueta | Origen |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 129 | Papemímico | Oscuridad/Acero | No evoluciona | Dentro de tinajas y papeleras de cualquier capítulo (10 % al registrarlas) | Especial | Atacante resistente | Recipiente con mandíbula | Invención del juego |
+| 129 | Papemímico | Oscuridad/Acero | No evoluciona | Dentro de las tinajas de cualquier capítulo (10 % al registrarlas) | Especial | Atacante resistente | Recipiente con mandíbula | Invención del juego |
 
 ### Legendarios (uno por partida)
 
@@ -649,7 +649,7 @@ pendiente del autor.
 5. **Ubicación y rareza:** evolución final de inicial.
 6. **Rol:** tanque físico.
    - Puntos débiles: es lento (Celeridad 60) y tiene poca Magia.
-   - Con la tabla del autor, es muy débil a Plasma (×4) y débil a Tierra y Eléctrico.
+   - Con la tabla de tipos, es muy débil a Plasma (×4) y débil a Tierra y Eléctrico.
 7. **Estadísticas:** 100 / 95 / 130 / 55 / 90 / 60 = **530**.
 8. **EXP:** ×1,20.
 9. **Movimientos:**
@@ -731,7 +731,7 @@ pendiente del autor.
 5. **Ubicación y rareza:** evolución final de inicial.
 6. **Rol:** tanque mixto y apoyo. Aguanta golpes de los dos tipos y se cura.
    - Puntos débiles: es lento y tiene poca Fuerza.
-   - Con la tabla del autor, es muy débil a Hielo (×4) y débil a Ancestral.
+   - Con la tabla de tipos, es muy débil a Hielo (×4) y débil a Aire, Infernal y Ancestral.
 7. **Estadísticas:** 100 / 70 / 100 / 100 / 105 / 55 = **530**.
 8. **EXP:** ×1,20.
 9. **Movimientos:**
@@ -1095,7 +1095,7 @@ pendiente del autor.
    - Tras vencerle, aparece salvaje un ejemplar en el Generalife.
 6. **Rol:** atacante resistente: pega y aguanta.
    - Punto débil: es lento.
-   - Con la tabla del autor, es muy débil a Planta (×4), débil a Aire e inmune a Eléctrico.
+   - Con la tabla de tipos, es muy débil a Planta (×4), débil a Aire e inmune a Eléctrico.
 7. **Estadísticas:** 85 / 90 / 95 / 70 / 85 / 55 = **480**. Es el mismo total que ya tiene en
    el juego, que está probado.
 8. **EXP:** ×1,40.
@@ -1203,7 +1203,7 @@ pendiente del autor.
 5. **Ubicación y rareza:** por evolución. Rara.
 6. **Rol:** tanque de apoyo. Aguanta mucho y cura.
    - Puntos débiles: muy lento (Celeridad 40) y con poca ofensiva.
-   - Con la tabla del autor, es débil a Tierra, Infernal y Plasma.
+   - Con la tabla de tipos, es débil a Tierra, Infernal, Plasma, Oscuridad y Acero.
 7. **Estadísticas:** 95 / 75 / 120 / 70 / 110 / 40 = **510**.
 8. **EXP:** ×1,20.
 9. **Movimientos:**
@@ -1255,7 +1255,7 @@ pendiente del autor.
      - Celeridad 20: casi siempre actúa el último.
      - Magia 30: su ofensiva es solo física y moderada.
      - Resistencia mágica 75, regular: los atacantes mágicos le hacen daño de verdad.
-     - Con la tabla del autor, es muy débil a Aire y a Hielo (×4) e inmune a Eléctrico.
+     - Con la tabla de tipos, es muy débil a Aire (×4), débil a Hielo e inmune a Eléctrico.
 7. **Estadísticas:** 130 / 90 / 135 / 30 / 75 / 20 = **480**.
 8. **EXP:** ×1,15.
 9. **Movimientos:**
@@ -1305,8 +1305,8 @@ pendiente del autor.
 5. **Ubicación y rareza:** El Hierro, en la Fuga de Gorreta. Muy rara.
 6. **Rol:** atacante resistente. Pega fuerte, aguanta golpes físicos y se calienta al sol para
    ir a más.
-   - Puntos débiles: Magia baja; con la tabla del autor, es débil a Agua, Planta, Aire y Hielo,
-     e inmune a Eléctrico.
+   - Puntos débiles: Magia baja; con la tabla de tipos, es débil a Agua, Planta y Aire, e
+     inmune a Eléctrico.
 7. **Estadísticas:** 95 / 105 / 100 / 45 / 80 / 75 = **500**.
 8. **EXP:** ×1,20.
 9. **Movimientos:**
@@ -1349,7 +1349,7 @@ pendiente del autor.
 5. **Ubicación y rareza:** buceando en el Mar de las Calmas (El Hierro). Común.
 6. **Rol:** tanque mágico. Aguanta la magia y se cura; pega poco.
    - Puntos débiles: Fuerza y Celeridad bajas.
-   - Con la tabla del autor, es débil a Aire y Plasma, y resiste Agua, Tierra y Acero.
+   - Con la tabla de tipos, es débil a Aire, Eléctrico, Hielo y Plasma, y resiste Agua, Tierra y Acero.
 7. **Estadísticas:** 95 / 55 / 70 / 70 / 110 / 60 = **460**.
 8. **EXP:** ×1,05.
 9. **Movimientos:**
@@ -1381,20 +1381,20 @@ pendiente del autor.
 
 #### 129 Papemímico
 
-1. **Nombre:** Papemímico, de *papelera* y *mímico*. Se llama igual en todas las épocas, aunque
-   en los capítulos antiguos se esconda en tinajas.
+1. **Nombre:** Papemímico, de *papelera* y *mímico*, como lo llamó el autor. En el juego se
+   esconde siempre en tinajas, en todas las épocas.
 2. **Tipos:**
    - Oscuridad: vive del engaño y ataca a traición.
    - Acero: su cuerpo es el recipiente, duro como un caldero.
 3. **Línea:** no evoluciona.
 4. **Inspiración:** *Licencia*. Un recipiente vivo que se hace pasar por uno corriente.
-5. **Ubicación y rareza:** dentro de tinajas y papeleras de cualquier capítulo. Al registrar
+5. **Ubicación y rareza:** dentro de las tinajas de cualquier capítulo. Al registrar
    una, hay un 10 % de que sea él (`src/data/recipientes.ts`). Especial.
 6. **Rol:** atacante resistente. Es más duro que lo normal en su zona, pero justo:
    - Sale al nivel de la zona, o dos por encima de tu criatura más fuerte si es más alto.
    - Elige sus movimientos como un entrenador, no al azar.
-   - Puntos débiles: Celeridad muy baja; con la tabla del autor, es débil a Tierra, Infernal
-     y Plasma.
+   - Puntos débiles: Celeridad muy baja; con la tabla de tipos, es débil a Tierra, Infernal,
+     Plasma, Mental y Luz.
 7. **Estadísticas:** 120 / 105 / 115 / 65 / 95 / 45 = **545**.
 8. **EXP:** ×1,40.
 9. **Movimientos:**
@@ -1410,9 +1410,8 @@ pendiente del autor.
 12. **Emboscada en el mapa:** el recipiente tiembla, se abre de golpe, salta un «!», la pantalla
     destella en rojo y tiembla, y aparece el texto «¡La tinaja tenía dientes!».
 13. **Imagen:**
-    - **Silueta:** la de su recipiente, con la boca convertida en mandíbula. En el capítulo 1,
-      una tinaja de barro; en los modernos, una papelera de metal.
-    - **Paleta:** barro rojizo o metal gris, con el interior negro y la lengua granate.
+    - **Silueta:** una tinaja de barro con la boca convertida en mandíbula.
+    - **Paleta:** barro rojizo, con el interior negro y la lengua granate.
     - **Detalles:**
       - Dientes de tiesto roto alrededor de la boca, irregulares.
       - Una lengua larga, como un trapo enrollado, que asoma.
@@ -1449,23 +1448,18 @@ Usan solo efectos que ya existen en el motor. Los del capítulo 1 ya están en e
 
 ### Decisiones del autor
 
+Aceptado el 2026-10-24: las entradas nuevas de la v2 y sus nombres, Dralín con dos formas y el
+Papemímico capturable (con sus 3 Turrones también al capturarlo).
+
 1. Dar el visto bueno a la auditoría (A.1 a A.8) y a los nombres nuevos: Brezuco, Carapachón,
    Mocarabeo, Farolera, Riscabra, Coronazul y todos los que no venían en el prompt.
-2. **v2: las once entradas nuevas** (A.8), sobre todo Oronjín → Matamoscón, Fragatín (antes
-   Paíñel), Almadrabón y Basiliscón. Fragatín y Almadrabón se llaman así para no confundirse con
-   Carapachón y Barbaflux.
-3. **Dralín con dos formas** frente a las tres de las otras iniciales. Se compensa con algo más
-   de estadísticas en la primera forma y la evolución al 26. Si prefieres que las tres iniciales
-   sean iguales, hay que recuperar una forma intermedia con concepto propio.
-4. **El Papemímico se puede capturar.** Si se captura, también da los 3 Turrones. ¿Debería
-   poder capturarse?
-5. **Capítulo 8 en Asturias.** El prompt lo propone y aquí se da por bueno.
-6. **Fuerteventura.** ¿Una zona opcional nocturna en los llanos de Mafasca, para la Luz de
+2. **Capítulo 8 en Asturias.** El prompt lo propone y aquí se da por bueno.
+3. **Fuerteventura.** ¿Una zona opcional nocturna en los llanos de Mafasca, para la Luz de
    Mafasca?
-7. **Islero fuera, Ratón Pérez dentro.** ¿Te parece bien?
-8. **Rutas entre capítulos.** ¿Se diseñan como zonas pequeñas de paso (Galicia, Cataluña,
+4. **Islero fuera, Ratón Pérez dentro.** ¿Te parece bien?
+5. **Rutas entre capítulos.** ¿Se diseñan como zonas pequeñas de paso (Galicia, Cataluña,
    Mallorca, Extremadura, Cantabria) o se reparten esas criaturas por los capítulos?
-9. **Evoluciones por lugar.** Lobánima (Monte de las Ánimas) y Noctilex (Real Biblioteca) están
+6. **Evoluciones por lugar.** Lobánima (Monte de las Ánimas) y Noctilex (Real Biblioteca) están
    pensadas para evolucionar en un lugar concreto. Es una mecánica nueva. Si no se quiere, se
    deja por nivel.
 

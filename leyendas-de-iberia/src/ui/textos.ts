@@ -20,13 +20,17 @@ function quien(nombre: string, lado: 'jugador' | 'rival', ctx: ContextoTextos): 
   return ctx.salvaje ? `${nombre} salvaje` : `${nombre} rival`;
 }
 
-/** «un Ungüento», «una Tésera», «unas Sales»: el artículo según la primera palabra. */
+const porNombre = (nombre: string) => Object.values(DATOS.objetos).find((o) => o.nombre === nombre);
+
+/** «una Poción», «un Repelente», «unos Restos»: el artículo que dicen los datos del objeto. */
 export function conArticulo(nombre: string): string {
-  const primera = nombre.split(' ')[0];
-  const femenino = /a$/.test(primera);
-  const plural = /[^é]s$/.test(primera);
-  if (plural) return `${/as$/.test(primera) || primera === 'Sales' ? 'unas' : 'unos'} ${nombre}`;
-  return `${femenino ? 'una' : 'un'} ${nombre}`;
+  return `${porNombre(nombre)?.articulo ?? 'un'} ${nombre}`;
+}
+
+/** «su Vidasfera», «sus Restos». */
+function suyo(nombre: string): string {
+  const articulo = porNombre(nombre)?.articulo;
+  return `${articulo === 'unos' || articulo === 'unas' ? 'sus' : 'su'} ${nombre}`;
 }
 
 /** Frases que acompañan a cada evento. Una lista vacía: el evento no se narra. */
@@ -95,10 +99,10 @@ export function textosEvento(ev: Evento, ctx: ContextoTextos): string[] {
       return [`¡${ev.nombre} se reanima!`];
     case 'objetoEquipado': {
       const q = quien(ev.nombre, ev.lado, ctx);
-      if (ev.efecto === 'aguanta') return [`¡${q} aguanta gracias a su ${ev.objeto}!`];
-      if (ev.efecto === 'come') return [`¡${q} se come su ${ev.objeto}!`];
-      if (ev.efecto === 'pierde') return [`${q} se resiente por su ${ev.objeto}.`];
-      return [`${q} recupera Vida gracias a su ${ev.objeto}.`];
+      if (ev.efecto === 'aguanta') return [`¡${q} aguanta gracias a ${suyo(ev.objeto)}!`];
+      if (ev.efecto === 'come') return [`¡${q} se come ${suyo(ev.objeto)}!`];
+      if (ev.efecto === 'pierde') return [`${q} se resiente por ${suyo(ev.objeto)}.`];
+      return [`${q} recupera Vida gracias a ${suyo(ev.objeto)}.`];
     }
     case 'captura': {
       if (ev.exito) return [`¡Pacto sellado! ${ev.nombre} se une a ti.`];

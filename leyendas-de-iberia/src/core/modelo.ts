@@ -123,6 +123,8 @@ export type CategoriaObjeto =
 interface ObjetoBase {
   id: string;
   nombre: string;
+  /** Artículo indefinido para los textos: «Usas una Poción», «unos Restos». */
+  articulo: 'un' | 'una' | 'unos' | 'unas';
   descripcion: string;
   categoria: CategoriaObjeto;
   /** Precio en tienda. Sin precio, no se vende: se encuentra o se gana. */

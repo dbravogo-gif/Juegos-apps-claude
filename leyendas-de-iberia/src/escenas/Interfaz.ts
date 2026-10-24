@@ -402,7 +402,7 @@ export class Interfaz extends Phaser.Scene {
 
   /**
    * Menú de pausa: equipo, Bestiario, mochila, tipos y guardar. Devuelve `'ovillo'` si se ha
-   * usado un Ovillo, para que el mapa lleve al jugador al mesón.
+   * usado una Cuerda huida, para que el mapa lleve al jugador al mesón.
    */
   menu(p: Partida, op: { ovilloPermitido: boolean } = { ovilloPermitido: false }): Promise<'ovillo' | undefined> {
     this.ovilloPermitido = op.ovilloPermitido;

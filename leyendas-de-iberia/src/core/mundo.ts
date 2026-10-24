@@ -104,10 +104,8 @@ export interface Zona {
   carteles: { x: number; y: number; texto: string[] }[];
   /** Objetos escondidos: se encuentran mirando la casilla y pulsando A (bandera `oculto:<zona>:<id>`). */
   ocultos?: { id: string; x: number; y: number; objeto: string; cantidad?: number }[];
-  /** Tinajas o papeleras que se pueden registrar una vez (`src/data/recipientes.ts`). Bloquean el paso. */
+  /** Tinajas que se pueden registrar una vez (`src/data/recipientes.ts`). Bloquean el paso. */
   recipientes?: { id: string; x: number; y: number }[];
-  /** Cómo se llaman los recipientes en esta época: tinajas antes, papeleras hoy. */
-  recipiente?: 'tinaja' | 'papelera';
   /** Guion que se ejecuta la primera vez que se entra (usa la bandera `visto:<id>`). */
   alEntrar?: Guion;
 }

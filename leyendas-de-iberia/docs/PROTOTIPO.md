@@ -78,7 +78,7 @@ iniciales evolucionan en la fase 2, como en Pokémon, donde lo hacen después de
     del Dr. Jangel, en el capítulo 2: es un anticipo.
 - **Objetos:**
   - Tésera, para capturar.
-  - Ungüento, para curar.
+  - Poción, para curar.
 - **Moneda:** maravedís.
 - **Estados alterados:** Quemado y Dormido.
 - **Movimientos:** unos 25.
