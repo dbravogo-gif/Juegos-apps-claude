@@ -358,7 +358,7 @@ export class Interfaz extends Phaser.Scene {
           INICIALES.forEach((id, i) => {
             const e = DATOS.especies[id];
             const x = 40 + ancho / 2 + i * (ancho + 20);
-            const tarjeta = this.add.rectangle(x, 560, ancho, 620, COLOR.pergamino).setRounded(24).setStrokeStyle(6, COLOR.tinta);
+            const tarjeta = this.add.rectangle(x, 600, ancho, 700, COLOR.pergamino).setRounded(24).setStrokeStyle(6, COLOR.tinta);
             tarjeta.setInteractive({ useHandCursor: true }).on('pointerup', () => resolve(id));
             c.add(tarjeta);
             c.add(crearCriaturaVisual(this, id, x, 400, 230, true));
@@ -368,8 +368,8 @@ export class Interfaz extends Phaser.Scene {
             c.add(tipos);
             c.add(
               this.add
-                .text(x, 760, e.descripcion, { ...estiloTexto(24, COLOR.tintaSuave), align: 'center', wordWrap: { width: ancho - 40 } })
-                .setOrigin(0.5, 0.5),
+                .text(x, 695, e.descripcion, { ...estiloTexto(22, COLOR.tintaSuave), align: 'center', wordWrap: { width: ancho - 36 } })
+                .setOrigin(0.5, 0),
             );
           });
         });
@@ -567,10 +567,13 @@ export class Interfaz extends Phaser.Scene {
     }
   }
 
-  private pantallaBestiario(p: Partida, volver: () => void): void {
+  private pantallaBestiario(p: Partida, volver: () => void, pagina = 0): void {
     const c = this.abrirCapa('Bestiario');
     c.add(this.add.text(ANCHO / 2, 135, `Vistas ${p.vistos.length} · Capturadas ${p.capturados.length}`, estiloTexto(32, COLOR.oro)).setOrigin(0.5));
-    const ids = Object.keys(DATOS.especies);
+    const todas = Object.values(DATOS.especies).sort((a, b) => a.numero - b.numero);
+    const porPagina = 20;
+    const paginas = Math.ceil(todas.length / porPagina);
+    const ids = todas.slice(pagina * porPagina, (pagina + 1) * porPagina).map((e) => e.id);
     const columnas = 4;
     const ancho = 240;
     const alto = 160;
@@ -581,15 +584,20 @@ export class Interfaz extends Phaser.Scene {
       const capturado = p.capturados.includes(id);
       const fondo = this.add.rectangle(x, y, ancho, alto, visto ? COLOR.pergamino : COLOR.pergaminoOscuro).setRounded(16).setStrokeStyle(4, COLOR.tintaSuave);
       c.add(fondo);
-      c.add(this.add.text(x - ancho / 2 + 12, y - alto / 2 + 8, String(i + 1).padStart(3, '0'), estiloTexto(22, COLOR.tintaSuave)));
+      c.add(this.add.text(x - ancho / 2 + 12, y - alto / 2 + 8, String(DATOS.especies[id].numero).padStart(3, '0'), estiloTexto(22, COLOR.tintaSuave)));
       if (visto) {
         c.add(crearCriaturaVisual(this, id, x, y - 16, 90));
         c.add(this.add.text(x, y + 52, `${DATOS.especies[id].nombre}${capturado ? ' ✓' : ''}`, { ...estiloTexto(22, COLOR.tinta, true), align: 'center', wordWrap: { width: ancho - 12 } }).setOrigin(0.5));
-        fondo.setInteractive({ useHandCursor: true }).on('pointerup', () => this.pantallaEspecie(p, id, () => this.pantallaBestiario(p, volver)));
+        fondo.setInteractive({ useHandCursor: true }).on('pointerup', () => this.pantallaEspecie(p, id, () => this.pantallaBestiario(p, volver, pagina)));
       } else {
         c.add(this.add.text(x, y, '???', estiloTexto(40, COLOR.tintaSuave, true)).setOrigin(0.5));
       }
     });
+    if (paginas > 1) {
+      const y = ALTO_MAPA - 80;
+      c.add(new Boton(this, 120, y, { ancho: 180, alto: 110, texto: '‹', tamano: 56, alPulsar: () => this.pantallaBestiario(p, volver, pagina - 1) }).setActivo(pagina > 0));
+      c.add(new Boton(this, ANCHO - 120, y, { ancho: 180, alto: 110, texto: '›', tamano: 56, alPulsar: () => this.pantallaBestiario(p, volver, pagina + 1) }).setActivo(pagina < paginas - 1));
+    }
     this.botonVolver(c, volver);
   }
 

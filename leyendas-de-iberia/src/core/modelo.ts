@@ -46,6 +46,8 @@ export interface Movimiento {
 
 export interface Especie {
   id: string;
+  /** Número en el Bestiario, de 1 a 150. */
+  numero: number;
   nombre: string;
   tipos: [string] | [string, string];
   base: Estadisticas;

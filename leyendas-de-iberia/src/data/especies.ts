@@ -11,6 +11,8 @@ import type { TipoId } from './tipos';
 type Aprende = [nivel: number, movimiento: MovimientoId][];
 
 interface DefEspecie {
+  /** Número en el Bestiario (`docs/BESTIARIO.md`). */
+  numero: number;
   nombre: string;
   tipos: [TipoId] | [TipoId, TipoId];
   base: [vida: number, fuerza: number, escudo: number, magia: number, resMagica: number, celeridad: number];
@@ -40,6 +42,7 @@ const LINEA_ESCARABAJO: Aprende = [[1, 'topetazo'], [1, 'desplante'], [5, 'polva
 
 const DEF = {
   becerro_igneo: {
+    numero: 1,
     nombre: 'Ignibue',
     tipos: ['infernal'],
     base: [44, 62, 44, 46, 44, 66],
@@ -50,6 +53,7 @@ const DEF = {
     descripcion: 'En las fiestas de muchos pueblos sale de noche un toro de fuego: un armazón con forma de toro, cargado de cohetes, que alguien lleva a hombros. Ignibue embiste igual, pero el fuego es suyo.',
   },
   novillo_embolado: {
+    numero: 2,
     nombre: 'Braverno',
     tipos: ['infernal', 'tierra'],
     base: [62, 85, 62, 60, 56, 80],
@@ -60,6 +64,7 @@ const DEF = {
     descripcion: 'El basalto es lava que se enfrió deprisa. Es la roca de la que están hechas buena parte de las islas volcánicas, Canarias incluida.',
   },
   toro_de_fuego: {
+    numero: 3,
     nombre: 'Ignivárgoth',
     tipos: ['infernal', 'tierra'],
     base: [85, 120, 85, 75, 70, 95],
@@ -70,6 +75,7 @@ const DEF = {
   },
 
   cangrejo: {
+    numero: 4,
     nombre: 'Marzuko',
     tipos: ['agua'],
     base: [46, 58, 64, 42, 50, 50],
@@ -80,6 +86,7 @@ const DEF = {
     descripcion: 'Para crecer, los cangrejos mudan el caparazón: se desprenden del viejo y pasan unos días blandos y escondidos hasta que endurece el nuevo.',
   },
   necora: {
+    numero: 5,
     nombre: 'Nakarra',
     tipos: ['agua'],
     base: [64, 74, 90, 50, 66, 61],
@@ -90,6 +97,7 @@ const DEF = {
     descripcion: 'La nécora tiene los ojos rojos y el último par de patas aplanado como remos, con el que nada. Tiene fama de agresiva y peleona.',
   },
   centollo: {
+    numero: 6,
     nombre: 'Talascrón',
     tipos: ['agua', 'acero'],
     base: [100, 95, 130, 55, 90, 60],
@@ -101,6 +109,7 @@ const DEF = {
 
   // El drago tiene dos formas: evoluciona más tarde, pero directamente a la final.
   retono_drago: {
+    numero: 7,
     nombre: 'Dralín',
     tipos: ['planta'],
     base: [54, 44, 56, 62, 66, 48],
@@ -111,6 +120,7 @@ const DEF = {
     descripcion: 'El drago no forma anillos en el tronco: su edad solo se estima contando las veces que se ha ramificado. Su savia se vuelve roja al secarse, y se vendía como «sangre de drago».',
   },
   drago_milenario: {
+    numero: 8,
     nombre: 'Dracendro',
     tipos: ['planta', 'ancestral'],
     base: [100, 70, 100, 100, 105, 55],
@@ -121,6 +131,7 @@ const DEF = {
   },
 
   libelula: {
+    numero: 9,
     nombre: 'Zumbrel',
     tipos: ['aire'],
     base: [38, 48, 34, 38, 36, 76],
@@ -131,6 +142,7 @@ const DEF = {
     descripcion: 'Las libélulas mueven cada una de sus cuatro alas por separado. Así pueden quedarse quietas en el aire, girar en seco o volar hacia atrás.',
   },
   caballuco_diablu: {
+    numero: 10,
     nombre: 'Diablisca',
     tipos: ['aire', 'infernal'],
     base: [60, 72, 55, 82, 58, 103],
@@ -140,6 +152,7 @@ const DEF = {
     descripcion: 'En Cantabria se cuenta que la noche de San Juan salen los caballucos del diablu, caballos con alas de libélula, a destrozar los tréboles de cuatro hojas.',
   },
   topillo: {
+    numero: 13,
     nombre: 'Túmbriz',
     tipos: ['comun', 'tierra'],
     base: [35, 50, 38, 25, 35, 67],
@@ -149,6 +162,7 @@ const DEF = {
     descripcion: 'El topillo mediterráneo excava galerías y come raíces. Cuando sus poblaciones se disparan, arruina frutales y alfalfares.',
   },
   barbo: {
+    numero: 14,
     nombre: 'Barbaflux',
     tipos: ['agua'],
     base: [55, 72, 50, 40, 48, 65],
@@ -158,6 +172,7 @@ const DEF = {
     descripcion: 'El barbo gitano solo vive en el sur de la península, en las cuencas del Guadalquivir y del Guadiana. Le amenazan las presas, las sequías y los peces introducidos.',
   },
   abejaruco: {
+    numero: 15,
     nombre: 'Abezar',
     tipos: ['aire'],
     base: [42, 58, 40, 45, 40, 80],
@@ -167,6 +182,7 @@ const DEF = {
     descripcion: 'El abejaruco anida en túneles que excava en taludes de arena o arcilla. Caza al vuelo abejas, avispas y otros insectos.',
   },
   duende: {
+    numero: 11,
     nombre: 'Brezuco',
     tipos: ['oscuridad'],
     base: [40, 45, 42, 55, 50, 70],
@@ -178,6 +194,7 @@ const DEF = {
     descripcion: 'La palabra duende viene de «duen de casa», el dueño de la casa. Por eso vive en las casas y se cree con derecho a todo lo que hay en ellas.',
   },
   trasgo: {
+    numero: 12,
     nombre: 'Trasgorn',
     tipos: ['oscuridad'],
     base: [62, 70, 60, 85, 70, 98],
@@ -187,6 +204,7 @@ const DEF = {
     descripcion: 'El trasgu tiene un agujero en la mano izquierda. Para librarse de él se le manda recoger linaza derramada: se le cuela por el agujero, nunca termina y acaba por marcharse.',
   },
   mandragora: {
+    numero: 16,
     nombre: 'Mandragor',
     tipos: ['planta', 'mental'],
     base: [65, 45, 60, 85, 80, 45],
@@ -196,6 +214,7 @@ const DEF = {
     descripcion: 'Sus raíces son narcóticas, con efectos parecidos a los de la belladona. Desde la Antigüedad se cuenta que grita cuando la arrancan.',
   },
   galapago: {
+    numero: 17,
     nombre: 'Carapachón',
     tipos: ['agua'],
     base: [65, 50, 95, 40, 65, 25],
@@ -205,6 +224,7 @@ const DEF = {
     descripcion: 'El galápago leproso vive en ríos, balsas y acequias del sur de la península. Está en declive por la pérdida de hábitat y los galápagos exóticos que la gente suelta.',
   },
   leon_fuente: {
+    numero: 18,
     nombre: 'Alhambrón',
     tipos: ['agua', 'tierra'],
     base: [85, 90, 95, 70, 85, 55],
@@ -215,6 +235,7 @@ const DEF = {
   },
 
   escarabajo_pelotero: {
+    numero: 19,
     nombre: 'Broncero',
     tipos: ['tierra'],
     base: [45, 60, 55, 25, 35, 40],
@@ -225,6 +246,7 @@ const DEF = {
     descripcion: 'El escarabajo pelotero sagrado vive en dunas y arenales del sur de España. Sale al atardecer.',
   },
   escarabajo_bronce: {
+    numero: 20,
     nombre: 'Escarbraz',
     tipos: ['tierra', 'acero'],
     base: [65, 78, 98, 35, 62, 45],
@@ -235,6 +257,7 @@ const DEF = {
     descripcion: 'Los peloteros ruedan bolas de estiércol y las entierran. Dentro ponen sus huevos, y las larvas crecen comiéndose la bola.',
   },
   escarabajo_joya: {
+    numero: 21,
     nombre: 'Mocarabeo',
     tipos: ['acero', 'luz'],
     base: [95, 75, 120, 70, 110, 40],
@@ -246,6 +269,7 @@ const DEF = {
 
   // Encuentro especial: se esconde en tinajas y papeleras (ver src/data/recipientes.ts).
   papemimico: {
+    numero: 129,
     nombre: 'Papemímico',
     tipos: ['oscuridad', 'acero'],
     base: [120, 105, 115, 65, 95, 45],
@@ -263,6 +287,7 @@ export const ESPECIES: Record<string, Especie> = Object.fromEntries(
     const [vida, fuerza, escudo, magia, resMagica, celeridad] = d.base;
     const especie: Especie = {
       id,
+      numero: d.numero,
       nombre: d.nombre,
       tipos: [...d.tipos] as Especie['tipos'],
       base: { vida, fuerza, escudo, magia, resMagica, celeridad },

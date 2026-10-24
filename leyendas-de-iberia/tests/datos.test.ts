@@ -47,6 +47,12 @@ describe('datos', () => {
     expect(formas).toEqual([3, 3, 2]);
   });
 
+  it('cada especie tiene un número del Bestiario distinto, de 1 a 150', () => {
+    const numeros = Object.values(DATOS.especies).map((e) => e.numero);
+    expect(new Set(numeros).size).toBe(numeros.length);
+    for (const n of numeros) expect(n >= 1 && n <= 150, String(n)).toBe(true);
+  });
+
   it('las especies retiradas pasan a especies que existen', () => {
     for (const [id, opciones] of Object.entries(ESPECIES_RETIRADAS)) {
       expect(DATOS.especies[id], id).toBeUndefined();

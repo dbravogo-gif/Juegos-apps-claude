@@ -41,6 +41,7 @@ describe('generador con semilla', () => {
 describe('estadísticas', () => {
   const especie: Especie = {
     id: 'prueba',
+    numero: 1,
     nombre: 'Prueba',
     tipos: ['comun'],
     base: { vida: 108, fuerza: 130, escudo: 95, magia: 80, resMagica: 85, celeridad: 102 },

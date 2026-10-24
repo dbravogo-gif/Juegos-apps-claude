@@ -380,11 +380,11 @@ const ALHAMBRA: Zona = {
   encuentros: {
     tasa: 14,
     especies: [
-      { especie: 'duende', min: 5, max: 7, peso: 32 },
+      { especie: 'duende', min: 5, max: 7, peso: 36 },
       { especie: 'abejaruco', min: 5, max: 7, peso: 24 },
       { especie: 'mandragora', min: 5, max: 7, peso: 16 },
       { especie: 'galapago', min: 6, max: 8, peso: 10 },
-      { especie: 'escarabajo_bronce', min: 6, max: 8, peso: 10 },
+      { especie: 'escarabajo_bronce', min: 6, max: 7, peso: 6 },
       { especie: 'trasgo', min: 7, max: 8, peso: 8 },
     ],
   },
