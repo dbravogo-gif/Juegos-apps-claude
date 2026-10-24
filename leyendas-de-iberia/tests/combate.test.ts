@@ -101,7 +101,7 @@ describe('combate', () => {
       const presa = criatura('galapago', 5);
       presa.vida = 1;
       presa.estado = { tipo: 'dormido', turnos: 3 };
-      const { estado } = salvaje([criatura('drago', 20)], presa, `captura-${s}`);
+      const { estado } = salvaje([criatura('retono_drago', 20)], presa, `captura-${s}`);
       const r = resolverTurno(estado, { tipo: 'objeto', objeto: 'tesera' }, DATOS);
       expect(r.estado.jugador.objetos.tesera).toBe(4);
       if (r.estado.fin === 'captura') {

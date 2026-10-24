@@ -1,8 +1,10 @@
 import Phaser from 'phaser';
 import { claveSprite, SPRITES } from '../ui/criaturaVisual';
-import { generarTexturasCasillas } from '../ui/casillasVisual';
+import { cargarHojasMundo, prepararHojasMundo } from '../ui/casillasVisual';
+import { cargarPersonas, prepararPersonas } from '../ui/personaVisual';
+import { cargarIconos, prepararIconos } from '../ui/objetoVisual';
 
-/** Carga el arte que exista, genera las casillas provisionales y pasa al título. */
+/** Carga el arte, prepara las animaciones y pasa al título. */
 export class Arranque extends Phaser.Scene {
   constructor() {
     super('Arranque');
@@ -10,6 +12,9 @@ export class Arranque extends Phaser.Scene {
 
   preload(): void {
     for (const [id, url] of Object.entries(SPRITES)) this.load.image(claveSprite(id), url);
+    cargarHojasMundo(this.load);
+    cargarPersonas(this.load);
+    cargarIconos(this.load);
   }
 
   create(): void {
@@ -17,7 +22,9 @@ export class Arranque extends Phaser.Scene {
     for (const id of Object.keys(SPRITES)) {
       this.textures.get(claveSprite(id)).setFilter(Phaser.Textures.FilterMode.NEAREST);
     }
-    generarTexturasCasillas(this);
+    prepararHojasMundo(this);
+    prepararPersonas(this);
+    prepararIconos(this);
     this.scene.start('Titulo');
   }
 }

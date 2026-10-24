@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { DATOS } from '../src/data';
-import { INICIALES } from '../src/data/especies';
+import { ESPECIES_RETIRADAS, INICIALES } from '../src/data/especies';
 
 // Comprueba que el contenido es coherente, para poder añadir criaturas sin miedo.
 describe('datos', () => {
@@ -16,23 +16,47 @@ describe('datos', () => {
     }
   });
 
-  it('las evoluciones apuntan a especies que existen y a un nivel mayor que 1', () => {
+  it('las evoluciones apuntan a especies que existen, por nivel mayor que 1 o con un objeto de evolución', () => {
     for (const e of Object.values(DATOS.especies)) {
       if (!e.evoluciona) continue;
-      expect(DATOS.especies[e.evoluciona.a], `${e.id} → ${e.evoluciona.a}`).toBeDefined();
-      expect(e.evoluciona.nivel).toBeGreaterThan(1);
+      const { a, nivel, objeto } = e.evoluciona;
+      expect(DATOS.especies[a], `${e.id} → ${a}`).toBeDefined();
+      expect(nivel !== undefined || objeto !== undefined, e.id).toBe(true);
+      if (nivel !== undefined) expect(nivel).toBeGreaterThan(1);
+      if (objeto !== undefined) expect(DATOS.objetos[objeto]?.tipo, objeto).toBe('evolucion');
     }
   });
 
-  it('los iniciales tienen tres formas', () => {
-    for (const id of INICIALES) {
+  it('cada objeto de evolución sirve al menos a una especie', () => {
+    for (const o of Object.values(DATOS.objetos)) {
+      if (o.tipo !== 'evolucion') continue;
+      expect(Object.values(DATOS.especies).some((e) => e.evoluciona?.objeto === o.id), o.id).toBe(true);
+    }
+  });
+
+  it('los iniciales tienen tres formas, salvo el drago, que tiene dos', () => {
+    const formas = INICIALES.map((id) => {
       let actual = DATOS.especies[id];
-      let formas = 1;
+      let n = 1;
       while (actual.evoluciona) {
         actual = DATOS.especies[actual.evoluciona.a];
-        formas++;
+        n++;
       }
-      expect(formas, id).toBe(3);
+      return n;
+    });
+    expect(formas).toEqual([3, 3, 2]);
+  });
+
+  it('cada especie tiene un número del Bestiario distinto, de 1 a 150', () => {
+    const numeros = Object.values(DATOS.especies).map((e) => e.numero);
+    expect(new Set(numeros).size).toBe(numeros.length);
+    for (const n of numeros) expect(n >= 1 && n <= 150, String(n)).toBe(true);
+  });
+
+  it('las especies retiradas pasan a especies que existen', () => {
+    for (const [id, opciones] of Object.entries(ESPECIES_RETIRADAS)) {
+      expect(DATOS.especies[id], id).toBeUndefined();
+      for (const o of opciones) expect(DATOS.especies[o.a], o.a).toBeDefined();
     }
   });
 

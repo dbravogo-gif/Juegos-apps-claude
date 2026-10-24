@@ -5,10 +5,12 @@
 import type {
   Criatura,
   DatosJuego,
+  EfectoEquipo,
   EstadisticaCombate,
   EstadoAlterado,
   Etapas,
   Movimiento,
+  Objeto,
 } from './modelo';
 import { crearRng, entero, probabilidad, type EstadoRng } from './rng';
 import { calcularEstadisticas, multiplicadorEtapa } from './estadisticas';
@@ -17,6 +19,7 @@ import { intentarCaptura } from './captura';
 import { aplicarExperiencia, expGanada } from './progreso';
 import { nombreDe } from './criatura';
 import { elegirAccionIA } from './ia';
+import { aplicarCuracion, motivoNoUsable, seAplicaACriatura, usoDe } from './objetos';
 
 export type Lado = 'jugador' | 'rival';
 export type ResultadoCombate = 'victoria' | 'derrota' | 'huida' | 'captura';
@@ -42,6 +45,8 @@ export interface EstadoCombate {
   intentosHuida: number;
   fin: ResultadoCombate | null;
   capturada: Criatura | null;
+  /** El rival salvaje elige sus movimientos como un entrenador (el Papemímico). */
+  iaAstuta?: boolean;
 }
 
 export type Accion =
@@ -75,7 +80,7 @@ export type Evento =
       vidaMax: number;
       eficacia: number;
       critico: boolean;
-      causa: 'ataque' | 'quemadura' | 'retroceso';
+      causa: 'ataque' | 'quemadura' | 'retroceso' | 'objeto';
     }
   | { tipo: 'sinEfecto'; lado: Lado; nombre: string }
   | { tipo: 'curacion'; lado: Lado; indice: number; nombre: string; cantidad: number; vida: number; vidaMax: number }
@@ -90,6 +95,11 @@ export type Evento =
   /** Ya sabe cuatro movimientos: la interfaz pregunta si olvida uno al acabar el combate. */
   | { tipo: 'noAprende'; indice: number; nombre: string; movimiento: string; movimientoId: string }
   | { tipo: 'objeto'; lado: Lado; objeto: string }
+  /** Un objeto de la mochila cura el estado o reanima a una criatura. */
+  | { tipo: 'curaEstado'; lado: Lado; nombre: string }
+  | { tipo: 'reanima'; lado: Lado; indice: number; nombre: string; vida: number; vidaMax: number }
+  /** Actúa el objeto equipado. */
+  | { tipo: 'objetoEquipado'; lado: Lado; nombre: string; objeto: string; efecto: 'aguanta' | 'cura' | 'come' | 'pierde' }
   | { tipo: 'captura'; nombre: string; sacudidas: number; exito: boolean }
   | { tipo: 'huida'; exito: boolean }
   | { tipo: 'fin'; resultado: ResultadoCombate };
@@ -147,7 +157,7 @@ export interface ParticipanteInicial {
 }
 
 export function iniciarCombate(
-  op: { semilla: number | string; jugador: ParticipanteInicial; rival: ParticipanteInicial; salvaje: boolean },
+  op: { semilla: number | string; jugador: ParticipanteInicial; rival: ParticipanteInicial; salvaje: boolean; iaAstuta?: boolean },
   datos: DatosJuego,
 ): Resultado {
   const lado = (p: ParticipanteInicial): LadoCombate => {
@@ -174,6 +184,7 @@ export function iniciarCombate(
     fin: null,
     capturada: null,
   };
+  if (op.iaAstuta) estado.iaAstuta = true;
   const eventos: Evento[] = [
     { tipo: 'entrada', lado: 'rival', indice: estado.rival.activo, ficha: fichaDe(activoDe(estado, 'rival'), datos) },
     { tipo: 'entrada', lado: 'jugador', indice: estado.jugador.activo, ficha: fichaDe(activoDe(estado, 'jugador'), datos) },
@@ -195,8 +206,8 @@ export function accionesDisponibles(e: EstadoCombate, datos: DatosJuego): Accion
   const objetos: Record<string, boolean> = {};
   for (const [id, n] of Object.entries(e.jugador.objetos)) {
     const obj = datos.objetos[id];
-    if (!obj || n <= 0 || obj.tipo === 'clave') continue;
-    objetos[id] = obj.tipo === 'captura' ? e.salvaje : e.jugador.equipo.some((c) => vivo(c) && c.vida < vidaMax(c, datos));
+    if (!obj || n <= 0 || !usoDe(obj).combate) continue;
+    objetos[id] = objetoUtil(e, obj, datos);
   }
   return {
     movimientos: a.movimientos.map((m) => m.pp > 0),
@@ -205,6 +216,14 @@ export function accionesDisponibles(e: EstadoCombate, datos: DatosJuego): Accion
     objetos,
     huir: e.salvaje,
   };
+}
+
+/** Si ahora mismo tiene sentido usar ese objeto en el combate. */
+function objetoUtil(e: EstadoCombate, obj: Objeto, datos: DatosJuego): boolean {
+  if (obj.tipo === 'captura') return e.salvaje;
+  if (obj.tipo === 'potenciador') return e.jugador.etapas[obj.estadistica] < 6;
+  if (seAplicaACriatura(obj)) return e.jugador.equipo.some((c) => motivoNoUsable(obj, c, datos) === null);
+  return false;
 }
 
 function validar(e: EstadoCombate, accion: Accion, datos: DatosJuego): void {
@@ -226,11 +245,12 @@ function validar(e: EstadoCombate, accion: Accion, datos: DatosJuego): void {
     case 'objeto': {
       const obj = datos.objetos[accion.objeto];
       if (!obj || (j.objetos[accion.objeto] ?? 0) <= 0) throw new Error('No te quedan de ese objeto');
-      if (obj.tipo === 'clave') throw new Error('Ese objeto no se usa en combate');
+      if (!usoDe(obj).combate) throw new Error('Ese objeto no se usa en combate');
       if (obj.tipo === 'captura' && !e.salvaje) throw new Error('No se puede capturar la criatura de otro entrenador');
-      if (obj.tipo === 'curar') {
+      if (seAplicaACriatura(obj)) {
         const c = j.equipo[accion.objetivo ?? j.activo];
-        if (!c || !vivo(c)) throw new Error('No se puede curar a esa criatura');
+        const motivo = c ? motivoNoUsable(obj, c, datos) : 'No hay ninguna criatura ahí';
+        if (motivo) throw new Error(motivo);
       }
       return;
     }
@@ -341,13 +361,24 @@ function huir(e: EstadoCombate, datos: DatosJuego, ev: Evento[]): boolean {
 /** Devuelve `true` si el objeto termina el combate (una captura con éxito). */
 function usarObjeto(e: EstadoCombate, accion: Extract<Accion, { tipo: 'objeto' }>, datos: DatosJuego, ev: Evento[]): boolean {
   const obj = datos.objetos[accion.objeto];
-  if (obj.tipo === 'clave') return false;
   e.jugador.objetos[accion.objeto] -= 1;
   ev.push({ tipo: 'objeto', lado: 'jugador', objeto: obj.nombre });
-  if (obj.tipo === 'curar') {
+  if (obj.tipo === 'potenciador') {
+    const a = activoDe(e, 'jugador');
+    const antes = e.jugador.etapas[obj.estadistica];
+    const despues = Math.min(6, antes + obj.cambio);
+    e.jugador.etapas[obj.estadistica] = despues;
+    ev.push({ tipo: 'etapa', lado: 'jugador', nombre: nombreDe(a, datos), estadistica: obj.estadistica, cambio: despues - antes, intento: obj.cambio });
+    return false;
+  }
+  if (obj.tipo !== 'captura') {
     const indice = accion.objetivo ?? e.jugador.activo;
     const c = e.jugador.equipo[indice];
-    curar(c, obj.cantidad, 'jugador', indice, datos, ev);
+    const nombre = nombreDe(c, datos);
+    const recuperada = aplicarCuracion(obj, c, datos);
+    if (obj.tipo === 'remedio') ev.push({ tipo: 'curaEstado', lado: 'jugador', nombre });
+    else if (obj.tipo === 'revivir') ev.push({ tipo: 'reanima', lado: 'jugador', indice, nombre, vida: c.vida, vidaMax: vidaMax(c, datos) });
+    else ev.push({ tipo: 'curacion', lado: 'jugador', indice, nombre, cantidad: recuperada, vida: c.vida, vidaMax: vidaMax(c, datos) });
     return false;
   }
   const presa = activoDe(e, 'rival');
@@ -358,6 +389,7 @@ function usarObjeto(e: EstadoCombate, accion: Extract<Accion, { tipo: 'objeto' }
       ratio: datos.especies[presa.especie].ratioCaptura,
       bonus: obj.bonus,
       estado: presa.estado,
+      segura: obj.segura,
     },
     e.rng,
   );
@@ -368,6 +400,47 @@ function usarObjeto(e: EstadoCombate, accion: Extract<Accion, { tipo: 'objeto' }
     ev.push({ tipo: 'fin', resultado: 'captura' });
   }
   return r.exito;
+}
+
+// ---------- Objetos equipados ----------
+
+function efectoEquipo(c: Criatura, datos: DatosJuego): EfectoEquipo | null {
+  const obj = c.objeto ? datos.objetos[c.objeto] : undefined;
+  return obj?.tipo === 'equipo' ? obj.efecto : null;
+}
+
+function nombreObjeto(c: Criatura, datos: DatosJuego): string {
+  return c.objeto ? (datos.objetos[c.objeto]?.nombre ?? c.objeto) : '';
+}
+
+/** El objeto equipado se ha gastado (un fruto comido, un amuleto roto). */
+function gastar(c: Criatura, datos: DatosJuego): void {
+  const obj = c.objeto ? datos.objetos[c.objeto] : undefined;
+  if (obj?.tipo === 'equipo' && obj.consumible) delete c.objeto;
+}
+
+/** Fruto que cura al bajar de cierta Vida. */
+function comprobarBaya(e: EstadoCombate, lado: Lado, datos: DatosJuego, ev: Evento[]): void {
+  const c = activoDe(e, lado);
+  const ef = efectoEquipo(c, datos);
+  if (ef?.tipo !== 'baya' || !vivo(c)) return;
+  const max = vidaMax(c, datos);
+  if (c.vida > Math.floor(max * ef.umbral)) return;
+  ev.push({ tipo: 'objetoEquipado', lado, nombre: nombreDe(c, datos), objeto: nombreObjeto(c, datos), efecto: 'come' });
+  gastar(c, datos);
+  curar(c, Math.max(1, Math.floor(max * ef.cura)), lado, e[lado].activo, datos, ev);
+}
+
+/** Fruto que cura un estado en cuanto se sufre. */
+function comprobarBayaEstado(e: EstadoCombate, lado: Lado, datos: DatosJuego, ev: Evento[]): void {
+  const c = activoDe(e, lado);
+  const ef = efectoEquipo(c, datos);
+  if (ef?.tipo !== 'bayaEstado' || !c.estado || c.estado.tipo !== ef.estado) return;
+  const nombre = nombreDe(c, datos);
+  ev.push({ tipo: 'objetoEquipado', lado, nombre, objeto: nombreObjeto(c, datos), efecto: 'come' });
+  gastar(c, datos);
+  c.estado = null;
+  ev.push({ tipo: 'curaEstado', lado, nombre });
 }
 
 function curar(c: Criatura, cantidad: number, lado: Lado, indice: number, datos: DatosJuego, ev: Evento[]): void {
@@ -426,7 +499,12 @@ function ejecutarMovimiento(e: EstadoCombate, lado: Lado, indice: number, datos:
       ev.push({ tipo: 'sinEfecto', lado: ladoDef, nombre: nDef });
       return;
     }
-    danioCausado = Math.min(defensor.vida, r.danio);
+    const efAt = efectoEquipo(atacante, datos);
+    const efDef = efectoEquipo(defensor, datos);
+    const danio = efAt?.tipo === 'potenciar' ? Math.floor(r.danio * efAt.multiplicador) : r.danio;
+    danioCausado = Math.min(defensor.vida, danio);
+    const aguanta = efDef?.tipo === 'aguantar' && defensor.vida === vidaMax(defensor, datos) && danioCausado >= defensor.vida;
+    if (aguanta) danioCausado = defensor.vida - 1;
     defensor.vida -= danioCausado;
     ev.push({
       tipo: 'danio',
@@ -439,12 +517,29 @@ function ejecutarMovimiento(e: EstadoCombate, lado: Lado, indice: number, datos:
       critico: r.critico,
       causa: 'ataque',
     });
+    if (aguanta) {
+      ev.push({ tipo: 'objetoEquipado', lado: ladoDef, nombre: nDef, objeto: nombreObjeto(defensor, datos), efecto: 'aguanta' });
+      gastar(defensor, datos);
+    }
+    comprobarBaya(e, ladoDef, datos, ev);
+    if (efAt?.tipo === 'robarVida' && danioCausado > 0 && vivo(atacante)) {
+      ev.push({ tipo: 'objetoEquipado', lado, nombre: nAt, objeto: nombreObjeto(atacante, datos), efecto: 'cura' });
+      curar(atacante, Math.max(1, Math.floor(danioCausado * efAt.fraccion)), lado, e[lado].activo, datos, ev);
+    }
+    if (efAt?.tipo === 'potenciar' && danioCausado > 0 && vivo(atacante)) {
+      const max = vidaMax(atacante, datos);
+      const coste = Math.min(atacante.vida, Math.max(1, Math.floor(max * efAt.coste)));
+      atacante.vida -= coste;
+      ev.push({ tipo: 'objetoEquipado', lado, nombre: nAt, objeto: nombreObjeto(atacante, datos), efecto: 'pierde' });
+      ev.push({ tipo: 'danio', lado, nombre: nAt, cantidad: coste, vida: atacante.vida, vidaMax: max, eficacia: 1, critico: false, causa: 'objeto' });
+    }
     if (mov === ARREBATO) {
       const max = vidaMax(atacante, datos);
       const retroceso = Math.min(atacante.vida, Math.max(1, Math.floor(max / 4)));
       atacante.vida -= retroceso;
       ev.push({ tipo: 'danio', lado, nombre: nAt, cantidad: retroceso, vida: atacante.vida, vidaMax: max, eficacia: 1, critico: false, causa: 'retroceso' });
     }
+    comprobarBaya(e, lado, datos, ev);
   }
 
   for (const f of mov.efectos ?? []) {
@@ -469,6 +564,7 @@ function ejecutarMovimiento(e: EstadoCombate, lado: Lado, indice: number, datos:
         if (!probabilidad(e.rng, f.prob)) break;
         defensor.estado = f.estado === 'dormido' ? { tipo: 'dormido', turnos: entero(e.rng, 1, 3) } : { tipo: 'quemado' };
         ev.push({ tipo: 'estado', lado: ladoDef, nombre: nDef, estado: f.estado });
+        comprobarBayaEstado(e, ladoDef, datos, ev);
         break;
       }
       case 'etapa': {
@@ -517,7 +613,9 @@ function yaAnunciado(ev: Evento[], lado: Lado): boolean {
 function darExperiencia(e: EstadoCombate, derrotado: Criatura, datos: DatosJuego, ev: Evento[]): void {
   const receptor = activoDe(e, 'jugador');
   if (!vivo(receptor)) return;
-  const cantidad = expGanada(derrotado, datos, !e.salvaje);
+  const ef = efectoEquipo(receptor, datos);
+  const base = expGanada(derrotado, datos, !e.salvaje);
+  const cantidad = ef?.tipo === 'experiencia' ? Math.floor(base * ef.multiplicador) : base;
   const { criatura, subidas } = aplicarExperiencia(receptor, cantidad, datos);
   Object.assign(receptor, criatura);
   const nombre = nombreDe(receptor, datos);
@@ -543,7 +641,17 @@ function finDeTurno(e: EstadoCombate, datos: DatosJuego, ev: Evento[]): void {
     const cantidad = Math.min(c.vida, Math.max(1, Math.floor(max / 16)));
     c.vida -= cantidad;
     ev.push({ tipo: 'danio', lado, nombre: nombreDe(c, datos), cantidad, vida: c.vida, vidaMax: max, eficacia: 1, critico: false, causa: 'quemadura' });
+    comprobarBaya(e, lado, datos, ev);
     comprobarDebilitado(e, lado, datos, ev);
+  }
+  for (const lado of lados) {
+    const c = activoDe(e, lado);
+    const ef = efectoEquipo(c, datos);
+    if (ef?.tipo !== 'regenerar' || !vivo(c)) continue;
+    const max = vidaMax(c, datos);
+    if (c.vida >= max) continue;
+    ev.push({ tipo: 'objetoEquipado', lado, nombre: nombreDe(c, datos), objeto: nombreObjeto(c, datos), efecto: 'cura' });
+    curar(c, Math.max(1, Math.floor(max * ef.fraccion)), lado, e[lado].activo, datos, ev);
   }
 }
 

@@ -1,5 +1,7 @@
-import type { Partida } from '../core/partida';
+import { ajustarADatos, type Partida } from '../core/partida';
 import { deserializar, serializar } from '../core/guardado';
+import { DATOS } from '../data';
+import { ESPECIES_RETIRADAS } from '../data/especies';
 
 // La partida en curso y su guardado en el navegador. El almacenamiento puede fallar (modo
 // privado, datos borrados): el juego sigue funcionando, solo que sin guardar.
@@ -20,7 +22,9 @@ export function guardarPartida(p: Partida): boolean {
 export function cargarPartida(): Partida | null {
   try {
     const texto = localStorage.getItem(CLAVE);
-    return texto ? deserializar(texto) : null;
+    const p = texto ? deserializar(texto) : null;
+    if (p) ajustarADatos(p, DATOS, ESPECIES_RETIRADAS);
+    return p;
   } catch {
     return null;
   }

@@ -30,7 +30,8 @@ export type Paso =
   | { tipo: 'dinero'; cantidad: number }
   | { tipo: 'elegirInicial' }
   | { tipo: 'combate'; entrenador: string }
-  | { tipo: 'tienda'; productos: { objeto: string; precio: number }[] }
+  /** Ids de objeto; el precio sale de los datos del objeto. */
+  | { tipo: 'tienda'; productos: string[] }
   | { tipo: 'regreso' }
   /** Ordenar el equipo con las criaturas guardadas en el Bestiario. */
   | { tipo: 'almacen' }
@@ -47,6 +48,8 @@ export interface DefEntrenador {
   /** Valía fija de sus criaturas: lo entrenadas que están. */
   valia: number;
   premio: number;
+  /** Objetos que regala la primera vez que se le vence. */
+  objetos?: Record<string, number>;
   antes: string[];
   derrota: string[];
   /** Lo que dice si le hablas cuando ya le has vencido. */
@@ -59,10 +62,8 @@ export interface Pnj {
   x: number;
   y: number;
   dir: Dir;
-  /** Color principal de la figura provisional. */
-  color: number;
-  /** Detalle de la figura: corona, casco, turbante… */
-  tocado?: 'corona' | 'casco' | 'turbante' | 'sombrero' | 'toca' | 'gorro';
+  /** Hoja de sprites con la que se dibuja (`ASPECTOS` en `src/data/aspectos.ts`). */
+  aspecto: string;
   guion: Guion;
   /** Id de un entrenador: si te ve, te reta. */
   entrenador?: string;
@@ -101,6 +102,12 @@ export interface Zona {
   pnj: Pnj[];
   salidas: Salida[];
   carteles: { x: number; y: number; texto: string[] }[];
+  /** Objetos escondidos: se encuentran mirando la casilla y pulsando A (bandera `oculto:<zona>:<id>`). */
+  ocultos?: { id: string; x: number; y: number; objeto: string; cantidad?: number }[];
+  /** Tinajas o papeleras que se pueden registrar una vez (`src/data/recipientes.ts`). Bloquean el paso. */
+  recipientes?: { id: string; x: number; y: number }[];
+  /** Cómo se llaman los recipientes en esta época: tinajas antes, papeleras hoy. */
+  recipiente?: 'tinaja' | 'papelera';
   /** Guion que se ejecuta la primera vez que se entra (usa la bandera `visto:<id>`). */
   alEntrar?: Guion;
 }
@@ -166,6 +173,14 @@ export function validarZona(
       continue;
     }
     if (esSolida(destino, s.ax, s.ay, casillas)) errores.push(`${z.id}: la salida a ${s.zona} cae en una casilla sólida`);
+  }
+  for (const o of z.ocultos ?? []) {
+    if (esSolida(z, o.x, o.y, casillas)) errores.push(`${z.id}: el objeto oculto ${o.id} está en una casilla sólida`);
+  }
+  const ocupadas = new Set([...z.pnj, ...z.carteles, ...(z.ocultos ?? [])].map((o) => `${o.x},${o.y}`));
+  for (const r of z.recipientes ?? []) {
+    if (esSolida(z, r.x, r.y, casillas)) errores.push(`${z.id}: el recipiente ${r.id} está en una casilla sólida`);
+    if (ocupadas.has(`${r.x},${r.y}`)) errores.push(`${z.id}: el recipiente ${r.id} pisa a otro elemento`);
   }
   for (const p of z.pnj) {
     if (esSolida(z, p.x, p.y, casillas)) errores.push(`${z.id}: ${p.id} está sobre una casilla sólida`);

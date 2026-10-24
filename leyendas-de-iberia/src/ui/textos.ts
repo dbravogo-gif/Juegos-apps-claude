@@ -20,6 +20,15 @@ function quien(nombre: string, lado: 'jugador' | 'rival', ctx: ContextoTextos): 
   return ctx.salvaje ? `${nombre} salvaje` : `${nombre} rival`;
 }
 
+/** «un Ungüento», «una Tésera», «unas Sales»: el artículo según la primera palabra. */
+export function conArticulo(nombre: string): string {
+  const primera = nombre.split(' ')[0];
+  const femenino = /a$/.test(primera);
+  const plural = /[^é]s$/.test(primera);
+  if (plural) return `${/as$/.test(primera) || primera === 'Sales' ? 'unas' : 'unos'} ${nombre}`;
+  return `${femenino ? 'una' : 'un'} ${nombre}`;
+}
+
 /** Frases que acompañan a cada evento. Una lista vacía: el evento no se narra. */
 export function textosEvento(ev: Evento, ctx: ContextoTextos): string[] {
   switch (ev.tipo) {
@@ -38,9 +47,10 @@ export function textosEvento(ev: Evento, ctx: ContextoTextos): string[] {
     case 'danio': {
       if (ev.causa === 'quemadura') return [`${quien(ev.nombre, ev.lado, ctx)} sufre por la quemadura.`];
       if (ev.causa === 'retroceso') return [`${quien(ev.nombre, ev.lado, ctx)} se resiente del golpe.`];
+      if (ev.causa === 'objeto') return [];
       const t: string[] = [];
       if (ev.critico) t.push('¡Golpe crítico!');
-      if (ev.eficacia >= 2) t.push('¡Es muy eficaz!');
+      if (ev.eficacia >= 2) t.push('¡Es supereficaz!');
       else if (ev.eficacia > 0 && ev.eficacia < 1) t.push('No es muy eficaz…');
       return t;
     }
@@ -78,7 +88,18 @@ export function textosEvento(ev: Evento, ctx: ContextoTextos): string[] {
     case 'noAprende':
       return [`${ev.nombre} quiere aprender ${ev.movimiento}, pero ya sabe cuatro movimientos.`];
     case 'objeto':
-      return [`Usas ${ev.objeto === 'Ungüento' ? 'un' : 'una'} ${ev.objeto}.`];
+      return [`Usas ${conArticulo(ev.objeto)}.`];
+    case 'curaEstado':
+      return [`¡${quien(ev.nombre, ev.lado, ctx)} se ha curado!`];
+    case 'reanima':
+      return [`¡${ev.nombre} se reanima!`];
+    case 'objetoEquipado': {
+      const q = quien(ev.nombre, ev.lado, ctx);
+      if (ev.efecto === 'aguanta') return [`¡${q} aguanta gracias a su ${ev.objeto}!`];
+      if (ev.efecto === 'come') return [`¡${q} se come su ${ev.objeto}!`];
+      if (ev.efecto === 'pierde') return [`${q} se resiente por su ${ev.objeto}.`];
+      return [`${q} recupera Vida gracias a su ${ev.objeto}.`];
+    }
     case 'captura': {
       if (ev.exito) return [`¡Pacto sellado! ${ev.nombre} se une a ti.`];
       const frases = ['¡Oh, no! Ha roto el pacto.', '¡Vaya! Casi…', '¡Por poco!', '¡Uf! ¡Faltó muy poco!'];

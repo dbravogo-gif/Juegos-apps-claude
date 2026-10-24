@@ -1,6 +1,6 @@
 # Leyendas de Iberia: documento de diseño (GDD)
 
-Última actualización: 2026-10-20. Estado: fase 0 (diseño). Todavía no hay código.
+Última actualización: 2026-10-24. Estado: fase 1 (prototipo jugable del capítulo 1).
 
 Este documento recoge **qué** es el juego y **por qué**. El plan de la fase en curso está en
 `PROTOTIPO.md`.
@@ -30,7 +30,7 @@ autor y dos amigos, y se juega en el navegador del móvil y del PC.
 | Guerra Civil | El protagonista combate en el bando sublevado. A los tres jugadores les parece bien. |
 | Estructura | El mapa es España. Cada gimnasio es una época y una ciudad, en orden cronológico. |
 | Diseño visual | Las criaturas débiles son sencillas; las fuertes y las evoluciones finales, elaboradas y épicas. |
-| Tipos | 15: Común, Agua, Tierra, Planta, Aire, Eléctrico, Hielo, Infernal (es el fuego), Plasma, Mental, Luz, Oscuridad, Espectral, Acero y Ancestral. Puede haber tipo doble. Las relaciones están por decidir (§8). |
+| Tipos | 15: Común, Agua, Tierra, Planta, Aire, Eléctrico, Hielo, Infernal (es el fuego), Plasma, Mental, Luz, Oscuridad, Espectral, Acero y Ancestral. Puede haber tipo doble. Las relaciones son la tabla del autor (§8). |
 | Estadísticas | Funcionan como en Pokémon, pero con nombres propios: Vida, Fuerza, Escudo, Magia, Resistencia mágica y Celeridad (§8 y `PROTOTIPO.md`). |
 | Multijugador | Asíncrono entre los tres y en una fase posterior. Desde el principio se diseña con semilla determinista y equipos serializables (§9). |
 | Stack | Vite + TypeScript + Phaser. Build estático publicado en GitHub Pages (§10). |
@@ -43,13 +43,13 @@ autor y dos amigos, y se juega en el navegador del móvil y del PC.
 
 Hay que preguntar antes de diseñar sobre ellas.
 
-1. **Tipos.** Faltan las relaciones entre los 15 tipos y definir Plasma. Ideas en §8.
-2. **Marco narrativo y segundo mentor** (se propone Carlos III). Propuesta en §5.
-3. **Líderes de los capítulos 2 a 8 y miembros de la Liga.** Propuesta en §4.
-4. **El Dr. Jangel:** quién es y en qué capítulo abre el laboratorio. Propuesta en §7.
-5. **Personajes actuales:** quiénes salen y con qué reglas. Propuesta en §6.
-6. **Phaser 3 o Phaser 4.** Ver §10.
-7. **Nombres definitivos de las criaturas.** Los del prototipo son provisionales.
+1. **Marco narrativo y segundo mentor** (se propone Carlos III). Propuesta en §5.
+2. **Líderes de los capítulos 2 a 8 y miembros de la Liga.** Propuesta en §4.
+3. **El Dr. Jangel:** quién es y en qué capítulo abre el laboratorio. Propuesta en §7.
+4. **Personajes actuales:** quiénes salen y con qué reglas. Propuesta en §6.
+5. **Phaser 3 o Phaser 4.** Ver §10.
+6. **Bestiario.** La propuesta de 150 especies está en `BESTIARIO.md` (v2, con la revisión de
+   variedad que pidió el autor). Falta su visto bueno a las decisiones del final del archivo.
 
 ## 4. Épocas y gimnasios (propuesta)
 
@@ -65,7 +65,7 @@ Los líderes son sobre todo reyes y generales; los artistas salen como PNJ.
 | 5 | Borbones: **Canarias** (1700–1808) | Tenerife, El Hierro y La Gomera, con un prólogo en Madrid y Cádiz | El general Gutiérrez, que rechazó a Nelson en 1797 | **Carlos III (mentor)** y Jorge Juan, en el prólogo; Nelson, como antagonista; las ánimas de los menceyes |
 | 6 | Independencia y siglo XIX (1808–1898) | Zaragoza | Agustina de Aragón | Palafox, Castaños (Bailén), el Empecinado, Prim; Goya |
 | 7 | Restauración, República y Guerra Civil (1898–1939) | Las Palmas y Madrid | Un general republicano (Miaja o Vicente Rojo) | Alfonso XIII. La guerra puede empezar en Las Palmas, de donde salió Franco el 18 de julio de 1936. El protagonista, en el bando sublevado (§6) |
-| 8 | Franquismo (1939–1975) | Por decidir | Por decidir (Franco, Carrero Blanco…) | Hay que decidir el enfoque: posguerra o desarrollismo. Félix Rodríguez de la Fuente, como personaje |
+| 8 | Franquismo (1939–1975) | Asturias (propuesta del Bestiario) | Por decidir (Franco, Carrero Blanco…) | Hay que decidir el enfoque: posguerra o desarrollismo. Félix Rodríguez de la Fuente, como personaje |
 | Liga | Transición y democracia (1975–hoy) | Madrid | Cuatro rivales y un campeón: reyes, presidentes, Gutiérrez Mellado… | §6 |
 
 - **Lo que queda apretado.** El XIX y el XX tienen un gimnasio cada uno. Si se quiere más
@@ -169,10 +169,12 @@ con la Guerra Civil.
   culebra → … → Cuélebre. Encaja con el principio de que lo débil es sencillo y lo final, épico.
 - **Diseño visual por niveles.** El primer estadio tiene silueta simple y pocos colores; el
   intermedio añade rasgos; el final es grande y detallado, con efectos.
-- **Legendarios** (ideas):
-  - Seres mitológicos: Mari, Cuélebre, Guayota.
-  - Animales célebres: Babieca, Rocinante, Platero, Islero o Copito de Nieve.
-  - Toros de Guisando (de piedra).
+- **Legendarios** (propuesta en `BESTIARIO.md`):
+  - Seres mitológicos, con 580–600 de total: Mari, Cuélebre, Guayota, Nuberu, Tarasca y Alcorax
+    (el Dragón de San Jorge).
+  - Animales célebres, con 540–570: Babieca, Rocinante, Platero, Copito de Nieve y el Ratón
+    Pérez. Islero queda fuera.
+  - Los Toros de Guisando pasan a ser una criatura rara, Guisandor.
   - **Evitar el toro de Osborne**, porque es una marca registrada.
 - **Ficha de cada criatura:** tipo, estadísticas base, movimientos por nivel, evolución, rareza
   y un texto del Bestiario con un dato real de folclore o de biología.
@@ -192,16 +194,20 @@ con la Guerra Civil.
 
 | Fósil | Criatura | Yacimiento real |
 | --- | --- | --- |
-| Colmillo de sable | Felino con dientes de sable (*Machairodus*, *Homotherium*) | Cerro de los Batallones (Madrid), Orce (Granada) |
-| Hiena gigante | *Pachycrocuta* | Orce (Granada) |
-| Defensa de mamut | Mamut | Padul (Granada) |
-| Joroba de «Pepito» | *Concavenator*, terópodo con joroba | Las Hoyas (Cuenca) |
-| Mandíbula dentada | *Pelecanimimus*, con más de 200 dientes | Las Hoyas (Cuenca) |
-| Vértebra gigante | *Turiasaurus*, el mayor dinosaurio de Europa | Riodeva (Teruel) |
-| Hueso de Galve | *Aragosaurus*, el primer dinosaurio con nombre español | Galve (Teruel) |
-| Ala primitiva | *Iberomesornis*, ave del Cretácico | Las Hoyas (Cuenca) |
+| Colmillo de cimitarra | Orcegar: *Homotherium latidens* | Venta Micena, Orce (Granada) |
+| Colmillo de sable | Machairón: *Machairodus aphanistus* | Cerro de los Batallones (Madrid) |
+| Hiena gigante | Hienarca: *Pachycrocuta brevirostris* | Venta Micena, Orce (Granada) |
+| Defensa de mamut | Padulonte: mamut | Padul (Granada) |
+| Joroba de «Pepito» | Concavex: *Concavenator*, terópodo con joroba | Las Hoyas (Cuenca) |
+| Mandíbula dentada | Pelicanox: *Pelecanimimus*, con más de 200 dientes | Las Hoyas (Cuenca) |
+| Ala primitiva | Iberomés: *Iberomesornis*, ave del Cretácico | Las Hoyas (Cuenca) |
+| Vértebra gigante | Turiasar: *Turiasaurus*, el mayor dinosaurio de Europa | Riodeva (Teruel) |
+| Caparazón gigante | Testudrago: *Centrochelys burchardi*, tortuga gigante | Tenerife |
 
-- **Su tipo** se decide cuando esté cerrada la tabla de tipos.
+- **Su tipo.** Todos son Ancestral, más un segundo tipo según su biología (`BESTIARIO.md`).
+- **Fuera de la lista:**
+  - *Aragosaurus*, porque repetía saurópodo.
+  - El lagarto gigante fósil, porque el de El Hierro sigue vivo y sale en el capítulo 5.
 
 ## 8. Mecánicas
 
@@ -241,7 +247,7 @@ con la Guerra Civil.
   | Eléctrico | Tormentas y rayos: el Nuberu |
   | Hielo | La nieve y el frío de las cumbres |
   | Infernal | Es el tipo **fuego**, y además los demonios: los toros de fuego, Guayota |
-  | Plasma | Por definir. Idea: fuegos que no queman, como el fuego de San Telmo de los marineros y las centellas o rayos en bola. Si no encuentra hueco, se quita |
+  | Plasma | Gas ionizado que se ve: el fuego de San Telmo (el *corposanto* de los marineros), las centellas o rayos en bola y las coronas. No es magia, ni luz, ni fuego corriente (propuesta en `BESTIARIO.md`) |
   | Mental | Hechizos, adivinación y astucia |
   | Luz | Lo sagrado y el sol |
   | Oscuridad | La noche, la sombra y el engaño: duendes, trasgos, el Coco |
@@ -249,31 +255,33 @@ con la Guerra Civil.
   | Acero | Armas, armaduras y cañones |
   | Ancestral | Los grandes seres de leyenda: dragones, cuélebres, gigantes |
 
-- **Ideas para las relaciones.** Están pendientes de decidir. Cada línea indica contra qué es
-  eficaz un tipo:
-  - **Agua:** contra Infernal, porque apaga el fuego y por el agua bendita. También contra
-    Tierra.
-  - **Tierra:** contra Infernal, porque lo sofoca, y contra Eléctrico, por la toma de tierra.
-    Contra Eléctrico podría ser incluso inmunidad. En cambio, no afecta a Aire: lo que vuela no
-    toca el suelo.
-  - **Infernal:** contra Planta, Hielo y Acero, porque lo funde.
-  - **Planta:** contra Agua y Tierra.
-  - **Aire:** contra Planta, porque el vendaval tumba los árboles.
-  - **Eléctrico:** contra Agua, contra Aire y contra Acero, porque el rayo busca el hierro.
-  - **Hielo:** contra Planta, porque las heladas arruinan la cosecha, y contra Aire.
-  - **Acero:** contra Hielo, y contra Ancestral, como la lanza de San Jorge contra el dragón.
-  - **Luz:** contra Oscuridad e Infernal. También contra Espectral: la Santa Compaña solo sale de
-    noche.
-  - **Oscuridad:** contra Mental, porque el miedo nubla la mente.
-  - **Mental:** contra Ancestral, porque la astucia vence a los gigantes, como en las leyendas
-    del Tartalo.
-  - **Espectral:** contra Espectral y contra Mental.
-  - **Ancestral:** contra Ancestral, como en los duelos de dragones.
-  - **Común:** no es eficaz contra nadie. Común y Espectral no se afectan entre sí.
+- **Relaciones entre tipos: cerradas.** Son la tabla del autor (2026-10-23), copiada tal cual
+  en `src/data/tipos.ts`. Con dos tipos, los multiplicadores se multiplican (×4, ×¼…).
+  - La tabla ponía Ancestral contra Ancestral a la vez como ×2 y ×½. Se deja en ×2, como los
+    duelos de dragones.
+  - Común no tiene debilidades: solo Acero le resiste y Espectral es inmune.
+  - Se consulta desde el menú («Tipos»), desde la ficha de cada especie del Bestiario, que
+    muestra sus debilidades y resistencias, y en combate, con el botón «Tipos». Los botones de
+    movimiento marcan ×2, ×½ o ×0 contra el rival.
 - **Captura con téseras.** Las téseras de hospitalidad eran pactos celtíberos de bronce, muchas
   con forma de animal. Aquí, lanzar una tésera es sellar un pacto con la criatura.
-- **Progresión.** Experiencia, niveles y aprender movimientos. En el prototipo se evoluciona por
-  nivel; otras condiciones vendrán después.
+- **Progresión.** Experiencia, niveles y aprender movimientos. Se evoluciona por nivel o con
+  un objeto: Brezuco evoluciona al darle el Gorro colorado.
+- **Objetos.** Once categorías: Captura, Curación, Estados, Reanimación, Exploración,
+  Progresión, Evolución, Combate, Para equipar, Frutos e Importantes (`src/data/objetos.ts`).
+  - Los nombres son propios: téseras, Ungüento, Bálsamo de Fierabrás, Ruda, Ovillo, Turrón…
+  - Solo existe lo que tiene efecto. Los objetos únicos (Tésera real, Bálsamo de Fierabrás,
+    Turrón, Gorro colorado y los equipables) no se venden: se encuentran, se ganan a
+    entrenadores o están escondidos en el mapa.
+  - Una criatura puede llevar un objeto equipado (Tarro de miel, Pólvora, frutos…), que actúa
+    solo durante el combate.
+- **Tinajas y papeleras.** Se pueden registrar una vez cada una, y queda guardado. El resultado
+  sale del generador con semilla, así que recargar no cambia nada:
+  - 60 %: un objeto propio de la zona.
+  - 30 %: nada.
+  - 10 %: un Papemímico, que embosca al jugador. Es más duro que la zona pero justo, elige sus
+    movimientos como un entrenador y da exactamente 3 Turrones una sola vez.
+  - Las probabilidades se cambian en `src/data/recipientes.ts`. Antes del siglo XX son tinajas.
 - **Temperamento.** Equivale a la naturaleza de Pokémon: +10 % en una estadística y −10 % en
   otra, con nombres propios.
 - **Valía (de 1 a 14).** Es la versión simplificada de los IV y los EV de Pokémon: un solo
@@ -325,9 +333,11 @@ con la Guerra Civil.
   - Resolución lógica fija con píxeles nítidos, escalada a la pantalla.
   - En vertical, la pantalla va arriba y el mando abajo, como en una Game Boy.
   - En PC, teclado y sin mando en pantalla.
-- **Arte provisional.** Cada sprite se busca por el id de la criatura. Si no hay imagen, se
-  genera una provisional con el color del tipo. Para sustituirlo basta con añadir el PNG con
-  ese nombre.
+- **Arte del mapa y de los personajes.** El paquete libre *Ninja Adventure* (CC0), a 16 × 16
+  escalado ×5 (`src/assets/LEEME.md`). Está pendiente retocarlo a la época.
+- **Arte de las criaturas, provisional.** Cada sprite se busca por el id de la criatura. Si no
+  hay imagen, se genera una provisional con el color del tipo. Para sustituirlo basta con añadir
+  el PNG con ese nombre.
 - **Publicación.** Se añade al workflow de Pages del repositorio, en
   `…/Juegos-apps-claude/leyendas-de-iberia/`.
 
@@ -386,3 +396,22 @@ con la Guerra Civil.
     - Caparín → Tenazor → Centurión.
     - Draguillo → Dracena → Ladón.
   - Perder un combate cuesta un 10 % del dinero, no la mitad.
+- **2026-10-23 (3).** Bestiario: auditoría y tabla de 150 especies (`BESTIARIO.md`), a partir
+  del prompt hecho con ChatGPT.
+  - Iniciales: Ignibue → Braverno → Ignivárgoth, Marzuko → Nakarra → Talascrón y
+    Dralín → Dracauro → Dracendro.
+  - Fuera los constructos sin raíz en fauna ni folclore.
+  - Entran los perros de Guayota y el Dragón de San Jorge (Alcorax).
+  - Plasma, con definición y 6 especies.
+  - Capítulo 8 en Asturias, como propuesta.
+  - Legendarios: Islero fuera y el Ratón Pérez dentro. Los animales célebres bajan a 540–570.
+  - Fichas completas del capítulo 1 y de Gofrón.
+- **2026-10-24.** Cambios y ampliaciones pedidos por el autor.
+  - Tabla de tipos del autor, consultable desde el menú, el Bestiario y el combate.
+  - Sistema de objetos por categorías, con objetos equipables y de evolución.
+  - Tinajas registrables (60/30/10) y el Papemímico.
+  - Mapa y personajes con el paquete *Ninja Adventure* (CC0).
+  - Bestiario v2: revisión de variedad. El drago pasa a dos formas (Dralín → Dracendro), la vieja
+    canaria es Agua/Planta, el lagarto de El Hierro se llama *Gallotia simonyi*, Talasonda queda
+    eliminada y entran once especies nuevas.
+  - El capítulo 1 del juego ya usa los nombres, estadísticas y movimientos del Bestiario.

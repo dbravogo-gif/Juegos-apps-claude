@@ -46,6 +46,8 @@ export interface Movimiento {
 
 export interface Especie {
   id: string;
+  /** Número en el Bestiario, de 1 a 150. */
+  numero: number;
   nombre: string;
   tipos: [string] | [string, string];
   base: Estadisticas;
@@ -53,7 +55,8 @@ export interface Especie {
   /** De 1 a 255, como en Pokémon: cuanto más alto, más fácil de capturar. */
   ratioCaptura: number;
   aprende: { nivel: number; movimiento: string }[];
-  evoluciona?: { a: string; nivel: number };
+  /** Por nivel o al usar un objeto de evolución (o las dos cosas). */
+  evoluciona?: { a: string; nivel?: number; objeto?: string };
   descripcion: string;
 }
 
@@ -71,19 +74,77 @@ export interface TipoDef {
   color: number;
 }
 
-export interface DefTablaTipos {
-  tipos: TipoDef[];
-  /** [atacante, defensor]: el ataque es eficaz (×2). El reverso queda en ×0,5. */
-  eficaces: [string, string][];
-  /** [atacante, defensor]: el ataque no afecta (×0). */
-  inmunidades: [string, string][];
+/** Lo que hace un tipo al atacar. Los tipos que no aparecen reciben ×1. */
+export interface RelacionTipo {
+  /** ×2 */
+  eficaz: string[];
+  /** ×0,5 */
+  pocoEficaz: string[];
+  /** ×0 */
+  sinEfecto: string[];
 }
 
-export type Objeto =
-  | { id: string; nombre: string; tipo: 'curar'; cantidad: number; descripcion: string }
-  | { id: string; nombre: string; tipo: 'captura'; bonus: number; descripcion: string }
-  /** Objeto de la historia: no se usa en combate. */
-  | { id: string; nombre: string; tipo: 'clave'; descripcion: string };
+export interface DefTablaTipos {
+  tipos: TipoDef[];
+  /** Por tipo atacante. */
+  relaciones: Record<string, RelacionTipo>;
+}
+
+/** Efecto de un objeto equipado durante el combate. */
+export type EfectoEquipo =
+  /** Recupera esa fracción de la Vida máxima al final de cada turno. */
+  | { tipo: 'regenerar'; fraccion: number }
+  /** Con la Vida llena, aguanta con 1 un golpe que lo debilitaría. */
+  | { tipo: 'aguantar' }
+  /** Sus ataques hacen más daño, pero pierde esa fracción de Vida máxima al golpear. */
+  | { tipo: 'potenciar'; multiplicador: number; coste: number }
+  /** Recupera esa fracción del daño que hace. */
+  | { tipo: 'robarVida'; fraccion: number }
+  /** Multiplica la experiencia que gana. */
+  | { tipo: 'experiencia'; multiplicador: number }
+  /** Al bajar de `umbral` de la Vida, recupera `cura` de la Vida máxima. */
+  | { tipo: 'baya'; umbral: number; cura: number }
+  /** Cura ese estado en cuanto lo sufre. */
+  | { tipo: 'bayaEstado'; estado: EstadoAlterado };
+
+export type CategoriaObjeto =
+  | 'captura'
+  | 'curacion'
+  | 'estados'
+  | 'reanimacion'
+  | 'exploracion'
+  | 'progresion'
+  | 'evolucion'
+  | 'combate'
+  | 'equipo'
+  | 'bayas'
+  | 'clave';
+
+interface ObjetoBase {
+  id: string;
+  nombre: string;
+  descripcion: string;
+  categoria: CategoriaObjeto;
+  /** Precio en tienda. Sin precio, no se vende: se encuentra o se gana. */
+  precio?: number;
+}
+
+export type Objeto = ObjetoBase &
+  (
+    | { tipo: 'captura'; bonus: number; segura?: boolean }
+    | { tipo: 'curar'; cantidad: number | 'toda' }
+    | { tipo: 'remedio'; estados: EstadoAlterado[] }
+    | { tipo: 'revivir'; fraccion: number }
+    | { tipo: 'repelente'; pasos: number }
+    | { tipo: 'huida' }
+    | { tipo: 'nivel' }
+    | { tipo: 'evolucion' }
+    | { tipo: 'potenciador'; estadistica: EstadisticaCombate; cambio: number }
+    /** Se lleva equipado. Los consumibles (bayas, amuleto) se gastan al actuar. */
+    | { tipo: 'equipo'; efecto: EfectoEquipo; consumible?: boolean }
+    /** Objeto de la historia. */
+    | { tipo: 'clave' }
+  );
 
 export interface DatosJuego {
   especies: Record<string, Especie>;
@@ -113,4 +174,6 @@ export interface Criatura {
   vida: number;
   movimientos: MovimientoAprendido[];
   estado: EstadoCriatura | null;
+  /** Objeto equipado (id). */
+  objeto?: string;
 }

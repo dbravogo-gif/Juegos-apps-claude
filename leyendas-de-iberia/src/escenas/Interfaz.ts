@@ -1,17 +1,22 @@
 import Phaser from 'phaser';
 import type { Dir } from '../core/mundo';
 import type { Partida } from '../core/partida';
-import { darObjeto, MAX_EQUIPO } from '../core/partida';
+import { darObjeto, marcarCapturado, MAX_EQUIPO } from '../core/partida';
+import { aplicarCuracion, equipar, motivoNoUsable, quitarObjeto, seAplicaACriatura, usoDe } from '../core/objetos';
 import { calcularEstadisticas } from '../core/estadisticas';
 import { nombreDe } from '../core/criatura';
-import { expParaNivel } from '../core/progreso';
-import type { Criatura } from '../core/modelo';
+import { aprenderMovimiento, destinoConObjeto, evolucionar, evolucionPendiente, expParaNivel, subirNivel } from '../core/progreso';
+import type { CategoriaObjeto, Criatura } from '../core/modelo';
 import { NOMBRE_ESTADISTICA, type EstadisticaCombate } from '../core/modelo';
 import { DATOS } from '../data';
 import { INICIALES } from '../data/especies';
+import { CATEGORIAS } from '../data/objetos';
 import { Barra, Boton, filaTipos, panel } from '../ui/componentes';
 import { crearCriaturaVisual } from '../ui/criaturaVisual';
-import { describirMovimiento } from '../ui/textos';
+import { conArticulo, describirMovimiento } from '../ui/textos';
+import { iconoObjeto } from '../ui/objetoVisual';
+import { construirTablaTipos, textoMultiplicador } from '../ui/tablaTipos';
+import { debilidades } from '../core/tipos';
 import { guardarPartida } from '../ui/sesion';
 import { aclarar, ALTO, ANCHO, COLOR, estiloTexto } from '../ui/tema';
 
@@ -50,6 +55,8 @@ export class Interfaz extends Phaser.Scene {
 
   private capaMenu?: Phaser.GameObjects.Container;
   private alAtras: (() => void) | null = null;
+  private ovilloPermitido = false;
+  private alUsarOvillo: (() => void) | null = null;
   private avisos?: Phaser.GameObjects.Container;
   private esperas = 0;
 
@@ -351,7 +358,7 @@ export class Interfaz extends Phaser.Scene {
           INICIALES.forEach((id, i) => {
             const e = DATOS.especies[id];
             const x = 40 + ancho / 2 + i * (ancho + 20);
-            const tarjeta = this.add.rectangle(x, 560, ancho, 620, COLOR.pergamino).setRounded(24).setStrokeStyle(6, COLOR.tinta);
+            const tarjeta = this.add.rectangle(x, 600, ancho, 700, COLOR.pergamino).setRounded(24).setStrokeStyle(6, COLOR.tinta);
             tarjeta.setInteractive({ useHandCursor: true }).on('pointerup', () => resolve(id));
             c.add(tarjeta);
             c.add(crearCriaturaVisual(this, id, x, 400, 230, true));
@@ -361,8 +368,8 @@ export class Interfaz extends Phaser.Scene {
             c.add(tipos);
             c.add(
               this.add
-                .text(x, 760, e.descripcion, { ...estiloTexto(24, COLOR.tintaSuave), align: 'center', wordWrap: { width: ancho - 40 } })
-                .setOrigin(0.5, 0.5),
+                .text(x, 695, e.descripcion, { ...estiloTexto(22, COLOR.tintaSuave), align: 'center', wordWrap: { width: ancho - 36 } })
+                .setOrigin(0.5, 0),
             );
           });
         });
@@ -393,14 +400,22 @@ export class Interfaz extends Phaser.Scene {
     this.alAtras = null;
   }
 
-  /** Menú de pausa: equipo, Bestiario, mochila y guardar. */
-  menu(p: Partida): Promise<void> {
+  /**
+   * Menú de pausa: equipo, Bestiario, mochila, tipos y guardar. Devuelve `'ovillo'` si se ha
+   * usado un Ovillo, para que el mapa lleve al jugador al mesón.
+   */
+  menu(p: Partida, op: { ovilloPermitido: boolean } = { ovilloPermitido: false }): Promise<'ovillo' | undefined> {
+    this.ovilloPermitido = op.ovilloPermitido;
     return new Promise((resolve) => {
+      this.alUsarOvillo = () => {
+        this.cerrarCapa();
+        resolve('ovillo');
+      };
       const principal = () => {
         const c = this.abrirCapa(p.nombre);
         this.alAtras = () => {
           this.cerrarCapa();
-          resolve();
+          resolve(undefined);
         };
         c.add(
           this.add
@@ -411,6 +426,7 @@ export class Interfaz extends Phaser.Scene {
           ['Equipo', () => this.pantallaEquipo(p, principal), p.equipo.length > 0],
           ['Bestiario', () => this.pantallaBestiario(p, principal), true],
           ['Mochila', () => this.pantallaMochila(p, principal), true],
+          ['Tipos', () => this.pantallaTipos(principal), true],
           [
             'Guardar',
             () => {
@@ -421,7 +437,9 @@ export class Interfaz extends Phaser.Scene {
           ['Volver al juego', () => this.alAtras?.(), true],
         ];
         opciones.forEach(([texto, accion, activo], i) => {
-          c.add(new Boton(this, ANCHO / 2, 280 + i * 170, { ancho: 700, alto: 140, texto, tamano: 46, alPulsar: accion }).setActivo(activo));
+          const x = i % 2 === 0 ? 285 : 795;
+          const y = 290 + Math.floor(i / 2) * 180;
+          c.add(new Boton(this, x, y, { ancho: 480, alto: 150, texto, tamano: 44, alPulsar: accion }).setActivo(activo));
         });
       };
       principal();
@@ -478,8 +496,25 @@ export class Interfaz extends Phaser.Scene {
           ? `${temp.nombre}: temperamento neutro`
           : `${temp.nombre}: +${NOMBRE_ESTADISTICA[temp.sube]}, −${NOMBRE_ESTADISTICA[temp.baja]}`
         : '',
+      `Lleva: ${cr.objeto ? (DATOS.objetos[cr.objeto]?.nombre ?? cr.objeto) : 'nada'}`,
     ];
     c.add(this.add.text(380, 240, lineas.join('\n'), { ...estiloTexto(30, COLOR.tinta), lineSpacing: 10, wordWrap: { width: 640 } }));
+    if (cr.objeto) {
+      c.add(
+        new Boton(this, 930, 425, {
+          ancho: 200,
+          alto: 64,
+          texto: 'Quitar',
+          tamano: 28,
+          alPulsar: () => {
+            const nombre = DATOS.objetos[cr.objeto!]?.nombre;
+            quitarObjeto(p, cr);
+            this.aviso(`${nombre} vuelve a la mochila`);
+            this.pantallaFicha(p, i, volver);
+          },
+        }),
+      );
+    }
     const orden: (keyof typeof stats)[] = ['vida', 'fuerza', 'escudo', 'magia', 'resMagica', 'celeridad'];
     orden.forEach((k, j) => {
       const x = j % 2 === 0 ? 70 : 560;
@@ -532,10 +567,13 @@ export class Interfaz extends Phaser.Scene {
     }
   }
 
-  private pantallaBestiario(p: Partida, volver: () => void): void {
+  private pantallaBestiario(p: Partida, volver: () => void, pagina = 0): void {
     const c = this.abrirCapa('Bestiario');
     c.add(this.add.text(ANCHO / 2, 135, `Vistas ${p.vistos.length} · Capturadas ${p.capturados.length}`, estiloTexto(32, COLOR.oro)).setOrigin(0.5));
-    const ids = Object.keys(DATOS.especies);
+    const todas = Object.values(DATOS.especies).sort((a, b) => a.numero - b.numero);
+    const porPagina = 20;
+    const paginas = Math.ceil(todas.length / porPagina);
+    const ids = todas.slice(pagina * porPagina, (pagina + 1) * porPagina).map((e) => e.id);
     const columnas = 4;
     const ancho = 240;
     const alto = 160;
@@ -546,120 +584,271 @@ export class Interfaz extends Phaser.Scene {
       const capturado = p.capturados.includes(id);
       const fondo = this.add.rectangle(x, y, ancho, alto, visto ? COLOR.pergamino : COLOR.pergaminoOscuro).setRounded(16).setStrokeStyle(4, COLOR.tintaSuave);
       c.add(fondo);
-      c.add(this.add.text(x - ancho / 2 + 12, y - alto / 2 + 8, String(i + 1).padStart(3, '0'), estiloTexto(22, COLOR.tintaSuave)));
+      c.add(this.add.text(x - ancho / 2 + 12, y - alto / 2 + 8, String(DATOS.especies[id].numero).padStart(3, '0'), estiloTexto(22, COLOR.tintaSuave)));
       if (visto) {
         c.add(crearCriaturaVisual(this, id, x, y - 16, 90));
         c.add(this.add.text(x, y + 52, `${DATOS.especies[id].nombre}${capturado ? ' ✓' : ''}`, { ...estiloTexto(22, COLOR.tinta, true), align: 'center', wordWrap: { width: ancho - 12 } }).setOrigin(0.5));
-        fondo.setInteractive({ useHandCursor: true }).on('pointerup', () => this.pantallaEspecie(p, id, () => this.pantallaBestiario(p, volver)));
+        fondo.setInteractive({ useHandCursor: true }).on('pointerup', () => this.pantallaEspecie(p, id, () => this.pantallaBestiario(p, volver, pagina)));
       } else {
         c.add(this.add.text(x, y, '???', estiloTexto(40, COLOR.tintaSuave, true)).setOrigin(0.5));
       }
     });
+    if (paginas > 1) {
+      const y = ALTO_MAPA - 80;
+      c.add(new Boton(this, 120, y, { ancho: 180, alto: 110, texto: '‹', tamano: 56, alPulsar: () => this.pantallaBestiario(p, volver, pagina - 1) }).setActivo(pagina > 0));
+      c.add(new Boton(this, ANCHO - 120, y, { ancho: 180, alto: 110, texto: '›', tamano: 56, alPulsar: () => this.pantallaBestiario(p, volver, pagina + 1) }).setActivo(pagina < paginas - 1));
+    }
     this.botonVolver(c, volver);
   }
 
   private pantallaEspecie(p: Partida, id: string, volver: () => void): void {
     const e = DATOS.especies[id];
     const c = this.abrirCapa(e.nombre);
-    c.add(panel(this, 60, 140, ANCHO - 120, 820));
-    c.add(crearCriaturaVisual(this, id, ANCHO / 2, 400, 360));
+    c.add(panel(this, 60, 130, ANCHO - 120, 900));
+    c.add(crearCriaturaVisual(this, id, ANCHO / 2, 380, 340));
     const tipos = this.add.container(0, 0);
     filaTipos(this, tipos, ANCHO / 2 - 90, 640, e.tipos, 30);
     c.add(tipos);
     const texto = p.capturados.includes(id) ? e.descripcion : 'Sella un pacto con esta criatura para saber más de ella.';
-    c.add(this.add.text(ANCHO / 2, 790, texto, { ...estiloTexto(34, COLOR.tinta), align: 'center', wordWrap: { width: ANCHO - 200 }, lineSpacing: 8 }).setOrigin(0.5));
+    c.add(this.add.text(ANCHO / 2, 760, texto, { ...estiloTexto(32, COLOR.tinta), align: 'center', wordWrap: { width: ANCHO - 200 }, lineSpacing: 8 }).setOrigin(0.5));
+    const d = debilidades(DATOS.tipos, e.tipos);
+    const nombre = (t: string) => DATOS.tipos.tipos.find((x) => x.id === t)?.nombre ?? t;
+    const grupo = (f: (m: number) => boolean) =>
+      d.filter((x) => f(x.multiplicador)).map((x) => `${nombre(x.tipo)} ${textoMultiplicador(x.multiplicador)}`).join(', ') || 'nada';
+    c.add(
+      this.add.text(
+        90,
+        880,
+        [`Débil a: ${grupo((m) => m > 1)}`, `Resiste: ${grupo((m) => m > 0 && m < 1)}`, `Inmune a: ${grupo((m) => m === 0)}`].join('\n'),
+        { ...estiloTexto(28, COLOR.tinta), wordWrap: { width: ANCHO - 180 }, lineSpacing: 6 },
+      ),
+    );
+    c.add(
+      new Boton(this, 790, ALTO_MAPA - 80, { ancho: 440, alto: 110, texto: 'Tabla de tipos', tamano: 34, alPulsar: () => this.pantallaTipos(() => this.pantallaEspecie(p, id, volver), e.tipos[0]) }),
+    );
+    this.alAtras = volver;
+    c.add(new Boton(this, 290, ALTO_MAPA - 80, { ancho: 440, alto: 110, texto: 'Volver', alPulsar: volver }));
+  }
+
+  private pantallaTipos(volver: () => void, tipo?: string): void {
+    const c = this.abrirCapa('Tabla de tipos');
+    construirTablaTipos(this, c, 130, tipo);
     this.botonVolver(c, volver);
   }
 
-  private pantallaMochila(p: Partida, volver: () => void): void {
+  private pantallaMochila(p: Partida, volver: () => void, categoria?: CategoriaObjeto): void {
     const c = this.abrirCapa('Mochila');
-    const objetos = Object.entries(p.objetos).filter(([, n]) => n > 0);
-    if (objetos.length === 0) c.add(this.add.text(ANCHO / 2, 400, 'La mochila está vacía.', estiloTexto(38, COLOR.pergaminoOscuro)).setOrigin(0.5));
-    objetos.forEach(([id, n], i) => {
-      const obj = DATOS.objetos[id];
+    const tengo = Object.entries(p.objetos).filter(([id, n]) => n > 0 && DATOS.objetos[id]);
+    if (tengo.length === 0) {
+      c.add(this.add.text(ANCHO / 2, 400, 'La mochila está vacía.', estiloTexto(38, COLOR.pergaminoOscuro)).setOrigin(0.5));
+      this.botonVolver(c, volver);
+      return;
+    }
+    const categorias = CATEGORIAS.filter((k) => tengo.some(([id]) => DATOS.objetos[id].categoria === k.id));
+    const actual = categorias.find((k) => k.id === categoria) ?? categorias[0];
+    categorias.forEach((k, i) => {
+      const x = 150 + (i % 4) * 260;
+      const y = 150 + Math.floor(i / 4) * 84;
       c.add(
-        new Boton(this, ANCHO / 2, 220 + i * 190, {
-          ancho: 980,
-          alto: 170,
-          texto: `${obj.nombre} ×${n}`,
-          subtexto: obj.descripcion.length > 62 ? `${obj.descripcion.slice(0, 59)}…` : obj.descripcion,
-          tamano: 38,
-          alPulsar: () => {
-            if (obj.tipo === 'curar') this.usarCuracion(p, id, () => this.pantallaMochila(p, volver));
-            else this.aviso(obj.tipo === 'captura' ? 'Se usa en combate contra criaturas salvajes' : obj.descripcion.slice(0, 50));
-          },
+        new Boton(this, x, y, {
+          ancho: 248,
+          alto: 72,
+          texto: k.nombre,
+          tamano: 26,
+          color: k.id === actual.id ? COLOR.oro : COLOR.pergaminoOscuro,
+          alPulsar: () => this.pantallaMochila(p, volver, k.id),
         }),
       );
     });
+    const y0 = 150 + Math.ceil(categorias.length / 4) * 84;
+    tengo
+      .filter(([id]) => DATOS.objetos[id].categoria === actual.id)
+      .forEach(([id, n], i) => {
+        const obj = DATOS.objetos[id];
+        const y = y0 + i * 148;
+        const fondo = this.add.rectangle(ANCHO / 2, y + 66, ANCHO - 60, 136, COLOR.pergamino).setRounded(18).setStrokeStyle(4, COLOR.tintaSuave);
+        fondo.setInteractive({ useHandCursor: true }).on('pointerup', () => this.accionesObjeto(p, id, () => this.pantallaMochila(p, volver, actual.id)));
+        c.add(fondo);
+        c.add(iconoObjeto(this, 100, y + 66, id, 80));
+        c.add(this.add.text(165, y + 14, `${obj.nombre} ×${n}`, estiloTexto(34, COLOR.tinta, true)));
+        c.add(this.add.text(165, y + 58, obj.descripcion, { ...estiloTexto(23, COLOR.tintaSuave), wordWrap: { width: ANCHO - 240 } }));
+      });
+    if (p.repelente > 0) {
+      c.add(this.add.text(ANCHO / 2, ALTO_MAPA - 165, `Repelente: quedan ${p.repelente} pasos`, estiloTexto(28, COLOR.oro)).setOrigin(0.5));
+    }
     this.botonVolver(c, volver);
   }
 
-  private usarCuracion(p: Partida, objeto: string, volver: () => void): void {
-    const obj = DATOS.objetos[objeto];
-    if (obj.tipo !== 'curar') return;
-    const c = this.abrirCapa(`¿A quién aplicas ${obj.nombre}?`);
+  /** Qué hacer con un objeto de la mochila fuera del combate. */
+  private accionesObjeto(p: Partida, id: string, volver: () => void): void {
+    const obj = DATOS.objetos[id];
+    const uso = usoDe(obj);
+    if (uso.equipable) {
+      this.elegirCriatura(p, `¿Quién lleva ${obj.nombre}?`, volver, (cr) => {
+        const antes = cr.objeto ? DATOS.objetos[cr.objeto]?.nombre : null;
+        equipar(p, cr, id, DATOS);
+        this.aviso(`${nombreDe(cr, DATOS)} lleva ${obj.nombre}${antes ? `; ${antes} vuelve a la mochila` : ''}`);
+        volver();
+      });
+      return;
+    }
+    if (!uso.fuera) {
+      this.aviso(obj.tipo === 'clave' ? 'Es un objeto importante: guárdalo bien' : 'Se usa durante los combates');
+      return;
+    }
+    if (obj.tipo === 'repelente') {
+      if (p.repelente > 0) {
+        this.aviso(`Todavía te dura: quedan ${p.repelente} pasos`);
+        return;
+      }
+      p.repelente = obj.pasos;
+      darObjeto(p, id, -1);
+      this.aviso(`Usas ${conArticulo(obj.nombre)}: ${obj.pasos} pasos sin criaturas débiles`);
+      volver();
+      return;
+    }
+    if (obj.tipo === 'huida') {
+      if (!this.ovilloPermitido) {
+        this.aviso('Aquí no sirve: solo en los caminos');
+        return;
+      }
+      darObjeto(p, id, -1);
+      this.alUsarOvillo?.();
+      return;
+    }
+    if (!seAplicaACriatura(obj)) return;
+    this.elegirCriatura(p, `¿A quién aplicas ${obj.nombre}?`, volver, (cr) => {
+      const motivo = motivoNoUsable(obj, cr, DATOS);
+      if (motivo) {
+        this.aviso(motivo);
+        return;
+      }
+      void this.aplicarFuera(p, cr, id).then(volver);
+    });
+  }
+
+  private elegirCriatura(p: Partida, titulo: string, volver: () => void, alElegir: (c: Criatura) => void): void {
+    const c = this.abrirCapa(titulo);
     p.equipo.forEach((cr, i) => {
       const x = i % 2 === 0 ? 285 : 795;
       const y = 200 + Math.floor(i / 2) * 290;
-      this.tarjetaCriatura(c, cr, x, y, () => {
-        const max = calcularEstadisticas(cr, DATOS).vida;
-        if (cr.vida <= 0 || cr.vida >= max) {
-          this.aviso(cr.vida <= 0 ? 'Está debilitada: llévala al mesón' : 'Ya tiene la Vida al máximo');
-          return;
-        }
-        const antes = cr.vida;
-        cr.vida = Math.min(max, cr.vida + obj.cantidad);
-        darObjeto(p, objeto, -1);
-        this.aviso(`${nombreDe(cr, DATOS)} recupera ${cr.vida - antes} de Vida`);
-        volver();
-      });
+      this.tarjetaCriatura(c, cr, x, y, () => alElegir(cr));
     });
     this.botonVolver(c, volver);
+  }
+
+  /** Aplica un objeto a una criatura fuera del combate, con sus consecuencias (niveles, evolución). */
+  private async aplicarFuera(p: Partida, cr: Criatura, id: string): Promise<void> {
+    const obj = DATOS.objetos[id];
+    const nombre = nombreDe(cr, DATOS);
+    darObjeto(p, id, -1);
+    if (obj.tipo === 'curar' || obj.tipo === 'remedio' || obj.tipo === 'revivir') {
+      const recuperada = aplicarCuracion(obj, cr, DATOS);
+      this.aviso(
+        obj.tipo === 'remedio' ? `${nombre} se ha curado` : obj.tipo === 'revivir' ? `${nombre} se reanima` : `${nombre} recupera ${recuperada} de Vida`,
+      );
+      return;
+    }
+    if (obj.tipo === 'nivel') {
+      const { criatura, subidas } = subirNivel(cr, DATOS);
+      Object.assign(cr, criatura);
+      this.aviso(`¡${nombre} sube al nivel ${cr.nivel}!`);
+      for (const s of subidas) {
+        for (const m of s.aprendidos) this.aviso(`¡${nombre} ha aprendido ${DATOS.movimientos[m].nombre}!`);
+        for (const m of s.pendientes) {
+          const indice = await this.preguntarOlvido(cr, m);
+          if (indice >= 0) Object.assign(cr, aprenderMovimiento(cr, m, indice, DATOS));
+        }
+      }
+      if (evolucionPendiente(cr, DATOS)) this.evolucionarFuera(p, cr);
+      return;
+    }
+    if (obj.tipo === 'evolucion') this.evolucionarFuera(p, cr, destinoConObjeto(cr, id, DATOS));
+  }
+
+  private evolucionarFuera(p: Partida, cr: Criatura, destino?: string | null): void {
+    const antes = nombreDe(cr, DATOS);
+    Object.assign(cr, evolucionar(cr, DATOS, destino ?? undefined));
+    marcarCapturado(p, cr.especie);
+    this.aviso(`¡${antes} ha evolucionado en ${DATOS.especies[cr.especie].nombre}!`);
+  }
+
+  /** Ya sabe cuatro movimientos: ¿cuál olvida para aprender el nuevo? −1 si no lo aprende. */
+  private preguntarOlvido(cr: Criatura, movimiento: string): Promise<number> {
+    return new Promise((resolve) => {
+      const c = this.abrirCapa(`${nombreDe(cr, DATOS)} quiere aprender ${DATOS.movimientos[movimiento].nombre}`);
+      c.add(this.add.text(ANCHO / 2, 150, '¿Qué movimiento olvida?', estiloTexto(34, COLOR.oro)).setOrigin(0.5));
+      cr.movimientos.forEach((m, i) => {
+        c.add(
+          new Boton(this, ANCHO / 2, 280 + i * 150, {
+            ancho: 800,
+            alto: 130,
+            texto: DATOS.movimientos[m.id].nombre,
+            tamano: 38,
+            alPulsar: () => resolve(i),
+          }),
+        );
+      });
+      c.add(new Boton(this, ANCHO / 2, 280 + 4 * 150 + 40, { ancho: 800, alto: 120, texto: 'No aprenderlo', tamano: 36, alPulsar: () => resolve(-1) }));
+      this.alAtras = () => resolve(-1);
+    });
   }
 
   // ---------- Tienda y almacén ----------
 
-  tienda(productos: { objeto: string; precio: number }[], p: Partida): Promise<void> {
+  /** Tienda: los precios salen de los datos de cada objeto. Cuatro productos por página. */
+  tienda(productos: string[], p: Partida): Promise<void> {
     this.cerrarDialogo();
+    const porPagina = 4;
     return new Promise((resolve) => {
-      const pintar = () => {
+      const pintar = (pagina: number) => {
         const c = this.abrirCapa('Tienda');
         this.alAtras = () => {
           this.cerrarCapa();
           resolve();
         };
         c.add(this.add.text(ANCHO / 2, 140, `Tienes ${p.dinero} ${MONEDA}`, estiloTexto(36, COLOR.oro, true)).setOrigin(0.5));
-        productos.forEach((prod, i) => {
-          const obj = DATOS.objetos[prod.objeto];
-          const y = 280 + i * 230;
-          c.add(panel(this, 40, y - 80, ANCHO - 80, 200));
-          c.add(this.add.text(80, y - 40, `${obj.nombre} · ${prod.precio} ${MONEDA}`, estiloTexto(38, COLOR.tinta, true)));
-          c.add(this.add.text(80, y + 10, `Tienes ${p.objetos[prod.objeto] ?? 0}`, estiloTexto(30, COLOR.tintaSuave)));
+        productos.slice(pagina * porPagina, (pagina + 1) * porPagina).forEach((id, i) => {
+          const obj = DATOS.objetos[id];
+          const precio = obj.precio ?? 0;
+          const y = 290 + i * 220;
+          c.add(panel(this, 40, y - 90, ANCHO - 80, 200));
+          c.add(iconoObjeto(this, 105, y - 20, id, 72));
+          c.add(this.add.text(160, y - 66, `${obj.nombre} · ${precio} ${MONEDA}`, estiloTexto(34, COLOR.tinta, true)));
+          c.add(this.add.text(160, y - 20, obj.descripcion, { ...estiloTexto(22, COLOR.tintaSuave), wordWrap: { width: 470 } }));
+          c.add(this.add.text(160, y + 62, `Tienes ${p.objetos[id] ?? 0}`, estiloTexto(26, COLOR.tintaSuave)));
           for (const [k, cantidad] of [1, 5].entries()) {
             c.add(
-              new Boton(this, 700 + k * 200, y + 20, {
-                ancho: 180,
-                alto: 100,
+              new Boton(this, 760 + k * 170, y + 10, {
+                ancho: 150,
+                alto: 96,
                 texto: `+${cantidad}`,
-                tamano: 38,
+                tamano: 36,
                 alPulsar: () => {
-                  const coste = prod.precio * cantidad;
+                  const coste = precio * cantidad;
                   if (p.dinero < coste) {
                     this.aviso('No te llega el dinero');
                     return;
                   }
                   p.dinero -= coste;
-                  darObjeto(p, prod.objeto, cantidad);
+                  darObjeto(p, id, cantidad);
                   this.aviso(`Compras ${obj.nombre} ×${cantidad}`);
-                  pintar();
+                  pintar(pagina);
                 },
-              }).setActivo(p.dinero >= prod.precio * cantidad),
+              }).setActivo(p.dinero >= precio * cantidad),
             );
           }
         });
-        c.add(new Boton(this, ANCHO / 2, ALTO_MAPA - 80, { ancho: 400, alto: 110, texto: 'Salir', alPulsar: () => this.alAtras?.() }));
+        const paginas = Math.ceil(productos.length / porPagina);
+        if (paginas > 1) {
+          c.add(new Boton(this, 170, ALTO_MAPA - 80, { ancho: 260, alto: 110, texto: '‹ Antes', tamano: 34, alPulsar: () => pintar(pagina - 1) }).setActivo(pagina > 0));
+          c.add(
+            new Boton(this, 910, ALTO_MAPA - 80, { ancho: 260, alto: 110, texto: 'Más ›', tamano: 34, alPulsar: () => pintar(pagina + 1) }).setActivo(pagina < paginas - 1),
+          );
+        }
+        c.add(new Boton(this, ANCHO / 2, ALTO_MAPA - 80, { ancho: 300, alto: 110, texto: 'Salir', alPulsar: () => this.alAtras?.() }));
       };
-      pintar();
+      pintar(0);
     });
   }
 

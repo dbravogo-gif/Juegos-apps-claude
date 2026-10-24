@@ -83,14 +83,23 @@ export function aprenderMovimiento(c: Criatura, movimiento: string, indice: numb
 }
 
 /** Especie a la que evolucionaría ahora, o `null`. */
+/** Especie a la que evoluciona por nivel, si ya le toca. */
 export function evolucionPendiente(c: Criatura, datos: DatosJuego): string | null {
   const evo = datos.especies[c.especie].evoluciona;
-  return evo && c.nivel >= evo.nivel ? evo.a : null;
+  return evo && evo.nivel !== undefined && c.nivel >= evo.nivel ? evo.a : null;
 }
 
-/** Evoluciona conservando la Vida perdida: la nueva Vida máxima suma su diferencia. */
-export function evolucionar(c: Criatura, datos: DatosJuego): Criatura {
-  const destino = evolucionPendiente(c, datos);
+/** Especie a la que evoluciona con ese objeto, o `null` si el objeto no le hace nada. */
+export function destinoConObjeto(c: Criatura, objeto: string, datos: DatosJuego): string | null {
+  const evo = datos.especies[c.especie].evoluciona;
+  return evo && evo.objeto === objeto ? evo.a : null;
+}
+
+/**
+ * Evoluciona conservando la Vida perdida: la nueva Vida máxima suma su diferencia. Sin
+ * `destino`, evoluciona por nivel si le toca.
+ */
+export function evolucionar(c: Criatura, datos: DatosJuego, destino = evolucionPendiente(c, datos)): Criatura {
   if (!destino) return structuredClone(c);
   const r: Criatura = structuredClone(c);
   const maxAntes = vidaMaxima(r, datos);
@@ -98,4 +107,10 @@ export function evolucionar(c: Criatura, datos: DatosJuego): Criatura {
   const maxDespues = vidaMaxima(r, datos);
   if (r.vida > 0) r.vida = Math.min(maxDespues, r.vida + (maxDespues - maxAntes));
   return r;
+}
+
+/** Sube exactamente un nivel, como con un Turrón. */
+export function subirNivel(c: Criatura, datos: DatosJuego): { criatura: Criatura; subidas: SubidaNivel[] } {
+  if (c.nivel >= NIVEL_MAX) return { criatura: structuredClone(c), subidas: [] };
+  return aplicarExperiencia(c, expParaNivel(c.nivel + 1) - c.exp, datos);
 }

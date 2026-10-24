@@ -24,22 +24,34 @@ tocan desde aquí.
   - Hecho: se publica en Pages con el resto del repositorio, en
     `…/Juegos-apps-claude/leyendas-de-iberia/`.
   - Falta ajustar el equilibrio jugando.
-- **Arte, pendiente de decidir:**
-  - Mapa y personajes que caminan: un paquete libre (CC0) retocado o pixel art hecho por
-    código. Kenney y OpenGameArt no son accesibles desde el entorno; el autor tendría que subir
-    el paquete.
-  - Criaturas y retratos: OpenArt, cuando el autor traiga el Bestiario hecho con
-    `docs/PROMPT-CRIATURAS.md`.
+- **Arte:**
+  - Mapa y personajes que caminan: el paquete *Ninja Adventure* (CC0), en `src/assets/`
+    (`LEEME.md`). Falta retocarlo a la época.
+  - Criaturas y retratos: pendientes. Se harán con OpenArt a partir de las descripciones
+    visuales de `docs/BESTIARIO.md`. Mientras, figuras provisionales por código.
+- **Bestiario (`docs/BESTIARIO.md`), v2:**
+  - Hecho: auditoría, segunda revisión de variedad (A.8), tabla de 150 especies y fichas del
+    capítulo 1, Gofrón, la vieja, *Gallotia simonyi* y el Papemímico.
+  - El juego ya usa el capítulo 1 del Bestiario. Los `id` internos no cambian; las especies
+    retiradas se convierten al cargar la partida (`ESPECIES_RETIRADAS`).
+  - Siguiente: fichas del capítulo 2, cuando el autor dé el visto bueno.
+- **Hecho en esta tanda (2026-10-24):**
+  - La tabla de tipos del autor (`src/data/tipos.ts`), consultable en el menú, el Bestiario y
+    el combate.
+  - Objetos por categorías, equipables y de evolución (`src/data/objetos.ts`).
+  - Tinajas registrables y el Papemímico (`src/data/recipientes.ts`).
 - **El laboratorio de combate** es solo una herramienta de pruebas, con un enlace pequeño en el
   título. No es prioridad.
-- **Pendiente del autor:** las relaciones entre tipos y la definición de Plasma (`docs/GDD.md`
-  §8). La tabla de `src/data/tipos.ts` es provisional.
+- **Pendiente del autor:** las decisiones abiertas al final de `docs/BESTIARIO.md` y del
+  `docs/GDD.md` §3.
 
 ## Antes de tocar nada
 
 - Lee `docs/GDD.md`: las decisiones cerradas y las abiertas. Si una idea nueva choca con una
   decisión cerrada, pregunta antes de seguir. No diseñes sobre las abiertas sin preguntar.
 - Lee `docs/PROTOTIPO.md`: el plan de la fase en curso.
+- Para criaturas, lee `docs/BESTIARIO.md`. Es la fuente de verdad de nombres, tipos, roles y
+  fichas, y `src/data/especies.ts` debe seguirla.
 
 ## Reglas que más se olvidan
 
@@ -96,7 +108,9 @@ El código va en español: nombres, comentarios y textos.
 - `src/ui/`:
   - `tema.ts`: medidas (1080 × 1920; el mapa ocupa los 1240 de arriba) y colores.
   - `componentes.ts`: `Boton`, que admite mantener pulsado; `Barra`; chips de tipo.
-  - `casillasVisual.ts` y `personaVisual.ts`: arte provisional por código.
+  - `casillasVisual.ts` y `personaVisual.ts`: el mapa y los personajes con las hojas de
+    *Ninja Adventure*. `objetoVisual.ts`: los iconos de los objetos.
+  - `tablaTipos.ts`: la consulta de la tabla de tipos.
   - `criaturaVisual.ts`: los PNG de `src/assets/criaturas/` o una figura provisional.
   - `textos.ts`: frases de combate y `describirMovimiento`.
   - `sesion.ts`: la partida en curso y el `localStorage`.
@@ -108,6 +122,8 @@ El código va en español: nombres, comentarios y textos.
     guiones.
 - **Banderas de la historia:**
   - `inicial`, `teseras`, `colon`, `fosil`.
+  - `oculto:<zona>:<id>`: objeto escondido ya recogido.
+  - `mimico:<zona>:<id>`: premio del Papemímico ya dado.
   - `visto:<zona>`: el guion de entrada ya se ha visto.
   - `vencido:<entrenador>`.
   - `blason_alhambra`.

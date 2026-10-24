@@ -36,8 +36,7 @@ const SANTA_FE: Zona = {
       x: 11,
       y: 1,
       dir: 'abajo',
-      color: 0x8a2b20,
-      tocado: 'casco',
+      aspecto: 'soldado',
       ocultoSi: 'inicial',
       guion: decir('Centinela', 'Sin licencia de la reina no sale nadie de Santa Fe.', 'Su pabellón es la tienda grande, al noreste de la plaza.'),
     },
@@ -47,8 +46,7 @@ const SANTA_FE: Zona = {
       x: 14,
       y: 9,
       dir: 'izquierda',
-      color: 0x6d1f1f,
-      tocado: 'casco',
+      aspecto: 'caballero',
       guion: [
         si(
           'teseras',
@@ -82,8 +80,7 @@ const SANTA_FE: Zona = {
       x: 7,
       y: 12,
       dir: 'abajo',
-      color: 0x3d4a7a,
-      tocado: 'gorro',
+      aspecto: 'explorador',
       guion: [
         si('colon', decir('Colón', 'Cuando la reina me dé su licencia, cruzaré el océano hacia el oeste. ¡Ya lo verás!'), [
           ...decir(
@@ -103,8 +100,7 @@ const SANTA_FE: Zona = {
       x: 9,
       y: 2,
       dir: 'abajo',
-      color: 0x7a6a3a,
-      tocado: 'sombrero',
+      aspecto: 'anciano',
       guion: [
         si('fosil', decir('Pastor', 'En Orce aparecen huesos de bestias que ya no existen. Mi abuelo decía que eran de gigantes.'), [
           si(
@@ -129,8 +125,7 @@ const SANTA_FE: Zona = {
       x: 19,
       y: 17,
       dir: 'izquierda',
-      color: 0x5b7a3a,
-      tocado: 'toca',
+      aspecto: 'mujer',
       guion: decir(
         'Vecina',
         'El verano pasado ardió el campamento real entero.',
@@ -146,6 +141,12 @@ const SANTA_FE: Zona = {
   carteles: [
     { x: 10, y: 5, texto: ['Santa Fe.', 'Ciudad levantada en 1491 por los Reyes Católicos frente a Granada.'] },
     { x: 4, y: 5, texto: ['Mesón de Santa Fe.', 'Cama, comida y descanso para tus criaturas.'] },
+  ],
+  ocultos: [{ id: 'azabache', x: 21, y: 11, objeto: 'azabache' }],
+  recipientes: [
+    { id: 'meson', x: 7, y: 5 },
+    { id: 'plaza', x: 3, y: 10 },
+    { id: 'huerto', x: 20, y: 16 },
   ],
   alEntrar: decir(
     undefined,
@@ -176,8 +177,7 @@ const MESON: Zona = {
       x: 3,
       y: 2,
       dir: 'abajo',
-      color: 0x9c4a6b,
-      tocado: 'toca',
+      aspecto: 'anciana',
       guion: [
         {
           tipo: 'elegir',
@@ -200,16 +200,12 @@ const MESON: Zona = {
       x: 6,
       y: 2,
       dir: 'abajo',
-      color: 0x4a6b3a,
-      tocado: 'gorro',
+      aspecto: 'monje',
       guion: [
         ...decir('Tendero', 'Téseras de bronce y ungüentos del boticario. ¿Qué te pongo?'),
         {
           tipo: 'tienda',
-          productos: [
-            { objeto: 'tesera', precio: 50 },
-            { objeto: 'unguento', precio: 60 },
-          ],
+          productos: ['tesera', 'tesera_plata', 'unguento', 'emplasto', 'aloe', 'sales', 'ruda', 'ovillo', 'brebaje_fuerza', 'brebaje_escudo'],
         },
       ],
     },
@@ -239,8 +235,7 @@ const PABELLON: Zona = {
       x: 4,
       y: 2,
       dir: 'abajo',
-      color: 0x7a1f3d,
-      tocado: 'corona',
+      aspecto: 'dama',
       guion: [
         si(
           'inicial',
@@ -272,8 +267,7 @@ const PABELLON: Zona = {
       x: 6,
       y: 2,
       dir: 'abajo',
-      color: 0x8a6a1f,
-      tocado: 'corona',
+      aspecto: 'noble',
       guion: decir('Fernando', 'La reina confía en ti. Y yo confío en la reina.', 'Tanto monta, monta tanto.'),
     },
   ],
@@ -317,11 +311,12 @@ const VEGA: Zona = {
   encuentros: {
     tasa: 12,
     especies: [
-      { especie: 'topillo', min: 2, max: 4, peso: 30 },
-      { especie: 'libelula', min: 2, max: 4, peso: 25 },
-      { especie: 'abejaruco', min: 3, max: 5, peso: 20 },
-      { especie: 'mandragora', min: 3, max: 5, peso: 12 },
-      { especie: 'duende', min: 4, max: 5, peso: 8 },
+      { especie: 'topillo', min: 2, max: 4, peso: 28 },
+      { especie: 'libelula', min: 2, max: 4, peso: 22 },
+      { especie: 'abejaruco', min: 3, max: 5, peso: 18 },
+      { especie: 'escarabajo_pelotero', min: 3, max: 5, peso: 10 },
+      { especie: 'mandragora', min: 3, max: 5, peso: 10 },
+      { especie: 'duende', min: 4, max: 5, peso: 7 },
       { especie: 'galapago', min: 4, max: 6, peso: 5 },
     ],
   },
@@ -332,8 +327,7 @@ const VEGA: Zona = {
       x: 9,
       y: 20,
       dir: 'izquierda',
-      color: 0x8a2b20,
-      tocado: 'casco',
+      aspecto: 'ballestero',
       entrenador: 'ballestero_sancho',
       vision: 3,
       guion: [],
@@ -344,8 +338,7 @@ const VEGA: Zona = {
       x: 13,
       y: 10,
       dir: 'izquierda',
-      color: 0x1f5a6d,
-      tocado: 'gorro',
+      aspecto: 'mercader',
       entrenador: 'mercader_genoves',
       vision: 3,
       guion: [],
@@ -356,6 +349,15 @@ const VEGA: Zona = {
     { x: 7, y: 0, zona: 'alhambra', ax: 6, ay: 10, dir: 'arriba' },
   ],
   carteles: [{ x: 8, y: 26, texto: ['La Vega de Granada.', 'Al norte, la Alhambra.'] }],
+  ocultos: [
+    { id: 'higo', x: 14, y: 15, objeto: 'higo' },
+    { id: 'endrina', x: 1, y: 20, objeto: 'endrina' },
+    { id: 'ruda', x: 13, y: 7, objeto: 'ruda' },
+  ],
+  recipientes: [
+    { id: 'puente', x: 8, y: 5 },
+    { id: 'acequia', x: 6, y: 18 },
+  ],
 };
 
 const ALHAMBRA: Zona = {
@@ -378,10 +380,12 @@ const ALHAMBRA: Zona = {
   encuentros: {
     tasa: 14,
     especies: [
-      { especie: 'duende', min: 5, max: 7, peso: 40 },
-      { especie: 'abejaruco', min: 5, max: 7, peso: 30 },
-      { especie: 'mandragora', min: 5, max: 7, peso: 20 },
+      { especie: 'duende', min: 5, max: 7, peso: 36 },
+      { especie: 'abejaruco', min: 5, max: 7, peso: 24 },
+      { especie: 'mandragora', min: 5, max: 7, peso: 16 },
       { especie: 'galapago', min: 6, max: 8, peso: 10 },
+      { especie: 'escarabajo_bronce', min: 6, max: 7, peso: 6 },
+      { especie: 'trasgo', min: 7, max: 8, peso: 8 },
     ],
   },
   pnj: [
@@ -391,8 +395,7 @@ const ALHAMBRA: Zona = {
       x: 7,
       y: 3,
       dir: 'izquierda',
-      color: 0x1f6d4a,
-      tocado: 'turbante',
+      aspecto: 'guardia_nazari',
       entrenador: 'guardia_alhambra',
       vision: 2,
       guion: [],
@@ -403,6 +406,11 @@ const ALHAMBRA: Zona = {
     { x: 6, y: 0, zona: 'patio_leones', ax: 5, ay: 10, dir: 'arriba' },
   ],
   carteles: [{ x: 5, y: 10, texto: ['La Alhambra.', 'Palacio de los reyes nazaríes de Granada.'] }],
+  ocultos: [
+    { id: 'gorro', x: 2, y: 9, objeto: 'gorro_colorado' },
+    { id: 'tuno', x: 11, y: 2, objeto: 'tuno' },
+  ],
+  recipientes: [{ id: 'adarve', x: 8, y: 4 }],
 };
 
 const PATIO_LEONES: Zona = {
@@ -430,8 +438,7 @@ const PATIO_LEONES: Zona = {
       x: 5,
       y: 2,
       dir: 'abajo',
-      color: 0x1f4a6d,
-      tocado: 'turbante',
+      aspecto: 'sultan',
       guion: [
         si('blason_alhambra', decir('Boabdil', 'Cuida de este patio. Doce leones lo han guardado durante más de cien años.'), [
           { tipo: 'combate', entrenador: 'boabdil' },
@@ -439,6 +446,9 @@ const PATIO_LEONES: Zona = {
             ...decir('Boabdil', 'Toma este blasón. Que se sepa que venciste en la Alhambra.'),
             { tipo: 'blason', id: 'alhambra', nombre: 'Blasón de la Alhambra' },
             bandera('blason_alhambra'),
+            ...decir(undefined, 'Un mensajero llega del real de Santa Fe con un regalo de la reina.'),
+            dar('tesera_real', 1),
+            ...decir('Mensajero', 'Una Tésera real, con el sello de doña Isabel. Ninguna criatura salvaje rechaza ese pacto. Úsala bien: no hay otra.'),
             {
               tipo: 'fin',
               texto: [
@@ -455,6 +465,7 @@ const PATIO_LEONES: Zona = {
   ],
   salidas: [{ x: 5, y: 11, zona: 'alhambra', ax: 6, ay: 1, dir: 'abajo' }],
   carteles: [],
+  ocultos: [{ id: 'turron', x: 1, y: 10, objeto: 'turron' }],
 };
 
 export const ZONAS_CAPITULO_1: Zona[] = [SANTA_FE, MESON, PABELLON, VEGA, ALHAMBRA, PATIO_LEONES];

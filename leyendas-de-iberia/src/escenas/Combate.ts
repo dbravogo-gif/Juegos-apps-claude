@@ -6,6 +6,9 @@ import { calcularEstadisticas } from '../core/estadisticas';
 import { aprenderMovimiento, evolucionar, evolucionPendiente, expParaNivel } from '../core/progreso';
 import type { Criatura, Movimiento } from '../core/modelo';
 import { eficacia } from '../core/tipos';
+import { construirTablaTipos } from '../ui/tablaTipos';
+import { iconoObjeto } from '../ui/objetoVisual';
+import { motivoNoUsable, seAplicaACriatura } from '../core/objetos';
 import {
   accionesDisponibles,
   activoDe,
@@ -21,7 +24,7 @@ import {
 import { Barra, Boton, filaTipos, panel } from '../ui/componentes';
 import { crearCriaturaVisual } from '../ui/criaturaVisual';
 import { describirMovimiento, textosEvento, type ContextoTextos } from '../ui/textos';
-import { aclarar, ANCHO, COLOR, estiloTexto, MARGEN_VERTICAL } from '../ui/tema';
+import { aclarar, ALTO, ANCHO, COLOR, estiloTexto, MARGEN_VERTICAL } from '../ui/tema';
 import type { ConfigLaboratorio } from './Laboratorio';
 
 const OBJETOS_INICIALES = { tesera: 5, unguento: 3 };
@@ -45,6 +48,8 @@ export type DatosCombate =
       rival: Criatura[];
       salvaje: boolean;
       nombreRival: string;
+      /** El rival salvaje elige sus movimientos como un entrenador. */
+      iaAstuta?: boolean;
       alTerminar: (r: ResultadoHistoria) => void;
     };
 
@@ -216,6 +221,7 @@ export class Combate extends Phaser.Scene {
         jugador: { nombre: 'Tú', equipo: equipoJugador, objetos },
         rival: { nombre: nombreRival, equipo: equipoRival },
         salvaje,
+        iaAstuta: this.entrada.modo === 'historia' && this.entrada.iaAstuta,
       },
       DATOS,
     );
@@ -282,8 +288,7 @@ export class Combate extends Phaser.Scene {
       case 'danio':
         if (ev.causa === 'ataque') await this.parpadeo(ev.lado);
         await this.ficha[ev.lado].setVida(ev.vida, ev.vidaMax, true);
-        if (ev.causa !== 'ataque') await this.decir(frases[0]);
-        else for (const f of frases) await this.decir(f, 900);
+        for (const f of frases) await this.decir(f, ev.causa === 'ataque' ? 900 : 1100);
         return;
       case 'curacion':
         if (ev.indice === this.activoVisual[ev.lado]) await this.ficha[ev.lado].setVida(ev.vida, ev.vidaMax, true);
@@ -292,6 +297,7 @@ export class Combate extends Phaser.Scene {
         this.ficha[ev.lado].setEstado(ev.estado);
         break;
       case 'despierta':
+      case 'curaEstado':
         this.ficha[ev.lado].setEstado(null);
         break;
       case 'debilitado':
@@ -440,60 +446,67 @@ export class Combate extends Phaser.Scene {
       }
     });
 
-    menu.add(
-      new Boton(this, 190, 1765, { ancho: 320, alto: 140, texto: 'Mochila', alPulsar: () => this.menuMochila() }).setActivo(
-        Object.values(disp.objetos).some(Boolean),
-      ),
-    );
-    menu.add(
-      new Boton(this, 540, 1765, { ancho: 320, alto: 140, texto: 'Equipo', alPulsar: () => this.menuEquipo('cambio') }).setActivo(
-        disp.cambios.some(Boolean),
-      ),
-    );
-    menu.add(
-      new Boton(this, 890, 1765, { ancho: 320, alto: 140, texto: 'Huir', alPulsar: () => void this.ejecutar({ tipo: 'huir' }) }).setActivo(
-        disp.huir,
-      ),
-    );
+    const inferior: [string, () => void, boolean][] = [
+      ['Mochila', () => this.menuMochila(), Object.values(disp.objetos).some(Boolean)],
+      ['Equipo', () => this.menuEquipo('cambio'), disp.cambios.some(Boolean)],
+      ['Tipos', () => this.verTablaTipos(), true],
+      ['Huir', () => void this.ejecutar({ tipo: 'huir' }), disp.huir],
+    ];
+    inferior.forEach(([texto, alPulsar, activo], i) => {
+      menu.add(new Boton(this, 145 + i * 263, 1765, { ancho: 245, alto: 140, texto, tamano: 38, alPulsar }).setActivo(activo));
+    });
   }
 
-  private menuMochila(): void {
+  private menuMochila(pagina = 0): void {
     const menu = this.nuevoMenu();
     const disp = accionesDisponibles(this.estado, DATOS);
     this.texto.setText('¿Qué objeto usas?');
-    const objetos = Object.entries(this.estado.jugador.objetos).filter(
-      ([id, n]) => n > 0 && DATOS.objetos[id] && DATOS.objetos[id].tipo !== 'clave',
-    );
-    objetos.forEach(([id, n], i) => {
+    const objetos = Object.keys(disp.objetos);
+    const porPagina = 4;
+    objetos.slice(pagina * porPagina, (pagina + 1) * porPagina).forEach((id, i) => {
       const obj = DATOS.objetos[id];
-      const b = new Boton(this, ANCHO / 2, 1360 + i * 190, {
-        ancho: 1000,
-        alto: 170,
+      const n = this.estado.jugador.objetos[id];
+      const x = i % 2 === 0 ? 280 : 800;
+      const y = 1355 + Math.floor(i / 2) * 175;
+      const b = new Boton(this, x, y, {
+        ancho: 500,
+        alto: 160,
         texto: `${obj.nombre} ×${n}`,
-        subtexto: obj.descripcion.length > 60 ? `${obj.descripcion.slice(0, 57)}…` : obj.descripcion,
+        tamano: 30,
         alPulsar: () => {
-          if (obj.tipo === 'curar') this.menuEquipo('curar', id);
+          if (seAplicaACriatura(obj)) this.menuEquipo('objeto', id);
           else void this.ejecutar({ tipo: 'objeto', objeto: id });
         },
-      }).setActivo(Boolean(disp.objetos[id]));
+        alMantener: () => {
+          this.info.setText(`${obj.nombre}\n${obj.descripcion}`).setVisible(true);
+          this.texto.setVisible(false);
+        },
+        alSoltar: () => this.ocultarInfo(),
+      }).setActivo(disp.objetos[id]);
       menu.add(b);
+      menu.add(iconoObjeto(this, x - 200, y + 30, id, 56));
     });
-    menu.add(new Boton(this, ANCHO / 2, 1790, { ancho: 400, alto: 120, texto: 'Volver', alPulsar: () => this.menuPrincipal() }));
+    const paginas = Math.ceil(objetos.length / porPagina);
+    if (paginas > 1) {
+      menu.add(new Boton(this, 150, 1790, { ancho: 240, alto: 110, texto: '‹', tamano: 44, alPulsar: () => this.menuMochila(pagina - 1) }).setActivo(pagina > 0));
+      menu.add(
+        new Boton(this, 930, 1790, { ancho: 240, alto: 110, texto: '›', tamano: 44, alPulsar: () => this.menuMochila(pagina + 1) }).setActivo(pagina < paginas - 1),
+      );
+    }
+    menu.add(new Boton(this, ANCHO / 2, 1790, { ancho: 360, alto: 110, texto: 'Volver', alPulsar: () => this.menuPrincipal() }));
   }
 
-  private menuEquipo(modo: 'cambio' | 'reemplazo' | 'curar', objeto?: string): void {
+  private menuEquipo(modo: 'cambio' | 'reemplazo' | 'objeto', objeto?: string): void {
     const menu = this.nuevoMenu();
     const equipo = this.estado.jugador.equipo;
-    this.texto.setText(
-      modo === 'reemplazo' ? '¿Quién sale ahora?' : modo === 'curar' ? '¿A quién aplicas el ungüento?' : '¿A quién sacas?',
-    );
+    const obj = objeto ? DATOS.objetos[objeto] : undefined;
+    this.texto.setText(modo === 'reemplazo' ? '¿Quién sale ahora?' : obj ? `¿A quién aplicas ${obj.nombre}?` : '¿A quién sacas?');
     equipo.forEach((c, i) => {
       const max = calcularEstadisticas(c, DATOS).vida;
       const x = i % 2 === 0 ? 280 : 800;
       const y = 1350 + Math.floor(i / 2) * 160;
       const estado = c.vida <= 0 ? ' · debilitado' : c.estado ? ` · ${c.estado.tipo}` : '';
-      const valido =
-        modo === 'curar' ? c.vida > 0 && c.vida < max : c.vida > 0 && i !== this.estado.jugador.activo;
+      const valido = obj ? motivoNoUsable(obj, c, DATOS) === null : c.vida > 0 && i !== this.estado.jugador.activo;
       const b = new Boton(this, x, y, {
         ancho: 500,
         alto: 145,
@@ -501,7 +514,7 @@ export class Combate extends Phaser.Scene {
         subtexto: `Vida ${c.vida}/${max}${estado}`,
         tamano: 36,
         alPulsar: () => {
-          if (modo === 'curar' && objeto) void this.ejecutar({ tipo: 'objeto', objeto, objetivo: i });
+          if (obj && objeto) void this.ejecutar({ tipo: 'objeto', objeto, objetivo: i });
           else if (modo === 'reemplazo') void this.ejecutar({ tipo: 'reemplazo', indice: i });
           else void this.ejecutar({ tipo: 'cambio', indice: i });
         },
@@ -527,6 +540,16 @@ export class Combate extends Phaser.Scene {
   }
 
   // ---------- Ayuda de movimientos ----------
+
+  /** La tabla de tipos encima del combate, abierta con el tipo del rival. */
+  private verTablaTipos(): void {
+    const capa = this.add.container(0, 0).setDepth(50);
+    capa.add(this.add.rectangle(0, -MARGEN_VERTICAL, ANCHO, ALTO, COLOR.fondo, 0.97).setOrigin(0, 0).setInteractive());
+    capa.add(this.add.text(ANCHO / 2, 60, 'Tabla de tipos', estiloTexto(52, COLOR.pergamino, true)).setOrigin(0.5));
+    const rival = activoDe(this.estado, 'rival');
+    construirTablaTipos(this, capa, 130, DATOS.especies[rival.especie].tipos[0]);
+    capa.add(new Boton(this, ANCHO / 2, 1800, { ancho: 400, alto: 120, texto: 'Volver', alPulsar: () => capa.destroy() }));
+  }
 
   private mostrarInfo(mov: Movimiento, pp?: number): void {
     const d = describirMovimiento(mov, pp);
