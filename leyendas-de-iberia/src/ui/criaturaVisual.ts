@@ -4,8 +4,9 @@ import { DATOS } from '../data';
 import { aclarar, COLOR, estiloTexto, oscurecer } from './tema';
 
 // Arte de las criaturas. Si existe `src/assets/criaturas/<id>.png`, se usa esa imagen; si no,
-// se dibuja una figura provisional con el color de su tipo. Para cambiar el arte basta con
-// añadir el PNG: no hay que tocar código.
+// se dibuja una figura provisional con el color de su tipo. `<id>_espalda.png` es la vista de
+// espaldas, la de tu criatura en combate; sin ella, se usa la de frente dada la vuelta. Para
+// cambiar el arte basta con añadir los PNG: no hay que tocar código.
 
 const PNGS = import.meta.glob('../assets/criaturas/*.png', { eager: true, query: '?url', import: 'default' }) as Record<
   string,
@@ -42,7 +43,8 @@ function iniciales(nombre: string): string {
 
 /**
  * Dibuja la criatura centrada en (x, y) dentro de un cuadrado de lado `tam`. `mirandoDerecha`
- * gira la figura hacia la derecha (la criatura del jugador mira al rival).
+ * gira la figura hacia la derecha (la criatura del jugador mira al rival). `deEspaldas` usa la
+ * vista de espaldas si existe.
  */
 export function crearCriaturaVisual(
   scene: Phaser.Scene,
@@ -51,8 +53,16 @@ export function crearCriaturaVisual(
   y: number,
   tam: number,
   mirandoDerecha = false,
+  deEspaldas = false,
 ): Phaser.GameObjects.Container {
   const c = scene.add.container(x, y);
+  const espalda = claveSprite(`${especieId}_espalda`);
+  if (deEspaldas && scene.textures.exists(espalda)) {
+    const img = scene.add.image(0, 0, espalda);
+    img.setScale(tam / Math.max(img.width, img.height));
+    c.add(img);
+    return c;
+  }
   const clave = claveSprite(especieId);
   if (scene.textures.exists(clave)) {
     const img = scene.add.image(0, 0, clave);

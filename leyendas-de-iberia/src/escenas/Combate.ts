@@ -319,7 +319,7 @@ export class Combate extends Phaser.Scene {
     this.visual[lado]?.destroy();
     this.activoVisual[lado] = indice;
     const p = POSICION[lado];
-    const v = crearCriaturaVisual(this, ficha.especie, p.x, p.y, p.tam, lado === 'jugador');
+    const v = crearCriaturaVisual(this, ficha.especie, p.x, p.y, p.tam, lado === 'jugador', lado === 'jugador');
     this.visual[lado] = v;
     this.ficha[lado].mostrar(ficha);
     v.setScale(0.2).setAlpha(0);
@@ -687,7 +687,7 @@ export class Combate extends Phaser.Scene {
         await this.tween({ targets: v, alpha: 0.1, duration: 160, yoyo: true, repeat: 5 });
         v.destroy();
         const p = POSICION.jugador;
-        this.visual.jugador = crearCriaturaVisual(this, nueva.especie, p.x, p.y, p.tam, true);
+        this.visual.jugador = crearCriaturaVisual(this, nueva.especie, p.x, p.y, p.tam, true, true);
       }
       await this.decir(`¡${antes} se ha convertido en ${DATOS.especies[nueva.especie].nombre}!`, 1600);
     }
