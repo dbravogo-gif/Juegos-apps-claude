@@ -50,3 +50,18 @@ el encalado, etcétera.
 ## Criaturas (`criaturas/`)
 
 `<id de especie>.png`. Si no hay imagen, se dibuja una figura provisional.
+
+- **Origen:** generadas con OpenArt (modelo Wan 2.7 Image) en hojas de varias criaturas, a partir
+  de las descripciones visuales de `docs/BESTIARIO.md` (2026-10-24).
+- **Proceso:** se separa cada criatura, se quita el fondo blanco y se reduce a 128 × 128 con una
+  paleta corta, para que parezca pixel art. Las formas pequeñas ocupan menos del cuadro, así que
+  se ven más pequeñas que las grandes. Todas miran a la izquierda: el juego las da la vuelta
+  para la criatura del jugador.
+- **Licencia:** el plan gratuito de OpenArt pone una marca de agua en el centro de cada imagen y
+  permite el uso no comercial. Solo se usan criaturas que quedaron fuera de la marca; las que
+  quedaron debajo se volvieron a generar, no se retocaron.
+- Reserva para más adelante: `arte/criaturas-futuras/` (por ahora, la vieja del capítulo 5).
+
+## Objetos (`objetos/`)
+
+Iconos del mismo paquete *Ninja Adventure* (carpeta `Items/`), uno por `id` de objeto.

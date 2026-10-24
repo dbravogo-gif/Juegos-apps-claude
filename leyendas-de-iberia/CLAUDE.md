@@ -27,8 +27,9 @@ tocan desde aquí.
 - **Arte:**
   - Mapa y personajes que caminan: el paquete *Ninja Adventure* (CC0), en `src/assets/`
     (`LEEME.md`). Falta retocarlo a la época.
-  - Criaturas y retratos: pendientes. Se harán con OpenArt a partir de las descripciones
-    visuales de `docs/BESTIARIO.md`. Mientras, figuras provisionales por código.
+  - Criaturas: hechas las 22 del capítulo 1, con OpenArt y reducidas a pixel art
+    (`src/assets/LEEME.md`). La vieja del capítulo 5 está en `arte/criaturas-futuras/`.
+  - Retratos de los personajes: pendientes.
 - **Bestiario (`docs/BESTIARIO.md`), v2:**
   - Hecho: auditoría, segunda revisión de variedad (A.8), tabla de 150 especies y fichas del
     capítulo 1, Gofrón, la vieja, *Gallotia simonyi* y el Papemímico.
@@ -36,8 +37,10 @@ tocan desde aquí.
     retiradas se convierten al cargar la partida (`ESPECIES_RETIRADAS`).
   - Siguiente: fichas del capítulo 2, cuando el autor dé el visto bueno.
 - **Hecho en esta tanda (2026-10-24):**
-  - La tabla de tipos del autor (`src/data/tipos.ts`), consultable en el menú, el Bestiario y
-    el combate.
+  - La tabla de tipos (`src/data/tipos.ts`), reducida a petición del autor y consultable en el
+    menú, el Bestiario y el combate.
+  - Los objetos se llaman como en el género, salvo téseras, Turrón y objetos únicos.
+  - Tinajas en todo el juego, nunca papeleras.
   - Objetos por categorías, equipables y de evolución (`src/data/objetos.ts`).
   - Tinajas registrables y el Papemímico (`src/data/recipientes.ts`).
 - **El laboratorio de combate** es solo una herramienta de pruebas, con un enlace pequeño en el
@@ -57,6 +60,9 @@ tocan desde aquí.
 
 - **Nada de Pokémon ni de PokéRogue:** ni nombres, ni diseños, ni sprites, ni música, ni
   textos. Solo se toman las mecánicas como inspiración.
+  - Excepción, por decisión del autor: la mayoría de los objetos se llaman como en el género
+    (Poción, Revivir, Repelente…). Las téseras, el Turrón y los objetos únicos tienen nombre
+    propio.
 - **Los personajes históricos nunca son criaturas.** Son entrenadores, líderes, PNJ y trama.
   Las criaturas salen de la mitología y la fauna ibérica, más los fósiles que revive el
   Dr. Jangel.

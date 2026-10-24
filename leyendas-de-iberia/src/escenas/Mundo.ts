@@ -332,9 +332,8 @@ export class Mundo extends Phaser.Scene {
   private async registrar(r: { def: NonNullable<Zona['recipientes']>[number]; figura: Phaser.GameObjects.Image }): Promise<void> {
     const p = this.p;
     const zona = this.zona;
-    const nombre = zona.recipiente ?? 'tinaja';
     if (revisado(p, zona.id, r.def.id)) {
-      await this.ui.decir(`Ya has registrado esta ${nombre}: está vacía.`);
+      await this.ui.decir('Ya has registrado esta tinaja: está vacía.');
       this.ui.cerrarDialogo();
       return;
     }
@@ -349,12 +348,12 @@ export class Mundo extends Phaser.Scene {
     if (res.tipo === 'objeto') {
       darObjeto(p, res.objeto, 1);
       abrirRecipiente(r.figura);
-      await this.ui.decir(`Rebuscas en la ${nombre}… ¡Hay ${conArticulo(DATOS.objetos[res.objeto].nombre)}!`);
+      await this.ui.decir(`Rebuscas en la tinaja… ¡Hay ${conArticulo(DATOS.objetos[res.objeto].nombre)}!`);
     } else if (res.tipo === 'nada') {
       abrirRecipiente(r.figura);
-      await this.ui.decir(`Rebuscas en la ${nombre}… No hay nada aquí.`);
+      await this.ui.decir(`Rebuscas en la tinaja… No hay nada aquí.`);
     } else {
-      await this.emboscada(r.figura, nombre);
+      await this.emboscada(r.figura);
       const clave = `mimico:${zona.id}:${r.def.id}`;
       const resultado = await this.combatir([res.criatura], true, undefined, {
         iaAstuta: true,
@@ -376,7 +375,7 @@ export class Mundo extends Phaser.Scene {
         const obj = DATOS.objetos[RECOMPENSA_MIMICO.objeto];
         await this.ui.decir(`Dentro del Papemímico había ${obj.nombre} ×${RECOMPENSA_MIMICO.cantidad}.`);
       } else if (resultado === 'huida') {
-        await this.ui.decir(`Te alejas a toda prisa. El Papemímico vuelve a fingir que es una ${nombre}… pero ya no engaña a nadie.`);
+        await this.ui.decir(`Te alejas a toda prisa. El Papemímico vuelve a fingir que es una tinaja… pero ya no engaña a nadie.`);
       }
     }
     this.ui.cerrarDialogo();
@@ -401,7 +400,7 @@ export class Mundo extends Phaser.Scene {
   }
 
   /** La tinaja tiembla, se abre de golpe y salta: era un Papemímico. */
-  private async emboscada(figura: Phaser.GameObjects.Image, nombre: string): Promise<void> {
+  private async emboscada(figura: Phaser.GameObjects.Image): Promise<void> {
     await this.sacudir(figura, 10, 10);
     abrirRecipiente(figura);
     const marca = this.add.text(figura.x, figura.y - T * 1.3, '!', estiloTexto(64, COLOR.rojo, true)).setOrigin(0.5).setDepth(1000);
@@ -413,7 +412,7 @@ export class Mundo extends Phaser.Scene {
     figura.y = y;
     this.cameras.main.flash(220, 170, 20, 20);
     this.cameras.main.shake(320, 0.012);
-    await this.ui.decir(`¡La ${nombre} tenía dientes! ¡Era un Papemímico!`);
+    await this.ui.decir(`¡La tinaja tenía dientes! ¡Era un Papemímico!`);
     marca.destroy();
     this.ui.cerrarDialogo();
   }
@@ -436,10 +435,10 @@ export class Mundo extends Phaser.Scene {
     });
   }
 
-  /** El Ovillo devuelve al último mesón. */
+  /** La Cuerda huida devuelve al último mesón. */
   private async usarOvillo(): Promise<void> {
     const cam = this.cameras.main;
-    await this.ui.decir('Sigues el hilo del Ovillo de vuelta al mesón…');
+    await this.ui.decir('Usas la Cuerda huida y vuelves al último mesón…');
     this.ui.cerrarDialogo();
     cam.fadeOut(250, 0, 0, 0);
     await this.esperar(280);

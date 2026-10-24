@@ -140,7 +140,7 @@ describe('en combate', () => {
     expect(Object.keys(accionesDisponibles(r0.estado, DATOS).objetos)).toEqual(['tesera']);
   });
 
-  it('un Aliento reanima a una criatura debilitada del equipo', () => {
+  it('un Revivir reanima a una criatura debilitada del equipo', () => {
     const caida = criatura('topillo', 5);
     caida.vida = 0;
     const r0 = combate([criatura('cangrejo', 10), caida], [criatura('topillo', 3)], { aliento: 1 });
@@ -156,7 +156,7 @@ describe('en combate', () => {
     expect(r.estado.jugador.etapas.fuerza).toBe(1);
   });
 
-  it('el Tarro de miel cura al final del turno', () => {
+  it('los Restos curan al final del turno', () => {
     const c = criatura('cangrejo', 20, 'tarro_miel');
     c.vida = 10;
     const r0 = combate([c], [criatura('topillo', 2)]);
@@ -164,7 +164,7 @@ describe('en combate', () => {
     expect(eventos(r, 'objetoEquipado').some((e) => e.tipo === 'objetoEquipado' && e.efecto === 'cura' && e.lado === 'jugador')).toBe(true);
   });
 
-  it('el Amuleto de Tanit aguanta con 1 de Vida y se rompe', () => {
+  it('la Banda focus aguanta con 1 de Vida y se rompe', () => {
     const debil = criatura('topillo', 3, 'amuleto_tanit');
     const r0 = combate([criatura('becerro_igneo', 40)], [debil]);
     const r = resolverTurno(r0.estado, { tipo: 'movimiento', indice: 0 }, DATOS);
@@ -174,7 +174,7 @@ describe('en combate', () => {
     expect(rival.vida === 1 || r.estado.fin === 'victoria' || rival.vida === 0).toBe(true);
   });
 
-  it('el Higo se come al bajar de la mitad', () => {
+  it('la Baya Zidra se come al bajar de la mitad', () => {
     const c = criatura('cangrejo', 10, 'higo');
     const r0 = combate([c], [criatura('becerro_igneo', 14)], {}, true, 'higo');
     let e: EstadoCombate = r0.estado;
@@ -188,7 +188,7 @@ describe('en combate', () => {
     expect(e.jugador.equipo[0].objeto).toBeUndefined();
   });
 
-  it('el Azabache da la mitad más de experiencia', () => {
+  it('el Huevo suerte da la mitad más de experiencia', () => {
     const conAzabache = combate([criatura('becerro_igneo', 30, 'azabache')], [criatura('topillo', 3)]);
     const sin = combate([criatura('becerro_igneo', 30)], [criatura('topillo', 3)]);
     const exp = (r0: ReturnType<typeof combate>) => {

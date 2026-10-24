@@ -267,7 +267,7 @@ const DEF = {
     descripcion: 'Los egipcios veían en el escarabajo que rueda su bola al dios que empujaba el sol. La cúpula de la Sala de las Dos Hermanas, en la Alhambra, tiene más de cinco mil celdas de mocárabes.',
   },
 
-  // Encuentro especial: se esconde en tinajas y papeleras (ver src/data/recipientes.ts).
+  // Encuentro especial: se esconde en las tinajas (ver src/data/recipientes.ts).
   papemimico: {
     numero: 129,
     nombre: 'Papemímico',
@@ -276,7 +276,7 @@ const DEF = {
     expBase: 220,
     ratioCaptura: 3,
     aprende: [[1, 'tapazo'], [1, 'emboscada'], [1, 'mal_de_ojo'], [1, 'escondite']],
-    descripcion: 'Se hace pasar por un recipiente cualquiera: una tinaja en 1492, una papelera hoy. Quien mete la mano se lleva un susto… y, si lo vence, tres turrones.',
+    descripcion: 'Se hace pasar por una tinaja cualquiera. Quien mete la mano se lleva un susto… y, si lo vence, tres turrones.',
   },
 } satisfies Record<string, DefEspecie>;
 

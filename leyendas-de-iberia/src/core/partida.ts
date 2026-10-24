@@ -36,7 +36,7 @@ export interface Partida {
   vencidos: string[];
   blasones: string[];
   pasos: number;
-  /** Pasos que le quedan al repelente en uso (Ruda, Romero…). */
+  /** Pasos que le quedan al repelente en uso. */
   repelente: number;
   /** Recipientes ya registrados, como `zona:id`. */
   revisados: string[];

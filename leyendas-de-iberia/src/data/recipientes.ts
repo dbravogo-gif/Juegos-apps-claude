@@ -1,5 +1,5 @@
-// Recipientes que se pueden registrar por el mapa. El brief los llama papeleras; en 1492 son
-// tinajas, y en los capítulos modernos serán papeleras. La mecánica es la misma.
+// Tinajas que se pueden registrar por el mapa. El brief del autor las llamaba papeleras, pero
+// son tinajas en todo el juego (decisión del autor, 2026-10-24).
 
 /** Probabilidades, sobre 100, de lo que sale al registrar un recipiente. Deben sumar 100. */
 export const PROB_RECIPIENTE = { objeto: 60, nada: 30, mimico: 10 };

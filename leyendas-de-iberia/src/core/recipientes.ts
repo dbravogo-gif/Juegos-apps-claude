@@ -1,4 +1,4 @@
-// Recipientes registrables (tinajas, papeleras). El resultado sale del generador de la partida,
+// Recipientes registrables (las tinajas). El resultado sale del generador de la partida,
 // así que no se puede repetir recargando: el estado del generador viaja con el guardado.
 
 import type { Criatura, DatosJuego } from './modelo';

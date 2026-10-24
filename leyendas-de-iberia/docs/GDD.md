@@ -17,7 +17,7 @@ autor y dos amigos, y se juega en el navegador del móvil y del PC.
 
 | Tema | Decisión |
 | --- | --- |
-| Inspiración | De Pokémon y PokéRogue solo se toman las mecánicas. Nombres, diseños, sprites, música y textos son originales. |
+| Inspiración | De Pokémon y PokéRogue solo se toman las mecánicas. Nombres, diseños, sprites, música y textos son originales. **Excepción:** la mayoría de los objetos se llaman como en el género (Poción, Revivir, Repelente…), por decisión del autor (2026-10-24). |
 | Criaturas | Salen de la mitología y la fauna ibérica: Trasgu, Cuélebre, Basajaun, Tarasca, lince, toro… |
 | Legendarios | Unos pocos. Son seres mitológicos o animales célebres, como Babieca, el caballo del Cid. |
 | Personajes históricos | **Nunca son capturables.** Son entrenadores, líderes de gimnasio, PNJ del mapa y parte de la trama. Tienen prioridad los reyes, los generales y los guerreros; algún artista sí, pero pocos. |
@@ -30,7 +30,7 @@ autor y dos amigos, y se juega en el navegador del móvil y del PC.
 | Guerra Civil | El protagonista combate en el bando sublevado. A los tres jugadores les parece bien. |
 | Estructura | El mapa es España. Cada gimnasio es una época y una ciudad, en orden cronológico. |
 | Diseño visual | Las criaturas débiles son sencillas; las fuertes y las evoluciones finales, elaboradas y épicas. |
-| Tipos | 15: Común, Agua, Tierra, Planta, Aire, Eléctrico, Hielo, Infernal (es el fuego), Plasma, Mental, Luz, Oscuridad, Espectral, Acero y Ancestral. Puede haber tipo doble. Las relaciones son la tabla del autor (§8). |
+| Tipos | 15: Común, Agua, Tierra, Planta, Aire, Eléctrico, Hielo, Infernal (es el fuego), Plasma, Mental, Luz, Oscuridad, Espectral, Acero y Ancestral. Puede haber tipo doble. Las relaciones están en §8. |
 | Estadísticas | Funcionan como en Pokémon, pero con nombres propios: Vida, Fuerza, Escudo, Magia, Resistencia mágica y Celeridad (§8 y `PROTOTIPO.md`). |
 | Multijugador | Asíncrono entre los tres y en una fase posterior. Desde el principio se diseña con semilla determinista y equipos serializables (§9). |
 | Stack | Vite + TypeScript + Phaser. Build estático publicado en GitHub Pages (§10). |
@@ -255,11 +255,17 @@ con la Guerra Civil.
   | Acero | Armas, armaduras y cañones |
   | Ancestral | Los grandes seres de leyenda: dragones, cuélebres, gigantes |
 
-- **Relaciones entre tipos: cerradas.** Son la tabla del autor (2026-10-23), copiada tal cual
-  en `src/data/tipos.ts`. Con dos tipos, los multiplicadores se multiplican (×4, ×¼…).
-  - La tabla ponía Ancestral contra Ancestral a la vez como ×2 y ×½. Se deja en ×2, como los
-    duelos de dragones.
-  - Común no tiene debilidades: solo Acero le resiste y Espectral es inmune.
+- **Relaciones entre tipos: cerradas.** Parten de la tabla del autor (2026-10-23), que el
+  autor pidió reducir el 2026-10-24 porque tenía demasiadas debilidades y resistencias. Está en
+  `src/data/tipos.ts`. Con dos tipos, los multiplicadores se multiplican (×4, ×¼…).
+  - Pasa de 82 relaciones que no son ×1 a 54.
+  - Solo se resisten a sí mismos Agua, Planta, Infernal, Eléctrico y Plasma, para que una
+    criatura Agua/Tierra no sea débil al Agua.
+  - Ancestral no resiste nada; Acero solo resiste a Común, Planta y Ancestral.
+  - Ningún tipo es muy eficaz contra más de tres, ni resiste a más de tres.
+  - Se quedan las cuatro inmunidades: Común y Espectral entre sí, Tierra contra Aire y
+    Eléctrico contra Tierra.
+  - Ancestral contra Ancestral es ×2, como los duelos de dragones.
   - Se consulta desde el menú («Tipos»), desde la ficha de cada especie del Bestiario, que
     muestra sus debilidades y resistencias, y en combate, con el botón «Tipos». Los botones de
     movimiento marcan ×2, ×½ o ×0 contra el rival.
@@ -268,20 +274,23 @@ con la Guerra Civil.
 - **Progresión.** Experiencia, niveles y aprender movimientos. Se evoluciona por nivel o con
   un objeto: Brezuco evoluciona al darle el Gorro colorado.
 - **Objetos.** Once categorías: Captura, Curación, Estados, Reanimación, Exploración,
-  Progresión, Evolución, Combate, Para equipar, Frutos e Importantes (`src/data/objetos.ts`).
-  - Los nombres son propios: téseras, Ungüento, Bálsamo de Fierabrás, Ruda, Ovillo, Turrón…
-  - Solo existe lo que tiene efecto. Los objetos únicos (Tésera real, Bálsamo de Fierabrás,
-    Turrón, Gorro colorado y los equipables) no se venden: se encuentran, se ganan a
+  Progresión, Evolución, Combate, Para equipar, Bayas e Importantes (`src/data/objetos.ts`).
+  - Casi todos se llaman como en el género, para que se reconozcan: Poción, Superpoción,
+    Antiquemar, Revivir, Repelente, Cuerda huida, Restos, Vidasfera, Baya Zidra… Tienen nombre
+    propio las téseras (para capturar), el Turrón (sube un nivel), el Gorro colorado y los
+    objetos importantes.
+  - Solo existe lo que tiene efecto. Los objetos únicos (Tésera real, Poción máxima,
+    Revivir máximo, Turrón, Gorro colorado y los equipables) no se venden: se encuentran, se ganan a
     entrenadores o están escondidos en el mapa.
-  - Una criatura puede llevar un objeto equipado (Tarro de miel, Pólvora, frutos…), que actúa
+  - Una criatura puede llevar un objeto equipado (Restos, Vidasfera, bayas…), que actúa
     solo durante el combate.
-- **Tinajas y papeleras.** Se pueden registrar una vez cada una, y queda guardado. El resultado
+- **Tinajas.** Se pueden registrar una vez cada una, y queda guardado. El resultado
   sale del generador con semilla, así que recargar no cambia nada:
   - 60 %: un objeto propio de la zona.
   - 30 %: nada.
   - 10 %: un Papemímico, que embosca al jugador. Es más duro que la zona pero justo, elige sus
     movimientos como un entrenador y da exactamente 3 Turrones una sola vez.
-  - Las probabilidades se cambian en `src/data/recipientes.ts`. Antes del siglo XX son tinajas.
+  - Las probabilidades se cambian en `src/data/recipientes.ts`. Son tinajas en todo el juego.
 - **Temperamento.** Equivale a la naturaleza de Pokémon: +10 % en una estadística y −10 % en
   otra, con nombres propios.
 - **Valía (de 1 a 14).** Es la versión simplificada de los IV y los EV de Pokémon: un solo
@@ -415,3 +424,10 @@ con la Guerra Civil.
     canaria es Agua/Planta, el lagarto de El Hierro se llama *Gallotia simonyi*, Talasonda queda
     eliminada y entran once especies nuevas.
   - El capítulo 1 del juego ya usa los nombres, estadísticas y movimientos del Bestiario.
+- **2026-10-24 (2).** Respuestas del autor a la revisión.
+  - Arte de las 22 criaturas del capítulo 1.
+  - Tabla de tipos reducida: de 82 relaciones que no son ×1 a 54.
+  - La mayoría de los objetos se llaman como en el género (Poción, Revivir, Repelente…).
+  - Tinajas en todo el juego.
+  - Se aceptan: Dralín con dos formas, la dificultad de Ignibue contra Boabdil, los nombres
+    nuevos y el Papemímico capturable.
