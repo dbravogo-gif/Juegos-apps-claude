@@ -53,9 +53,9 @@ describe('datos', () => {
     for (const n of numeros) expect(n >= 1 && n <= 150, String(n)).toBe(true);
   });
 
-  it('cada imagen de criatura es de una especie que existe, de frente o de espaldas', () => {
+  it('cada imagen de criatura es de una especie que existe, de frente o en la vista del jugador', () => {
     const archivos = Object.keys(import.meta.glob('../src/assets/criaturas/*.png')).map((r) => r.split('/').pop()!.replace(/\.png$/, ''));
-    for (const a of archivos) expect(DATOS.especies[a.replace(/_espalda$/, '')], a).toBeDefined();
+    for (const a of archivos) expect(DATOS.especies[a.replace(/_jugador$/, '')], a).toBeDefined();
   });
 
   it('las especies retiradas pasan a especies que existen', () => {
