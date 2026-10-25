@@ -127,9 +127,30 @@ class Ficha {
     this.estado.setBackgroundColor(estado === 'dormido' ? '#6f7fd8' : '#ff7a2f');
   }
 
+  /** Vida que se ve ahora en los números, para contarla hacia abajo o hacia arriba. */
+  private vidaVista = 0;
+  private cuenta?: Phaser.Tweens.Tween;
+
   setVida(vida: number, max: number, animar: boolean): Promise<void> {
-    this.numeros?.setText(`${vida} / ${max}`);
-    return this.barra.setFraccion(vida / max, animar);
+    const desde = this.vidaVista;
+    this.vidaVista = vida;
+    this.cuenta?.stop();
+    if (!animar || desde === vida) {
+      this.numeros?.setText(`${vida} / ${max}`);
+      return this.barra.setFraccion(vida / max, false);
+    }
+    // Los números y la barra bajan a la vez y al mismo ritmo.
+    const duracion = 300 + (Math.abs(vida - desde) / max) * 900;
+    if (this.numeros) {
+      this.cuenta = this.scene.tweens.addCounter({
+        from: desde,
+        to: vida,
+        duration: duracion,
+        onUpdate: (t) => this.numeros?.setText(`${Math.round(t.getValue() ?? vida)} / ${max}`),
+        onComplete: () => this.numeros?.setText(`${vida} / ${max}`),
+      });
+    }
+    return this.barra.setFraccion(vida / max, true, duracion);
   }
 
   setExp(fraccion: number): void {

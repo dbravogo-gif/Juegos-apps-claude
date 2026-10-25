@@ -15,6 +15,7 @@ import { Barra, Boton, botonFlecha, filaTipos } from '../ui/componentes';
 import { crearCriaturaVisual } from '../ui/criaturaVisual';
 import { conArticulo, describirMovimiento } from '../ui/textos';
 import { iconoObjeto, iconoUI, type IconoUI } from '../ui/objetoVisual';
+import { claveRetrato } from '../ui/retratoVisual';
 import { construirTablaTipos, textoMultiplicador } from '../ui/tablaTipos';
 import { debilidades } from '../core/tipos';
 import { guardarPartida } from '../ui/sesion';
@@ -56,6 +57,8 @@ export class Interfaz extends Phaser.Scene {
   private textoDialogo!: Phaser.GameObjects.Text;
   private nombreDialogo!: Phaser.GameObjects.Text;
   private fondoNombre!: Phaser.GameObjects.Rectangle;
+  private marcoRetrato!: Phaser.GameObjects.Graphics;
+  private retrato!: Phaser.GameObjects.Image;
   private indicador!: Phaser.GameObjects.Text;
   private alAvanzar: (() => void) | null = null;
 
@@ -93,6 +96,15 @@ export class Interfaz extends Phaser.Scene {
     this.crearMando();
     this.crearDialogo();
     this.crearTeclado();
+    // Mientras dura un combate esta escena duerme y no se entera de que sueltas la cruceta o la
+    // tecla: al volver, el jugador seguiría andando solo.
+    const soltar = () => this.soltarControles();
+    this.events.on(Phaser.Scenes.Events.SLEEP, soltar);
+    this.events.on(Phaser.Scenes.Events.WAKE, soltar);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.events.off(Phaser.Scenes.Events.SLEEP, soltar);
+      this.events.off(Phaser.Scenes.Events.WAKE, soltar);
+    });
   }
 
   // ---------- Mando ----------
@@ -223,6 +235,13 @@ export class Interfaz extends Phaser.Scene {
     });
   }
 
+  /** Olvida las direcciones que estuvieran pulsadas. */
+  soltarControles(): void {
+    this.punteroCruceta = null;
+    this.setDirTactil(null);
+    this.input.keyboard?.resetKeys();
+  }
+
   /** Dirección que el jugador mantiene pulsada, en pantalla o en el teclado. */
   direccion(): Dir | null {
     const t = this.teclas;
@@ -261,7 +280,15 @@ export class Interfaz extends Phaser.Scene {
     // Tocar cualquier parte del mapa también avanza el texto.
     const zona = this.add.rectangle(0, 0, ANCHO, ALTO_MAPA, 0x000000, 0.001).setOrigin(0, 0).setInteractive();
     zona.on('pointerdown', () => this.alAvanzar?.());
-    const fondo = ventana(this, 24, ALTO_MAPA - 262, ANCHO - 48, 238);
+    const arriba = ALTO_MAPA - 262;
+    // Retrato de quien habla: un busto que asoma por encima del cuadro, a la izquierda.
+    this.marcoRetrato = this.add.graphics();
+    this.marcoRetrato.fillStyle(0x000000, 0.22).fillRoundedRect(40, arriba - 236, 280, 270, 36);
+    this.marcoRetrato.fillGradientStyle(COLOR.cielo, COLOR.cielo, COLOR.azul, COLOR.azul, 1);
+    this.marcoRetrato.fillRoundedRect(40, arriba - 244, 280, 270, 36);
+    this.marcoRetrato.lineStyle(6, COLOR.panel, 1).strokeRoundedRect(40, arriba - 244, 280, 270, 36);
+    this.retrato = this.add.image(180, arriba + 26, '__DEFAULT').setOrigin(0.5, 1);
+    const fondo = ventana(this, 24, arriba, ANCHO - 48, 238);
     this.fondoNombre = this.add.rectangle(56, ALTO_MAPA - 294, 300, 64, COLOR.rojo).setOrigin(0, 0).setRounded(32);
     this.nombreDialogo = this.add.text(84, ALTO_MAPA - 262, '', estiloTexto(32, COLOR.panel, true)).setOrigin(0, 0.5);
     this.textoDialogo = this.add.text(64, ALTO_MAPA - 222, '', {
@@ -271,7 +298,7 @@ export class Interfaz extends Phaser.Scene {
     });
     this.indicador = this.add.text(ANCHO - 72, ALTO_MAPA - 60, '▼', estiloTexto(30, COLOR.rojo)).setOrigin(0.5);
     this.tweens.add({ targets: this.indicador, y: ALTO_MAPA - 52, duration: 450, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
-    c.add([zona, fondo, this.fondoNombre, this.nombreDialogo, this.textoDialogo, this.indicador]);
+    c.add([zona, this.marcoRetrato, this.retrato, fondo, this.fondoNombre, this.nombreDialogo, this.textoDialogo, this.indicador]);
     c.setVisible(false);
     this.capaDialogo = c;
   }
@@ -282,7 +309,16 @@ export class Interfaz extends Phaser.Scene {
     this.nombreDialogo.setText(quien ?? '');
     this.fondoNombre.setVisible(Boolean(quien));
     this.nombreDialogo.setVisible(Boolean(quien));
-    if (quien) this.fondoNombre.width = this.nombreDialogo.width + 56;
+    const retrato = claveRetrato(quien);
+    this.marcoRetrato.setVisible(retrato !== null);
+    this.retrato.setVisible(retrato !== null);
+    if (retrato) this.retrato.setTexture(retrato).setScale(300 / this.retrato.height);
+    // Con retrato, el nombre va a su derecha.
+    const x = retrato ? 344 : 56;
+    this.fondoNombre.setX(x);
+    this.nombreDialogo.setX(x + 28);
+    // Cambiar `width` a mano no redibuja el rectángulo: hay que pasar por `setSize`.
+    if (quien) this.fondoNombre.setSize(this.nombreDialogo.width + 56, 64).setRounded(32);
     this.indicador.setVisible(indicador);
   }
 

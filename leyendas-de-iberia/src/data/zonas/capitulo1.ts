@@ -83,14 +83,15 @@ const SANTA_FE: Zona = {
       dir: 'abajo',
       aspecto: 'explorador',
       guion: [
-        si('colon', decir('Colón', 'Cuando la reina me dé su licencia, cruzaré el océano hacia el oeste. ¡Ya lo verás!'), [
+        si('colon', decir('Colón', 'Cuando la reina me dé su licencia, cruzaré el mar océano hacia poniente. ¡Ya lo verás!'), [
           ...decir(
             'Colón',
-            'Me llamo Cristóbal Colón. Llevo años pidiendo barcos a los Reyes para llegar a las Indias por el oeste.',
-            'Los sabios de la corte dicen que el océano es demasiado grande. Ya veremos quién tiene razón.',
-            'Toma, para el camino. A mí me sobran: no me dejan ir a ninguna parte.',
+            'Me llamo Cristóbal Colón. Llevo años pidiendo naves a los Reyes para llegar a las Indias por poniente.',
+            'Los sabios de la corte dicen que el mar océano es demasiado grande. Ya veremos quién tiene razón.',
+            'Toma: cinco téseras. Al otro lado del océano esperan tierras que ningún cristiano ha visto y criaturas que ningún bestiario ha escrito.',
           ),
-          dar('unguento', 3),
+          dar('tesera', 5),
+          ...decir('Colón', 'Yo iré a buscarlas. Tú empieza por las de esta tierra: cada pacto que selles es un mundo por descubrir.'),
           bandera('colon'),
         ]),
       ],
@@ -145,7 +146,8 @@ const SANTA_FE: Zona = {
   ],
   ocultos: [{ id: 'azabache', x: 21, y: 11, objeto: 'azabache' }],
   // Una tinaja por zona, como mucho: el autor vio demasiadas (2026-10-25).
-  recipientes: [{ id: 'huerto', x: 20, y: 16 }],
+  // La del huerto lleva una Poción: es la primera que se encuentra (decisión del autor).
+  recipientes: [{ id: 'huerto', x: 20, y: 16, objeto: 'unguento' }],
   alEntrar: decir(
     undefined,
     'Invierno de 1491. Los Reyes Católicos asedian Granada, el último reino nazarí de la Península.',
@@ -312,13 +314,13 @@ const VEGA: Zona = {
   encuentros: {
     tasa: 12,
     especies: [
-      { especie: 'topillo', min: 2, max: 4, peso: 28 },
-      { especie: 'libelula', min: 2, max: 4, peso: 22 },
-      { especie: 'abejaruco', min: 3, max: 5, peso: 18 },
-      { especie: 'escarabajo_pelotero', min: 3, max: 5, peso: 10 },
-      { especie: 'mandragora', min: 3, max: 5, peso: 10 },
-      { especie: 'duende', min: 4, max: 5, peso: 7 },
-      { especie: 'galapago', min: 4, max: 6, peso: 5 },
+      { especie: 'topillo', min: 2, max: 3, peso: 28 },
+      { especie: 'libelula', min: 2, max: 3, peso: 22 },
+      { especie: 'abejaruco', min: 2, max: 4, peso: 18 },
+      { especie: 'escarabajo_pelotero', min: 3, max: 4, peso: 10 },
+      { especie: 'mandragora', min: 3, max: 4, peso: 10 },
+      { especie: 'duende', min: 3, max: 4, peso: 7 },
+      { especie: 'galapago', min: 3, max: 4, peso: 5 },
     ],
   },
   pnj: [
@@ -331,6 +333,28 @@ const VEGA: Zona = {
       aspecto: 'ballestero',
       entrenador: 'ballestero_sancho',
       vision: 3,
+      guion: [],
+    },
+    {
+      id: 'labrador',
+      nombre: 'Labrador',
+      x: 8,
+      y: 15,
+      dir: 'izquierda',
+      aspecto: 'labrador',
+      entrenador: 'labrador',
+      vision: 2,
+      guion: [],
+    },
+    {
+      id: 'hortelana',
+      nombre: 'Hortelana',
+      x: 5,
+      y: 8,
+      dir: 'derecha',
+      aspecto: 'hortelana',
+      entrenador: 'hortelana',
+      vision: 2,
       guion: [],
     },
     {
@@ -355,7 +379,6 @@ const VEGA: Zona = {
     { id: 'endrina', x: 1, y: 20, objeto: 'endrina' },
     { id: 'ruda', x: 13, y: 7, objeto: 'ruda' },
   ],
-  recipientes: [{ id: 'acequia', x: 6, y: 18 }],
 };
 
 const ALHAMBRA: Zona = {
@@ -379,15 +402,48 @@ const ALHAMBRA: Zona = {
   encuentros: {
     tasa: 14,
     especies: [
-      { especie: 'duende', min: 5, max: 7, peso: 36 },
-      { especie: 'abejaruco', min: 5, max: 7, peso: 24 },
-      { especie: 'mandragora', min: 5, max: 7, peso: 16 },
-      { especie: 'galapago', min: 6, max: 8, peso: 10 },
-      { especie: 'escarabajo_bronce', min: 6, max: 7, peso: 6 },
-      { especie: 'trasgo', min: 7, max: 8, peso: 8 },
+      { especie: 'duende', min: 4, max: 6, peso: 36 },
+      { especie: 'abejaruco', min: 4, max: 6, peso: 26 },
+      { especie: 'mandragora', min: 4, max: 6, peso: 18 },
+      { especie: 'galapago', min: 5, max: 6, peso: 10 },
+      { especie: 'escarabajo_bronce', min: 5, max: 6, peso: 6 },
+      { especie: 'trasgo', min: 6, max: 6, peso: 4 },
     ],
   },
   pnj: [
+    {
+      id: 'aguador',
+      nombre: 'Aguador',
+      x: 5,
+      y: 8,
+      dir: 'derecha',
+      aspecto: 'aguador',
+      entrenador: 'aguador',
+      vision: 1,
+      guion: [],
+    },
+    {
+      id: 'halconero',
+      nombre: 'Halconero',
+      x: 7,
+      y: 6,
+      dir: 'izquierda',
+      aspecto: 'halconero',
+      entrenador: 'halconero',
+      vision: 1,
+      guion: [],
+    },
+    {
+      id: 'jardinero',
+      nombre: 'Jardinero',
+      x: 5,
+      y: 4,
+      dir: 'derecha',
+      aspecto: 'jardinero',
+      entrenador: 'jardinero',
+      vision: 1,
+      guion: [],
+    },
     {
       id: 'guardia',
       nombre: 'Guardia de la Alhambra',
@@ -409,7 +465,6 @@ const ALHAMBRA: Zona = {
     { id: 'gorro', x: 2, y: 9, objeto: 'gorro_colorado' },
     { id: 'tuno', x: 11, y: 2, objeto: 'tuno' },
   ],
-  recipientes: [{ id: 'adarve', x: 8, y: 4 }],
 };
 
 const PATIO_LEONES: Zona = {

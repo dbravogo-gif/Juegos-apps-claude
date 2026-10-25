@@ -25,7 +25,7 @@ y su ropa. **No se editan a mano.**
 | `dama.png` | Corona, pelo rubio rojizo, piel blanca y vestido carmesí, como la describen las crónicas | Isabel la Católica |
 | `noble.png` | Corona, jubón granate y oro, capa | Fernando el Católico |
 | `caballero.png` | Coraza, capa roja y barba | El Gran Capitán |
-| `explorador.png` | Pelo cano y largo, gorro oscuro y túnica granate | Colón |
+| `explorador.png` | Pelo cano, gorro oscuro, jubón granate, calzas y capa azul | Colón |
 | `anciano.png` | Sombrero de ala ancha, zamarra y barba blanca | El pastor de Orce |
 | `anciana.png` | Toca blanca, vestido y delantal | La mesonera |
 | `mujer.png` | Pañuelo rojo y vestido verde | La vecina |
@@ -35,7 +35,26 @@ y su ropa. **No se editan a mano.**
 | `guardia_nazari.png` | Turbante, aljuba roja y barba | El guardia de la Alhambra |
 | `sultan.png` | Turbante con joya, barba y túnica verde y oro | Boabdil |
 | `soldado.png` | Capacete y sayo rojo | El centinela |
+| `labrador.png` | Sombrero de paja | Labrador de la Vega |
+| `hortelana.png` | Vestido y delantal | Hortelana de la Vega |
+| `aguador.png` | Turbante blanco y camisa azul | Aguador de la Alhambra |
+| `halconero.png` | Turbante verde y barba | Halconero de la Alhambra |
+| `jardinero.png` | Sombrero de paja y camisa verde | Jardinero de la Alhambra |
 | `monje.png`, `aldeano.png`, `aldeano_verde.png`, `aldeana.png`, `maestro.png` | Fraile, aldeanos y un sabio | De reserva |
+
+## Retratos (`retratos/`)
+
+`<id>.webp`: bustos de 384 px sobre fondo transparente, apoyados abajo, para los diálogos. Qué
+nombre usa cada uno está en `src/data/retratos.ts`.
+
+- **Origen:** OpenArt (GPT Image 2) el 2026-10-25, en cuatro hojas de 3 × 2, con el estilo de las
+  criaturas (dibujo limpio, colores planos con una sombra, contorno fino) y la ropa de la época.
+- **Historia:** Isabel, blanca y de pelo rubio rojizo; Fernando, con melena corta y flequillo;
+  Colón, con el pelo ya blanco a los cuarenta, como lo describe su hijo Hernando; Boabdil, de unos
+  treinta años.
+- **Proceso:** el mismo corte que las criaturas, sin vaciar huecos blancos (tocas, turbantes y
+  velos son blancos a propósito).
+- Reserva: `jugador`, `fraile`, `sabio`, `aldeano` y `aldeana`.
 
 ## Criaturas (`criaturas/`)
 
