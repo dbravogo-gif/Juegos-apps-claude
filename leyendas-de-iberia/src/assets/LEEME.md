@@ -14,36 +14,28 @@ script y se vuelve a ejecutar (`python3 arte/mapa/tileset.py`).
 
 ## Personajes (`personajes/`)
 
-Salen del paquete **Ninja Adventure**, de Pixel-boy y AAA, publicado con licencia **CC0**
-(dominio público): se puede usar, modificar y redistribuir sin pedir permiso. No hace falta
-citar, pero se agradece.
+Hojas propias, al estilo de los juegos de criaturas de GBA: 16 × 24 píxeles por fotograma, 4
+columnas (abajo, arriba, izquierda, derecha) y 4 filas (quieto, paso, quieto, el otro paso). Las
+genera `arte/mapa/personajes.py`: todos comparten un cuerpo y cada uno lleva sus colores, su tocado
+y su ropa. **No se editan a mano.**
 
-- Página del paquete: <https://pixel-boy.itch.io/ninja-adventure-asset-pack>
-- Copia usada: el repositorio `rinn7e/ninja-adventure-indigo`, carpeta
-  `assets/Ninja Adventure - Asset Pack`, que trae el `LICENSE.txt` con la CC0.
-
-Personajes (`Actor/Character/<nombre>/SpriteSheet.png`):
-
-| Archivo | Original | Lo usa |
+| Archivo | Cómo va | Lo usa |
 | --- | --- | --- |
-| `muchacho.png` | Boy | El jugador |
-| `dama.png` | Princess, con la piel, el pelo y el vestido recoloreados | Isabel la Católica: blanca y de pelo rubio rojizo, como la describen las crónicas de su tiempo |
-| `noble.png` | Noble | Fernando el Católico |
-| `caballero.png` | Knight | El Gran Capitán |
-| `explorador.png` | Inspector | Colón |
-| `anciano.png` | OldMan2 | El pastor de Orce |
-| `anciana.png` | OldWoman | La mesonera |
-| `mujer.png` | Woman | La vecina |
-| `monje.png` | Monk | El tendero |
-| `ballestero.png` | Hunter | El ballestero Sancho |
-| `mercader.png` | Master | El mercader genovés |
-| `guardia_nazari.png` | Sultan | El guardia de la Alhambra |
-| `sultan.png` | Sultan2 | Boabdil |
-| `soldado.png` | GladiatorBlue | El centinela |
-| `aldeano.png`, `aldeano_verde.png`, `aldeana.png`, `maestro.png` | Villager, Villager3, Villager4, OldMan | De reserva |
-
-**Pendiente: rehacerlos al estilo del mapa nuevo**, con la ropa y los tocados de la época: la
-corona de Isabel, el turbante de Boabdil, el capacete del centinela, etcétera.
+| `muchacho.png` | Gorro rojo y jubón azul | El jugador |
+| `dama.png` | Corona, pelo rubio rojizo, piel blanca y vestido carmesí, como la describen las crónicas | Isabel la Católica |
+| `noble.png` | Corona, jubón granate y oro, capa | Fernando el Católico |
+| `caballero.png` | Coraza, capa roja y barba | El Gran Capitán |
+| `explorador.png` | Pelo cano y largo, gorro oscuro y túnica granate | Colón |
+| `anciano.png` | Sombrero de ala ancha, zamarra y barba blanca | El pastor de Orce |
+| `anciana.png` | Toca blanca, vestido y delantal | La mesonera |
+| `mujer.png` | Pañuelo rojo y vestido verde | La vecina |
+| `tendero.png` | Gorro, camisa y delantal | El tendero del mesón |
+| `ballestero.png` | Capucha y sayo verdes | El ballestero Sancho |
+| `mercader.png` | Bonete rojo y ropa azul con cadena de oro | El mercader genovés |
+| `guardia_nazari.png` | Turbante, aljuba roja y barba | El guardia de la Alhambra |
+| `sultan.png` | Turbante con joya, barba y túnica verde y oro | Boabdil |
+| `soldado.png` | Capacete y sayo rojo | El centinela |
+| `monje.png`, `aldeano.png`, `aldeano_verde.png`, `aldeana.png`, `maestro.png` | Fraile, aldeanos y un sabio | De reserva |
 
 ## Criaturas (`criaturas/`)
 

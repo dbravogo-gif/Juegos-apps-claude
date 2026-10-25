@@ -199,7 +199,7 @@ const MESON: Zona = {
       x: 6,
       y: 2,
       dir: 'abajo',
-      aspecto: 'monje',
+      aspecto: 'tendero',
       guion: [
         ...decir('Tendero', 'Téseras, pociones y repelentes. ¿Qué te pongo?'),
         {

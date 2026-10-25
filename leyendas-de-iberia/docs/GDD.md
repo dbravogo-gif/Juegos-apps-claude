@@ -347,8 +347,9 @@ con la Guerra Civil.
   escalado ×5. Lo dibuja un script (`arte/mapa/tileset.py`), sin recursos de terceros, para poder
   publicarlo en el repositorio. Ambientado en la época: encalado, teja árabe, tapial, olivos,
   acequias, arrayanes y azulejos.
-- **Arte de los personajes del mapa.** De momento, el paquete libre *Ninja Adventure* (CC0)
-  (`src/assets/LEEME.md`).
+- **Arte de los personajes del mapa.** Propio, al mismo estilo: 16 × 24 por fotograma, un cuerpo
+  común y, para cada personaje, sus colores, su tocado y su ropa de la época
+  (`arte/mapa/personajes.py`).
 - **Arte de las criaturas, provisional.** Cada sprite se busca por el id de la criatura. Si no
   hay imagen, se genera una provisional con el color del tipo. Para sustituirlo basta con añadir
   el PNG con ese nombre.
@@ -480,3 +481,7 @@ con la Guerra Civil.
   - Mapas más ricos: plaza empedrada con fuente en Santa Fe, vallado del pabellón, huertos en
     Santa Fe y en la Vega, setos en la Alhambra. Una prueba comprueba que se llega a todas las
     salidas, personajes, carteles, tinajas y objetos.
+- **2026-10-25 (7).** Personajes del mapa propios, al estilo de los del tileset: Isabel con corona y
+  vestido carmesí, Fernando con corona y capa, el Gran Capitán con coraza y capa roja, Colón con
+  el pelo cano, Boabdil y su guardia con turbante, el centinela con capacete, el pastor con
+  sombrero… El tendero tiene aspecto propio. Ya no se usa nada de *Ninja Adventure*.

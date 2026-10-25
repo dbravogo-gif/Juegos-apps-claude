@@ -3,8 +3,9 @@ import type { Dir } from '../core/mundo';
 import { ASPECTOS } from '../data/aspectos';
 import { ESCALA, imagenPieza, TAM_CASILLA } from './casillasVisual';
 
-// Personas del mapa con las hojas del paquete Ninja Adventure (`src/assets/personajes/`). Cada
-// hoja tiene una columna por dirección y cuatro filas con los pasos.
+// Personas del mapa con las hojas de `src/assets/personajes/`, que dibuja `arte/mapa/personajes.py`.
+// Cada hoja tiene una columna por dirección y cuatro filas con los pasos, a 16 × 24 píxeles: la
+// cabeza asoma por encima de su casilla, como en los juegos de GBA.
 
 const URLS = import.meta.glob('../assets/personajes/*.png', { eager: true, query: '?url', import: 'default' }) as Record<
   string,
@@ -18,7 +19,7 @@ const claveAnimacion = (aspecto: string, dir: Dir) => `persona-${aspecto}-${dir}
 
 export function cargarPersonas(load: Phaser.Loader.LoaderPlugin): void {
   for (const a of ASPECTOS) {
-    load.spritesheet(claveAspecto(a), URLS[`../assets/personajes/${a}.png`], { frameWidth: 16, frameHeight: 16 });
+    load.spritesheet(claveAspecto(a), URLS[`../assets/personajes/${a}.png`], { frameWidth: 16, frameHeight: 24 });
   }
 }
 
@@ -49,8 +50,10 @@ export class Persona extends Phaser.GameObjects.Container {
     this.aspecto = (ASPECTOS as readonly string[]).includes(aspecto) ? aspecto : ASPECTOS[0];
     this.dir = dir;
     const t = TAM_CASILLA;
-    const sombra = imagenPieza(scene, 'sombra', 0, t * 0.36);
-    this.sprite = scene.add.sprite(0, -t * 0.08, claveAspecto(this.aspecto), COLUMNA[dir]).setScale(ESCALA);
+    // Los pies, un píxel por encima del borde inferior de la casilla.
+    const pies = t / 2 - ESCALA;
+    const sombra = imagenPieza(scene, 'sombra', 0, pies - ESCALA * 2);
+    this.sprite = scene.add.sprite(0, pies, claveAspecto(this.aspecto), COLUMNA[dir]).setOrigin(0.5, 1).setScale(ESCALA);
     this.add([sombra, this.sprite]);
     scene.add.existing(this);
   }
