@@ -11,7 +11,7 @@ import { NOMBRE_ESTADISTICA, type EstadisticaCombate } from '../core/modelo';
 import { DATOS } from '../data';
 import { INICIALES } from '../data/especies';
 import { CATEGORIAS } from '../data/objetos';
-import { Barra, Boton, filaTipos, panel } from '../ui/componentes';
+import { Barra, Boton, filaTipos } from '../ui/componentes';
 import { crearCriaturaVisual } from '../ui/criaturaVisual';
 import { conArticulo, describirMovimiento } from '../ui/textos';
 import { iconoObjeto } from '../ui/objetoVisual';
@@ -19,6 +19,7 @@ import { construirTablaTipos, textoMultiplicador } from '../ui/tablaTipos';
 import { debilidades } from '../core/tipos';
 import { guardarPartida } from '../ui/sesion';
 import { aclarar, ALTO, ANCHO, COLOR, estiloTexto } from '../ui/tema';
+import { cabecera, colorPedestal, cursor, fondoMenu, iconoMenu, pildora, ventana, type IconoMenu } from '../ui/ventanas';
 
 /** Alto del mando, abajo del todo. El mapa ocupa el resto. */
 const ALTO_MANDO = 680;
@@ -34,6 +35,16 @@ export const MONEDA = 'maravedís';
 const CRUCETA = { x: 250, y: ALTO_MAPA + 320, radio: 200 };
 const BOTON_A = { x: 880, y: ALTO_MAPA + 250, radio: 100 };
 const BOTON_B = { x: 690, y: ALTO_MAPA + 400, radio: 82 };
+const TECLAS_DIR: Record<string, Dir> = {
+  arrowup: 'arriba',
+  w: 'arriba',
+  arrowdown: 'abajo',
+  s: 'abajo',
+  arrowleft: 'izquierda',
+  a: 'izquierda',
+  arrowright: 'derecha',
+  d: 'derecha',
+};
 
 export class Interfaz extends Phaser.Scene {
   private dirTactil: Dir | null = null;
@@ -55,6 +66,8 @@ export class Interfaz extends Phaser.Scene {
 
   private capaMenu?: Phaser.GameObjects.Container;
   private alAtras: (() => void) | null = null;
+  /** En los menús, qué hacen la cruceta y A. Se pone a null al cambiar de pantalla. */
+  private nav: { mover: (dir: Dir) => void; aceptar: () => void } | null = null;
   private ovilloPermitido = false;
   private alUsarOvillo: (() => void) | null = null;
   private avisos?: Phaser.GameObjects.Container;
@@ -161,6 +174,7 @@ export class Interfaz extends Phaser.Scene {
     }
     // En menús y elecciones, la cruceta mueve la selección.
     if (dir && this.capaEleccion) this.moverSeleccion(dir === 'arriba' || dir === 'izquierda' ? -1 : 1);
+    else if (dir && this.capaMenu) this.nav?.mover(dir);
   }
 
   private botonRedondo(x: number, y: number, r: number, color: number, letra: string, etiqueta: string, accion: () => void): void {
@@ -200,6 +214,10 @@ export class Interfaz extends Phaser.Scene {
       else if (k === 'm') this.pulsarMenu();
       else if (this.capaEleccion && (k === 'arrowup' || k === 'w' || k === 'arrowleft' || k === 'a')) this.moverSeleccion(-1);
       else if (this.capaEleccion && (k === 'arrowdown' || k === 's' || k === 'arrowright' || k === 'd')) this.moverSeleccion(1);
+      else if (this.capaMenu && this.nav) {
+        const dir = TECLAS_DIR[k];
+        if (dir) this.nav.mover(dir);
+      }
     });
   }
 
@@ -218,6 +236,7 @@ export class Interfaz extends Phaser.Scene {
   private pulsarA(): void {
     if (this.alAvanzar) this.alAvanzar();
     else if (this.capaEleccion) this.opciones[this.seleccion]?.elegir();
+    else if (this.capaMenu) this.nav?.aceptar();
     else if (!this.ocupado) this.events.emit('a');
   }
 
@@ -240,7 +259,7 @@ export class Interfaz extends Phaser.Scene {
     // Tocar cualquier parte del mapa también avanza el texto.
     const zona = this.add.rectangle(0, 0, ANCHO, ALTO_MAPA, 0x000000, 0.001).setOrigin(0, 0).setInteractive();
     zona.on('pointerdown', () => this.alAvanzar?.());
-    const fondo = panel(this, 24, ALTO_MAPA - 270, ANCHO - 48, 250);
+    const fondo = ventana(this, 24, ALTO_MAPA - 270, ANCHO - 48, 250);
     this.fondoNombre = this.add.rectangle(48, ALTO_MAPA - 300, 300, 64, COLOR.rojo).setOrigin(0, 0).setRounded(14);
     this.nombreDialogo = this.add.text(70, ALTO_MAPA - 268, '', estiloTexto(34, COLOR.pergamino, true)).setOrigin(0, 0.5);
     this.textoDialogo = this.add.text(64, ALTO_MAPA - 238, '', {
@@ -300,7 +319,7 @@ export class Interfaz extends Phaser.Scene {
       const alto = 110;
       const ancho = 480;
       const y0 = ALTO_MAPA - 300 - opciones.length * (alto + 12);
-      c.add(panel(this, ANCHO - ancho - 44, y0 - 16, ancho + 20, opciones.length * (alto + 12) + 20));
+      c.add(ventana(this, ANCHO - ancho - 44, y0 - 16, ancho + 20, opciones.length * (alto + 12) + 20));
       this.opciones = opciones.map((texto, i) => {
         const boton = new Boton(this, ANCHO - ancho / 2 - 34, y0 + i * (alto + 12) + alto / 2, {
           ancho,
@@ -385,11 +404,21 @@ export class Interfaz extends Phaser.Scene {
 
   // ---------- Capas de menú ----------
 
-  private abrirCapa(titulo: string): Phaser.GameObjects.Container {
+  /**
+   * Abre una pantalla de menú encima del mapa. Con `superpuesta`, el mapa se sigue viendo
+   * oscurecido detrás (el menú de pausa); si no, la tapa un fondo con rayas y una cabecera.
+   */
+  private abrirCapa(titulo: string, op: { superpuesta?: boolean } = {}): Phaser.GameObjects.Container {
     this.capaMenu?.destroy();
+    this.nav = null;
     const c = this.add.container(0, 0).setDepth(25);
-    c.add(this.add.rectangle(0, 0, ANCHO, ALTO_MAPA, COLOR.fondo, 0.96).setOrigin(0, 0).setInteractive());
-    c.add(this.add.text(ANCHO / 2, 70, titulo, estiloTexto(52, COLOR.pergamino, true)).setOrigin(0.5));
+    if (op.superpuesta) {
+      c.add(this.add.rectangle(0, 0, ANCHO, ALTO_MAPA, 0x000000, 0.45).setOrigin(0, 0).setInteractive());
+    } else {
+      c.add(this.add.rectangle(0, 0, ANCHO, ALTO_MAPA, COLOR.fondo).setOrigin(0, 0).setInteractive());
+      c.add(fondoMenu(this, ALTO_MAPA));
+      cabecera(this, c, titulo);
+    }
     this.capaMenu = c;
     return c;
   }
@@ -398,6 +427,7 @@ export class Interfaz extends Phaser.Scene {
     this.capaMenu?.destroy();
     this.capaMenu = undefined;
     this.alAtras = null;
+    this.nav = null;
   }
 
   /**
@@ -411,39 +441,131 @@ export class Interfaz extends Phaser.Scene {
         this.cerrarCapa();
         resolve('ovillo');
       };
-      const principal = () => {
-        const c = this.abrirCapa(p.nombre);
+      const principal = (inicial = 0) => {
+        const c = this.abrirCapa(p.nombre, { superpuesta: true });
         this.alAtras = () => {
           this.cerrarCapa();
           resolve(undefined);
         };
-        c.add(
-          this.add
-            .text(ANCHO / 2, 140, `${p.dinero} ${MONEDA} · Blasones: ${p.blasones.length} · Bestiario: ${p.capturados.length}`, estiloTexto(32, COLOR.oro))
-            .setOrigin(0.5),
-        );
-        const opciones: [string, () => void, boolean][] = [
-          ['Equipo', () => this.pantallaEquipo(p, principal), p.equipo.length > 0],
-          ['Bestiario', () => this.pantallaBestiario(p, principal), true],
-          ['Mochila', () => this.pantallaMochila(p, principal), true],
-          ['Tipos', () => this.pantallaTipos(principal), true],
-          [
-            'Guardar',
-            () => {
-              this.aviso(guardarPartida(p) ? 'Partida guardada' : 'No se ha podido guardar');
-            },
-            true,
-          ],
-          ['Volver al juego', () => this.alAtras?.(), true],
+        this.tarjetaJugador(c, p);
+        const volverAqui = (i: number) => () => principal(i);
+        const opciones: { texto: string; icono: IconoMenu; ayuda: string; activo: boolean; accion: (i: number) => void }[] = [
+          {
+            texto: 'Equipo',
+            icono: 'equipo',
+            ayuda: 'Mira cómo están tus criaturas, cámbialas de orden y quítales lo que llevan.',
+            activo: p.equipo.length > 0,
+            accion: (i) => this.pantallaEquipo(p, volverAqui(i)),
+          },
+          {
+            texto: 'Bestiario',
+            icono: 'bestiario',
+            ayuda: 'Las criaturas que has visto y con las que has sellado un pacto.',
+            activo: true,
+            accion: (i) => this.pantallaBestiario(p, volverAqui(i)),
+          },
+          { texto: 'Mochila', icono: 'mochila', ayuda: 'Tus objetos, ordenados por bolsillos.', activo: true, accion: (i) => this.pantallaMochila(p, volverAqui(i)) },
+          { texto: 'Tipos', icono: 'tipos', ayuda: 'Qué tipo es fuerte o débil contra cuál.', activo: true, accion: (i) => this.pantallaTipos(volverAqui(i)) },
+          {
+            texto: 'Guardar',
+            icono: 'guardar',
+            ayuda: 'Guarda la partida en este dispositivo. También se guarda sola al cambiar de zona.',
+            activo: true,
+            accion: () => this.aviso(guardarPartida(p) ? 'Partida guardada' : 'No se ha podido guardar'),
+          },
+          { texto: 'Cerrar', icono: 'cerrar', ayuda: 'Vuelve al camino.', activo: true, accion: () => this.alAtras?.() },
         ];
-        opciones.forEach(([texto, accion, activo], i) => {
-          const x = i % 2 === 0 ? 285 : 795;
-          const y = 290 + Math.floor(i / 2) * 180;
-          c.add(new Boton(this, x, y, { ancho: 480, alto: 150, texto, tamano: 44, alPulsar: accion }).setActivo(activo));
+
+        // Lista de opciones a la derecha, como en los juegos del género.
+        const x0 = 590;
+        const ancho = ANCHO - x0 - 24;
+        const altoFila = 116;
+        const y0 = 24;
+        c.add(ventana(this, x0, y0, ancho, opciones.length * altoFila + 44));
+        const marcas: Phaser.GameObjects.Graphics[] = [];
+        opciones.forEach((o, i) => {
+          const y = y0 + 22 + i * altoFila;
+          const marca = this.add.graphics();
+          marca.fillStyle(aclarar(COLOR.oro, 0.5), 1);
+          marca.fillRoundedRect(x0 + 18, y + 6, ancho - 36, altoFila - 12, 18);
+          marca.setVisible(false);
+          marcas.push(marca);
+          c.add(marca);
+          const icono = iconoMenu(this, o.icono, x0 + 104, y + altoFila / 2, 68);
+          const texto = this.add.text(x0 + 160, y + altoFila / 2, o.texto, estiloTexto(44, COLOR.tinta, true)).setOrigin(0, 0.5);
+          if (!o.activo) {
+            icono.setAlpha(0.35);
+            texto.setAlpha(0.35);
+          }
+          c.add([icono, texto]);
+          const zona = this.add.rectangle(x0 + ancho / 2, y + altoFila / 2, ancho - 20, altoFila, 0xffffff, 0.001).setInteractive({ useHandCursor: true });
+          zona.on('pointerup', () => elegir(i));
+          c.add(zona);
         });
+        const flecha = cursor(this, x0 + 46, 0, 40);
+        c.add(flecha);
+
+        // Ventana de ayuda abajo: qué hace la opción marcada.
+        const altoAyuda = 170;
+        c.add(ventana(this, 24, ALTO_MAPA - altoAyuda - 24, ANCHO - 48, altoAyuda));
+        const ayuda = this.add.text(64, ALTO_MAPA - altoAyuda - 24 + altoAyuda / 2, '', {
+          ...estiloTexto(34, COLOR.tinta),
+          wordWrap: { width: ANCHO - 128 },
+          lineSpacing: 6,
+        });
+        ayuda.setOrigin(0, 0.5);
+        c.add(ayuda);
+
+        let sel = inicial;
+        const marcar = (i: number) => {
+          sel = i;
+          marcas.forEach((m, j) => m.setVisible(j === i));
+          flecha.y = y0 + 22 + i * altoFila + altoFila / 2;
+          ayuda.setText(opciones[i].ayuda);
+        };
+        const elegir = (i: number) => {
+          marcar(i);
+          if (opciones[i].activo) opciones[i].accion(i);
+        };
+        marcar(sel);
+        this.nav = {
+          mover: (dir) => {
+            if (dir === 'arriba' || dir === 'abajo') marcar((sel + (dir === 'arriba' ? -1 : 1) + opciones.length) % opciones.length);
+          },
+          aceptar: () => elegir(sel),
+        };
       };
       principal();
     });
+  }
+
+  /** Tarjeta del jugador en el menú de pausa: nombre, dinero, Bestiario y blasones. */
+  private tarjetaJugador(c: Phaser.GameObjects.Container, p: Partida): void {
+    const x = 24;
+    const y = 24;
+    const ancho = 540;
+    c.add(ventana(this, x, y, ancho, 330, { color: aclarar(COLOR.pergaminoOscuro, 0.2) }));
+    c.add(this.add.text(x + 40, y + 52, p.nombre, estiloTexto(48, COLOR.tinta, true)).setOrigin(0, 0.5));
+    const moneda = this.add.graphics();
+    moneda.fillStyle(COLOR.oro, 1).lineStyle(3, COLOR.tinta, 1);
+    moneda.fillCircle(x + 56, y + 122, 16).strokeCircle(x + 56, y + 122, 16);
+    c.add(moneda);
+    c.add(this.add.text(x + 86, y + 122, `${p.dinero} ${MONEDA}`, estiloTexto(32, COLOR.tinta)).setOrigin(0, 0.5));
+    c.add(this.add.text(x + 40, y + 176, `Bestiario: ${p.capturados.length} pactos, ${p.vistos.length} vistas`, estiloTexto(28, COLOR.tintaSuave)).setOrigin(0, 0.5));
+    c.add(this.add.text(x + 40, y + 228, 'Blasones', estiloTexto(26, COLOR.tintaSuave, true)).setOrigin(0, 0.5));
+    // Ocho huecos, uno por gimnasio: los ganados, en oro.
+    const g = this.add.graphics();
+    for (let i = 0; i < 8; i++) {
+      const cx = x + 62 + i * 58;
+      const cy = y + 280;
+      const ganado = i < p.blasones.length;
+      g.fillStyle(ganado ? COLOR.oro : aclarar(COLOR.tintaSuave, 0.55), 1);
+      g.lineStyle(3, COLOR.tinta, ganado ? 1 : 0.4);
+      const pts = [new Phaser.Math.Vector2(cx, cy - 22), new Phaser.Math.Vector2(cx + 20, cy), new Phaser.Math.Vector2(cx, cy + 22), new Phaser.Math.Vector2(cx - 20, cy)];
+      g.fillPoints(pts, true);
+      g.strokePoints(pts, true);
+    }
+    c.add(g);
   }
 
   private botonVolver(c: Phaser.GameObjects.Container, volver: () => void): void {
@@ -451,120 +573,387 @@ export class Interfaz extends Phaser.Scene {
     c.add(new Boton(this, ANCHO / 2, ALTO_MAPA - 80, { ancho: 400, alto: 110, texto: 'Volver', alPulsar: volver }));
   }
 
-  private pantallaEquipo(p: Partida, volver: () => void): void {
+  /**
+   * El equipo: seis huecos en dos columnas, como en los juegos del género. Al elegir una
+   * criatura sale un menú pequeño (ficha, mover, quitar objeto). `moviendo` es la criatura que se
+   * está cambiando de sitio.
+   */
+  private pantallaEquipo(p: Partida, volver: () => void, sel = 0, moviendo: number | null = null): void {
     const c = this.abrirCapa('Equipo');
-    p.equipo.forEach((cr, i) => {
-      const x = i % 2 === 0 ? 285 : 795;
-      const y = 230 + Math.floor(i / 2) * 290;
-      this.tarjetaCriatura(c, cr, x, y, () => this.pantallaFicha(p, i, () => this.pantallaEquipo(p, volver)));
-    });
-    this.botonVolver(c, volver);
+    const ancho = 504;
+    const alto = 268;
+    const pos = (i: number) => ({ x: 24 + (i % 2) * (ancho + 24), y: 136 + Math.floor(i / 2) * (alto + 22) });
+    const marcos: Phaser.GameObjects.Graphics[] = [];
+    for (let i = 0; i < MAX_EQUIPO; i++) {
+      const { x, y } = pos(i);
+      const cr = p.equipo[i];
+      if (!cr) {
+        c.add(ventana(this, x, y, ancho, alto, { color: 0x3a2e24, filete: 0x5a4a3a, sombra: false, brillo: false }));
+        continue;
+      }
+      const marco = this.add.graphics();
+      marco.lineStyle(10, moviendo === i ? COLOR.rojo : COLOR.oro, 1);
+      marco.strokeRoundedRect(x - 8, y - 8, ancho + 16, alto + 16, 32);
+      marco.setVisible(false);
+      marcos.push(marco);
+      c.add(marco);
+      this.ranuraCriatura(c, cr, x, y, ancho, alto, { primera: i === 0, moviendo: moviendo === i });
+      const zona = this.add.rectangle(x + ancho / 2, y + alto / 2, ancho, alto, 0xffffff, 0.001).setInteractive({ useHandCursor: true });
+      zona.on('pointerup', () => elegir(i));
+      c.add(zona);
+    }
+
+    // Ventana de mensaje y botón de salir, abajo.
+    const yMensaje = ALTO_MAPA - 190;
+    c.add(ventana(this, 24, yMensaje, ANCHO - 340, 166));
+    const mensaje = moviendo !== null ? `¿Con quién cambias a ${nombreDe(p.equipo[moviendo], DATOS)}?` : 'Elige una criatura.';
+    c.add(this.add.text(64, yMensaje + 83, mensaje, { ...estiloTexto(36, COLOR.tinta), wordWrap: { width: ANCHO - 430 } }).setOrigin(0, 0.5));
+    const cancelar = moviendo !== null ? () => this.pantallaEquipo(p, volver, moviendo) : volver;
+    this.alAtras = cancelar;
+    c.add(
+      new Boton(this, ANCHO - 162, yMensaje + 83, {
+        ancho: 270,
+        alto: 140,
+        texto: moviendo !== null ? 'Cancelar' : 'Salir',
+        tamano: 38,
+        color: COLOR.bronce,
+        alPulsar: cancelar,
+      }),
+    );
+
+    const n = p.equipo.length;
+    let actual = Math.min(sel, n - 1);
+    const marcar = (i: number) => {
+      actual = i;
+      marcos.forEach((m, j) => m.setVisible(j === i));
+    };
+    const elegir = (i: number) => {
+      marcar(i);
+      if (moviendo === null) this.menuRanura(p, i, volver);
+      else {
+        if (i !== moviendo) [p.equipo[moviendo], p.equipo[i]] = [p.equipo[i], p.equipo[moviendo]];
+        this.pantallaEquipo(p, volver, i);
+      }
+    };
+    marcar(actual);
+    this.nav = {
+      mover: (dir) => {
+        const paso = { izquierda: -1, derecha: 1, arriba: -2, abajo: 2 }[dir];
+        const destino = actual + paso;
+        if (destino >= 0 && destino < n) marcar(destino);
+      },
+      aceptar: () => elegir(actual),
+    };
   }
 
-  private tarjetaCriatura(c: Phaser.GameObjects.Container, cr: Criatura, x: number, y: number, alPulsar: () => void): void {
+  /** Lo que se puede hacer con una criatura del equipo: una ventanita sobre la pantalla. */
+  private menuRanura(p: Partida, i: number, volver: () => void): void {
+    const cr = p.equipo[i];
+    const opciones: [string, () => void][] = [['Ficha', () => this.pantallaFicha(p, i, () => this.pantallaEquipo(p, volver, i))]];
+    if (p.equipo.length > 1) opciones.push(['Mover', () => this.pantallaEquipo(p, volver, i, i)]);
+    if (cr.objeto) {
+      opciones.push([
+        'Quitar objeto',
+        () => {
+          const nombre = DATOS.objetos[cr.objeto!]?.nombre;
+          quitarObjeto(p, cr);
+          this.aviso(`${nombre} vuelve a la mochila`);
+          this.pantallaEquipo(p, volver, i);
+        },
+      ]);
+    }
+    opciones.push(['Cancelar', () => this.pantallaEquipo(p, volver, i)]);
+    const ancho = 420;
+    const altoFila = 96;
+    const alto = opciones.length * altoFila + 40;
+    const x = ANCHO - ancho - 24;
+    const y = ALTO_MAPA - 210 - alto;
+    const sub = this.add.container(0, 0);
+    sub.add(this.add.rectangle(0, 0, ANCHO, ALTO_MAPA, 0x000000, 0.35).setOrigin(0, 0).setInteractive());
+    sub.add(ventana(this, x, y, ancho, alto));
+    const titulo = this.add.text(x + 24, y - 36, nombreDe(cr, DATOS), estiloTexto(36, COLOR.pergamino, true)).setOrigin(0, 0.5);
+    titulo.setShadow(0, 3, '#000000', 0, false, true);
+    sub.add(titulo);
+    const marcas = opciones.map(([texto, accion], j) => {
+      const fy = y + 20 + j * altoFila;
+      const marca = this.add.graphics();
+      marca.fillStyle(aclarar(COLOR.oro, 0.5), 1).fillRoundedRect(x + 16, fy + 6, ancho - 32, altoFila - 12, 16);
+      sub.add(marca);
+      sub.add(this.add.text(x + 80, fy + altoFila / 2, texto, estiloTexto(38, COLOR.tinta, true)).setOrigin(0, 0.5));
+      const zona = this.add.rectangle(x + ancho / 2, fy + altoFila / 2, ancho - 20, altoFila, 0xffffff, 0.001).setInteractive({ useHandCursor: true });
+      zona.on('pointerup', accion);
+      sub.add(zona);
+      return marca;
+    });
+    const flecha = cursor(this, x + 46, 0, 34);
+    sub.add(flecha);
+    this.capaMenu!.add(sub);
+    let actual = 0;
+    const marcar = (j: number) => {
+      actual = j;
+      marcas.forEach((m, k) => m.setVisible(k === j));
+      flecha.y = y + 20 + j * altoFila + altoFila / 2;
+    };
+    marcar(0);
+    this.alAtras = () => this.pantallaEquipo(p, volver, i);
+    this.nav = {
+      mover: (dir) => {
+        if (dir === 'arriba' || dir === 'abajo') marcar((actual + (dir === 'arriba' ? -1 : 1) + opciones.length) % opciones.length);
+      },
+      aceptar: () => opciones[actual][1](),
+    };
+  }
+
+  /**
+   * Hueco de una criatura: pedestal del color de su tipo, nombre, nivel, tipos, estado, objeto
+   * y barra de Vida. Lo usan el equipo y la elección de criatura de la mochila.
+   */
+  private ranuraCriatura(
+    c: Phaser.GameObjects.Container,
+    cr: Criatura,
+    x: number,
+    y: number,
+    ancho: number,
+    alto: number,
+    op: { primera?: boolean; moviendo?: boolean } = {},
+  ): void {
     const max = calcularEstadisticas(cr, DATOS).vida;
-    const fondo = this.add.rectangle(x, y + 100, 490, 260, cr.vida > 0 ? COLOR.pergamino : COLOR.pergaminoOscuro).setRounded(20).setStrokeStyle(5, COLOR.tinta);
-    fondo.setInteractive({ useHandCursor: true }).on('pointerup', alPulsar);
-    c.add(fondo);
-    c.add(crearCriaturaVisual(this, cr.especie, x - 160, y + 85, 140, true));
-    c.add(this.add.text(x - 70, y + 20, nombreDe(cr, DATOS), { ...estiloTexto(32, COLOR.tinta, true), wordWrap: { width: 300 } }));
-    c.add(this.add.text(x - 70, y + 100, `Nv ${cr.nivel}${cr.estado ? ` · ${cr.estado.tipo}` : ''}`, estiloTexto(28, COLOR.tintaSuave)));
-    const barra = new Barra(this, x - 70, y + 165, 300, 24, true);
+    const debilitada = cr.vida <= 0;
+    const color = debilitada ? aclarar(COLOR.rojo, 0.62) : op.moviendo ? aclarar(COLOR.rojo, 0.75) : op.primera ? aclarar(COLOR.oro, 0.62) : COLOR.pergamino;
+    c.add(ventana(this, x, y, ancho, alto, { color }));
+    const px = x + 112;
+    const py = y + alto / 2 - 8;
+    const pedestal = this.add.graphics();
+    pedestal.fillStyle(colorPedestal(cr.especie), 1).fillCircle(px, py, 86);
+    pedestal.lineStyle(4, COLOR.tinta, 0.6).strokeCircle(px, py, 86);
+    pedestal.fillStyle(0x000000, 0.15).fillEllipse(px, py + 56, 120, 26);
+    c.add(pedestal);
+    const figura = crearCriaturaVisual(this, cr.especie, px, py - 4, 160, true);
+    if (debilitada) figura.setAlpha(0.55);
+    else this.tweens.add({ targets: figura, y: figura.y - 6, duration: 700, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    c.add(figura);
+    if (cr.objeto) {
+      const fondo = this.add.graphics();
+      fondo.fillStyle(COLOR.pergamino, 1).fillCircle(px + 70, py + 64, 26);
+      fondo.lineStyle(3, COLOR.tinta, 1).strokeCircle(px + 70, py + 64, 26);
+      c.add(fondo);
+      c.add(iconoObjeto(this, px + 70, py + 64, cr.objeto, 38));
+    }
+    const tx = x + 222;
+    c.add(this.add.text(tx, y + 44, nombreDe(cr, DATOS), estiloTexto(34, COLOR.tinta, true)).setOrigin(0, 0.5));
+    c.add(this.add.text(tx, y + 92, `Nv ${cr.nivel}`, estiloTexto(30, COLOR.tintaSuave, true)).setOrigin(0, 0.5));
+    if (debilitada) c.add(pildora(this, tx + 110, y + 92, 'Debilitada', COLOR.rojo, 20));
+    else if (cr.estado) {
+      const quemada = cr.estado.tipo === 'quemado';
+      c.add(pildora(this, tx + 110, y + 92, quemada ? 'Quemada' : 'Dormida', quemada ? 0xc8551e : 0x5b6f9a, 20));
+    }
+    const tipos = this.add.container(0, 0);
+    filaTipos(this, tipos, tx, y + 144, DATOS.especies[cr.especie].tipos, 20);
+    c.add(tipos);
+    c.add(pildora(this, tx, y + 196, 'VIDA', COLOR.tinta, 18, COLOR.oro));
+    const barra = new Barra(this, tx + 92, y + 196, ancho - (tx - x) - 120, 24, true);
     void barra.setFraccion(cr.vida / max, false);
     c.add(barra);
-    c.add(this.add.text(x + 230, y + 200, `${cr.vida}/${max}`, estiloTexto(26, COLOR.tinta, true)).setOrigin(1, 0.5));
+    c.add(this.add.text(x + ancho - 30, y + 236, `${Math.max(0, cr.vida)}/${max}`, estiloTexto(28, COLOR.tinta, true)).setOrigin(1, 0.5));
   }
 
-  private pantallaFicha(p: Partida, i: number, volver: () => void): void {
+  /**
+   * Ficha de una criatura del equipo, en tres pestañas como en los juegos del género: datos,
+   * estadísticas y movimientos. Izquierda y derecha cambian de pestaña; arriba y abajo, de
+   * criatura.
+   */
+  private pantallaFicha(p: Partida, i: number, volver: () => void, pestana = 0, movimiento = 0): void {
     const cr = p.equipo[i];
     const e = DATOS.especies[cr.especie];
     const c = this.abrirCapa(nombreDe(cr, DATOS));
     const stats = calcularEstadisticas(cr, DATOS);
     const temp = DATOS.temperamentos.find((t) => t.id === cr.temperamento);
-    c.add(panel(this, 30, 130, ANCHO - 60, 960));
-    c.add(crearCriaturaVisual(this, cr.especie, 200, 300, 260, true));
+    const n = p.equipo.length;
+    const ir = (j: number, k = pestana, m = 0) => this.pantallaFicha(p, (j + n) % n, volver, k, m);
+
+    // Arriba: la criatura en su pedestal, con nombre, nivel, tipos, estado y objeto.
+    c.add(ventana(this, 24, 130, ANCHO - 48, 300));
+    const px = 180;
+    const py = 278;
+    const pedestal = this.add.graphics();
+    pedestal.fillStyle(colorPedestal(cr.especie), 1).fillCircle(px, py, 118);
+    pedestal.lineStyle(5, COLOR.tinta, 0.6).strokeCircle(px, py, 118);
+    pedestal.fillStyle(0x000000, 0.15).fillEllipse(px, py + 80, 170, 34);
+    c.add(pedestal);
+    const figura = crearCriaturaVisual(this, cr.especie, px, py - 6, 230, true);
+    if (cr.vida <= 0) figura.setAlpha(0.55);
+    else this.tweens.add({ targets: figura, y: figura.y - 8, duration: 800, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    c.add(figura);
+    const tx = 340;
+    c.add(this.add.text(tx, 190, nombreDe(cr, DATOS), estiloTexto(44, COLOR.tinta, true)).setOrigin(0, 0.5));
+    c.add(this.add.text(tx, 248, `Nv ${cr.nivel}`, estiloTexto(34, COLOR.tintaSuave, true)).setOrigin(0, 0.5));
+    if (cr.vida <= 0) c.add(pildora(this, tx + 130, 248, 'Debilitada', COLOR.rojo, 22));
+    else if (cr.estado) {
+      const quemada = cr.estado.tipo === 'quemado';
+      c.add(pildora(this, tx + 130, 248, quemada ? 'Quemada' : 'Dormida', quemada ? 0xc8551e : 0x5b6f9a, 22));
+    }
     const tipos = this.add.container(0, 0);
-    filaTipos(this, tipos, 380, 190, e.tipos, 28);
+    filaTipos(this, tipos, tx, 304, e.tipos, 24);
     c.add(tipos);
-    const desde = expParaNivel(cr.nivel);
-    const hasta = expParaNivel(cr.nivel + 1);
-    const lineas = [
-      `Nivel ${cr.nivel} · Exp ${cr.exp - desde}/${hasta - desde}`,
-      `Valía ${cr.valia}/14`,
-      temp
-        ? temp.sube === temp.baja
-          ? `${temp.nombre}: temperamento neutro`
-          : `${temp.nombre}: +${NOMBRE_ESTADISTICA[temp.sube]}, −${NOMBRE_ESTADISTICA[temp.baja]}`
-        : '',
-      `Lleva: ${cr.objeto ? (DATOS.objetos[cr.objeto]?.nombre ?? cr.objeto) : 'nada'}`,
-    ];
-    c.add(this.add.text(380, 240, lineas.join('\n'), { ...estiloTexto(30, COLOR.tinta), lineSpacing: 10, wordWrap: { width: 640 } }));
     if (cr.objeto) {
+      c.add(iconoObjeto(this, tx + 24, 370, cr.objeto, 44));
+      c.add(this.add.text(tx + 60, 370, DATOS.objetos[cr.objeto]?.nombre ?? cr.objeto, estiloTexto(30, COLOR.tinta)).setOrigin(0, 0.5));
       c.add(
-        new Boton(this, 930, 425, {
+        new Boton(this, ANCHO - 150, 370, {
           ancho: 200,
-          alto: 64,
+          alto: 72,
           texto: 'Quitar',
           tamano: 28,
           alPulsar: () => {
             const nombre = DATOS.objetos[cr.objeto!]?.nombre;
             quitarObjeto(p, cr);
             this.aviso(`${nombre} vuelve a la mochila`);
-            this.pantallaFicha(p, i, volver);
+            ir(i);
           },
         }),
       );
-    }
-    const orden: (keyof typeof stats)[] = ['vida', 'fuerza', 'escudo', 'magia', 'resMagica', 'celeridad'];
-    orden.forEach((k, j) => {
-      const x = j % 2 === 0 ? 70 : 560;
-      const y = 470 + Math.floor(j / 2) * 60;
-      const valor = k === 'vida' ? `${cr.vida}/${stats.vida}` : `${stats[k]}`;
-      const marca = temp && temp.sube !== temp.baja ? (temp.sube === (k as EstadisticaCombate) ? ' ▲' : temp.baja === (k as EstadisticaCombate) ? ' ▼' : '') : '';
-      c.add(this.add.text(x, y, `${NOMBRE_ESTADISTICA[k]}${marca}`, estiloTexto(30, COLOR.tintaSuave)));
-      c.add(this.add.text(x + 440, y, valor, estiloTexto(32, COLOR.tinta, true)).setOrigin(1, 0));
-    });
-    const ayuda = this.add
-      .text(70, 920, 'Toca un movimiento para ver qué hace.', { ...estiloTexto(28, COLOR.tinta), wordWrap: { width: ANCHO - 140 }, lineSpacing: 6 })
-      .setDepth(1);
-    c.add(ayuda);
-    cr.movimientos.forEach((m, j) => {
-      const mov = DATOS.movimientos[m.id];
-      const tipo = DATOS.tipos.tipos.find((t) => t.id === mov.tipo);
-      c.add(
-        new Boton(this, j % 2 === 0 ? 290 : 790, 700 + Math.floor(j / 2) * 110, {
-          ancho: 470,
-          alto: 96,
-          texto: mov.nombre,
-          subtexto: `${tipo?.nombre ?? ''} · PP ${m.pp}/${mov.pp}`,
-          tamano: 32,
-          color: aclarar(tipo?.color ?? COLOR.pergaminoOscuro, 0.35),
-          alPulsar: () => {
-            const d = describirMovimiento(mov, m.pp);
-            ayuda.setText(`${d.titulo}\n${d.cifras}\n${d.efecto}`);
-          },
-        }),
-      );
-    });
-    if (i > 0) {
-      c.add(
-        new Boton(this, 290, ALTO_MAPA - 80, {
-          ancho: 440,
-          alto: 110,
-          texto: 'Poner primera',
-          tamano: 36,
-          alPulsar: () => {
-            const [x] = p.equipo.splice(i, 1);
-            p.equipo.unshift(x);
-            this.pantallaFicha(p, 0, volver);
-          },
-        }),
-      );
-      this.alAtras = volver;
-      c.add(new Boton(this, 790, ALTO_MAPA - 80, { ancho: 440, alto: 110, texto: 'Volver', alPulsar: volver }));
     } else {
-      this.botonVolver(c, volver);
+      c.add(this.add.text(tx, 370, 'No lleva nada', estiloTexto(30, COLOR.tintaSuave)).setOrigin(0, 0.5));
     }
+
+    // Pestañas.
+    const pestanas = ['Datos', 'Estadísticas', 'Movimientos'];
+    pestanas.forEach((nombre, k) => {
+      c.add(
+        new Boton(this, 24 + 168 + k * 348, 498, {
+          ancho: 336,
+          alto: 88,
+          texto: nombre,
+          tamano: 32,
+          color: k === pestana ? COLOR.oro : COLOR.pergaminoOscuro,
+          alPulsar: () => ir(i, k),
+        }),
+      );
+    });
+
+    const yC = 566;
+    const altoC = ALTO_MAPA - 170 - yC;
+    c.add(ventana(this, 24, yC, ANCHO - 48, altoC));
+    if (pestana === 0) {
+      // Datos: número, temperamento, valía, experiencia y el texto del Bestiario.
+      const desde = expParaNivel(cr.nivel);
+      const hasta = expParaNivel(cr.nivel + 1);
+      const temperamento = temp
+        ? temp.sube === temp.baja
+          ? `${temp.nombre}: temperamento neutro`
+          : `${temp.nombre}: más ${NOMBRE_ESTADISTICA[temp.sube]}, menos ${NOMBRE_ESTADISTICA[temp.baja]}`
+        : '';
+      const filas: [string, string][] = [
+        ['Bestiario', `Nº ${String(e.numero).padStart(3, '0')} · ${e.nombre}`],
+        ['Temperamento', temperamento],
+        ['Valía', `${cr.valia} de 14`],
+      ];
+      filas.forEach(([etiqueta, valor], k) => {
+        const y = yC + 56 + k * 62;
+        c.add(this.add.text(64, y, etiqueta, estiloTexto(28, COLOR.tintaSuave, true)).setOrigin(0, 0.5));
+        c.add(this.add.text(300, y, valor, { ...estiloTexto(30, COLOR.tinta), wordWrap: { width: ANCHO - 360 } }).setOrigin(0, 0.5));
+      });
+      const yExp = yC + 56 + 3 * 62;
+      c.add(this.add.text(64, yExp, 'Experiencia', estiloTexto(28, COLOR.tintaSuave, true)).setOrigin(0, 0.5));
+      const barra = new Barra(this, 300, yExp, ANCHO - 380, 24, false);
+      void barra.setFraccion((cr.exp - desde) / Math.max(1, hasta - desde), false);
+      c.add(barra);
+      c.add(
+        this.add
+          .text(ANCHO - 80, yExp + 42, `Le faltan ${Math.max(0, hasta - cr.exp)} para el nivel ${cr.nivel + 1}`, estiloTexto(26, COLOR.tintaSuave))
+          .setOrigin(1, 0.5),
+      );
+      const yTexto = yExp + 92;
+      const linea = this.add.graphics();
+      linea.lineStyle(3, COLOR.oro, 1).lineBetween(64, yTexto, ANCHO - 64, yTexto);
+      c.add(linea);
+      c.add(
+        this.add.text(64, yTexto + 24, e.descripcion, {
+          ...estiloTexto(29, COLOR.tinta),
+          fontStyle: 'italic',
+          wordWrap: { width: ANCHO - 128 },
+          lineSpacing: 6,
+        }),
+      );
+    } else if (pestana === 1) {
+      // Estadísticas, con barras. ▲ y ▼ marcan lo que sube y baja su temperamento.
+      const orden: (keyof typeof stats)[] = ['vida', 'fuerza', 'escudo', 'magia', 'resMagica', 'celeridad'];
+      const tope = Math.max(...orden.filter((k) => k !== 'vida').map((k) => stats[k]), 1);
+      const alto = Math.min(84, (altoC - 60) / orden.length);
+      orden.forEach((k, j) => {
+        const y = yC + 40 + j * alto + alto / 2;
+        const marca = temp && temp.sube !== temp.baja ? (temp.sube === (k as EstadisticaCombate) ? ' ▲' : temp.baja === (k as EstadisticaCombate) ? ' ▼' : '') : '';
+        const colorMarca = marca === ' ▲' ? COLOR.rojo : marca === ' ▼' ? COLOR.exp : COLOR.tintaSuave;
+        c.add(this.add.text(64, y, NOMBRE_ESTADISTICA[k], estiloTexto(30, COLOR.tintaSuave, true)).setOrigin(0, 0.5));
+        if (marca) c.add(this.add.text(64 + 300, y, marca.trim(), estiloTexto(28, colorMarca, true)).setOrigin(0.5));
+        const valor = k === 'vida' ? `${Math.max(0, cr.vida)}/${stats.vida}` : `${stats[k]}`;
+        c.add(this.add.text(540, y, valor, estiloTexto(32, COLOR.tinta, true)).setOrigin(1, 0.5));
+        if (k === 'vida') {
+          const barra = new Barra(this, 580, y, ANCHO - 660, 26, true);
+          void barra.setFraccion(cr.vida / stats.vida, false);
+          c.add(barra);
+        } else {
+          const g = this.add.graphics();
+          const largo = ANCHO - 660;
+          g.fillStyle(COLOR.tinta, 1).fillRoundedRect(580, y - 13, largo, 26, 13);
+          g.fillStyle(COLOR.oro, 1).fillRoundedRect(583, y - 10, Math.max(20, (largo - 6) * (stats[k] / tope)), 20, 10);
+          c.add(g);
+        }
+      });
+    } else {
+      // Movimientos: tócalos para ver qué hacen.
+      const actual = Math.min(movimiento, cr.movimientos.length - 1);
+      const anchoMov = (ANCHO - 96 - 20) / 2;
+      cr.movimientos.forEach((m, j) => {
+        const mov = DATOS.movimientos[m.id];
+        const tipo = DATOS.tipos.tipos.find((t) => t.id === mov.tipo);
+        const x = 48 + (j % 2) * (anchoMov + 20);
+        const y = yC + 30 + Math.floor(j / 2) * 116;
+        const g = this.add.graphics();
+        g.fillStyle(aclarar(tipo?.color ?? COLOR.pergaminoOscuro, j === actual ? 0.25 : 0.55), 1);
+        g.fillRoundedRect(x, y, anchoMov, 104, 18);
+        g.lineStyle(j === actual ? 6 : 3, j === actual ? COLOR.rojo : COLOR.tintaSuave, 1).strokeRoundedRect(x, y, anchoMov, 104, 18);
+        c.add(g);
+        c.add(this.add.text(x + 22, y + 32, mov.nombre, estiloTexto(32, COLOR.tinta, true)).setOrigin(0, 0.5));
+        const chip = this.add.container(0, 0);
+        filaTipos(this, chip, x + 22, y + 76, [mov.tipo], 20);
+        c.add(chip);
+        c.add(this.add.text(x + anchoMov - 22, y + 76, `PP ${m.pp}/${mov.pp}`, estiloTexto(26, COLOR.tinta, true)).setOrigin(1, 0.5));
+        const zona = this.add.rectangle(x + anchoMov / 2, y + 52, anchoMov, 104, 0xffffff, 0.001).setInteractive({ useHandCursor: true });
+        zona.on('pointerup', () => ir(i, 2, j));
+        c.add(zona);
+      });
+      const m = cr.movimientos[actual];
+      if (m) {
+        const d = describirMovimiento(DATOS.movimientos[m.id], m.pp);
+        const y = yC + 30 + 2 * 116 + 6;
+        const linea = this.add.graphics();
+        linea.lineStyle(3, COLOR.oro, 1).lineBetween(64, y, ANCHO - 64, y);
+        c.add(linea);
+        c.add(
+          this.add.text(64, y + 20, `${d.titulo}\n${d.cifras}\n${d.efecto}`, {
+            ...estiloTexto(28, COLOR.tinta),
+            wordWrap: { width: ANCHO - 128 },
+            lineSpacing: 6,
+          }),
+        );
+      }
+    }
+
+    // Abajo: criatura anterior, volver y siguiente.
+    if (n > 1) {
+      c.add(new Boton(this, 120, ALTO_MAPA - 80, { ancho: 180, alto: 110, texto: '‹', tamano: 56, alPulsar: () => ir(i - 1) }));
+      c.add(new Boton(this, ANCHO - 120, ALTO_MAPA - 80, { ancho: 180, alto: 110, texto: '›', tamano: 56, alPulsar: () => ir(i + 1) }));
+    }
+    this.botonVolver(c, volver);
+    this.nav = {
+      mover: (dir) => {
+        if (dir === 'izquierda' || dir === 'derecha') ir(i, (pestana + (dir === 'izquierda' ? -1 : 1) + pestanas.length) % pestanas.length);
+        else if (pestana === 2) ir(i, 2, (movimiento + (dir === 'arriba' ? -1 : 1) + cr.movimientos.length) % cr.movimientos.length);
+        else if (n > 1) ir(i + (dir === 'arriba' ? -1 : 1));
+      },
+      aceptar: () => undefined,
+    };
   }
 
   private pantallaBestiario(p: Partida, volver: () => void, pagina = 0): void {
@@ -604,7 +993,7 @@ export class Interfaz extends Phaser.Scene {
   private pantallaEspecie(p: Partida, id: string, volver: () => void): void {
     const e = DATOS.especies[id];
     const c = this.abrirCapa(e.nombre);
-    c.add(panel(this, 60, 130, ANCHO - 120, 900));
+    c.add(ventana(this, 60, 130, ANCHO - 120, 900));
     c.add(crearCriaturaVisual(this, id, ANCHO / 2, 380, 340));
     const tipos = this.add.container(0, 0);
     filaTipos(this, tipos, ANCHO / 2 - 90, 640, e.tipos, 30);
@@ -636,47 +1025,102 @@ export class Interfaz extends Phaser.Scene {
     this.botonVolver(c, volver);
   }
 
-  private pantallaMochila(p: Partida, volver: () => void, categoria?: CategoriaObjeto): void {
+  /**
+   * Mochila por bolsillos, como en los juegos del género: uno por categoría, que se cambian con
+   * las flechas. Abajo, la descripción del objeto marcado y lo que se puede hacer con él.
+   */
+  private pantallaMochila(p: Partida, volver: () => void, categoria?: CategoriaObjeto, sel = 0): void {
     const c = this.abrirCapa('Mochila');
     const tengo = Object.entries(p.objetos).filter(([id, n]) => n > 0 && DATOS.objetos[id]);
     if (tengo.length === 0) {
-      c.add(this.add.text(ANCHO / 2, 400, 'La mochila está vacía.', estiloTexto(38, COLOR.pergaminoOscuro)).setOrigin(0.5));
+      c.add(ventana(this, 24, 136, ANCHO - 48, 140));
+      c.add(this.add.text(ANCHO / 2, 206, 'La mochila está vacía.', estiloTexto(38, COLOR.tinta)).setOrigin(0.5));
       this.botonVolver(c, volver);
       return;
     }
-    const categorias = CATEGORIAS.filter((k) => tengo.some(([id]) => DATOS.objetos[id].categoria === k.id));
-    const actual = categorias.find((k) => k.id === categoria) ?? categorias[0];
-    categorias.forEach((k, i) => {
-      const x = 150 + (i % 4) * 260;
-      const y = 150 + Math.floor(i / 4) * 84;
-      c.add(
-        new Boton(this, x, y, {
-          ancho: 248,
-          alto: 72,
-          texto: k.nombre,
-          tamano: 26,
-          color: k.id === actual.id ? COLOR.oro : COLOR.pergaminoOscuro,
-          alPulsar: () => this.pantallaMochila(p, volver, k.id),
-        }),
-      );
+    const bolsillos = CATEGORIAS.filter((k) => tengo.some(([id]) => DATOS.objetos[id].categoria === k.id));
+    const k = Math.max(0, bolsillos.findIndex((b) => b.id === categoria));
+    const bolsillo = bolsillos[k];
+    const objetos = tengo.filter(([id]) => DATOS.objetos[id].categoria === bolsillo.id);
+    const actual = Math.min(sel, objetos.length - 1);
+    const ir = (bk: number, s = 0) => this.pantallaMochila(p, volver, bolsillos[(bk + bolsillos.length) % bolsillos.length].id, s);
+
+    // Bolsillo actual, con flechas para cambiar y puntos que dicen cuántos hay.
+    c.add(ventana(this, 170, 132, ANCHO - 340, 112));
+    c.add(iconoObjeto(this, 250, 188, objetos[0][0], 64));
+    c.add(this.add.text(ANCHO / 2 + 30, 188, bolsillo.nombre, estiloTexto(42, COLOR.tinta, true)).setOrigin(0.5));
+    if (bolsillos.length > 1) {
+      c.add(new Boton(this, 90, 188, { ancho: 130, alto: 104, texto: '‹', tamano: 56, alPulsar: () => ir(k - 1) }));
+      c.add(new Boton(this, ANCHO - 90, 188, { ancho: 130, alto: 104, texto: '›', tamano: 56, alPulsar: () => ir(k + 1) }));
+    }
+    const puntos = this.add.graphics();
+    bolsillos.forEach((_, j) => {
+      const x = ANCHO / 2 - ((bolsillos.length - 1) * 30) / 2 + j * 30;
+      puntos.fillStyle(j === k ? COLOR.oro : 0x5a4a3a, 1).fillCircle(x, 270, j === k ? 10 : 7);
     });
-    const y0 = 150 + Math.ceil(categorias.length / 4) * 84;
-    tengo
-      .filter(([id]) => DATOS.objetos[id].categoria === actual.id)
-      .forEach(([id, n], i) => {
-        const obj = DATOS.objetos[id];
-        const y = y0 + i * 148;
-        const fondo = this.add.rectangle(ANCHO / 2, y + 66, ANCHO - 60, 136, COLOR.pergamino).setRounded(18).setStrokeStyle(4, COLOR.tintaSuave);
-        fondo.setInteractive({ useHandCursor: true }).on('pointerup', () => this.accionesObjeto(p, id, () => this.pantallaMochila(p, volver, actual.id)));
-        c.add(fondo);
-        c.add(iconoObjeto(this, 100, y + 66, id, 80));
-        c.add(this.add.text(165, y + 14, `${obj.nombre} ×${n}`, estiloTexto(34, COLOR.tinta, true)));
-        c.add(this.add.text(165, y + 58, obj.descripcion, { ...estiloTexto(23, COLOR.tintaSuave), wordWrap: { width: ANCHO - 240 } }));
-      });
+    c.add(puntos);
+
+    // Lista de objetos del bolsillo.
+    const yD = ALTO_MAPA - 360;
+    const yL = 300;
+    const altoFila = 100;
+    const filas = Math.max(1, Math.floor((yD - 24 - yL - 40) / altoFila));
+    const inicio = Math.floor(actual / filas) * filas;
+    c.add(ventana(this, 24, yL, ANCHO - 48, filas * altoFila + 40));
+    objetos.slice(inicio, inicio + filas).forEach(([id, cantidad], j) => {
+      const indice = inicio + j;
+      const y = yL + 20 + j * altoFila;
+      if (indice === actual) {
+        const marca = this.add.graphics();
+        marca.fillStyle(aclarar(COLOR.oro, 0.5), 1).fillRoundedRect(42, y + 6, ANCHO - 84, altoFila - 12, 16);
+        c.add(marca);
+        c.add(cursor(this, 72, y + altoFila / 2, 34));
+      }
+      c.add(iconoObjeto(this, 140, y + altoFila / 2, id, 64));
+      c.add(this.add.text(196, y + altoFila / 2, DATOS.objetos[id].nombre, estiloTexto(36, COLOR.tinta, true)).setOrigin(0, 0.5));
+      c.add(this.add.text(ANCHO - 70, y + altoFila / 2, `×${cantidad}`, estiloTexto(34, COLOR.tinta, true)).setOrigin(1, 0.5));
+      const zona = this.add.rectangle(ANCHO / 2, y + altoFila / 2, ANCHO - 84, altoFila, 0xffffff, 0.001).setInteractive({ useHandCursor: true });
+      zona.on('pointerup', () => ir(k, indice));
+      c.add(zona);
+    });
+    if (inicio > 0) c.add(this.add.text(ANCHO / 2, yL + 4, '▲', estiloTexto(28, COLOR.rojo, true)).setOrigin(0.5));
+    if (inicio + filas < objetos.length) c.add(this.add.text(ANCHO / 2, yL + filas * altoFila + 36, '▼', estiloTexto(28, COLOR.rojo, true)).setOrigin(0.5));
+
+    // Descripción y acción del objeto marcado.
+    const [id] = objetos[actual];
+    const obj = DATOS.objetos[id];
+    const uso = usoDe(obj);
+    const accion = uso.equipable ? 'Dar' : uso.fuera ? 'Usar' : null;
+    c.add(ventana(this, 24, yD, ANCHO - 48, 216));
+    c.add(iconoObjeto(this, 100, yD + 108, id, 88));
+    const ancho = accion ? ANCHO - 460 : ANCHO - 230;
+    const nota = !accion ? (obj.tipo === 'clave' ? 'Objeto importante.' : 'Se usa en los combates.') : '';
+    c.add(
+      this.add.text(170, yD + 108, nota ? `${obj.descripcion}\n${nota}` : obj.descripcion, {
+        ...estiloTexto(27, COLOR.tinta),
+        wordWrap: { width: ancho },
+        lineSpacing: 4,
+      }).setOrigin(0, 0.5),
+    );
+    const usar = () => this.accionesObjeto(p, id, () => this.pantallaMochila(p, volver, bolsillo.id, actual));
+    if (accion) c.add(new Boton(this, ANCHO - 160, yD + 108, { ancho: 220, alto: 120, texto: accion, tamano: 40, color: COLOR.oro, alPulsar: usar }));
     if (p.repelente > 0) {
-      c.add(this.add.text(ANCHO / 2, ALTO_MAPA - 165, `Repelente: quedan ${p.repelente} pasos`, estiloTexto(28, COLOR.oro)).setOrigin(0.5));
+      c.add(this.add.text(ANCHO / 2, yD - 22, `Repelente: quedan ${p.repelente} pasos`, estiloTexto(26, COLOR.oro)).setOrigin(0.5));
     }
     this.botonVolver(c, volver);
+    this.nav = {
+      mover: (dir) => {
+        if (dir === 'izquierda' || dir === 'derecha') {
+          if (bolsillos.length > 1) ir(k + (dir === 'izquierda' ? -1 : 1));
+        } else {
+          const destino = actual + (dir === 'arriba' ? -1 : 1);
+          if (destino >= 0 && destino < objetos.length) ir(k, destino);
+        }
+      },
+      aceptar: () => {
+        if (accion) usar();
+      },
+    };
   }
 
   /** Qué hacer con un objeto de la mochila fuera del combate. */
@@ -729,12 +1173,36 @@ export class Interfaz extends Phaser.Scene {
 
   private elegirCriatura(p: Partida, titulo: string, volver: () => void, alElegir: (c: Criatura) => void): void {
     const c = this.abrirCapa(titulo);
-    p.equipo.forEach((cr, i) => {
-      const x = i % 2 === 0 ? 285 : 795;
-      const y = 200 + Math.floor(i / 2) * 290;
-      this.tarjetaCriatura(c, cr, x, y, () => alElegir(cr));
+    const ancho = 504;
+    const alto = 268;
+    const marcos = p.equipo.map((cr, i) => {
+      const x = 24 + (i % 2) * (ancho + 24);
+      const y = 136 + Math.floor(i / 2) * (alto + 22);
+      const marco = this.add.graphics();
+      marco.lineStyle(10, COLOR.oro, 1).strokeRoundedRect(x - 8, y - 8, ancho + 16, alto + 16, 32);
+      c.add(marco);
+      this.ranuraCriatura(c, cr, x, y, ancho, alto, { primera: i === 0 });
+      const zona = this.add.rectangle(x + ancho / 2, y + alto / 2, ancho, alto, 0xffffff, 0.001).setInteractive({ useHandCursor: true });
+      zona.on('pointerup', () => alElegir(cr));
+      c.add(zona);
+      return marco;
     });
     this.botonVolver(c, volver);
+    let actual = 0;
+    const marcar = (i: number) => {
+      actual = i;
+      marcos.forEach((m, j) => m.setVisible(j === i));
+    };
+    marcar(0);
+    this.nav = {
+      mover: (dir) => {
+        const destino = actual + { izquierda: -1, derecha: 1, arriba: -2, abajo: 2 }[dir];
+        if (destino >= 0 && destino < marcos.length) marcar(destino);
+      },
+      aceptar: () => {
+        if (p.equipo[actual]) alElegir(p.equipo[actual]);
+      },
+    };
   }
 
   /** Aplica un objeto a una criatura fuera del combate, con sus consecuencias (niveles, evolución). */
@@ -812,7 +1280,7 @@ export class Interfaz extends Phaser.Scene {
           const obj = DATOS.objetos[id];
           const precio = obj.precio ?? 0;
           const y = 290 + i * 220;
-          c.add(panel(this, 40, y - 90, ANCHO - 80, 200));
+          c.add(ventana(this, 40, y - 90, ANCHO - 80, 200));
           c.add(iconoObjeto(this, 105, y - 20, id, 72));
           c.add(this.add.text(160, y - 66, `${obj.nombre} · ${precio} ${MONEDA}`, estiloTexto(34, COLOR.tinta, true)));
           c.add(this.add.text(160, y - 20, obj.descripcion, { ...estiloTexto(22, COLOR.tintaSuave), wordWrap: { width: 470 } }));

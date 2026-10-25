@@ -21,10 +21,11 @@ import {
   type Lado,
   type ResultadoCombate,
 } from '../core/combate';
-import { Barra, Boton, filaTipos, panel } from '../ui/componentes';
+import { Barra, Boton, filaTipos } from '../ui/componentes';
+import { pildora, ventana } from '../ui/ventanas';
 import { crearCriaturaVisual } from '../ui/criaturaVisual';
 import { describirMovimiento, textosEvento, type ContextoTextos } from '../ui/textos';
-import { aclarar, ALTO, ANCHO, COLOR, estiloTexto, MARGEN_VERTICAL } from '../ui/tema';
+import { aclarar, ALTO, ANCHO, COLOR, estiloTexto, MARGEN_VERTICAL, oscurecer } from '../ui/tema';
 import type { ConfigLaboratorio } from './Laboratorio';
 
 const OBJETOS_INICIALES = { tesera: 5, unguento: 3 };
@@ -78,19 +79,19 @@ class Ficha {
   ) {
     const alto = esJugador ? 270 : 220;
     this.capa = scene.add.container(x, y);
-    this.capa.add(panel(scene, 0, 0, ancho, alto));
+    this.capa.add(ventana(scene, 0, 0, ancho, alto));
     this.nombre = scene.add.text(30, 48, '', estiloTexto(44, COLOR.tinta, true)).setOrigin(0, 0.5);
     this.nivel = scene.add.text(ancho - 30, 48, '', estiloTexto(38, COLOR.tinta, true)).setOrigin(1, 0.5);
     this.tipos = scene.add.container(0, 0);
     this.estado = scene.add.text(ancho - 30, 108, '', estiloTexto(28, COLOR.pergamino, true)).setOrigin(1, 0.5);
     this.estado.setBackgroundColor('#9f1d20').setPadding(10, 4, 10, 4);
-    const etiqueta = scene.add.text(30, 166, 'Vida', estiloTexto(30, COLOR.tintaSuave, true)).setOrigin(0, 0.5);
-    this.barra = new Barra(scene, 110, 166, ancho - 140, 30, true);
+    const etiqueta = pildora(scene, 30, 166, 'VIDA', COLOR.tinta, 20, COLOR.oro);
+    this.barra = new Barra(scene, 130, 166, ancho - 160, 30, true);
     this.capa.add([this.nombre, this.nivel, this.tipos, this.estado, etiqueta, this.barra]);
     if (esJugador) {
       this.numeros = scene.add.text(ancho - 30, 212, '', estiloTexto(34, COLOR.tinta, true)).setOrigin(1, 0.5);
-      const etExp = scene.add.text(30, 246, 'Exp', estiloTexto(24, COLOR.tintaSuave, true)).setOrigin(0, 0.5);
-      this.barraExp = new Barra(scene, 110, 246, ancho - 140, 14, false);
+      const etExp = pildora(scene, 30, 240, 'EXP', COLOR.exp, 16, COLOR.pergamino);
+      this.barraExp = new Barra(scene, 130, 240, ancho - 160, 16, false);
       this.capa.add([this.numeros, etExp, this.barraExp]);
     }
   }
@@ -164,11 +165,22 @@ export class Combate extends Phaser.Scene {
     // Diseñada a 1920 de alto: en pantallas más altas se centra y el cielo llega hasta arriba.
     this.cameras.main.setScroll(0, -MARGEN_VERTICAL);
 
-    // Campo de batalla.
-    this.add.rectangle(0, -MARGEN_VERTICAL, ANCHO, 990 + MARGEN_VERTICAL, COLOR.cielo).setOrigin(0, 0);
-    this.add.rectangle(0, 560, ANCHO, 430, aclarar(COLOR.suelo, 0.35)).setOrigin(0, 0);
-    this.add.ellipse(POSICION.rival.x, POSICION.rival.y + 150, 440, 110, COLOR.suelo);
-    this.add.ellipse(POSICION.jugador.x, POSICION.jugador.y + 175, 500, 120, COLOR.suelo);
+    // Campo de batalla: cielo en degradado, suelo y dos pedestales de tierra con borde.
+    const campo = this.add.graphics();
+    campo.fillGradientStyle(aclarar(COLOR.cielo, 0.5), aclarar(COLOR.cielo, 0.5), COLOR.cielo, COLOR.cielo, 1);
+    campo.fillRect(0, -MARGEN_VERTICAL, ANCHO, 560 + MARGEN_VERTICAL);
+    campo.fillGradientStyle(aclarar(COLOR.suelo, 0.45), aclarar(COLOR.suelo, 0.45), aclarar(COLOR.suelo, 0.2), aclarar(COLOR.suelo, 0.2), 1);
+    campo.fillRect(0, 560, ANCHO, 430);
+    campo.fillStyle(0xffffff, 0.25).fillRect(0, 560, ANCHO, 6);
+    for (const [lado, ancho, alto, dy] of [
+      ['rival', 440, 110, 150],
+      ['jugador', 500, 120, 175],
+    ] as const) {
+      const { x, y } = POSICION[lado];
+      campo.fillStyle(oscurecer(COLOR.suelo, 0.25), 1).fillEllipse(x, y + dy + 10, ancho, alto);
+      campo.fillStyle(COLOR.suelo, 1).fillEllipse(x, y + dy, ancho, alto);
+      campo.fillStyle(0xffffff, 0.18).fillEllipse(x - ancho * 0.08, y + dy - alto * 0.15, ancho * 0.6, alto * 0.4);
+    }
 
     this.ficha = {
       rival: new Ficha(this, 30, 40, 560, false),
@@ -177,7 +189,7 @@ export class Combate extends Phaser.Scene {
     this.ficha.rival.ocultar();
     this.ficha.jugador.ocultar();
 
-    panel(this, 30, 1010, ANCHO - 60, 240);
+    ventana(this, 30, 1010, ANCHO - 60, 240);
     this.texto = this.add.text(70, 1045, '', {
       ...estiloTexto(44, COLOR.tinta),
       wordWrap: { width: ANCHO - 140 },

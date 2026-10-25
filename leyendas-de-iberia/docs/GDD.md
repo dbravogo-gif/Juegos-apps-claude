@@ -439,3 +439,12 @@ con la Guerra Civil.
   - Guía de diseño visual en `BESTIARIO.md`: niveles de épica según la línea, la rareza y la
     zona.
   - Guayota pasa a ser un gigante humano hecho de volcán, con el sol que robó en la mano.
+- **2026-10-25 (2).** Menús al estilo del género y descripciones corregidas.
+  - Brezuco y Mandragor, redibujados con la orientación correcta.
+  - `DESCRIPCIONES.md`: la descripción visual de las 150 especies, corregida con todo lo
+    decidido. Sustituye al inventario del prompt de ChatGPT.
+  - Menú de pausa encima del mapa: tarjeta del jugador con los blasones, lista con iconos y
+    cursor, y una ayuda de cada opción.
+  - Equipo en seis huecos, con submenú (ficha, mover, quitar objeto). Ficha en tres pestañas
+    (datos, estadísticas, movimientos). Mochila por bolsillos.
+  - Los menús se manejan también con la cruceta y A, y el combate usa los mismos marcos.

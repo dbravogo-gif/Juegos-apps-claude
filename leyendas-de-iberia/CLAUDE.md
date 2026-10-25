@@ -36,6 +36,8 @@ tocan desde aquí.
     capítulo 1, Gofrón, la vieja, *Gallotia simonyi* y el Papemímico.
   - El juego ya usa el capítulo 1 del Bestiario. Los `id` internos no cambian; las especies
     retiradas se convierten al cargar la partida (`ESPECIES_RETIRADAS`).
+  - `docs/DESCRIPCIONES.md`: la descripción visual de las 150 especies, corregida con todo lo
+    decidido. Es la que se usa para generar el arte.
   - Siguiente: fichas del capítulo 2, cuando el autor dé el visto bueno.
 - **Hecho en esta tanda (2026-10-24):**
   - La tabla de tipos (`src/data/tipos.ts`), reducida a petición del autor y consultable en el
@@ -44,6 +46,11 @@ tocan desde aquí.
   - Tinajas en todo el juego, nunca papeleras.
   - Objetos por categorías, equipables y de evolución (`src/data/objetos.ts`).
   - Tinajas registrables y el Papemímico (`src/data/recipientes.ts`).
+- **Menús (2026-10-25):** al estilo del género, con piezas comunes en `src/ui/ventanas.ts`.
+  - Hecho: el menú de pausa, el equipo con submenú y opción de mover, la ficha en pestañas, la
+    mochila por bolsillos y los marcos del combate.
+  - Pendiente, si el autor lo pide: el Bestiario en lista con vista previa, la tienda y el menú
+    de órdenes del combate.
 - **El laboratorio de combate** es solo una herramienta de pruebas, con un enlace pequeño en el
   título. No es prioridad.
 - **Pendiente del autor:** las decisiones abiertas al final de `docs/BESTIARIO.md` y del
@@ -109,12 +116,15 @@ El código va en español: nombres, comentarios y textos.
   - `Arranque`.
   - `Titulo`.
   - `Mundo`: el mapa y los guiones.
-  - `Interfaz`: el mando, los diálogos y los menús, encima del mapa.
+  - `Interfaz`: el mando, los diálogos y los menús, encima del mapa. En los menús, la cruceta y
+    A se reparten con `nav`: cada pantalla dice qué hacen.
   - `Combate`: modo historia o laboratorio.
   - `Laboratorio`.
 - `src/ui/`:
   - `tema.ts`: medidas (1080 × 1920; el mapa ocupa los 1240 de arriba) y colores.
   - `componentes.ts`: `Boton`, que admite mantener pulsado; `Barra`; chips de tipo.
+  - `ventanas.ts`: las piezas de los menús (ventana de doble marco, fondo con rayas, cabecera,
+    cursor, iconos de menú y píldoras).
   - `casillasVisual.ts` y `personaVisual.ts`: el mapa y los personajes con las hojas de
     *Ninja Adventure*. `objetoVisual.ts`: los iconos de los objetos.
   - `tablaTipos.ts`: la consulta de la tabla de tipos.
