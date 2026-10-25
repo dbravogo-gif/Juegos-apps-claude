@@ -462,3 +462,5 @@ con la Guerra Civil.
     entrenadores no te retan en ese caso.
   - Isabel la Católica, recoloreada: piel blanca y pelo rubio rojizo, como la describen las
     crónicas de su tiempo (Hernando del Pulgar).
+- **2026-10-25 (5).** El Papemímico solo sale desde la quinta ciudad (cuatro blasones), por ser
+  una criatura fuerte. Antes, las tinajas solo dan objetos o nada.
