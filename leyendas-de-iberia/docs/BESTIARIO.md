@@ -483,7 +483,7 @@ pendiente del autor.
 
 | Nº | Nombre | Tipos | Línea | Dónde aparece | Rareza | Rol | Silueta | Origen |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 129 | Papemímico | Oscuridad/Acero | No evoluciona | Dentro de las tinajas de cualquier capítulo (10 % al registrarlas) | Especial | Atacante resistente | Recipiente con mandíbula | Invención del juego |
+| 129 | Papemímico | Oscuridad/Acero | No evoluciona | Dentro de las tinajas, desde la quinta ciudad (10 % al registrarlas) | Especial | Atacante resistente | Recipiente con mandíbula | Invención del juego |
 
 ### Legendarios (uno por partida)
 
@@ -1453,8 +1453,9 @@ pendiente del autor.
    - Acero: su cuerpo es el recipiente, duro como un caldero.
 3. **Línea:** no evoluciona.
 4. **Inspiración:** *Licencia*. Un recipiente vivo que se hace pasar por uno corriente.
-5. **Ubicación y rareza:** dentro de las tinajas de cualquier capítulo. Al registrar
-   una, hay un 10 % de que sea él (`src/data/recipientes.ts`). Especial.
+5. **Ubicación y rareza:** dentro de las tinajas, desde la quinta ciudad (con cuatro blasones):
+   es fuerte y no tiene sentido encontrarlo antes (decisión del autor, 2026-10-25). Al registrar
+   una tinaja, hay un 10 % de que sea él (`src/data/recipientes.ts`). Especial.
 6. **Rol:** atacante resistente. Es más duro que lo normal en su zona, pero justo:
    - Sale al nivel de la zona, o dos por encima de tu criatura más fuerte si es más alto.
    - Elige sus movimientos como un entrenador, no al azar.

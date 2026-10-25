@@ -4,6 +4,13 @@
 /** Probabilidades, sobre 100, de lo que sale al registrar un recipiente. Deben sumar 100. */
 export const PROB_RECIPIENTE = { objeto: 60, nada: 30, mimico: 10 };
 
+/**
+ * Blasones que hacen falta para que el Papemímico pueda salir: 4, es decir, desde la quinta
+ * ciudad. Es una criatura fuerte y no tiene sentido luchar con él ni capturarlo antes
+ * (decisión del autor, 2026-10-25). Hasta entonces, las tinajas solo dan objetos o nada.
+ */
+export const MIMICO_MIN_BLASONES = 4;
+
 /** Objetos que pueden salir en cada zona, con su peso. Van con la progresión del capítulo. */
 export const OBJETOS_RECIPIENTE: Record<string, { objeto: string; peso: number }[]> = {
   santa_fe: [

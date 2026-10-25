@@ -16,7 +16,7 @@ import { deserializar, serializar } from '../src/core/guardado';
 import { ESPECIES_RETIRADAS } from '../src/data/especies';
 import { vidaMaxima } from '../src/core/estadisticas';
 import { ESPECIE_MIMICO, registrarRecipiente, revisado } from '../src/core/recipientes';
-import { OBJETOS_RECIPIENTE, PROB_RECIPIENTE, RECOMPENSA_MIMICO } from '../src/data/recipientes';
+import { MIMICO_MIN_BLASONES, OBJETOS_RECIPIENTE, PROB_RECIPIENTE, RECOMPENSA_MIMICO } from '../src/data/recipientes';
 import { crearCriatura } from '../src/core/criatura';
 import { crearRng } from '../src/core/rng';
 
@@ -92,8 +92,9 @@ describe('recipientes', () => {
     const cuenta = { objeto: 0, nada: 0, mimico: 0 };
     const p = nuevaPartida('X', 'recipientes', INICIO);
     p.equipo = [crearCriatura(DATOS, 'cangrejo', 10, crearRng(1))];
+    p.blasones = ['b1', 'b2', 'b3', 'b4'];
     for (let i = 0; i < 2000; i++) {
-      const r = registrarRecipiente(p, 'vega', `r${i}`, { prob: PROB_RECIPIENTE, objetos: OBJETOS_RECIPIENTE.vega }, DATOS);
+      const r = registrarRecipiente(p, 'vega', `r${i}`, { prob: PROB_RECIPIENTE, objetos: OBJETOS_RECIPIENTE.vega, minBlasones: MIMICO_MIN_BLASONES }, DATOS);
       cuenta[r.tipo] += 1;
     }
     expect(cuenta.objeto / 2000).toBeGreaterThan(0.55);
@@ -122,6 +123,19 @@ describe('recipientes', () => {
     expect(soloMimico.tipo).toBe('nada');
     p.equipo = [{ ...crearCriatura(DATOS, 'cangrejo', 5, crearRng(1)), vida: 0 }];
     expect(registrarRecipiente(p, 'santa_fe', 'v', { prob: { objeto: 0, nada: 0, mimico: 100 }, objetos: [] }, DATOS).tipo).toBe('nada');
+  });
+
+  it('el Papemímico no sale hasta la quinta ciudad (cuatro blasones)', () => {
+    expect(MIMICO_MIN_BLASONES).toBe(4);
+    const p = nuevaPartida('X', 'pronto', INICIO);
+    p.equipo = [crearCriatura(DATOS, 'cangrejo', 30, crearRng(1))];
+    const op = { prob: { objeto: 0, nada: 0, mimico: 100 }, objetos: OBJETOS_RECIPIENTE.vega, minBlasones: MIMICO_MIN_BLASONES };
+    for (let b = 0; b < 4; b++) {
+      p.blasones = Array.from({ length: b }, (_, i) => `b${i}`);
+      expect(registrarRecipiente(p, 'vega', `t${b}`, op, DATOS).tipo, `${b} blasones`).toBe('nada');
+    }
+    p.blasones = ['b0', 'b1', 'b2', 'b3'];
+    expect(registrarRecipiente(p, 'vega', 't4', op, DATOS).tipo).toBe('mimico');
   });
 
   it('como mucho una tinaja por zona', () => {

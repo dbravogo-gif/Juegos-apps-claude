@@ -36,16 +36,19 @@ export function registrarRecipiente(
     prob: { objeto: number; nada: number; mimico: number };
     objetos: { objeto: string; peso: number }[];
     encuentros?: TablaEncuentros;
+    /** Blasones que hacen falta para que pueda salir el Papemímico. */
+    minBlasones?: number;
   },
   datos: DatosJuego,
 ): ResultadoRecipiente {
   if (revisado(p, zona, id)) return { tipo: 'nada' };
   p.revisados.push(claveRecipiente(zona, id));
   const tipos = ['objeto', 'nada', 'mimico'] as const;
-  // Sin tabla de objetos en la zona, la parte de «objeto» no puede salir. Sin ninguna criatura
-  // en pie, tampoco el Papemímico: no habría con quién luchar.
+  // Sin tabla de objetos en la zona, la parte de «objeto» no puede salir. El Papemímico solo sale
+  // con los blasones que pida y con alguna criatura en pie: si no, no habría con quién luchar.
   const pesoObjeto = op.objetos.length > 0 ? op.prob.objeto : 0;
-  const pesoMimico = p.equipo.some((c) => c.vida > 0) ? op.prob.mimico : 0;
+  const puedeMimico = p.blasones.length >= (op.minBlasones ?? 0) && p.equipo.some((c) => c.vida > 0);
+  const pesoMimico = puedeMimico ? op.prob.mimico : 0;
   const pesos = [pesoObjeto, op.prob.nada, pesoMimico];
   if (pesos.every((w) => w === 0)) return { tipo: 'nada' };
   const tipo = tipos[elegirPonderado(p.rng, pesos)];

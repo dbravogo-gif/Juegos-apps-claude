@@ -58,6 +58,15 @@ tocan desde aquí.
   título. No es prioridad.
 - **Pendiente del autor:** las decisiones abiertas al final de `docs/BESTIARIO.md` y del
   `docs/GDD.md` §3.
+- **Mapas (2026-10-25), en estudio:** el autor quiere mapas con aspecto de Pokémon y propuso
+  Pokémon Essentials y Reliqui Studio. Opciones planteadas:
+  - Pasar todo el juego a Essentials. Se descarta de momento: no va en el navegador ni en
+    iPhone, y obliga a rehacer el motor.
+  - Usar Reliqui Studio (Windows) solo como editor de mapas, con tilesets de la comunidad, y
+    convertir sus `.rxdata` a nuestro formato. Es la opción recomendada; `rubymarshal` (PyPI)
+    sirve para leerlos.
+  - Falta que el autor elija y que se abra la red a las webs de recursos, o que suba él los
+    archivos.
 
 ## Antes de tocar nada
 

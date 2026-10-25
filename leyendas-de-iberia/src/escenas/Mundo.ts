@@ -34,7 +34,7 @@ import {
 } from '../core/partida';
 import { abrirRecipiente, dibujarRecipiente, dibujarZona, ESCALA, TAM_CASILLA } from '../ui/casillasVisual';
 import { registrarRecipiente, revisado } from '../core/recipientes';
-import { OBJETOS_RECIPIENTE, PROB_RECIPIENTE, RECOMPENSA_MIMICO } from '../data/recipientes';
+import { MIMICO_MIN_BLASONES, OBJETOS_RECIPIENTE, PROB_RECIPIENTE, RECOMPENSA_MIMICO } from '../data/recipientes';
 import { Persona } from '../ui/personaVisual';
 import { guardarPartida, sesion } from '../ui/sesion';
 import { conArticulo } from '../ui/textos';
@@ -342,7 +342,7 @@ export class Mundo extends Phaser.Scene {
       p,
       zona.id,
       r.def.id,
-      { prob: PROB_RECIPIENTE, objetos: OBJETOS_RECIPIENTE[zona.id] ?? [], encuentros: zona.encuentros },
+      { prob: PROB_RECIPIENTE, objetos: OBJETOS_RECIPIENTE[zona.id] ?? [], encuentros: zona.encuentros, minBlasones: MIMICO_MIN_BLASONES },
       DATOS,
     );
     if (res.tipo === 'objeto') {
