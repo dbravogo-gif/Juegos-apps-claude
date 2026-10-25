@@ -431,3 +431,11 @@ con la Guerra Civil.
   - Tinajas en todo el juego.
   - Se aceptan: Dralín con dos formas, la dificultad de Ignibue contra Boabdil, los nombres
     nuevos y el Papemímico capturable.
+- **2026-10-25.** Arte de las criaturas, versión definitiva de estilo.
+  - El autor elige, tras dos rondas de pruebas, ilustración limpia de criatura de juego (sin
+    texturas realistas).
+  - Cada criatura tiene dos vistas en combate: el rival en diagonal de frente y la tuya en
+    diagonal por detrás.
+  - Guía de diseño visual en `BESTIARIO.md`: niveles de épica según la línea, la rareza y la
+    zona.
+  - Guayota pasa a ser un gigante humano hecho de volcán, con el sol que robó en la mano.

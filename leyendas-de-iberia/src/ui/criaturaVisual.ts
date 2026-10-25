@@ -3,17 +3,18 @@ import type { DatosJuego } from '../core/modelo';
 import { DATOS } from '../data';
 import { aclarar, COLOR, estiloTexto, oscurecer } from './tema';
 
-// Arte de las criaturas. Si existe `src/assets/criaturas/<id>.png`, se usa esa imagen; si no,
-// se dibuja una figura provisional con el color de su tipo. Para cambiar el arte basta con
-// añadir el PNG: no hay que tocar código.
+// Arte de las criaturas. Si existe `src/assets/criaturas/<id>.webp` (o `.png`), se usa esa imagen; si no,
+// se dibuja una figura provisional con el color de su tipo. `<id>_jugador` es la vista de tu
+// criatura en combate: en diagonal, de tres cuartos por detrás, mirando al rival. Sin ella, se
+// usa la de frente dada la vuelta. Para cambiar el arte basta con añadir las imágenes.
 
-const PNGS = import.meta.glob('../assets/criaturas/*.png', { eager: true, query: '?url', import: 'default' }) as Record<
+const IMAGENES = import.meta.glob('../assets/criaturas/*.{webp,png}', { eager: true, query: '?url', import: 'default' }) as Record<
   string,
   string
 >;
 
 export const SPRITES: Record<string, string> = Object.fromEntries(
-  Object.entries(PNGS).map(([ruta, url]) => [ruta.split('/').pop()!.replace(/\.png$/, ''), url]),
+  Object.entries(IMAGENES).map(([ruta, url]) => [ruta.split('/').pop()!.replace(/\.(webp|png)$/, ''), url]),
 );
 
 export const claveSprite = (especie: string) => `criatura-${especie}`;
@@ -42,7 +43,8 @@ function iniciales(nombre: string): string {
 
 /**
  * Dibuja la criatura centrada en (x, y) dentro de un cuadrado de lado `tam`. `mirandoDerecha`
- * gira la figura hacia la derecha (la criatura del jugador mira al rival).
+ * gira la figura hacia la derecha (la criatura del jugador mira al rival). `delJugador` usa la
+ * vista de tu criatura en combate si existe.
  */
 export function crearCriaturaVisual(
   scene: Phaser.Scene,
@@ -51,8 +53,16 @@ export function crearCriaturaVisual(
   y: number,
   tam: number,
   mirandoDerecha = false,
+  delJugador = false,
 ): Phaser.GameObjects.Container {
   const c = scene.add.container(x, y);
+  const vistaJugador = claveSprite(`${especieId}_jugador`);
+  if (delJugador && scene.textures.exists(vistaJugador)) {
+    const img = scene.add.image(0, 0, vistaJugador);
+    img.setScale(tam / Math.max(img.width, img.height));
+    c.add(img);
+    return c;
+  }
   const clave = claveSprite(especieId);
   if (scene.textures.exists(clave)) {
     const img = scene.add.image(0, 0, clave);

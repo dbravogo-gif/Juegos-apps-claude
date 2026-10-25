@@ -18,10 +18,7 @@ export class Arranque extends Phaser.Scene {
   }
 
   create(): void {
-    // Pixel art nítido al escalar.
-    for (const id of Object.keys(SPRITES)) {
-      this.textures.get(claveSprite(id)).setFilter(Phaser.Textures.FilterMode.NEAREST);
-    }
+    // Las criaturas son ilustraciones: se escalan con suavizado (el filtro por defecto).
     prepararHojasMundo(this);
     prepararPersonas(this);
     prepararIconos(this);
