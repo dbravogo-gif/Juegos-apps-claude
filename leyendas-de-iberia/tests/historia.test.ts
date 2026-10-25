@@ -112,6 +112,22 @@ describe('recipientes', () => {
     expect(r.tipo).toBe('nada');
   });
 
+  it('sin ninguna criatura en pie no sale el Papemímico (no habría con quién luchar)', () => {
+    const p = nuevaPartida('X', 'sin equipo', INICIO);
+    for (let i = 0; i < 300; i++) {
+      const r = registrarRecipiente(p, 'santa_fe', `t${i}`, { prob: PROB_RECIPIENTE, objetos: OBJETOS_RECIPIENTE.santa_fe }, DATOS);
+      expect(r.tipo).not.toBe('mimico');
+    }
+    const soloMimico = registrarRecipiente(p, 'santa_fe', 'u', { prob: { objeto: 0, nada: 0, mimico: 100 }, objetos: [] }, DATOS);
+    expect(soloMimico.tipo).toBe('nada');
+    p.equipo = [{ ...crearCriatura(DATOS, 'cangrejo', 5, crearRng(1)), vida: 0 }];
+    expect(registrarRecipiente(p, 'santa_fe', 'v', { prob: { objeto: 0, nada: 0, mimico: 100 }, objetos: [] }, DATOS).tipo).toBe('nada');
+  });
+
+  it('como mucho una tinaja por zona', () => {
+    for (const z of Object.values(ZONAS)) expect(z.recipientes?.length ?? 0, z.id).toBeLessThanOrEqual(1);
+  });
+
   it('el Papemímico sale por encima del nivel del equipo', () => {
     const p = nuevaPartida('X', 3, INICIO);
     p.equipo = [crearCriatura(DATOS, 'cangrejo', 12, crearRng(1))];

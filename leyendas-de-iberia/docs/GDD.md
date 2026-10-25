@@ -455,3 +455,10 @@ con la Guerra Civil.
   - Combate: movimientos a la izquierda (70 %) y, en un 2 × 2 a la derecha, la última tésera
     usada, la mochila, el equipo y huir.
   - Quitado el fondo blanco atrapado en el drago, el Papemímico, el Trasgorn y el pelotero.
+- **2026-10-25 (4).** Correcciones del autor.
+  - Una tinaja por zona como mucho, y fuera los barriles de adorno del exterior de Santa Fe, que
+    se confundían con ellas.
+  - El Papemímico no sale si no tienes ninguna criatura en pie (antes rompía el juego), y los
+    entrenadores no te retan en ese caso.
+  - Isabel la Católica, recoloreada: piel blanca y pelo rubio rojizo, como la describen las
+    crónicas de su tiempo (Hernando del Pulgar).

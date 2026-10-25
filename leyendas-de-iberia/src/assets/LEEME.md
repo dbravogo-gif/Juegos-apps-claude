@@ -28,7 +28,7 @@ Personajes (`Actor/Character/<nombre>/SpriteSheet.png`):
 | Archivo | Original | Lo usa |
 | --- | --- | --- |
 | `muchacho.png` | Boy | El jugador |
-| `dama.png` | Princess | Isabel la Católica |
+| `dama.png` | Princess, con la piel, el pelo y el vestido recoloreados | Isabel la Católica: blanca y de pelo rubio rojizo, como la describen las crónicas de su tiempo |
 | `noble.png` | Noble | Fernando el Católico |
 | `caballero.png` | Knight | El Gran Capitán |
 | `explorador.png` | Inspector | Colón |
