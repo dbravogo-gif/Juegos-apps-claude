@@ -43,6 +43,64 @@ Diseño de las 150 especies. Parte del prompt maestro que el autor preparó con 
   - *Licencia*: invención del juego.
   - **[VERIFICAR]**: dato dudoso, pendiente de comprobar.
 
+## Guía de diseño visual
+
+Cómo se dibuja cada criatura según su línea, su fuerza y dónde sale. Sigue las costumbres del
+género: las criaturas son de dibujo animado, nunca animales realistas, aunque partan de una
+especie real.
+
+**Vistas en combate.**
+- El rival se ve en diagonal de frente, mostrando el frente y su lado izquierdo.
+- La tuya se ve en diagonal por detrás, mostrando la espalda y su lado derecho.
+
+**Niveles de épica.** Cada especie tiene uno. Marca el tamaño, el detalle y los efectos.
+
+| Nivel | Cuándo | Cómo se dibuja |
+| --- | --- | --- |
+| 0. Corriente | Primeras rutas; formas débiles comunes | Pequeña y redonda, 2–3 colores, rasgos del animal fáciles de reconocer, cara amable o graciosa. Sin efectos. |
+| 1. Media | Primera forma de una línea de dos; únicas comunes | Cuerpo completo, un rasgo exagerado (aletas, cuernos, garras), 3–4 colores. |
+| 2. Fuerte | Formas intermedias; finales que salen pronto; únicas raras | Más grande, pose con carácter, alguna armadura u ornamento, 4–5 colores. Efectos leves. |
+| 3. Final | Finales de tres formas, finales de inicial y finales que salen tarde | Grande y con peso, silueta inconfundible, el motivo de su tipo completo y exagerado. A veces cambia de postura o gana armadura, ropa o un detalle cultural. Efectos moderados. |
+| 4. Épica | Muy raras de historia, legendarias | Presencia de monumento, ornamento o simetría, motivo cultural fuerte, aura o partículas, colores de prestigio (oro, blanco, azul profundo). Llama la atención en cuanto aparece. |
+
+**Líneas de tres formas** (iniciales y algunas de ruta):
+- **Primera, la cría:** cabeza grande (un tercio del cuerpo), cuerpo redondo, patas cortas y
+  ojos grandes. El motivo del tipo apenas asoma: una llamita, una hoja.
+- **Segunda, la adolescente:** más alta y desgarbada, con expresión desafiante. El motivo crece
+  y aparece la mitad de lo que tendrá la final.
+- **Tercera, la adulta:** grande y con peso, con el motivo completo. A menudo cambia de postura
+  o gana armadura o ropa. Conserva los colores de la línea.
+- Las líneas de tres que salen en las primeras rutas, como la del escarabajo, acaban fuertes,
+  pero menos espectaculares que las iniciales.
+
+**Líneas de dos formas.** La base no es tan cría: ya es una criatura joven completa. La final
+es de nivel 2 si sale pronto (Zumbrel → Diablisca) y de nivel 3 si sale tarde.
+
+**Únicas, que no evolucionan.** Son adultas y su diseño está cerrado, con un rasgo que las
+distingue. Las comunes son de nivel 1; las raras, de nivel 2 o 3; las muy raras y de historia,
+de nivel 4 (Alhambrón, Guisandor).
+
+**Legendarias.** Siempre de nivel 4, pero de dos maneras:
+- Los animales célebres (Babieca, Platero) son sobrios y majestuosos, sin efectos exagerados.
+- Los seres míticos (Guayota, Cuélebre, Mari) son grandes, con aura y elementos de su mito.
+
+**Fósiles.** Nivel 2 o 3. Rocosos, de paleta terrosa, algo amenazantes; se nota que han vuelto
+de otra época.
+
+**Según la zona de la historia.**
+- Capítulo 1 y primeras rutas: animales familiares, colores cálidos y diseños sencillos.
+- Capítulos centrales: más elementales y exóticos.
+- Final del juego y zonas opcionales: más intimidantes o místicos.
+- Cada región pone sus motivos: lo nazarí en Granada, lo mudéjar en Toledo, lo guanche en
+  Canarias, el románico en el norte.
+
+**Capítulo 1, nivel de cada especie:**
+- 0: Túmbriz, Zumbrel, Abezar, Broncero.
+- 1: Ignibue, Marzuko, Dralín, Brezuco, Barbaflux, Carapachón.
+- 2: Braverno, Nakarra, Diablisca, Trasgorn, Mandragor, Escarbraz, Papemímico.
+- 3: Ignivárgoth, Talascrón, Dracendro, Mocarabeo.
+- 4: Alhambrón.
+
 ---
 
 ## Fase A. Auditoría
