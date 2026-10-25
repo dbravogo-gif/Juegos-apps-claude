@@ -60,6 +60,10 @@ el encalado, etcétera.
 - **Proceso:** la hoja se corta en 2 filas y 3 columnas por las líneas con menos dibujo, se quita
   el fondo blanco (también los huecos grandes interiores), y cada criatura se coloca apoyada abajo
   en un cuadro de 384 px. Las formas débiles ocupan menos del cuadro, así que se ven más pequeñas.
+- **Revisión de huecos:** el fondo blanco que queda encerrado entre ramas, patas o asas no
+  siempre sale en el corte. Hay que mirar cada imagen sobre un fondo oscuro y quitar a mano esos
+  huecos, sin tocar lo que es blanco a propósito (vapor, motas, alas, mármol, brillos de los
+  ojos). Corregidos el 2026-10-25: el drago, el Papemímico, el Trasgorn y el pelotero.
 - Reserva para más adelante: `arte/criaturas-futuras/` (Guayota y la vieja).
 
 ## Objetos (`objetos/`)
