@@ -40,6 +40,8 @@ export interface Partida {
   repelente: number;
   /** Recipientes ya registrados, como `zona:id`. */
   revisados: string[];
+  /** La última tésera lanzada en un combate: sale a mano en el siguiente. */
+  ultimaTesera?: string;
 }
 
 export function nuevaPartida(nombre: string, semilla: number | string, inicio: Posicion): Partida {

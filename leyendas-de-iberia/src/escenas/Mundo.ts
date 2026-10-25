@@ -639,10 +639,12 @@ export class Mundo extends Phaser.Scene {
           salvaje,
           nombreRival: def?.nombre ?? 'Salvaje',
           iaAstuta: op.iaAstuta,
+          ultimaTesera: p.ultimaTesera,
           alTerminar: (r: ResultadoHistoria) => {
             this.scene.stop('Combate');
             this.scene.wake();
             this.scene.wake('Interfaz');
+            p.ultimaTesera = r.ultimaTesera;
             const aplicado = aplicarCombate(p, { ...r, entrenador: def }, DATOS);
             this.perdido = aplicado.perdido;
             this.regalos = aplicado.regalos;

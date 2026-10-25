@@ -6,20 +6,20 @@ import { aplicarCuracion, equipar, motivoNoUsable, quitarObjeto, seAplicaACriatu
 import { calcularEstadisticas } from '../core/estadisticas';
 import { nombreDe } from '../core/criatura';
 import { aprenderMovimiento, destinoConObjeto, evolucionar, evolucionPendiente, expParaNivel, subirNivel } from '../core/progreso';
-import type { CategoriaObjeto, Criatura } from '../core/modelo';
+import type { CategoriaObjeto, Criatura, Movimiento } from '../core/modelo';
 import { NOMBRE_ESTADISTICA, type EstadisticaCombate } from '../core/modelo';
 import { DATOS } from '../data';
 import { INICIALES } from '../data/especies';
 import { CATEGORIAS } from '../data/objetos';
-import { Barra, Boton, filaTipos } from '../ui/componentes';
+import { Barra, Boton, botonFlecha, filaTipos } from '../ui/componentes';
 import { crearCriaturaVisual } from '../ui/criaturaVisual';
 import { conArticulo, describirMovimiento } from '../ui/textos';
-import { iconoObjeto } from '../ui/objetoVisual';
+import { iconoObjeto, iconoUI, type IconoUI } from '../ui/objetoVisual';
 import { construirTablaTipos, textoMultiplicador } from '../ui/tablaTipos';
 import { debilidades } from '../core/tipos';
 import { guardarPartida } from '../ui/sesion';
-import { aclarar, ALTO, ANCHO, COLOR, estiloTexto } from '../ui/tema';
-import { cabecera, colorPedestal, cursor, fondoMenu, iconoMenu, pildora, ventana, type IconoMenu } from '../ui/ventanas';
+import { aclarar, ALTO, ANCHO, COLOR, estiloTexto, oscurecer, textoSobre } from '../ui/tema';
+import { cabecera, colorPedestal, colorTipoDe, fondoMenu, franja, pildora, ventana } from '../ui/ventanas';
 
 /** Alto del mando, abajo del todo. El mapa ocupa el resto. */
 const ALTO_MANDO = 680;
@@ -60,7 +60,7 @@ export class Interfaz extends Phaser.Scene {
   private alAvanzar: (() => void) | null = null;
 
   private capaEleccion?: Phaser.GameObjects.Container;
-  private opciones: { boton: Boton; elegir: () => void }[] = [];
+  private opciones: { marca: Phaser.GameObjects.Graphics; elegir: () => void }[] = [];
   private seleccion = 0;
   private alCancelar: (() => void) | null = null;
 
@@ -99,15 +99,15 @@ export class Interfaz extends Phaser.Scene {
 
   private crearMando(): void {
     this.add.rectangle(0, ALTO_MAPA, ANCHO, ALTO - ALTO_MAPA, COLOR.fondo).setOrigin(0, 0);
-    this.add.rectangle(0, ALTO_MAPA, ANCHO, 8, COLOR.oro).setOrigin(0, 0);
+    this.add.rectangle(0, ALTO_MAPA, ANCHO, 6, COLOR.celeste).setOrigin(0, 0);
 
     // Cruceta: una sola zona circular; la dirección sale del ángulo del dedo.
     const { x, y, radio } = CRUCETA;
-    this.add.circle(x, y, radio, 0x2b211a).setStrokeStyle(6, 0x4a3a2c);
+    this.add.circle(x, y, radio, 0x1f2550).setStrokeStyle(6, 0x2c3470);
     const brazo = 120;
     const grosor = 120;
-    this.add.rectangle(x, y, grosor, brazo * 2 + grosor, 0x4a3a2c).setRounded(18);
-    this.add.rectangle(x, y, brazo * 2 + grosor, grosor, 0x4a3a2c).setRounded(18);
+    this.add.rectangle(x, y, grosor, brazo * 2 + grosor, 0x343d80).setRounded(26);
+    this.add.rectangle(x, y, brazo * 2 + grosor, grosor, 0x343d80).setRounded(26);
     const puntas: Record<Dir, [number, number]> = {
       arriba: [0, -brazo],
       abajo: [0, brazo],
@@ -144,13 +144,13 @@ export class Interfaz extends Phaser.Scene {
     this.input.on('pointerupoutside', soltar);
 
     this.botonRedondo(BOTON_A.x, BOTON_A.y, BOTON_A.radio, COLOR.rojo, 'A', 'Hablar', () => this.pulsarA());
-    this.botonRedondo(BOTON_B.x, BOTON_B.y, BOTON_B.radio, COLOR.bronce, 'B', 'Volver', () => this.pulsarB());
+    this.botonRedondo(BOTON_B.x, BOTON_B.y, BOTON_B.radio, COLOR.azul, 'B', 'Volver', () => this.pulsarB());
     new Boton(this, 880, ALTO_MAPA + 570, { ancho: 260, alto: 100, texto: 'Menú', tamano: 38, alPulsar: () => this.pulsarMenu() });
   }
 
   private dibujarFlecha(g: Phaser.GameObjects.Graphics, x: number, y: number, dir: Dir, activa: boolean): void {
     g.clear();
-    g.fillStyle(activa ? COLOR.oro : COLOR.pergaminoOscuro, 1);
+    g.fillStyle(activa ? COLOR.oro : COLOR.panel, activa ? 1 : 0.85);
     const s = 34;
     const pts: Record<Dir, number[]> = {
       arriba: [x, y - s, x - s, y + s * 0.6, x + s, y + s * 0.6],
@@ -178,9 +178,11 @@ export class Interfaz extends Phaser.Scene {
   }
 
   private botonRedondo(x: number, y: number, r: number, color: number, letra: string, etiqueta: string, accion: () => void): void {
-    const c = this.add.circle(x, y, r, color).setStrokeStyle(6, 0x1d1611).setInteractive({ useHandCursor: true });
-    this.add.text(x, y, letra, estiloTexto(Math.round(r * 0.8), COLOR.pergamino, true)).setOrigin(0.5);
-    this.add.text(x, y + r + 28, etiqueta, estiloTexto(28, COLOR.pergaminoOscuro)).setOrigin(0.5);
+    this.add.circle(x, y + 8, r, oscurecer(color, 0.35));
+    const c = this.add.circle(x, y, r, color).setInteractive({ useHandCursor: true });
+    this.add.circle(x, y - r * 0.35, r * 0.6, 0xffffff, 0.14);
+    this.add.text(x, y, letra, estiloTexto(Math.round(r * 0.8), COLOR.panel, true)).setOrigin(0.5);
+    this.add.text(x, y + r + 30, etiqueta, estiloTexto(28, COLOR.panelSuave, true)).setOrigin(0.5);
     let ultima = -Infinity;
     c.on('pointerdown', () => {
       c.setScale(0.94);
@@ -259,16 +261,16 @@ export class Interfaz extends Phaser.Scene {
     // Tocar cualquier parte del mapa también avanza el texto.
     const zona = this.add.rectangle(0, 0, ANCHO, ALTO_MAPA, 0x000000, 0.001).setOrigin(0, 0).setInteractive();
     zona.on('pointerdown', () => this.alAvanzar?.());
-    const fondo = ventana(this, 24, ALTO_MAPA - 270, ANCHO - 48, 250);
-    this.fondoNombre = this.add.rectangle(48, ALTO_MAPA - 300, 300, 64, COLOR.rojo).setOrigin(0, 0).setRounded(14);
-    this.nombreDialogo = this.add.text(70, ALTO_MAPA - 268, '', estiloTexto(34, COLOR.pergamino, true)).setOrigin(0, 0.5);
-    this.textoDialogo = this.add.text(64, ALTO_MAPA - 238, '', {
-      ...estiloTexto(42, COLOR.tinta),
+    const fondo = ventana(this, 24, ALTO_MAPA - 262, ANCHO - 48, 238);
+    this.fondoNombre = this.add.rectangle(56, ALTO_MAPA - 294, 300, 64, COLOR.rojo).setOrigin(0, 0).setRounded(32);
+    this.nombreDialogo = this.add.text(84, ALTO_MAPA - 262, '', estiloTexto(32, COLOR.panel, true)).setOrigin(0, 0.5);
+    this.textoDialogo = this.add.text(64, ALTO_MAPA - 222, '', {
+      ...estiloTexto(40, COLOR.tinta),
       wordWrap: { width: ANCHO - 140 },
-      lineSpacing: 8,
+      lineSpacing: 10,
     });
-    this.indicador = this.add.text(ANCHO - 70, ALTO_MAPA - 50, '▼', estiloTexto(32, COLOR.rojo)).setOrigin(0.5);
-    this.tweens.add({ targets: this.indicador, alpha: 0.2, duration: 500, yoyo: true, repeat: -1 });
+    this.indicador = this.add.text(ANCHO - 72, ALTO_MAPA - 60, '▼', estiloTexto(30, COLOR.rojo)).setOrigin(0.5);
+    this.tweens.add({ targets: this.indicador, y: ALTO_MAPA - 52, duration: 450, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     c.add([zona, fondo, this.fondoNombre, this.nombreDialogo, this.textoDialogo, this.indicador]);
     c.setVisible(false);
     this.capaDialogo = c;
@@ -280,7 +282,7 @@ export class Interfaz extends Phaser.Scene {
     this.nombreDialogo.setText(quien ?? '');
     this.fondoNombre.setVisible(Boolean(quien));
     this.nombreDialogo.setVisible(Boolean(quien));
-    if (quien) this.fondoNombre.width = this.nombreDialogo.width + 44;
+    if (quien) this.fondoNombre.width = this.nombreDialogo.width + 56;
     this.indicador.setVisible(indicador);
   }
 
@@ -316,20 +318,21 @@ export class Interfaz extends Phaser.Scene {
         this.opciones = [];
         resolve(i);
       };
-      const alto = 110;
-      const ancho = 480;
-      const y0 = ALTO_MAPA - 300 - opciones.length * (alto + 12);
-      c.add(ventana(this, ANCHO - ancho - 44, y0 - 16, ancho + 20, opciones.length * (alto + 12) + 20));
+      const altoFila = 100;
+      const ancho = 460;
+      const alto = opciones.length * altoFila + 28;
+      const x = ANCHO - ancho - 32;
+      const y = ALTO_MAPA - 310 - alto;
+      c.add(ventana(this, x, y, ancho, alto));
       this.opciones = opciones.map((texto, i) => {
-        const boton = new Boton(this, ANCHO - ancho / 2 - 34, y0 + i * (alto + 12) + alto / 2, {
-          ancho,
-          alto,
-          texto,
-          tamano: 38,
-          alPulsar: () => terminar(i),
-        });
-        c.add(boton);
-        return { boton, elegir: () => terminar(i) };
+        const fy = y + 14 + i * altoFila;
+        const marca = franja(this, x + 12, fy + 6, ancho - 24, altoFila - 12);
+        c.add(marca);
+        c.add(this.add.text(x + ancho / 2, fy + altoFila / 2, texto, estiloTexto(38, COLOR.tinta, true)).setOrigin(0.5));
+        const zona = this.add.rectangle(x + ancho / 2, fy + altoFila / 2, ancho, altoFila, 0xffffff, 0.001).setInteractive({ useHandCursor: true });
+        zona.on('pointerup', () => terminar(i));
+        c.add(zona);
+        return { marca, elegir: () => terminar(i) };
       });
       this.seleccion = 0;
       this.marcarSeleccion();
@@ -344,17 +347,20 @@ export class Interfaz extends Phaser.Scene {
   }
 
   private marcarSeleccion(): void {
-    this.opciones.forEach((o, i) => o.boton.setScale(i === this.seleccion ? 1.04 : 1).setAlpha(i === this.seleccion ? 1 : 0.85));
+    this.opciones.forEach((o, i) => o.marca.setVisible(i === this.seleccion));
   }
 
   /** Aviso breve arriba del mapa que no detiene el juego. */
   aviso(texto: string): void {
     this.avisos?.destroy();
-    const t = this.add.text(0, 0, texto, estiloTexto(36, COLOR.pergamino, true)).setOrigin(0, 0.5);
-    const fondo = this.add.rectangle(-24, 0, t.width + 48, 76, COLOR.fondo, 0.85).setOrigin(0, 0.5).setRounded(16);
-    const c = this.add.container(40, 70, [fondo, t]).setDepth(40).setAlpha(0);
+    const t = this.add.text(0, 0, texto, { ...estiloTexto(34, COLOR.panel, true), wordWrap: { width: ANCHO - 160 } }).setOrigin(0.5);
+    const ancho = t.width + 80;
+    const alto = t.height + 36;
+    const fondo = this.add.graphics();
+    fondo.fillStyle(COLOR.tinta, 0.92).fillRoundedRect(-ancho / 2, -alto / 2, ancho, alto, Math.min(alto / 2, 40));
+    const c = this.add.container(ANCHO / 2, 90, [fondo, t]).setDepth(40).setAlpha(0);
     this.avisos = c;
-    this.tweens.add({ targets: c, alpha: 1, duration: 200, yoyo: true, hold: 1500, onComplete: () => c.destroy() });
+    this.tweens.add({ targets: c, alpha: 1, y: 110, duration: 200, yoyo: true, hold: 1600, onComplete: () => c.destroy() });
   }
 
   /** Pantalla negra con textos de narración, uno tras otro. */
@@ -372,24 +378,30 @@ export class Interfaz extends Phaser.Scene {
     try {
       for (;;) {
         const especie = await new Promise<string>((resolve) => {
-          const c = this.abrirCapa('Elige compañera');
+          const c = this.abrirCapa('Elige compañera', { color: COLOR.rojo });
           const ancho = 320;
           INICIALES.forEach((id, i) => {
             const e = DATOS.especies[id];
-            const x = 40 + ancho / 2 + i * (ancho + 20);
-            const tarjeta = this.add.rectangle(x, 600, ancho, 700, COLOR.pergamino).setRounded(24).setStrokeStyle(6, COLOR.tinta);
-            tarjeta.setInteractive({ useHandCursor: true }).on('pointerup', () => resolve(id));
-            c.add(tarjeta);
-            c.add(crearCriaturaVisual(this, id, x, 400, 230, true));
-            c.add(this.add.text(x, 570, e.nombre, { ...estiloTexto(38, COLOR.tinta, true), align: 'center', wordWrap: { width: ancho - 30 } }).setOrigin(0.5));
+            const x = 24 + i * (ancho + 24);
+            const cx = x + ancho / 2;
+            c.add(ventana(this, x, 170, ancho, 760, { radio: 36 }));
+            const circulo = this.add.graphics();
+            circulo.fillStyle(colorPedestal(id), 1).fillCircle(cx, 360, 130);
+            c.add(circulo);
+            c.add(crearCriaturaVisual(this, id, cx, 350, 230, true));
+            c.add(this.add.text(cx, 540, e.nombre, { ...estiloTexto(40, COLOR.tinta, true), align: 'center' }).setOrigin(0.5));
             const tipos = this.add.container(0, 0);
-            filaTipos(this, tipos, x - 60, 650, e.tipos, 28);
+            const anchoTipos = filaTipos(this, tipos, 0, 600, e.tipos, 26);
+            tipos.x = cx - anchoTipos / 2;
             c.add(tipos);
             c.add(
               this.add
-                .text(x, 695, e.descripcion, { ...estiloTexto(22, COLOR.tintaSuave), align: 'center', wordWrap: { width: ancho - 36 } })
+                .text(cx, 650, e.descripcion, { ...estiloTexto(23, COLOR.tintaSuave), align: 'center', wordWrap: { width: ancho - 40 }, lineSpacing: 4 })
                 .setOrigin(0.5, 0),
             );
+            const zona = this.add.rectangle(cx, 550, ancho, 760, 0xffffff, 0.001).setInteractive({ useHandCursor: true });
+            zona.on('pointerup', () => resolve(id));
+            c.add(zona);
           });
         });
         this.cerrarCapa();
@@ -406,33 +418,61 @@ export class Interfaz extends Phaser.Scene {
 
   /**
    * Abre una pantalla de menú encima del mapa. Con `superpuesta`, el mapa se sigue viendo
-   * oscurecido detrás (el menú de pausa); si no, la tapa un fondo con rayas y una cabecera.
+   * oscurecido detrás (el menú de pausa); si no, la tapa un fondo de color con rayas y una
+   * pestaña de título.
    */
-  private abrirCapa(titulo: string, op: { superpuesta?: boolean } = {}): Phaser.GameObjects.Container {
-    this.capaMenu?.destroy();
+  private abrirCapa(titulo: string, op: { superpuesta?: boolean; icono?: IconoUI; color?: number } = {}): Phaser.GameObjects.Container {
+    this.destruirCapa();
     this.nav = null;
     const c = this.add.container(0, 0).setDepth(25);
     if (op.superpuesta) {
-      c.add(this.add.rectangle(0, 0, ANCHO, ALTO_MAPA, 0x000000, 0.45).setOrigin(0, 0).setInteractive());
+      c.add(this.add.rectangle(0, 0, ANCHO, ALTO_MAPA, 0x0b0e24, 0.6).setOrigin(0, 0).setInteractive());
     } else {
       c.add(this.add.rectangle(0, 0, ANCHO, ALTO_MAPA, COLOR.fondo).setOrigin(0, 0).setInteractive());
-      c.add(fondoMenu(this, ALTO_MAPA));
-      cabecera(this, c, titulo);
+      fondoMenu(this, c, ALTO_MAPA, op.color ?? COLOR.azul);
+      cabecera(this, c, titulo, op.icono, oscurecer(op.color ?? COLOR.azul, 0.25));
     }
     this.capaMenu = c;
     return c;
   }
 
-  private cerrarCapa(): void {
-    this.capaMenu?.destroy();
+  /**
+   * Quita la pantalla de menú y sus animaciones sin fin (rayas del fondo, criaturas que se
+   * mecen): si no, seguirían vivas y se irían acumulando al navegar por los menús.
+   */
+  private destruirCapa(): void {
+    if (!this.capaMenu) return;
+    const todos: Phaser.GameObjects.GameObject[] = [];
+    const recorrer = (lista: Phaser.GameObjects.GameObject[]) =>
+      lista.forEach((o) => {
+        todos.push(o);
+        if (o instanceof Phaser.GameObjects.Container) recorrer(o.list);
+      });
+    recorrer(this.capaMenu.list);
+    this.tweens.killTweensOf(todos);
+    this.capaMenu.destroy();
     this.capaMenu = undefined;
+  }
+
+  private cerrarCapa(): void {
+    this.destruirCapa();
     this.alAtras = null;
     this.nav = null;
   }
 
+  /** Barra de abajo con un texto de ayuda, en blanco sobre azul noche. */
+  private barraAyuda(c: Phaser.GameObjects.Container, texto: string, ancho = ANCHO - 48): Phaser.GameObjects.Text {
+    const y = ALTO_MAPA - 130;
+    c.add(ventana(this, 24, y, ancho, 106, { color: COLOR.tinta, opacidad: 0.9, borde: null, radio: 53 }));
+    const t = this.add.text(64, y + 53, texto, { ...estiloTexto(30, COLOR.panel), wordWrap: { width: ancho - 80 } }).setOrigin(0, 0.5);
+    c.add(t);
+    return t;
+  }
+
   /**
-   * Menú de pausa: equipo, Bestiario, mochila, tipos y guardar. Devuelve `'ovillo'` si se ha
-   * usado una Cuerda huida, para que el mapa lleve al jugador al mesón.
+   * Menú de pausa, como en los juegos actuales: el equipo a la izquierda, las opciones con
+   * iconos a la derecha y, arriba, tu tarjeta. Devuelve `'ovillo'` si se ha usado una Cuerda
+   * huida, para que el mapa lleve al jugador al mesón.
    */
   menu(p: Partida, op: { ovilloPermitido: boolean } = { ovilloPermitido: false }): Promise<'ovillo' | undefined> {
     this.ovilloPermitido = op.ovilloPermitido;
@@ -441,136 +481,167 @@ export class Interfaz extends Phaser.Scene {
         this.cerrarCapa();
         resolve('ovillo');
       };
-      const principal = (inicial = 0) => {
+      const principal = (inicio: { col: number; fila: number } = { col: 1, fila: 0 }) => {
         const c = this.abrirCapa(p.nombre, { superpuesta: true });
         this.alAtras = () => {
           this.cerrarCapa();
           resolve(undefined);
         };
-        this.tarjetaJugador(c, p);
-        const volverAqui = (i: number) => () => principal(i);
-        const opciones: { texto: string; icono: IconoMenu; ayuda: string; activo: boolean; accion: (i: number) => void }[] = [
+        this.barraJugador(c, p);
+        const volverA = (col: number, fila: number) => () => principal({ col, fila });
+        const opciones: { texto: string; icono: IconoUI; color: number; ayuda: string; activo: boolean; accion: () => void }[] = [
           {
             texto: 'Equipo',
             icono: 'equipo',
+            color: COLOR.verde,
             ayuda: 'Mira cómo están tus criaturas, cámbialas de orden y quítales lo que llevan.',
             activo: p.equipo.length > 0,
-            accion: (i) => this.pantallaEquipo(p, volverAqui(i)),
+            accion: () => this.pantallaEquipo(p, volverA(1, 0)),
           },
           {
             texto: 'Bestiario',
             icono: 'bestiario',
+            color: COLOR.rojo,
             ayuda: 'Las criaturas que has visto y con las que has sellado un pacto.',
             activo: true,
-            accion: (i) => this.pantallaBestiario(p, volverAqui(i)),
+            accion: () => this.pantallaBestiario(p, volverA(1, 1)),
           },
-          { texto: 'Mochila', icono: 'mochila', ayuda: 'Tus objetos, ordenados por bolsillos.', activo: true, accion: (i) => this.pantallaMochila(p, volverAqui(i)) },
-          { texto: 'Tipos', icono: 'tipos', ayuda: 'Qué tipo es fuerte o débil contra cuál.', activo: true, accion: (i) => this.pantallaTipos(volverAqui(i)) },
+          { texto: 'Mochila', icono: 'mochila', color: COLOR.bronce, ayuda: 'Tus objetos, ordenados por bolsillos.', activo: true, accion: () => this.pantallaMochila(p, volverA(1, 2)) },
+          { texto: 'Tipos', icono: 'tipos', color: COLOR.morado, ayuda: 'Qué tipo es fuerte o débil contra cuál.', activo: true, accion: () => this.pantallaTipos(volverA(1, 3)) },
           {
             texto: 'Guardar',
             icono: 'guardar',
+            color: COLOR.azul,
             ayuda: 'Guarda la partida en este dispositivo. También se guarda sola al cambiar de zona.',
             activo: true,
             accion: () => this.aviso(guardarPartida(p) ? 'Partida guardada' : 'No se ha podido guardar'),
           },
-          { texto: 'Cerrar', icono: 'cerrar', ayuda: 'Vuelve al camino.', activo: true, accion: () => this.alAtras?.() },
+          { texto: 'Cerrar', icono: 'cerrar', color: COLOR.tintaSuave, ayuda: 'Vuelve al camino.', activo: true, accion: () => this.alAtras?.() },
         ];
+        const y0 = 186;
+        const paso = 128;
+        const alto = 112;
 
-        // Lista de opciones a la derecha, como en los juegos del género.
-        const x0 = 590;
-        const ancho = ANCHO - x0 - 24;
-        const altoFila = 116;
-        const y0 = 24;
-        c.add(ventana(this, x0, y0, ancho, opciones.length * altoFila + 44));
-        const marcas: Phaser.GameObjects.Graphics[] = [];
-        opciones.forEach((o, i) => {
-          const y = y0 + 22 + i * altoFila;
-          const marca = this.add.graphics();
-          marca.fillStyle(aclarar(COLOR.oro, 0.5), 1);
-          marca.fillRoundedRect(x0 + 18, y + 6, ancho - 36, altoFila - 12, 18);
-          marca.setVisible(false);
-          marcas.push(marca);
+        // Derecha: las opciones, en píldoras con su icono.
+        const xO = 548;
+        const anchoO = ANCHO - xO - 24;
+        const marcasO = opciones.map((o, i) => {
+          const y = y0 + i * paso;
+          const marca = franja(this, xO - 8, y - 8, anchoO + 16, alto + 16);
           c.add(marca);
-          const icono = iconoMenu(this, o.icono, x0 + 104, y + altoFila / 2, 68);
-          const texto = this.add.text(x0 + 160, y + altoFila / 2, o.texto, estiloTexto(44, COLOR.tinta, true)).setOrigin(0, 0.5);
-          if (!o.activo) {
-            icono.setAlpha(0.35);
-            texto.setAlpha(0.35);
-          }
+          c.add(ventana(this, xO, y, anchoO, alto, { radio: alto / 2 }));
+          const circulo = this.add.graphics();
+          circulo.fillStyle(o.color, 1).fillCircle(xO + 58, y + alto / 2, 44);
+          c.add(circulo);
+          const icono = iconoUI(this, o.icono, xO + 58, y + alto / 2, 76);
+          const texto = this.add.text(xO + 122, y + alto / 2, o.texto, estiloTexto(40, COLOR.tinta, true)).setOrigin(0, 0.5);
+          if (!o.activo) [circulo, icono, texto].forEach((g) => g.setAlpha(0.35));
           c.add([icono, texto]);
-          const zona = this.add.rectangle(x0 + ancho / 2, y + altoFila / 2, ancho - 20, altoFila, 0xffffff, 0.001).setInteractive({ useHandCursor: true });
-          zona.on('pointerup', () => elegir(i));
+          const zona = this.add.rectangle(xO + anchoO / 2, y + alto / 2, anchoO, alto, 0xffffff, 0.001).setInteractive({ useHandCursor: true });
+          zona.on('pointerup', () => elegir(1, i));
           c.add(zona);
+          return marca;
         });
-        const flecha = cursor(this, x0 + 46, 0, 40);
-        c.add(flecha);
 
-        // Ventana de ayuda abajo: qué hace la opción marcada.
-        const altoAyuda = 170;
-        c.add(ventana(this, 24, ALTO_MAPA - altoAyuda - 24, ANCHO - 48, altoAyuda));
-        const ayuda = this.add.text(64, ALTO_MAPA - altoAyuda - 24 + altoAyuda / 2, '', {
-          ...estiloTexto(34, COLOR.tinta),
-          wordWrap: { width: ANCHO - 128 },
-          lineSpacing: 6,
-        });
-        ayuda.setOrigin(0, 0.5);
-        c.add(ayuda);
+        // Izquierda: el equipo, cada criatura en su píldora.
+        const xE = 24;
+        const anchoE = 500;
+        const marcasE: Phaser.GameObjects.Graphics[] = [];
+        for (let i = 0; i < MAX_EQUIPO; i++) {
+          const y = y0 + i * paso;
+          const cr = p.equipo[i];
+          if (!cr) {
+            c.add(ventana(this, xE, y, anchoE, alto, { color: COLOR.panel, opacidad: 0.12, borde: null, sombra: false, radio: alto / 2 }));
+            continue;
+          }
+          const marca = franja(this, xE - 8, y - 8, anchoE + 16, alto + 16, COLOR.celeste);
+          marcasE.push(marca);
+          c.add(marca);
+          const max = calcularEstadisticas(cr, DATOS).vida;
+          c.add(ventana(this, xE, y, anchoE, alto, { radio: alto / 2, color: cr.vida > 0 ? COLOR.panel : 0xffe1e5 }));
+          const circulo = this.add.graphics();
+          circulo.fillStyle(colorPedestal(cr.especie), 1).fillCircle(xE + 58, y + alto / 2, 46);
+          c.add(circulo);
+          const figura = crearCriaturaVisual(this, cr.especie, xE + 58, y + alto / 2 - 2, 92, true);
+          if (cr.vida <= 0) figura.setAlpha(0.5);
+          c.add(figura);
+          c.add(this.add.text(xE + 120, y + 34, nombreDe(cr, DATOS), estiloTexto(30, COLOR.tinta, true)).setOrigin(0, 0.5));
+          c.add(this.add.text(xE + anchoE - 28, y + 34, `Nv ${cr.nivel}`, estiloTexto(26, COLOR.tintaSuave, true)).setOrigin(1, 0.5));
+          const barra = new Barra(this, xE + 120, y + 78, anchoE - 150, 18, true);
+          void barra.setFraccion(cr.vida / max, false);
+          c.add(barra);
+          const zona = this.add.rectangle(xE + anchoE / 2, y + alto / 2, anchoE, alto, 0xffffff, 0.001).setInteractive({ useHandCursor: true });
+          zona.on('pointerup', () => elegir(0, i));
+          c.add(zona);
+        }
 
-        let sel = inicial;
-        const marcar = (i: number) => {
-          sel = i;
-          marcas.forEach((m, j) => m.setVisible(j === i));
-          flecha.y = y0 + 22 + i * altoFila + altoFila / 2;
-          ayuda.setText(opciones[i].ayuda);
+        const ayuda = this.barraAyuda(c, '');
+        let col = inicio.col;
+        let fila = inicio.fila;
+        const marcar = (nc: number, nf: number) => {
+          col = nc;
+          fila = nf;
+          marcasO.forEach((m, j) => m.setVisible(col === 1 && j === fila));
+          marcasE.forEach((m, j) => m.setVisible(col === 0 && j === fila));
+          ayuda.setText(col === 1 ? opciones[fila].ayuda : `${nombreDe(p.equipo[fila], DATOS)}: pulsa para ver su ficha, moverla o quitarle el objeto.`);
         };
-        const elegir = (i: number) => {
-          marcar(i);
-          if (opciones[i].activo) opciones[i].accion(i);
+        const elegir = (nc: number, nf: number) => {
+          marcar(nc, nf);
+          if (nc === 1) {
+            if (opciones[nf].activo) opciones[nf].accion();
+          } else {
+            const volver = volverA(0, nf);
+            this.pantallaEquipo(p, volver, nf);
+            this.menuRanura(p, nf, volver);
+          }
         };
-        marcar(sel);
+        if (col === 0 && !p.equipo[fila]) col = 1;
+        marcar(col, col === 1 ? Math.min(fila, opciones.length - 1) : fila);
         this.nav = {
           mover: (dir) => {
-            if (dir === 'arriba' || dir === 'abajo') marcar((sel + (dir === 'arriba' ? -1 : 1) + opciones.length) % opciones.length);
+            if (dir === 'izquierda' && p.equipo.length > 0) marcar(0, Math.min(fila, p.equipo.length - 1));
+            else if (dir === 'derecha') marcar(1, Math.min(fila, opciones.length - 1));
+            else if (dir === 'arriba' || dir === 'abajo') {
+              const n = col === 1 ? opciones.length : p.equipo.length;
+              marcar(col, (fila + (dir === 'arriba' ? -1 : 1) + n) % n);
+            }
           },
-          aceptar: () => elegir(sel),
+          aceptar: () => elegir(col, fila),
         };
       };
       principal();
     });
   }
 
-  /** Tarjeta del jugador en el menú de pausa: nombre, dinero, Bestiario y blasones. */
-  private tarjetaJugador(c: Phaser.GameObjects.Container, p: Partida): void {
-    const x = 24;
+  /** Tu tarjeta, arriba del menú de pausa: nombre, dinero y blasones. */
+  private barraJugador(c: Phaser.GameObjects.Container, p: Partida): void {
     const y = 24;
-    const ancho = 540;
-    c.add(ventana(this, x, y, ancho, 330, { color: aclarar(COLOR.pergaminoOscuro, 0.2) }));
-    c.add(this.add.text(x + 40, y + 52, p.nombre, estiloTexto(48, COLOR.tinta, true)).setOrigin(0, 0.5));
-    const moneda = this.add.graphics();
-    moneda.fillStyle(COLOR.oro, 1).lineStyle(3, COLOR.tinta, 1);
-    moneda.fillCircle(x + 56, y + 122, 16).strokeCircle(x + 56, y + 122, 16);
-    c.add(moneda);
-    c.add(this.add.text(x + 86, y + 122, `${p.dinero} ${MONEDA}`, estiloTexto(32, COLOR.tinta)).setOrigin(0, 0.5));
-    c.add(this.add.text(x + 40, y + 176, `Bestiario: ${p.capturados.length} pactos, ${p.vistos.length} vistas`, estiloTexto(28, COLOR.tintaSuave)).setOrigin(0, 0.5));
-    c.add(this.add.text(x + 40, y + 228, 'Blasones', estiloTexto(26, COLOR.tintaSuave, true)).setOrigin(0, 0.5));
-    // Ocho huecos, uno por gimnasio: los ganados, en oro.
+    const alto = 136;
+    c.add(ventana(this, 24, y, ANCHO - 48, alto, { radio: alto / 2 }));
+    c.add(iconoUI(this, 'tarjeta', 112, y + alto / 2, 104));
+    c.add(this.add.text(186, y + 46, p.nombre, estiloTexto(44, COLOR.tinta, true)).setOrigin(0, 0.5));
+    c.add(iconoUI(this, 'dinero', 206, y + 100, 44));
+    c.add(this.add.text(238, y + 100, `${p.dinero} ${MONEDA}`, estiloTexto(28, COLOR.tintaSuave, true)).setOrigin(0, 0.5));
+    // Ocho huecos de blasones, uno por gimnasio: los ganados, en oro.
+    const x0 = ANCHO - 70 - 7 * 46;
+    c.add(this.add.text(x0 - 22, y + 44, 'Blasones', estiloTexto(24, COLOR.tintaSuave, true)).setOrigin(0, 0.5));
     const g = this.add.graphics();
     for (let i = 0; i < 8; i++) {
-      const cx = x + 62 + i * 58;
-      const cy = y + 280;
+      const cx = x0 + i * 46;
+      const cy = y + 96;
       const ganado = i < p.blasones.length;
-      g.fillStyle(ganado ? COLOR.oro : aclarar(COLOR.tintaSuave, 0.55), 1);
-      g.lineStyle(3, COLOR.tinta, ganado ? 1 : 0.4);
-      const pts = [new Phaser.Math.Vector2(cx, cy - 22), new Phaser.Math.Vector2(cx + 20, cy), new Phaser.Math.Vector2(cx, cy + 22), new Phaser.Math.Vector2(cx - 20, cy)];
+      g.fillStyle(ganado ? COLOR.oro : COLOR.panelSuave, 1);
+      g.lineStyle(3, ganado ? oscurecer(COLOR.oro, 0.3) : COLOR.borde, 1);
+      const pts = [new Phaser.Math.Vector2(cx, cy - 19), new Phaser.Math.Vector2(cx + 17, cy), new Phaser.Math.Vector2(cx, cy + 19), new Phaser.Math.Vector2(cx - 17, cy)];
       g.fillPoints(pts, true);
       g.strokePoints(pts, true);
     }
     c.add(g);
   }
 
-  private botonVolver(c: Phaser.GameObjects.Container, volver: () => void): void {
+  private botonVolver(c: Phaser.GameObjects.Container, volver: () => void, x = ANCHO / 2): void {
     this.alAtras = volver;
-    c.add(new Boton(this, ANCHO / 2, ALTO_MAPA - 80, { ancho: 400, alto: 110, texto: 'Volver', alPulsar: volver }));
+    c.add(new Boton(this, x, ALTO_MAPA - 80, { ancho: 360, alto: 112, texto: 'Volver', tamano: 38, icono: { ui: 'cerrar', tam: 56 }, alPulsar: volver }));
   }
 
   /**
@@ -579,21 +650,20 @@ export class Interfaz extends Phaser.Scene {
    * está cambiando de sitio.
    */
   private pantallaEquipo(p: Partida, volver: () => void, sel = 0, moviendo: number | null = null): void {
-    const c = this.abrirCapa('Equipo');
+    const c = this.abrirCapa('Equipo', { icono: 'equipo', color: COLOR.verde });
     const ancho = 504;
-    const alto = 268;
-    const pos = (i: number) => ({ x: 24 + (i % 2) * (ancho + 24), y: 136 + Math.floor(i / 2) * (alto + 22) });
+    const alto = 262;
     const marcos: Phaser.GameObjects.Graphics[] = [];
     for (let i = 0; i < MAX_EQUIPO; i++) {
-      const { x, y } = pos(i);
+      const x = 24 + (i % 2) * (ancho + 24);
+      const y = 140 + Math.floor(i / 2) * (alto + 24);
       const cr = p.equipo[i];
       if (!cr) {
-        c.add(ventana(this, x, y, ancho, alto, { color: 0x3a2e24, filete: 0x5a4a3a, sombra: false, brillo: false }));
+        c.add(ventana(this, x, y, ancho, alto, { color: COLOR.panel, opacidad: 0.12, borde: null, sombra: false }));
         continue;
       }
       const marco = this.add.graphics();
-      marco.lineStyle(10, moviendo === i ? COLOR.rojo : COLOR.oro, 1);
-      marco.strokeRoundedRect(x - 8, y - 8, ancho + 16, alto + 16, 32);
+      marco.lineStyle(10, moviendo === i ? COLOR.rojo : COLOR.celeste, 1).strokeRoundedRect(x - 8, y - 8, ancho + 16, alto + 16, 38);
       marco.setVisible(false);
       marcos.push(marco);
       c.add(marco);
@@ -603,20 +673,18 @@ export class Interfaz extends Phaser.Scene {
       c.add(zona);
     }
 
-    // Ventana de mensaje y botón de salir, abajo.
-    const yMensaje = ALTO_MAPA - 190;
-    c.add(ventana(this, 24, yMensaje, ANCHO - 340, 166));
     const mensaje = moviendo !== null ? `¿Con quién cambias a ${nombreDe(p.equipo[moviendo], DATOS)}?` : 'Elige una criatura.';
-    c.add(this.add.text(64, yMensaje + 83, mensaje, { ...estiloTexto(36, COLOR.tinta), wordWrap: { width: ANCHO - 430 } }).setOrigin(0, 0.5));
+    this.barraAyuda(c, mensaje, ANCHO - 340);
     const cancelar = moviendo !== null ? () => this.pantallaEquipo(p, volver, moviendo) : volver;
     this.alAtras = cancelar;
     c.add(
-      new Boton(this, ANCHO - 162, yMensaje + 83, {
-        ancho: 270,
-        alto: 140,
+      new Boton(this, ANCHO - 158, ALTO_MAPA - 77, {
+        ancho: 268,
+        alto: 112,
         texto: moviendo !== null ? 'Cancelar' : 'Salir',
-        tamano: 38,
-        color: COLOR.bronce,
+        tamano: 34,
+        color: COLOR.rojo,
+        icono: { ui: 'cerrar', tam: 54 },
         alPulsar: cancelar,
       }),
     );
@@ -638,74 +706,77 @@ export class Interfaz extends Phaser.Scene {
     marcar(actual);
     this.nav = {
       mover: (dir) => {
-        const paso = { izquierda: -1, derecha: 1, arriba: -2, abajo: 2 }[dir];
-        const destino = actual + paso;
+        const destino = actual + { izquierda: -1, derecha: 1, arriba: -2, abajo: 2 }[dir];
         if (destino >= 0 && destino < n) marcar(destino);
       },
       aceptar: () => elegir(actual),
     };
   }
 
-  /** Lo que se puede hacer con una criatura del equipo: una ventanita sobre la pantalla. */
-  private menuRanura(p: Partida, i: number, volver: () => void): void {
-    const cr = p.equipo[i];
-    const opciones: [string, () => void][] = [['Ficha', () => this.pantallaFicha(p, i, () => this.pantallaEquipo(p, volver, i))]];
-    if (p.equipo.length > 1) opciones.push(['Mover', () => this.pantallaEquipo(p, volver, i, i)]);
-    if (cr.objeto) {
-      opciones.push([
-        'Quitar objeto',
-        () => {
-          const nombre = DATOS.objetos[cr.objeto!]?.nombre;
-          quitarObjeto(p, cr);
-          this.aviso(`${nombre} vuelve a la mochila`);
-          this.pantallaEquipo(p, volver, i);
-        },
-      ]);
-    }
-    opciones.push(['Cancelar', () => this.pantallaEquipo(p, volver, i)]);
-    const ancho = 420;
-    const altoFila = 96;
-    const alto = opciones.length * altoFila + 40;
-    const x = ANCHO - ancho - 24;
-    const y = ALTO_MAPA - 210 - alto;
+  /** Ventanita de opciones sobre una pantalla: filas con icono, la marcada en color. */
+  private submenu(titulo: string, opciones: { texto: string; icono: IconoUI; accion: () => void }[], alCancelar: () => void): void {
+    const ancho = 470;
+    const altoFila = 100;
+    const alto = opciones.length * altoFila + 28;
+    const x = ANCHO - ancho - 32;
+    const y = ALTO_MAPA - 170 - alto;
     const sub = this.add.container(0, 0);
-    sub.add(this.add.rectangle(0, 0, ANCHO, ALTO_MAPA, 0x000000, 0.35).setOrigin(0, 0).setInteractive());
+    sub.add(this.add.rectangle(0, 0, ANCHO, ALTO_MAPA, 0x0b0e24, 0.45).setOrigin(0, 0).setInteractive());
+    sub.add(pildora(this, x, y - 44, titulo, COLOR.tinta, 30));
     sub.add(ventana(this, x, y, ancho, alto));
-    const titulo = this.add.text(x + 24, y - 36, nombreDe(cr, DATOS), estiloTexto(36, COLOR.pergamino, true)).setOrigin(0, 0.5);
-    titulo.setShadow(0, 3, '#000000', 0, false, true);
-    sub.add(titulo);
-    const marcas = opciones.map(([texto, accion], j) => {
-      const fy = y + 20 + j * altoFila;
-      const marca = this.add.graphics();
-      marca.fillStyle(aclarar(COLOR.oro, 0.5), 1).fillRoundedRect(x + 16, fy + 6, ancho - 32, altoFila - 12, 16);
+    const marcas = opciones.map((o, j) => {
+      const fy = y + 14 + j * altoFila;
+      const marca = franja(this, x + 12, fy + 6, ancho - 24, altoFila - 12);
       sub.add(marca);
-      sub.add(this.add.text(x + 80, fy + altoFila / 2, texto, estiloTexto(38, COLOR.tinta, true)).setOrigin(0, 0.5));
+      sub.add(iconoUI(this, o.icono, x + 66, fy + altoFila / 2, 64));
+      sub.add(this.add.text(x + 118, fy + altoFila / 2, o.texto, estiloTexto(36, COLOR.tinta, true)).setOrigin(0, 0.5));
       const zona = this.add.rectangle(x + ancho / 2, fy + altoFila / 2, ancho - 20, altoFila, 0xffffff, 0.001).setInteractive({ useHandCursor: true });
-      zona.on('pointerup', accion);
+      zona.on('pointerup', o.accion);
       sub.add(zona);
       return marca;
     });
-    const flecha = cursor(this, x + 46, 0, 34);
-    sub.add(flecha);
     this.capaMenu!.add(sub);
     let actual = 0;
     const marcar = (j: number) => {
       actual = j;
       marcas.forEach((m, k) => m.setVisible(k === j));
-      flecha.y = y + 20 + j * altoFila + altoFila / 2;
     };
     marcar(0);
-    this.alAtras = () => this.pantallaEquipo(p, volver, i);
+    this.alAtras = alCancelar;
     this.nav = {
       mover: (dir) => {
         if (dir === 'arriba' || dir === 'abajo') marcar((actual + (dir === 'arriba' ? -1 : 1) + opciones.length) % opciones.length);
       },
-      aceptar: () => opciones[actual][1](),
+      aceptar: () => opciones[actual].accion(),
     };
   }
 
+  /** Lo que se puede hacer con una criatura del equipo. */
+  private menuRanura(p: Partida, i: number, volver: () => void): void {
+    const cr = p.equipo[i];
+    const volverAqui = () => this.pantallaEquipo(p, volver, i);
+    const opciones: { texto: string; icono: IconoUI; accion: () => void }[] = [
+      { texto: 'Ficha', icono: 'tarjeta', accion: () => this.pantallaFicha(p, i, volverAqui) },
+    ];
+    if (p.equipo.length > 1) opciones.push({ texto: 'Mover', icono: 'equipo', accion: () => this.pantallaEquipo(p, volver, i, i) });
+    if (cr.objeto) {
+      opciones.push({
+        texto: 'Quitar objeto',
+        icono: 'mochila',
+        accion: () => {
+          const nombre = DATOS.objetos[cr.objeto!]?.nombre;
+          quitarObjeto(p, cr);
+          this.aviso(`${nombre} vuelve a la mochila`);
+          volverAqui();
+        },
+      });
+    }
+    opciones.push({ texto: 'Cancelar', icono: 'cerrar', accion: volverAqui });
+    this.submenu(nombreDe(cr, DATOS), opciones, volverAqui);
+  }
+
   /**
-   * Hueco de una criatura: pedestal del color de su tipo, nombre, nivel, tipos, estado, objeto
+   * Tarjeta de una criatura: círculo del color de su tipo, nombre, nivel, tipos, estado, objeto
    * y barra de Vida. Lo usan el equipo y la elección de criatura de la mochila.
    */
   private ranuraCriatura(
@@ -719,91 +790,96 @@ export class Interfaz extends Phaser.Scene {
   ): void {
     const max = calcularEstadisticas(cr, DATOS).vida;
     const debilitada = cr.vida <= 0;
-    const color = debilitada ? aclarar(COLOR.rojo, 0.62) : op.moviendo ? aclarar(COLOR.rojo, 0.75) : op.primera ? aclarar(COLOR.oro, 0.62) : COLOR.pergamino;
-    c.add(ventana(this, x, y, ancho, alto, { color }));
-    const px = x + 112;
-    const py = y + alto / 2 - 8;
-    const pedestal = this.add.graphics();
-    pedestal.fillStyle(colorPedestal(cr.especie), 1).fillCircle(px, py, 86);
-    pedestal.lineStyle(4, COLOR.tinta, 0.6).strokeCircle(px, py, 86);
-    pedestal.fillStyle(0x000000, 0.15).fillEllipse(px, py + 56, 120, 26);
-    c.add(pedestal);
-    const figura = crearCriaturaVisual(this, cr.especie, px, py - 4, 160, true);
-    if (debilitada) figura.setAlpha(0.55);
+    c.add(ventana(this, x, y, ancho, alto, { color: debilitada ? 0xffe1e5 : COLOR.panel, borde: op.primera ? COLOR.oro : op.moviendo ? COLOR.rojo : undefined, radio: 34 }));
+    if (op.primera) {
+      const g = this.add.graphics();
+      g.lineStyle(6, COLOR.oro, 1).strokeRoundedRect(x, y, ancho, alto, 34);
+      c.add(g);
+      c.add(pildora(this, x + ancho - 150, y + 2, 'Primera', COLOR.oro, 18, COLOR.tinta));
+    }
+    const px = x + 108;
+    const py = y + alto / 2;
+    const circulo = this.add.graphics();
+    circulo.fillStyle(colorPedestal(cr.especie), 1).fillCircle(px, py, 86);
+    circulo.fillStyle(0xffffff, 0.35).fillCircle(px, py, 66);
+    c.add(circulo);
+    const figura = crearCriaturaVisual(this, cr.especie, px, py - 6, 158, true);
+    if (debilitada) figura.setAlpha(0.5);
     else this.tweens.add({ targets: figura, y: figura.y - 6, duration: 700, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     c.add(figura);
     if (cr.objeto) {
       const fondo = this.add.graphics();
-      fondo.fillStyle(COLOR.pergamino, 1).fillCircle(px + 70, py + 64, 26);
-      fondo.lineStyle(3, COLOR.tinta, 1).strokeCircle(px + 70, py + 64, 26);
+      fondo.fillStyle(COLOR.panel, 1).fillCircle(px + 64, py + 64, 30);
+      fondo.lineStyle(3, COLOR.borde, 1).strokeCircle(px + 64, py + 64, 30);
       c.add(fondo);
-      c.add(iconoObjeto(this, px + 70, py + 64, cr.objeto, 38));
+      c.add(iconoObjeto(this, px + 64, py + 64, cr.objeto, 46));
     }
-    const tx = x + 222;
-    c.add(this.add.text(tx, y + 44, nombreDe(cr, DATOS), estiloTexto(34, COLOR.tinta, true)).setOrigin(0, 0.5));
-    c.add(this.add.text(tx, y + 92, `Nv ${cr.nivel}`, estiloTexto(30, COLOR.tintaSuave, true)).setOrigin(0, 0.5));
-    if (debilitada) c.add(pildora(this, tx + 110, y + 92, 'Debilitada', COLOR.rojo, 20));
+    const tx = x + 216;
+    c.add(this.add.text(tx, y + 50, nombreDe(cr, DATOS), estiloTexto(34, COLOR.tinta, true)).setOrigin(0, 0.5));
+    c.add(pildora(this, tx, y + 100, `Nv ${cr.nivel}`, COLOR.tinta, 22));
+    if (debilitada) c.add(pildora(this, tx + 104, y + 100, 'Debilitada', COLOR.rojo, 20));
     else if (cr.estado) {
       const quemada = cr.estado.tipo === 'quemado';
-      c.add(pildora(this, tx + 110, y + 92, quemada ? 'Quemada' : 'Dormida', quemada ? 0xc8551e : 0x5b6f9a, 20));
+      c.add(pildora(this, tx + 104, y + 100, quemada ? 'Quemada' : 'Dormida', quemada ? 0xff7a2f : 0x6f7fd8, 20));
     }
     const tipos = this.add.container(0, 0);
-    filaTipos(this, tipos, tx, y + 144, DATOS.especies[cr.especie].tipos, 20);
+    filaTipos(this, tipos, tx, y + 150, DATOS.especies[cr.especie].tipos, 20);
     c.add(tipos);
-    c.add(pildora(this, tx, y + 196, 'VIDA', COLOR.tinta, 18, COLOR.oro));
-    const barra = new Barra(this, tx + 92, y + 196, ancho - (tx - x) - 120, 24, true);
+    const barra = new Barra(this, tx, y + 202, ancho - (tx - x) - 28, 22, true);
     void barra.setFraccion(cr.vida / max, false);
     c.add(barra);
-    c.add(this.add.text(x + ancho - 30, y + 236, `${Math.max(0, cr.vida)}/${max}`, estiloTexto(28, COLOR.tinta, true)).setOrigin(1, 0.5));
+    c.add(this.add.text(x + ancho - 28, y + 236, `${Math.max(0, cr.vida)} / ${max}`, estiloTexto(26, COLOR.tintaSuave, true)).setOrigin(1, 0.5));
   }
 
   /**
    * Ficha de una criatura del equipo, en tres pestañas como en los juegos del género: datos,
    * estadísticas y movimientos. Izquierda y derecha cambian de pestaña; arriba y abajo, de
-   * criatura.
+   * criatura (en Movimientos, de movimiento).
    */
   private pantallaFicha(p: Partida, i: number, volver: () => void, pestana = 0, movimiento = 0): void {
     const cr = p.equipo[i];
     const e = DATOS.especies[cr.especie];
-    const c = this.abrirCapa(nombreDe(cr, DATOS));
+    const color = colorTipoDe(cr.especie);
+    const c = this.abrirCapa(nombreDe(cr, DATOS), { icono: 'tarjeta', color });
     const stats = calcularEstadisticas(cr, DATOS);
     const temp = DATOS.temperamentos.find((t) => t.id === cr.temperamento);
     const n = p.equipo.length;
     const ir = (j: number, k = pestana, m = 0) => this.pantallaFicha(p, (j + n) % n, volver, k, m);
 
-    // Arriba: la criatura en su pedestal, con nombre, nivel, tipos, estado y objeto.
-    c.add(ventana(this, 24, 130, ANCHO - 48, 300));
-    const px = 180;
-    const py = 278;
-    const pedestal = this.add.graphics();
-    pedestal.fillStyle(colorPedestal(cr.especie), 1).fillCircle(px, py, 118);
-    pedestal.lineStyle(5, COLOR.tinta, 0.6).strokeCircle(px, py, 118);
-    pedestal.fillStyle(0x000000, 0.15).fillEllipse(px, py + 80, 170, 34);
-    c.add(pedestal);
-    const figura = crearCriaturaVisual(this, cr.especie, px, py - 6, 230, true);
-    if (cr.vida <= 0) figura.setAlpha(0.55);
+    // Arriba: la criatura con nombre, nivel, tipos, estado y objeto.
+    c.add(ventana(this, 24, 140, ANCHO - 48, 300, { radio: 36 }));
+    const px = 178;
+    const py = 290;
+    const circulo = this.add.graphics();
+    circulo.fillStyle(aclarar(color, 0.55), 1).fillCircle(px, py, 124);
+    circulo.fillStyle(0xffffff, 0.35).fillCircle(px, py, 96);
+    c.add(circulo);
+    const figura = crearCriaturaVisual(this, cr.especie, px, py - 8, 236, true);
+    if (cr.vida <= 0) figura.setAlpha(0.5);
     else this.tweens.add({ targets: figura, y: figura.y - 8, duration: 800, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     c.add(figura);
-    const tx = 340;
-    c.add(this.add.text(tx, 190, nombreDe(cr, DATOS), estiloTexto(44, COLOR.tinta, true)).setOrigin(0, 0.5));
-    c.add(this.add.text(tx, 248, `Nv ${cr.nivel}`, estiloTexto(34, COLOR.tintaSuave, true)).setOrigin(0, 0.5));
-    if (cr.vida <= 0) c.add(pildora(this, tx + 130, 248, 'Debilitada', COLOR.rojo, 22));
+    const tx = 336;
+    c.add(this.add.text(tx, 196, nombreDe(cr, DATOS), estiloTexto(46, COLOR.tinta, true)).setOrigin(0, 0.5));
+    c.add(pildora(this, tx, 252, `Nv ${cr.nivel}`, COLOR.tinta, 24));
+    c.add(pildora(this, tx + 116, 252, `Nº ${String(e.numero).padStart(3, '0')}`, COLOR.panelSuave, 22, COLOR.tintaSuave));
+    if (cr.vida <= 0) c.add(pildora(this, tx + 250, 252, 'Debilitada', COLOR.rojo, 22));
     else if (cr.estado) {
       const quemada = cr.estado.tipo === 'quemado';
-      c.add(pildora(this, tx + 130, 248, quemada ? 'Quemada' : 'Dormida', quemada ? 0xc8551e : 0x5b6f9a, 22));
+      c.add(pildora(this, tx + 250, 252, quemada ? 'Quemada' : 'Dormida', quemada ? 0xff7a2f : 0x6f7fd8, 22));
     }
     const tipos = this.add.container(0, 0);
-    filaTipos(this, tipos, tx, 304, e.tipos, 24);
+    filaTipos(this, tipos, tx, 306, e.tipos, 24);
     c.add(tipos);
     if (cr.objeto) {
-      c.add(iconoObjeto(this, tx + 24, 370, cr.objeto, 44));
-      c.add(this.add.text(tx + 60, 370, DATOS.objetos[cr.objeto]?.nombre ?? cr.objeto, estiloTexto(30, COLOR.tinta)).setOrigin(0, 0.5));
+      c.add(iconoObjeto(this, tx + 26, 380, cr.objeto, 56));
+      c.add(this.add.text(tx + 66, 380, DATOS.objetos[cr.objeto]?.nombre ?? cr.objeto, estiloTexto(30, COLOR.tinta, true)).setOrigin(0, 0.5));
       c.add(
-        new Boton(this, ANCHO - 150, 370, {
-          ancho: 200,
-          alto: 72,
+        new Boton(this, ANCHO - 146, 380, {
+          ancho: 196,
+          alto: 76,
           texto: 'Quitar',
           tamano: 28,
+          color: COLOR.panelSuave,
           alPulsar: () => {
             const nombre = DATOS.objetos[cr.objeto!]?.nombre;
             quitarObjeto(p, cr);
@@ -813,90 +889,83 @@ export class Interfaz extends Phaser.Scene {
         }),
       );
     } else {
-      c.add(this.add.text(tx, 370, 'No lleva nada', estiloTexto(30, COLOR.tintaSuave)).setOrigin(0, 0.5));
+      c.add(this.add.text(tx, 380, 'No lleva nada', estiloTexto(28, COLOR.tintaSuave)).setOrigin(0, 0.5));
     }
 
-    // Pestañas.
+    // Pestañas en un control segmentado.
     const pestanas = ['Datos', 'Estadísticas', 'Movimientos'];
+    const yP = 468;
+    const anchoP = (ANCHO - 48 - 16) / 3;
+    c.add(ventana(this, 24, yP, ANCHO - 48, 92, { radio: 46 }));
     pestanas.forEach((nombre, k) => {
-      c.add(
-        new Boton(this, 24 + 168 + k * 348, 498, {
-          ancho: 336,
-          alto: 88,
-          texto: nombre,
-          tamano: 32,
-          color: k === pestana ? COLOR.oro : COLOR.pergaminoOscuro,
-          alPulsar: () => ir(i, k),
-        }),
-      );
+      const x = 32 + k * anchoP;
+      if (k === pestana) {
+        const g = this.add.graphics();
+        g.fillStyle(COLOR.tinta, 1).fillRoundedRect(x, yP + 8, anchoP, 76, 38);
+        c.add(g);
+      }
+      c.add(this.add.text(x + anchoP / 2, yP + 46, nombre, estiloTexto(30, k === pestana ? COLOR.panel : COLOR.tintaSuave, true)).setOrigin(0.5));
+      const zona = this.add.rectangle(x + anchoP / 2, yP + 46, anchoP, 92, 0xffffff, 0.001).setInteractive({ useHandCursor: true });
+      zona.on('pointerup', () => ir(i, k));
+      c.add(zona);
     });
 
-    const yC = 566;
+    const yC = 584;
     const altoC = ALTO_MAPA - 170 - yC;
-    c.add(ventana(this, 24, yC, ANCHO - 48, altoC));
+    c.add(ventana(this, 24, yC, ANCHO - 48, altoC, { radio: 36 }));
     if (pestana === 0) {
-      // Datos: número, temperamento, valía, experiencia y el texto del Bestiario.
+      // Datos: temperamento, valía, experiencia y el texto del Bestiario.
       const desde = expParaNivel(cr.nivel);
       const hasta = expParaNivel(cr.nivel + 1);
       const temperamento = temp
         ? temp.sube === temp.baja
-          ? `${temp.nombre}: temperamento neutro`
+          ? `${temp.nombre}: neutro`
           : `${temp.nombre}: más ${NOMBRE_ESTADISTICA[temp.sube]}, menos ${NOMBRE_ESTADISTICA[temp.baja]}`
         : '';
       const filas: [string, string][] = [
-        ['Bestiario', `Nº ${String(e.numero).padStart(3, '0')} · ${e.nombre}`],
+        ['Especie', e.nombre],
         ['Temperamento', temperamento],
         ['Valía', `${cr.valia} de 14`],
       ];
       filas.forEach(([etiqueta, valor], k) => {
-        const y = yC + 56 + k * 62;
-        c.add(this.add.text(64, y, etiqueta, estiloTexto(28, COLOR.tintaSuave, true)).setOrigin(0, 0.5));
-        c.add(this.add.text(300, y, valor, { ...estiloTexto(30, COLOR.tinta), wordWrap: { width: ANCHO - 360 } }).setOrigin(0, 0.5));
+        const y = yC + 52 + k * 60;
+        c.add(this.add.text(64, y, etiqueta, estiloTexto(26, COLOR.tintaSuave, true)).setOrigin(0, 0.5));
+        c.add(this.add.text(300, y, valor, { ...estiloTexto(30, COLOR.tinta, true), wordWrap: { width: ANCHO - 360 } }).setOrigin(0, 0.5));
       });
-      const yExp = yC + 56 + 3 * 62;
-      c.add(this.add.text(64, yExp, 'Experiencia', estiloTexto(28, COLOR.tintaSuave, true)).setOrigin(0, 0.5));
-      const barra = new Barra(this, 300, yExp, ANCHO - 380, 24, false);
+      const yExp = yC + 52 + 3 * 60;
+      c.add(this.add.text(64, yExp, 'Experiencia', estiloTexto(26, COLOR.tintaSuave, true)).setOrigin(0, 0.5));
+      const barra = new Barra(this, 300, yExp, ANCHO - 380, 22, false);
       void barra.setFraccion((cr.exp - desde) / Math.max(1, hasta - desde), false);
       c.add(barra);
       c.add(
-        this.add
-          .text(ANCHO - 80, yExp + 42, `Le faltan ${Math.max(0, hasta - cr.exp)} para el nivel ${cr.nivel + 1}`, estiloTexto(26, COLOR.tintaSuave))
-          .setOrigin(1, 0.5),
+        this.add.text(ANCHO - 80, yExp + 38, `Le faltan ${Math.max(0, hasta - cr.exp)} para el nivel ${cr.nivel + 1}`, estiloTexto(24, COLOR.tintaSuave)).setOrigin(1, 0.5),
       );
-      const yTexto = yExp + 92;
+      const yTexto = yExp + 80;
       const linea = this.add.graphics();
-      linea.lineStyle(3, COLOR.oro, 1).lineBetween(64, yTexto, ANCHO - 64, yTexto);
+      linea.lineStyle(3, COLOR.borde, 1).lineBetween(64, yTexto, ANCHO - 64, yTexto);
       c.add(linea);
-      c.add(
-        this.add.text(64, yTexto + 24, e.descripcion, {
-          ...estiloTexto(29, COLOR.tinta),
-          fontStyle: 'italic',
-          wordWrap: { width: ANCHO - 128 },
-          lineSpacing: 6,
-        }),
-      );
+      c.add(this.add.text(64, yTexto + 22, e.descripcion, { ...estiloTexto(28, COLOR.tintaSuave), wordWrap: { width: ANCHO - 128 }, lineSpacing: 6 }));
     } else if (pestana === 1) {
-      // Estadísticas, con barras. ▲ y ▼ marcan lo que sube y baja su temperamento.
+      // Estadísticas, con barras del color de su tipo. ▲ y ▼: lo que sube y baja su temperamento.
       const orden: (keyof typeof stats)[] = ['vida', 'fuerza', 'escudo', 'magia', 'resMagica', 'celeridad'];
       const tope = Math.max(...orden.filter((k) => k !== 'vida').map((k) => stats[k]), 1);
-      const alto = Math.min(84, (altoC - 60) / orden.length);
+      const alto = Math.min(80, (altoC - 50) / orden.length);
       orden.forEach((k, j) => {
-        const y = yC + 40 + j * alto + alto / 2;
-        const marca = temp && temp.sube !== temp.baja ? (temp.sube === (k as EstadisticaCombate) ? ' ▲' : temp.baja === (k as EstadisticaCombate) ? ' ▼' : '') : '';
-        const colorMarca = marca === ' ▲' ? COLOR.rojo : marca === ' ▼' ? COLOR.exp : COLOR.tintaSuave;
-        c.add(this.add.text(64, y, NOMBRE_ESTADISTICA[k], estiloTexto(30, COLOR.tintaSuave, true)).setOrigin(0, 0.5));
-        if (marca) c.add(this.add.text(64 + 300, y, marca.trim(), estiloTexto(28, colorMarca, true)).setOrigin(0.5));
+        const y = yC + 30 + j * alto + alto / 2;
+        const marca = temp && temp.sube !== temp.baja ? (temp.sube === (k as EstadisticaCombate) ? '▲' : temp.baja === (k as EstadisticaCombate) ? '▼' : '') : '';
+        c.add(this.add.text(64, y, NOMBRE_ESTADISTICA[k], estiloTexto(28, COLOR.tintaSuave, true)).setOrigin(0, 0.5));
+        if (marca) c.add(this.add.text(370, y, marca, estiloTexto(26, marca === '▲' ? COLOR.rojo : COLOR.azul, true)).setOrigin(0.5));
         const valor = k === 'vida' ? `${Math.max(0, cr.vida)}/${stats.vida}` : `${stats[k]}`;
         c.add(this.add.text(540, y, valor, estiloTexto(32, COLOR.tinta, true)).setOrigin(1, 0.5));
         if (k === 'vida') {
-          const barra = new Barra(this, 580, y, ANCHO - 660, 26, true);
+          const barra = new Barra(this, 580, y, ANCHO - 660, 24, true);
           void barra.setFraccion(cr.vida / stats.vida, false);
           c.add(barra);
         } else {
           const g = this.add.graphics();
           const largo = ANCHO - 660;
-          g.fillStyle(COLOR.tinta, 1).fillRoundedRect(580, y - 13, largo, 26, 13);
-          g.fillStyle(COLOR.oro, 1).fillRoundedRect(583, y - 10, Math.max(20, (largo - 6) * (stats[k] / tope)), 20, 10);
+          g.fillStyle(COLOR.panelSuave, 1).fillRoundedRect(580, y - 12, largo, 24, 12);
+          g.fillStyle(color, 1).fillRoundedRect(580, y - 12, Math.max(24, largo * (stats[k] / tope)), 24, 12);
           c.add(g);
         }
       });
@@ -906,44 +975,26 @@ export class Interfaz extends Phaser.Scene {
       const anchoMov = (ANCHO - 96 - 20) / 2;
       cr.movimientos.forEach((m, j) => {
         const mov = DATOS.movimientos[m.id];
-        const tipo = DATOS.tipos.tipos.find((t) => t.id === mov.tipo);
         const x = 48 + (j % 2) * (anchoMov + 20);
-        const y = yC + 30 + Math.floor(j / 2) * 116;
-        const g = this.add.graphics();
-        g.fillStyle(aclarar(tipo?.color ?? COLOR.pergaminoOscuro, j === actual ? 0.25 : 0.55), 1);
-        g.fillRoundedRect(x, y, anchoMov, 104, 18);
-        g.lineStyle(j === actual ? 6 : 3, j === actual ? COLOR.rojo : COLOR.tintaSuave, 1).strokeRoundedRect(x, y, anchoMov, 104, 18);
-        c.add(g);
-        c.add(this.add.text(x + 22, y + 32, mov.nombre, estiloTexto(32, COLOR.tinta, true)).setOrigin(0, 0.5));
-        const chip = this.add.container(0, 0);
-        filaTipos(this, chip, x + 22, y + 76, [mov.tipo], 20);
-        c.add(chip);
-        c.add(this.add.text(x + anchoMov - 22, y + 76, `PP ${m.pp}/${mov.pp}`, estiloTexto(26, COLOR.tinta, true)).setOrigin(1, 0.5));
-        const zona = this.add.rectangle(x + anchoMov / 2, y + 52, anchoMov, 104, 0xffffff, 0.001).setInteractive({ useHandCursor: true });
-        zona.on('pointerup', () => ir(i, 2, j));
-        c.add(zona);
+        const y = yC + 28 + Math.floor(j / 2) * 118;
+        c.add(this.tarjetaMovimiento(mov, m.pp, x, y, anchoMov, 104, j === actual, () => ir(i, 2, j)));
       });
       const m = cr.movimientos[actual];
       if (m) {
         const d = describirMovimiento(DATOS.movimientos[m.id], m.pp);
-        const y = yC + 30 + 2 * 116 + 6;
+        const y = yC + 28 + 2 * 118 + 4;
         const linea = this.add.graphics();
-        linea.lineStyle(3, COLOR.oro, 1).lineBetween(64, y, ANCHO - 64, y);
+        linea.lineStyle(3, COLOR.borde, 1).lineBetween(64, y, ANCHO - 64, y);
         c.add(linea);
-        c.add(
-          this.add.text(64, y + 20, `${d.titulo}\n${d.cifras}\n${d.efecto}`, {
-            ...estiloTexto(28, COLOR.tinta),
-            wordWrap: { width: ANCHO - 128 },
-            lineSpacing: 6,
-          }),
-        );
+        c.add(this.add.text(64, y + 18, d.titulo, estiloTexto(30, COLOR.tinta, true)));
+        c.add(this.add.text(64, y + 58, `${d.cifras}\n${d.efecto}`, { ...estiloTexto(27, COLOR.tintaSuave), wordWrap: { width: ANCHO - 128 }, lineSpacing: 6 }));
       }
     }
 
     // Abajo: criatura anterior, volver y siguiente.
     if (n > 1) {
-      c.add(new Boton(this, 120, ALTO_MAPA - 80, { ancho: 180, alto: 110, texto: '‹', tamano: 56, alPulsar: () => ir(i - 1) }));
-      c.add(new Boton(this, ANCHO - 120, ALTO_MAPA - 80, { ancho: 180, alto: 110, texto: '›', tamano: 56, alPulsar: () => ir(i + 1) }));
+      c.add(botonFlecha(this, 110, ALTO_MAPA - 80, -1, () => ir(i - 1), 170, 112));
+      c.add(botonFlecha(this, ANCHO - 110, ALTO_MAPA - 80, 1, () => ir(i + 1), 170, 112));
     }
     this.botonVolver(c, volver);
     this.nav = {
@@ -956,85 +1007,148 @@ export class Interfaz extends Phaser.Scene {
     };
   }
 
+  /** Tarjeta de un movimiento con el color de su tipo, como en el combate. */
+  private tarjetaMovimiento(mov: Movimiento, pp: number, x: number, y: number, ancho: number, alto: number, marcado: boolean, alPulsar: () => void): Phaser.GameObjects.Container {
+    const tipo = DATOS.tipos.tipos.find((t) => t.id === mov.tipo);
+    const color = tipo?.color ?? COLOR.tintaSuave;
+    const tinta = textoSobre(color);
+    const c = this.add.container(0, 0);
+    const g = this.add.graphics();
+    g.fillStyle(oscurecer(color, 0.3), 1).fillRoundedRect(x, y + 6, ancho, alto, 24);
+    g.fillStyle(color, 1).fillRoundedRect(x, y, ancho, alto, 24);
+    g.fillStyle(0xffffff, 0.18).fillRoundedRect(x + 6, y + 4, ancho - 12, alto * 0.42, { tl: 20, tr: 20, bl: 0, br: 0 });
+    if (marcado) g.lineStyle(6, COLOR.tinta, 1).strokeRoundedRect(x - 3, y - 3, ancho + 6, alto + 12, 26);
+    c.add(g);
+    c.add(this.add.text(x + 22, y + 34, mov.nombre, estiloTexto(32, tinta, true)).setOrigin(0, 0.5));
+    c.add(this.add.text(x + 22, y + 76, tipo?.nombre ?? '', estiloTexto(24, tinta, true)).setOrigin(0, 0.5).setAlpha(0.85));
+    c.add(this.add.text(x + ancho - 22, y + 76, `PP ${pp}/${mov.pp}`, estiloTexto(24, tinta, true)).setOrigin(1, 0.5));
+    const zona = this.add.rectangle(x + ancho / 2, y + alto / 2, ancho, alto, 0xffffff, 0.001).setInteractive({ useHandCursor: true });
+    zona.on('pointerup', alPulsar);
+    c.add(zona);
+    return c;
+  }
+
   private pantallaBestiario(p: Partida, volver: () => void, pagina = 0): void {
-    const c = this.abrirCapa('Bestiario');
-    c.add(this.add.text(ANCHO / 2, 135, `Vistas ${p.vistos.length} · Capturadas ${p.capturados.length}`, estiloTexto(32, COLOR.oro)).setOrigin(0.5));
+    const c = this.abrirCapa('Bestiario', { icono: 'bestiario', color: COLOR.rojo });
+    c.add(pildora(this, ANCHO - 360, 66, `Vistas ${p.vistos.length} · Pactos ${p.capturados.length}`, COLOR.tinta, 24));
     const todas = Object.values(DATOS.especies).sort((a, b) => a.numero - b.numero);
     const porPagina = 20;
     const paginas = Math.ceil(todas.length / porPagina);
     const ids = todas.slice(pagina * porPagina, (pagina + 1) * porPagina).map((e) => e.id);
     const columnas = 4;
-    const ancho = 240;
-    const alto = 160;
+    const ancho = 243;
+    const alto = 176;
     ids.forEach((id, i) => {
-      const x = 32 + (i % columnas) * (ancho + 12) + ancho / 2;
-      const y = 200 + Math.floor(i / columnas) * (alto + 10) + alto / 2;
+      const x = 24 + (i % columnas) * (ancho + 12);
+      const y = 140 + Math.floor(i / columnas) * (alto + 12);
       const visto = p.vistos.includes(id);
       const capturado = p.capturados.includes(id);
-      const fondo = this.add.rectangle(x, y, ancho, alto, visto ? COLOR.pergamino : COLOR.pergaminoOscuro).setRounded(16).setStrokeStyle(4, COLOR.tintaSuave);
-      c.add(fondo);
-      c.add(this.add.text(x - ancho / 2 + 12, y - alto / 2 + 8, String(DATOS.especies[id].numero).padStart(3, '0'), estiloTexto(22, COLOR.tintaSuave)));
+      c.add(visto ? ventana(this, x, y, ancho, alto, { radio: 26 }) : ventana(this, x, y, ancho, alto, { color: COLOR.panel, opacidad: 0.14, borde: null, sombra: false, radio: 26 }));
+      c.add(this.add.text(x + 16, y + 20, String(DATOS.especies[id].numero).padStart(3, '0'), estiloTexto(20, visto ? COLOR.tintaSuave : COLOR.panel, true)).setOrigin(0, 0.5));
       if (visto) {
-        c.add(crearCriaturaVisual(this, id, x, y - 16, 90));
-        c.add(this.add.text(x, y + 52, `${DATOS.especies[id].nombre}${capturado ? ' ✓' : ''}`, { ...estiloTexto(22, COLOR.tinta, true), align: 'center', wordWrap: { width: ancho - 12 } }).setOrigin(0.5));
-        fondo.setInteractive({ useHandCursor: true }).on('pointerup', () => this.pantallaEspecie(p, id, () => this.pantallaBestiario(p, volver, pagina)));
+        const circulo = this.add.graphics();
+        circulo.fillStyle(colorPedestal(id), 1).fillCircle(x + ancho / 2, y + 74, 52);
+        c.add(circulo);
+        c.add(crearCriaturaVisual(this, id, x + ancho / 2, y + 70, 104));
+        c.add(this.add.text(x + ancho / 2, y + 150, DATOS.especies[id].nombre, estiloTexto(24, COLOR.tinta, true)).setOrigin(0.5));
+        if (capturado) c.add(pildora(this, x + ancho - 56, y + 20, '✓', COLOR.verde, 18));
+        const zona = this.add.rectangle(x + ancho / 2, y + alto / 2, ancho, alto, 0xffffff, 0.001).setInteractive({ useHandCursor: true });
+        zona.on('pointerup', () => this.pantallaEspecie(p, id, () => this.pantallaBestiario(p, volver, pagina)));
+        c.add(zona);
       } else {
-        c.add(this.add.text(x, y, '???', estiloTexto(40, COLOR.tintaSuave, true)).setOrigin(0.5));
+        c.add(this.add.text(x + ancho / 2, y + alto / 2 + 6, '?', estiloTexto(64, COLOR.panel, true)).setOrigin(0.5).setAlpha(0.5));
       }
     });
+    const ir = (k: number) => this.pantallaBestiario(p, volver, k);
     if (paginas > 1) {
-      const y = ALTO_MAPA - 80;
-      c.add(new Boton(this, 120, y, { ancho: 180, alto: 110, texto: '‹', tamano: 56, alPulsar: () => this.pantallaBestiario(p, volver, pagina - 1) }).setActivo(pagina > 0));
-      c.add(new Boton(this, ANCHO - 120, y, { ancho: 180, alto: 110, texto: '›', tamano: 56, alPulsar: () => this.pantallaBestiario(p, volver, pagina + 1) }).setActivo(pagina < paginas - 1));
+      c.add(botonFlecha(this, 110, ALTO_MAPA - 80, -1, () => ir(pagina - 1), 170, 112).setActivo(pagina > 0));
+      c.add(botonFlecha(this, ANCHO - 110, ALTO_MAPA - 80, 1, () => ir(pagina + 1), 170, 112).setActivo(pagina < paginas - 1));
+      c.add(pildora(this, ANCHO / 2 - 70, ALTO_MAPA - 168, `Página ${pagina + 1} de ${paginas}`, COLOR.tinta, 22));
     }
     this.botonVolver(c, volver);
+    this.nav = {
+      mover: (dir) => {
+        if (dir === 'izquierda' && pagina > 0) ir(pagina - 1);
+        else if (dir === 'derecha' && pagina < paginas - 1) ir(pagina + 1);
+      },
+      aceptar: () => undefined,
+    };
   }
 
   private pantallaEspecie(p: Partida, id: string, volver: () => void): void {
     const e = DATOS.especies[id];
-    const c = this.abrirCapa(e.nombre);
-    c.add(ventana(this, 60, 130, ANCHO - 120, 900));
-    c.add(crearCriaturaVisual(this, id, ANCHO / 2, 380, 340));
+    const color = colorTipoDe(id);
+    const c = this.abrirCapa(e.nombre, { icono: 'bestiario', color });
+    c.add(ventana(this, 24, 140, ANCHO - 48, ALTO_MAPA - 140 - 170, { radio: 36 }));
+    const circulo = this.add.graphics();
+    circulo.fillStyle(aclarar(color, 0.55), 1).fillCircle(ANCHO / 2, 360, 180);
+    circulo.fillStyle(0xffffff, 0.35).fillCircle(ANCHO / 2, 360, 140);
+    c.add(circulo);
+    c.add(crearCriaturaVisual(this, id, ANCHO / 2, 350, 330));
+    c.add(pildora(this, 56, 176, `Nº ${String(e.numero).padStart(3, '0')}`, COLOR.tinta, 24));
     const tipos = this.add.container(0, 0);
-    filaTipos(this, tipos, ANCHO / 2 - 90, 640, e.tipos, 30);
+    const anchoTipos = filaTipos(this, tipos, 0, 580, e.tipos, 30);
+    tipos.x = ANCHO / 2 - anchoTipos / 2;
     c.add(tipos);
     const texto = p.capturados.includes(id) ? e.descripcion : 'Sella un pacto con esta criatura para saber más de ella.';
-    c.add(this.add.text(ANCHO / 2, 760, texto, { ...estiloTexto(32, COLOR.tinta), align: 'center', wordWrap: { width: ANCHO - 200 }, lineSpacing: 8 }).setOrigin(0.5));
+    c.add(this.add.text(ANCHO / 2, 640, texto, { ...estiloTexto(30, COLOR.tinta), align: 'center', wordWrap: { width: ANCHO - 160 }, lineSpacing: 6 }).setOrigin(0.5, 0));
+    // Debilidades y resistencias, en píldoras del color de cada tipo.
     const d = debilidades(DATOS.tipos, e.tipos);
-    const nombre = (t: string) => DATOS.tipos.tipos.find((x) => x.id === t)?.nombre ?? t;
-    const grupo = (f: (m: number) => boolean) =>
-      d.filter((x) => f(x.multiplicador)).map((x) => `${nombre(x.tipo)} ${textoMultiplicador(x.multiplicador)}`).join(', ') || 'nada';
+    const def = (t: string) => DATOS.tipos.tipos.find((x) => x.id === t);
+    const grupos: [string, (m: number) => boolean][] = [
+      ['Débil a', (m) => m > 1],
+      ['Resiste', (m) => m > 0 && m < 1],
+      ['Inmune a', (m) => m === 0],
+    ];
+    let y = 830;
+    for (const [etiqueta, f] of grupos) {
+      const lista = d.filter((x) => f(x.multiplicador));
+      if (lista.length === 0) continue;
+      c.add(this.add.text(64, y, etiqueta, estiloTexto(26, COLOR.tintaSuave, true)).setOrigin(0, 0.5));
+      let x = 210;
+      for (const t of lista) {
+        const tp = def(t.tipo);
+        const pil = pildora(this, x, y, `${tp?.nombre ?? t.tipo} ${textoMultiplicador(t.multiplicador)}`, tp?.color ?? COLOR.tintaSuave, 22, textoSobre(tp?.color ?? COLOR.tintaSuave));
+        if (x + pil.width > ANCHO - 60) {
+          y += 50;
+          x = 210;
+          pil.x = x + pil.width / 2;
+          pil.y = y;
+        }
+        c.add(pil);
+        x += pil.width + 10;
+      }
+      y += 60;
+    }
     c.add(
-      this.add.text(
-        90,
-        880,
-        [`Débil a: ${grupo((m) => m > 1)}`, `Resiste: ${grupo((m) => m > 0 && m < 1)}`, `Inmune a: ${grupo((m) => m === 0)}`].join('\n'),
-        { ...estiloTexto(28, COLOR.tinta), wordWrap: { width: ANCHO - 180 }, lineSpacing: 6 },
-      ),
+      new Boton(this, 790, ALTO_MAPA - 80, {
+        ancho: 440,
+        alto: 112,
+        texto: 'Tabla de tipos',
+        tamano: 32,
+        icono: { ui: 'tipos', tam: 60 },
+        alPulsar: () => this.pantallaTipos(() => this.pantallaEspecie(p, id, volver), e.tipos[0]),
+      }),
     );
-    c.add(
-      new Boton(this, 790, ALTO_MAPA - 80, { ancho: 440, alto: 110, texto: 'Tabla de tipos', tamano: 34, alPulsar: () => this.pantallaTipos(() => this.pantallaEspecie(p, id, volver), e.tipos[0]) }),
-    );
-    this.alAtras = volver;
-    c.add(new Boton(this, 290, ALTO_MAPA - 80, { ancho: 440, alto: 110, texto: 'Volver', alPulsar: volver }));
+    this.botonVolver(c, volver, 290);
   }
 
   private pantallaTipos(volver: () => void, tipo?: string): void {
-    const c = this.abrirCapa('Tabla de tipos');
+    const c = this.abrirCapa('Tabla de tipos', { icono: 'tipos', color: COLOR.morado });
     construirTablaTipos(this, c, 130, tipo);
     this.botonVolver(c, volver);
   }
 
   /**
-   * Mochila por bolsillos, como en los juegos del género: uno por categoría, que se cambian con
-   * las flechas. Abajo, la descripción del objeto marcado y lo que se puede hacer con él.
+   * Mochila por bolsillos, como en los juegos actuales: arriba, un icono por bolsillo; en
+   * medio, la lista; abajo, la descripción del objeto marcado y lo que se puede hacer con él.
    */
   private pantallaMochila(p: Partida, volver: () => void, categoria?: CategoriaObjeto, sel = 0): void {
-    const c = this.abrirCapa('Mochila');
+    const c = this.abrirCapa('Mochila', { icono: 'mochila', color: COLOR.bronce });
     const tengo = Object.entries(p.objetos).filter(([id, n]) => n > 0 && DATOS.objetos[id]);
     if (tengo.length === 0) {
-      c.add(ventana(this, 24, 136, ANCHO - 48, 140));
-      c.add(this.add.text(ANCHO / 2, 206, 'La mochila está vacía.', estiloTexto(38, COLOR.tinta)).setOrigin(0.5));
+      c.add(ventana(this, 24, 150, ANCHO - 48, 140));
+      c.add(this.add.text(ANCHO / 2, 220, 'La mochila está vacía.', estiloTexto(38, COLOR.tinta, true)).setOrigin(0.5));
       this.botonVolver(c, volver);
       return;
     }
@@ -1045,67 +1159,81 @@ export class Interfaz extends Phaser.Scene {
     const actual = Math.min(sel, objetos.length - 1);
     const ir = (bk: number, s = 0) => this.pantallaMochila(p, volver, bolsillos[(bk + bolsillos.length) % bolsillos.length].id, s);
 
-    // Bolsillo actual, con flechas para cambiar y puntos que dicen cuántos hay.
-    c.add(ventana(this, 170, 132, ANCHO - 340, 112));
-    c.add(iconoObjeto(this, 250, 188, objetos[0][0], 64));
-    c.add(this.add.text(ANCHO / 2 + 30, 188, bolsillo.nombre, estiloTexto(42, COLOR.tinta, true)).setOrigin(0.5));
-    if (bolsillos.length > 1) {
-      c.add(new Boton(this, 90, 188, { ancho: 130, alto: 104, texto: '‹', tamano: 56, alPulsar: () => ir(k - 1) }));
-      c.add(new Boton(this, ANCHO - 90, 188, { ancho: 130, alto: 104, texto: '›', tamano: 56, alPulsar: () => ir(k + 1) }));
-    }
-    const puntos = this.add.graphics();
-    bolsillos.forEach((_, j) => {
-      const x = ANCHO / 2 - ((bolsillos.length - 1) * 30) / 2 + j * 30;
-      puntos.fillStyle(j === k ? COLOR.oro : 0x5a4a3a, 1).fillCircle(x, 270, j === k ? 10 : 7);
+    // Bolsillos: un círculo con el icono de su primer objeto; el actual, grande y con nombre.
+    const paso = Math.min(140, (ANCHO - 48) / bolsillos.length);
+    const x0 = ANCHO / 2 - ((bolsillos.length - 1) * paso) / 2;
+    bolsillos.forEach((b, j) => {
+      const x = x0 + j * paso;
+      const primero = tengo.find(([id]) => DATOS.objetos[id].categoria === b.id)![0];
+      const g = this.add.graphics();
+      if (j === k) {
+        g.fillStyle(0x000000, 0.2).fillCircle(x, 206, 58);
+        g.fillStyle(COLOR.panel, 1).fillCircle(x, 200, 58);
+        g.lineStyle(5, COLOR.oro, 1).strokeCircle(x, 200, 58);
+      } else {
+        g.fillStyle(COLOR.panel, 0.3).fillCircle(x, 200, 44);
+      }
+      c.add(g);
+      const icono = iconoObjeto(this, x, 200, primero, j === k ? 84 : 62);
+      if (j !== k) (icono as Phaser.GameObjects.Image).setAlpha(0.75);
+      c.add(icono);
+      const zona = this.add.circle(x, 200, 58, 0xffffff, 0.001).setInteractive({ useHandCursor: true });
+      zona.on('pointerup', () => ir(j));
+      c.add(zona);
     });
-    c.add(puntos);
+    const nombreBolsillo = pildora(this, 0, 292, bolsillo.nombre, COLOR.tinta, 28);
+    nombreBolsillo.x = ANCHO / 2;
+    c.add(nombreBolsillo);
 
     // Lista de objetos del bolsillo.
-    const yD = ALTO_MAPA - 360;
-    const yL = 300;
-    const altoFila = 100;
-    const filas = Math.max(1, Math.floor((yD - 24 - yL - 40) / altoFila));
+    const yD = ALTO_MAPA - 400;
+    const yL = 336;
+    const altoFila = 96;
+    const filas = Math.max(1, Math.floor((yD - 24 - yL - 28) / altoFila));
     const inicio = Math.floor(actual / filas) * filas;
-    c.add(ventana(this, 24, yL, ANCHO - 48, filas * altoFila + 40));
+    c.add(ventana(this, 24, yL, ANCHO - 48, filas * altoFila + 28, { radio: 36 }));
     objetos.slice(inicio, inicio + filas).forEach(([id, cantidad], j) => {
       const indice = inicio + j;
-      const y = yL + 20 + j * altoFila;
-      if (indice === actual) {
-        const marca = this.add.graphics();
-        marca.fillStyle(aclarar(COLOR.oro, 0.5), 1).fillRoundedRect(42, y + 6, ANCHO - 84, altoFila - 12, 16);
-        c.add(marca);
-        c.add(cursor(this, 72, y + altoFila / 2, 34));
-      }
-      c.add(iconoObjeto(this, 140, y + altoFila / 2, id, 64));
-      c.add(this.add.text(196, y + altoFila / 2, DATOS.objetos[id].nombre, estiloTexto(36, COLOR.tinta, true)).setOrigin(0, 0.5));
-      c.add(this.add.text(ANCHO - 70, y + altoFila / 2, `×${cantidad}`, estiloTexto(34, COLOR.tinta, true)).setOrigin(1, 0.5));
+      const y = yL + 14 + j * altoFila;
+      if (indice === actual) c.add(franja(this, 38, y + 6, ANCHO - 76, altoFila - 12));
+      c.add(iconoObjeto(this, 100, y + altoFila / 2, id, 72));
+      c.add(this.add.text(156, y + altoFila / 2, DATOS.objetos[id].nombre, estiloTexto(34, COLOR.tinta, true)).setOrigin(0, 0.5));
+      const contador = pildora(this, 0, y + altoFila / 2, `×${cantidad}`, COLOR.tinta, 24);
+      contador.x = ANCHO - 70 - contador.width / 2;
+      c.add(contador);
       const zona = this.add.rectangle(ANCHO / 2, y + altoFila / 2, ANCHO - 84, altoFila, 0xffffff, 0.001).setInteractive({ useHandCursor: true });
       zona.on('pointerup', () => ir(k, indice));
       c.add(zona);
     });
-    if (inicio > 0) c.add(this.add.text(ANCHO / 2, yL + 4, '▲', estiloTexto(28, COLOR.rojo, true)).setOrigin(0.5));
-    if (inicio + filas < objetos.length) c.add(this.add.text(ANCHO / 2, yL + filas * altoFila + 36, '▼', estiloTexto(28, COLOR.rojo, true)).setOrigin(0.5));
+    if (inicio > 0) c.add(this.add.text(ANCHO / 2, yL + 2, '▲', estiloTexto(26, COLOR.tintaSuave, true)).setOrigin(0.5));
+    if (inicio + filas < objetos.length) c.add(this.add.text(ANCHO / 2, yL + filas * altoFila + 24, '▼', estiloTexto(26, COLOR.tintaSuave, true)).setOrigin(0.5));
 
     // Descripción y acción del objeto marcado.
     const [id] = objetos[actual];
     const obj = DATOS.objetos[id];
     const uso = usoDe(obj);
     const accion = uso.equipable ? 'Dar' : uso.fuera ? 'Usar' : null;
-    c.add(ventana(this, 24, yD, ANCHO - 48, 216));
-    c.add(iconoObjeto(this, 100, yD + 108, id, 88));
-    const ancho = accion ? ANCHO - 460 : ANCHO - 230;
+    c.add(ventana(this, 24, yD, ANCHO - 48, 216, { radio: 36 }));
+    const circulo = this.add.graphics();
+    circulo.fillStyle(COLOR.panelSuave, 1).fillCircle(112, yD + 108, 72);
+    c.add(circulo);
+    c.add(iconoObjeto(this, 112, yD + 108, id, 112));
+    const ancho = accion ? ANCHO - 480 : ANCHO - 260;
     const nota = !accion ? (obj.tipo === 'clave' ? 'Objeto importante.' : 'Se usa en los combates.') : '';
+    c.add(this.add.text(204, yD + 50, obj.nombre, estiloTexto(32, COLOR.tinta, true)).setOrigin(0, 0.5));
     c.add(
-      this.add.text(170, yD + 108, nota ? `${obj.descripcion}\n${nota}` : obj.descripcion, {
-        ...estiloTexto(27, COLOR.tinta),
+      this.add.text(204, yD + 84, nota ? `${obj.descripcion} ${nota}` : obj.descripcion, {
+        ...estiloTexto(25, COLOR.tintaSuave),
         wordWrap: { width: ancho },
         lineSpacing: 4,
-      }).setOrigin(0, 0.5),
+      }),
     );
     const usar = () => this.accionesObjeto(p, id, () => this.pantallaMochila(p, volver, bolsillo.id, actual));
-    if (accion) c.add(new Boton(this, ANCHO - 160, yD + 108, { ancho: 220, alto: 120, texto: accion, tamano: 40, color: COLOR.oro, alPulsar: usar }));
+    if (accion) c.add(new Boton(this, ANCHO - 158, yD + 108, { ancho: 220, alto: 120, texto: accion, tamano: 40, color: COLOR.verde, alPulsar: usar }));
     if (p.repelente > 0) {
-      c.add(this.add.text(ANCHO / 2, yD - 22, `Repelente: quedan ${p.repelente} pasos`, estiloTexto(26, COLOR.oro)).setOrigin(0.5));
+      const aviso = pildora(this, 0, yD - 32, `Repelente: quedan ${p.repelente} pasos`, COLOR.tinta, 22);
+      aviso.x = ANCHO / 2;
+      c.add(aviso);
     }
     this.botonVolver(c, volver);
     this.nav = {
@@ -1172,14 +1300,14 @@ export class Interfaz extends Phaser.Scene {
   }
 
   private elegirCriatura(p: Partida, titulo: string, volver: () => void, alElegir: (c: Criatura) => void): void {
-    const c = this.abrirCapa(titulo);
+    const c = this.abrirCapa(titulo, { icono: 'mochila', color: COLOR.bronce });
     const ancho = 504;
-    const alto = 268;
+    const alto = 262;
     const marcos = p.equipo.map((cr, i) => {
       const x = 24 + (i % 2) * (ancho + 24);
-      const y = 136 + Math.floor(i / 2) * (alto + 22);
+      const y = 140 + Math.floor(i / 2) * (alto + 24);
       const marco = this.add.graphics();
-      marco.lineStyle(10, COLOR.oro, 1).strokeRoundedRect(x - 8, y - 8, ancho + 16, alto + 16, 32);
+      marco.lineStyle(10, COLOR.celeste, 1).strokeRoundedRect(x - 8, y - 8, ancho + 16, alto + 16, 38);
       c.add(marco);
       this.ranuraCriatura(c, cr, x, y, ancho, alto, { primera: i === 0 });
       const zona = this.add.rectangle(x + ancho / 2, y + alto / 2, ancho, alto, 0xffffff, 0.001).setInteractive({ useHandCursor: true });
@@ -1244,20 +1372,18 @@ export class Interfaz extends Phaser.Scene {
   /** Ya sabe cuatro movimientos: ¿cuál olvida para aprender el nuevo? −1 si no lo aprende. */
   private preguntarOlvido(cr: Criatura, movimiento: string): Promise<number> {
     return new Promise((resolve) => {
-      const c = this.abrirCapa(`${nombreDe(cr, DATOS)} quiere aprender ${DATOS.movimientos[movimiento].nombre}`);
-      c.add(this.add.text(ANCHO / 2, 150, '¿Qué movimiento olvida?', estiloTexto(34, COLOR.oro)).setOrigin(0.5));
+      const nuevo = DATOS.movimientos[movimiento];
+      const c = this.abrirCapa(`Aprender ${nuevo.nombre}`, { icono: 'tarjeta', color: colorTipoDe(cr.especie) });
+      c.add(ventana(this, 24, 140, ANCHO - 48, 110, { color: COLOR.tinta, opacidad: 0.9, borde: null, radio: 55 }));
+      c.add(this.add.text(64, 195, `${nombreDe(cr, DATOS)} ya sabe cuatro movimientos. ¿Cuál olvida?`, { ...estiloTexto(30, COLOR.panel, true), wordWrap: { width: ANCHO - 128 } }).setOrigin(0, 0.5));
+      const ancho = (ANCHO - 96 - 20) / 2;
       cr.movimientos.forEach((m, i) => {
-        c.add(
-          new Boton(this, ANCHO / 2, 280 + i * 150, {
-            ancho: 800,
-            alto: 130,
-            texto: DATOS.movimientos[m.id].nombre,
-            tamano: 38,
-            alPulsar: () => resolve(i),
-          }),
-        );
+        const mov = DATOS.movimientos[m.id];
+        c.add(this.tarjetaMovimiento(mov, m.pp, 48 + (i % 2) * (ancho + 20), 290 + Math.floor(i / 2) * 130, ancho, 110, false, () => resolve(i)));
       });
-      c.add(new Boton(this, ANCHO / 2, 280 + 4 * 150 + 40, { ancho: 800, alto: 120, texto: 'No aprenderlo', tamano: 36, alPulsar: () => resolve(-1) }));
+      c.add(pildora(this, 48, 590, 'Nuevo', COLOR.verde, 24));
+      c.add(this.tarjetaMovimiento(nuevo, nuevo.pp, 48, 620, ANCHO - 96, 110, true, () => undefined));
+      c.add(new Boton(this, ANCHO / 2, 830, { ancho: 520, alto: 112, texto: 'No aprenderlo', tamano: 36, color: COLOR.rojo, alPulsar: () => resolve(-1) }));
       this.alAtras = () => resolve(-1);
     });
   }
@@ -1270,28 +1396,36 @@ export class Interfaz extends Phaser.Scene {
     const porPagina = 4;
     return new Promise((resolve) => {
       const pintar = (pagina: number) => {
-        const c = this.abrirCapa('Tienda');
+        const c = this.abrirCapa('Tienda', { icono: 'tienda', color: COLOR.verde });
         this.alAtras = () => {
           this.cerrarCapa();
           resolve();
         };
-        c.add(this.add.text(ANCHO / 2, 140, `Tienes ${p.dinero} ${MONEDA}`, estiloTexto(36, COLOR.oro, true)).setOrigin(0.5));
+        const bolsa = pildora(this, 0, 66, `${p.dinero} ${MONEDA}`, COLOR.tinta, 26);
+        bolsa.x = ANCHO - 40 - bolsa.width / 2;
+        c.add(bolsa);
+        c.add(iconoUI(this, 'dinero', bolsa.x - bolsa.width / 2 - 30, 66, 52));
         productos.slice(pagina * porPagina, (pagina + 1) * porPagina).forEach((id, i) => {
           const obj = DATOS.objetos[id];
           const precio = obj.precio ?? 0;
-          const y = 290 + i * 220;
-          c.add(ventana(this, 40, y - 90, ANCHO - 80, 200));
-          c.add(iconoObjeto(this, 105, y - 20, id, 72));
-          c.add(this.add.text(160, y - 66, `${obj.nombre} · ${precio} ${MONEDA}`, estiloTexto(34, COLOR.tinta, true)));
-          c.add(this.add.text(160, y - 20, obj.descripcion, { ...estiloTexto(22, COLOR.tintaSuave), wordWrap: { width: 470 } }));
-          c.add(this.add.text(160, y + 62, `Tienes ${p.objetos[id] ?? 0}`, estiloTexto(26, COLOR.tintaSuave)));
+          const y = 150 + i * 214;
+          c.add(ventana(this, 24, y, ANCHO - 48, 196, { radio: 34 }));
+          const circulo = this.add.graphics();
+          circulo.fillStyle(COLOR.panelSuave, 1).fillCircle(110, y + 98, 64);
+          c.add(circulo);
+          c.add(iconoObjeto(this, 110, y + 98, id, 100));
+          c.add(this.add.text(196, y + 40, obj.nombre, estiloTexto(34, COLOR.tinta, true)).setOrigin(0, 0.5));
+          c.add(pildora(this, 196, y + 88, `${precio} ${MONEDA}`, COLOR.oro, 22, COLOR.tinta));
+          c.add(this.add.text(196, y + 120, obj.descripcion, { ...estiloTexto(22, COLOR.tintaSuave), wordWrap: { width: 470 } }));
+          c.add(this.add.text(ANCHO - 190, y + 40, `Tienes ${p.objetos[id] ?? 0}`, estiloTexto(24, COLOR.tintaSuave, true)).setOrigin(0.5));
           for (const [k, cantidad] of [1, 5].entries()) {
             c.add(
-              new Boton(this, 760 + k * 170, y + 10, {
-                ancho: 150,
+              new Boton(this, ANCHO - 262 + k * 150, y + 124, {
+                ancho: 136,
                 alto: 96,
                 texto: `+${cantidad}`,
                 tamano: 36,
+                color: COLOR.verde,
                 alPulsar: () => {
                   const coste = precio * cantidad;
                   if (p.dinero < coste) {
@@ -1309,12 +1443,10 @@ export class Interfaz extends Phaser.Scene {
         });
         const paginas = Math.ceil(productos.length / porPagina);
         if (paginas > 1) {
-          c.add(new Boton(this, 170, ALTO_MAPA - 80, { ancho: 260, alto: 110, texto: '‹ Antes', tamano: 34, alPulsar: () => pintar(pagina - 1) }).setActivo(pagina > 0));
-          c.add(
-            new Boton(this, 910, ALTO_MAPA - 80, { ancho: 260, alto: 110, texto: 'Más ›', tamano: 34, alPulsar: () => pintar(pagina + 1) }).setActivo(pagina < paginas - 1),
-          );
+          c.add(botonFlecha(this, 110, ALTO_MAPA - 80, -1, () => pintar(pagina - 1), 170, 112).setActivo(pagina > 0));
+          c.add(botonFlecha(this, ANCHO - 110, ALTO_MAPA - 80, 1, () => pintar(pagina + 1), 170, 112).setActivo(pagina < paginas - 1));
         }
-        c.add(new Boton(this, ANCHO / 2, ALTO_MAPA - 80, { ancho: 300, alto: 110, texto: 'Salir', alPulsar: () => this.alAtras?.() }));
+        c.add(new Boton(this, ANCHO / 2, ALTO_MAPA - 80, { ancho: 360, alto: 112, texto: 'Salir', tamano: 38, icono: { ui: 'cerrar', tam: 56 }, alPulsar: () => this.alAtras?.() }));
       };
       pintar(0);
     });
@@ -1325,47 +1457,37 @@ export class Interfaz extends Phaser.Scene {
     this.cerrarDialogo();
     return new Promise((resolve) => {
       const pintar = () => {
-        const c = this.abrirCapa('Ordenar el equipo');
+        const c = this.abrirCapa('Ordenar el equipo', { icono: 'equipo', color: COLOR.verde });
         this.alAtras = () => {
           this.cerrarCapa();
           resolve();
         };
-        c.add(this.add.text(285, 140, `Equipo (${p.equipo.length}/${MAX_EQUIPO})`, estiloTexto(34, COLOR.oro, true)).setOrigin(0.5));
-        c.add(this.add.text(795, 140, `En el Bestiario (${p.almacen.length})`, estiloTexto(34, COLOR.oro, true)).setOrigin(0.5));
+        c.add(pildora(this, 40, 160, `Equipo ${p.equipo.length}/${MAX_EQUIPO}`, COLOR.tinta, 26));
+        c.add(pildora(this, 560, 160, `En el Bestiario ${p.almacen.length}`, COLOR.tinta, 26));
+        const fila = (cr: Criatura, x: number, y: number, subtexto: string, activo: boolean, accion: () => void) => {
+          const b = new Boton(this, x, y, { ancho: 500, alto: 116, texto: `${nombreDe(cr, DATOS)} · Nv ${cr.nivel}`, subtexto, tamano: 30, alPulsar: accion }).setActivo(activo);
+          c.add(b);
+          const circulo = this.add.graphics();
+          circulo.fillStyle(colorPedestal(cr.especie), 1).fillCircle(x - 196, y - 4, 40);
+          c.add(circulo);
+          c.add(crearCriaturaVisual(this, cr.especie, x - 196, y - 6, 80, true));
+        };
         p.equipo.forEach((cr, i) => {
-          c.add(
-            new Boton(this, 285, 230 + i * 130, {
-              ancho: 480,
-              alto: 116,
-              texto: `${nombreDe(cr, DATOS)} Nv ${cr.nivel}`,
-              subtexto: 'Dejar en el Bestiario →',
-              tamano: 32,
-              alPulsar: () => {
-                p.almacen.push(...p.equipo.splice(i, 1));
-                pintar();
-              },
-            }).setActivo(p.equipo.length > 1),
-          );
+          fila(cr, 274, 250 + i * 132, 'Dejar en el Bestiario →', p.equipo.length > 1, () => {
+            p.almacen.push(...p.equipo.splice(i, 1));
+            pintar();
+          });
         });
-        p.almacen.slice(0, 7).forEach((cr, i) => {
-          c.add(
-            new Boton(this, 795, 230 + i * 130, {
-              ancho: 480,
-              alto: 116,
-              texto: `${nombreDe(cr, DATOS)} Nv ${cr.nivel}`,
-              subtexto: '← Llevar al equipo',
-              tamano: 32,
-              alPulsar: () => {
-                p.equipo.push(...p.almacen.splice(i, 1));
-                pintar();
-              },
-            }).setActivo(p.equipo.length < MAX_EQUIPO),
-          );
+        p.almacen.slice(0, 6).forEach((cr, i) => {
+          fila(cr, 806, 250 + i * 132, '← Llevar al equipo', p.equipo.length < MAX_EQUIPO, () => {
+            p.equipo.push(...p.almacen.splice(i, 1));
+            pintar();
+          });
         });
-        if (p.almacen.length > 7) {
-          c.add(this.add.text(795, 1150, `y ${p.almacen.length - 7} más`, estiloTexto(28, COLOR.pergaminoOscuro)).setOrigin(0.5));
+        if (p.almacen.length > 6) {
+          c.add(this.add.text(806, 250 + 6 * 132, `y ${p.almacen.length - 6} más`, estiloTexto(28, COLOR.panel, true)).setOrigin(0.5));
         }
-        c.add(new Boton(this, ANCHO / 2, ALTO_MAPA - 80, { ancho: 400, alto: 110, texto: 'Listo', alPulsar: () => this.alAtras?.() }));
+        c.add(new Boton(this, ANCHO / 2, ALTO_MAPA - 80, { ancho: 360, alto: 112, texto: 'Listo', tamano: 38, color: COLOR.verde, alPulsar: () => this.alAtras?.() }));
       };
       pintar();
     });

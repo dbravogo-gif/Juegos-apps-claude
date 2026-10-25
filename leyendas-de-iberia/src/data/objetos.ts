@@ -4,7 +4,7 @@ import type { CategoriaObjeto, Objeto } from '../core/modelo';
 // juegos del género, para que se reconozcan al momento. Tienen nombre propio solo las téseras
 // (para capturar), el Turrón (sube un nivel), el Gorro colorado y los objetos importantes.
 // Un objeto sin `precio` no se vende: se encuentra, se gana o lo regala alguien.
-// El icono de cada uno está en `src/assets/objetos/<id>.png`. Los `id` son los de antes de
+// El icono de cada uno está en `src/assets/objetos/<id>.webp`. Los `id` son los de antes de
 // cambiar los nombres, para no romper las partidas guardadas.
 
 export const CATEGORIAS: { id: CategoriaObjeto; nombre: string }[] = [

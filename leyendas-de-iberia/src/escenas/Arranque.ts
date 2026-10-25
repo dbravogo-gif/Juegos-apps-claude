@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import { claveSprite, SPRITES } from '../ui/criaturaVisual';
 import { cargarHojasMundo, prepararHojasMundo } from '../ui/casillasVisual';
 import { cargarPersonas, prepararPersonas } from '../ui/personaVisual';
-import { cargarIconos, prepararIconos } from '../ui/objetoVisual';
+import { cargarIconos } from '../ui/objetoVisual';
 
 /** Carga el arte, prepara las animaciones y pasa al título. */
 export class Arranque extends Phaser.Scene {
@@ -18,10 +18,9 @@ export class Arranque extends Phaser.Scene {
   }
 
   create(): void {
-    // Las criaturas son ilustraciones: se escalan con suavizado (el filtro por defecto).
+    // Las criaturas y los iconos son ilustraciones: se escalan con suavizado (el filtro por defecto).
     prepararHojasMundo(this);
     prepararPersonas(this);
-    prepararIconos(this);
     this.scene.start('Titulo');
   }
 }

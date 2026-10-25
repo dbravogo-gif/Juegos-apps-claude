@@ -66,6 +66,15 @@ el encalado, etcétera.
   ojos). Corregidos el 2026-10-25: el drago, el Papemímico, el Trasgorn y el pelotero.
 - Reserva para más adelante: `arte/criaturas-futuras/` (Guayota y la vieja).
 
-## Objetos (`objetos/`)
+## Objetos (`objetos/`) e iconos de menú (`iconos/`)
 
-Iconos del mismo paquete *Ninja Adventure* (carpeta `Items/`), uno por `id` de objeto.
+- **Origen:** ilustrados con OpenArt (GPT Image 2) el 2026-10-25, en hojas de 4 × 3, con estilo de
+  icono de juego para móvil. Sustituyen a los iconos pixelados de *Ninja Adventure*.
+- **Objetos:** `objetos/<id>.webp`, uno por `id`. El dibujo sale de la idea original de cada
+  objeto (ungüento, tarro de miel, azabache, téseras de manos unidas…), aunque el nombre en
+  pantalla sea el del género.
+- **Menús:** `iconos/<nombre>.webp` (equipo, bestiario, mochila, tipos, guardar, cerrar, huir,
+  dinero, tarjeta, opciones, tienda y mapa).
+- **Proceso:** el mismo corte que las criaturas, centrado y a 192 px. Aquí no se vacían los
+  huecos blancos interiores, que son parte del dibujo, salvo en el amuleto de Tanit.
+- Reserva: `arte/objetos-futuros/` (tres bayas sin uso todavía).
