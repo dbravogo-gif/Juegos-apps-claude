@@ -1,7 +1,7 @@
 /**
  * Aspecto de las personas del mapa: el nombre de su hoja en `src/assets/personajes/`. Cada hoja
- * tiene 4 columnas (abajo, arriba, izquierda, derecha) y 4 filas de paso, a 16 × 16 píxeles.
- * Salen del paquete Ninja Adventure (CC0); ver `src/assets/LEEME.md`.
+ * tiene 4 columnas (abajo, arriba, izquierda, derecha) y 4 filas de paso, a 16 × 24 píxeles.
+ * Las dibuja `arte/mapa/personajes.py`: un aspecto nuevo se añade allí y aquí.
  */
 export const ASPECTOS = [
   'muchacho',
@@ -22,6 +22,7 @@ export const ASPECTOS = [
   'aldeano_verde',
   'aldeana',
   'maestro',
+  'tendero',
 ] as const;
 
 export type Aspecto = (typeof ASPECTOS)[number];

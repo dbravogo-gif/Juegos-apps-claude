@@ -27,8 +27,8 @@ tocan desde aquí.
 - **Arte:**
   - Mapa: tileset propio al estilo de los juegos de criaturas de GBA, generado por
     `arte/mapa/tileset.py` (`src/assets/LEEME.md`). Se cambia el script, nunca el PNG a mano.
-  - Personajes que caminan: todavía el paquete *Ninja Adventure* (CC0). Siguiente paso:
-    rehacerlos al estilo del mapa, con ropa y tocados de la época.
+  - Personajes que caminan: propios, al mismo estilo, con la ropa y los tocados de la época;
+    los genera `arte/mapa/personajes.py`. Ya no queda nada de *Ninja Adventure*.
   - Criaturas: hechas las 22 del capítulo 1 en el estilo elegido por el autor, con vista de
     rival y vista del jugador (`src/assets/LEEME.md`). Guayota y la vieja, en reserva, en
     `arte/criaturas-futuras/`. Antes de hacer más, lee la guía de diseño visual del Bestiario.
@@ -66,6 +66,7 @@ tocan desde aquí.
     tilesets de la comunidad (casi todos prohíben redistribuirlos y el repositorio es público).
   - Tileset propio y mapas del capítulo 1 más ricos: plaza con fuente, vallas, pozo, huertos,
     naranjos, setos, rocas.
+  - Personajes propios de 16 × 24, con la cabeza asomando sobre la casilla de arriba.
 
 ## Antes de tocar nada
 
@@ -140,7 +141,7 @@ El código va en español: nombres, comentarios y textos.
   - `casillasVisual.ts`: el mapa con el tileset propio. El suelo de cada zona se pinta en un
     lienzo (caminos, agua y alfombras por cuartos según sus vecinos); árboles, columnas y demás
     cosas altas van aparte, ordenadas por profundidad; el agua se mueve.
-  - `personaVisual.ts`: los personajes con las hojas de *Ninja Adventure*.
+  - `personaVisual.ts`: los personajes, con las hojas de `arte/mapa/personajes.py`.
   - `objetoVisual.ts`: los iconos ilustrados de objetos y menús.
   - `tablaTipos.ts`: la consulta de la tabla de tipos.
   - `criaturaVisual.ts`: las imágenes de `src/assets/criaturas/` (de frente y `_jugador`) o una

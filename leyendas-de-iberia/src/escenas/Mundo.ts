@@ -392,7 +392,7 @@ export class Mundo extends Phaser.Scene {
   private async emboscada(figura: Phaser.GameObjects.Image): Promise<void> {
     await this.sacudir(figura, 10, 10);
     abrirRecipiente(figura);
-    const marca = this.add.text(figura.x, figura.y - T * 1.3, '!', estiloTexto(64, COLOR.rojo, true)).setOrigin(0.5).setDepth(1000);
+    const marca = this.add.text(figura.x, figura.y - T * 1.6, '!', estiloTexto(64, COLOR.rojo, true)).setOrigin(0.5).setDepth(1000);
     this.capa?.add(marca);
     const y = figura.y;
     await new Promise<void>((resolve) =>
