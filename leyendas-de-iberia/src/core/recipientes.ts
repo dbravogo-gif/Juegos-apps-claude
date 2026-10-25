@@ -42,9 +42,13 @@ export function registrarRecipiente(
   if (revisado(p, zona, id)) return { tipo: 'nada' };
   p.revisados.push(claveRecipiente(zona, id));
   const tipos = ['objeto', 'nada', 'mimico'] as const;
-  // Sin tabla de objetos en la zona, la parte de «objeto» no puede salir.
+  // Sin tabla de objetos en la zona, la parte de «objeto» no puede salir. Sin ninguna criatura
+  // en pie, tampoco el Papemímico: no habría con quién luchar.
   const pesoObjeto = op.objetos.length > 0 ? op.prob.objeto : 0;
-  const tipo = tipos[elegirPonderado(p.rng, [pesoObjeto, op.prob.nada, op.prob.mimico])];
+  const pesoMimico = p.equipo.some((c) => c.vida > 0) ? op.prob.mimico : 0;
+  const pesos = [pesoObjeto, op.prob.nada, pesoMimico];
+  if (pesos.every((w) => w === 0)) return { tipo: 'nada' };
+  const tipo = tipos[elegirPonderado(p.rng, pesos)];
   if (tipo === 'nada') return { tipo: 'nada' };
   if (tipo === 'mimico') {
     const criatura = crearCriatura(datos, ESPECIE_MIMICO, nivelMimico(p, op.encuentros), p.rng, { valia: 10 });

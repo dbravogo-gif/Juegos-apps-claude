@@ -46,11 +46,14 @@ tocan desde aquí.
   - Tinajas en todo el juego, nunca papeleras.
   - Objetos por categorías, equipables y de evolución (`src/data/objetos.ts`).
   - Tinajas registrables y el Papemímico (`src/data/recipientes.ts`).
-- **Menús (2026-10-25):** al estilo del género, con piezas comunes en `src/ui/ventanas.ts`.
-  - Hecho: el menú de pausa, el equipo con submenú y opción de mover, la ficha en pestañas, la
-    mochila por bolsillos y los marcos del combate.
-  - Pendiente, si el autor lo pide: el Bestiario en lista con vista previa, la tienda y el menú
-    de órdenes del combate.
+- **Menús (2026-10-25, segunda versión):** con aspecto de juego actual, como pidió el autor.
+  - Tipografía Nunito (incluida en el juego), paneles blancos redondeados, botones con relieve,
+    fondos de color con rayas que se mueven e iconos ilustrados (`src/assets/iconos/`).
+  - Pausa con el equipo a la izquierda y las opciones a la derecha; equipo con submenú y
+    opción de mover; ficha en pestañas; mochila por bolsillos; Bestiario; tienda.
+  - Combate: los cuatro movimientos a la izquierda (70 %) y, a la derecha, la última tésera
+    usada, la mochila, el equipo y huir en un 2 × 2. La partida recuerda la última tésera.
+  - Los objetos tienen iconos ilustrados nuevos; los pixelados se han quitado.
 - **El laboratorio de combate** es solo una herramienta de pruebas, con un enlace pequeño en el
   título. No es prioridad.
 - **Pendiente del autor:** las decisiones abiertas al final de `docs/BESTIARIO.md` y del
@@ -121,12 +124,13 @@ El código va en español: nombres, comentarios y textos.
   - `Combate`: modo historia o laboratorio.
   - `Laboratorio`.
 - `src/ui/`:
-  - `tema.ts`: medidas (1080 × 1920; el mapa ocupa los 1240 de arriba) y colores.
-  - `componentes.ts`: `Boton`, que admite mantener pulsado; `Barra`; chips de tipo.
-  - `ventanas.ts`: las piezas de los menús (ventana de doble marco, fondo con rayas, cabecera,
-    cursor, iconos de menú y píldoras).
+  - `tema.ts`: medidas (1080 × 1920; el mapa ocupa los 1240 de arriba), paleta y tipografía.
+  - `componentes.ts`: `Boton` (con relieve, icono opcional y mantener pulsado), `botonFlecha`,
+    `Barra` y chips de tipo.
+  - `ventanas.ts`: las piezas de los menús (panel, fondo con rayas, pestaña de título, franja de
+    selección y píldoras).
   - `casillasVisual.ts` y `personaVisual.ts`: el mapa y los personajes con las hojas de
-    *Ninja Adventure*. `objetoVisual.ts`: los iconos de los objetos.
+    *Ninja Adventure*. `objetoVisual.ts`: los iconos ilustrados de objetos y menús.
   - `tablaTipos.ts`: la consulta de la tabla de tipos.
   - `criaturaVisual.ts`: las imágenes de `src/assets/criaturas/` (de frente y `_jugador`) o una
     figura provisional.

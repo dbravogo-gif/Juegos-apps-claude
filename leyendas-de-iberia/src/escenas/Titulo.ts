@@ -20,9 +20,9 @@ export class Titulo extends Phaser.Scene {
     this.empezando = false;
     this.cameras.main.setBackgroundColor(COLOR.fondo);
     this.cameras.main.setScroll(0, -MARGEN_VERTICAL);
-    this.add.text(ANCHO / 2, 300, 'Leyendas', estiloTexto(130, COLOR.pergamino, true)).setOrigin(0.5);
+    this.add.text(ANCHO / 2, 300, 'Leyendas', estiloTexto(130, COLOR.panel, true)).setOrigin(0.5);
     this.add.text(ANCHO / 2, 430, 'de Iberia', estiloTexto(96, COLOR.oro, true)).setOrigin(0.5);
-    this.add.text(ANCHO / 2, 540, 'Capítulo 1 · Granada, 1492', estiloTexto(40, COLOR.pergaminoOscuro)).setOrigin(0.5);
+    this.add.text(ANCHO / 2, 540, 'Capítulo 1 · Granada, 1492', estiloTexto(40, COLOR.panelSuave)).setOrigin(0.5);
 
     crearCriaturaVisual(this, 'becerro_igneo', 250, 800, 230, true);
     crearCriaturaVisual(this, 'retono_drago', 540, 760, 250);
@@ -84,7 +84,7 @@ export class Titulo extends Phaser.Scene {
     return new Promise((resolve) => {
       const c = this.add.container(0, 0).setDepth(10);
       c.add(this.add.rectangle(0, -MARGEN_VERTICAL, ANCHO, ALTO + 2 * MARGEN_VERTICAL, 0x000000, 0.7).setOrigin(0, 0).setInteractive());
-      c.add(this.add.rectangle(ANCHO / 2, ALTO / 2 - 60, 900, 480, COLOR.pergamino).setRounded(24).setStrokeStyle(6, COLOR.tinta));
+      c.add(this.add.rectangle(ANCHO / 2, ALTO / 2 - 60, 900, 480, COLOR.panel).setRounded(24).setStrokeStyle(6, COLOR.tinta));
       c.add(this.add.text(ANCHO / 2, ALTO / 2 - 170, pregunta, { ...estiloTexto(44, COLOR.tinta, true), align: 'center', wordWrap: { width: 780 } }).setOrigin(0.5));
       const fin = (v: boolean) => {
         c.destroy();

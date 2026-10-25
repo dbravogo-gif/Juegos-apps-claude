@@ -27,10 +27,10 @@ const eventos = (r: { eventos: Evento[] }, tipo: Evento['tipo']) => r.eventos.fi
 describe('catálogo de objetos', () => {
   it('cada objeto tiene una categoría conocida y un icono', () => {
     const categorias = new Set(CATEGORIAS.map((c) => c.id));
-    const iconos = Object.keys(import.meta.glob('../src/assets/objetos/*.png')).map((r) => r.split('/').pop());
+    const iconos = Object.keys(import.meta.glob('../src/assets/objetos/*.webp')).map((r) => r.split('/').pop());
     for (const o of Object.values(DATOS.objetos)) {
       expect(categorias.has(o.categoria), o.id).toBe(true);
-      expect(iconos, `icono de ${o.id}`).toContain(`${o.id}.png`);
+      expect(iconos, `icono de ${o.id}`).toContain(`${o.id}.webp`);
     }
   });
 

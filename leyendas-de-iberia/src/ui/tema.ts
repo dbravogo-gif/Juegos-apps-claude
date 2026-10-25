@@ -20,24 +20,35 @@ function calcularAlto(): number {
 /** Lo que hay que bajar una pantalla de 1920 de alto para centrarla en el alto real. */
 export const MARGEN_VERTICAL = Math.round((ALTO - ALTO_DISENO) / 2);
 
+// Paleta de juego actual: paneles blancos, texto azul noche y colores vivos de acento.
 export const COLOR = {
-  fondo: 0x1d1611,
-  pergamino: 0xf3e6c4,
-  pergaminoOscuro: 0xe2cf9f,
-  tinta: 0x2b1d12,
-  tintaSuave: 0x6b5a45,
-  rojo: 0x9f1d20,
-  oro: 0xc9a227,
-  bronce: 0xb0793a,
-  vidaAlta: 0x3f8f3a,
-  vidaMedia: 0xd99a1e,
-  vidaBaja: 0xc0392b,
-  exp: 0x3a6ea5,
-  cielo: 0xcfe3e8,
-  suelo: 0xb9a27a,
+  /** Azul noche: el mando y el fondo de los menús. */
+  fondo: 0x151a3d,
+  /** Paneles y ventanas. */
+  panel: 0xffffff,
+  /** Botones secundarios y paneles apagados. */
+  panelSuave: 0xe9edf6,
+  /** Borde fino de los paneles. */
+  borde: 0xd3d9ec,
+  tinta: 0x1d2240,
+  tintaSuave: 0x66708f,
+  rojo: 0xec3b4f,
+  oro: 0xffbe1e,
+  bronce: 0xff8a2a,
+  azul: 0x3b6cff,
+  celeste: 0x2ec4ff,
+  verde: 0x2fbf71,
+  morado: 0x8a5cf6,
+  vidaAlta: 0x3ccf6e,
+  vidaMedia: 0xffc21a,
+  vidaBaja: 0xf2414f,
+  exp: 0x3d8bff,
+  cielo: 0x9ad7ff,
+  suelo: 0x93cf6b,
 } as const;
 
-export const FUENTE = 'Georgia, "Times New Roman", serif';
+/** Tipografía redondeada, como la de los juegos actuales (Nunito, incluida en el juego). */
+export const FUENTE = '"Nunito", "Segoe UI", system-ui, sans-serif';
 
 export function css(color: number): string {
   return `#${color.toString(16).padStart(6, '0')}`;
@@ -48,7 +59,7 @@ export function estiloTexto(tamano: number, color: number = COLOR.tinta, negrita
     fontFamily: FUENTE,
     fontSize: `${tamano}px`,
     color: css(color),
-    fontStyle: negrita ? 'bold' : 'normal',
+    fontStyle: negrita ? '900' : '700',
   };
 }
 
@@ -70,10 +81,10 @@ export function oscurecer(color: number, t: number): number {
   return (m(r) << 16) | (m(g) << 8) | m(b);
 }
 
-/** Negro o pergamino, el que mejor se lea sobre `fondo`. */
+/** Texto oscuro o blanco, el que mejor se lea sobre `fondo`. */
 export function textoSobre(fondo: number): number {
   const r = (fondo >> 16) & 0xff;
   const g = (fondo >> 8) & 0xff;
   const b = fondo & 0xff;
-  return 0.299 * r + 0.587 * g + 0.114 * b > 150 ? COLOR.tinta : COLOR.pergamino;
+  return 0.299 * r + 0.587 * g + 0.114 * b > 165 ? COLOR.tinta : COLOR.panel;
 }

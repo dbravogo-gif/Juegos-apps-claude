@@ -595,6 +595,12 @@ export class Mundo extends Phaser.Scene {
       p.banderas[`vencido:${def.id}`] = true;
       return true;
     }
+    // Sin ninguna criatura en pie no hay combate posible (antes de elegir compañera, por ejemplo).
+    if (!equipoEnPie(p)) {
+      await this.ui.decir('Vuelve cuando tengas una criatura con ganas de pelear.', def.nombre);
+      this.ui.cerrarDialogo();
+      return false;
+    }
     for (const t of def.antes) await this.ui.decir(t, def.nombre);
     this.ui.cerrarDialogo();
     const resultado = await this.combatir(equipoEntrenador(def, DATOS), false, def);
@@ -639,10 +645,12 @@ export class Mundo extends Phaser.Scene {
           salvaje,
           nombreRival: def?.nombre ?? 'Salvaje',
           iaAstuta: op.iaAstuta,
+          ultimaTesera: p.ultimaTesera,
           alTerminar: (r: ResultadoHistoria) => {
             this.scene.stop('Combate');
             this.scene.wake();
             this.scene.wake('Interfaz');
+            p.ultimaTesera = r.ultimaTesera;
             const aplicado = aplicarCombate(p, { ...r, entrenador: def }, DATOS);
             this.perdido = aplicado.perdido;
             this.regalos = aplicado.regalos;

@@ -66,7 +66,7 @@ export class Laboratorio extends Phaser.Scene {
     this.cameras.main.setBackgroundColor(COLOR.fondo);
     this.cameras.main.setScroll(0, -MARGEN_VERTICAL);
 
-    this.add.text(ANCHO / 2, 70, 'Laboratorio de combate', estiloTexto(64, COLOR.pergamino, true)).setOrigin(0.5);
+    this.add.text(ANCHO / 2 + 80, 70, 'Laboratorio de combate', estiloTexto(54, COLOR.panel, true)).setOrigin(0.5);
     this.add.text(ANCHO / 2, 135, 'Leyendas de Iberia · herramienta de pruebas', estiloTexto(34, COLOR.oro)).setOrigin(0.5);
     new Boton(this, 110, 70, { ancho: 160, alto: 80, texto: '‹ Salir', tamano: 30, alPulsar: () => this.scene.start('Titulo') });
 
@@ -99,7 +99,7 @@ export class Laboratorio extends Phaser.Scene {
     const destino = this.ladoActivo === 'jugador' ? 'tu equipo' : 'el rival';
     capa.add(
       this.add
-        .text(ANCHO / 2, 880, `Toca una criatura para añadirla a ${destino}`, estiloTexto(34, COLOR.pergaminoOscuro))
+        .text(ANCHO / 2, 880, `Toca una criatura para añadirla a ${destino}`, estiloTexto(34, COLOR.panelSuave))
         .setOrigin(0.5),
     );
   }
@@ -107,7 +107,7 @@ export class Laboratorio extends Phaser.Scene {
   private dibujarLado(capa: Phaser.GameObjects.Container, lado: LadoLab, y: number): void {
     const activo = this.ladoActivo === lado;
     const alto = 300;
-    const fondo = panel(this, 40, y, ANCHO - 80, alto, activo ? COLOR.pergamino : COLOR.pergaminoOscuro);
+    const fondo = panel(this, 40, y, ANCHO - 80, alto, activo ? COLOR.panel : COLOR.panelSuave);
     if (activo) fondo.setStrokeStyle(10, COLOR.oro);
     fondo.setInteractive({ useHandCursor: true }).on('pointerup', () => {
       if (this.ladoActivo !== lado) {
@@ -158,7 +158,7 @@ export class Laboratorio extends Phaser.Scene {
     for (let i = 0; i < maximo; i++) {
       const cx = 125 + i * 166;
       const cy = y + 185;
-      const hueco = this.add.rectangle(cx, cy, 150, 160, oscurecer(COLOR.pergaminoOscuro, 0.08)).setRounded(18);
+      const hueco = this.add.rectangle(cx, cy, 150, 160, oscurecer(COLOR.panelSuave, 0.08)).setRounded(18);
       capa.add(hueco);
       const id = ids[i];
       if (!id) continue;
@@ -192,7 +192,7 @@ export class Laboratorio extends Phaser.Scene {
       const x = x0 + col * (ancho + 12) + ancho / 2;
       const y = 930 + fila * (alto + 10) + alto / 2;
       const fondo = this.add
-        .rectangle(x, y, ancho, alto, COLOR.pergamino)
+        .rectangle(x, y, ancho, alto, COLOR.panel)
         .setRounded(18)
         .setStrokeStyle(4, COLOR.tintaSuave);
       crearCriaturaVisual(this, id, x, y - 18, 92);

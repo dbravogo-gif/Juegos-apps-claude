@@ -7,7 +7,7 @@ import { aprenderMovimiento, evolucionar, evolucionPendiente, expParaNivel } fro
 import type { Criatura, Movimiento } from '../core/modelo';
 import { eficacia } from '../core/tipos';
 import { construirTablaTipos } from '../ui/tablaTipos';
-import { iconoObjeto } from '../ui/objetoVisual';
+
 import { motivoNoUsable, seAplicaACriatura } from '../core/objetos';
 import {
   accionesDisponibles,
@@ -21,8 +21,9 @@ import {
   type Lado,
   type ResultadoCombate,
 } from '../core/combate';
-import { Barra, Boton, filaTipos } from '../ui/componentes';
-import { pildora, ventana } from '../ui/ventanas';
+import { Barra, Boton, botonFlecha, filaTipos, type OpcionesBoton } from '../ui/componentes';
+import { cabecera, colorPedestal, fondoMenu, pildora, ventana } from '../ui/ventanas';
+import { iconoObjeto } from '../ui/objetoVisual';
 import { crearCriaturaVisual } from '../ui/criaturaVisual';
 import { describirMovimiento, textosEvento, type ContextoTextos } from '../ui/textos';
 import { aclarar, ALTO, ANCHO, COLOR, estiloTexto, MARGEN_VERTICAL, oscurecer } from '../ui/tema';
@@ -37,6 +38,8 @@ export interface ResultadoHistoria {
   capturada: Criatura | null;
   /** Especies rivales que han salido: van al Bestiario como vistas. */
   rivales: string[];
+  /** La última tésera lanzada, para tenerla a mano en el siguiente combate. */
+  ultimaTesera: string;
 }
 
 export type DatosCombate =
@@ -51,8 +54,12 @@ export type DatosCombate =
       nombreRival: string;
       /** El rival salvaje elige sus movimientos como un entrenador. */
       iaAstuta?: boolean;
+      ultimaTesera?: string;
       alTerminar: (r: ResultadoHistoria) => void;
     };
+
+/** Centro vertical de las dos filas de botones del menú de combate. */
+const FILA_MENU = [1385, 1595];
 
 const POSICION: Record<Lado, { x: number; y: number; tam: number }> = {
   rival: { x: 770, y: 370, tam: 330 },
@@ -74,33 +81,37 @@ class Ficha {
     private scene: Phaser.Scene,
     x: number,
     y: number,
-    ancho: number,
+    private ancho: number,
     esJugador: boolean,
   ) {
-    const alto = esJugador ? 270 : 220;
+    const alto = esJugador ? 250 : 200;
     this.capa = scene.add.container(x, y);
-    this.capa.add(ventana(scene, 0, 0, ancho, alto));
-    this.nombre = scene.add.text(30, 48, '', estiloTexto(44, COLOR.tinta, true)).setOrigin(0, 0.5);
-    this.nivel = scene.add.text(ancho - 30, 48, '', estiloTexto(38, COLOR.tinta, true)).setOrigin(1, 0.5);
+    this.capa.add(ventana(scene, 0, 0, ancho, alto, { radio: 36 }));
+    this.nombre = scene.add.text(30, 46, '', estiloTexto(40, COLOR.tinta, true)).setOrigin(0, 0.5);
+    const fondoNivel = scene.add.graphics();
+    fondoNivel.fillStyle(COLOR.tinta, 1).fillRoundedRect(ancho - 150, 24, 124, 44, 22);
+    this.nivel = scene.add.text(ancho - 88, 46, '', estiloTexto(28, COLOR.panel, true)).setOrigin(0.5);
     this.tipos = scene.add.container(0, 0);
-    this.estado = scene.add.text(ancho - 30, 108, '', estiloTexto(28, COLOR.pergamino, true)).setOrigin(1, 0.5);
-    this.estado.setBackgroundColor('#9f1d20').setPadding(10, 4, 10, 4);
-    const etiqueta = pildora(scene, 30, 166, 'VIDA', COLOR.tinta, 20, COLOR.oro);
-    this.barra = new Barra(scene, 130, 166, ancho - 160, 30, true);
-    this.capa.add([this.nombre, this.nivel, this.tipos, this.estado, etiqueta, this.barra]);
+    this.estado = scene.add.text(ancho - 28, 104, '', estiloTexto(24, COLOR.panel, true)).setOrigin(1, 0.5);
+    this.estado.setBackgroundColor('#ec3b4f').setPadding(14, 4, 14, 4);
+    const etiqueta = pildora(scene, 30, 156, 'VIDA', COLOR.tinta, 20, COLOR.oro);
+    this.barra = new Barra(scene, 130, 156, ancho - 160, 28, true);
+    this.capa.add([this.nombre, fondoNivel, this.nivel, this.tipos, this.estado, etiqueta, this.barra]);
     if (esJugador) {
-      this.numeros = scene.add.text(ancho - 30, 212, '', estiloTexto(34, COLOR.tinta, true)).setOrigin(1, 0.5);
-      const etExp = pildora(scene, 30, 240, 'EXP', COLOR.exp, 16, COLOR.pergamino);
-      this.barraExp = new Barra(scene, 130, 240, ancho - 160, 16, false);
+      this.numeros = scene.add.text(ancho - 30, 196, '', estiloTexto(30, COLOR.tinta, true)).setOrigin(1, 0.5);
+      const etExp = pildora(scene, 30, 222, 'EXP', COLOR.exp, 16, COLOR.panel);
+      this.barraExp = new Barra(scene, 130, 222, ancho - 300, 14, false);
       this.capa.add([this.numeros, etExp, this.barraExp]);
     }
   }
 
   mostrar(ficha: FichaCombate): void {
     this.nombre.setText(ficha.nombre);
+    // Si el nombre es largo, se encoge para no pisar el nivel.
+    this.nombre.setScale(Math.min(1, (this.ancho - 200) / Math.max(1, this.nombre.width / this.nombre.scaleX)));
     this.nivel.setText(`Nv ${ficha.nivel}`);
     this.tipos.removeAll(true);
-    filaTipos(this.scene, this.tipos, 30, 108, DATOS.especies[ficha.especie].tipos, 26);
+    filaTipos(this.scene, this.tipos, 30, 104, DATOS.especies[ficha.especie].tipos, 22);
     this.setEstado(ficha.estado);
     void this.setVida(ficha.vida, ficha.vidaMax, false);
     this.capa.setVisible(true);
@@ -111,8 +122,9 @@ class Ficha {
   }
 
   setEstado(estado: string | null): void {
-    const texto = estado === 'quemado' ? 'QUEMADO' : estado === 'dormido' ? 'DORMIDO' : '';
+    const texto = estado === 'quemado' ? 'Quemada' : estado === 'dormido' ? 'Dormida' : '';
     this.estado.setText(texto).setVisible(texto !== '');
+    this.estado.setBackgroundColor(estado === 'dormido' ? '#6f7fd8' : '#ff7a2f');
   }
 
   setVida(vida: number, max: number, animar: boolean): Promise<void> {
@@ -144,6 +156,7 @@ export class Combate extends Phaser.Scene {
   private menu?: Phaser.GameObjects.Container;
   private saltar: (() => void) | null = null;
   private ocupado = false;
+  private ultimaTesera = 'tesera';
 
   constructor() {
     super('Combate');
@@ -157,6 +170,7 @@ export class Combate extends Phaser.Scene {
     this.menu = undefined;
     this.saltar = null;
     this.ocupado = false;
+    this.ultimaTesera = (data.modo === 'historia' && data.ultimaTesera) || 'tesera';
   }
 
   create(): void {
@@ -165,44 +179,44 @@ export class Combate extends Phaser.Scene {
     // Diseñada a 1920 de alto: en pantallas más altas se centra y el cielo llega hasta arriba.
     this.cameras.main.setScroll(0, -MARGEN_VERTICAL);
 
-    // Campo de batalla: cielo en degradado, suelo y dos pedestales de tierra con borde.
+    // Campo de batalla: cielo en degradado, pradera y dos plataformas de hierba con borde.
     const campo = this.add.graphics();
-    campo.fillGradientStyle(aclarar(COLOR.cielo, 0.5), aclarar(COLOR.cielo, 0.5), COLOR.cielo, COLOR.cielo, 1);
+    campo.fillGradientStyle(aclarar(COLOR.cielo, 0.55), aclarar(COLOR.cielo, 0.55), COLOR.cielo, COLOR.cielo, 1);
     campo.fillRect(0, -MARGEN_VERTICAL, ANCHO, 560 + MARGEN_VERTICAL);
-    campo.fillGradientStyle(aclarar(COLOR.suelo, 0.45), aclarar(COLOR.suelo, 0.45), aclarar(COLOR.suelo, 0.2), aclarar(COLOR.suelo, 0.2), 1);
+    campo.fillGradientStyle(aclarar(COLOR.suelo, 0.35), aclarar(COLOR.suelo, 0.35), COLOR.suelo, COLOR.suelo, 1);
     campo.fillRect(0, 560, ANCHO, 430);
-    campo.fillStyle(0xffffff, 0.25).fillRect(0, 560, ANCHO, 6);
+    campo.fillStyle(0xffffff, 0.3).fillRect(0, 560, ANCHO, 5);
     for (const [lado, ancho, alto, dy] of [
-      ['rival', 440, 110, 150],
-      ['jugador', 500, 120, 175],
+      ['rival', 460, 120, 150],
+      ['jugador', 540, 130, 175],
     ] as const) {
       const { x, y } = POSICION[lado];
-      campo.fillStyle(oscurecer(COLOR.suelo, 0.25), 1).fillEllipse(x, y + dy + 10, ancho, alto);
-      campo.fillStyle(COLOR.suelo, 1).fillEllipse(x, y + dy, ancho, alto);
-      campo.fillStyle(0xffffff, 0.18).fillEllipse(x - ancho * 0.08, y + dy - alto * 0.15, ancho * 0.6, alto * 0.4);
+      campo.fillStyle(oscurecer(COLOR.suelo, 0.35), 1).fillEllipse(x, y + dy + 12, ancho, alto);
+      campo.fillStyle(oscurecer(COLOR.suelo, 0.1), 1).fillEllipse(x, y + dy, ancho, alto);
+      campo.fillStyle(aclarar(COLOR.suelo, 0.3), 1).fillEllipse(x, y + dy - 6, ancho * 0.82, alto * 0.7);
     }
 
     this.ficha = {
-      rival: new Ficha(this, 30, 40, 560, false),
-      jugador: new Ficha(this, 510, 620, 540, true),
+      rival: new Ficha(this, 24, 40, 560, false),
+      jugador: new Ficha(this, 500, 640, 556, true),
     };
     this.ficha.rival.ocultar();
     this.ficha.jugador.ocultar();
 
-    ventana(this, 30, 1010, ANCHO - 60, 240);
-    this.texto = this.add.text(70, 1045, '', {
-      ...estiloTexto(44, COLOR.tinta),
-      wordWrap: { width: ANCHO - 140 },
+    // Mensajes en una caja oscura, como en los juegos actuales.
+    ventana(this, 24, 1010, ANCHO - 48, 236, { color: COLOR.tinta, opacidad: 0.94, borde: null, radio: 36 });
+    this.texto = this.add.text(64, 1046, '', {
+      ...estiloTexto(40, COLOR.panel, true),
+      wordWrap: { width: ANCHO - 128 },
       lineSpacing: 10,
     });
     this.info = this.add
-      .text(70, 1035, '', { ...estiloTexto(33, COLOR.tinta), wordWrap: { width: ANCHO - 140 }, lineSpacing: 6 })
+      .text(64, 1036, '', { ...estiloTexto(31, COLOR.panel), wordWrap: { width: ANCHO - 128 }, lineSpacing: 6 })
       .setVisible(false);
 
-    this.add
-      .text(ANCHO - 40, 1900, `Semilla ${semilla}`, estiloTexto(24, COLOR.tintaSuave))
-      .setOrigin(1, 1);
-
+    if (this.entrada.modo === 'laboratorio') {
+      this.add.text(ANCHO - 40, 1900, `Semilla ${semilla}`, estiloTexto(22, COLOR.tintaSuave)).setOrigin(1, 1);
+    }
 
     // Tocar la pantalla adelanta el texto.
     this.input.on('pointerdown', () => this.saltar?.());
@@ -373,7 +387,8 @@ export class Combate extends Phaser.Scene {
 
   private async animarCaptura(sacudidas: number, exito: boolean): Promise<void> {
     const presa = this.visual.rival;
-    const t = this.add.rectangle(POSICION.jugador.x, POSICION.jugador.y, 70, 90, COLOR.bronce).setRounded(14).setStrokeStyle(5, COLOR.tinta);
+    // Vuela la tésera que se ha usado, con su dibujo.
+    const t = iconoObjeto(this, POSICION.jugador.x, POSICION.jugador.y, this.ultimaTesera, 120) as Phaser.GameObjects.Image;
     await this.tween({ targets: t, x: POSICION.rival.x, y: POSICION.rival.y + 60, angle: 360, duration: 500, ease: 'Quad.easeOut' });
     if (presa) await this.tween({ targets: presa, scale: 0.05, alpha: 0, duration: 250 });
     for (let i = 0; i < sacudidas; i++) {
@@ -382,7 +397,12 @@ export class Combate extends Phaser.Scene {
     }
     await this.esperar(300);
     if (exito) {
-      t.setFillStyle(COLOR.oro);
+      // Destellos alrededor: el pacto está sellado.
+      for (let i = 0; i < 8; i++) {
+        const angulo = (i / 8) * Math.PI * 2;
+        const chispa = this.add.star(t.x, t.y, 5, 6, 16, COLOR.oro);
+        this.tweens.add({ targets: chispa, x: t.x + Math.cos(angulo) * 110, y: t.y + Math.sin(angulo) * 110, alpha: 0, duration: 600, onComplete: () => chispa.destroy() });
+      }
       return;
     }
     t.destroy();
@@ -417,56 +437,89 @@ export class Combate extends Phaser.Scene {
     return this.menu;
   }
 
+  /**
+   * Menú del combate, como en los juegos del género: los cuatro movimientos a la izquierda (70 %)
+   * y, a la derecha (30 %), la última tésera usada, la mochila, el equipo y huir en un 2 × 2.
+   */
   private menuPrincipal(): void {
     const menu = this.nuevoMenu();
     const yo = activoDe(this.estado, 'jugador');
     const rival = activoDe(this.estado, 'rival');
     const disp = accionesDisponibles(this.estado, DATOS);
     this.texto.setText(`¿Qué hará ${nombreDe(yo, DATOS)}?`);
-    menu.add(
-      this.add
-        .text(ANCHO / 2, 1268, 'Mantén pulsado un movimiento para ver qué hace', estiloTexto(26, COLOR.pergaminoOscuro))
-        .setOrigin(0.5, 0.5),
-    );
 
-    yo.movimientos.forEach((m, i) => {
+    const filas = [FILA_MENU[0], FILA_MENU[1]];
+    const altoFila = 192;
+    const anchoMov = 348;
+    const xMov = [24 + anchoMov / 2, 24 + anchoMov + 16 + anchoMov / 2];
+    for (let i = 0; i < 4; i++) {
+      const x = xMov[i % 2];
+      const y = filas[Math.floor(i / 2)];
+      const m = yo.movimientos[i];
+      if (!m) {
+        menu.add(this.add.rectangle(x, y, anchoMov, altoFila - 8, 0xffffff, 0.08).setRounded(30));
+        continue;
+      }
       const mov = DATOS.movimientos[m.id];
       const tipo = DATOS.tipos.tipos.find((t) => t.id === mov.tipo);
-      const x = i % 2 === 0 ? 280 : 800;
-      const y = i < 2 ? 1370 : 1555;
-      const b = new Boton(this, x, y, {
-        ancho: 500,
-        alto: 170,
-        texto: mov.nombre,
-        subtexto: `${tipo?.nombre ?? ''} · PP ${m.pp}/${mov.pp}`,
-        color: aclarar(tipo?.color ?? COLOR.pergaminoOscuro, 0.35),
-        tamano: 42,
-        alPulsar: () => void this.ejecutar({ tipo: 'movimiento', indice: i }),
-        alMantener: () => this.mostrarInfo(mov, m.pp),
-        alSoltar: () => this.ocultarInfo(),
-      }).setActivo(disp.movimientos[i] || disp.sinPP);
-      menu.add(b);
+      menu.add(
+        new Boton(this, x, y, {
+          ancho: anchoMov,
+          alto: altoFila,
+          texto: mov.nombre,
+          subtexto: `${tipo?.nombre ?? ''} · PP ${m.pp}/${mov.pp}`,
+          color: tipo?.color ?? COLOR.panel,
+          tamano: 38,
+          alPulsar: () => void this.ejecutar({ tipo: 'movimiento', indice: i }),
+          alMantener: () => this.mostrarInfo(mov, m.pp),
+          alSoltar: () => this.ocultarInfo(),
+        }).setActivo(disp.movimientos[i] || disp.sinPP),
+      );
       if (mov.categoria !== 'estado') {
         const ef = eficacia(DATOS.tipos, mov.tipo, DATOS.especies[rival.especie].tipos);
         if (ef !== 1) {
-          const marca = ef === 0 ? '×0' : ef < 1 ? `×${ef === 0.25 ? '¼' : '½'}` : `×${ef}`;
-          const color = ef > 1 ? COLOR.vidaAlta : COLOR.vidaBaja;
-          const t = this.add.text(x + 215, y - 60, marca, estiloTexto(30, COLOR.pergamino, true)).setOrigin(1, 0.5);
-          t.setBackgroundColor(`#${color.toString(16).padStart(6, '0')}`).setPadding(8, 2, 8, 2);
-          menu.add(t);
+          const marca = ef === 0 ? 'Sin efecto' : ef < 1 ? `×${ef === 0.25 ? '¼' : '½'}` : `×${ef}`;
+          const etiqueta = pildora(this, 0, y - altoFila / 2 + 4, marca, ef > 1 ? COLOR.verde : COLOR.tinta, 20);
+          etiqueta.x = x + anchoMov / 2 - etiqueta.width / 2 - 10;
+          menu.add(etiqueta);
         }
       }
-    });
+    }
 
-    const inferior: [string, () => void, boolean][] = [
-      ['Mochila', () => this.menuMochila(), Object.values(disp.objetos).some(Boolean)],
-      ['Equipo', () => this.menuEquipo('cambio'), disp.cambios.some(Boolean)],
-      ['Tipos', () => this.verTablaTipos(), true],
-      ['Huir', () => void this.ejecutar({ tipo: 'huir' }), disp.huir],
+    // Derecha: la última tésera usada, la mochila, el equipo y huir.
+    const capturas = Object.keys(disp.objetos).filter((id) => DATOS.objetos[id].tipo === 'captura');
+    const tesera = disp.objetos[this.ultimaTesera] ? this.ultimaTesera : (capturas.find((id) => disp.objetos[id]) ?? this.ultimaTesera);
+    const quedan = this.estado.jugador.objetos[tesera] ?? 0;
+    const anchoLado = 144;
+    const xLado = [24 + 2 * anchoMov + 16 + 16 + anchoLado / 2, ANCHO - 24 - anchoLado / 2];
+    const lado: { texto: string; color: number; icono: OpcionesBoton['icono']; activo: boolean; accion: () => void }[] = [
+      {
+        texto: 'Tésera',
+        color: COLOR.oro,
+        icono: { objeto: tesera, tam: 84 },
+        activo: disp.objetos[tesera] === true,
+        accion: () => void this.ejecutar({ tipo: 'objeto', objeto: tesera }),
+      },
+      { texto: 'Mochila', color: COLOR.bronce, icono: { ui: 'mochila', tam: 84 }, activo: Object.values(disp.objetos).some(Boolean), accion: () => this.menuMochila() },
+      { texto: 'Equipo', color: COLOR.verde, icono: { ui: 'equipo', tam: 84 }, activo: disp.cambios.some(Boolean), accion: () => this.menuEquipo('cambio') },
+      { texto: 'Huir', color: COLOR.azul, icono: { ui: 'huir', tam: 84 }, activo: disp.huir, accion: () => void this.ejecutar({ tipo: 'huir' }) },
     ];
-    inferior.forEach(([texto, alPulsar, activo], i) => {
-      menu.add(new Boton(this, 145 + i * 263, 1765, { ancho: 245, alto: 140, texto, tamano: 38, alPulsar }).setActivo(activo));
+    lado.forEach((o, i) => {
+      const x = xLado[i % 2];
+      const y = filas[Math.floor(i / 2)];
+      menu.add(new Boton(this, x, y, { ancho: anchoLado, alto: altoFila, texto: o.texto, tamano: 26, color: o.color, icono: o.icono, alPulsar: o.accion }).setActivo(o.activo));
     });
+    if (quedan > 0) {
+      const n = pildora(this, 0, filas[0] - altoFila / 2 + 4, `×${quedan}`, COLOR.tinta, 20);
+      n.x = xLado[0] + anchoLado / 2 - n.width / 2 - 8;
+      menu.add(n);
+    }
+
+    // Abajo: la ayuda y la tabla de tipos.
+    menu.add(this.add.text(40, 1830, 'Mantén pulsado un movimiento para ver qué hace.', estiloTexto(24, COLOR.panelSuave)).setOrigin(0, 0.5));
+    menu.add(
+      new Boton(this, ANCHO - 170, 1830, { ancho: 290, alto: 92, texto: 'Tipos', tamano: 30, color: COLOR.morado, icono: { ui: 'tipos', tam: 58 }, alPulsar: () => this.verTablaTipos() }),
+    );
   }
 
   private menuMochila(pagina = 0): void {
@@ -478,34 +531,32 @@ export class Combate extends Phaser.Scene {
     objetos.slice(pagina * porPagina, (pagina + 1) * porPagina).forEach((id, i) => {
       const obj = DATOS.objetos[id];
       const n = this.estado.jugador.objetos[id];
-      const x = i % 2 === 0 ? 280 : 800;
-      const y = 1355 + Math.floor(i / 2) * 175;
-      const b = new Boton(this, x, y, {
-        ancho: 500,
-        alto: 160,
-        texto: `${obj.nombre} ×${n}`,
-        tamano: 30,
-        alPulsar: () => {
-          if (seAplicaACriatura(obj)) this.menuEquipo('objeto', id);
-          else void this.ejecutar({ tipo: 'objeto', objeto: id });
-        },
-        alMantener: () => {
-          this.info.setText(`${obj.nombre}\n${obj.descripcion}`).setVisible(true);
-          this.texto.setVisible(false);
-        },
-        alSoltar: () => this.ocultarInfo(),
-      }).setActivo(disp.objetos[id]);
-      menu.add(b);
-      menu.add(iconoObjeto(this, x - 200, y + 30, id, 56));
+      menu.add(
+        new Boton(this, i % 2 === 0 ? 280 : 800, FILA_MENU[Math.floor(i / 2)], {
+          ancho: 500,
+          alto: 192,
+          texto: obj.nombre,
+          subtexto: `Tienes ${n}`,
+          tamano: 32,
+          icono: { objeto: id, tam: 96 },
+          alPulsar: () => {
+            if (seAplicaACriatura(obj)) this.menuEquipo('objeto', id);
+            else void this.ejecutar({ tipo: 'objeto', objeto: id });
+          },
+          alMantener: () => {
+            this.info.setText(`${obj.nombre}\n${obj.descripcion}`).setVisible(true);
+            this.texto.setVisible(false);
+          },
+          alSoltar: () => this.ocultarInfo(),
+        }).setActivo(disp.objetos[id]),
+      );
     });
     const paginas = Math.ceil(objetos.length / porPagina);
     if (paginas > 1) {
-      menu.add(new Boton(this, 150, 1790, { ancho: 240, alto: 110, texto: '‹', tamano: 44, alPulsar: () => this.menuMochila(pagina - 1) }).setActivo(pagina > 0));
-      menu.add(
-        new Boton(this, 930, 1790, { ancho: 240, alto: 110, texto: '›', tamano: 44, alPulsar: () => this.menuMochila(pagina + 1) }).setActivo(pagina < paginas - 1),
-      );
+      menu.add(botonFlecha(this, 110, 1830, -1, () => this.menuMochila(pagina - 1), 170, 104).setActivo(pagina > 0));
+      menu.add(botonFlecha(this, ANCHO - 110, 1830, 1, () => this.menuMochila(pagina + 1), 170, 104).setActivo(pagina < paginas - 1));
     }
-    menu.add(new Boton(this, ANCHO / 2, 1790, { ancho: 360, alto: 110, texto: 'Volver', alPulsar: () => this.menuPrincipal() }));
+    menu.add(new Boton(this, ANCHO / 2, 1830, { ancho: 360, alto: 104, texto: 'Volver', tamano: 36, icono: { ui: 'cerrar', tam: 54 }, alPulsar: () => this.menuPrincipal() }));
   }
 
   private menuEquipo(modo: 'cambio' | 'reemplazo' | 'objeto', objeto?: string): void {
@@ -516,15 +567,15 @@ export class Combate extends Phaser.Scene {
     equipo.forEach((c, i) => {
       const max = calcularEstadisticas(c, DATOS).vida;
       const x = i % 2 === 0 ? 280 : 800;
-      const y = 1350 + Math.floor(i / 2) * 160;
-      const estado = c.vida <= 0 ? ' · debilitado' : c.estado ? ` · ${c.estado.tipo}` : '';
+      const y = 1340 + Math.floor(i / 2) * 156;
+      const estado = c.vida <= 0 ? ' · debilitada' : c.estado ? ` · ${c.estado.tipo === 'quemado' ? 'quemada' : 'dormida'}` : '';
       const valido = obj ? motivoNoUsable(obj, c, DATOS) === null : c.vida > 0 && i !== this.estado.jugador.activo;
       const b = new Boton(this, x, y, {
         ancho: 500,
-        alto: 145,
-        texto: `${nombreDe(c, DATOS)} Nv ${c.nivel}`,
+        alto: 142,
+        texto: `${nombreDe(c, DATOS)} · Nv ${c.nivel}`,
         subtexto: `Vida ${c.vida}/${max}${estado}`,
-        tamano: 36,
+        tamano: 30,
         alPulsar: () => {
           if (obj && objeto) void this.ejecutar({ tipo: 'objeto', objeto, objetivo: i });
           else if (modo === 'reemplazo') void this.ejecutar({ tipo: 'reemplazo', indice: i });
@@ -532,14 +583,21 @@ export class Combate extends Phaser.Scene {
         },
       }).setActivo(valido);
       menu.add(b);
+      // La criatura, en su círculo, a la izquierda del botón (dentro de la cara, para que se hunda con él).
+      const circulo = this.add.graphics();
+      circulo.fillStyle(colorPedestal(c.especie), 1).fillCircle(-196, -3, 46);
+      const figura = crearCriaturaVisual(this, c.especie, -196, -6, 92, true);
+      if (c.vida <= 0) figura.setAlpha(0.5);
+      b.add([circulo, figura]);
     });
     if (modo !== 'reemplazo') {
-      menu.add(new Boton(this, ANCHO / 2, 1830, { ancho: 400, alto: 110, texto: 'Volver', alPulsar: () => this.menuPrincipal() }));
+      menu.add(new Boton(this, ANCHO / 2, 1830, { ancho: 360, alto: 104, texto: 'Volver', tamano: 36, icono: { ui: 'cerrar', tam: 54 }, alPulsar: () => this.menuPrincipal() }));
     }
   }
 
   private async ejecutar(accion: Accion): Promise<void> {
     if (this.ocupado) return;
+    if (accion.tipo === 'objeto' && DATOS.objetos[accion.objeto]?.tipo === 'captura') this.ultimaTesera = accion.objeto;
     let r;
     try {
       r = resolverTurno(this.estado, accion, DATOS);
@@ -555,12 +613,13 @@ export class Combate extends Phaser.Scene {
 
   /** La tabla de tipos encima del combate, abierta con el tipo del rival. */
   private verTablaTipos(): void {
-    const capa = this.add.container(0, 0).setDepth(50);
-    capa.add(this.add.rectangle(0, -MARGEN_VERTICAL, ANCHO, ALTO, COLOR.fondo, 0.97).setOrigin(0, 0).setInteractive());
-    capa.add(this.add.text(ANCHO / 2, 60, 'Tabla de tipos', estiloTexto(52, COLOR.pergamino, true)).setOrigin(0.5));
+    const capa = this.add.container(0, -MARGEN_VERTICAL).setDepth(50);
+    capa.add(this.add.rectangle(0, 0, ANCHO, ALTO, COLOR.fondo).setOrigin(0, 0).setInteractive());
+    fondoMenu(this, capa, ALTO, COLOR.morado);
+    cabecera(this, capa, 'Tabla de tipos', 'tipos', oscurecer(COLOR.morado, 0.25));
     const rival = activoDe(this.estado, 'rival');
     construirTablaTipos(this, capa, 130, DATOS.especies[rival.especie].tipos[0]);
-    capa.add(new Boton(this, ANCHO / 2, 1800, { ancho: 400, alto: 120, texto: 'Volver', alPulsar: () => capa.destroy() }));
+    capa.add(new Boton(this, ANCHO / 2, ALTO - 100, { ancho: 360, alto: 112, texto: 'Volver', tamano: 38, icono: { ui: 'cerrar', tam: 56 }, alPulsar: () => capa.destroy() }));
   }
 
   private mostrarInfo(mov: Movimiento, pp?: number): void {
@@ -596,7 +655,7 @@ export class Combate extends Phaser.Scene {
           ancho: 600,
           alto: 170,
           texto: 'Continuar',
-          color: COLOR.rojo,
+          color: COLOR.verde,
           alPulsar: () =>
             entrada.alTerminar({
               resultado: this.estado.fin ?? 'huida',
@@ -604,6 +663,7 @@ export class Combate extends Phaser.Scene {
               objetos: this.estado.jugador.objetos,
               capturada: this.estado.capturada,
               rivales: [...this.rivalesVistos],
+              ultimaTesera: this.ultimaTesera,
             }),
         }),
       );
@@ -643,13 +703,13 @@ export class Combate extends Phaser.Scene {
           const mov = DATOS.movimientos[m.id];
           const tipo = DATOS.tipos.tipos.find((t) => t.id === mov.tipo);
           menu.add(
-            new Boton(this, i % 2 === 0 ? 280 : 800, i < 2 ? 1370 : 1555, {
+            new Boton(this, i % 2 === 0 ? 280 : 800, FILA_MENU[i < 2 ? 0 : 1], {
               ancho: 500,
-              alto: 170,
+              alto: 192,
               texto: mov.nombre,
               subtexto: `${tipo?.nombre ?? ''} · PP ${m.pp}/${mov.pp}`,
-              color: aclarar(tipo?.color ?? COLOR.pergaminoOscuro, 0.35),
-              tamano: 42,
+              color: tipo?.color ?? COLOR.panel,
+              tamano: 40,
               alPulsar: () => resolve(i),
               alMantener: () => this.mostrarInfo(mov, m.pp),
               alSoltar: () => this.ocultarInfo(),
@@ -658,9 +718,9 @@ export class Combate extends Phaser.Scene {
         });
         const tipoNuevo = DATOS.tipos.tipos.find((t) => t.id === nuevo.tipo);
         menu.add(
-          new Boton(this, 280, 1765, {
+          new Boton(this, 280, 1810, {
             ancho: 500,
-            alto: 140,
+            alto: 130,
             texto: `Ver ${nuevo.nombre}`,
             subtexto: tipoNuevo?.nombre ?? '',
             tamano: 34,
@@ -669,7 +729,7 @@ export class Combate extends Phaser.Scene {
             alSoltar: () => this.ocultarInfo(),
           }),
         );
-        menu.add(new Boton(this, 800, 1765, { ancho: 500, alto: 140, texto: 'No aprenderlo', alPulsar: () => resolve(-1) }));
+        menu.add(new Boton(this, 800, 1810, { ancho: 500, alto: 130, texto: 'No aprenderlo', tamano: 36, color: COLOR.rojo, alPulsar: () => resolve(-1) }));
       });
       this.ocultarInfo();
       this.limpiarMenu();
