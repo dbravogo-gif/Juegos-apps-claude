@@ -62,14 +62,18 @@ iniciales evolucionan en la fase 2, como en Pokémon, donde lo hacen después de
 
 ### Personajes y objetos
 
-- **Entrenadores:**
-  - Un ballestero del real de Santa Fe: dos Túmbriz.
-  - Un mercader genovés: Zumbrel, Barbaflux y Brezuco.
+- **Entrenadores** (rebajados a petición del autor el 2026-10-25: muchos, con una sola criatura
+  y niveles bajos, para que la primera zona sea fácil con cualquier inicial):
+  - La Vega, niveles 3 a 5: el ballestero Sancho (Abezar), un labrador (Túmbriz), una hortelana
+    (Mandragor) y el mercader genovés (Brezuco).
+  - La Alhambra, niveles 5 y 6: un aguador (Barbaflux), un halconero (Abezar), un jardinero
+    (Mandragor) y el guardia (Brezuco). El guardia avisa de que a los leones del emir les va
+    bien la Planta y el Aire.
 - **Líder: Boabdil**, de tipo Agua por las acequias, albercas y fuentes de la Alhambra. Lleva
-  Barbaflux, Carapachón y Alhambrón, entre los niveles 9 y 11.
-  - Frente a él, Dralín (Planta) tiene ventaja, Ignibue (Infernal) desventaja y Marzuko va
-    neutral. Es lo habitual en un primer gimnasio. Alhambrón, de Agua y Tierra, resiste mucho a
-    Ignibue (×¼): quien lo elija puede capturar un Mandragor en la Vega, que le hace ×4.
+  Brezuco (nivel 7) y Alhambrón (nivel 8).
+  - Frente a Alhambrón, Dralín (Planta) tiene ventaja, Ignibue (Infernal) desventaja y Marzuko
+    va neutral. Es lo habitual en un primer gimnasio. Alhambrón, de Agua y Tierra, resiste mucho
+    a Ignibue (×¼): quien lo elija puede capturar un Mandragor en la Vega, que le hace ×4.
 - **PNJ:**
   - Isabel la Católica, la mentora. Te encarga el Bestiario y te da la criatura inicial.
   - El Gran Capitán, que negoció la entrega de Granada. Te da las primeras téseras.

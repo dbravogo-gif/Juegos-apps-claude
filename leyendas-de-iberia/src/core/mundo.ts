@@ -109,8 +109,11 @@ export interface Zona {
   carteles: { x: number; y: number; texto: string[] }[];
   /** Objetos escondidos: se encuentran mirando la casilla y pulsando A (bandera `oculto:<zona>:<id>`). */
   ocultos?: { id: string; x: number; y: number; objeto: string; cantidad?: number }[];
-  /** Tinajas que se pueden registrar una vez (`src/data/recipientes.ts`). Bloquean el paso. */
-  recipientes?: { id: string; x: number; y: number }[];
+  /**
+   * Tinajas que se pueden registrar una vez (`src/data/recipientes.ts`). Bloquean el paso. Solo
+   * en ciudades e interiores. Con `objeto`, siempre dan ese objeto en vez de echarlo a suertes.
+   */
+  recipientes?: { id: string; x: number; y: number; objeto?: string }[];
   /** Guion que se ejecuta la primera vez que se entra (usa la bandera `visto:<id>`). */
   alEntrar?: Guion;
 }

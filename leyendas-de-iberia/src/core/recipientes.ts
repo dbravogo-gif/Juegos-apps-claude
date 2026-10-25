@@ -38,11 +38,14 @@ export function registrarRecipiente(
     encuentros?: TablaEncuentros;
     /** Blasones que hacen falta para que pueda salir el Papemímico. */
     minBlasones?: number;
+    /** Objeto fijo: la tinaja siempre lo da, sin tirar del generador. */
+    fijo?: string;
   },
   datos: DatosJuego,
 ): ResultadoRecipiente {
   if (revisado(p, zona, id)) return { tipo: 'nada' };
   p.revisados.push(claveRecipiente(zona, id));
+  if (op.fijo) return { tipo: 'objeto', objeto: op.fijo };
   const tipos = ['objeto', 'nada', 'mimico'] as const;
   // Sin tabla de objetos en la zona, la parte de «objeto» no puede salir. El Papemímico solo sale
   // con los blasones que pida y con alguna criatura en pie: si no, no habría con quién luchar.

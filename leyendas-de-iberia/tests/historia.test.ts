@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { DATOS } from '../src/data';
 import { ASPECTOS } from '../src/data/aspectos';
+import { RETRATOS } from '../src/data/retratos';
 import { CASILLAS, ENTRENADORES, INICIO, ZONAS } from '../src/data/mundo';
 import { enLineaDeVision, esSolida, validarZona, type Guion, type Paso } from '../src/core/mundo';
 import {
@@ -40,6 +41,20 @@ describe('zonas del capítulo 1', () => {
   it('son coherentes: filas iguales, caracteres conocidos, salidas y personajes en su sitio', () => {
     for (const z of Object.values(ZONAS)) {
       expect(validarZona(z, CASILLAS, ZONAS, ENTRENADORES)).toEqual([]);
+    }
+  });
+
+  it('todo el que habla tiene retrato', () => {
+    const archivos = Object.keys(import.meta.glob('../src/assets/retratos/*.webp')).map((r) => r.split('/').pop());
+    const quienes = new Set<string>(Object.values(ENTRENADORES).map((e) => e.nombre));
+    for (const z of Object.values(ZONAS)) {
+      for (const p of [...z.pnj.map((n) => n.guion), z.alEntrar ?? []].flatMap(pasosDe)) {
+        if ((p.tipo === 'decir' || p.tipo === 'elegir') && p.quien) quienes.add(p.quien);
+      }
+    }
+    for (const q of quienes) {
+      expect(RETRATOS[q], `retrato de ${q}`).toBeDefined();
+      expect(archivos, `archivo del retrato de ${q}`).toContain(`${RETRATOS[q]}.webp`);
     }
   });
 
@@ -126,7 +141,7 @@ describe('recipientes', () => {
     p.equipo = [crearCriatura(DATOS, 'cangrejo', 10, crearRng(1))];
     p.blasones = ['b1', 'b2', 'b3', 'b4'];
     for (let i = 0; i < 2000; i++) {
-      const r = registrarRecipiente(p, 'vega', `r${i}`, { prob: PROB_RECIPIENTE, objetos: OBJETOS_RECIPIENTE.vega, minBlasones: MIMICO_MIN_BLASONES }, DATOS);
+      const r = registrarRecipiente(p, 'vega', `r${i}`, { prob: PROB_RECIPIENTE, objetos: OBJETOS_RECIPIENTE.santa_fe, minBlasones: MIMICO_MIN_BLASONES }, DATOS);
       cuenta[r.tipo] += 1;
     }
     expect(cuenta.objeto / 2000).toBeGreaterThan(0.55);
@@ -138,10 +153,10 @@ describe('recipientes', () => {
   it('un recipiente registrado no vuelve a dar nada, ni tras guardar y cargar', () => {
     const p = nuevaPartida('X', 7, INICIO);
     p.equipo = [crearCriatura(DATOS, 'cangrejo', 10, crearRng(1))];
-    registrarRecipiente(p, 'vega', 'puente', { prob: { objeto: 100, nada: 0, mimico: 0 }, objetos: OBJETOS_RECIPIENTE.vega }, DATOS);
+    registrarRecipiente(p, 'vega', 'puente', { prob: { objeto: 100, nada: 0, mimico: 0 }, objetos: OBJETOS_RECIPIENTE.santa_fe }, DATOS);
     const cargada = deserializar(serializar(p))!;
     expect(revisado(cargada, 'vega', 'puente')).toBe(true);
-    const r = registrarRecipiente(cargada, 'vega', 'puente', { prob: { objeto: 100, nada: 0, mimico: 0 }, objetos: OBJETOS_RECIPIENTE.vega }, DATOS);
+    const r = registrarRecipiente(cargada, 'vega', 'puente', { prob: { objeto: 100, nada: 0, mimico: 0 }, objetos: OBJETOS_RECIPIENTE.santa_fe }, DATOS);
     expect(r.tipo).toBe('nada');
   });
 
@@ -161,7 +176,7 @@ describe('recipientes', () => {
     expect(MIMICO_MIN_BLASONES).toBe(4);
     const p = nuevaPartida('X', 'pronto', INICIO);
     p.equipo = [crearCriatura(DATOS, 'cangrejo', 30, crearRng(1))];
-    const op = { prob: { objeto: 0, nada: 0, mimico: 100 }, objetos: OBJETOS_RECIPIENTE.vega, minBlasones: MIMICO_MIN_BLASONES };
+    const op = { prob: { objeto: 0, nada: 0, mimico: 100 }, objetos: OBJETOS_RECIPIENTE.santa_fe, minBlasones: MIMICO_MIN_BLASONES };
     for (let b = 0; b < 4; b++) {
       p.blasones = Array.from({ length: b }, (_, i) => `b${i}`);
       expect(registrarRecipiente(p, 'vega', `t${b}`, op, DATOS).tipo, `${b} blasones`).toBe('nada');
@@ -170,14 +185,26 @@ describe('recipientes', () => {
     expect(registrarRecipiente(p, 'vega', 't4', op, DATOS).tipo).toBe('mimico');
   });
 
-  it('como mucho una tinaja por zona', () => {
-    for (const z of Object.values(ZONAS)) expect(z.recipientes?.length ?? 0, z.id).toBeLessThanOrEqual(1);
+  it('como mucho una tinaja por zona, y solo en ciudades e interiores', () => {
+    for (const z of Object.values(ZONAS)) {
+      expect(z.recipientes?.length ?? 0, z.id).toBeLessThanOrEqual(1);
+      if (z.recipientes?.length) expect(z.interior || z.estilo === 'pueblo', z.id).toBe(true);
+      for (const r of z.recipientes ?? []) if (r.objeto) expect(DATOS.objetos[r.objeto], r.objeto).toBeDefined();
+    }
+  });
+
+  it('la tinaja de Santa Fe da una Poción sin tirar del generador', () => {
+    const p = nuevaPartida('X', 'fija', INICIO);
+    const antes = JSON.stringify(p.rng);
+    const r = registrarRecipiente(p, 'santa_fe', 'huerto', { prob: PROB_RECIPIENTE, objetos: OBJETOS_RECIPIENTE.santa_fe, fijo: 'unguento' }, DATOS);
+    expect(r).toEqual({ tipo: 'objeto', objeto: 'unguento' });
+    expect(JSON.stringify(p.rng)).toBe(antes);
   });
 
   it('el Papemímico sale por encima del nivel del equipo', () => {
     const p = nuevaPartida('X', 3, INICIO);
     p.equipo = [crearCriatura(DATOS, 'cangrejo', 12, crearRng(1))];
-    const r = registrarRecipiente(p, 'vega', 'x', { prob: { objeto: 0, nada: 0, mimico: 100 }, objetos: OBJETOS_RECIPIENTE.vega }, DATOS);
+    const r = registrarRecipiente(p, 'vega', 'x', { prob: { objeto: 0, nada: 0, mimico: 100 }, objetos: OBJETOS_RECIPIENTE.santa_fe }, DATOS);
     expect(r.tipo).toBe('mimico');
     if (r.tipo === 'mimico') {
       expect(r.criatura.especie).toBe(ESPECIE_MIMICO);
@@ -226,7 +253,7 @@ describe('partida', () => {
     const a = equipoEntrenador(ENTRENADORES.boabdil, DATOS);
     const b = equipoEntrenador(ENTRENADORES.boabdil, DATOS);
     expect(a).toEqual(b);
-    expect(a.map((c) => c.especie)).toEqual(['barbo', 'galapago', 'leon_fuente']);
+    expect(a.map((c) => c.especie)).toEqual(['duende', 'leon_fuente']);
     expect(a.every((c) => c.valia === ENTRENADORES.boabdil.valia)).toBe(true);
   });
 

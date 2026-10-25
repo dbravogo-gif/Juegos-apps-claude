@@ -291,6 +291,8 @@ con la Guerra Civil.
   - 10 %: un Papemímico, que embosca al jugador. Es más duro que la zona pero justo, elige sus
     movimientos como un entrenador y da exactamente 3 Turrones una sola vez.
   - Las probabilidades se cambian en `src/data/recipientes.ts`. Son tinajas en todo el juego.
+  - Solo hay tinajas en ciudades e interiores: en el campo no pintan nada. Una tinaja puede
+    llevar un objeto fijo; la de Santa Fe siempre da una Poción.
 - **Temperamento.** Equivale a la naturaleza de Pokémon: +10 % en una estadística y −10 % en
   otra, con nombres propios.
 - **Valía (de 1 a 14).** Es la versión simplificada de los IV y los EV de Pokémon: un solo
@@ -485,3 +487,17 @@ con la Guerra Civil.
   vestido carmesí, Fernando con corona y capa, el Gran Capitán con coraza y capa roja, Colón con
   el pelo cano, Boabdil y su guardia con turbante, el centinela con capacete, el pastor con
   sombrero… El tendero tiene aspecto propio. Ya no se usa nada de *Ninja Adventure*.
+- **2026-10-25 (8).** Correcciones del autor tras jugar.
+  - Retratos de todos los que hablan, en el estilo de las criaturas, junto al cuadro de diálogo:
+    Isabel, Fernando, el Gran Capitán, Colón, Boabdil y el resto de PNJ y entrenadores.
+  - Tinajas solo en ciudades e interiores; la de Santa Fe da una Poción (antes podía dar una
+    Superpoción por azar).
+  - Primera zona más fácil: cuatro entrenadores de una sola criatura en la Vega y otros cuatro
+    en la Alhambra, salvajes de nivel más bajo y Boabdil con dos criaturas (7 y 8).
+  - Colón, rehecho como hombre (jubón, calzas y capa). Da cinco téseras en vez de tres pociones,
+    con una frase sobre las tierras al otro lado del océano. No habla de «América»: en 1491 no
+    sabía que existía y buscaba las Indias.
+  - Arreglado: al volver de un combate, el jugador seguía andando solo si había empezado con el
+    dedo en la cruceta.
+  - Arreglado: la barra de vida no bajaba, solo cambiaba de color. Ahora baja poco a poco, junto
+    con los números, y tarda más cuanto más daño.

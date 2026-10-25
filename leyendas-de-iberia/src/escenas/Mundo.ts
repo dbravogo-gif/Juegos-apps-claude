@@ -331,7 +331,13 @@ export class Mundo extends Phaser.Scene {
       p,
       zona.id,
       r.def.id,
-      { prob: PROB_RECIPIENTE, objetos: OBJETOS_RECIPIENTE[zona.id] ?? [], encuentros: zona.encuentros, minBlasones: MIMICO_MIN_BLASONES },
+      {
+        prob: PROB_RECIPIENTE,
+        objetos: OBJETOS_RECIPIENTE[zona.id] ?? [],
+        encuentros: zona.encuentros,
+        minBlasones: MIMICO_MIN_BLASONES,
+        fijo: r.def.objeto,
+      },
       DATOS,
     );
     if (res.tipo === 'objeto') {

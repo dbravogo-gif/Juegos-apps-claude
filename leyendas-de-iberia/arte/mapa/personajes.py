@@ -393,9 +393,9 @@ PERSONAJES = {
     # El Gran Capitán: coraza, capa roja y barba.
     'caballero': personaje(pelo=(66, 46, 36), ropa=(186, 194, 212), cuello=(246, 200, 64), calzas=(120, 36, 40),
                            barba=(66, 46, 36), capa=(200, 40, 48)),
-    # Colón: pelo cano y largo, gorro oscuro y túnica granate.
-    'explorador': personaje(pelo=(224, 222, 220), ropa=(124, 40, 58), vestido=(124, 40, 58), tocado='gorro',
-                            color_tocado=(52, 44, 60), melena=True),
+    # Colón: pelo cano, gorro oscuro, jubón granate, calzas y capa de navegante.
+    'explorador': personaje(pelo=(224, 222, 220), ropa=(124, 40, 58), calzas=(52, 44, 60), tocado='gorro',
+                            color_tocado=(52, 44, 60), capa=(44, 62, 104)),
     # El pastor de Orce: sombrero de ala ancha, zamarra de piel y barba blanca.
     'anciano': personaje(piel='tostada', pelo=(220, 220, 214), ropa=(232, 214, 176), calzas=(124, 92, 62),
                          tocado='sombrero', color_tocado=(132, 94, 56), barba=(236, 236, 230)),
@@ -424,6 +424,18 @@ PERSONAJES = {
     # El centinela: capacete y sayo rojo.
     'soldado': personaje(pelo=(70, 50, 40), ropa=(176, 40, 44), cuello=(246, 200, 64), calzas=(70, 60, 60),
                          tocado='capacete'),
+    # Gente de la Vega: un labrador con sombrero de paja y una hortelana con pañuelo.
+    'labrador': personaje(piel='tostada', pelo=(80, 56, 40), ropa=(226, 210, 172), calzas=(118, 90, 60),
+                          tocado='sombrero', color_tocado=(222, 190, 110)),
+    'hortelana': personaje(piel='tostada', pelo=(196, 160, 72), ropa=(134, 110, 70), vestido=(134, 110, 70),
+                           delantal=True),
+    # Gente de la Alhambra: aguador, halconero y jardinero nazaríes.
+    'aguador': personaje(piel='morena', pelo=(40, 32, 30), ropa=(70, 120, 180), calzas=(232, 222, 196),
+                         tocado='turbante', color_tocado=(236, 230, 214)),
+    'halconero': personaje(piel='morena', pelo=(40, 32, 30), ropa=(140, 96, 56), calzas=(90, 70, 50),
+                           tocado='turbante', color_tocado=(60, 120, 90), barba=(40, 32, 30)),
+    'jardinero': personaje(piel='morena', pelo=(50, 40, 34), ropa=(84, 140, 76), calzas=(232, 222, 196),
+                           tocado='sombrero', color_tocado=(210, 176, 96)),
     'aldeano': personaje(pelo=(96, 66, 44), ropa=(214, 196, 160), calzas=(110, 80, 56)),
     'aldeano_verde': personaje(piel='tostada', pelo=(60, 44, 34), ropa=(96, 150, 80), calzas=(96, 72, 56)),
     'aldeana': personaje(pelo=(238, 234, 226), ropa=(150, 96, 60), vestido=(150, 96, 60)),

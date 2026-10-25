@@ -183,6 +183,7 @@ export class Barra extends Phaser.GameObjects.Container {
   private relleno: Phaser.GameObjects.Rectangle;
   private anchoTotal: number;
   private esVida: boolean;
+  private animacion?: Phaser.Tweens.Tween;
 
   constructor(scene: Phaser.Scene, x: number, y: number, ancho: number, alto: number, esVida = true) {
     super(scene, x, y);
@@ -204,23 +205,43 @@ export class Barra extends Phaser.GameObjects.Container {
     return COLOR.vidaBaja;
   }
 
-  /** Devuelve una promesa que se cumple al terminar la animación. */
-  setFraccion(fraccion: number, animar: boolean, duracion = 450): Promise<void> {
+  /** Pone el relleno a `ancho` píxeles, con el color que toca. */
+  private rellenar(ancho: number): void {
+    const alto = this.relleno.height;
+    const lleno = this.anchoTotal - 6;
+    // Cambiar `width` a mano no redibuja el rectángulo: hay que pasar por `setSize`.
+    this.relleno.setSize(Math.max(0.001, ancho), alto);
+    this.relleno.setRounded(Math.min(alto / 2, ancho / 2));
+    this.relleno.setFillStyle(this.colorPara(ancho / lleno));
+    this.relleno.setVisible(ancho > 0.5);
+  }
+
+  /**
+   * Lleva la barra a `fraccion` (de 0 a 1). Animada, baja o sube poco a poco y cambia de color al
+   * cruzar la mitad y la quinta parte. Devuelve una promesa que se cumple al terminar.
+   */
+  setFraccion(fraccion: number, animar: boolean, duracion?: number): Promise<void> {
     const f = Math.max(0, Math.min(1, fraccion));
-    const destino = Math.max(0.001, (this.anchoTotal - 6) * f);
-    this.relleno.setFillStyle(this.colorPara(f));
-    this.relleno.setVisible(f > 0);
-    if (!animar) {
-      this.relleno.width = destino;
+    const destino = (this.anchoTotal - 6) * f;
+    const desde = this.relleno.visible ? this.relleno.width : 0;
+    this.animacion?.stop();
+    this.animacion = undefined;
+    if (!animar || Math.abs(destino - desde) < 0.5) {
+      this.rellenar(destino);
       return Promise.resolve();
     }
     return new Promise((resolve) => {
-      this.scene.tweens.add({
-        targets: this.relleno,
-        width: destino,
-        duration: duracion,
-        ease: 'Sine.easeOut',
-        onComplete: () => resolve(),
+      this.animacion = this.scene.tweens.addCounter({
+        from: desde,
+        to: destino,
+        // Como en el género: cuanto más daño, más tarda en bajar.
+        duration: duracion ?? 300 + (Math.abs(destino - desde) / (this.anchoTotal - 6)) * 900,
+        ease: 'Linear',
+        onUpdate: (tween) => this.rellenar(tween.getValue() ?? destino),
+        onComplete: () => {
+          this.rellenar(destino);
+          resolve();
+        },
       });
     });
   }
