@@ -1,268 +1,347 @@
 import Phaser from 'phaser';
-import type { Zona } from '../core/mundo';
+import type { EstiloZona, Zona } from '../core/mundo';
+import hoja from '../assets/mundo/iberia.json';
+import urlHoja from '../assets/mundo/iberia.png?url';
 
-// Aspecto de las casillas con los tilesets del paquete Ninja Adventure (CC0, ver
-// `src/assets/LEEME.md`). Cada carácter de la leyenda (`src/data/casillas.ts`) se convierte en
-// una o dos capas de suelo y, a veces, un objeto más alto que la casilla (árboles, columnas,
-// estanterías) que tapa a quien pase por detrás. Los bordes de caminos, acequias, tejados y
-// muros se eligen mirando las casillas vecinas.
+// Aspecto de las casillas con el tileset propio del juego (`arte/mapa/tileset.py`, ver
+// `src/assets/LEEME.md`), al estilo de los juegos de criaturas de GBA.
+//
+// - El suelo de cada zona se pinta una vez en un lienzo a tamaño real (16 px por casilla) y se
+//   muestra ampliado: una sola imagen por zona. Caminos, agua y alfombras se componen con cuatro
+//   cuartos de 8 × 8 según sus vecinos, como los autotiles de RPG Maker.
+// - Lo que es más alto que una casilla (árboles, columnas, estanterías, banderolas, la fuente) va
+//   aparte y se ordena por profundidad, para tapar a quien pase por detrás.
+// - El agua se mueve repintando sus casillas en el lienzo.
 
-/** Lado de un tile en el paquete, en píxeles. */
-const PX = 16;
+const PX = hoja.px;
 /** Se escala a un número entero de veces para que el pixel art quede nítido. */
 export const ESCALA = 5;
 export const TAM_CASILLA = PX * ESCALA;
 
-const URLS = import.meta.glob('../assets/mundo/*.png', { eager: true, query: '?url', import: 'default' }) as Record<
-  string,
-  string
->;
-
-const HOJAS = ['suelo', 'agua', 'naturaleza', 'casas', 'elementos', 'interior_suelo', 'interior_pared', 'campamento'] as const;
-type Hoja = (typeof HOJAS)[number];
-
-const claveHoja = (h: Hoja) => `mundo-${h}`;
-export const CLAVE_SOMBRA = 'mundo-sombra';
-
-const urlDe = (nombre: string) => URLS[`../assets/mundo/${nombre}.png`];
+const CLAVE = 'mundo-iberia';
+const PIEZAS: Record<string, number[]> = hoja.piezas;
 
 export function cargarHojasMundo(load: Phaser.Loader.LoaderPlugin): void {
-  for (const h of HOJAS) load.image(claveHoja(h), urlDe(h));
-  load.image(CLAVE_SOMBRA, urlDe('sombra'));
+  load.image(CLAVE, urlHoja);
 }
 
 export function prepararHojasMundo(scene: Phaser.Scene): void {
-  for (const clave of [...HOJAS.map(claveHoja), CLAVE_SOMBRA]) {
-    scene.textures.get(clave).setFilter(Phaser.Textures.FilterMode.NEAREST);
-  }
+  const textura = scene.textures.get(CLAVE);
+  textura.setFilter(Phaser.Textures.FilterMode.NEAREST);
+  for (const [nombre, [x, y, w, h]] of Object.entries(PIEZAS)) textura.add(nombre, 0, x, y, w, h);
 }
 
-/** Un trozo de una hoja: columna y fila en tiles, y tamaño en tiles (1 × 1 si no se dice). */
-interface Pieza {
-  hoja: Hoja;
-  c: number;
-  f: number;
-  w?: number;
-  h?: number;
+/** Imagen de una pieza del tileset, ya ampliada. */
+export function imagenPieza(scene: Phaser.Scene, nombre: string, x: number, y: number): Phaser.GameObjects.Image {
+  return scene.add.image(x, y, CLAVE, nombre).setScale(ESCALA);
 }
 
-interface Dibujo {
-  suelo: Pieza[];
-  /** Algo más alto que la casilla: se apoya en su borde inferior y se ordena por profundidad. */
-  objeto?: Pieza;
-}
+// ---------- Familias de casillas ----------
 
-const p = (hoja: Hoja, c: number, f: number, w = 1, h = 1): Pieza => ({ hoja, c, f, w, h });
+const CAMINO = new Set(['.', 'S', 'G', '=', 'P']);
+/** Con quién se junta el camino sin dejar borde: también la fuente de una plaza. */
+const JUNTO_CAMINO = new Set([...CAMINO, 'A']);
+const JUNTO_EMPEDRADO = new Set(['S', 'G', 'P', 'A']);
+const ACEQUIA = new Set(['~', '=']);
+const MURALLA = new Set(['M', 'G', 'P']);
+const PAREDES = new Set(['W', 'Z', 'L']);
 
-// ---------- Piezas del paquete ----------
-
-const HIERBA = p('suelo', 0, 12);
-const HIERBA_VARIANTES = [p('suelo', 1, 12), p('suelo', 2, 12), p('suelo', 3, 12), p('suelo', 4, 12)];
-const HIERBA_ALTA = p('naturaleza', 7, 11);
-const FLORES = [p('naturaleza', 0, 11), p('naturaleza', 1, 11)];
-const EMPEDRADO = p('interior_suelo', 1, 13);
-const SUELO_INTERIOR = p('interior_suelo', 12, 1);
-const ALFOMBRA = p('interior_suelo', 5, 7);
-const PUENTE = p('agua', 1, 13);
-const ARCO = p('casas', 9, 3);
-const PUERTA_CASA = p('casas', 13, 2);
-const PUERTA_TIENDA = p('campamento', 5, 2);
-const BARRILES = p('casas', 16, 15);
-const ARBOLES = [p('naturaleza', 16, 0, 2, 2), p('naturaleza', 18, 0, 2, 2)];
-/** Árbol de una casilla, para no tapar caminos y puertas con la copa. */
-const ARBUSTO = p('naturaleza', 10, 9);
-const OLIVO = p('naturaleza', 6, 8, 2, 2);
-const COLUMNA = p('casas', 0, 15, 1, 2);
-const ESTANTERIA = p('elementos', 3, 7, 1, 2);
-const MURO_HORIZONTAL = p('casas', 10, 9);
-const MURO_VERTICAL = p('casas', 11, 9);
-
-/** Esquina superior izquierda de los bloques de autotile (3 × 3, tira vertical, tira horizontal). */
-const BLOQUE_CAMINO = { hoja: 'suelo' as Hoja, c: 0, f: 7 };
-const BLOQUE_ACEQUIA = { hoja: 'agua' as Hoja, c: 0, f: 6 };
-const BLOQUE_FUENTE = { hoja: 'agua' as Hoja, c: 0, f: 0 };
-
-/** Marcos de pared de interior (5 × 5): madera, estuco y lona. */
-const MARCOS: Record<string, { c: number; f: number }> = { W: { c: 0, f: 6 }, Z: { c: 0, f: 0 }, L: { c: 5, f: 0 } };
-
-// ---------- Vecinos ----------
-
-const FAMILIA_CAMINO = new Set(['.', 'S', 'G', '=', 'P']);
-const FAMILIA_ACEQUIA = new Set(['~', '=']);
-
-/** Número fijo por casilla, para variar la hierba o los árboles sin azar. */
+/** Número fijo por casilla, para variar la hierba o los adornos sin azar. */
 function ruido(x: number, y: number): number {
   return ((x * 73856093) ^ (y * 19349663)) >>> 0;
 }
 
-/**
- * Elige el tile de un bloque de autotile según qué vecinos son de la misma familia. Los bloques del
- * paquete son un 3 × 3 (esquinas, bordes y centro), una tira vertical a su derecha y una tira
- * horizontal debajo, con la pieza suelta al final.
- */
-function autotile(b: { hoja: Hoja; c: number; f: number }, u: boolean, d: boolean, l: boolean, r: boolean): Pieza {
-  const { c, f } = b;
-  if (!l && !r) {
-    if (u && d) return p(b.hoja, c + 3, f + 1);
-    if (d) return p(b.hoja, c + 3, f);
-    if (u) return p(b.hoja, c + 3, f + 2);
-    return p(b.hoja, c + 3, f + 3);
-  }
-  if (!u && !d) return p(b.hoja, l && r ? c + 1 : l ? c + 2 : c, f + 3);
-  return p(b.hoja, !l ? c : !r ? c + 2 : c + 1, !u ? f : !d ? f + 2 : f + 1);
+function estiloDe(zona: Zona): EstiloZona {
+  return zona.estilo ?? (zona.interior ? 'meson' : 'campo');
 }
 
-function dibujoDe(zona: Zona, x: number, y: number): Dibujo {
-  const alto = zona.mapa.length;
-  const ancho = zona.mapa[0].length;
-  // Fuera del mapa se considera que todo continúa, para que caminos y muros no se corten en el borde.
-  const en = (dx: number, dy: number): string => {
-    const nx = x + dx;
-    const ny = y + dy;
-    if (ny < 0 || ny >= alto || nx < 0 || nx >= ancho) return zona.mapa[y][x];
-    return zona.mapa[ny][nx];
-  };
-  const c = en(0, 0);
-  const vecinos = (familia: Set<string>) =>
-    [familia.has(en(0, -1)), familia.has(en(0, 1)), familia.has(en(-1, 0)), familia.has(en(1, 0))] as const;
-  const r = ruido(x, y);
-  const hierba = r % 7 === 0 ? HIERBA_VARIANTES[r % HIERBA_VARIANTES.length] : HIERBA;
-  const base = zona.interior ? SUELO_INTERIOR : hierba;
+const SUELO_INTERIOR: Record<EstiloZona, string> = {
+  campo: 'suelo.tablas',
+  pueblo: 'suelo.tablas',
+  alhambra: 'suelo.marmol',
+  meson: 'suelo.barro',
+  pabellon: 'suelo.tablas',
+  patio: 'suelo.marmol',
+};
 
-  if (zona.interior && MARCOS[c]) {
-    const m = MARCOS[c];
-    const col = x === 0 ? 0 : x === ancho - 1 ? 4 : 1;
-    const fil = y === 0 ? 0 : y === alto - 1 ? 4 : 1;
-    return { suelo: [base, p('interior_pared', m.c + col, m.f + fil)] };
+/** Lectura de la zona alrededor de una casilla. Fuera del mapa, `fuera`. */
+class Vecindad {
+  constructor(
+    private readonly zona: Zona,
+    readonly x: number,
+    readonly y: number,
+  ) {}
+
+  en(dx: number, dy: number, fuera = ''): string {
+    const fila = this.zona.mapa[this.y + dy];
+    const c = fila?.[this.x + dx];
+    return c ?? fuera;
+  }
+
+  /** ¿Es de la familia la casilla vecina? Fuera del mapa cuenta como `fuera`. */
+  es(familia: Set<string>, dx: number, dy: number, fuera: boolean): boolean {
+    const c = this.en(dx, dy);
+    return c === '' ? fuera : familia.has(c);
+  }
+
+  /** ¿Es pared de casa (fachada encalada)? La que tiene un tejado justo encima. */
+  fachada(dx: number): boolean {
+    return (this.en(dx, 0) === 'M' || this.en(dx, 0) === 'P') && this.en(dx, -1) === 'T';
+  }
+}
+
+/** Una capa del suelo de una casilla: una pieza entera o un material que se junta con sus vecinos. */
+type Capa = { pieza: string } | { material: string; familia: Set<string>; fuera: boolean };
+
+const pieza = (nombre: string): Capa => ({ pieza: nombre });
+const bits = (...b: boolean[]) => b.map((x) => (x ? '1' : '0')).join('');
+
+/** Capas del suelo de una casilla, de abajo arriba. `f` es el fotograma del agua. */
+function capasDe(zona: Zona, x: number, y: number, f: number): Capa[] {
+  const v = new Vecindad(zona, x, y);
+  const c = v.en(0, 0);
+  const estilo = estiloDe(zona);
+  const r = ruido(x, y);
+  const hierba = `hierba.${r % 11 === 0 ? 1 : r % 13 === 0 ? 2 : r % 7 === 0 ? 3 : 0}`;
+  const base = zona.interior ? SUELO_INTERIOR[estilo] : hierba;
+  const capas: Capa[] = [pieza(base)];
+
+  if (zona.interior) {
+    if (PAREDES.has(c)) {
+      const pos = y > 0 ? 'borde' : x === 0 ? 'esquina_i' : x === zona.mapa[0].length - 1 ? 'esquina_d' : 'cara';
+      const material = c === 'Z' ? 'patio' : c === 'L' ? 'pabellon' : 'meson';
+      capas.push(pieza(`pared.${material}.${pos}`));
+      return capas;
+    }
+    if (c === 'P') return [pieza(`felpudo.${base.split('.')[1]}`)];
+  } else if (CAMINO.has(c) || c === 'A') {
+    // La fuente de una plaza se asienta sobre el empedrado.
+    capas.push({ material: 'camino', familia: JUNTO_CAMINO, fuera: true });
+    if (c === 'S' || c === 'A') capas.push({ material: 'empedrado', familia: JUNTO_EMPEDRADO, fuera: true });
   }
 
   switch (c) {
-    case ',':
-      return { suelo: [hierba] };
     case 'h':
-      return { suelo: [hierba, HIERBA_ALTA] };
+      capas.push(pieza('hierba_alta'));
+      break;
     case '*':
-      return { suelo: [hierba, FLORES[r % FLORES.length]] };
-    case '.':
-    case 'G': {
-      const [u, d, l, rr] = vecinos(FAMILIA_CAMINO);
-      return { suelo: [autotile(BLOQUE_CAMINO, u, d, l, rr)] };
-    }
-    case 'S':
-      return { suelo: [EMPEDRADO] };
-    case '~': {
-      const [u, d, l, rr] = vecinos(FAMILIA_ACEQUIA);
-      return { suelo: [hierba, autotile(BLOQUE_ACEQUIA, u, d, l, rr)] };
-    }
+      capas.push(pieza(`flores.${r % 3}`));
+      break;
+    case '~':
+      capas.push({ material: `acequia.${f}`, familia: ACEQUIA, fuera: true });
+      break;
     case '=':
-      return { suelo: [PUENTE] };
-    case '#': {
-      const junto = FAMILIA_CAMINO.has(en(-1, 0)) || FAMILIA_CAMINO.has(en(1, 0));
-      return junto ? { suelo: [hierba, ARBUSTO] } : { suelo: [hierba], objeto: ARBOLES[r % ARBOLES.length] };
+      capas.push({ material: `acequia.${f}`, familia: ACEQUIA, fuera: true }, pieza('puente'));
+      break;
+    case 'A':
+      capas.push({ material: `fuente.${f}`, familia: new Set(['A']), fuera: false });
+      break;
+    case 'R':
+      capas.push({ material: 'alfombra', familia: new Set(['R']), fuera: false });
+      break;
+    case 'K':
+      capas.push(pieza('barril'));
+      break;
+    case 'r':
+      capas.push(pieza('roca'));
+      break;
+    case 'u':
+      capas.push({ material: 'huerto', familia: new Set(['u']), fuera: false });
+      break;
+    case 'f':
+    case 'v': {
+      const igual = (dx: number, dy: number) => v.en(dx, dy) === c;
+      capas.push(pieza(`${c === 'f' ? 'valla' : 'seto'}.${bits(igual(0, -1), igual(0, 1), igual(-1, 0), igual(1, 0))}`));
+      break;
     }
-    case 'o':
-      return { suelo: [hierba], objeto: OLIVO };
-    case 'T': {
-      const izq = en(-1, 0) !== 'T';
-      const der = en(1, 0) !== 'T';
-      const col = izq ? 12 : der ? 15 : 13 + (x % 2);
-      return { suelo: [hierba, p('casas', col, en(0, -1) === 'T' ? 1 : 0)] };
+    case 'X': {
+      const adorno = r % 5 === 0 ? 1 : r % 7 === 0 ? 2 : 0;
+      capas.push(pieza(`mostrador.${bits(v.en(-1, 0) === 'X', v.en(1, 0) === 'X')}.${adorno}`));
+      break;
     }
+    case 'T':
+      capas.push(pieza(`tejado.${bits(v.en(0, -1) === 'T', v.en(0, 1) === 'T', v.en(-1, 0) === 'T', v.en(1, 0) === 'T')}`));
+      break;
     case 'L': {
-      const col = en(-1, 0) !== 'L' ? 4 : en(1, 0) !== 'L' ? 6 : 5;
-      const fil = en(0, -1) !== 'L' ? 0 : en(0, 1) !== 'L' ? 2 : 1;
-      return { suelo: [hierba, p('campamento', col, fil === 2 && col === 5 ? 1 : fil)] };
+      const lona = new Set(['L', 'P']);
+      capas.push(pieza(`lona.${bits(v.en(0, -1) === 'L', lona.has(v.en(0, 1)), lona.has(v.en(-1, 0)), lona.has(v.en(1, 0)))}`));
+      break;
     }
     case 'M':
-    case 'P': {
-      if (en(0, -1) === 'T') {
-        // Fachada de una casa: bajo el tejado.
-        if (c === 'P') return { suelo: [hierba, PUERTA_CASA] };
-        const izq = en(-1, 0) === 'M' || en(-1, 0) === 'P' ? false : true;
-        const der = en(1, 0) === 'M' || en(1, 0) === 'P' ? false : true;
-        return { suelo: [hierba, p('casas', izq ? 12 : der ? 15 : 14, 2)] };
-      }
-      if (c === 'P') {
-        if (!zona.interior && (en(-1, 0) === 'L' || en(1, 0) === 'L')) return { suelo: [hierba, PUERTA_TIENDA] };
-        return { suelo: [base, ARCO] };
-      }
-      const horizontal = en(-1, 0) === 'M' || en(1, 0) === 'M';
-      const vertical = en(0, -1) === 'M' || en(0, 1) === 'M';
-      return { suelo: [hierba, vertical && !horizontal ? MURO_VERTICAL : MURO_HORIZONTAL] };
+    case 'P':
+    case 'G':
+      capas.push(...muro(v, c, estilo));
+      break;
+  }
+  return capas;
+}
+
+function muro(v: Vecindad, c: string, estilo: EstiloZona): Capa[] {
+  if (v.fachada(0)) {
+    const izq = v.fachada(-1);
+    const der = v.fachada(1);
+    const junto = v.en(-1, 0) === 'P' || v.en(1, 0) === 'P';
+    const hueco = c === 'P' ? 'puerta' : !junto && v.x % 2 === 1 ? 'ventana' : 'lisa';
+    return [pieza(`fachada.${hueco}.${bits(izq, der)}`)];
+  }
+  if (c === 'P' && (v.en(-1, 0) === 'L' || v.en(1, 0) === 'L')) {
+    return [pieza(`lona.puerta.${bits(v.en(-1, 0) === 'L', v.en(1, 0) === 'L')}`)];
+  }
+  const horizontal = v.es(MURALLA, -1, 0, false) || v.es(MURALLA, 1, 0, false);
+  const vertical = v.es(MURALLA, 0, -1, false) || v.es(MURALLA, 0, 1, false);
+  // Un portón entre árboles no es más que camino.
+  if (c === 'G' && !horizontal) return [];
+  const piedra = estilo === 'alhambra' ? 'roja' : 'tapial';
+  const forma = c === 'G' ? 'puerta' : c === 'P' ? 'arco' : horizontal || !vertical ? 'horizontal' : 'vertical';
+  return [pieza(`muro.${piedra}.${forma}`)];
+}
+
+// ---------- Pintar el suelo ----------
+
+const FORMA_CUARTO = (h: boolean, v: boolean, d: boolean) =>
+  !h && !v ? 'esquina' : h && !v ? 'horizontal' : !h && v ? 'vertical' : d ? 'lleno' : 'interior';
+
+function pintarCasilla(ctx: CanvasRenderingContext2D, img: CanvasImageSource, zona: Zona, x: number, y: number, f: number): void {
+  const v = new Vecindad(zona, x, y);
+  for (const capa of capasDe(zona, x, y, f)) {
+    if ('pieza' in capa) {
+      const [px, py] = PIEZAS[capa.pieza];
+      ctx.drawImage(img, px, py, PX, PX, x * PX, y * PX, PX, PX);
+      continue;
     }
-    case 'B':
-      return { suelo: [SUELO_INTERIOR] };
-    case 'R':
-      return { suelo: [ALFOMBRA] };
-    case 'X': {
-      const col = en(-1, 0) !== 'X' ? 1 : en(1, 0) !== 'X' ? 4 : 2 + (x % 2);
-      return { suelo: [base, p('elementos', col, 10)] };
+    const igual = (dx: number, dy: number) => v.es(capa.familia, dx, dy, capa.fuera);
+    for (const [qx, qy] of [
+      [0, 0],
+      [1, 0],
+      [0, 1],
+      [1, 1],
+    ]) {
+      const sx = qx ? 1 : -1;
+      const sy = qy ? 1 : -1;
+      const forma = FORMA_CUARTO(igual(sx, 0), igual(0, sy), igual(sx, sy));
+      const [px, py] = PIEZAS[`${capa.material}.${forma}`];
+      const m = PX / 2;
+      ctx.drawImage(img, px + qx * m, py + qy * m, m, m, x * PX + qx * m, y * PX + qy * m, m, m);
     }
-    case 'E':
-      return { suelo: [base], objeto: ESTANTERIA };
-    case 'K':
-      return { suelo: [base, BARRILES] };
-    case 'C':
-      return { suelo: [base], objeto: COLUMNA };
-    case 'A': {
-      const fam = new Set(['A']);
-      const [u, d, l, rr] = vecinos(fam);
-      return { suelo: [base, autotile(BLOQUE_FUENTE, u, d, l, rr)] };
-    }
-    default:
-      return { suelo: [base] };
   }
 }
 
-/** Nombre del frame de una pieza; lo crea en la textura la primera vez. */
-function frameDe(scene: Phaser.Scene, pieza: Pieza): string {
-  const nombre = `${pieza.c},${pieza.f},${pieza.w ?? 1},${pieza.h ?? 1}`;
-  const textura = scene.textures.get(claveHoja(pieza.hoja));
-  if (!textura.has(nombre)) {
-    textura.add(nombre, 0, pieza.c * PX, pieza.f * PX, (pieza.w ?? 1) * PX, (pieza.h ?? 1) * PX);
-  }
-  return nombre;
+const ANIMADAS = new Set(['~', '=', 'A']);
+
+// ---------- Objetos altos ----------
+
+interface Objeto {
+  nombre: string;
+  /** Punto de apoyo, en píxeles del tileset: centro abajo. */
+  x: number;
+  y: number;
+  profundidad: number;
+  origenX?: number;
 }
 
-/**
- * Dibuja la zona en `capa`. El suelo queda a profundidad −1. Los objetos altos, a la de su fila
- * más 0,9, para que tapen a quien esté justo detrás (al norte) y no a quien esté delante.
- */
-export function dibujarZona(scene: Phaser.Scene, zona: Zona, capa: Phaser.GameObjects.Container): void {
-  const t = TAM_CASILLA;
+function objetosDe(zona: Zona): Objeto[] {
+  const estilo = estiloDe(zona);
+  const lista: Objeto[] = [];
+  const apoyo = (nombre: string, x: number, y: number, extra = 0.9): Objeto => ({
+    nombre,
+    x: x * PX + PX / 2,
+    y: (y + 1) * PX,
+    profundidad: y + extra,
+  });
   zona.mapa.forEach((fila, y) => {
     for (let x = 0; x < fila.length; x++) {
-      const dibujo = dibujoDe(zona, x, y);
-      for (const pieza of dibujo.suelo) {
-        capa.add(
-          scene.add.image(x * t, y * t, claveHoja(pieza.hoja), frameDe(scene, pieza)).setOrigin(0).setScale(ESCALA).setDepth(-1),
-        );
-      }
-      if (dibujo.objeto) {
-        const o = dibujo.objeto;
-        capa.add(
-          scene.add
-            .image(x * t + t / 2, (y + 1) * t, claveHoja(o.hoja), frameDe(scene, o))
-            .setOrigin(0.5, 1)
-            .setScale(ESCALA)
-            .setDepth(y + 0.9),
-        );
+      const v = new Vecindad(zona, x, y);
+      const c = fila[x];
+      if (c === '#') {
+        // Junto a un camino, un arbusto: la copa de un árbol taparía el paso.
+        const junto = v.es(CAMINO, -1, 0, false) || v.es(CAMINO, 1, 0, false);
+        lista.push(apoyo(estilo === 'alhambra' ? 'cipres' : junto ? 'arbusto' : 'arbol', x, y));
+      } else if (c === 'o') lista.push(apoyo('olivo', x, y));
+      else if (c === 'n') lista.push(apoyo('naranjo', x, y));
+      else if (c === 'Q') lista.push(apoyo('pozo', x, y));
+      else if (c === 'C') lista.push(apoyo('columna', x, y));
+      else if (c === 'E') lista.push(apoyo('estanteria', x, y));
+      else if (c === 'h') lista.push({ nombre: 'hierba_alta.delante', x: x * PX + PX / 2, y: (y + 1) * PX, profundidad: y + 0.7 });
+      else if (c === 'L' && !zona.interior && v.en(0, -1) !== 'L' && (v.en(-1, 0) !== 'L' || v.en(1, 0) !== 'L')) {
+        lista.push({ nombre: 'banderola', x: x * PX + PX / 2, y: y * PX + 6, profundidad: y + 0.95, origenX: 3.5 / 16 });
       }
     }
   });
+  // La fuente: la taza con el surtidor en medio y, en el Patio de los Leones, los leones delante.
+  const fuente: [number, number][] = [];
+  zona.mapa.forEach((fila, y) => [...fila].forEach((c, x) => c === 'A' && fuente.push([x, y])));
+  if (fuente.length > 0) {
+    const xs = fuente.map(([x]) => x);
+    const ys = fuente.map(([, y]) => y);
+    const [x0, x1, y0, y1] = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)];
+    if (estilo === 'patio') {
+      for (let x = x0 * PX + 8; x <= (x1 + 1) * PX - 8; x += 12) {
+        lista.push({ nombre: 'leon', x, y: (y1 + 1) * PX + 2, profundidad: y1 + 0.85 });
+      }
+    }
+    lista.push({ nombre: 'surtidor', x: ((x0 + x1 + 1) / 2) * PX, y: ((y0 + y1 + 1) / 2) * PX + 8, profundidad: y1 + 0.8 });
+  }
+  return lista;
 }
 
-const TINAJA = p('elementos', 1, 0);
-const TINAJA_ABIERTA = p('elementos', 4, 0);
+/**
+ * Dibuja la zona en `capa`: el suelo a profundidad −1 y los objetos altos a la de su fila más un
+ * poco, para que tapen a quien esté justo detrás (al norte) y no a quien esté delante.
+ */
+export function dibujarZona(scene: Phaser.Scene, zona: Zona, capa: Phaser.GameObjects.Container): void {
+  const ancho = zona.mapa[0].length;
+  const alto = zona.mapa.length;
+  const clave = `suelo-${zona.id}`;
+  if (scene.textures.exists(clave)) scene.textures.remove(clave);
+  const lienzo = scene.textures.createCanvas(clave, ancho * PX, alto * PX)!;
+  const ctx = lienzo.context;
+  const img = scene.textures.get(CLAVE).getSourceImage() as CanvasImageSource;
+  const animadas: [number, number][] = [];
+  zona.mapa.forEach((fila, y) => {
+    for (let x = 0; x < ancho; x++) {
+      pintarCasilla(ctx, img, zona, x, y, 0);
+      if (ANIMADAS.has(fila[x])) animadas.push([x, y]);
+    }
+  });
+  lienzo.setFilter(Phaser.Textures.FilterMode.NEAREST);
+  lienzo.refresh();
+  capa.add(scene.add.image(0, 0, clave).setOrigin(0).setScale(ESCALA).setDepth(-1));
+
+  for (const o of objetosDe(zona)) {
+    capa.add(
+      imagenPieza(scene, o.nombre, o.x * ESCALA, o.y * ESCALA)
+        .setOrigin(o.origenX ?? 0.5, 1)
+        .setDepth(o.profundidad),
+    );
+  }
+
+  if (animadas.length > 0) {
+    let f = 0;
+    const evento = scene.time.addEvent({
+      delay: 260,
+      loop: true,
+      callback: () => {
+        f = (f + 1) % 4;
+        for (const [x, y] of animadas) pintarCasilla(ctx, img, zona, x, y, f);
+        lienzo.refresh();
+      },
+    });
+    capa.once(Phaser.GameObjects.Events.DESTROY, () => evento.remove());
+  }
+}
+
+/** Cartel de madera, apoyado en el borde inferior de su casilla. */
+export function dibujarCartel(scene: Phaser.Scene, x: number, y: number): Phaser.GameObjects.Image {
+  return imagenPieza(scene, 'cartel', (x + 0.5) * TAM_CASILLA, (y + 1) * TAM_CASILLA).setOrigin(0.5, 1).setDepth(y + 0.4);
+}
 
 /** Recipiente registrable, apoyado en el borde inferior de su casilla. */
 export function dibujarRecipiente(scene: Phaser.Scene, x: number, y: number, abierto: boolean): Phaser.GameObjects.Image {
-  const pieza = abierto ? TINAJA_ABIERTA : TINAJA;
-  return scene.add.image(x, y, claveHoja(pieza.hoja), frameDe(scene, pieza)).setOrigin(0.5, 1).setScale(ESCALA);
+  return imagenPieza(scene, abierto ? 'tinaja.abierta' : 'tinaja', x, y).setOrigin(0.5, 1);
 }
 
 export function abrirRecipiente(figura: Phaser.GameObjects.Image): void {
   // Si la zona se ha vuelto a dibujar mientras tanto, la figura ya no existe.
   if (!figura.scene) return;
-  figura.setFrame(frameDe(figura.scene, TINAJA_ABIERTA));
+  figura.setFrame('tinaja.abierta');
 }

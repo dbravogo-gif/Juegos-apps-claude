@@ -90,12 +90,17 @@ export interface TablaEncuentros {
   especies: { especie: string; min: number; max: number; peso: number }[];
 }
 
+/** Aspecto del mapa: qué árboles, muros, suelos y paredes se dibujan. Lo interpreta la interfaz. */
+export type EstiloZona = 'campo' | 'pueblo' | 'alhambra' | 'meson' | 'pabellon' | 'patio';
+
 export interface Zona {
   id: string;
   nombre: string;
   /** Filas de caracteres, todas del mismo ancho. */
   mapa: string[];
   interior?: boolean;
+  /** Si no se dice: `meson` en interiores y `campo` fuera. */
+  estilo?: EstiloZona;
   /** Color del suelo fuera del mapa y de fondo. */
   fondo?: number;
   encuentros?: TablaEncuentros;

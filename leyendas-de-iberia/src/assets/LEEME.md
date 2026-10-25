@@ -1,6 +1,18 @@
 # Arte del juego
 
-## Mapa y personajes (`mundo/` y `personajes/`)
+## Mapa (`mundo/`)
+
+`iberia.png` e `iberia.json` son el tileset propio del juego, al estilo de los juegos de criaturas
+de GBA (tiles de 16 × 16). Los genera `arte/mapa/tileset.py`, que lo dibuja todo por código, sin
+recursos de terceros: son nuestros y se pueden publicar. **No se editan a mano**: se cambia el
+script y se vuelve a ejecutar (`python3 arte/mapa/tileset.py`).
+
+- El JSON dice dónde está cada pieza (`nombre: [x, y, ancho, alto]`).
+- Caminos, empedrado, acequias, fuentes, alfombras y huertos son materiales que se juntan con sus
+  vecinos: cinco tiles de referencia que el juego corta en cuartos (`src/ui/casillasVisual.ts`).
+- Las acequias y las fuentes tienen cuatro fotogramas.
+
+## Personajes (`personajes/`)
 
 Salen del paquete **Ninja Adventure**, de Pixel-boy y AAA, publicado con licencia **CC0**
 (dominio público): se puede usar, modificar y redistribuir sin pedir permiso. No hace falta
@@ -8,20 +20,7 @@ citar, pero se agradece.
 
 - Página del paquete: <https://pixel-boy.itch.io/ninja-adventure-asset-pack>
 - Copia usada: el repositorio `rinn7e/ninja-adventure-indigo`, carpeta
-  `assets/Ninja Adventure - Asset Pack`, que trae el `LICENSE.txt` con la CC0. La sombra viene
-  del proyecto oficial `pixel-boy/NinjaAdventure`.
-
-| Archivo | Original |
-| --- | --- |
-| `mundo/suelo.png` | `Backgrounds/Tilesets/TilesetFloor.png` |
-| `mundo/agua.png` | `Backgrounds/Tilesets/TilesetWater.png` |
-| `mundo/naturaleza.png` | `Backgrounds/Tilesets/TilesetNature.png` |
-| `mundo/casas.png` | `Backgrounds/Tilesets/TilesetHouse.png` |
-| `mundo/elementos.png` | `Backgrounds/Tilesets/TilesetElement.png` |
-| `mundo/interior_suelo.png` | `Backgrounds/Tilesets/Interior/TilesetInteriorFloor.png` |
-| `mundo/interior_pared.png` | `Backgrounds/Tilesets/Interior/TilesetWallSimple.png` |
-| `mundo/campamento.png` | `Backgrounds/Tilesets/tileset_camp.png` |
-| `mundo/sombra.png` | `content/character/Shadow.png` (proyecto oficial) |
+  `assets/Ninja Adventure - Asset Pack`, que trae el `LICENSE.txt` con la CC0.
 
 Personajes (`Actor/Character/<nombre>/SpriteSheet.png`):
 
@@ -43,9 +42,8 @@ Personajes (`Actor/Character/<nombre>/SpriteSheet.png`):
 | `soldado.png` | GladiatorBlue | El centinela |
 | `aldeano.png`, `aldeano_verde.png`, `aldeana.png`, `maestro.png` | Villager, Villager3, Villager4, OldMan | De reserva |
 
-**Pendiente: retocarlo a la época.** El paquete es de estética japonesa. Hay que cambiar
-tejados, ropa y tocados para que encajen con cada capítulo: la corona de Isabel, la teja árabe,
-el encalado, etcétera.
+**Pendiente: rehacerlos al estilo del mapa nuevo**, con la ropa y los tocados de la época: la
+corona de Isabel, el turbante de Boabdil, el capacete del centinela, etcétera.
 
 ## Criaturas (`criaturas/`)
 

@@ -47,6 +47,38 @@ describe('zonas del capítulo 1', () => {
     expect(esSolida(ZONAS[INICIO.zona], INICIO.x, INICIO.y, CASILLAS)).toBe(false);
   });
 
+  it('se llega a todas las salidas, personajes, carteles, tinajas y objetos escondidos', () => {
+    // Los personajes que se apartan con una bandera (`ocultoSi`) no cuentan como estorbo.
+    for (const z of Object.values(ZONAS)) {
+      const ocupadas = new Set(
+        [...z.pnj.filter((p) => !p.ocultoSi), ...z.carteles, ...(z.recipientes ?? [])].map((o) => `${o.x},${o.y}`),
+      );
+      const pisable = (x: number, y: number) => !esSolida(z, x, y, CASILLAS) && !ocupadas.has(`${x},${y}`);
+      const llegadas = Object.values(ZONAS).flatMap((o) => o.salidas.filter((s) => s.zona === z.id).map((s) => [s.ax, s.ay]));
+      if (z.id === INICIO.zona) llegadas.push([INICIO.x, INICIO.y]);
+      const vistas = new Set<string>();
+      const cola = llegadas.filter(([x, y]) => pisable(x, y));
+      for (const [x, y] of cola) vistas.add(`${x},${y}`);
+      while (cola.length > 0) {
+        const [x, y] = cola.shift()!;
+        for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+          const clave = `${x + dx},${y + dy}`;
+          if (!vistas.has(clave) && pisable(x + dx, y + dy)) {
+            vistas.add(clave);
+            cola.push([x + dx, y + dy]);
+          }
+        }
+      }
+      const alLado = (o: { x: number; y: number }) =>
+        [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => vistas.has(`${o.x + dx},${o.y + dy}`));
+      for (const s of z.salidas) expect(vistas.has(`${s.x},${s.y}`), `${z.id}: salida a ${s.zona}`).toBe(true);
+      for (const p of z.pnj) expect(alLado(p), `${z.id}: ${p.id}`).toBe(true);
+      for (const c of z.carteles) expect(alLado(c), `${z.id}: cartel en ${c.x},${c.y}`).toBe(true);
+      for (const r of z.recipientes ?? []) expect(alLado(r), `${z.id}: tinaja ${r.id}`).toBe(true);
+      for (const o of z.ocultos ?? []) expect(vistas.has(`${o.x},${o.y}`) || alLado(o), `${z.id}: ${o.id}`).toBe(true);
+    }
+  });
+
   it('los guiones usan objetos, entrenadores y especies que existen', () => {
     for (const z of Object.values(ZONAS)) {
       const guiones = [...z.pnj.map((p) => p.guion), z.alEntrar ?? []];

@@ -25,8 +25,10 @@ tocan desde aquí.
     `…/Juegos-apps-claude/leyendas-de-iberia/`.
   - Falta ajustar el equilibrio jugando.
 - **Arte:**
-  - Mapa y personajes que caminan: el paquete *Ninja Adventure* (CC0), en `src/assets/`
-    (`LEEME.md`). Falta retocarlo a la época.
+  - Mapa: tileset propio al estilo de los juegos de criaturas de GBA, generado por
+    `arte/mapa/tileset.py` (`src/assets/LEEME.md`). Se cambia el script, nunca el PNG a mano.
+  - Personajes que caminan: todavía el paquete *Ninja Adventure* (CC0). Siguiente paso:
+    rehacerlos al estilo del mapa, con ropa y tocados de la época.
   - Criaturas: hechas las 22 del capítulo 1 en el estilo elegido por el autor, con vista de
     rival y vista del jugador (`src/assets/LEEME.md`). Guayota y la vieja, en reserva, en
     `arte/criaturas-futuras/`. Antes de hacer más, lee la guía de diseño visual del Bestiario.
@@ -58,15 +60,12 @@ tocan desde aquí.
   título. No es prioridad.
 - **Pendiente del autor:** las decisiones abiertas al final de `docs/BESTIARIO.md` y del
   `docs/GDD.md` §3.
-- **Mapas (2026-10-25), en estudio:** el autor quiere mapas con aspecto de Pokémon y propuso
-  Pokémon Essentials y Reliqui Studio. Opciones planteadas:
-  - Pasar todo el juego a Essentials. Se descarta de momento: no va en el navegador ni en
-    iPhone, y obliga a rehacer el motor.
-  - Usar Reliqui Studio (Windows) solo como editor de mapas, con tilesets de la comunidad, y
-    convertir sus `.rxdata` a nuestro formato. Es la opción recomendada; `rubymarshal` (PyPI)
-    sirve para leerlos.
-  - Falta que el autor elija y que se abra la red a las webs de recursos, o que suba él los
-    archivos.
+- **Mapas (2026-10-25), hecho:** con aspecto de los juegos de criaturas de GBA, a petición
+  del autor.
+  - Se descartó pasar el juego a Pokémon Essentials (no va en el navegador ni en iPhone) y usar
+    tilesets de la comunidad (casi todos prohíben redistribuirlos y el repositorio es público).
+  - Tileset propio y mapas del capítulo 1 más ricos: plaza con fuente, vallas, pozo, huertos,
+    naranjos, setos, rocas.
 
 ## Antes de tocar nada
 
@@ -138,8 +137,11 @@ El código va en español: nombres, comentarios y textos.
     `Barra` y chips de tipo.
   - `ventanas.ts`: las piezas de los menús (panel, fondo con rayas, pestaña de título, franja de
     selección y píldoras).
-  - `casillasVisual.ts` y `personaVisual.ts`: el mapa y los personajes con las hojas de
-    *Ninja Adventure*. `objetoVisual.ts`: los iconos ilustrados de objetos y menús.
+  - `casillasVisual.ts`: el mapa con el tileset propio. El suelo de cada zona se pinta en un
+    lienzo (caminos, agua y alfombras por cuartos según sus vecinos); árboles, columnas y demás
+    cosas altas van aparte, ordenadas por profundidad; el agua se mueve.
+  - `personaVisual.ts`: los personajes con las hojas de *Ninja Adventure*.
+  - `objetoVisual.ts`: los iconos ilustrados de objetos y menús.
   - `tablaTipos.ts`: la consulta de la tabla de tipos.
   - `criaturaVisual.ts`: las imágenes de `src/assets/criaturas/` (de frente y `_jugador`) o una
     figura provisional.
@@ -147,10 +149,13 @@ El código va en español: nombres, comentarios y textos.
   - `sesion.ts`: la partida en curso y el `localStorage`.
   - `pedirNombre.ts`.
 - **Añadir una zona:**
-  - Se dibuja en texto con los caracteres de `casillas.ts`.
+  - Se dibuja en texto con los caracteres de `casillas.ts` y se le pone un `estilo` (pueblo,
+    campo, alhambra, mesón, pabellón, patio), que decide árboles, muros, suelos y paredes.
+  - Una casilla nueva necesita su entrada en `casillas.ts`, su dibujo en `casillasVisual.ts` y,
+    si es una pieza nueva, su función en `arte/mapa/tileset.py`.
   - Cada salida necesita su vuelta en la otra zona.
   - Las pruebas (`tests/historia.test.ts`) comprueban filas, caracteres, salidas, personajes y
-    guiones.
+    guiones, y que se llega a todo lo que hay en el mapa.
 - **Banderas de la historia:**
   - `inicial`, `teseras`, `colon`, `fosil`.
   - `oculto:<zona>:<id>`: objeto escondido ya recogido.
