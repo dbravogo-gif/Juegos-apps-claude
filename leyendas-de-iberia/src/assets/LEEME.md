@@ -51,16 +51,16 @@ el encalado, etcétera.
 
 `<id de especie>.png`. Si no hay imagen, se dibuja una figura provisional.
 
-- **Origen:** generadas con OpenArt (modelo Wan 2.7 Image) en hojas de varias criaturas, a partir
-  de las descripciones visuales de `docs/BESTIARIO.md` (2026-10-24).
-- **Proceso:** se separa cada criatura, se quita el fondo blanco y se reduce a 128 × 128 con una
-  paleta corta, para que parezca pixel art. Las formas pequeñas ocupan menos del cuadro, así que
-  se ven más pequeñas que las grandes. Todas miran a la izquierda: el juego las da la vuelta
-  para la criatura del jugador.
-- **Licencia:** el plan gratuito de OpenArt pone una marca de agua en el centro de cada imagen y
-  permite el uso no comercial. Solo se usan criaturas que quedaron fuera de la marca; las que
-  quedaron debajo se volvieron a generar, no se retocaron.
-- Reserva para más adelante: `arte/criaturas-futuras/` (por ahora, la vieja del capítulo 5).
+- **Origen:** generadas con OpenArt (GPT Image 2, plan Starter, sin marca de agua) en hojas de una
+  línea o de tres criaturas, a partir de las fichas de `docs/BESTIARIO.md` y su guía de diseño
+  visual. Estilo «D», elegido por el autor el 2026-10-25.
+- **Dos vistas por criatura:**
+  - `<id>.webp`: el rival, en diagonal de frente, mirando a la izquierda.
+  - `<id>_jugador.webp`: la tuya, en diagonal por detrás, mirando arriba a la derecha.
+- **Proceso:** la hoja se corta en 2 filas y 3 columnas por las líneas con menos dibujo, se quita
+  el fondo blanco (también los huecos grandes interiores), y cada criatura se coloca apoyada abajo
+  en un cuadro de 384 px. Las formas débiles ocupan menos del cuadro, así que se ven más pequeñas.
+- Reserva para más adelante: `arte/criaturas-futuras/` (Guayota y la vieja).
 
 ## Objetos (`objetos/`)
 

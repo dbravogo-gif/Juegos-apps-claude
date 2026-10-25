@@ -27,8 +27,9 @@ tocan desde aquí.
 - **Arte:**
   - Mapa y personajes que caminan: el paquete *Ninja Adventure* (CC0), en `src/assets/`
     (`LEEME.md`). Falta retocarlo a la época.
-  - Criaturas: hechas las 22 del capítulo 1, con OpenArt y reducidas a pixel art
-    (`src/assets/LEEME.md`). La vieja del capítulo 5 está en `arte/criaturas-futuras/`.
+  - Criaturas: hechas las 22 del capítulo 1 en el estilo elegido por el autor, con vista de
+    rival y vista del jugador (`src/assets/LEEME.md`). Guayota y la vieja, en reserva, en
+    `arte/criaturas-futuras/`. Antes de hacer más, lee la guía de diseño visual del Bestiario.
   - Retratos de los personajes: pendientes.
 - **Bestiario (`docs/BESTIARIO.md`), v2:**
   - Hecho: auditoría, segunda revisión de variedad (A.8), tabla de 150 especies y fichas del
@@ -117,7 +118,8 @@ El código va en español: nombres, comentarios y textos.
   - `casillasVisual.ts` y `personaVisual.ts`: el mapa y los personajes con las hojas de
     *Ninja Adventure*. `objetoVisual.ts`: los iconos de los objetos.
   - `tablaTipos.ts`: la consulta de la tabla de tipos.
-  - `criaturaVisual.ts`: los PNG de `src/assets/criaturas/` o una figura provisional.
+  - `criaturaVisual.ts`: las imágenes de `src/assets/criaturas/` (de frente y `_jugador`) o una
+    figura provisional.
   - `textos.ts`: frases de combate y `describirMovimiento`.
   - `sesion.ts`: la partida en curso y el `localStorage`.
   - `pedirNombre.ts`.

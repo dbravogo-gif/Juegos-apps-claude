@@ -49,6 +49,11 @@ Cómo se dibuja cada criatura según su línea, su fuerza y dónde sale. Sigue l
 género: las criaturas son de dibujo animado, nunca animales realistas, aunque partan de una
 especie real.
 
+**Estilo (elegido por el autor el 2026-10-25, el «D» de las pruebas).** Ilustración limpia de
+criatura de juego: formas sencillas y redondeadas, colores planos con una sola sombra suave,
+contorno fino y ojos expresivos. Sin texturas realistas de pelo, plumas o roca, aunque la
+criatura sea fuerte: lo que la hace épica es el tamaño, la silueta y los efectos, no el detalle.
+
 **Vistas en combate.**
 - El rival se ve en diagonal de frente, mostrando el frente y su lado izquierdo.
 - La tuya se ve en diagonal por detrás, mostrando la espalda y su lado derecho.
@@ -484,7 +489,7 @@ pendiente del autor.
 | --- | --- | --- | --- | --- | --- | --- |
 | 130 | Mari | Mental/Plasma **[VERIFICAR]** | Anboto (guarida de legendario) | Tanque mágico y control | Diosa de agua y niebla | País Vasco (mitología) |
 | 131 | Cuélebre | Ancestral/Agua | Covadonga | Tanque físico | Serpiente alada | Asturias y Cantabria (mitología) |
-| 132 | Guayota | Infernal/Oscuridad | Teide, tras el capítulo 5 | Atacante pesado mixto | Volcán con forma | Tenerife (mitología guanche) |
+| 132 | Guayota | Infernal/Oscuridad | Teide, tras el capítulo 5 | Atacante pesado mixto | Gigante humano hecho de volcán, con el sol robado en la mano | Tenerife (mitología guanche) |
 | 133 | Magec | Luz/Ancestral | Cumbre del Teide, al amanecer, tras vencer a Guayota | Atacante mágico | Disco solar con forma | Tenerife (mitología guanche) |
 | 134 | Nuberu | Eléctrico/Aire | Puertos de Asturias, con tormenta | Atacante mágico y control | Nube de tormenta | Asturias (mitología) |
 | 135 | Tarasca | Ancestral/Oscuridad | Granada, en el Corpus, tras la Liga | Tanque físico y control | Dragón de procesión | Corpus Christi |

@@ -3,18 +3,18 @@ import type { DatosJuego } from '../core/modelo';
 import { DATOS } from '../data';
 import { aclarar, COLOR, estiloTexto, oscurecer } from './tema';
 
-// Arte de las criaturas. Si existe `src/assets/criaturas/<id>.png`, se usa esa imagen; si no,
-// se dibuja una figura provisional con el color de su tipo. `<id>_jugador.png` es la vista de tu
+// Arte de las criaturas. Si existe `src/assets/criaturas/<id>.webp` (o `.png`), se usa esa imagen; si no,
+// se dibuja una figura provisional con el color de su tipo. `<id>_jugador` es la vista de tu
 // criatura en combate: en diagonal, de tres cuartos por detrás, mirando al rival. Sin ella, se
-// usa la de frente dada la vuelta. Para cambiar el arte basta con añadir los PNG.
+// usa la de frente dada la vuelta. Para cambiar el arte basta con añadir las imágenes.
 
-const PNGS = import.meta.glob('../assets/criaturas/*.png', { eager: true, query: '?url', import: 'default' }) as Record<
+const IMAGENES = import.meta.glob('../assets/criaturas/*.{webp,png}', { eager: true, query: '?url', import: 'default' }) as Record<
   string,
   string
 >;
 
 export const SPRITES: Record<string, string> = Object.fromEntries(
-  Object.entries(PNGS).map(([ruta, url]) => [ruta.split('/').pop()!.replace(/\.png$/, ''), url]),
+  Object.entries(IMAGENES).map(([ruta, url]) => [ruta.split('/').pop()!.replace(/\.(webp|png)$/, ''), url]),
 );
 
 export const claveSprite = (especie: string) => `criatura-${especie}`;
