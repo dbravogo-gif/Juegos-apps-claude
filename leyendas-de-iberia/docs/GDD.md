@@ -501,3 +501,11 @@ con la Guerra Civil.
     dedo en la cruceta.
   - Arreglado: la barra de vida no bajaba, solo cambiaba de color. Ahora baja poco a poco, junto
     con los números, y tarda más cuanto más daño.
+- **2026-10-25 (9).** Más correcciones del autor.
+  - Retratos solo de los personajes importantes (Isabel, Fernando, el Gran Capitán, Colón y
+    Boabdil). Los demás quedan en reserva en `arte/retratos-reserva/`.
+  - Fuera la Tésera real que daba el mensajero tras Boabdil: era demasiado pronto para la
+    equivalente a la Master Ball. Ahora da tres téseras de plata.
+  - Cinco entrenadores en total entre la Vega y la Alhambra, no cuatro por zona.
+  - Boabdil lleva Brezuco y Trasgorn, de Oscuridad, en vez de Alhambrón (Agua/Tierra), que hacía
+    imposible el combate con el inicial de fuego.

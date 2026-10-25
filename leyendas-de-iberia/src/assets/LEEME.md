@@ -45,7 +45,9 @@ y su ropa. **No se editan a mano.**
 ## Retratos (`retratos/`)
 
 `<id>.webp`: bustos de 384 px sobre fondo transparente, apoyados abajo, para los diálogos. Qué
-nombre usa cada uno está en `src/data/retratos.ts`.
+nombre usa cada uno está en `src/data/retratos.ts`. Solo llevan retrato los personajes
+importantes (decisión del autor): Isabel, Fernando, el Gran Capitán, Colón y Boabdil. Los demás
+están hechos y guardados en `arte/retratos-reserva/`, fuera del juego.
 
 - **Origen:** OpenArt (GPT Image 2) el 2026-10-25, en cuatro hojas de 3 × 2, con el estilo de las
   criaturas (dibujo limpio, colores planos con una sombra, contorno fino) y la ropa de la época.
@@ -54,7 +56,6 @@ nombre usa cada uno está en `src/data/retratos.ts`.
   treinta años.
 - **Proceso:** el mismo corte que las criaturas, sin vaciar huecos blancos (tocas, turbantes y
   velos son blancos a propósito).
-- Reserva: `jugador`, `fraile`, `sabio`, `aldeano` y `aldeana`.
 
 ## Criaturas (`criaturas/`)
 

@@ -32,9 +32,9 @@ tocan desde aquí.
   - Criaturas: hechas las 22 del capítulo 1 en el estilo elegido por el autor, con vista de
     rival y vista del jugador (`src/assets/LEEME.md`). Guayota y la vieja, en reserva, en
     `arte/criaturas-futuras/`. Antes de hacer más, lee la guía de diseño visual del Bestiario.
-  - Retratos de los personajes para los diálogos: hechos los 19 que hablan en el capítulo 1 y
-    cinco de reserva (`src/assets/retratos/`, `src/data/retratos.ts`). Quien hable sin retrato
-    lo hace sin imagen; una prueba exige retrato para todo el que habla.
+  - Retratos para los diálogos, solo de los personajes importantes (decisión del autor):
+    Isabel, Fernando, el Gran Capitán, Colón y Boabdil (`src/assets/retratos/`,
+    `src/data/retratos.ts`). Hay 19 más hechos, en reserva, en `arte/retratos-reserva/`.
 - **Bestiario (`docs/BESTIARIO.md`), v2:**
   - Hecho: auditoría, segunda revisión de variedad (A.8), tabla de 150 especies y fichas del
     capítulo 1, Gofrón, la vieja, *Gallotia simonyi* y el Papemímico.
@@ -63,8 +63,10 @@ tocan desde aquí.
 - **Pendiente del autor:** las decisiones abiertas al final de `docs/BESTIARIO.md` y del
   `docs/GDD.md` §3.
 - **Correcciones del autor (2026-10-25, tras jugar):** tinajas solo en ciudades; primera zona
-  más fácil (ocho entrenadores de una criatura, Boabdil con dos); Colón rehecho y con cinco
-  téseras; control trabado tras el combate y barra de vida, arreglados.
+  más fácil (cinco entrenadores de una criatura; Boabdil con Brezuco y Trasgorn, sin nada de
+  Agua ni Tierra); sin Tésera real al principio; Colón rehecho y con cinco téseras; control
+  trabado tras el combate y barra de vida, arreglados.
+- **Siguiente (pedido por el autor):** revisar la tabla de tipos con él y meter el capítulo 2.
 - **Mapas (2026-10-25), hecho:** con aspecto de los juegos de criaturas de GBA, a petición
   del autor.
   - Se descartó pasar el juego a Pokémon Essentials (no va en el navegador ni en iPhone) y usar

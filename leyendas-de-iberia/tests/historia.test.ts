@@ -44,7 +44,7 @@ describe('zonas del capítulo 1', () => {
     }
   });
 
-  it('todo el que habla tiene retrato', () => {
+  it('los retratos son de personajes importantes que hablan, y tienen su archivo', () => {
     const archivos = Object.keys(import.meta.glob('../src/assets/retratos/*.webp')).map((r) => r.split('/').pop());
     const quienes = new Set<string>(Object.values(ENTRENADORES).map((e) => e.nombre));
     for (const z of Object.values(ZONAS)) {
@@ -52,10 +52,12 @@ describe('zonas del capítulo 1', () => {
         if ((p.tipo === 'decir' || p.tipo === 'elegir') && p.quien) quienes.add(p.quien);
       }
     }
-    for (const q of quienes) {
-      expect(RETRATOS[q], `retrato de ${q}`).toBeDefined();
-      expect(archivos, `archivo del retrato de ${q}`).toContain(`${RETRATOS[q]}.webp`);
+    for (const [q, id] of Object.entries(RETRATOS)) {
+      expect(quienes.has(q), `${q} no habla en ningún sitio`).toBe(true);
+      expect(archivos, `archivo del retrato de ${q}`).toContain(`${id}.webp`);
     }
+    // Solo los importantes: un retrato de más se nota en cada diálogo.
+    expect(archivos.length).toBe(Object.keys(RETRATOS).length);
   });
 
   it('el inicio cae en una casilla transitable', () => {
@@ -253,7 +255,7 @@ describe('partida', () => {
     const a = equipoEntrenador(ENTRENADORES.boabdil, DATOS);
     const b = equipoEntrenador(ENTRENADORES.boabdil, DATOS);
     expect(a).toEqual(b);
-    expect(a.map((c) => c.especie)).toEqual(['duende', 'leon_fuente']);
+    expect(a.map((c) => c.especie)).toEqual(['duende', 'trasgo']);
     expect(a.every((c) => c.valia === ENTRENADORES.boabdil.valia)).toBe(true);
   });
 
