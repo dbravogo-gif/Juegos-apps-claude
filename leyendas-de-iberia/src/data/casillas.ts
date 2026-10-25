@@ -28,4 +28,10 @@ export const CASILLAS: Record<string, DefCasilla> = {
   C: { nombre: 'Columna', solido: true },
   A: { nombre: 'Fuente', solido: true },
   Z: { nombre: 'Azulejos', solido: true },
+  n: { nombre: 'Naranjo', solido: true },
+  f: { nombre: 'Valla', solido: true },
+  v: { nombre: 'Seto', solido: true },
+  u: { nombre: 'Huerto', solido: true },
+  Q: { nombre: 'Pozo', solido: true },
+  r: { nombre: 'Roca', solido: true },
 };

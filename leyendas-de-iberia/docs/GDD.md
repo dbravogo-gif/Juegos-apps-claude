@@ -335,15 +335,20 @@ con la Guerra Civil.
   - `src/data`: el contenido, en TypeScript tipado. Se prefiere a JSON porque comprueba los
     errores al compilar.
   - `src/escenas` y `src/ui`: Phaser.
-  - Los mapas se hacen con Tiled y se guardan en JSON.
+  - Los mapas se dibujan como texto en `src/data/zonas/`, un carácter por casilla, y cada zona
+    dice su estilo (pueblo, campo, Alhambra, mesón…).
 - **Guardado.** En `localStorage`, con número de versión y migraciones. Además se puede exportar
   e importar la partida como texto, que sirve de copia de seguridad.
 - **Móvil.**
   - Resolución lógica fija con píxeles nítidos, escalada a la pantalla.
   - En vertical, la pantalla va arriba y el mando abajo, como en una Game Boy.
   - En PC, teclado y sin mando en pantalla.
-- **Arte del mapa y de los personajes.** El paquete libre *Ninja Adventure* (CC0), a 16 × 16
-  escalado ×5 (`src/assets/LEEME.md`). Está pendiente retocarlo a la época.
+- **Arte del mapa.** Tileset propio al estilo de los juegos de criaturas de GBA, a 16 × 16
+  escalado ×5. Lo dibuja un script (`arte/mapa/tileset.py`), sin recursos de terceros, para poder
+  publicarlo en el repositorio. Ambientado en la época: encalado, teja árabe, tapial, olivos,
+  acequias, arrayanes y azulejos.
+- **Arte de los personajes del mapa.** De momento, el paquete libre *Ninja Adventure* (CC0)
+  (`src/assets/LEEME.md`).
 - **Arte de las criaturas, provisional.** Cada sprite se busca por el id de la criatura. Si no
   hay imagen, se genera una provisional con el color del tipo. Para sustituirlo basta con añadir
   el PNG con ese nombre.
@@ -464,3 +469,14 @@ con la Guerra Civil.
     crónicas de su tiempo (Hernando del Pulgar).
 - **2026-10-25 (5).** El Papemímico solo sale desde la quinta ciudad (cuatro blasones), por ser
   una criatura fuerte. Antes, las tinajas solo dan objetos o nada.
+- **2026-10-25 (6).** Mapas con aspecto de los juegos de criaturas de GBA, a petición del autor.
+  - Se descarta pasar el juego a Pokémon Essentials: no funciona en el navegador ni en iPhone.
+    Los tilesets de la comunidad tampoco sirven tal cual: casi todos prohíben redistribuirlos y
+    el repositorio es público.
+  - Tileset propio, generado por script: hierba alta que tapa las piernas, caminos con bordes,
+    casas encaladas con teja árabe, rejas y geranios, murallas de tapial y roja, el pabellón real
+    a rayas con pendones, acequias y fuentes con el agua en movimiento, olivos, naranjos,
+    cipreses, setos de arrayán, huertos, pozo y los leones del patio.
+  - Mapas más ricos: plaza empedrada con fuente en Santa Fe, vallado del pabellón, huertos en
+    Santa Fe y en la Vega, setos en la Alhambra. Una prueba comprueba que se llega a todas las
+    salidas, personajes, carteles, tinajas y objetos.

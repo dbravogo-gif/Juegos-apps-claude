@@ -32,7 +32,7 @@ import {
   type Partida,
   type Posicion,
 } from '../core/partida';
-import { abrirRecipiente, dibujarRecipiente, dibujarZona, ESCALA, TAM_CASILLA } from '../ui/casillasVisual';
+import { abrirRecipiente, dibujarCartel, dibujarRecipiente, dibujarZona, ESCALA, TAM_CASILLA } from '../ui/casillasVisual';
 import { registrarRecipiente, revisado } from '../core/recipientes';
 import { MIMICO_MIN_BLASONES, OBJETOS_RECIPIENTE, PROB_RECIPIENTE, RECOMPENSA_MIMICO } from '../data/recipientes';
 import { Persona } from '../ui/personaVisual';
@@ -133,7 +133,7 @@ export class Mundo extends Phaser.Scene {
     const capa = this.add.container(0, 0);
     this.capa = capa;
     dibujarZona(this, zona, capa);
-    for (const cartel of zona.carteles) capa.add(this.dibujarCartel(cartel.x, cartel.y));
+    for (const cartel of zona.carteles) capa.add(dibujarCartel(this, cartel.x, cartel.y));
     this.recipientes = [];
     for (const r of zona.recipientes ?? []) {
       const abierto = revisado(this.p, zona.id, r.id);
@@ -161,17 +161,6 @@ export class Mundo extends Phaser.Scene {
     cam.setRoundPixels(true);
     cam.setBounds(Math.min(0, (w - ANCHO) / 2), Math.min(0, (h - ALTO_MAPA) / 2), Math.max(w, ANCHO), Math.max(h, ALTO_MAPA));
     cam.startFollow(this.jugador, true);
-  }
-
-  private dibujarCartel(x: number, y: number): Phaser.GameObjects.Container {
-    const g = this.add.graphics();
-    g.fillStyle(0x5c3a1a, 1);
-    g.fillRect(-5, -6, 10, 34);
-    g.fillStyle(0x8b5a2b, 1);
-    g.fillRoundedRect(-28, -30, 56, 34, 6);
-    g.lineStyle(3, 0x3a2410, 1);
-    g.strokeRoundedRect(-28, -30, 56, 34, 6);
-    return this.add.container(x * T + T / 2, y * T + T / 2, [g]);
   }
 
   private ordenarProfundidad(): void {

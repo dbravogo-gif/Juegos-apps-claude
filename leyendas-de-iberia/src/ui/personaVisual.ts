@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import type { Dir } from '../core/mundo';
 import { ASPECTOS } from '../data/aspectos';
-import { CLAVE_SOMBRA, ESCALA, TAM_CASILLA } from './casillasVisual';
+import { ESCALA, imagenPieza, TAM_CASILLA } from './casillasVisual';
 
 // Personas del mapa con las hojas del paquete Ninja Adventure (`src/assets/personajes/`). Cada
 // hoja tiene una columna por dirección y cuatro filas con los pasos.
@@ -49,7 +49,7 @@ export class Persona extends Phaser.GameObjects.Container {
     this.aspecto = (ASPECTOS as readonly string[]).includes(aspecto) ? aspecto : ASPECTOS[0];
     this.dir = dir;
     const t = TAM_CASILLA;
-    const sombra = scene.add.image(0, t * 0.36, CLAVE_SOMBRA).setScale(ESCALA).setAlpha(0.6);
+    const sombra = imagenPieza(scene, 'sombra', 0, t * 0.36);
     this.sprite = scene.add.sprite(0, -t * 0.08, claveAspecto(this.aspecto), COLUMNA[dir]).setScale(ESCALA);
     this.add([sombra, this.sprite]);
     scene.add.existing(this);
