@@ -1199,7 +1199,9 @@ export class Interfaz extends Phaser.Scene {
         const destino = actual + { izquierda: -1, derecha: 1, arriba: -2, abajo: 2 }[dir];
         if (destino >= 0 && destino < marcos.length) marcar(destino);
       },
-      aceptar: () => alElegir(p.equipo[actual]),
+      aceptar: () => {
+        if (p.equipo[actual]) alElegir(p.equipo[actual]);
+      },
     };
   }
 
