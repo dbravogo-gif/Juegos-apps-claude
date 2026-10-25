@@ -11,6 +11,8 @@ Diseño de las 150 especies. Parte del prompt maestro que el autor preparó con 
 - El juego ya usa el capítulo 1 de esta tabla (nombres, estadísticas y movimientos). Los `id`
   internos de `src/data/especies.ts` no cambian, para no romper partidas guardadas.
 - Siguiente: fichas del capítulo 2, cuando el autor dé el visto bueno.
+- La descripción visual de las 150 especies, lista para generar su imagen, está en
+  `DESCRIPCIONES.md`. Sustituye al inventario del prompt.
 
 ## Convenciones
 

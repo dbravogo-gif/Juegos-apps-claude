@@ -36,6 +36,8 @@ tocan desde aquí.
     capítulo 1, Gofrón, la vieja, *Gallotia simonyi* y el Papemímico.
   - El juego ya usa el capítulo 1 del Bestiario. Los `id` internos no cambian; las especies
     retiradas se convierten al cargar la partida (`ESPECIES_RETIRADAS`).
+  - `docs/DESCRIPCIONES.md`: la descripción visual de las 150 especies, corregida con todo lo
+    decidido. Es la que se usa para generar el arte.
   - Siguiente: fichas del capítulo 2, cuando el autor dé el visto bueno.
 - **Hecho en esta tanda (2026-10-24):**
   - La tabla de tipos (`src/data/tipos.ts`), reducida a petición del autor y consultable en el
