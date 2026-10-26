@@ -20,6 +20,8 @@ export interface DefCasilla {
   hierba?: boolean;
   /** Agua profunda: sólida a pie, pero se cruza con Pleamar. */
   navegable?: boolean;
+  /** Agua donde se puede pescar con la Caña. */
+  pesca?: boolean;
 }
 
 export type Paso =
@@ -140,6 +142,8 @@ export interface Zona {
   encuentros?: TablaEncuentros;
   /** Encuentros al surcar el agua profunda con Pleamar (cada paso por el agua). */
   encuentrosAgua?: TablaEncuentros;
+  /** Lo que pica al pescar con la Caña. `tasa`: probabilidad de que pique algo. */
+  encuentrosPesca?: TablaEncuentros;
   pnj: Pnj[];
   salidas: Salida[];
   carteles: { x: number; y: number; texto: string[] }[];
@@ -172,13 +176,15 @@ export interface ZonaDeEspecie {
   porcentaje: number;
   /** Sale al surcar el agua, no en la hierba. */
   agua?: boolean;
+  /** Sale pescando. */
+  pesca?: boolean;
 }
 
 /** Las zonas donde se encuentra una especie en libertad, en el orden de `zonas`. */
 export function dondeSale(zonas: Record<string, Zona>, especie: string): ZonaDeEspecie[] {
   const lista: ZonaDeEspecie[] = [];
   for (const z of Object.values(zonas)) {
-    for (const [tabla, agua] of [[z.encuentros, false], [z.encuentrosAgua, true]] as const) {
+    for (const [tabla, donde] of [[z.encuentros, ''], [z.encuentrosAgua, 'agua'], [z.encuentrosPesca, 'pesca']] as const) {
       if (!tabla) continue;
       const total = tabla.especies.reduce((s, e) => s + e.peso, 0);
       const propias = tabla.especies.filter((e) => e.especie === especie);
@@ -189,7 +195,8 @@ export function dondeSale(zonas: Record<string, Zona>, especie: string): ZonaDeE
         max: Math.max(...propias.map((e) => e.max)),
         porcentaje: Math.max(1, Math.round((propias.reduce((s, e) => s + e.peso, 0) / total) * 100)),
       };
-      if (agua) d.agua = true;
+      if (donde === 'agua') d.agua = true;
+      if (donde === 'pesca') d.pesca = true;
       lista.push(d);
     }
   }
@@ -220,6 +227,10 @@ export function esHierba(z: Zona, x: number, y: number, casillas: Record<string,
 
 export function esNavegable(z: Zona, x: number, y: number, casillas: Record<string, DefCasilla>): boolean {
   return Boolean(casillas[casillaEn(z, x, y)]?.navegable);
+}
+
+export function esPescable(z: Zona, x: number, y: number, casillas: Record<string, DefCasilla>): boolean {
+  return Boolean(casillas[casillaEn(z, x, y)]?.pesca);
 }
 
 /** ¿Está el jugador en línea recta delante del entrenador, sin nada sólido en medio? */

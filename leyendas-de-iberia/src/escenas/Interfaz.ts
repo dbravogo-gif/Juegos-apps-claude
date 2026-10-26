@@ -8,6 +8,7 @@ import { dondeSale } from '../core/mundo';
 import { escalaMapa, lugarDe, MAPA_ALTO, MAPA_ANCHO, mapaZonas } from '../ui/mapaVisual';
 import { LUGARES } from '../data/lugares';
 import { aplicarCuracion, equipar, motivoNoUsable, quitarObjeto, seAplicaACriatura, usoDe } from '../core/objetos';
+import { COLUMNAS_PAGINA, enLugar, HUECOS_PAGINA, liberar, mover, type Lugar } from '../core/almacen';
 import { calcularEstadisticas } from '../core/estadisticas';
 import { aprenderMovimiento, destinoConObjeto, evolucionar, evolucionPendiente, expParaNivel, subirNivel } from '../core/progreso';
 import type { Criatura, Movimiento } from '../core/modelo';
@@ -329,7 +330,7 @@ export class Interfaz extends Phaser.Scene {
     this.capaDialogo = c;
   }
 
-  private mostrarTexto(texto: string, quien?: string, indicador = true): void {
+  mostrarTexto(texto: string, quien?: string, indicador = true): void {
     this.capaDialogo.setVisible(true);
     this.textoDialogo.setText(texto);
     this.nombreDialogo.setText(quien ?? '');
@@ -927,15 +928,15 @@ export class Interfaz extends Phaser.Scene {
    * estadísticas y movimientos. Izquierda y derecha cambian de pestaña; arriba y abajo, de
    * criatura (en Movimientos, de movimiento).
    */
-  private pantallaFicha(p: Partida, i: number, volver: () => void, pestana = 0, movimiento = 0): void {
-    const cr = p.equipo[i];
+  private pantallaFicha(p: Partida, i: number, volver: () => void, pestana = 0, movimiento = 0, lista: Criatura[] = p.equipo): void {
+    const cr = lista[i];
     const e = DATOS.especies[cr.especie];
     const color = colorTipoDe(cr.especie);
     const c = this.abrirCapa(nombreDe(cr, DATOS), { icono: 'tarjeta', color });
     const stats = calcularEstadisticas(cr, DATOS);
     const temp = DATOS.temperamentos.find((t) => t.id === cr.temperamento);
-    const n = p.equipo.length;
-    const ir = (j: number, k = pestana, m = 0) => this.pantallaFicha(p, (j + n) % n, volver, k, m);
+    const n = lista.length;
+    const ir = (j: number, k = pestana, m = 0) => this.pantallaFicha(p, (j + n) % n, volver, k, m, lista);
 
     // Arriba: la criatura con nombre, nivel, tipos, estado y objeto.
     c.add(ventana(this, 24, 140, ANCHO - 48, 300, { radio: 36 }));
@@ -1336,7 +1337,7 @@ export class Interfaz extends Phaser.Scene {
       const punto = this.add.graphics();
       punto.fillStyle(COLOR.rojo, 1).fillCircle(76, yl, 10);
       c.add(punto);
-      c.add(this.add.text(100, yl, `${ZONAS[d.zona].nombre}${d.agua ? ' (con Pleamar)' : ''}`, estiloTexto(30, COLOR.tinta, true)).setOrigin(0, 0.5));
+      c.add(this.add.text(100, yl, `${ZONAS[d.zona].nombre}${d.agua ? ' (con Pleamar)' : d.pesca ? ' (pescando)' : ''}`, estiloTexto(30, COLOR.tinta, true)).setOrigin(0, 0.5));
       const niveles = d.min === d.max ? `Nv ${d.min}` : `Nv ${d.min}–${d.max}`;
       c.add(this.add.text(ANCHO - 72, yl, `${niveles} · ${d.porcentaje} %`, estiloTexto(26, COLOR.tintaSuave, true)).setOrigin(1, 0.5));
       yl += altoFila;
@@ -1929,42 +1930,146 @@ export class Interfaz extends Phaser.Scene {
     });
   }
 
-  /** Mover criaturas entre el equipo y las páginas del Bestiario. */
+  /**
+   * El almacén: el equipo arriba y, debajo, las páginas del Bestiario con 30 huecos (6 × 5),
+   * como las cajas de los juegos del género. Se toca una criatura y luego el sitio adonde va; si
+   * está ocupado, se cambian. La cruceta mueve el cursor (y pasa de página por los lados) y A
+   * hace lo mismo que tocar.
+   */
   almacen(p: Partida): Promise<void> {
     this.cerrarDialogo();
     return new Promise((resolve) => {
-      const pintar = () => {
-        const c = this.abrirCapa('Ordenar el equipo', { icono: 'equipo', color: COLOR.verde });
-        this.alAtras = () => {
-          this.cerrarCapa();
-          resolve();
-        };
-        c.add(pildora(this, 40, 160, `Equipo ${p.equipo.length}/${MAX_EQUIPO}`, COLOR.tinta, 26));
-        c.add(pildora(this, 560, 160, `En el Bestiario ${p.almacen.length}`, COLOR.tinta, 26));
-        const fila = (cr: Criatura, x: number, y: number, subtexto: string, activo: boolean, accion: () => void) => {
-          const b = new Boton(this, x, y, { ancho: 500, alto: 116, texto: `${nombreDe(cr, DATOS)} · Nv ${cr.nivel}`, subtexto, tamano: 30, alPulsar: accion }).setActivo(activo);
-          c.add(b);
-          const circulo = this.add.graphics();
-          circulo.fillStyle(colorPedestal(cr.especie), 1).fillCircle(x - 196, y - 4, 40);
-          c.add(circulo);
-          c.add(crearCriaturaVisual(this, cr.especie, x - 196, y - 6, 80, true));
-        };
-        p.equipo.forEach((cr, i) => {
-          fila(cr, 274, 250 + i * 132, 'Dejar en el Bestiario →', p.equipo.length > 1, () => {
-            p.almacen.push(...p.equipo.splice(i, 1));
-            pintar();
-          });
-        });
-        p.almacen.slice(0, 6).forEach((cr, i) => {
-          fila(cr, 806, 250 + i * 132, '← Llevar al equipo', p.equipo.length < MAX_EQUIPO, () => {
-            p.equipo.push(...p.almacen.splice(i, 1));
-            pintar();
-          });
-        });
-        if (p.almacen.length > 6) {
-          c.add(this.add.text(806, 250 + 6 * 132, `y ${p.almacen.length - 6} más`, estiloTexto(28, COLOR.panel, true)).setOrigin(0.5));
+      let pagina = 0;
+      let seleccion: Lugar | null = null;
+      let cursor: Lugar = { equipo: 0 };
+      const igual = (a: Lugar | null, b: Lugar) =>
+        !!a && ('equipo' in a ? 'equipo' in b && a.equipo === b.equipo : !('equipo' in b) && a.pagina === b.pagina && a.hueco === b.hueco);
+      const salir = () => {
+        this.cerrarCapa();
+        resolve();
+      };
+      const cambiarPagina = (delta: number) => {
+        pagina = (pagina + delta + p.paginas.length) % p.paginas.length;
+        if (!('equipo' in cursor)) cursor = { pagina, hueco: cursor.hueco };
+        pintar();
+      };
+      const tocar = (l: Lugar) => {
+        cursor = l;
+        if (!seleccion) {
+          if (enLugar(p, l)) seleccion = l;
+        } else if (igual(seleccion, l)) {
+          seleccion = null;
+        } else {
+          const motivo = mover(p, seleccion, l);
+          if (motivo) this.aviso(motivo);
+          seleccion = null;
         }
-        c.add(new Boton(this, ANCHO / 2, ALTO_MAPA - 80, { ancho: 360, alto: 112, texto: 'Listo', tamano: 38, color: COLOR.verde, alPulsar: () => this.alAtras?.() }));
+        pintar();
+      };
+      const verFicha = () => {
+        const cr = seleccion && enLugar(p, seleccion);
+        if (!cr) return;
+        const lista = 'equipo' in seleccion! ? p.equipo : p.paginas[pagina].filter((x): x is Criatura => x !== null);
+        this.pantallaFicha(p, lista.indexOf(cr), () => pintar(), 0, 0, lista);
+      };
+      const soltar = async () => {
+        const l = seleccion;
+        const cr = l && enLugar(p, l);
+        if (!l || !cr) return;
+        const r = await this.elegir(`¿Dejas en libertad a ${nombreDe(cr, DATOS)}? No volverá.`, ['Liberar', 'Cancelar']);
+        this.cerrarDialogo();
+        if (r === 0) {
+          const motivo = liberar(p, l);
+          if (motivo) this.aviso(motivo);
+          else this.aviso(`${nombreDe(cr, DATOS)} vuelve a su tierra. ¡Adiós!`);
+        }
+        seleccion = null;
+        pintar();
+      };
+
+      const pintar = () => {
+        const c = this.abrirCapa('Almacén', { icono: 'equipo', color: COLOR.verde });
+        this.alAtras = () => {
+          if (seleccion) {
+            seleccion = null;
+            pintar();
+          } else salir();
+        };
+        const celda = 160;
+        const x0 = ANCHO / 2 - (COLUMNAS_PAGINA * celda) / 2 + celda / 2;
+        const hueco = (l: Lugar, cr: Criatura | null, x: number, y: number) => {
+          const g = this.add.graphics();
+          if (igual(seleccion, l)) g.fillStyle(COLOR.oro, 0.55).fillRoundedRect(x - 74, y - 68, 148, 136, 26);
+          if (igual(cursor, l)) g.lineStyle(8, COLOR.celeste, 1).strokeRoundedRect(x - 74, y - 68, 148, 136, 26);
+          if (cr) {
+            g.fillStyle(colorPedestal(cr.especie), 1).fillCircle(x, y + 4, 52);
+            c.add(g);
+            const figura = crearCriaturaVisual(this, cr.especie, x, y, 100, true);
+            if (cr.vida <= 0) figura.setAlpha(0.45);
+            c.add(figura);
+            c.add(this.add.text(x + 60, y + 52, `${cr.nivel}`, estiloTexto(22, COLOR.tinta, true)).setOrigin(1, 0.5));
+          } else {
+            g.fillStyle(COLOR.panelSuave, 1).fillCircle(x, y + 4, 40);
+            c.add(g);
+          }
+          const zona = this.add.rectangle(x, y, celda, 140, 0xffffff, 0.001).setInteractive({ useHandCursor: true });
+          zona.on('pointerup', () => tocar(l));
+          c.add(zona);
+        };
+
+        // El equipo.
+        c.add(ventana(this, 24, 136, ANCHO - 48, 176, { radio: 36 }));
+        for (let i = 0; i < MAX_EQUIPO; i++) hueco({ equipo: i }, p.equipo[i] ?? null, x0 + i * celda, 224);
+
+        // La página.
+        const pg = p.paginas[pagina];
+        c.add(botonFlecha(this, 110, 366, -1, () => cambiarPagina(-1), 150, 84));
+        c.add(botonFlecha(this, ANCHO - 110, 366, 1, () => cambiarPagina(1), 150, 84));
+        const ocupados = pg.filter(Boolean).length;
+        const titulo = pildora(this, 0, 366, `Página ${pagina + 1} de ${p.paginas.length} · ${ocupados}/${HUECOS_PAGINA}`, COLOR.tinta, 28);
+        titulo.x = ANCHO / 2;
+        c.add(titulo);
+        c.add(ventana(this, 24, 420, ANCHO - 48, 5 * 146 + 24, { radio: 36 }));
+        pg.forEach((cr, i) => hueco({ pagina, hueco: i }, cr, x0 + (i % COLUMNAS_PAGINA) * celda, 506 + Math.floor(i / COLUMNAS_PAGINA) * 146));
+
+        // Lo que está elegido y qué hacer con ello.
+        const elegida = seleccion && enLugar(p, seleccion);
+        const ayuda = elegida
+          ? `${nombreDe(elegida, DATOS)} · Nv ${elegida.nivel}. Toca otro sitio para moverla.`
+          : 'Toca una criatura para moverla, ver su ficha o liberarla.';
+        c.add(this.add.text(ANCHO / 2, 420 + 5 * 146 + 64, ayuda, { ...estiloTexto(28, COLOR.panel, true), align: 'center', wordWrap: { width: ANCHO - 80 } }).setOrigin(0.5));
+        const yB = ALTO_MAPA - 80;
+        if (elegida) {
+          c.add(new Boton(this, 190, yB, { ancho: 320, alto: 112, texto: 'Volver', tamano: 34, icono: { ui: 'cerrar', tam: 50 }, alPulsar: () => this.alAtras?.() }));
+          c.add(new Boton(this, 540, yB, { ancho: 320, alto: 112, texto: 'Ficha', tamano: 34, icono: { ui: 'tarjeta', tam: 50 }, alPulsar: verFicha }));
+          c.add(new Boton(this, 890, yB, { ancho: 320, alto: 112, texto: 'Liberar', tamano: 34, color: COLOR.rojo, alPulsar: () => void soltar() }));
+        } else {
+          c.add(new Boton(this, ANCHO / 2, yB, { ancho: 360, alto: 112, texto: 'Listo', tamano: 38, color: COLOR.verde, alPulsar: salir }));
+        }
+
+        this.nav = {
+          mover: (dir) => {
+            if ('equipo' in cursor) {
+              if (dir === 'izquierda') cursor = { equipo: Math.max(0, cursor.equipo - 1) };
+              else if (dir === 'derecha') cursor = { equipo: Math.min(MAX_EQUIPO - 1, cursor.equipo + 1) };
+              else if (dir === 'abajo') cursor = { pagina, hueco: cursor.equipo };
+            } else {
+              const col = cursor.hueco % COLUMNAS_PAGINA;
+              const fila = Math.floor(cursor.hueco / COLUMNAS_PAGINA);
+              if (dir === 'arriba') cursor = fila === 0 ? { equipo: col } : { pagina, hueco: cursor.hueco - COLUMNAS_PAGINA };
+              else if (dir === 'abajo') cursor = { pagina, hueco: Math.min(HUECOS_PAGINA - 1, cursor.hueco + COLUMNAS_PAGINA) };
+              else if (dir === 'izquierda') {
+                if (col === 0) return cambiarPagina(-1);
+                cursor = { pagina, hueco: cursor.hueco - 1 };
+              } else {
+                if (col === COLUMNAS_PAGINA - 1) return cambiarPagina(1);
+                cursor = { pagina, hueco: cursor.hueco + 1 };
+              }
+            }
+            pintar();
+          },
+          aceptar: () => tocar(cursor),
+        };
       };
       pintar();
     });

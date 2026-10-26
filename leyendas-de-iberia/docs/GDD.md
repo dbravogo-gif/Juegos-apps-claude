@@ -231,7 +231,10 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
   Cada movimiento es físico, mágico o de estado. Las fórmulas están en `PROTOTIPO.md`.
 - **Almacén de criaturas, desde el minuto 1.** Las que no caben en el equipo de 6 viven en las
   páginas del Bestiario y se cambian en cualquier mesón. Es el equivalente a las cajas del PC de
-  Pokémon.
+  Pokémon: 10 páginas de 30 huecos (6 × 5), donde se mueven, se cambian de sitio, se ve su
+  ficha o se liberan.
+- **Pesca.** Con la Caña (la da un pescador de la Vega), delante del agua se pesca. Cada zona
+  con agua puede tener su tabla de pesca (`encuentrosPesca`).
 - **Estados alterados.** Quemadura, sueño, parálisis, veneno y veneno grave (intoxicación),
   como en el género; no hay congelación, por decisión del autor. Además, estados que se
   pierden al retirarse: confusión, retroceso y Muérdago (las drenadoras). Rodela es la
@@ -623,3 +626,10 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
   - Repartir experiencia: lo da un maestro de Toledo. Las que han salido contra la criatura
     derrotada ganan la experiencia entera, y con él encendido, las demás la mitad. Se apaga
     desde la mochila.
+- **2026-10-26 (17).** Pesca y almacén de verdad.
+  - Caña: la da un pescador de la Vega (a quien ya venció a Boabdil le llega al cargar). Delante
+    de una acequia o del Tajo, A ofrece pescar; si el agua es profunda, también Pleamar. En la
+    Vega pican barbos gitanos y galápagos; en el Tajo, galápagos.
+  - El almacén pasa de una lista a 10 páginas de 30 huecos, como las cajas del género: mover
+    tocando la criatura y su destino (si está ocupado, se cambian), ver su ficha y liberarla. El
+    equipo nunca se queda vacío ni sin nadie en pie. Las partidas guardadas se migran (v3).

@@ -111,8 +111,9 @@ tocan desde aquí.
   - Hecho: más objetos (bayas, potenciadores de tipo, objetos equipables, téseras, Elixires),
     piedras lunar y solar, y Repartir experiencia (maestro de Toledo; objetos `clave` con
     `interruptor`). Las otras cuatro piedras, en `arte/objetos-futuros/`.
-  - Falta, en este orden: pesca y almacén de verdad; rivales recurrentes. La Liga, más
-    adelante.
+  - Hecho: pesca (Caña del pescador de la Vega, `encuentrosPesca`, casillas con `pesca`) y
+    almacén en páginas de 30 huecos (`src/core/almacen.ts`, partida v3).
+  - Falta: rivales recurrentes. La Liga, más adelante.
 - **Siguiente:** capítulo 3 (1571). Alhambrón queda para una zona de ruinas, a petición del
   autor. La vista de espalda de Imperión parece de frente: se puede rehacer.
 - **Mapas (2026-10-25), hecho:** con aspecto de los juegos de criaturas de GBA, a petición
@@ -174,6 +175,7 @@ El código va en español: nombres, comentarios y textos.
   - `combate.ts` e `ia.ts`: el combate, como (estado, acción) → (estado, eventos).
   - `mundo.ts`: zonas, personajes, salidas, guiones (`Paso`) y línea de visión.
   - `partida.ts`: el estado de la partida, los encuentros y el resultado de los combates.
+  - `almacen.ts`: las páginas del almacén (mover, guardar, liberar).
   - `guardado.ts`: serializar y migrar partidas.
 - `src/data/`:
   - Contenido de combate: `especies.ts`, `movimientos.ts`, `tipos.ts`, `temperamentos.ts`, `pasivas.ts` y

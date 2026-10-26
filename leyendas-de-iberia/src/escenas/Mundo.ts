@@ -11,6 +11,7 @@ import {
   esHierba,
   cumpleRequisito,
   esNavegable,
+  esPescable,
   esSolida,
   OPUESTA,
   type DefEntrenador,
@@ -430,7 +431,51 @@ export class Mundo extends Phaser.Scene {
       void this.conBloqueo(() => this.encontrarOculto(oculto));
       return;
     }
-    if (!this.navegando() && esNavegable(this.zona, tx, ty, CASILLAS)) void this.ofrecerPleamar(pos.dir);
+    if (esPescable(this.zona, tx, ty, CASILLAS)) void this.asomarseAlAgua(pos.dir, esNavegable(this.zona, tx, ty, CASILLAS));
+  }
+
+  /**
+   * Delante hay agua. Con la Caña se puede pescar; si es agua profunda, además, una criatura que
+   * sepa Pleamar puede llevarte.
+   */
+  private async asomarseAlAgua(dir: Dir, navegable: boolean): Promise<void> {
+    const pleamar = navegable && !this.navegando();
+    if (!this.p.objetos.cana) {
+      if (pleamar) await this.ofrecerPleamar(dir);
+      return;
+    }
+    const quien = pleamar ? quienSabe(this.p, 'surf') : undefined;
+    const opciones = ['Pescar', ...(quien ? [`Pleamar (${nombreDe(quien, DATOS)})`] : []), 'Nada'];
+    const eleccion = await this.conBloqueo(async () => {
+      const e = await this.ui.elegir(navegable ? 'El agua es profunda. ¿Qué haces?' : 'Es una acequia. ¿Qué haces?', opciones);
+      this.ui.cerrarDialogo();
+      return e;
+    });
+    if (opciones[eleccion] === 'Pescar') await this.conBloqueo(() => this.pescar());
+    else if (quien && eleccion === 1) {
+      this.entrarAlAgua = true;
+      this.intentarMover(dir);
+    }
+  }
+
+  private async pescar(): Promise<void> {
+    const tabla = this.zona.encuentrosPesca;
+    if (!equipoEnPie(this.p)) {
+      await this.ui.decir('No tienes ninguna criatura en pie: mejor no pescar.');
+      this.ui.cerrarDialogo();
+      return;
+    }
+    this.ui.mostrarTexto('Echas la caña…', undefined, false);
+    await this.esperar(1100);
+    const salvaje = tabla ? tirarEncuentro(this.p, tabla, DATOS) : null;
+    if (!salvaje) {
+      await this.ui.decir(tabla ? 'No pica nada…' : 'Aquí no hay peces.');
+      this.ui.cerrarDialogo();
+      return;
+    }
+    await this.ui.decir('¡Algo ha picado!');
+    this.ui.cerrarDialogo();
+    await this.combateSalvaje(salvaje);
   }
 
   /** Delante hay agua profunda: si alguien del equipo sabe Pleamar, se ofrece a llevarte. */
