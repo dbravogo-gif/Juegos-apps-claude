@@ -22,6 +22,21 @@ export const CATEGORIAS: { id: CategoriaObjeto; nombre: string }[] = [
   { id: 'clave', nombre: 'Importantes' },
 ];
 
+/**
+ * Los bolsillos de la mochila, como en los juegos del género: cada uno junta varias categorías.
+ * Dentro de cada bolsillo, los objetos van en el orden de las categorías y luego en el de esta
+ * lista.
+ */
+export const BOLSILLOS: { id: string; nombre: string; categorias: CategoriaObjeto[] }[] = [
+  { id: 'objetos', nombre: 'Objetos', categorias: ['exploracion', 'progresion', 'evolucion', 'equipo'] },
+  { id: 'botiquin', nombre: 'Botiquín', categorias: ['curacion', 'estados', 'reanimacion'] },
+  { id: 'teseras', nombre: 'Téseras', categorias: ['captura'] },
+  { id: 'combate', nombre: 'Combate', categorias: ['combate'] },
+  { id: 'bayas', nombre: 'Bayas', categorias: ['bayas'] },
+  { id: 'maquinas', nombre: 'MT y MO', categorias: ['maquinas'] },
+  { id: 'clave', nombre: 'Importantes', categorias: ['clave'] },
+];
+
 const lista: Objeto[] = [
   // Captura: las téseras de hospitalidad eran pactos celtíberos de metal.
   {
@@ -238,6 +253,14 @@ const lista: Objeto[] = [
     descripcion: 'Enseña Vuelo (Aire). Fuera de combate, la criatura te lleva volando a un lugar que ya conoces. No se gasta.',
   },
   // Importantes
+  {
+    id: 'alpargatas',
+    nombre: 'Alpargatas',
+    articulo: 'unas',
+    categoria: 'clave',
+    tipo: 'clave',
+    descripcion: 'Alpargatas de esparto, regalo del rey Fernando. Con ellas puedes correr: mantén pulsado B mientras andas.',
+  },
   {
     id: 'mapa',
     nombre: 'Mapa',

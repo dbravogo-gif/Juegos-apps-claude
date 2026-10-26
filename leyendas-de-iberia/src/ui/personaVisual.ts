@@ -66,11 +66,12 @@ export class Persona extends Phaser.GameObjects.Container {
     else this.sprite.setFrame(COLUMNA[dir]);
   }
 
-  /** Empieza (o sigue) la animación de paso. */
-  andar(dir: Dir): void {
+  /** Empieza (o sigue) la animación de paso; corriendo, los pasos van más deprisa. */
+  andar(dir: Dir, rapido = false): void {
     this.dir = dir;
     this.andando = true;
     this.sprite.play(claveAnimacion(this.aspecto, dir), true);
+    this.sprite.anims.timeScale = rapido ? 1.9 : 1;
   }
 
   parar(): void {

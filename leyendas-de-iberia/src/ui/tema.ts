@@ -19,6 +19,23 @@ function calcularAlto(): number {
   return Math.round(Math.min(2400, Math.max(ALTO_DISENO, ANCHO * proporcion)));
 }
 
+/**
+ * Lo que ocupa abajo la barra de inicio del iPhone, en unidades del juego: el mando se dibuja
+ * hasta el borde, pero sus botones quedan por encima.
+ */
+export const MARGEN_INFERIOR = calcularMargenInferior();
+
+function calcularMargenInferior(): number {
+  if (typeof document === 'undefined' || !document.body) return 0;
+  const sonda = document.createElement('div');
+  sonda.style.cssText = 'position:fixed;bottom:0;height:0;visibility:hidden;padding-bottom:env(safe-area-inset-bottom, 0px)';
+  document.body.append(sonda);
+  const px = parseFloat(getComputedStyle(sonda).paddingBottom) || 0;
+  sonda.remove();
+  const ancho = document.getElementById('juego')?.getBoundingClientRect().width || window.innerWidth;
+  return Math.round((px * ANCHO) / ancho);
+}
+
 /** Lo que hay que bajar una pantalla de 1920 de alto para centrarla en el alto real. */
 export const MARGEN_VERTICAL = Math.round((ALTO - ALTO_DISENO) / 2);
 
