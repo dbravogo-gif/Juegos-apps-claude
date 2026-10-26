@@ -14,6 +14,20 @@ script y se vuelve a ejecutar (`python3 arte/mapa/tileset.py`).
 - Capítulo 2: hierba de la meseta, trigales (hierba alta), encinas, losas, muros de sillería
   gris del Alcázar, armaduras y armeros.
 
+## Mapa de la península (`mundo/mapa_iberia.*`)
+
+`mapa_iberia.png` (240 × 196, en píxeles grandes) es el mapa de la zona de captura del
+Bestiario, y `mapa_iberia.json`, su proyección. Los genera `arte/mapa/mapa_iberia.py`; **no se
+editan a mano.**
+
+- **Origen de las costas y fronteras:** Natural Earth 4.1.0, escala 1:10m, de dominio público,
+  tomada del paquete npm `world-atlas` 2.0.2. El script guarda solo los países que se ven en
+  `arte/mapa/datos/costas.json`.
+- **Dibujo:** propio, al estilo del mapa de la región de los juegos de GBA: mar con olas, la
+  península en verde con la frontera de Portugal punteada y los vecinos en color arena.
+- **Canarias** va en un recuadro abajo a la izquierda, en el Atlántico bajo el Algarve, para no
+  tapar Huelva, Cádiz ni el estrecho.
+
 ## Personajes (`personajes/`)
 
 Hojas propias, al estilo de los juegos de criaturas de GBA: 16 × 24 píxeles por fotograma, 4

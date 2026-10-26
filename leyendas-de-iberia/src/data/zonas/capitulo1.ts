@@ -24,6 +24,7 @@ const HACIA_CAPITULO_2: Paso[] = [
 const SANTA_FE: Zona = {
   id: 'santa_fe',
   nombre: 'Santa Fe',
+  enMapa: { lugar: 'granada' },
   estilo: 'pueblo',
   mapa: [
     'MMMMMMMMMMMGMMMMMMMMMMMM',
@@ -176,6 +177,7 @@ const SANTA_FE: Zona = {
 const MESON: Zona = {
   id: 'meson_santa_fe',
   nombre: 'Mesón de Santa Fe',
+  enMapa: { lugar: 'granada' },
   estilo: 'meson',
   interior: true,
   mapa: [
@@ -235,6 +237,7 @@ const MESON: Zona = {
 const PABELLON: Zona = {
   id: 'pabellon_real',
   nombre: 'Pabellón real',
+  enMapa: { lugar: 'granada' },
   estilo: 'pabellon',
   interior: true,
   mapa: [
@@ -297,6 +300,7 @@ const PABELLON: Zona = {
 const VEGA: Zona = {
   id: 'vega',
   nombre: 'La Vega de Granada',
+  enMapa: { lugar: 'granada' },
   estilo: 'campo',
   mapa: [
     '#######G########',
@@ -390,6 +394,7 @@ const VEGA: Zona = {
 const ALHAMBRA: Zona = {
   id: 'alhambra',
   nombre: 'Bosque de la Alhambra',
+  enMapa: { lugar: 'granada' },
   estilo: 'alhambra',
   mapa: [
     'MMMMMMPMMMMMMM',
@@ -454,6 +459,7 @@ const ALHAMBRA: Zona = {
 const PATIO_LEONES: Zona = {
   id: 'patio_leones',
   nombre: 'Patio de los Leones',
+  enMapa: { lugar: 'granada' },
   estilo: 'patio',
   interior: true,
   mapa: [

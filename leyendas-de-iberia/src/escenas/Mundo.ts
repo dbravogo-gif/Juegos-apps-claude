@@ -242,7 +242,7 @@ export class Mundo extends Phaser.Scene {
       this.ui.cerrarDialogo();
     });
     if (await this.comprobarEntrenadores()) return;
-    if (this.zona.encuentros && esHierba(this.zona, p.posicion.x, p.posicion.y, CASILLAS) && equipoEnPie(p)) {
+    if (this.zona.encuentros && !p.banderas['dev:sin_encuentros'] && esHierba(this.zona, p.posicion.x, p.posicion.y, CASILLAS) && equipoEnPie(p)) {
       const salvaje = tirarEncuentro(p, this.zona.encuentros, DATOS);
       if (salvaje && !repelida(p, salvaje)) await this.conBloqueo(() => this.combateSalvaje(salvaje));
     }
@@ -427,6 +427,7 @@ export class Mundo extends Phaser.Scene {
       const ovilloPermitido = Boolean(this.zona.encuentros) && !this.zona.interior;
       const accion = await this.ui.menu(this.p, { ovilloPermitido });
       if (accion === 'ovillo') await this.usarOvillo();
+      else if (accion) await this.cambiarZona({ x: 0, y: 0, zona: accion.viajar.zona, ax: accion.viajar.x, ay: accion.viajar.y, dir: accion.viajar.dir });
     });
   }
 

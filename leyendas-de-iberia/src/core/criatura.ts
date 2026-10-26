@@ -1,4 +1,4 @@
-import type { Criatura, DatosJuego } from './modelo';
+import type { Criatura, DatosJuego, Sexo } from './modelo';
 import { elegir, entero, type EstadoRng } from './rng';
 import { tirarValia, vidaMaxima } from './estadisticas';
 import { expParaNivel, movimientosIniciales } from './progreso';
@@ -31,8 +31,28 @@ export function crearCriatura(
     estado: null,
   };
   if (opciones.mote) c.mote = opciones.mote;
+  c.sexo = sexoPara(datos, especie, c.uid);
   c.vida = vidaMaxima(c, datos);
   return c;
+}
+
+/**
+ * El sexo de un ejemplar nuevo. Sale del `uid` y no del generador, para no cambiar lo que sale
+ * después en las partidas ya empezadas.
+ */
+export function sexoPara(datos: DatosJuego, especie: string, uid: string): Sexo {
+  const reparto = datos.especies[especie]?.sexo ?? 50;
+  if (typeof reparto !== 'number') return reparto;
+  let h = 0;
+  for (const letra of uid) h = (Math.imul(h, 31) + letra.charCodeAt(0)) >>> 0;
+  return h % 100 < reparto ? 'macho' : 'hembra';
+}
+
+/** El sexo que se muestra: si la especie no tiene machos y hembras, manda la especie. */
+export function sexoDe(c: Criatura, datos: DatosJuego): Sexo {
+  const reparto = datos.especies[c.especie]?.sexo;
+  if (reparto === 'hermafrodita' || reparto === 'ninguno') return reparto;
+  return c.sexo === 'macho' || c.sexo === 'hembra' ? c.sexo : sexoPara(datos, c.especie, c.uid);
 }
 
 export function nombreDe(c: Criatura, datos: DatosJuego): string {

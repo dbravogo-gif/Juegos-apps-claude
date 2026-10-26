@@ -3,7 +3,7 @@
 
 import type { Criatura, DatosJuego } from './modelo';
 import { crearRng, elegirPonderado, entero, probabilidad, type EstadoRng } from './rng';
-import { crearCriatura, curarDelTodo } from './criatura';
+import { crearCriatura, curarDelTodo, sexoPara } from './criatura';
 import { vidaMaxima } from './estadisticas';
 import type { DefEntrenador, Dir, TablaEncuentros } from './mundo';
 import type { ResultadoCombate } from './combate';
@@ -42,6 +42,11 @@ export interface Partida {
   revisados: string[];
   /** La última tésera lanzada en un combate: sale a mano en el siguiente. */
   ultimaTesera?: string;
+  /**
+   * Partida del modo desarrollador: se guarda aparte y su menú de pausa permite darse objetos y
+   * criaturas, viajar a cualquier zona o quitar los encuentros (`dev:sin_encuentros`).
+   */
+  dev?: boolean;
 }
 
 export function nuevaPartida(nombre: string, semilla: number | string, inicio: Posicion): Partida {
@@ -95,6 +100,7 @@ export function ajustarADatos(p: Partida, datos: DatosJuego, retiradas: Record<s
     const opciones = retiradas[c.especie];
     if (opciones) c.especie = (opciones.find((o) => c.nivel >= o.desdeNivel) ?? opciones[opciones.length - 1]).a;
     c.vida = Math.min(c.vida, vidaMaxima(c, datos));
+    c.sexo ??= sexoPara(datos, c.especie, c.uid);
   }
   const sustituir = (ids: string[]) =>
     [...new Set(ids.map((id) => retiradas[id]?.at(-1)?.a ?? id))].filter((id) => datos.especies[id]);

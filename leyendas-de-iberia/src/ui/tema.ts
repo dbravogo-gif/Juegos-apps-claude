@@ -7,13 +7,15 @@ export const ALTO_DISENO = 1920;
 
 /**
  * Alto real del juego: 1920 como mínimo y más en móviles alargados, para que no queden bandas
- * negras. Se calcula una vez al cargar.
+ * a los lados. Sale de la caja `#juego`, que ya descuenta la franja negra de arriba
+ * (`index.html`). Se calcula una vez al cargar.
  */
 export const ALTO = calcularAlto();
 
 function calcularAlto(): number {
   if (typeof window === 'undefined' || !window.innerWidth) return ALTO_DISENO;
-  const proporcion = window.innerHeight / window.innerWidth;
+  const caja = document.getElementById('juego')?.getBoundingClientRect();
+  const proporcion = (caja?.height || window.innerHeight) / (caja?.width || window.innerWidth);
   return Math.round(Math.min(2400, Math.max(ALTO_DISENO, ANCHO * proporcion)));
 }
 
