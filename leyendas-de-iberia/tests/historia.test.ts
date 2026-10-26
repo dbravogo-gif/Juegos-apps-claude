@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { DATOS } from '../src/data';
+import { guardadas } from '../src/core/almacen';
 import { ASPECTOS } from '../src/data/aspectos';
 import { RETRATOS } from '../src/data/retratos';
 import { CAPITULOS, CASILLAS, ENTRADAS, ENTRENADORES, INICIO, REGALOS_ATRASADOS, ZONAS } from '../src/data/mundo';
@@ -239,7 +240,8 @@ describe('partida', () => {
     const rng = crearRng(2);
     for (let i = 0; i < MAX_EQUIPO + 2; i++) anadirCriatura(p, crearCriatura(DATOS, 'topillo', 3, rng));
     expect(p.equipo).toHaveLength(MAX_EQUIPO);
-    expect(p.almacen).toHaveLength(2);
+    expect(guardadas(p)).toHaveLength(2);
+    expect(p.paginas[0][1]).not.toBeNull();
     expect(p.capturados).toEqual(['topillo']);
   });
 
@@ -299,13 +301,13 @@ describe('guardado', () => {
     const joven = crearCriatura(DATOS, 'retono_drago', 20, crearRng(3));
     const mayor = crearCriatura(DATOS, 'retono_drago', 30, crearRng(4));
     p.equipo = [{ ...joven, especie: 'drago', vida: 999 }];
-    p.almacen = [{ ...mayor, especie: 'drago' }];
+    p.paginas[0][0] = { ...mayor, especie: 'drago' };
     p.vistos = ['retono_drago', 'drago'];
     p.capturados = ['drago'];
     ajustarADatos(p, DATOS, ESPECIES_RETIRADAS);
     expect(p.equipo[0].especie).toBe('retono_drago');
     expect(p.equipo[0].vida).toBe(vidaMaxima(p.equipo[0], DATOS));
-    expect(p.almacen[0].especie).toBe('drago_milenario');
+    expect(p.paginas[0][0]?.especie).toBe('drago_milenario');
     expect(p.vistos).not.toContain('drago');
     expect(p.capturados.sort()).toEqual(['drago_milenario', 'retono_drago']);
   });
@@ -391,7 +393,7 @@ describe('regalos atrasados', () => {
     const p = nuevaPartida('Antigua', 5, INICIO);
     p.banderas.colon = true;
     p.banderas['vencido:boabdil'] = true;
-    expect(darAtrasados(p, REGALOS_ATRASADOS).sort()).toEqual(['mapa', 'mt_noche_cerrada']);
+    expect(darAtrasados(p, REGALOS_ATRASADOS).sort()).toEqual(['cana', 'mapa', 'mt_noche_cerrada']);
     expect(darAtrasados(p, REGALOS_ATRASADOS)).toEqual([]);
     expect(p.objetos.mapa).toBe(1);
   });

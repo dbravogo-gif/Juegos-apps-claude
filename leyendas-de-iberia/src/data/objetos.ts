@@ -337,6 +337,14 @@ const lista: Objeto[] = [
   },
   // Importantes
   {
+    id: 'cana',
+    nombre: 'Caña',
+    articulo: 'una',
+    categoria: 'clave',
+    tipo: 'clave',
+    descripcion: 'Una caña de pescar de cañavera. Ponte delante del agua y pulsa A para echarla.',
+  },
+  {
     id: 'repartir_exp',
     nombre: 'Repartir experiencia',
     articulo: 'un',

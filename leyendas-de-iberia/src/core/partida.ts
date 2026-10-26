@@ -7,8 +7,9 @@ import { crearCriatura, curarDelTodo, sexoPara } from './criatura';
 import { vidaMaxima } from './estadisticas';
 import type { DefEntrenador, Dir, TablaEncuentros } from './mundo';
 import type { ResultadoCombate } from './combate';
+import { guardadas, guardar, paginasVacias, type Pagina } from './almacen';
 
-export const VERSION_PARTIDA = 2;
+export const VERSION_PARTIDA = 3;
 export const MAX_EQUIPO = 6;
 
 export interface Posicion {
@@ -26,8 +27,8 @@ export interface Partida {
   /** Dónde reapareces si pierdes: el último mesón. */
   regreso: Posicion;
   equipo: Criatura[];
-  /** Las criaturas que no caben en el equipo viven en las páginas del Bestiario. */
-  almacen: Criatura[];
+  /** Las criaturas que no van en el equipo viven en las páginas del Bestiario (`almacen.ts`). */
+  paginas: Pagina[];
   objetos: Record<string, number>;
   dinero: number;
   vistos: string[];
@@ -59,7 +60,7 @@ export function nuevaPartida(nombre: string, semilla: number | string, inicio: P
     posicion: { ...inicio },
     regreso: { ...inicio },
     equipo: [],
-    almacen: [],
+    paginas: paginasVacias(),
     objetos: {},
     dinero: 300,
     vistos: [],
@@ -123,7 +124,7 @@ export function anadirCriatura(p: Partida, c: Criatura): 'equipo' | 'almacen' {
     p.equipo.push(c);
     return 'equipo';
   }
-  p.almacen.push(c);
+  guardar(p, c);
   return 'almacen';
 }
 
@@ -132,7 +133,7 @@ export function anadirCriatura(p: Partida, c: Criatura): 'equipo' | 'almacen' {
  * pasan a su sustituta, y la Vida no pasa de la máxima, por si han cambiado las estadísticas.
  */
 export function ajustarADatos(p: Partida, datos: DatosJuego, retiradas: Record<string, { desdeNivel: number; a: string }[]>): void {
-  for (const c of [...p.equipo, ...p.almacen]) {
+  for (const c of [...p.equipo, ...guardadas(p)]) {
     const opciones = retiradas[c.especie];
     if (opciones) c.especie = (opciones.find((o) => c.nivel >= o.desdeNivel) ?? opciones[opciones.length - 1]).a;
     c.vida = Math.min(c.vida, vidaMaxima(c, datos));
@@ -142,7 +143,7 @@ export function ajustarADatos(p: Partida, datos: DatosJuego, retiradas: Record<s
     [...new Set(ids.map((id) => retiradas[id]?.at(-1)?.a ?? id))].filter((id) => datos.especies[id]);
   p.vistos = sustituir(p.vistos);
   p.capturados = sustituir(p.capturados);
-  for (const c of [...p.equipo, ...p.almacen]) marcarCapturado(p, c.especie);
+  for (const c of [...p.equipo, ...guardadas(p)]) marcarCapturado(p, c.especie);
 }
 
 export function darObjeto(p: Partida, objeto: string, cantidad: number): void {

@@ -216,7 +216,7 @@ const MESON: Zona = {
               texto: 'Sí, por favor',
               pasos: [{ tipo: 'curar' }, { tipo: 'regreso' }, ...decir('Mesonera', '¡Ya están como nuevas! Que tengas buen camino.')],
             },
-            { texto: 'Ordenar el equipo', pasos: [{ tipo: 'almacen' }] },
+            { texto: 'Almacén', pasos: [{ tipo: 'almacen' }] },
             { texto: 'No, gracias', pasos: decir('Mesonera', 'Aquí estaremos cuando nos necesites.') },
           ],
         },
@@ -356,6 +356,14 @@ const VEGA: Zona = {
       { especie: 'galapago', min: 3, max: 4, peso: 5 },
     ],
   },
+  // En las acequias que bajan del Genil hay barbos gitanos y galápagos leprosos.
+  encuentrosPesca: {
+    tasa: 70,
+    especies: [
+      { especie: 'barbo', min: 3, max: 5, peso: 80 },
+      { especie: 'galapago', min: 3, max: 4, peso: 20 },
+    ],
+  },
   pnj: [
     {
       id: 'ballestero',
@@ -389,6 +397,30 @@ const VEGA: Zona = {
       entrenador: 'mercader_genoves',
       vision: 3,
       guion: [],
+    },
+    {
+      id: 'pescador',
+      nombre: 'Pescador',
+      x: 3,
+      y: 18,
+      dir: 'abajo',
+      aspecto: 'aldeano',
+      guion: [
+        si(
+          'regalo:cana',
+          decir('Pescador', 'Ponte delante del agua y echa la caña. Con paciencia, algo pica.'),
+          [
+            ...decir(
+              'Pescador',
+              'Estas acequias bajan del Genil. Con el agua del riego vienen barbos, y algún galápago.',
+              'Yo ya tengo otra caña. Toma esta, que a ti te hará más falta.',
+            ),
+            dar('cana', 1),
+            bandera('regalo:cana'),
+            ...decir(undefined, 'Ponte delante del agua y pulsa A para pescar.'),
+          ],
+        ),
+      ],
     },
   ],
   salidas: [

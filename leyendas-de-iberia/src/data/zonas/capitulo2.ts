@@ -186,6 +186,10 @@ const CAMINO_TOLEDO: Zona = {
     tasa: 10,
     especies: [{ especie: 'galapago', min: 9, max: 11, peso: 100 }],
   },
+  encuentrosPesca: {
+    tasa: 70,
+    especies: [{ especie: 'galapago', min: 9, max: 12, peso: 100 }],
+  },
   encuentros: {
     tasa: 13,
     especies: [
@@ -386,7 +390,7 @@ const MESON_TOLEDO: Zona = {
               texto: 'Sí, por favor',
               pasos: [{ tipo: 'curar' }, { tipo: 'regreso' }, ...decir('Mesonera', '¡Ya están como nuevas!')],
             },
-            { texto: 'Ordenar el equipo', pasos: [{ tipo: 'almacen' }] },
+            { texto: 'Almacén', pasos: [{ tipo: 'almacen' }] },
             { texto: 'No, gracias', pasos: decir('Mesonera', 'Aquí estaremos.') },
           ],
         },

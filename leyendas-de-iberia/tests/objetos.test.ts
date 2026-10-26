@@ -4,7 +4,7 @@ import { crearCriatura } from '../src/core/criatura';
 import { accionesDisponibles, iniciarCombate, resolverTurno, type EstadoCombate, type Evento } from '../src/core/combate';
 import { aplicarCuracion, equipar, motivoNoUsable, puedeAprender, quitarObjeto, usoDe } from '../src/core/objetos';
 import { destinoConObjeto, evolucionar, subirNivel } from '../src/core/progreso';
-import { nuevaPartida, pasoRepelente, repelida } from '../src/core/partida';
+import { nuevaPartida, pasoRepelente, repelida, VERSION_PARTIDA } from '../src/core/partida';
 import { deserializar, serializar } from '../src/core/guardado';
 import { vidaMaxima } from '../src/core/estadisticas';
 import type { Criatura } from '../src/core/modelo';
@@ -159,7 +159,7 @@ describe('fuera del combate', () => {
     p.version = 1;
     const leida = deserializar(JSON.stringify(p));
     expect(leida?.repelente).toBe(0);
-    expect(leida?.version).toBe(2);
+    expect(leida?.version).toBe(VERSION_PARTIDA);
   });
 });
 

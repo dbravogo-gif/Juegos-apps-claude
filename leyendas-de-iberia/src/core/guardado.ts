@@ -1,11 +1,15 @@
+import type { Criatura } from './modelo';
 import type { Partida } from './partida';
 import { VERSION_PARTIDA } from './partida';
+import { enPaginas } from './almacen';
 
 // Cada cambio en la forma de la partida sube VERSION_PARTIDA y añade aquí su migración, para
 // que las partidas guardadas sigan abriéndose.
 const MIGRACIONES: Record<number, (p: Record<string, unknown>) => Record<string, unknown>> = {
   // v2: repelentes y recipientes registrados.
   1: (p) => ({ ...p, repelente: 0, revisados: [] }),
+  // v3: el almacén pasa de una lista a páginas de 30 huecos.
+  2: ({ almacen, ...p }) => ({ ...p, paginas: enPaginas((almacen as Criatura[] | undefined) ?? []) }),
 };
 
 export function serializar(p: Partida): string {
@@ -34,7 +38,7 @@ export function deserializar(texto: string): Partida | null {
   const valida =
     typeof p.nombre === 'string' &&
     Array.isArray(p.equipo) &&
-    Array.isArray(p.almacen) &&
+    Array.isArray(p.paginas) &&
     p.posicion !== undefined &&
     typeof p.posicion.zona === 'string' &&
     Array.isArray(p.rng?.s);
