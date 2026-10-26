@@ -1205,21 +1205,13 @@ export class Interfaz extends Phaser.Scene {
 
   /**
    * El mapa del menú: dónde estás y los lugares que conoces. Con una criatura que sepa Vuelo, y
-   * al aire libre, se elige un lugar del capítulo en curso y se vuela allí.
+   * al aire libre, se elige un lugar visitado, de cualquier época, y se vuela allí.
    */
   private pantallaMapa(p: Partida, volver: () => void, viajar: (pos: Posicion, texto?: string) => void, exterior: boolean, elegido?: string): void {
     const c = this.abrirCapa('Mapa', { icono: 'mapa', color: COLOR.azul });
     const visitadas = zonasVisitadas(p);
-    const capitulo = CAPITULOS.find((k) => k.zonas.includes(p.posicion.zona));
     const aqui = lugarDe(p.posicion.zona);
-    const destinos = [
-      ...new Set(
-        visitadas
-          .filter((z) => capitulo?.zonas.includes(z))
-          .map(lugarDe)
-          .filter((l): l is string => Boolean(l && l !== aqui && LUGARES[l].llegada)),
-      ),
-    ];
+    const destinos = [...new Set(visitadas.map(lugarDe).filter((l): l is string => Boolean(l && l !== aqui && LUGARES[l].llegada)))];
     const volador = quienSabe(p, 'vuelo');
     const puede = Boolean(volador) && exterior && destinos.length > 0;
     const sel = puede ? (elegido && destinos.includes(elegido) ? elegido : destinos[0]) : undefined;
@@ -1243,7 +1235,7 @@ export class Interfaz extends Phaser.Scene {
       : !exterior
         ? `Sal al aire libre para que ${nombreDe(volador, DATOS)} pueda volar.`
         : destinos.length === 0
-          ? 'Todavía no conoces otro lugar de esta época al que volar.'
+          ? 'Todavía no conoces otro lugar al que volar.'
           : `Elige un lugar y ${nombreDe(volador, DATOS)} te llevará volando.`;
     c.add(this.add.text(40, yT + 56, ayuda, { ...estiloTexto(28, COLOR.panel, true), wordWrap: { width: ANCHO - 80 } }));
     const volar = () => {

@@ -22,6 +22,10 @@ interface DefEspecie {
   evoluciona?: { a: string; nivel?: number; objeto?: string };
   /** Porcentaje de machos (50 si no se dice), `hermafrodita` o `ninguno`. */
   sexo?: number | 'hermafrodita' | 'ninguno';
+  /** Vive en el agua (aprende Surf). */
+  acuatica?: boolean;
+  /** Ave o ser alado que puede llevar a una persona (aprende Vuelo). */
+  alada?: boolean;
   descripcion: string;
 }
 
@@ -97,6 +101,7 @@ const DEF = {
     base: [46, 58, 64, 42, 50, 50],
     expBase: 63,
     ratioCaptura: 45,
+    acuatica: true,
     aprende: LINEA_CANGREJO,
     evoluciona: { a: 'necora', nivel: 16 },
     descripcion: 'Para crecer, los cangrejos mudan el caparazón: se desprenden del viejo y pasan unos días blandos y escondidos hasta que endurece el nuevo.',
@@ -108,6 +113,7 @@ const DEF = {
     base: [64, 74, 90, 50, 66, 61],
     expBase: 142,
     ratioCaptura: 45,
+    acuatica: true,
     aprende: [...LINEA_CANGREJO, [18, 'brazada']],
     evoluciona: { a: 'centollo', nivel: 36 },
     descripcion: 'La nécora tiene los ojos rojos y el último par de patas aplanado como remos, con el que nada. Tiene fama de agresiva y peleona.',
@@ -119,6 +125,7 @@ const DEF = {
     base: [100, 95, 130, 55, 90, 60],
     expBase: 265,
     ratioCaptura: 45,
+    acuatica: true,
     aprende: [...LINEA_CANGREJO, [18, 'brazada'], [38, 'tajo'], [42, 'coraza'], [46, 'camuflaje_algas']],
     descripcion: 'Los cangrejos araña, la familia del centollo, se enganchan algas y otros organismos al caparazón para pasar desapercibidos.',
   },
@@ -167,6 +174,7 @@ const DEF = {
     base: [60, 72, 55, 82, 58, 103],
     expBase: 150,
     ratioCaptura: 90,
+    alada: true,
     aprende: [...LINEA_LIBELULA, [13, 'rescoldo'], [16, 'ventolera'], [19, 'tizne'], [25, 'hoguera']],
     descripcion: 'En Cantabria se cuenta que la noche de San Juan salen los caballucos del diablu, caballos con alas de libélula, a destrozar los tréboles de cuatro hojas.',
   },
@@ -187,6 +195,7 @@ const DEF = {
     base: [55, 72, 50, 40, 48, 65],
     expBase: 58,
     ratioCaptura: 235,
+    acuatica: true,
     aprende: [[1, 'rociada'], [4, 'topetazo'], [9, 'dentellada'], [15, 'golpe_de_mar']],
     descripcion: 'El barbo gitano solo vive en el sur de la península, en las cuencas del Guadalquivir y del Guadiana. Le amenazan las presas, las sequías y los peces introducidos.',
   },
@@ -197,6 +206,7 @@ const DEF = {
     base: [42, 58, 40, 45, 40, 80],
     expBase: 55,
     ratioCaptura: 235,
+    alada: true,
     aprende: [[1, 'aletazo'], [5, 'acometida'], [9, 'revoloteo'], [13, 'picada'], [17, 'ventolera']],
     descripcion: 'El abejaruco anida en túneles que excava en taludes de arena o arcilla. Caza al vuelo abejas, avispas y otros insectos.',
   },
@@ -241,6 +251,7 @@ const DEF = {
     base: [65, 50, 95, 40, 65, 25],
     expBase: 85,
     ratioCaptura: 75,
+    acuatica: true,
     aprende: [[1, 'topetazo'], [1, 'caparazon'], [6, 'rociada'], [11, 'marejada'], [16, 'remanso'], [22, 'golpe_de_mar']],
     descripcion: 'El galápago leproso vive en ríos, balsas y acequias del sur de la península. Está en declive por la pérdida de hábitat y los galápagos exóticos que la gente suelta.',
   },
@@ -351,6 +362,7 @@ const DEF = {
     base: [55, 65, 50, 30, 40, 50],
     expBase: 58,
     ratioCaptura: 190,
+    alada: true,
     aprende: LINEA_AVUTARDA,
     evoluciona: { a: 'avutarda_macho', nivel: 24 },
     descripcion: 'La avutarda es una de las aves voladoras más pesadas del mundo: un macho puede pasar de 15 kilos. España tiene la mayor población del planeta.',
@@ -362,6 +374,7 @@ const DEF = {
     base: [90, 95, 75, 45, 65, 60],
     expBase: 150,
     ratioCaptura: 75,
+    alada: true,
     aprende: [...LINEA_AVUTARDA, [25, 'picada'], [30, 'ventolera']],
     descripcion: 'En primavera, el macho de avutarda hace la rueda: vuelve del revés las plumas de la cola y de las alas y se convierte en una bola blanca que se ve desde lejos.',
   },
@@ -372,6 +385,7 @@ const DEF = {
     base: [45, 65, 40, 40, 40, 90],
     expBase: 70,
     ratioCaptura: 60,
+    alada: true,
     aprende: LINEA_AGUILA,
     evoluciona: { a: 'aguila_imperial', nivel: 30 },
     descripcion: 'El águila imperial ibérica solo vive en la península. En los años setenta quedaban unas pocas decenas de parejas; hoy son varios cientos.',
@@ -383,6 +397,7 @@ const DEF = {
     base: [80, 105, 70, 85, 75, 110],
     expBase: 240,
     ratioCaptura: 30,
+    alada: true,
     aprende: [...LINEA_AGUILA, [31, 'resplandor'], [36, 'vuelo_real'], [42, 'amanecer']],
     descripcion: 'El águila de San Juan sostiene el escudo de los Reyes Católicos. Su nieto Carlos, emperador, usó el águila de dos cabezas.',
   },
@@ -484,6 +499,8 @@ export const ESPECIES: Record<string, Especie> = Object.fromEntries(
     };
     if ('evoluciona' in d) especie.evoluciona = { ...d.evoluciona };
     if ('sexo' in d) especie.sexo = d.sexo;
+    if ('acuatica' in d) especie.acuatica = d.acuatica;
+    if ('alada' in d) especie.alada = d.alada;
     return [id, especie];
   }),
 );

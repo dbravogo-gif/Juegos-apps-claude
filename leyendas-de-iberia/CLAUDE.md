@@ -95,8 +95,9 @@ tocan desde aquí.
     (`REGALOS_ATRASADOS` en `data/mundo.ts`, que sirve para cualquier regalo añadido tarde).
   - MT y MO en el bolsillo «MT y MO»: no se gastan. Cinco MT (dos de líderes, tres en zurrones
     en el suelo: `ocultos` con `visible`). MO Surf y Vuelo, con sus usos fuera de combate:
-    Surf cruza el agua profunda (`O`, con `encuentrosAgua`) y Vuelo viaja desde el mapa a los
-    lugares visitados del capítulo (`llegada` en `lugares.ts`).
+    Surf cruza el agua profunda (`O`, con `encuentrosAgua`) y solo lo aprenden las especies
+    `acuatica`; Vuelo, solo las `alada`, y viaja desde el mapa a cualquier lugar visitado, de
+    cualquier época (decisión del autor; `llegada` en `lugares.ts`).
   - Quién da las MO y el plan de los legendarios: propuesta en el GDD §8, pendiente del autor.
   - Base de los legendarios: personajes con `criatura` (esperan de pie y empiezan el combate) y
     salidas con `requiere` (zonas cerradas hasta tener un objeto o una bandera).

@@ -59,6 +59,16 @@ describe('catálogo de objetos', () => {
     expect(motivoNoUsable(DATOS.objetos.mo_vuelo, crearCriatura(DATOS, 'aguila', 10, rng), DATOS)).toBeNull();
   });
 
+  it('Surf solo lo aprenden las criaturas acuáticas, no cualquiera de tipo Agua', () => {
+    const surf = DATOS.objetos.mo_surf;
+    expect(puedeAprender(surf, 'galapago', DATOS)).toBe(true);
+    expect(puedeAprender(surf, 'necora', DATOS)).toBe(true);
+    // Alhambrón es de tipo Agua, pero es una estatua.
+    expect(puedeAprender(surf, 'leon_fuente', DATOS)).toBe(false);
+    expect(puedeAprender(surf, 'lobo', DATOS)).toBe(false);
+    for (const e of Object.values(DATOS.especies)) if (e.acuatica) expect(e.tipos.includes('agua'), e.id).toBe(true);
+  });
+
   it('cada objeto se puede usar de alguna forma (salvo los importantes)', () => {
     for (const o of Object.values(DATOS.objetos)) {
       const u = usoDe(o);
