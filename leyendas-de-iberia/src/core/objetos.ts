@@ -46,8 +46,15 @@ export function seAplicaACriatura(obj: Objeto): boolean {
 /** Si una especie puede aprender el movimiento de una MT o MO. */
 export function puedeAprender(obj: Objeto, especie: string, datos: DatosJuego): boolean {
   if (obj.tipo !== 'maquina') return false;
-  const { todos, tipos, especies } = obj.aprenden;
-  return Boolean(todos) || (especies ?? []).includes(especie) || datos.especies[especie].tipos.some((t) => (tipos ?? []).includes(t));
+  const { todos, tipos, especies, acuaticas, aladas } = obj.aprenden;
+  const e = datos.especies[especie];
+  return (
+    Boolean(todos) ||
+    (especies ?? []).includes(especie) ||
+    e.tipos.some((t) => (tipos ?? []).includes(t)) ||
+    Boolean(acuaticas && e.acuatica) ||
+    Boolean(aladas && e.alada)
+  );
 }
 
 /** Por qué no se puede usar el objeto en esa criatura, o `null` si se puede. */

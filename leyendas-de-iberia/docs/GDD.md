@@ -38,6 +38,8 @@ autor y dos amigos, y se juega en el navegador del móvil y del PC.
 | Guardado | Local en la primera fase. El backend, por ejemplo Supabase, llega con el multijugador. |
 | Plataforma | Móvil primero: controles táctiles, teclado en PC y resolución adaptable. |
 | Título | *Leyendas de Iberia* (provisional). Vive en la carpeta `leyendas-de-iberia/`. |
+| MT y MO | Las MT las dan los líderes o están en el suelo. Solo hay dos MO, Surf y Vuelo, y las dan personajes importantes en capítulos distintos (no a la vez). Surf solo lo aprenden criaturas acuáticas. |
+| Vuelo | Lleva a cualquier lugar visitado, de cualquier época, aunque allí sigan los personajes de entonces (decisión del autor, 2026-10-26). |
 
 ## 3. Decisiones abiertas
 
@@ -51,10 +53,8 @@ Hay que preguntar antes de diseñar sobre ellas.
 5. **Phaser 3 o Phaser 4.** Ver §10.
 6. **Bestiario.** La propuesta de 150 especies está en `BESTIARIO.md` (v2, con la revisión de
    variedad que pidió el autor). Falta su visto bueno a las decisiones del final del archivo.
-7. **Volar a otras épocas.** Ahora Vuelo solo lleva a los lugares del capítulo en curso: en
-   Santa Fe siguen Isabel y Colón, y volver allí en 1797 sería un anacronismo. La alternativa es
-   dejar volar a cualquier lugar visitado y quitar de cada zona los personajes de otra época.
-8. **Quién da las MO y los legendarios.** Propuesta en §8 («MT, MO y legendarios»).
+7. **Quién da las MO, el nombre de Surf y los legendarios.** Propuesta en §8 («MT, MO y
+   legendarios»).
 
 ## 4. Épocas y gimnasios (propuesta)
 
@@ -323,8 +323,13 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
   - **MO.** Solo dos, Surf y Vuelo, y las dan personajes importantes. Sus movimientos sirven
     también fuera de combate:
     - **Surf:** cruzar ríos y mares por el agua profunda (casilla `O`), con sus propios
-      encuentros. Propuesta: Jorge Juan, en el prólogo del capítulo 5 en Cádiz, cuando «te
-      enseña a navegar» y te lleva a las islas (§4).
+      encuentros. Solo lo aprenden las criaturas acuáticas (`acuatica` en la especie). El autor
+      quiere un nombre propio, que falta elegir. Propuesta: el **capítulo 4**, en Madrid, en el
+      Estanque Grande del Buen Retiro, que se hizo navegable en 1634–1635 y donde la corte de
+      Felipe IV celebraba naumaquias con barcos de guerra en miniatura. Lo daría el conde-duque
+      de Olivares, que regaló el Buen Retiro al rey. Otra opción: el capítulo 3, con Álvaro de
+      Bazán, que mandó la retaguardia en Lepanto (1571). Jorge Juan, en el capítulo 5, ya no da
+      la MO: te lleva a las islas en su barco.
     - **Vuelo:** viajar a un lugar ya visitado desde el mapa. Propuesta: **Diego Marín
       Aguilera**, el «hombre pájaro» de Coruña del Conde (Burgos), que la noche del 15 de mayo
       de 1793 se lanzó desde el castillo con una máquina de madera y plumas y voló unas 431

@@ -221,8 +221,9 @@ const lista: Objeto[] = [
     tipo: 'maquina',
     movimiento: 'surf',
     oculta: true,
-    aprenden: { tipos: ['agua'] },
-    descripcion: 'Enseña Surf (Agua). Fuera de combate, la criatura te lleva por ríos y mares. No se gasta.',
+    // Solo las criaturas que viven en el agua: Alhambrón es de tipo Agua, pero es una estatua.
+    aprenden: { acuaticas: true },
+    descripcion: 'Enseña Surf (Agua) a una criatura acuática. Fuera de combate, te lleva por ríos y mares. No se gasta.',
   },
   {
     id: 'mo_vuelo',
@@ -233,7 +234,7 @@ const lista: Objeto[] = [
     movimiento: 'vuelo',
     oculta: true,
     // Solo las aves y los seres alados capaces de llevar a una persona.
-    aprenden: { especies: ['abejaruco', 'aguila', 'aguila_imperial', 'avutarda', 'avutarda_macho', 'caballuco_diablu'] },
+    aprenden: { aladas: true },
     descripcion: 'Enseña Vuelo (Aire). Fuera de combate, la criatura te lleva volando a un lugar que ya conoces. No se gasta.',
   },
   // Importantes
