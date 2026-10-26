@@ -38,10 +38,17 @@ function imagen(scene: Phaser.Scene, clave: string, x: number, y: number, tam: n
   return img;
 }
 
+/** Las MT comparten el icono `mt` y las MO, el `mo`. */
+function iconoDe(id: string): string {
+  if (OBJETOS[id]) return id;
+  return id.startsWith('mo_') ? 'mo' : id.startsWith('mt_') ? 'mt' : id;
+}
+
 /** Icono de un objeto, escalado a `tam` píxeles de lado. Sin icono, un círculo. */
 export function iconoObjeto(scene: Phaser.Scene, x: number, y: number, id: string, tam: number): Phaser.GameObjects.GameObject {
-  if (!OBJETOS[id]) return scene.add.circle(x, y, tam * 0.35, 0xffbe1e);
-  return imagen(scene, claveObjeto(id), x, y, tam);
+  const icono = iconoDe(id);
+  if (!OBJETOS[icono]) return scene.add.circle(x, y, tam * 0.35, 0xffbe1e);
+  return imagen(scene, claveObjeto(icono), x, y, tam);
 }
 
 /** Icono de menú, escalado a `tam` píxeles de lado. */

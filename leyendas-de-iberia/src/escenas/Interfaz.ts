@@ -1,11 +1,12 @@
 import Phaser from 'phaser';
 import type { Dir } from '../core/mundo';
 import type { Partida, Posicion } from '../core/partida';
-import { anadirCriatura, curarEquipo, darObjeto, marcarCapturado, marcarVisto, MAX_EQUIPO } from '../core/partida';
+import { anadirCriatura, curarEquipo, darObjeto, marcarCapturado, marcarVisto, MAX_EQUIPO, quienSabe, zonasVisitadas } from '../core/partida';
 import { crearCriatura, nombreDe, sexoDe } from '../core/criatura';
 import { CAPITULOS, ENTRADAS, ZONAS } from '../data/mundo';
 import { dondeSale } from '../core/mundo';
-import { escalaMapa, MAPA_ALTO, MAPA_ANCHO, mapaZonas } from '../ui/mapaVisual';
+import { escalaMapa, lugarDe, MAPA_ALTO, MAPA_ANCHO, mapaZonas } from '../ui/mapaVisual';
+import { LUGARES } from '../data/lugares';
 import { aplicarCuracion, equipar, motivoNoUsable, quitarObjeto, seAplicaACriatura, usoDe } from '../core/objetos';
 import { calcularEstadisticas } from '../core/estadisticas';
 import { aprenderMovimiento, destinoConObjeto, evolucionar, evolucionPendiente, expParaNivel, subirNivel } from '../core/progreso';
@@ -517,7 +518,10 @@ export class Interfaz extends Phaser.Scene {
    * iconos a la derecha y, arriba, tu tarjeta. Devuelve `'ovillo'` si se ha usado una Cuerda
    * huida, para que el mapa lleve al jugador al mesón.
    */
-  menu(p: Partida, op: { ovilloPermitido: boolean } = { ovilloPermitido: false }): Promise<'ovillo' | { viajar: Posicion } | undefined> {
+  menu(
+    p: Partida,
+    op: { ovilloPermitido: boolean; exterior?: boolean } = { ovilloPermitido: false },
+  ): Promise<'ovillo' | { viajar: Posicion; texto?: string } | undefined> {
     this.ovilloPermitido = op.ovilloPermitido;
     return new Promise((resolve) => {
       this.alUsarOvillo = () => {
@@ -532,6 +536,9 @@ export class Interfaz extends Phaser.Scene {
         };
         this.barraJugador(c, p);
         const volverA = (col: number, fila: number) => () => principal({ col, fila });
+        // Volver a la opción del menú con ese texto (las opciones cambian según lo que tengas).
+        const aqui = (texto: string) => volverA(1, opciones.findIndex((o) => o.texto === texto));
+        const viajar = (pos: Posicion, texto?: string) => resolve({ viajar: pos, texto });
         const opciones: { texto: string; icono: IconoUI; color: number; ayuda: string; activo: boolean; accion: () => void }[] = [
           {
             texto: 'Equipo',
@@ -539,7 +546,7 @@ export class Interfaz extends Phaser.Scene {
             color: COLOR.verde,
             ayuda: 'Mira cómo están tus criaturas, cámbialas de orden y quítales lo que llevan.',
             activo: p.equipo.length > 0,
-            accion: () => this.pantallaEquipo(p, volverA(1, 0)),
+            accion: () => this.pantallaEquipo(p, aqui('Equipo')),
           },
           {
             texto: 'Bestiario',
@@ -547,10 +554,22 @@ export class Interfaz extends Phaser.Scene {
             color: COLOR.rojo,
             ayuda: 'Las criaturas que has visto y con las que has sellado un pacto.',
             activo: true,
-            accion: () => this.pantallaBestiario(p, volverA(1, 1)),
+            accion: () => this.pantallaBestiario(p, aqui('Bestiario')),
           },
-          { texto: 'Mochila', icono: 'mochila', color: COLOR.bronce, ayuda: 'Tus objetos, ordenados por bolsillos.', activo: true, accion: () => this.pantallaMochila(p, volverA(1, 2)) },
-          { texto: 'Tipos', icono: 'tipos', color: COLOR.morado, ayuda: 'Qué tipo es fuerte o débil contra cuál.', activo: true, accion: () => this.pantallaTipos(volverA(1, 3)) },
+          { texto: 'Mochila', icono: 'mochila', color: COLOR.bronce, ayuda: 'Tus objetos, ordenados por bolsillos.', activo: true, accion: () => this.pantallaMochila(p, aqui('Mochila')) },
+          ...((p.objetos.mapa ?? 0) > 0
+            ? [
+                {
+                  texto: 'Mapa',
+                  icono: 'mapa' as IconoUI,
+                  color: COLOR.celeste,
+                  ayuda: 'Dónde estás y los lugares que conoces. Con Vuelo, viajas a ellos.',
+                  activo: true,
+                  accion: () => this.pantallaMapa(p, aqui('Mapa'), viajar, op.exterior ?? false),
+                },
+              ]
+            : []),
+          { texto: 'Tipos', icono: 'tipos', color: COLOR.morado, ayuda: 'Qué tipo es fuerte o débil contra cuál.', activo: true, accion: () => this.pantallaTipos(aqui('Tipos')) },
           {
             texto: 'Guardar',
             icono: 'guardar',
@@ -562,19 +581,19 @@ export class Interfaz extends Phaser.Scene {
           { texto: 'Cerrar', icono: 'cerrar', color: COLOR.tintaSuave, ayuda: 'Vuelve al camino.', activo: true, accion: () => this.alAtras?.() },
         ];
         if (p.dev) {
-          const viajar = (pos: Posicion) => resolve({ viajar: pos });
           opciones.splice(opciones.length - 1, 0, {
             texto: 'Desarrollador',
             icono: 'opciones',
             color: COLOR.morado,
             ayuda: 'Objetos, criaturas, viajes y más, para probar el juego.',
             activo: true,
-            accion: () => this.pantallaDesarrollador(p, volverA(1, opciones.length - 2), viajar),
+            accion: () => this.pantallaDesarrollador(p, aqui('Desarrollador'), viajar),
           });
         }
+        // Con muchas opciones, las filas se aprietan para no pisar la barra de ayuda.
         const y0 = 186;
-        const paso = 128;
-        const alto = 112;
+        const paso = Math.min(128, Math.floor((ALTO_MAPA - 150 - y0) / Math.max(opciones.length, MAX_EQUIPO)));
+        const alto = paso - 16;
 
         // Derecha: las opciones, en píldoras con su icono.
         const xO = 548;
@@ -1184,6 +1203,71 @@ export class Interfaz extends Phaser.Scene {
     this.botonVolver(c, volver, 290);
   }
 
+  /**
+   * El mapa del menú: dónde estás y los lugares que conoces. Con una criatura que sepa Vuelo, y
+   * al aire libre, se elige un lugar del capítulo en curso y se vuela allí.
+   */
+  private pantallaMapa(p: Partida, volver: () => void, viajar: (pos: Posicion, texto?: string) => void, exterior: boolean, elegido?: string): void {
+    const c = this.abrirCapa('Mapa', { icono: 'mapa', color: COLOR.azul });
+    const visitadas = zonasVisitadas(p);
+    const capitulo = CAPITULOS.find((k) => k.zonas.includes(p.posicion.zona));
+    const aqui = lugarDe(p.posicion.zona);
+    const destinos = [
+      ...new Set(
+        visitadas
+          .filter((z) => capitulo?.zonas.includes(z))
+          .map(lugarDe)
+          .filter((l): l is string => Boolean(l && l !== aqui && LUGARES[l].llegada)),
+      ),
+    ];
+    const volador = quienSabe(p, 'vuelo');
+    const puede = Boolean(volador) && exterior && destinos.length > 0;
+    const sel = puede ? (elegido && destinos.includes(elegido) ? elegido : destinos[0]) : undefined;
+    const ir = (l?: string) => this.pantallaMapa(p, volver, viajar, exterior, l);
+
+    const escala = escalaMapa(ANCHO - 96, ALTO_MAPA - 150 - 400);
+    const yMapa = 164;
+    c.add(
+      mapaZonas(this, (ANCHO - MAPA_ANCHO * escala) / 2, yMapa, escala, {
+        conocidas: visitadas,
+        aqui: p.posicion.zona,
+        elegido: sel,
+        tocables: puede ? destinos : [],
+        alTocar: (l) => ir(l),
+      }),
+    );
+    const yT = yMapa + MAPA_ALTO * escala + 40;
+    c.add(pildora(this, 40, yT, `Estás en ${ZONAS[p.posicion.zona].nombre}`, COLOR.tinta, 28));
+    const ayuda = !volador
+      ? 'Con una criatura que sepa Vuelo (MO02) podrás viajar a los lugares que ya conoces.'
+      : !exterior
+        ? `Sal al aire libre para que ${nombreDe(volador, DATOS)} pueda volar.`
+        : destinos.length === 0
+          ? 'Todavía no conoces otro lugar de esta época al que volar.'
+          : `Elige un lugar y ${nombreDe(volador, DATOS)} te llevará volando.`;
+    c.add(this.add.text(40, yT + 56, ayuda, { ...estiloTexto(28, COLOR.panel, true), wordWrap: { width: ANCHO - 80 } }));
+    const volar = () => {
+      if (!sel || !volador) return;
+      const lugar = LUGARES[sel];
+      this.cerrarCapa();
+      viajar(lugar.llegada!, `¡${nombreDe(volador, DATOS)} te lleva volando a ${lugar.nombre}!`);
+    };
+    if (sel) {
+      c.add(new Boton(this, 790, ALTO_MAPA - 80, { ancho: 440, alto: 112, texto: `Volar a ${LUGARES[sel].nombre}`, tamano: 30, color: COLOR.verde, icono: { ui: 'mapa', tam: 56 }, alPulsar: volar }));
+      this.botonVolver(c, volver, 290);
+    } else {
+      this.botonVolver(c, volver);
+    }
+    this.nav = {
+      mover: (dir) => {
+        if (!sel || destinos.length < 2) return;
+        const k = destinos.indexOf(sel) + (dir === 'izquierda' || dir === 'arriba' ? -1 : 1);
+        ir(destinos[(k + destinos.length) % destinos.length]);
+      },
+      aceptar: volar,
+    };
+  }
+
   /** Control segmentado de pestañas, con la elegida en azul noche. */
   private pestanas(c: Phaser.GameObjects.Container, nombres: string[], actual: number, y: number, alElegir: (k: number) => void): void {
     const ancho = (ANCHO - 48 - 16) / nombres.length;
@@ -1213,7 +1297,7 @@ export class Interfaz extends Phaser.Scene {
     const altoLista = Math.max(1, filas) * altoFila + 30;
     const escala = escalaMapa(ANCHO - 112, yFin - y - altoLista - 40);
     const anchoMapa = MAPA_ANCHO * escala;
-    c.add(mapaZonas(this, (ANCHO - anchoMapa) / 2, y + 24, escala, donde.map((d) => d.zona)));
+    c.add(mapaZonas(this, (ANCHO - anchoMapa) / 2, y + 24, escala, { resaltadas: donde.map((d) => d.zona) }));
     let yl = y + 24 + MAPA_ALTO * escala + 30 + altoFila / 2;
     if (donde.length === 0) {
       const origen = Object.values(DATOS.especies).find((e) => e.evoluciona?.a === especie);
@@ -1229,7 +1313,7 @@ export class Interfaz extends Phaser.Scene {
       const punto = this.add.graphics();
       punto.fillStyle(COLOR.rojo, 1).fillCircle(76, yl, 10);
       c.add(punto);
-      c.add(this.add.text(100, yl, ZONAS[d.zona].nombre, estiloTexto(30, COLOR.tinta, true)).setOrigin(0, 0.5));
+      c.add(this.add.text(100, yl, `${ZONAS[d.zona].nombre}${d.agua ? ' (con Surf)' : ''}`, estiloTexto(30, COLOR.tinta, true)).setOrigin(0, 0.5));
       const niveles = d.min === d.max ? `Nv ${d.min}` : `Nv ${d.min}–${d.max}`;
       c.add(this.add.text(ANCHO - 72, yl, `${niveles} · ${d.porcentaje} %`, estiloTexto(26, COLOR.tintaSuave, true)).setOrigin(1, 0.5));
       yl += altoFila;
@@ -1393,7 +1477,8 @@ export class Interfaz extends Phaser.Scene {
       return;
     }
     if (!seAplicaACriatura(obj)) return;
-    this.elegirCriatura(p, `¿A quién aplicas ${obj.nombre}?`, volver, (cr) => {
+    const pregunta = obj.tipo === 'maquina' ? `¿Quién aprende ${DATOS.movimientos[obj.movimiento].nombre}?` : `¿A quién aplicas ${obj.nombre}?`;
+    this.elegirCriatura(p, pregunta, volver, (cr) => {
       const motivo = motivoNoUsable(obj, cr, DATOS);
       if (motivo) {
         this.aviso(motivo);
@@ -1441,6 +1526,14 @@ export class Interfaz extends Phaser.Scene {
   private async aplicarFuera(p: Partida, cr: Criatura, id: string): Promise<void> {
     const obj = DATOS.objetos[id];
     const nombre = nombreDe(cr, DATOS);
+    if (obj.tipo === 'maquina') {
+      // Las MT y MO no se gastan.
+      const indice = cr.movimientos.length < 4 ? cr.movimientos.length : await this.preguntarOlvido(cr, obj.movimiento);
+      if (indice < 0) return;
+      Object.assign(cr, aprenderMovimiento(cr, obj.movimiento, indice, DATOS));
+      this.aviso(`¡${nombre} ha aprendido ${DATOS.movimientos[obj.movimiento].nombre}!`);
+      return;
+    }
     darObjeto(p, id, -1);
     if (obj.tipo === 'curar' || obj.tipo === 'remedio' || obj.tipo === 'revivir') {
       const recuperada = aplicarCuracion(obj, cr, DATOS);
@@ -1498,7 +1591,7 @@ export class Interfaz extends Phaser.Scene {
    * Herramientas para probar el juego sin jugarlo entero. Solo salen en la partida del modo
    * desarrollador (`p.dev`). `viajar` cierra el menú y lleva al jugador a otra zona.
    */
-  private pantallaDesarrollador(p: Partida, volver: () => void, viajar: (pos: Posicion) => void, sel = 0): void {
+  private pantallaDesarrollador(p: Partida, volver: () => void, viajar: (pos: Posicion, texto?: string) => void, sel = 0): void {
     const c = this.abrirCapa('Desarrollador', { icono: 'opciones', color: COLOR.morado });
     const volverAqui = (k: number) => () => this.pantallaDesarrollador(p, volver, viajar, k);
     const sinEncuentros = Boolean(p.banderas['dev:sin_encuentros']);

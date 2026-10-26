@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { crearRng } from '../src/core/rng';
 import { crearCriatura } from '../src/core/criatura';
 import { accionesDisponibles, iniciarCombate, resolverTurno, type EstadoCombate, type Evento } from '../src/core/combate';
-import { aplicarCuracion, equipar, motivoNoUsable, quitarObjeto, usoDe } from '../src/core/objetos';
+import { aplicarCuracion, equipar, motivoNoUsable, puedeAprender, quitarObjeto, usoDe } from '../src/core/objetos';
 import { destinoConObjeto, evolucionar, subirNivel } from '../src/core/progreso';
 import { nuevaPartida, pasoRepelente, repelida } from '../src/core/partida';
 import { deserializar, serializar } from '../src/core/guardado';
@@ -30,8 +30,33 @@ describe('catálogo de objetos', () => {
     const iconos = Object.keys(import.meta.glob('../src/assets/objetos/*.webp')).map((r) => r.split('/').pop());
     for (const o of Object.values(DATOS.objetos)) {
       expect(categorias.has(o.categoria), o.id).toBe(true);
-      expect(iconos, `icono de ${o.id}`).toContain(`${o.id}.webp`);
+      // Las MT comparten el icono `mt`, y las MO, el `mo`.
+      const icono = o.tipo === 'maquina' ? (o.oculta ? 'mo' : 'mt') : o.id;
+      expect(iconos, `icono de ${o.id}`).toContain(`${icono}.webp`);
     }
+  });
+
+  it('las MT y MO enseñan movimientos que existen, y alguna especie puede aprenderlas', () => {
+    for (const o of Object.values(DATOS.objetos)) {
+      if (o.tipo !== 'maquina') continue;
+      expect(DATOS.movimientos[o.movimiento], o.id).toBeDefined();
+      expect(o.id.startsWith(o.oculta ? 'mo_' : 'mt_'), o.id).toBe(true);
+      for (const e of o.aprenden.especies ?? []) expect(DATOS.especies[e], `${o.id}: ${e}`).toBeDefined();
+      expect(Object.keys(DATOS.especies).some((e) => puedeAprender(o, e, DATOS)), o.id).toBe(true);
+    }
+  });
+
+  it('una MT enseña sin gastarse, y no a quien no puede o ya lo sabe', () => {
+    const mt = DATOS.objetos.mt_temblor;
+    const rng = crearRng('mt');
+    const lagarto = crearCriatura(DATOS, 'lagarto', 10, rng);
+    const lobo = crearCriatura(DATOS, 'lobo', 10, rng);
+    expect(motivoNoUsable(mt, lagarto, DATOS)).toBeNull();
+    expect(motivoNoUsable(mt, lobo, DATOS)).toBe('No puede aprenderlo');
+    const sabe = crearCriatura(DATOS, 'lagarto', 30, rng);
+    expect(motivoNoUsable(mt, sabe, DATOS)).toBe('Ya lo sabe');
+    expect(motivoNoUsable(DATOS.objetos.mo_vuelo, crearCriatura(DATOS, 'libelula', 10, rng), DATOS)).toBe('No puede aprenderlo');
+    expect(motivoNoUsable(DATOS.objetos.mo_vuelo, crearCriatura(DATOS, 'aguila', 10, rng), DATOS)).toBeNull();
   });
 
   it('cada objeto se puede usar de alguna forma (salvo los importantes)', () => {

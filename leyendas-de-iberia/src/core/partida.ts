@@ -42,6 +42,8 @@ export interface Partida {
   revisados: string[];
   /** La última tésera lanzada en un combate: sale a mano en el siguiente. */
   ultimaTesera?: string;
+  /** Zonas por las que ha pasado el jugador (para el mapa y Vuelo). Ver `zonasVisitadas`. */
+  visitadas?: string[];
   /**
    * Partida del modo desarrollador: se guarda aparte y su menú de pausa permite darse objetos y
    * criaturas, viajar a cualquier zona o quitar los encuentros (`dev:sin_encuentros`).
@@ -78,6 +80,40 @@ export function marcarVisto(p: Partida, especie: string): void {
 export function marcarCapturado(p: Partida, especie: string): void {
   marcarVisto(p, especie);
   if (!p.capturados.includes(especie)) p.capturados.push(especie);
+}
+
+/**
+ * Las zonas visitadas. Las partidas de antes de que existiera la lista la reciben con lo que se
+ * sabe: la zona actual y las que tienen el guion de entrada visto.
+ */
+export function zonasVisitadas(p: Partida): string[] {
+  p.visitadas ??= [...new Set([p.posicion.zona, ...Object.keys(p.banderas).filter((b) => b.startsWith('visto:')).map((b) => b.slice(6))])];
+  return p.visitadas;
+}
+
+export function marcarVisitada(p: Partida, zona: string): void {
+  const v = zonasVisitadas(p);
+  if (!v.includes(zona)) v.push(zona);
+}
+
+/** La primera criatura del equipo que sabe un movimiento (para Surf y Vuelo fuera de combate). */
+export function quienSabe(p: Partida, movimiento: string): Criatura | undefined {
+  return p.equipo.find((c) => c.movimientos.some((m) => m.id === movimiento));
+}
+
+/**
+ * Objetos que da la historia y que una partida empezada antes de añadirlos no tiene: si la
+ * bandera `si` está puesta y la marca no, se dan y se pone la marca. Devuelve lo que se ha dado.
+ */
+export function darAtrasados(p: Partida, regalos: readonly { si: string; marca: string; objeto: string; cantidad?: number }[]): string[] {
+  const dados: string[] = [];
+  for (const r of regalos) {
+    if (!p.banderas[r.si] || p.banderas[r.marca]) continue;
+    p.banderas[r.marca] = true;
+    darObjeto(p, r.objeto, r.cantidad ?? 1);
+    dados.push(r.objeto);
+  }
+  return dados;
 }
 
 /** Añade una criatura al equipo o, si está lleno, al Bestiario. Devuelve dónde ha ido. */

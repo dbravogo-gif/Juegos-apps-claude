@@ -171,11 +171,16 @@ const CAMINO_TOLEDO: Zona = {
     '#,hhh,,,,.,hhh,#',
     '#,hhh,,,,.,hhh,#',
     '#,,,,,,,,.,,,,,#',
-    '#~~~~~~~~=~~~~~#',
-    '#~~~~~~~~=~~~~~#',
+    '#OOOOOOOO=OOOOO#',
+    '#OOOOOOOO=OOOOO#',
     '#,,,,,,,,.,,,,,#',
     '#########G######',
   ],
+  // En el Tajo, con Surf.
+  encuentrosAgua: {
+    tasa: 10,
+    especies: [{ especie: 'galapago', min: 9, max: 11, peso: 100 }],
+  },
   encuentros: {
     tasa: 13,
     especies: [
@@ -218,6 +223,7 @@ const CAMINO_TOLEDO: Zona = {
   ],
   carteles: [{ x: 8, y: 24, texto: ['El Tajo. Al otro lado del puente, Toledo.'] }],
   ocultos: [
+    { id: 'mt_temblor', x: 13, y: 13, objeto: 'mt_temblor', visible: true },
     { id: 'unguento', x: 1, y: 13, objeto: 'unguento' },
     { id: 'tesera', x: 14, y: 4, objeto: 'tesera_plata' },
   ],
@@ -423,6 +429,9 @@ const ALCAZAR_TOLEDO: Zona = {
             ...decir('María Pacheco', 'Peleas con honra. Toma este blasón: que se sepa que venciste en el Alcázar.'),
             { tipo: 'blason', id: 'toledo', nombre: 'Blasón de Toledo' },
             bandera('blason_toledo'),
+            ...decir('María Pacheco', 'Y esto, para que tus criaturas peleen como el acero de Toledo.'),
+            dar('mt_hoja_toledana', 1),
+            bandera('regalo:mt_maria'),
             dar('tesera_plata', 3),
             {
               tipo: 'fin',

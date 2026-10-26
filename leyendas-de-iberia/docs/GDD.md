@@ -51,6 +51,10 @@ Hay que preguntar antes de diseñar sobre ellas.
 5. **Phaser 3 o Phaser 4.** Ver §10.
 6. **Bestiario.** La propuesta de 150 especies está en `BESTIARIO.md` (v2, con la revisión de
    variedad que pidió el autor). Falta su visto bueno a las decisiones del final del archivo.
+7. **Volar a otras épocas.** Ahora Vuelo solo lleva a los lugares del capítulo en curso: en
+   Santa Fe siguen Isabel y Colón, y volver allí en 1797 sería un anacronismo. La alternativa es
+   dejar volar a cualquier lugar visitado y quitar de cada zona los personajes de otra época.
+8. **Quién da las MO y los legendarios.** Propuesta en §8 («MT, MO y legendarios»).
 
 ## 4. Épocas y gimnasios (propuesta)
 
@@ -307,6 +311,44 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
 - **Moneda.** Cambia de nombre con la época (maravedí, ducado, real, peseta, euro), pero por
   dentro es la misma. Es solo un detalle de ambientación.
 - **Insignias de gimnasio: blasones.**
+- **MT, MO y legendarios** (sistemas hechos el 2026-10-26; lo de los capítulos 3 a 8 es
+  propuesta):
+  - **Mapa.** Es un objeto importante. Lo da Colón en Santa Fe: antes de pedir naves, dibujaba
+    cartas en Lisboa con su hermano Bartolomé (el Diccionario Biográfico de la RAH sitúa allí a
+    los dos hermanos como cartógrafos hacia 1479–1480). Se abre desde el menú: muestra dónde
+    estás y los lugares visitados, y con Vuelo sirve para viajar.
+  - **MT.** Enseñan un movimiento y no se gastan. Las dan los líderes (Boabdil, la MT01; María
+    Pacheco, la MT02) o están en el suelo, en un zurrón que se ve. Cada MT dice quién puede
+    aprenderla: por tipos, por especies o todas.
+  - **MO.** Solo dos, Surf y Vuelo, y las dan personajes importantes. Sus movimientos sirven
+    también fuera de combate:
+    - **Surf:** cruzar ríos y mares por el agua profunda (casilla `O`), con sus propios
+      encuentros. Propuesta: Jorge Juan, en el prólogo del capítulo 5 en Cádiz, cuando «te
+      enseña a navegar» y te lleva a las islas (§4).
+    - **Vuelo:** viajar a un lugar ya visitado desde el mapa. Propuesta: **Diego Marín
+      Aguilera**, el «hombre pájaro» de Coruña del Conde (Burgos), que la noche del 15 de mayo
+      de 1793 se lanzó desde el castillo con una máquina de madera y plumas y voló unas 431
+      varas (unos 360 m) antes de que se le rompiera una pieza. Encaja con el quinto gimnasio.
+      Se descartó Leonardo: sus códices de Madrid son de mecánica, no de vuelo.
+  - **Legendarios.** Llegan tarde, como en el género. Esperan de pie en su guarida (un
+    personaje con `criatura`): al hablarles empieza el combate; si los vences o los capturas,
+    desaparecen; si huyes, siguen ahí. Las guaridas pueden estar en zonas de los primeros
+    capítulos, cerradas hasta tener un objeto o una bandera de más adelante (salida con
+    `requiere`). Cada uno necesita su imagen de pie en `src/assets/legendarios/`, en píxeles como
+    los personajes; sin ella se usa su ilustración.
+
+    | Legendario | Guarida (Bestiario) | Se abre con (propuesta) |
+    | --- | --- | --- |
+    | Tarasca | Granada, en el Corpus | Tras la Liga: la ciudad del capítulo 1, cerrada hasta el final |
+    | Guayota | Teide | Tras el gimnasio del capítulo 5; hace falta Vuelo o Surf para llegar |
+    | Magec | Cumbre del Teide, al amanecer | Tras vencer o capturar a Guayota |
+    | Cuélebre | Covadonga | Un candil para entrar en la cueva |
+    | Mari | Anboto | Una cuerda con garfio para subir a su cueva |
+    | Babieca | San Pedro de Cardeña (Burgos), con el ánima del Cid | Una llave del monasterio |
+    | Nuberu, Alcorax, Platero, Rocinante, Copito de Nieve, Ratón Pérez | Su capítulo | Según su capítulo |
+
+    Los iconos del candil, la cuerda con garfio y la llave ya están hechos, en reserva
+    (`arte/objetos-futuros/`).
 
 ## 9. Multijugador asíncrono (fase posterior)
 
@@ -538,3 +580,11 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
   - Sexo de cada criatura: macho, hembra, hermafrodita o sin sexo. Se añade «sin sexo», que el
     autor no pidió, para las estatuas y la tinaja: llamarlas hermafroditas sería falso.
   - Zona de captura en un mapa de la península, como el área del Pokédex.
+- **2026-10-26 (13).** Mapa, MT y MO, y base para los legendarios, a petición del autor.
+  - Colón da el Mapa en Santa Fe; quien ya había pasado lo recibe al cargar la partida.
+  - Cinco MT: dos de los líderes (Boabdil y María Pacheco) y tres en zurrones en el suelo (la
+    Vega, el bosque de la Alhambra y el camino de Toledo).
+  - Las MO Surf y Vuelo funcionan: Surf cruza el Tajo, con sus propios encuentros, y Vuelo lleva
+    desde el mapa a los lugares visitados del capítulo. Quién las da, propuesta en §8.
+  - Base para los legendarios: criaturas que esperan de pie y zonas que piden un objeto para
+    entrar. El plan de cada guarida, en §8.

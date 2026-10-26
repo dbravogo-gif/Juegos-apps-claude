@@ -8,14 +8,16 @@ export interface Lugar {
   nombre: string;
   lat: number;
   lon: number;
+  /** Dónde aterrizas al llegar con Vuelo: una casilla libre a la entrada del pueblo. */
+  llegada?: { zona: string; x: number; y: number; dir: 'arriba' | 'abajo' | 'izquierda' | 'derecha' };
 }
 
 export const LUGARES: Record<string, Lugar> = {
   // La Alhambra; Santa Fe y la Vega quedan a unos 10 km.
-  granada: { nombre: 'Granada', lat: 37.176, lon: -3.588 },
+  granada: { nombre: 'Granada', lat: 37.176, lon: -3.588, llegada: { zona: 'santa_fe', x: 12, y: 16, dir: 'arriba' } },
   // Villalar de los Comuneros (Valladolid).
-  villalar: { nombre: 'Villalar', lat: 41.553, lon: -5.137 },
-  toledo: { nombre: 'Toledo', lat: 39.857, lon: -4.024 },
+  villalar: { nombre: 'Villalar', lat: 41.553, lon: -5.137, llegada: { zona: 'villalar', x: 11, y: 8, dir: 'arriba' } },
+  toledo: { nombre: 'Toledo', lat: 39.857, lon: -4.024, llegada: { zona: 'toledo', x: 5, y: 5, dir: 'abajo' } },
 };
 
 /** Tamaño de la imagen del mapa (`arte/mapa/mapa_iberia.py`), en sus píxeles. */

@@ -200,6 +200,15 @@ const MOVIMIENTOS_DEF = {
     efectos: [{ tipo: 'etapa', objetivo: 'rival', estadistica: 'magia', cambio: -1, prob: 20 }],
   },
   vuelo_real: { nombre: 'Vuelo real', tipo: 'aire', categoria: 'fisico', poder: 90, precision: 90, pp: 10 },
+  // Los de las MO: también se usan fuera de combate.
+  surf: {
+    nombre: 'Surf', tipo: 'agua', categoria: 'magico', poder: 90, precision: 100, pp: 15,
+    descripcion: 'Una ola enorme cae sobre el rival. Fuera de combate, la criatura te lleva por el agua.',
+  },
+  vuelo: {
+    nombre: 'Vuelo', tipo: 'aire', categoria: 'fisico', poder: 90, precision: 95, pp: 15,
+    descripcion: 'Sube muy alto y cae en picado. Fuera de combate, te lleva volando a un lugar que ya conoces.',
+  },
   resplandor: { nombre: 'Resplandor', tipo: 'luz', categoria: 'magico', poder: 60, precision: 100, pp: 20 },
   lamento: {
     nombre: 'Lamento', tipo: 'espectral', categoria: 'magico', poder: 65, precision: 100, pp: 15,

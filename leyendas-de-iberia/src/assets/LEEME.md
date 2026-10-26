@@ -13,6 +13,14 @@ script y se vuelve a ejecutar (`python3 arte/mapa/tileset.py`).
 - Las acequias y las fuentes tienen cuatro fotogramas.
 - Capítulo 2: hierba de la meseta, trigales (hierba alta), encinas, losas, muros de sillería
   gris del Alcázar, armaduras y armeros.
+- `zurron`: el zurrón de cuero con hebilla de los objetos que se ven en el suelo (las MT).
+- El agua profunda (`O`, la del Tajo) se dibuja como las acequias; con Surf se puede cruzar.
+
+## Legendarios de pie (`legendarios/`)
+
+`<especie>.png`: la imagen de cada legendario esperando en su guarida, en píxeles como los
+personajes (con `ESCALA`, apoyada abajo en su casilla). Todavía no hay ninguno: se hace cuando
+llegue cada legendario. Mientras falte, el juego pone su ilustración, más pequeña.
 
 ## Mapa de la península (`mundo/mapa_iberia.*`)
 
@@ -61,6 +69,7 @@ y su ropa. **No se editan a mano.**
 | `comunero.png` | Capacete y sayo carmesí, el color de las Comunidades | Comuneros |
 | `imperial.png` | Capacete, sayo blanco y calzas rojas | Soldados del emperador |
 | `espadero.png` | Gorro, delantal y barba | El espadero de Toledo |
+| `muchacho_agua.png` | El jugador sobre una criatura de agua genérica, verde azulada, como en el género | El jugador con Surf |
 | `monje.png`, `aldeano.png` | Fraile y aldeano | Villalar |
 | `aldeano_verde.png`, `aldeana.png`, `maestro.png` | Aldeanos y un sabio | De reserva |
 
@@ -113,4 +122,7 @@ del juego (entre ellos Carlos V, Felipe II y Juan de Austria, para capítulos si
   dinero, tarjeta, opciones, tienda y mapa).
 - **Proceso:** el mismo corte que las criaturas, centrado y a 192 px. Aquí no se vacían los
   huecos blancos interiores, que son parte del dibujo, salvo en el amuleto de Tanit.
-- Reserva: `arte/objetos-futuros/` (tres bayas sin uso todavía).
+- **MT, MO y Mapa (2026-10-26):** `mt.webp` (pergamino con sello rojo) lo comparten todas las
+  MT, y `mo.webp` (sello dorado con alas), las MO. `mapa.webp` es la carta que da Colón.
+- Reserva: `arte/objetos-futuros/`: tres bayas sin uso todavía y, para abrir las guaridas de
+  los legendarios, una llave, un candil y una cuerda con garfio.

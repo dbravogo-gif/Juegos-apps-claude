@@ -109,6 +109,13 @@ const SANTA_FE: Zona = {
             'Toma: cinco téseras. Al otro lado del océano esperan tierras que ningún cristiano ha visto y criaturas que ningún bestiario ha escrito.',
           ),
           dar('tesera', 5),
+          ...decir(
+            'Colón',
+            'Antes de pedir naves dibujaba cartas de marear en Lisboa, con mi hermano Bartolomé.',
+            'Toma también este mapa de los reinos. Quien sabe dónde está, nunca anda perdido.',
+          ),
+          dar('mapa', 1),
+          bandera('regalo:mapa'),
           ...decir('Colón', 'Yo iré a buscarlas. Tú empieza por las de esta tierra: cada pacto que selles es un mundo por descubrir.'),
           bandera('colon'),
         ]),
@@ -388,6 +395,7 @@ const VEGA: Zona = {
     { id: 'higo', x: 14, y: 15, objeto: 'higo' },
     { id: 'endrina', x: 1, y: 20, objeto: 'endrina' },
     { id: 'ruda', x: 13, y: 7, objeto: 'ruda' },
+    { id: 'mt_pisoton', x: 13, y: 5, objeto: 'mt_pisoton', visible: true },
   ],
 };
 
@@ -451,6 +459,7 @@ const ALHAMBRA: Zona = {
   ],
   carteles: [{ x: 5, y: 10, texto: ['La Alhambra.', 'Palacio de los reyes nazaríes de Granada.'] }],
   ocultos: [
+    { id: 'mt_mocarabe', x: 10, y: 9, objeto: 'mt_mocarabe', visible: true },
     { id: 'gorro', x: 2, y: 9, objeto: 'gorro_colorado' },
     { id: 'tuno', x: 11, y: 2, objeto: 'tuno' },
   ],
@@ -505,6 +514,9 @@ const PATIO_LEONES: Zona = {
             ...decir('Boabdil', 'Toma este blasón. Que se sepa que venciste en la Alhambra.'),
             { tipo: 'blason', id: 'alhambra', nombre: 'Blasón de la Alhambra' },
             bandera('blason_alhambra'),
+            ...decir('Boabdil', 'Y llévate también esto: lo que mis duendes saben de la noche.'),
+            dar('mt_noche_cerrada', 1),
+            bandera('regalo:mt_boabdil'),
             ...decir(undefined, 'Un mensajero llega del real de Santa Fe con un regalo de la reina.'),
             dar('tesera_plata', 3),
             ...decir('Mensajero', 'Tres téseras de plata, con el sello de doña Isabel. Más allá de Granada las criaturas son más bravas: te harán falta.'),

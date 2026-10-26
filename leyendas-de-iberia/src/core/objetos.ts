@@ -31,6 +31,8 @@ export function usoDe(obj: Objeto): UsoObjeto {
       return { combate: false, fuera: true, equipable: false };
     case 'equipo':
       return { combate: false, fuera: false, equipable: true };
+    case 'maquina':
+      return { combate: false, fuera: true, equipable: false };
     case 'clave':
       return { combate: false, fuera: false, equipable: false };
   }
@@ -38,7 +40,14 @@ export function usoDe(obj: Objeto): UsoObjeto {
 
 /** Los objetos que se aplican a una criatura concreta del equipo. */
 export function seAplicaACriatura(obj: Objeto): boolean {
-  return ['curar', 'remedio', 'revivir', 'nivel', 'evolucion'].includes(obj.tipo);
+  return ['curar', 'remedio', 'revivir', 'nivel', 'evolucion', 'maquina'].includes(obj.tipo);
+}
+
+/** Si una especie puede aprender el movimiento de una MT o MO. */
+export function puedeAprender(obj: Objeto, especie: string, datos: DatosJuego): boolean {
+  if (obj.tipo !== 'maquina') return false;
+  const { todos, tipos, especies } = obj.aprenden;
+  return Boolean(todos) || (especies ?? []).includes(especie) || datos.especies[especie].tipos.some((t) => (tipos ?? []).includes(t));
 }
 
 /** Por qué no se puede usar el objeto en esa criatura, o `null` si se puede. */
@@ -57,6 +66,9 @@ export function motivoNoUsable(obj: Objeto, c: Criatura, datos: DatosJuego): str
       return c.nivel >= NIVEL_MAX ? 'Ya está en el nivel máximo' : null;
     case 'evolucion':
       return destinoConObjeto(c, obj.id, datos) ? null : 'No le hace nada';
+    case 'maquina':
+      if (!puedeAprender(obj, c.especie, datos)) return 'No puede aprenderlo';
+      return c.movimientos.some((m) => m.id === obj.movimiento) ? 'Ya lo sabe' : null;
     default:
       return 'Este objeto no se usa así';
   }

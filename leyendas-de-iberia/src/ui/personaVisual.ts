@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import type { Dir } from '../core/mundo';
 import { ASPECTOS } from '../data/aspectos';
 import { ESCALA, imagenPieza, TAM_CASILLA } from './casillasVisual';
+import { crearCriaturaVisual } from './criaturaVisual';
 
 // Personas del mapa con las hojas de `src/assets/personajes/`, que dibuja `arte/mapa/personajes.py`.
 // Cada hoja tiene una columna por dirección y cuatro filas con los pasos, a 16 × 24 píxeles: la
@@ -78,4 +79,52 @@ export class Persona extends Phaser.GameObjects.Container {
     this.sprite.stop();
     this.sprite.setFrame(COLUMNA[this.dir]);
   }
+}
+
+// Imagen de pie de cada legendario que espera en el mapa: `src/assets/legendarios/<especie>.png`,
+// en píxeles como los personajes. Si falta, se usa su ilustración, más pequeña.
+const LEGENDARIOS = Object.fromEntries(
+  Object.entries(import.meta.glob('../assets/legendarios/*.png', { eager: true, query: '?url', import: 'default' }) as Record<string, string>).map(
+    ([ruta, url]) => [ruta.split('/').pop()!.replace(/\.png$/, ''), url],
+  ),
+);
+const claveLegendario = (especie: string) => `legendario-${especie}`;
+
+export function cargarLegendarios(load: Phaser.Loader.LoaderPlugin): void {
+  for (const [especie, url] of Object.entries(LEGENDARIOS)) load.image(claveLegendario(especie), url);
+}
+
+export function prepararLegendarios(scene: Phaser.Scene): void {
+  for (const especie of Object.keys(LEGENDARIOS)) scene.textures.get(claveLegendario(especie)).setFilter(Phaser.Textures.FilterMode.NEAREST);
+}
+
+/**
+ * Una criatura de pie en el mapa, esperando a que llegues (los legendarios en su guarida). No
+ * anda: respira. Tiene la misma forma que `Persona` para que el mapa la trate igual.
+ */
+export class CriaturaQuieta extends Phaser.GameObjects.Container {
+  dir: Dir;
+  andando = false;
+
+  constructor(scene: Phaser.Scene, x: number, y: number, especie: string, dir: Dir) {
+    super(scene, x, y);
+    this.dir = dir;
+    const t = TAM_CASILLA;
+    const pies = t / 2 - ESCALA;
+    const sombra = imagenPieza(scene, 'sombra', 0, pies - ESCALA * 2).setScale(ESCALA * 1.8, ESCALA * 1.4);
+    const figura = LEGENDARIOS[especie]
+      ? scene.add.image(0, pies, claveLegendario(especie)).setOrigin(0.5, 1).setScale(ESCALA)
+      : crearCriaturaVisual(scene, especie, 0, pies - t * 0.8, t * 1.9);
+    this.add([sombra, figura]);
+    scene.tweens.add({ targets: figura, scaleY: figura.scaleY * 1.03, duration: 1100, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    scene.add.existing(this);
+  }
+
+  setDir(dir: Dir): void {
+    this.dir = dir;
+  }
+
+  andar(): void {}
+
+  parar(): void {}
 }

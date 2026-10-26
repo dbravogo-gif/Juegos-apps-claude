@@ -2,17 +2,19 @@ import { describe, expect, it } from 'vitest';
 import { DATOS } from '../src/data';
 import { ASPECTOS } from '../src/data/aspectos';
 import { RETRATOS } from '../src/data/retratos';
-import { CAPITULOS, CASILLAS, ENTRADAS, ENTRENADORES, INICIO, ZONAS } from '../src/data/mundo';
+import { CAPITULOS, CASILLAS, ENTRADAS, ENTRENADORES, INICIO, REGALOS_ATRASADOS, ZONAS } from '../src/data/mundo';
 import { aPixel, LUGARES, MAPA_ALTO, MAPA_ANCHO } from '../src/data/lugares';
-import { dondeSale, enLineaDeVision, esSolida, validarZona, type Guion, type Paso } from '../src/core/mundo';
+import { cumpleRequisito, dondeSale, enLineaDeVision, esNavegable, esSolida, validarZona, type Guion, type Paso } from '../src/core/mundo';
 import {
   ajustarADatos,
   anadirCriatura,
   aplicarCombate,
+  darAtrasados,
   equipoEntrenador,
   MAX_EQUIPO,
   nuevaPartida,
   tirarEncuentro,
+  zonasVisitadas,
 } from '../src/core/partida';
 import { deserializar, serializar } from '../src/core/guardado';
 import { ESPECIES_RETIRADAS } from '../src/data/especies';
@@ -69,7 +71,7 @@ describe('zonas', () => {
     // Los personajes que se apartan con una bandera (`ocultoSi`) no cuentan como estorbo.
     for (const z of Object.values(ZONAS)) {
       const ocupadas = new Set(
-        [...z.pnj.filter((p) => !p.ocultoSi), ...z.carteles, ...(z.recipientes ?? [])].map((o) => `${o.x},${o.y}`),
+        [...z.pnj.filter((p) => !p.ocultoSi), ...z.carteles, ...(z.recipientes ?? []), ...(z.ocultos ?? []).filter((o) => o.visible)].map((o) => `${o.x},${o.y}`),
       );
       const pisable = (x: number, y: number) => !esSolida(z, x, y, CASILLAS) && !ocupadas.has(`${x},${y}`);
       const llegadas = Object.values(ZONAS).flatMap((o) => o.salidas.filter((s) => s.zona === z.id).map((s) => [s.ax, s.ay]));
@@ -353,6 +355,65 @@ describe('mapa de la península', () => {
       const suma = z.encuentros.especies.reduce((s, e) => s + (dondeSale({ [z.id]: z }, e.especie)[0]?.porcentaje ?? 0), 0);
       expect(Math.abs(suma - 100), z.id).toBeLessThanOrEqual(z.encuentros.especies.length);
     }
+  });
+});
+
+describe('legendarios y zonas cerradas', () => {
+  it('las criaturas que esperan en el mapa y lo que piden las salidas existen', () => {
+    for (const z of Object.values(ZONAS)) {
+      for (const p of z.pnj) if (p.criatura) expect(DATOS.especies[p.criatura.especie], `${z.id}: ${p.id}`).toBeDefined();
+      for (const s of z.salidas) if (s.requiere?.objeto) expect(DATOS.objetos[s.requiere.objeto], `${z.id}: salida a ${s.zona}`).toBeDefined();
+    }
+  });
+
+  it('una salida con requisito se abre con el objeto o la bandera', () => {
+    const req = { objeto: 'mapa', bandera: 'capitulo2', texto: 'Cerrado.' };
+    expect(cumpleRequisito(req, {}, {})).toBe(false);
+    expect(cumpleRequisito(req, { mapa: 1 }, {})).toBe(false);
+    expect(cumpleRequisito(req, { mapa: 1 }, { capitulo2: true })).toBe(true);
+    expect(cumpleRequisito({ texto: 'Abierto' }, {}, {})).toBe(true);
+  });
+});
+
+describe('regalos atrasados', () => {
+  it('quien ya pasó por Colón o venció a un líder recibe lo que falta, y solo una vez', () => {
+    const p = nuevaPartida('Antigua', 5, INICIO);
+    p.banderas.colon = true;
+    p.banderas['vencido:boabdil'] = true;
+    expect(darAtrasados(p, REGALOS_ATRASADOS).sort()).toEqual(['mapa', 'mt_noche_cerrada']);
+    expect(darAtrasados(p, REGALOS_ATRASADOS)).toEqual([]);
+    expect(p.objetos.mapa).toBe(1);
+  });
+
+  it('quien recibe el regalo en la historia no lo recibe otra vez', () => {
+    const colon = ZONAS.santa_fe.pnj.find((x) => x.id === 'colon')!;
+    const pasos = pasosDe(colon.guion);
+    expect(pasos.some((x) => x.tipo === 'dar' && x.objeto === 'mapa')).toBe(true);
+    expect(pasos.some((x) => x.tipo === 'bandera' && x.nombre === 'regalo:mapa')).toBe(true);
+  });
+});
+
+describe('Surf y Vuelo', () => {
+  it('cada lugar con llegada cae en una casilla transitable', () => {
+    for (const [id, l] of Object.entries(LUGARES)) {
+      if (!l.llegada) continue;
+      expect(esSolida(ZONAS[l.llegada.zona], l.llegada.x, l.llegada.y, CASILLAS), id).toBe(false);
+      expect(ZONAS[l.llegada.zona].enMapa, id).toEqual({ lugar: id });
+    }
+  });
+
+  it('el Tajo se cruza con Surf: agua profunda, sólida a pie', () => {
+    const z = ZONAS.camino_toledo;
+    expect(esNavegable(z, 3, 22, CASILLAS)).toBe(true);
+    expect(esSolida(z, 3, 22, CASILLAS)).toBe(true);
+    expect(z.encuentrosAgua).toBeDefined();
+  });
+
+  it('las visitadas de una partida antigua salen de sus banderas', () => {
+    const p = nuevaPartida('Antigua', 6, INICIO);
+    p.banderas['visto:vega'] = true;
+    delete p.visitadas;
+    expect(zonasVisitadas(p).sort()).toEqual(['santa_fe', 'vega']);
   });
 });
 
