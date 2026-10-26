@@ -59,7 +59,7 @@ describe('catálogo de objetos', () => {
     expect(motivoNoUsable(DATOS.objetos.mo_vuelo, crearCriatura(DATOS, 'aguila', 10, rng), DATOS)).toBeNull();
   });
 
-  it('Surf solo lo aprenden las criaturas acuáticas, no cualquiera de tipo Agua', () => {
+  it('Pleamar solo lo aprenden las criaturas acuáticas, no cualquiera de tipo Agua', () => {
     const surf = DATOS.objetos.mo_surf;
     expect(puedeAprender(surf, 'galapago', DATOS)).toBe(true);
     expect(puedeAprender(surf, 'necora', DATOS)).toBe(true);

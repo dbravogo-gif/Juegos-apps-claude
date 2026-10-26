@@ -1305,7 +1305,7 @@ export class Interfaz extends Phaser.Scene {
       const punto = this.add.graphics();
       punto.fillStyle(COLOR.rojo, 1).fillCircle(76, yl, 10);
       c.add(punto);
-      c.add(this.add.text(100, yl, `${ZONAS[d.zona].nombre}${d.agua ? ' (con Surf)' : ''}`, estiloTexto(30, COLOR.tinta, true)).setOrigin(0, 0.5));
+      c.add(this.add.text(100, yl, `${ZONAS[d.zona].nombre}${d.agua ? ' (con Pleamar)' : ''}`, estiloTexto(30, COLOR.tinta, true)).setOrigin(0, 0.5));
       const niveles = d.min === d.max ? `Nv ${d.min}` : `Nv ${d.min}–${d.max}`;
       c.add(this.add.text(ANCHO - 72, yl, `${niveles} · ${d.porcentaje} %`, estiloTexto(26, COLOR.tintaSuave, true)).setOrigin(1, 0.5));
       yl += altoFila;

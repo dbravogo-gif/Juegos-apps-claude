@@ -14,7 +14,7 @@ script y se vuelve a ejecutar (`python3 arte/mapa/tileset.py`).
 - Capítulo 2: hierba de la meseta, trigales (hierba alta), encinas, losas, muros de sillería
   gris del Alcázar, armaduras y armeros.
 - `zurron`: el zurrón de cuero con hebilla de los objetos que se ven en el suelo (las MT).
-- El agua profunda (`O`, la del Tajo) se dibuja como las acequias; con Surf se puede cruzar.
+- El agua profunda (`O`, la del Tajo) se dibuja como las acequias; con Pleamar se puede cruzar.
 
 ## Legendarios de pie (`legendarios/`)
 
@@ -69,7 +69,7 @@ y su ropa. **No se editan a mano.**
 | `comunero.png` | Capacete y sayo carmesí, el color de las Comunidades | Comuneros |
 | `imperial.png` | Capacete, sayo blanco y calzas rojas | Soldados del emperador |
 | `espadero.png` | Gorro, delantal y barba | El espadero de Toledo |
-| `muchacho_agua.png` | El jugador sobre una criatura de agua genérica, verde azulada, como en el género | El jugador con Surf |
+| `muchacho_agua.png` | El jugador sobre una criatura de agua genérica, verde azulada, como en el género | El jugador con Pleamar |
 | `monje.png`, `aldeano.png` | Fraile y aldeano | Villalar |
 | `aldeano_verde.png`, `aldeana.png`, `maestro.png` | Aldeanos y un sabio | De reserva |
 

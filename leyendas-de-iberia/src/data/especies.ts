@@ -22,7 +22,7 @@ interface DefEspecie {
   evoluciona?: { a: string; nivel?: number; objeto?: string };
   /** Porcentaje de machos (50 si no se dice), `hermafrodita` o `ninguno`. */
   sexo?: number | 'hermafrodita' | 'ninguno';
-  /** Vive en el agua (aprende Surf). */
+  /** Vive en el agua (aprende Pleamar). */
   acuatica?: boolean;
   /** Ave o ser alado que puede llevar a una persona (aprende Vuelo). */
   alada?: boolean;
