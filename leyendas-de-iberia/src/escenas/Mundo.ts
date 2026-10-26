@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import { DATOS } from '../data';
-import { ASPECTO_JUGADOR } from '../data/aspectos';
-import { CASILLAS, ENTRENADORES, ZONAS } from '../data/mundo';
+import { ASPECTO_JUGADOR, ASPECTO_NAVEGANDO } from '../data/aspectos';
+import { CASILLAS, ENTRENADORES, REGALOS_ATRASADOS, ZONAS } from '../data/mundo';
 import { crearCriatura, nombreDe } from '../core/criatura';
 import type { Criatura } from '../core/modelo';
 import type { ResultadoCombate } from '../core/combate';
@@ -9,6 +9,8 @@ import {
   DELTA,
   enLineaDeVision,
   esHierba,
+  cumpleRequisito,
+  esNavegable,
   esSolida,
   OPUESTA,
   type DefEntrenador,
@@ -22,20 +24,23 @@ import {
   anadirCriatura,
   aplicarCombate,
   curarEquipo,
+  darAtrasados,
   darObjeto,
   equipoEnPie,
+  marcarVisitada,
   equipoEntrenador,
   pasoRepelente,
+  quienSabe,
   repelida,
   semillaCombate,
   tirarEncuentro,
   type Partida,
   type Posicion,
 } from '../core/partida';
-import { abrirRecipiente, dibujarCartel, dibujarRecipiente, dibujarZona, ESCALA, TAM_CASILLA } from '../ui/casillasVisual';
+import { abrirRecipiente, dibujarCartel, dibujarRecipiente, dibujarZona, ESCALA, imagenPieza, TAM_CASILLA } from '../ui/casillasVisual';
 import { registrarRecipiente, revisado } from '../core/recipientes';
 import { MIMICO_MIN_BLASONES, OBJETOS_RECIPIENTE, PROB_RECIPIENTE, RECOMPENSA_MIMICO } from '../data/recipientes';
-import { Persona } from '../ui/personaVisual';
+import { CriaturaQuieta, Persona } from '../ui/personaVisual';
 import { guardarPartida, sesion } from '../ui/sesion';
 import { conArticulo } from '../ui/textos';
 import { ANCHO, COLOR, estiloTexto } from '../ui/tema';
@@ -50,7 +55,7 @@ const MS_PASO = 170;
 
 interface PersonaEnMapa {
   pnj: Pnj;
-  figura: Persona;
+  figura: Persona | CriaturaQuieta;
   x: number;
   y: number;
 }
@@ -62,6 +67,8 @@ export class Mundo extends Phaser.Scene {
   private jugador!: Persona;
   private personas: PersonaEnMapa[] = [];
   private recipientes: { def: NonNullable<Zona['recipientes']>[number]; figura: Phaser.GameObjects.Image }[] = [];
+  /** Zurrones de los objetos visibles que aún no se han recogido, por su id. */
+  private zurrones = new Map<string, Phaser.GameObjects.Image>();
   private moviendo = false;
   private ocupado = false;
   /** Dinero perdido en la última derrota, para contarlo al volver al mesón. */
@@ -73,6 +80,10 @@ export class Mundo extends Phaser.Scene {
   /** A pulsado a mitad de un paso: se atiende al llegar. */
   private aPendiente = false;
   private listo = false;
+  /** Se ha aceptado entrar en el agua con Surf: el siguiente paso puede pisar agua profunda. */
+  private entrarAlAgua = false;
+  /** Con qué hoja se dibuja ahora al jugador: a pie o surcando el agua. */
+  private aspectoJugador: string = ASPECTO_JUGADOR;
 
   constructor() {
     super('Mundo');
@@ -103,7 +114,15 @@ export class Mundo extends Phaser.Scene {
     this.ui.events.on('menu', this.alPulsarMenu, this);
     this.cargarZona(this.p.posicion);
     this.listo = true;
-    await this.conBloqueo(() => this.alEntrarZona());
+    await this.conBloqueo(async () => {
+      await this.alEntrarZona();
+      const dados = darAtrasados(this.p, REGALOS_ATRASADOS);
+      for (const r of REGALOS_ATRASADOS.filter((x) => dados.includes(x.objeto))) await this.ui.decir(r.texto);
+      if (dados.length > 0) {
+        this.ui.cerrarDialogo();
+        guardarPartida(this.p);
+      }
+    });
   }
 
   update(): void {
@@ -130,6 +149,7 @@ export class Mundo extends Phaser.Scene {
     this.personas = [];
     const zona = ZONAS[pos.zona];
     this.zona = zona;
+    marcarVisitada(this.p, zona.id);
     const capa = this.add.container(0, 0);
     this.capa = capa;
     dibujarZona(this, zona, capa);
@@ -143,13 +163,24 @@ export class Mundo extends Phaser.Scene {
       this.recipientes.push({ def: r, figura });
     }
 
+    this.zurrones.clear();
+    for (const o of zona.ocultos ?? []) {
+      if (!o.visible || this.p.banderas[`oculto:${zona.id}:${o.id}`]) continue;
+      const figura = imagenPieza(this, 'zurron', o.x * T + T / 2, o.y * T + T / 2).setDepth(o.y + 0.3);
+      capa.add(figura);
+      this.zurrones.set(o.id, figura);
+    }
+
     for (const pnj of zona.pnj) {
       if (!this.pnjVisible(pnj)) continue;
-      const figura = new Persona(this, pnj.x * T + T / 2, pnj.y * T + T / 2, pnj.aspecto, pnj.dir);
+      const figura = pnj.criatura
+        ? new CriaturaQuieta(this, pnj.x * T + T / 2, pnj.y * T + T / 2, pnj.criatura.especie, pnj.dir)
+        : new Persona(this, pnj.x * T + T / 2, pnj.y * T + T / 2, pnj.aspecto, pnj.dir);
       capa.add(figura);
       this.personas.push({ pnj, figura, x: pnj.x, y: pnj.y });
     }
-    this.jugador = new Persona(this, pos.x * T + T / 2, pos.y * T + T / 2, ASPECTO_JUGADOR, pos.dir);
+    this.aspectoJugador = this.navegando() ? ASPECTO_NAVEGANDO : ASPECTO_JUGADOR;
+    this.jugador = new Persona(this, pos.x * T + T / 2, pos.y * T + T / 2, this.aspectoJugador, pos.dir);
     capa.add(this.jugador);
     this.ordenarProfundidad();
 
@@ -173,6 +204,7 @@ export class Mundo extends Phaser.Scene {
     const b = this.p.banderas;
     if (pnj.visibleSi && !b[pnj.visibleSi]) return false;
     if (pnj.ocultoSi && b[pnj.ocultoSi]) return false;
+    if (pnj.criatura && b[`fijo:${this.zona.id}:${pnj.id}`]) return false;
     return true;
   }
 
@@ -192,8 +224,29 @@ export class Mundo extends Phaser.Scene {
     return (
       this.personas.some((pe) => pe.x === x && pe.y === y) ||
       this.zona.carteles.some((c) => c.x === x && c.y === y) ||
-      (this.zona.recipientes ?? []).some((r) => r.x === x && r.y === y)
+      (this.zona.recipientes ?? []).some((r) => r.x === x && r.y === y) ||
+      (this.zona.ocultos ?? []).some((o) => o.visible && o.x === x && o.y === y && this.zurrones.has(o.id))
     );
+  }
+
+  /** El jugador está sobre agua profunda: va con Surf. */
+  private navegando(): boolean {
+    const pos = this.p.posicion;
+    return esNavegable(this.zona, pos.x, pos.y, CASILLAS);
+  }
+
+  /** Cambia la hoja del jugador al entrar o salir del agua. */
+  private actualizarAspecto(): void {
+    const aspecto = this.navegando() ? ASPECTO_NAVEGANDO : ASPECTO_JUGADOR;
+    if (aspecto === this.aspectoJugador) return;
+    this.aspectoJugador = aspecto;
+    const { x, y } = this.jugador;
+    const dir = this.p.posicion.dir;
+    this.jugador.destroy();
+    this.jugador = new Persona(this, x, y, aspecto, dir);
+    this.capa?.add(this.jugador);
+    this.cameras.main.startFollow(this.jugador, true);
+    this.ordenarProfundidad();
   }
 
   private intentarMover(dir: Dir): void {
@@ -203,7 +256,21 @@ export class Mundo extends Phaser.Scene {
     const [dx, dy] = DELTA[dir];
     const nx = pos.x + dx;
     const ny = pos.y + dy;
-    if (esSolida(this.zona, nx, ny, CASILLAS) || this.ocupadaPorAlguien(nx, ny)) {
+    // En el agua profunda solo se entra con Surf; desde el agua se sale a cualquier casilla libre.
+    const cerrada = this.zona.salidas.find((s) => s.x === nx && s.y === ny && s.requiere && !cumpleRequisito(s.requiere, this.p.objetos, this.p.banderas));
+    if (cerrada?.requiere) {
+      this.jugador.parar();
+      const texto = cerrada.requiere.texto;
+      void this.conBloqueo(async () => {
+        await this.ui.decir(texto);
+        this.ui.cerrarDialogo();
+      });
+      return;
+    }
+    const agua = esNavegable(this.zona, nx, ny, CASILLAS);
+    const libre = agua ? this.navegando() || this.entrarAlAgua : !esSolida(this.zona, nx, ny, CASILLAS);
+    this.entrarAlAgua = false;
+    if (!libre || this.ocupadaPorAlguien(nx, ny)) {
       this.jugador.parar();
       return;
     }
@@ -219,6 +286,7 @@ export class Mundo extends Phaser.Scene {
       duration: MS_PASO,
       onComplete: () => {
         this.moviendo = false;
+        this.actualizarAspecto();
         void this.alLlegar().then(() => {
           if (this.aPendiente) {
             this.aPendiente = false;
@@ -242,8 +310,9 @@ export class Mundo extends Phaser.Scene {
       this.ui.cerrarDialogo();
     });
     if (await this.comprobarEntrenadores()) return;
-    if (this.zona.encuentros && !p.banderas['dev:sin_encuentros'] && esHierba(this.zona, p.posicion.x, p.posicion.y, CASILLAS) && equipoEnPie(p)) {
-      const salvaje = tirarEncuentro(p, this.zona.encuentros, DATOS);
+    const tabla = this.navegando() ? this.zona.encuentrosAgua : esHierba(this.zona, p.posicion.x, p.posicion.y, CASILLAS) ? this.zona.encuentros : undefined;
+    if (tabla && !p.banderas['dev:sin_encuentros'] && equipoEnPie(p)) {
+      const salvaje = tirarEncuentro(p, tabla, DATOS);
       if (salvaje && !repelida(p, salvaje)) await this.conBloqueo(() => this.combateSalvaje(salvaje));
     }
   }
@@ -301,7 +370,29 @@ export class Mundo extends Phaser.Scene {
       return;
     }
     const oculto = (this.zona.ocultos ?? []).find((o) => o.x === tx && o.y === ty && !this.p.banderas[`oculto:${this.zona.id}:${o.id}`]);
-    if (oculto) void this.conBloqueo(() => this.encontrarOculto(oculto));
+    if (oculto) {
+      void this.conBloqueo(() => this.encontrarOculto(oculto));
+      return;
+    }
+    if (!this.navegando() && esNavegable(this.zona, tx, ty, CASILLAS)) void this.ofrecerSurf(pos.dir);
+  }
+
+  /** Delante hay agua profunda: si alguien del equipo sabe Surf, se ofrece a llevarte. */
+  private async ofrecerSurf(dir: Dir): Promise<void> {
+    const quien = quienSabe(this.p, 'surf');
+    const acepta = await this.conBloqueo(async () => {
+      if (!quien) {
+        await this.ui.decir('El agua es profunda. Una criatura que sepa Surf podría llevarte.');
+        this.ui.cerrarDialogo();
+        return false;
+      }
+      const eleccion = await this.ui.elegir(`El agua es profunda. ¿Quieres que ${nombreDe(quien, DATOS)} te lleve?`, ['Sí', 'No']);
+      this.ui.cerrarDialogo();
+      return eleccion === 0;
+    });
+    if (!acepta) return;
+    this.entrarAlAgua = true;
+    this.intentarMover(dir);
   }
 
   /** Tocar un recipiente con el dedo o el ratón: si está al lado, te giras hacia él y lo registras. */
@@ -415,6 +506,8 @@ export class Mundo extends Phaser.Scene {
   private async encontrarOculto(o: NonNullable<Zona['ocultos']>[number]): Promise<void> {
     const p = this.p;
     p.banderas[`oculto:${this.zona.id}:${o.id}`] = true;
+    this.zurrones.get(o.id)?.destroy();
+    this.zurrones.delete(o.id);
     darObjeto(p, o.objeto, o.cantidad ?? 1);
     await this.ui.decir(`¡Has encontrado ${conArticulo(DATOS.objetos[o.objeto].nombre)}!`);
     this.ui.cerrarDialogo();
@@ -425,9 +518,15 @@ export class Mundo extends Phaser.Scene {
     if (!this.listo || this.moviendo || this.ocupado) return;
     void this.conBloqueo(async () => {
       const ovilloPermitido = Boolean(this.zona.encuentros) && !this.zona.interior;
-      const accion = await this.ui.menu(this.p, { ovilloPermitido });
+      const accion = await this.ui.menu(this.p, { ovilloPermitido, exterior: !this.zona.interior });
       if (accion === 'ovillo') await this.usarOvillo();
-      else if (accion) await this.cambiarZona({ x: 0, y: 0, zona: accion.viajar.zona, ax: accion.viajar.x, ay: accion.viajar.y, dir: accion.viajar.dir });
+      else if (accion) {
+        if (accion.texto) {
+          await this.ui.decir(accion.texto);
+          this.ui.cerrarDialogo();
+        }
+        await this.cambiarZona({ x: 0, y: 0, zona: accion.viajar.zona, ax: accion.viajar.x, ay: accion.viajar.y, dir: accion.viajar.dir });
+      }
     });
   }
 
@@ -446,7 +545,8 @@ export class Mundo extends Phaser.Scene {
 
   private async hablarCon(pe: PersonaEnMapa): Promise<void> {
     pe.figura.setDir(OPUESTA[this.p.posicion.dir]);
-    if (pe.pnj.entrenador) await this.retoEntrenador(pe.pnj.entrenador);
+    if (pe.pnj.criatura) await this.encuentroFijo(pe);
+    else if (pe.pnj.entrenador) await this.retoEntrenador(pe.pnj.entrenador);
     else await this.ejecutarGuion(pe.pnj.guion);
     pe.figura.setDir(pe.pnj.dir);
   }
@@ -616,6 +716,32 @@ export class Mundo extends Phaser.Scene {
     }
     this.regalos = {};
     return true;
+  }
+
+  /** Un legendario que esperaba de pie: su guion, el combate y, si lo vences o capturas, se va. */
+  private async encuentroFijo(pe: PersonaEnMapa): Promise<void> {
+    const p = this.p;
+    const def = pe.pnj.criatura!;
+    await this.ejecutarGuion(pe.pnj.guion);
+    this.ui.cerrarDialogo();
+    if (!equipoEnPie(p)) return;
+    const resultado = await this.combatir([crearCriatura(DATOS, def.especie, def.nivel, p.rng)], true, undefined, {
+      // Se apunta antes de guardar: recargar no lo hace volver.
+      alGanar: () => {
+        p.banderas[`fijo:${this.zona.id}:${pe.pnj.id}`] = true;
+      },
+    });
+    if (resultado === 'derrota') {
+      await this.trasDerrota();
+      return;
+    }
+    if (p.banderas[`fijo:${this.zona.id}:${pe.pnj.id}`]) {
+      pe.figura.destroy();
+      this.personas = this.personas.filter((x) => x !== pe);
+    } else if (resultado === 'huida') {
+      await this.ui.decir(`${DATOS.especies[def.especie].nombre} sigue ahí, esperando.`);
+      this.ui.cerrarDialogo();
+    }
   }
 
   private async combateSalvaje(salvaje: Criatura): Promise<void> {

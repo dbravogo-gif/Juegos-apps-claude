@@ -1311,6 +1311,38 @@ def puente() -> Lienzo:
     return l
 
 
+def zurron() -> Lienzo:
+    """Zurrón de cuero con hebilla: los objetos que se ven en el suelo (MT y otros)."""
+    l = Lienzo()
+    l.dibujo(0, 0, [
+        '................',
+        '................',
+        '................',
+        '......aaaa......',
+        '.....a....a.....',
+        '....bbbbbbbb....',
+        '...bcccccccdb...',
+        '...bccccccccb...',
+        '...bddddoddddb..',
+        '...beeeeoeeeb...',
+        '...beeeeeeeeb...',
+        '...beeeeeeefb...',
+        '...bfeeeeeefb...',
+        '....bffffffb....',
+        '.....bbbbbb.....',
+        '................',
+    ], {
+        'a': rgb(92, 56, 30),
+        'b': rgb(58, 34, 20),
+        'c': rgb(206, 148, 84),
+        'd': rgb(150, 96, 52),
+        'e': rgb(176, 116, 62),
+        'f': rgb(128, 80, 42),
+        'o': rgb(250, 208, 72),
+    })
+    return l
+
+
 def sombra() -> Lienzo:
     l = Lienzo(16, 8)
     for y in range(8):
@@ -1440,6 +1472,7 @@ def construir() -> Hoja:
     h.pon('cartel', cartel())
     h.pon('puente', puente())
     h.pon('sombra', sombra())
+    h.pon('zurron', zurron())
     return h
 
 

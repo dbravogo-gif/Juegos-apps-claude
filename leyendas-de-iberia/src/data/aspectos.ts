@@ -5,6 +5,7 @@
  */
 export const ASPECTOS = [
   'muchacho',
+  'muchacho_agua',
   'dama',
   'noble',
   'caballero',
@@ -38,3 +39,5 @@ export const ASPECTOS = [
 export type Aspecto = (typeof ASPECTOS)[number];
 
 export const ASPECTO_JUGADOR: Aspecto = 'muchacho';
+/** El jugador surcando el agua con Surf, sobre una criatura (`hoja_navegando` en personajes.py). */
+export const ASPECTO_NAVEGANDO: Aspecto = 'muchacho_agua';

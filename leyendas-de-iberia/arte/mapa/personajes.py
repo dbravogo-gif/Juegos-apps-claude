@@ -21,7 +21,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from PIL import Image
+from PIL import Image, ImageDraw
 
 RAIZ = Path(__file__).resolve().parents[2]
 SALIDA = RAIZ / 'src' / 'assets' / 'personajes'
@@ -536,6 +536,71 @@ def hoja(p: dict) -> Image.Image:
     return im
 
 
+# ---------------------------------------------------------------- surcando el agua (Surf)
+
+# Una criatura de agua genérica, como en los juegos del género: lomo azul, ojos y espuma. Sea
+# cual sea la criatura que sabe Surf, en el mapa se ve esta.
+LOMO = (46, 150, 132)
+LOMO_CLARO = (132, 220, 192)
+LOMO_OSCURO = (18, 62, 64)
+OJO = (20, 24, 40)
+ESPUMA = (240, 250, 255)
+
+
+def montura(d: str, oy: int, paso: int) -> Image.Image:
+    im = Image.new('RGBA', (W, H), (0, 0, 0, 0))
+    dibujo = ImageDraw.Draw(im)
+    if d in ('abajo', 'arriba'):
+        dibujo.ellipse((2, oy, 13, oy + 7), fill=LOMO, outline=LOMO_OSCURO)
+        dibujo.line((4, oy + 2, 8, oy + 2), fill=LOMO_CLARO)
+        if d == 'abajo':
+            # La cabeza asoma por delante, con sus dos ojos.
+            dibujo.ellipse((4, oy + 4, 11, oy + 9), fill=LOMO, outline=LOMO_OSCURO)
+            dibujo.point([(6, oy + 6), (9, oy + 6)], fill=OJO)
+        else:
+            # Por detrás se ve la aleta de la cola.
+            dibujo.polygon([(6, oy + 7), (9, oy + 7), (11, oy + 9), (4, oy + 9)], fill=LOMO_OSCURO)
+    else:
+        dibujo.ellipse((2, oy + 1, 14, oy + 7), fill=LOMO, outline=LOMO_OSCURO)
+        dibujo.line((5, oy + 2, 10, oy + 2), fill=LOMO_CLARO)
+        # Mira a la izquierda: la cabeza delante y la cola detrás.
+        dibujo.ellipse((0, oy + 2, 5, oy + 7), fill=LOMO, outline=LOMO_OSCURO)
+        dibujo.point([(1, oy + 4)], fill=OJO)
+        dibujo.polygon([(13, oy + 3), (15, oy + 1), (15, oy + 6)], fill=LOMO_OSCURO)
+    # Espuma en la línea del agua; cambia con el paso para que parezca que avanza.
+    for x in range(1, W - 1, 3):
+        y = oy + 8 + ((x // 3 + paso) % 2)
+        if 0 <= y < H:
+            dibujo.point((x, y), fill=ESPUMA)
+    return im
+
+
+def hoja_navegando(p: dict) -> Image.Image:
+    """La hoja del jugador sobre la criatura: medio cuerpo encima, meciéndose."""
+    im = Image.new('RGBA', (W * 4, H * 4), (0, 0, 0, 0))
+    for col, direccion in enumerate(DIRS):
+        espejo = direccion == 'derecha'
+        d = 'izquierda' if espejo else direccion
+        for fila, paso in enumerate([0, 1, 0, 2]):
+            alza = -1 if paso == 1 else 0
+            oy = 14 + alza
+            marco = montura(d, oy, paso)
+            jinete = fotograma(p, direccion, 0).crop((0, 0, W, 15))
+            capa = Image.new('RGBA', (W, H), (0, 0, 0, 0))
+            capa.paste(jinete, (0, oy - 12 + alza))
+            if d == 'arriba':
+                # De espaldas, el jinete tapa el lomo.
+                marco.alpha_composite(capa)
+                cuadro = marco
+            else:
+                cuadro = capa
+                cuadro.alpha_composite(montura(d, oy, paso).crop((0, oy + 3, W, H)), (0, oy + 3))
+            if espejo:
+                cuadro = cuadro.transpose(Image.FLIP_LEFT_RIGHT)
+            im.paste(cuadro, (col * W, fila * H))
+    return im
+
+
 def main() -> None:
     SALIDA.mkdir(parents=True, exist_ok=True)
     hojas = {}
@@ -543,6 +608,9 @@ def main() -> None:
         h = hoja(p)
         h.save(SALIDA / f'{nombre}.png', optimize=True)
         hojas[nombre] = h
+    agua = hoja_navegando(PERSONAJES['muchacho'])
+    agua.save(SALIDA / 'muchacho_agua.png', optimize=True)
+    hojas['muchacho_agua'] = agua
     if '--muestra' in sys.argv:
         destino = Path(sys.argv[sys.argv.index('--muestra') + 1])
         destino.mkdir(parents=True, exist_ok=True)

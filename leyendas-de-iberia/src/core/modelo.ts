@@ -125,6 +125,7 @@ export type CategoriaObjeto =
   | 'combate'
   | 'equipo'
   | 'bayas'
+  | 'maquinas'
   | 'clave';
 
 interface ObjetoBase {
@@ -151,6 +152,11 @@ export type Objeto = ObjetoBase &
     | { tipo: 'potenciador'; estadistica: EstadisticaCombate; cambio: number }
     /** Se lleva equipado. Los consumibles (bayas, amuleto) se gastan al actuar. */
     | { tipo: 'equipo'; efecto: EfectoEquipo; consumible?: boolean }
+    /**
+     * MT o MO: enseña un movimiento y no se gasta. Las MO (`oculta`) enseñan los movimientos que
+     * también se usan fuera de combate (Surf y Vuelo).
+     */
+    | { tipo: 'maquina'; movimiento: string; oculta?: boolean; aprenden: { todos?: boolean; tipos?: string[]; especies?: string[] } }
     /** Objeto de la historia. */
     | { tipo: 'clave' }
   );

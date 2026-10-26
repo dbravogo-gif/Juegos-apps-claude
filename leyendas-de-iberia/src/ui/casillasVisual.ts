@@ -42,7 +42,7 @@ const CAMINO = new Set(['.', 'S', 'G', '=', 'P']);
 /** Con quién se junta el camino sin dejar borde: también la fuente de una plaza. */
 const JUNTO_CAMINO = new Set([...CAMINO, 'A']);
 const JUNTO_EMPEDRADO = new Set(['S', 'G', 'P', 'A']);
-const ACEQUIA = new Set(['~', '=']);
+const ACEQUIA = new Set(['~', '=', 'O']);
 const MURALLA = new Set(['M', 'G', 'P']);
 const PAREDES = new Set(['W', 'Z', 'L']);
 
@@ -138,6 +138,7 @@ function capasDe(zona: Zona, x: number, y: number, f: number): Capa[] {
       capas.push(pieza(`flores.${r % 3}`));
       break;
     case '~':
+    case 'O':
       capas.push({ material: `acequia.${f}`, familia: ACEQUIA, fuera: true });
       break;
     case '=':
@@ -236,7 +237,7 @@ function pintarCasilla(ctx: CanvasRenderingContext2D, img: CanvasImageSource, zo
   }
 }
 
-const ANIMADAS = new Set(['~', '=', 'A']);
+const ANIMADAS = new Set(['~', '=', 'O', 'A']);
 
 // ---------- Objetos altos ----------
 

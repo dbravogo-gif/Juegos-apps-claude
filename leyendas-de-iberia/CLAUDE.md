@@ -90,6 +90,16 @@ tocan desde aquí.
     o una tinaja). Los toros son siempre machos. Sale en la ficha y en el combate.
   - Zona de captura: mapa pixelado de la península en la ficha (pestaña Zona) y en el Bestiario,
     con los lugares donde sale la especie resaltados, y sus niveles y frecuencia.
+- **Mapa, MT, MO y legendarios (2026-10-26), hecho a petición del autor:**
+  - Colón da el Mapa (opción Mapa en el menú); a quien ya pasó por él le llega al cargar
+    (`REGALOS_ATRASADOS` en `data/mundo.ts`, que sirve para cualquier regalo añadido tarde).
+  - MT y MO en el bolsillo «MT y MO»: no se gastan. Cinco MT (dos de líderes, tres en zurrones
+    en el suelo: `ocultos` con `visible`). MO Surf y Vuelo, con sus usos fuera de combate:
+    Surf cruza el agua profunda (`O`, con `encuentrosAgua`) y Vuelo viaja desde el mapa a los
+    lugares visitados del capítulo (`llegada` en `lugares.ts`).
+  - Quién da las MO y el plan de los legendarios: propuesta en el GDD §8, pendiente del autor.
+  - Base de los legendarios: personajes con `criatura` (esperan de pie y empiezan el combate) y
+    salidas con `requiere` (zonas cerradas hasta tener un objeto o una bandera).
 - **Siguiente:** capítulo 3 (1571). Alhambrón queda para una zona de ruinas, a petición del
   autor. La vista de espalda de Imperión parece de frente: se puede rehacer.
 - **Mapas (2026-10-25), hecho:** con aspecto de los juegos de criaturas de GBA, a petición
@@ -205,6 +215,8 @@ El código va en español: nombres, comentarios y textos.
   - `blason_alhambra`.
   - Capítulo 2: `capitulo2`, `carta_padilla`, `blason_toledo`.
   - Modo desarrollador: `dev:sin_encuentros`.
+  - Regalos dados (para no repetirlos): `regalo:mapa`, `regalo:mt_boabdil`, `regalo:mt_maria`.
+  - `fijo:<zona>:<id>`: legendario que esperaba de pie, ya vencido o capturado.
 - **Cada zona nueva** necesita `enMapa` (su lugar de `lugares.ts`, o el camino entre dos) para
   salir en el mapa de la zona de captura; las pruebas lo exigen.
 

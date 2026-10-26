@@ -24,11 +24,33 @@ export function escalaMapa(ancho: number, alto: number): number {
   return Math.max(1, Math.floor(Math.min(ancho / MAPA_ANCHO, alto / MAPA_ALTO)));
 }
 
+export interface OpcionesMapa {
+  /** Zonas donde sale una especie (zona de captura): sus lugares y caminos, en rojo y latiendo. */
+  resaltadas?: readonly string[];
+  /** Si se da, solo se dibujan los lugares y caminos de estas zonas (las visitadas). */
+  conocidas?: readonly string[];
+  /** La zona donde estás: su lugar lleva una marca que sube y baja. */
+  aqui?: string;
+  /** Lugar elegido para volar: con su nombre y un anillo dorado. */
+  elegido?: string;
+  /** Se pueden tocar estos lugares. */
+  tocables?: readonly string[];
+  alTocar?: (lugar: string) => void;
+}
+
+/** El lugar de una zona, si no es un camino. */
+export function lugarDe(zona: string): string | undefined {
+  const m = ZONAS[zona]?.enMapa;
+  return m && 'lugar' in m ? m.lugar : undefined;
+}
+
 /**
- * El mapa con todos los lugares y caminos conocidos; los de las zonas de `resaltadas` van en rojo
- * y laten, con su nombre. La esquina de arriba a la izquierda queda en (x, y).
+ * El mapa con los lugares y caminos de las zonas. La esquina de arriba a la izquierda queda en
+ * (x, y). Sirve para la zona de captura (`resaltadas`) y para el mapa del menú (`conocidas`,
+ * `aqui` y lo que se puede tocar para volar).
  */
-export function mapaZonas(scene: Phaser.Scene, x: number, y: number, escala: number, resaltadas: readonly string[]): Phaser.GameObjects.Container {
+export function mapaZonas(scene: Phaser.Scene, x: number, y: number, escala: number, op: OpcionesMapa = {}): Phaser.GameObjects.Container {
+  const resaltadas = op.resaltadas ?? [];
   const c = scene.add.container(x, y);
   const marco = scene.add.graphics();
   marco.fillStyle(COLOR.tinta, 1).fillRoundedRect(-8, -8, MAPA_ANCHO * escala + 16, MAPA_ALTO * escala + 16, 14);
@@ -41,7 +63,7 @@ export function mapaZonas(scene: Phaser.Scene, x: number, y: number, escala: num
   const rutasMarcadas = new Set<string>();
   for (const z of Object.values(ZONAS)) {
     const m = z.enMapa;
-    if (!m) continue;
+    if (!m || (op.conocidas && !op.conocidas.includes(z.id))) continue;
     const marcada = resaltadas.includes(z.id);
     if ('lugar' in m) {
       lugares.add(m.lugar);
@@ -82,29 +104,48 @@ export function mapaZonas(scene: Phaser.Scene, x: number, y: number, escala: num
     latir(anillo);
   }
 
+  const etiqueta = (id: string, p: { x: number; y: number }, lado: number, color: number) => {
+    const derecha = p.x < (MAPA_ANCHO * escala) / 2;
+    c.add(
+      scene.add
+        .text(p.x + (derecha ? 1 : -1) * (lado + 6), p.y, LUGARES[id].nombre, { ...estiloTexto(Math.max(20, escala * 6), color, true), stroke: css(COLOR.tinta), strokeThickness: 6 })
+        .setOrigin(derecha ? 0 : 1, 0.5),
+    );
+  };
+
   // Lugares: cuadraditos blancos; los marcados, rojos, con su nombre y un anillo que late.
   const lado = escala * 4;
+  const aqui = op.aqui ? lugarDe(op.aqui) : undefined;
   for (const id of lugares) {
     const p = punto(id);
     const marcado = lugaresMarcados.has(id);
-    if (marcado) {
-      const anillo = scene.add.circle(p.x, p.y, lado).setStrokeStyle(escala, COLOR.rojo);
+    const elegido = op.elegido === id;
+    if (marcado || elegido) {
+      const anillo = scene.add.circle(p.x, p.y, lado).setStrokeStyle(escala, elegido ? COLOR.oro : COLOR.rojo);
       c.add(anillo);
       latir(anillo);
     }
     const g = scene.add.graphics();
     g.fillStyle(0x26324f, 1).fillRect(p.x - lado / 2 - escala, p.y - lado / 2 - escala, lado + 2 * escala, lado + 2 * escala);
-    g.fillStyle(marcado ? COLOR.rojo : 0xffffff, 1).fillRect(p.x - lado / 2, p.y - lado / 2, lado, lado);
+    g.fillStyle(marcado ? COLOR.rojo : elegido ? COLOR.oro : 0xffffff, 1).fillRect(p.x - lado / 2, p.y - lado / 2, lado, lado);
     if (marcado) g.fillStyle(oscurecer(COLOR.rojo, 0.3), 1).fillRect(p.x - lado / 2, p.y + lado / 2 - escala, lado, escala);
     c.add(g);
-    if (marcado) {
-      const derecha = p.x < (MAPA_ANCHO * escala) / 2;
-      c.add(
-        scene.add
-          .text(p.x + (derecha ? 1 : -1) * (lado + 6), p.y, LUGARES[id].nombre, { ...estiloTexto(Math.max(20, escala * 6), COLOR.panel, true), stroke: css(COLOR.tinta), strokeThickness: 6 })
-          .setOrigin(derecha ? 0 : 1, 0.5),
-      );
+    if (marcado || elegido || id === aqui) etiqueta(id, p, lado, elegido ? COLOR.oro : COLOR.panel);
+    if (op.alTocar && op.tocables?.includes(id)) {
+      const zona = scene.add.circle(p.x, p.y, Math.max(40, lado * 2), 0xffffff, 0.001).setInteractive({ useHandCursor: true });
+      zona.on('pointerup', () => op.alTocar!(id));
+      c.add(zona);
     }
+  }
+
+  // Estás aquí: un rombo azul que sube y baja encima de tu lugar.
+  if (aqui && lugares.has(aqui)) {
+    const p = punto(aqui);
+    const rombo = scene.add.graphics({ x: p.x, y: p.y - lado * 2 });
+    rombo.fillStyle(COLOR.tinta, 1).fillTriangle(-escala * 4, -escala * 3, escala * 4, -escala * 3, 0, escala * 3);
+    rombo.fillStyle(COLOR.celeste, 1).fillTriangle(-escala * 3, -escala * 2.4, escala * 3, -escala * 2.4, 0, escala * 1.6);
+    c.add(rombo);
+    scene.tweens.add({ targets: rombo, y: rombo.y - escala * 2, duration: 500, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
   }
   return c;
 }

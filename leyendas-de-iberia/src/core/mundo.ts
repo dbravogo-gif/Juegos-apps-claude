@@ -18,6 +18,8 @@ export interface DefCasilla {
   solido: boolean;
   /** Hierba alta: puede saltar un encuentro. */
   hierba?: boolean;
+  /** Agua profunda: sólida a pie, pero se cruza con Surf. */
+  navegable?: boolean;
 }
 
 export type Paso =
@@ -75,6 +77,12 @@ export interface Pnj {
   visibleSi?: string;
   /** Desaparece cuando la bandera está puesta. */
   ocultoSi?: string;
+  /**
+   * Es una criatura que espera de pie (un legendario en su guarida): al hablarle, tras su guion,
+   * empieza el combate. Si la vences o la capturas, desaparece (bandera `fijo:<zona>:<id>`); si
+   * huyes, sigue ahí. Con esto, `aspecto` no se usa.
+   */
+  criatura?: { especie: string; nivel: number };
 }
 
 export interface Salida {
@@ -84,6 +92,16 @@ export interface Salida {
   ax: number;
   ay: number;
   dir: Dir;
+  /**
+   * Para entrar hace falta un objeto o una bandera (las guaridas de legendarios que se abren más
+   * adelante). Si no se cumple, no se pasa y sale `texto`.
+   */
+  requiere?: { objeto?: string; bandera?: string; texto: string };
+}
+
+/** Si la partida cumple lo que pide una salida (objetos y banderas, como `p.objetos` y `p.banderas`). */
+export function cumpleRequisito(req: NonNullable<Salida['requiere']>, objetos: Record<string, number>, banderas: Record<string, boolean>): boolean {
+  return (!req.objeto || (objetos[req.objeto] ?? 0) > 0) && (!req.bandera || Boolean(banderas[req.bandera]));
 }
 
 export interface TablaEncuentros {
@@ -118,11 +136,17 @@ export interface Zona {
   /** Color del suelo fuera del mapa y de fondo. */
   fondo?: number;
   encuentros?: TablaEncuentros;
+  /** Encuentros al surcar el agua profunda con Surf (cada paso por el agua). */
+  encuentrosAgua?: TablaEncuentros;
   pnj: Pnj[];
   salidas: Salida[];
   carteles: { x: number; y: number; texto: string[] }[];
-  /** Objetos escondidos: se encuentran mirando la casilla y pulsando A (bandera `oculto:<zona>:<id>`). */
-  ocultos?: { id: string; x: number; y: number; objeto: string; cantidad?: number }[];
+  /**
+   * Objetos en el suelo: se recogen mirando la casilla y pulsando A (bandera `oculto:<zona>:<id>`).
+   * Sin `visible` están escondidos; con `visible` se ve un zurrón que estorba el paso hasta que
+   * se recoge (las MT, por ejemplo).
+   */
+  ocultos?: { id: string; x: number; y: number; objeto: string; cantidad?: number; visible?: boolean }[];
   /**
    * Tinajas que se pueden registrar una vez (`src/data/recipientes.ts`). Bloquean el paso. Solo
    * en ciudades e interiores. Con `objeto`, siempre dan ese objeto en vez de echarlo a suertes.
@@ -144,23 +168,28 @@ export interface ZonaDeEspecie {
   max: number;
   /** Porcentaje de los encuentros de la zona que son de esta especie. */
   porcentaje: number;
+  /** Sale al surcar el agua, no en la hierba. */
+  agua?: boolean;
 }
 
 /** Las zonas donde se encuentra una especie en libertad, en el orden de `zonas`. */
 export function dondeSale(zonas: Record<string, Zona>, especie: string): ZonaDeEspecie[] {
   const lista: ZonaDeEspecie[] = [];
   for (const z of Object.values(zonas)) {
-    const tabla = z.encuentros;
-    if (!tabla) continue;
-    const total = tabla.especies.reduce((s, e) => s + e.peso, 0);
-    const propias = tabla.especies.filter((e) => e.especie === especie);
-    if (propias.length === 0 || total <= 0) continue;
-    lista.push({
-      zona: z.id,
-      min: Math.min(...propias.map((e) => e.min)),
-      max: Math.max(...propias.map((e) => e.max)),
-      porcentaje: Math.max(1, Math.round((propias.reduce((s, e) => s + e.peso, 0) / total) * 100)),
-    });
+    for (const [tabla, agua] of [[z.encuentros, false], [z.encuentrosAgua, true]] as const) {
+      if (!tabla) continue;
+      const total = tabla.especies.reduce((s, e) => s + e.peso, 0);
+      const propias = tabla.especies.filter((e) => e.especie === especie);
+      if (propias.length === 0 || total <= 0) continue;
+      const d: ZonaDeEspecie = {
+        zona: z.id,
+        min: Math.min(...propias.map((e) => e.min)),
+        max: Math.max(...propias.map((e) => e.max)),
+        porcentaje: Math.max(1, Math.round((propias.reduce((s, e) => s + e.peso, 0) / total) * 100)),
+      };
+      if (agua) d.agua = true;
+      lista.push(d);
+    }
   }
   return lista;
 }
@@ -185,6 +214,10 @@ export function esSolida(z: Zona, x: number, y: number, casillas: Record<string,
 
 export function esHierba(z: Zona, x: number, y: number, casillas: Record<string, DefCasilla>): boolean {
   return Boolean(casillas[casillaEn(z, x, y)]?.hierba);
+}
+
+export function esNavegable(z: Zona, x: number, y: number, casillas: Record<string, DefCasilla>): boolean {
+  return Boolean(casillas[casillaEn(z, x, y)]?.navegable);
 }
 
 /** ¿Está el jugador en línea recta delante del entrenador, sin nada sólido en medio? */
