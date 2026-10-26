@@ -204,6 +204,19 @@ const CAMINO_TOLEDO: Zona = {
   },
   pnj: [
     {
+      id: 'rival_a',
+      nombre: '{rivalA}',
+      x: 11,
+      y: 21,
+      dir: 'izquierda',
+      aspecto: 'rival_a',
+      entrenador: 'rival_a_camino',
+      vision: 2,
+      visibleSi: 'inicial',
+      ocultoSi: 'vencido:rival_a_camino',
+      guion: [],
+    },
+    {
       id: 'pastor_mesta',
       nombre: 'Pastor de la Mesta',
       x: 5,
@@ -275,6 +288,19 @@ const TOLEDO: Zona = {
     ),
   ],
   pnj: [
+    {
+      id: 'rival_b',
+      nombre: '{rivalB}',
+      x: 13,
+      y: 3,
+      dir: 'izquierda',
+      aspecto: 'rival_b',
+      entrenador: 'rival_b_toledo',
+      vision: 2,
+      visibleSi: 'inicial',
+      ocultoSi: 'vencido:rival_b_toledo',
+      guion: [],
+    },
     {
       id: 'guardia_alcazar',
       nombre: 'Guardia comunero',
