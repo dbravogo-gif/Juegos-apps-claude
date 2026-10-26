@@ -4,7 +4,7 @@ import { crearRng } from '../core/rng';
 import { crearCriatura, nombreDe } from '../core/criatura';
 import { calcularEstadisticas } from '../core/estadisticas';
 import { aprenderMovimiento, evolucionar, evolucionPendiente, expParaNivel } from '../core/progreso';
-import type { Criatura, Movimiento } from '../core/modelo';
+import type { Criatura, EstadoAlterado, Movimiento } from '../core/modelo';
 import { eficacia } from '../core/tipos';
 import { construirTablaTipos } from '../ui/tablaTipos';
 
@@ -26,7 +26,7 @@ import { Barra, Boton, botonFlecha, filaTipos, simboloSexo, type OpcionesBoton }
 import { cabecera, colorPedestal, fondoMenu, pildora, ventana } from '../ui/ventanas';
 import { iconoObjeto } from '../ui/objetoVisual';
 import { crearCriaturaVisual } from '../ui/criaturaVisual';
-import { describirMovimiento, textosEvento, type ContextoTextos } from '../ui/textos';
+import { describirMovimiento, ESTADO_VISTA, textosEvento, type ContextoTextos } from '../ui/textos';
 import { aclarar, ALTO, ANCHO, COLOR, estiloTexto, MARGEN_VERTICAL, oscurecer } from '../ui/tema';
 import type { ConfigLaboratorio } from './Laboratorio';
 
@@ -126,10 +126,10 @@ class Ficha {
     this.nivel.setText(`Nv ${nivel}`);
   }
 
-  setEstado(estado: string | null): void {
-    const texto = estado === 'quemado' ? 'Quemada' : estado === 'dormido' ? 'Dormida' : '';
-    this.estado.setText(texto).setVisible(texto !== '');
-    this.estado.setBackgroundColor(estado === 'dormido' ? '#6f7fd8' : '#ff7a2f');
+  setEstado(estado: EstadoAlterado | null): void {
+    const vista = estado ? ESTADO_VISTA[estado] : null;
+    this.estado.setText(vista?.etiqueta ?? '').setVisible(vista !== null);
+    if (vista) this.estado.setBackgroundColor(`#${vista.color.toString(16).padStart(6, '0')}`);
   }
 
   /** Vida que se ve ahora en los números, para contarla hacia abajo o hacia arriba. */
@@ -594,7 +594,7 @@ export class Combate extends Phaser.Scene {
       const max = calcularEstadisticas(c, DATOS).vida;
       const x = i % 2 === 0 ? 280 : 800;
       const y = 1340 + Math.floor(i / 2) * 156;
-      const estado = c.vida <= 0 ? ' · debilitada' : c.estado ? ` · ${c.estado.tipo === 'quemado' ? 'quemada' : 'dormida'}` : '';
+      const estado = c.vida <= 0 ? ' · debilitada' : c.estado ? ` · ${ESTADO_VISTA[c.estado.tipo].etiqueta.toLowerCase()}` : '';
       const valido = obj ? motivoNoUsable(obj, c, DATOS) === null : c.vida > 0 && i !== this.estado.jugador.activo;
       const b = new Boton(this, x, y, {
         ancho: 500,

@@ -232,6 +232,14 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
 - **Almacén de criaturas, desde el minuto 1.** Las que no caben en el equipo de 6 viven en las
   páginas del Bestiario y se cambian en cualquier mesón. Es el equivalente a las cajas del PC de
   Pokémon.
+- **Estados alterados.** Quemadura, sueño, parálisis, veneno y veneno grave (intoxicación),
+  como en el género; no hay congelación, por decisión del autor. Además, estados que se
+  pierden al retirarse: confusión, retroceso y Muérdago (las drenadoras). Rodela es la
+  protección del género. El fuego no se quema, el Eléctrico no se paraliza y el Acero no se
+  envenena.
+- **Pasivas.** Cada especie tiene una, y varias especies comparten la misma: 50 en total
+  (`src/data/pasivas.ts`), con los efectos de las habilidades del género y nombres propios.
+  Las que aún no lleva nadie quedan para los capítulos siguientes.
 - **Aleatoriedad.** Como en Pokémon: tirada de daño, golpes críticos, precisión y captura. Todo
   sale del generador con semilla, así que una partida se puede reproducir y el reto diario
   sigue siendo justo.
@@ -595,3 +603,13 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
   - Se puede volar a cualquier lugar visitado, de cualquier época.
   - Surf se llama **Pleamar**, solo lo aprenden las criaturas acuáticas y lo da Olivares en el
     capítulo 4, en el estanque del Buen Retiro. Así no coincide con Vuelo, que queda en el 5.
+- **2026-10-26 (15).** Pedidos del autor tras comparar con Cristal, Esmeralda y Negro 2.
+  - El mando llega hasta el borde de abajo, y el mapa gana alto.
+  - Correr con B: el rey Fernando da unas alpargatas al empezar (a las partidas empezadas les
+    llegan al cargar).
+  - Mochila por bolsillos: objetos, botiquín, téseras, combate, bayas, MT y MO, importantes.
+  - Algunos vecinos pasean por su zona.
+  - Combate: parálisis, veneno e intoxicación (sin congelación), confusión, retroceso,
+    Muérdago y Rodela, con sus movimientos; 50 pasivas, una por especie; la captura es más
+    fácil con cualquier estado. Antídoto y Antiparalizador en las tiendas, y la MT06 Rodela en
+    un zurrón de Villalar.

@@ -17,11 +17,20 @@ export const NOMBRE_ESTADISTICA: Record<Estadistica, string> = {
 };
 
 export type Categoria = 'fisico' | 'magico' | 'estado';
-export type EstadoAlterado = 'quemado' | 'dormido';
+export type EstadoAlterado = 'quemado' | 'dormido' | 'paralizado' | 'envenenado' | 'intoxicado';
+export const ESTADOS_ALTERADOS: EstadoAlterado[] = ['quemado', 'dormido', 'paralizado', 'envenenado', 'intoxicado'];
 
 export type Efecto =
   /** Provoca un estado alterado al rival. `prob` en tanto por ciento. */
   | { tipo: 'estado'; estado: EstadoAlterado; prob: number }
+  /** Confunde al rival de 2 a 5 turnos. */
+  | { tipo: 'confundir'; prob: number }
+  /** El rival pierde el turno si todavía no ha actuado. */
+  | { tipo: 'retroceso'; prob: number }
+  /** Siembra al rival: pierde 1/8 de su Vida cada turno y se la lleva quien esté en este lado. */
+  | { tipo: 'drenadoras' }
+  /** Se protege de todos los ataques este turno. Usarlo seguido sale cada vez peor. */
+  | { tipo: 'proteger' }
   /** Sube o baja etapas de una estadística, de −6 a +6. */
   | { tipo: 'etapa'; objetivo: 'propio' | 'rival'; estadistica: EstadisticaCombate; cambio: number; prob: number }
   /** Recupera una fracción del daño causado. */
@@ -66,7 +75,62 @@ export interface Especie {
   acuatica?: boolean;
   /** Ave o ser con alas capaz de llevar a una persona: solo estas aprenden Vuelo. */
   alada?: boolean;
+  /** Id de su pasiva (`src/data/pasivas.ts`). */
+  pasiva?: string;
   descripcion: string;
+}
+
+/** Estados volátiles: no son estados alterados, pero hay pasivas que los impiden. */
+export type EstadoVolatil = 'confusion' | 'retroceso';
+
+export type EfectoPasiva =
+  /** Con un tercio de la Vida o menos, sus ataques de ese tipo pegan ×1,5. */
+  | { tipo: 'apuro'; tipoMov: string }
+  /** Los ataques de ese tipo no le hacen nada y además le curan, le avivan o le suben la Fuerza. */
+  | { tipo: 'absorber'; tipoMov: string; ganancia: 'curar' | 'avivar' | 'fuerza' }
+  /** Los ataques de ese tipo no le hacen nada. */
+  | { tipo: 'inmuneTipo'; tipoMov: string }
+  | { tipo: 'inmuneEstado'; estados: (EstadoAlterado | EstadoVolatil)[] }
+  /** Quien le golpea con un ataque físico puede sufrir uno de esos estados. */
+  | { tipo: 'contacto'; estados: EstadoAlterado[]; prob: number }
+  | { tipo: 'resistir'; tipos: string[] }
+  | {
+      tipo:
+        | 'pielAspera'
+        | 'coraje'
+        | 'tecnica'
+        | 'afinidad'
+        | 'celos'
+        | 'punteria'
+        | 'buenaEstrella'
+        | 'ojoAvizor'
+        | 'bendicion'
+        | 'corpulencia'
+        | 'hedor'
+        | 'coraza'
+        | 'escamas'
+        | 'firme'
+        | 'caparazon'
+        | 'intimidar'
+        | 'petreo'
+        | 'garrasDuras'
+        | 'carrerilla'
+        | 'piesLigeros'
+        | 'muda'
+        | 'reposo'
+        | 'brote'
+        | 'espejo'
+        | 'imponente'
+        | 'escurridizo';
+    }
+  /** Al acabar un combate, `prob` % de encontrar uno de esos objetos (por peso). */
+  | { tipo: 'rebuscar'; prob: number; objetos: { objeto: string; peso: number }[] };
+
+export interface Pasiva {
+  id: string;
+  nombre: string;
+  descripcion: string;
+  efecto: EfectoPasiva;
 }
 
 export type Sexo = 'macho' | 'hembra' | 'hermafrodita' | 'ninguno';
@@ -176,9 +240,16 @@ export interface DatosJuego {
   temperamentos: Temperamento[];
   tipos: DefTablaTipos;
   objetos: Record<string, Objeto>;
+  pasivas: Record<string, Pasiva>;
 }
 
-export type EstadoCriatura = { tipo: 'quemado' } | { tipo: 'dormido'; turnos: number };
+export type EstadoCriatura =
+  | { tipo: 'quemado' }
+  | { tipo: 'dormido'; turnos: number }
+  | { tipo: 'paralizado' }
+  | { tipo: 'envenenado' }
+  /** Veneno grave: cada turno hace más daño (`turnos`/16). */
+  | { tipo: 'intoxicado'; turnos: number };
 
 export interface MovimientoAprendido {
   id: string;

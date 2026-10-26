@@ -233,7 +233,7 @@ const MESON: Zona = {
         ...decir('Tendero', 'Téseras, pociones y repelentes. ¿Qué te pongo?'),
         {
           tipo: 'tienda',
-          productos: ['tesera', 'tesera_plata', 'unguento', 'emplasto', 'aloe', 'sales', 'ruda', 'ovillo', 'brebaje_fuerza', 'brebaje_escudo'],
+          productos: ['tesera', 'tesera_plata', 'unguento', 'emplasto', 'aloe', 'sales', 'antiparalizador', 'ruda', 'ovillo', 'brebaje_fuerza', 'brebaje_escudo'],
         },
       ],
     },

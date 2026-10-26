@@ -163,7 +163,10 @@ const MOVIMIENTOS_DEF = {
   polvareda: { nombre: 'Polvareda', tipo: 'tierra', categoria: 'magico', poder: 45, precision: 100, pp: 25 },
   // Capítulo 2 (Toledo y Castilla)
   zarpazo: { nombre: 'Zarpazo', tipo: 'comun', categoria: 'fisico', poder: 50, precision: 100, pp: 30 },
-  pisoton: { nombre: 'Pisotón', tipo: 'comun', categoria: 'fisico', poder: 65, precision: 95, pp: 20 },
+  pisoton: {
+    nombre: 'Pisotón', tipo: 'comun', categoria: 'fisico', poder: 65, precision: 95, pp: 20,
+    efectos: [{ tipo: 'retroceso', prob: 30 }],
+  },
   aullido: {
     nombre: 'Aullido', tipo: 'comun', categoria: 'estado', poder: 0, precision: null, pp: 30,
     efectos: [{ tipo: 'etapa', objetivo: 'propio', estadistica: 'fuerza', cambio: 1, prob: 100 }],
@@ -194,7 +197,10 @@ const MOVIMIENTOS_DEF = {
     efectos: [{ tipo: 'etapa', objetivo: 'propio', estadistica: 'escudo', cambio: 2, prob: 100 }],
     descripcion: 'Se apelmaza como la tierra pisada: sube mucho el Escudo propio.',
   },
-  colmillo_sombrio: { nombre: 'Colmillo sombrío', tipo: 'oscuridad', categoria: 'fisico', poder: 60, precision: 100, pp: 25 },
+  colmillo_sombrio: {
+    nombre: 'Colmillo sombrío', tipo: 'oscuridad', categoria: 'fisico', poder: 60, precision: 100, pp: 25,
+    efectos: [{ tipo: 'retroceso', prob: 30 }],
+  },
   noche_cerrada: {
     nombre: 'Noche cerrada', tipo: 'oscuridad', categoria: 'magico', poder: 80, precision: 100, pp: 15,
     efectos: [{ tipo: 'etapa', objetivo: 'rival', estadistica: 'magia', cambio: -1, prob: 20 }],
@@ -221,6 +227,51 @@ const MOVIMIENTOS_DEF = {
     descripcion: 'Un baile que agota: puede dormir al rival.',
   },
   hoja_toledana: { nombre: 'Hoja toledana', tipo: 'acero', categoria: 'fisico', poder: 75, precision: 100, pp: 15 },
+
+  // Estados alterados, confusión, retroceso, drenadoras y protección.
+  testarazo: {
+    nombre: 'Testarazo', tipo: 'comun', categoria: 'fisico', poder: 70, precision: 100, pp: 15,
+    efectos: [{ tipo: 'retroceso', prob: 30 }],
+    descripcion: 'Un cabezazo que puede hacer retroceder al rival.',
+  },
+  peso_muerto: {
+    nombre: 'Peso muerto', tipo: 'comun', categoria: 'fisico', poder: 85, precision: 100, pp: 15,
+    efectos: [{ tipo: 'estado', estado: 'paralizado', prob: 30 }],
+    descripcion: 'Se deja caer con todo su peso sobre el rival.',
+  },
+  colmillo_venenoso: {
+    nombre: 'Colmillo venenoso', tipo: 'oscuridad', categoria: 'fisico', poder: 50, precision: 100, pp: 15,
+    efectos: [{ tipo: 'estado', estado: 'envenenado', prob: 30 }],
+  },
+  ponzona: {
+    nombre: 'Ponzoña', tipo: 'oscuridad', categoria: 'estado', poder: 0, precision: 90, pp: 10,
+    efectos: [{ tipo: 'estado', estado: 'intoxicado', prob: 100 }],
+    descripcion: 'Un veneno que hace más daño cada turno.',
+  },
+  polvo_urticante: {
+    nombre: 'Polvo urticante', tipo: 'planta', categoria: 'estado', poder: 0, precision: 75, pp: 30,
+    efectos: [{ tipo: 'estado', estado: 'paralizado', prob: 100 }],
+    descripcion: 'Suelta un polvo que entumece.',
+  },
+  desvario: {
+    nombre: 'Desvarío', tipo: 'mental', categoria: 'estado', poder: 0, precision: 100, pp: 10,
+    efectos: [{ tipo: 'confundir', prob: 100 }],
+    descripcion: 'Le hace perder el juicio.',
+  },
+  ofuscacion: {
+    nombre: 'Ofuscación', tipo: 'mental', categoria: 'magico', poder: 50, precision: 100, pp: 25,
+    efectos: [{ tipo: 'confundir', prob: 10 }],
+  },
+  muerdago: {
+    nombre: 'Muérdago', tipo: 'planta', categoria: 'estado', poder: 0, precision: 90, pp: 10,
+    efectos: [{ tipo: 'drenadoras' }],
+    descripcion: 'Le planta muérdago, que vive de chuparle la savia.',
+  },
+  rodela: {
+    nombre: 'Rodela', tipo: 'comun', categoria: 'estado', poder: 0, precision: null, pp: 10, prioridad: 4,
+    efectos: [{ tipo: 'proteger' }],
+    descripcion: 'Se cubre con un escudo redondo, como los rodeleros.',
+  },
 } satisfies Record<string, DefMovimiento>;
 
 export type MovimientoId = keyof typeof MOVIMIENTOS_DEF;

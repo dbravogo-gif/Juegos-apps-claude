@@ -1,13 +1,23 @@
 // IA del rival. Usa el generador del propio combate, así que también es determinista.
 
-import type { DatosJuego, Movimiento } from './modelo';
+import type { DatosJuego, EstadoAlterado, Movimiento } from './modelo';
 import { elegir, probabilidad } from './rng';
 import { calcularDanio } from './danio';
 import { calcularEstadisticas } from './estadisticas';
+import { anulaTipo, inmuneAEstado, puedeSufrir } from './pasivas';
 import type { Accion, EstadoCombate } from './combate';
 
 /** Probabilidad (sobre 100) de que un entrenador no elija el mejor movimiento. */
 const DESPISTE_ENTRENADOR = 15;
+
+/** Lo que vale provocar cada estado, en «fracciones de la Vida del rival». */
+const VALOR_ESTADO: Record<EstadoAlterado, number> = {
+  dormido: 0.6,
+  paralizado: 0.5,
+  intoxicado: 0.5,
+  quemado: 0.45,
+  envenenado: 0.4,
+};
 
 export function elegirAccionIA(e: EstadoCombate, datos: DatosJuego): Accion {
   const yo = e.rival.equipo[e.rival.activo];
@@ -36,7 +46,7 @@ function puntuar(e: EstadoCombate, mov: Movimiento, datos: DatosJuego): number {
 
   if (mov.categoria !== 'estado') {
     const r = calcularDanio(
-      { criatura: yo, etapas: e.rival.etapas },
+      { criatura: yo, etapas: e.rival.etapas, avivado: e.rival.volatil.avivado },
       { criatura: tu, etapas: e.jugador.etapas },
       mov,
       datos,
@@ -48,14 +58,24 @@ function puntuar(e: EstadoCombate, mov: Movimiento, datos: DatosJuego): number {
     return (fraccion >= 1 ? 1.5 : fraccion) * acierto;
   }
 
+  // Un ataque de estado contra una pasiva que anula su tipo no sirve de nada.
+  if (anulaTipo(tu, mov.tipo, datos) && (mov.efectos ?? []).some((f) => f.tipo !== 'curar' && !(f.tipo === 'etapa' && f.objetivo === 'propio'))) return 0;
   let puntos = 0;
   for (const f of mov.efectos ?? []) {
     switch (f.tipo) {
-      case 'estado': {
-        const inmune = tu.estado !== null || (f.estado === 'quemado' && datos.especies[tu.especie].tipos.includes('infernal'));
-        if (!inmune) puntos += f.estado === 'dormido' ? 0.6 : 0.45;
+      case 'estado':
+        if (puedeSufrir(tu, f.estado, datos)) puntos += VALOR_ESTADO[f.estado];
         break;
-      }
+      case 'confundir':
+        if (e.jugador.volatil.confusion === 0 && !inmuneAEstado(tu, 'confusion', datos)) puntos += 0.35;
+        break;
+      case 'drenadoras':
+        if (!e.jugador.volatil.drenadoras && !datos.especies[tu.especie].tipos.includes('planta')) puntos += 0.4;
+        break;
+      case 'proteger':
+        // De vez en cuando, y nunca dos veces seguidas.
+        if (e.rival.volatil.protecciones === 0) puntos += 0.15;
+        break;
       case 'etapa': {
         const etapas = f.objetivo === 'propio' ? e.rival.etapas : e.jugador.etapas;
         const margen = f.cambio > 0 ? etapas[f.estadistica] < 2 : etapas[f.estadistica] > -2;
@@ -68,6 +88,7 @@ function puntuar(e: EstadoCombate, mov: Movimiento, datos: DatosJuego): number {
         break;
       }
       case 'drenar':
+      case 'retroceso':
         break;
     }
   }

@@ -2,6 +2,7 @@ import type { DatosJuego } from '../core/modelo';
 import { ESPECIES } from './especies';
 import { MOVIMIENTOS } from './movimientos';
 import { OBJETOS } from './objetos';
+import { PASIVAS } from './pasivas';
 import { TEMPERAMENTOS } from './temperamentos';
 import { TABLA_TIPOS } from './tipos';
 
@@ -12,4 +13,5 @@ export const DATOS: DatosJuego = {
   temperamentos: TEMPERAMENTOS,
   tipos: TABLA_TIPOS,
   objetos: OBJETOS,
+  pasivas: PASIVAS,
 };

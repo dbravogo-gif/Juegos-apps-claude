@@ -9,6 +9,11 @@ function criatura(especie: string, nivel: number, semilla = especie): Criatura {
   return crearCriatura(DATOS, especie, nivel, crearRng(semilla), { valia: 8, temperamento: 'sosegado' });
 }
 
+/** El primer movimiento que hace daño. */
+function ataqueDe(c: Criatura): number {
+  return c.movimientos.findIndex((m) => DATOS.movimientos[m.id].categoria !== 'estado');
+}
+
 function salvaje(jugador: Criatura[], rival: Criatura, semilla = 'combate') {
   return iniciarCombate(
     {
@@ -30,8 +35,9 @@ function jugarHastaFin(estado: EstadoCombate, maxTurnos = 200): EstadoCombate {
       accion = { tipo: 'reemplazo', indice: e.jugador.equipo.findIndex((c) => c.vida > 0) };
     } else {
       const disp = accionesDisponibles(e, DATOS);
-      const indice = disp.movimientos.findIndex(Boolean);
-      accion = { tipo: 'movimiento', indice };
+      const movs = e.jugador.equipo[e.jugador.activo].movimientos;
+      const ataque = disp.movimientos.findIndex((ok, i) => ok && DATOS.movimientos[movs[i].id].categoria !== 'estado');
+      accion = { tipo: 'movimiento', indice: ataque >= 0 ? ataque : disp.movimientos.findIndex(Boolean) };
     }
     e = resolverTurno(e, accion, DATOS).estado;
   }
@@ -71,7 +77,7 @@ describe('combate', () => {
   it('gana el más fuerte y da experiencia', () => {
     const fuerte = criatura('drago_milenario', 50);
     const { estado } = salvaje([fuerte], criatura('topillo', 3));
-    const r = resolverTurno(estado, { tipo: 'movimiento', indice: 0 }, DATOS);
+    const r = resolverTurno(estado, { tipo: 'movimiento', indice: ataqueDe(fuerte) }, DATOS);
     expect(r.estado.fin).toBe('victoria');
     expect(r.eventos.some((e) => e.tipo === 'experiencia')).toBe(true);
     expect(r.estado.jugador.equipo[0].exp).toBeGreaterThan(fuerte.exp);

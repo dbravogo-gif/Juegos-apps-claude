@@ -17,7 +17,7 @@ import { INICIALES } from '../data/especies';
 import { BOLSILLOS, CATEGORIAS } from '../data/objetos';
 import { Barra, Boton, botonFlecha, filaTipos, NOMBRE_SEXO, simboloSexo } from '../ui/componentes';
 import { crearCriaturaVisual } from '../ui/criaturaVisual';
-import { conArticulo, describirMovimiento } from '../ui/textos';
+import { conArticulo, describirMovimiento, ESTADO_VISTA } from '../ui/textos';
 import { iconoObjeto, iconoUI, type IconoUI } from '../ui/objetoVisual';
 import { claveRetrato } from '../ui/retratoVisual';
 import { construirTablaTipos, textoMultiplicador } from '../ui/tablaTipos';
@@ -910,8 +910,8 @@ export class Interfaz extends Phaser.Scene {
     c.add(pildora(this, tx, y + 100, `Nv ${cr.nivel}`, COLOR.tinta, 22));
     if (debilitada) c.add(pildora(this, tx + 104, y + 100, 'Debilitada', COLOR.rojo, 20));
     else if (cr.estado) {
-      const quemada = cr.estado.tipo === 'quemado';
-      c.add(pildora(this, tx + 104, y + 100, quemada ? 'Quemada' : 'Dormida', quemada ? 0xff7a2f : 0x6f7fd8, 20));
+      const vista = ESTADO_VISTA[cr.estado.tipo];
+      c.add(pildora(this, tx + 104, y + 100, vista.etiqueta, vista.color, 20));
     }
     const tipos = this.add.container(0, 0);
     filaTipos(this, tipos, tx, y + 150, DATOS.especies[cr.especie].tipos, 20);
@@ -957,8 +957,8 @@ export class Interfaz extends Phaser.Scene {
     c.add(pildora(this, tx + 116, 252, `Nº ${String(e.numero).padStart(3, '0')}`, COLOR.panelSuave, 22, COLOR.tintaSuave));
     if (cr.vida <= 0) c.add(pildora(this, tx + 250, 252, 'Debilitada', COLOR.rojo, 22));
     else if (cr.estado) {
-      const quemada = cr.estado.tipo === 'quemado';
-      c.add(pildora(this, tx + 250, 252, quemada ? 'Quemada' : 'Dormida', quemada ? 0xff7a2f : 0x6f7fd8, 22));
+      const vista = ESTADO_VISTA[cr.estado.tipo];
+      c.add(pildora(this, tx + 250, 252, vista.etiqueta, vista.color, 22));
     }
     const tipos = this.add.container(0, 0);
     filaTipos(this, tipos, tx, 306, e.tipos, 24);
@@ -1006,12 +1006,19 @@ export class Interfaz extends Phaser.Scene {
         ['Temperamento', temperamento],
         ['Valía', `${cr.valia} de 14`],
       ];
+      const pasiva = e.pasiva ? DATOS.pasivas[e.pasiva] : undefined;
+      if (pasiva) filas.push(['Pasiva', pasiva.nombre]);
       filas.forEach(([etiqueta, valor], k) => {
-        const y = yC + 52 + k * 60;
+        const y = yC + 48 + k * 54;
         c.add(this.add.text(64, y, etiqueta, estiloTexto(26, COLOR.tintaSuave, true)).setOrigin(0, 0.5));
         c.add(this.add.text(300, y, valor, { ...estiloTexto(30, COLOR.tinta, true), wordWrap: { width: ANCHO - 360 } }).setOrigin(0, 0.5));
       });
-      const yExp = yC + 52 + filas.length * 60;
+      let yExp = yC + 48 + filas.length * 54;
+      if (pasiva) {
+        const desc = this.add.text(300, yExp - 32, pasiva.descripcion, { ...estiloTexto(24, COLOR.tintaSuave), wordWrap: { width: ANCHO - 360 } });
+        c.add(desc);
+        yExp += desc.height - 10;
+      }
       c.add(this.add.text(64, yExp, 'Experiencia', estiloTexto(26, COLOR.tintaSuave, true)).setOrigin(0, 0.5));
       const barra = new Barra(this, 300, yExp, ANCHO - 380, 22, false);
       void barra.setFraccion((cr.exp - desde) / Math.max(1, hasta - desde), false);
@@ -1207,6 +1214,12 @@ export class Interfaz extends Phaser.Scene {
         x += pil.width + 10;
       }
       y += 60;
+    }
+    const pasiva = e.pasiva ? DATOS.pasivas[e.pasiva] : undefined;
+    if (pasiva && p.capturados.includes(id)) {
+      c.add(this.add.text(64, y, 'Pasiva', estiloTexto(26, COLOR.tintaSuave, true)).setOrigin(0, 0.5));
+      c.add(this.add.text(210, y, pasiva.nombre, estiloTexto(30, COLOR.tinta, true)).setOrigin(0, 0.5));
+      c.add(this.add.text(210, y + 26, pasiva.descripcion, { ...estiloTexto(24, COLOR.tintaSuave), wordWrap: { width: ANCHO - 280 } }));
     }
     c.add(
       new Boton(this, 790, ALTO_MAPA - 80, {

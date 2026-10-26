@@ -18,8 +18,9 @@ export function valorCaptura(d: DatosCaptura): number {
   const max = Math.max(1, d.vidaMax);
   const vida = Math.max(1, Math.min(d.vida, max));
   let a = Math.floor(((3 * max - 2 * vida) * d.ratio * d.bonus) / (3 * max));
+  // Como en el género: dormida, el doble; con cualquier otro estado, un 50 % más.
   if (d.estado?.tipo === 'dormido') a = Math.floor(a * 2);
-  else if (d.estado?.tipo === 'quemado') a = Math.floor(a * 1.5);
+  else if (d.estado) a = Math.floor(a * 1.5);
   return Math.max(1, a);
 }
 

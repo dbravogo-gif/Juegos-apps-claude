@@ -141,7 +141,10 @@ const VILLALAR: Zona = {
   ],
   salidas: [{ x: 10, y: 19, zona: 'camino_toledo', ax: 7, ay: 1, dir: 'abajo' }],
   carteles: [{ x: 9, y: 4, texto: ['Villalar.', 'Al sur, el camino de Toledo.'] }],
-  ocultos: [{ id: 'sales', x: 20, y: 17, objeto: 'sales' }],
+  ocultos: [
+    { id: 'sales', x: 20, y: 17, objeto: 'sales' },
+    { id: 'mt_rodela', x: 1, y: 13, objeto: 'mt_rodela', visible: true },
+  ],
 };
 
 const CAMINO_TOLEDO: Zona = {
@@ -367,7 +370,7 @@ const MESON_TOLEDO: Zona = {
         ...decir('Tendero', 'Con la guerra todo está más caro, pero hay de todo. ¿Qué te pongo?'),
         {
           tipo: 'tienda',
-          productos: ['tesera', 'tesera_plata', 'unguento', 'emplasto', 'aloe', 'sales', 'ruda', 'ovillo', 'brebaje_fuerza', 'brebaje_escudo'],
+          productos: ['tesera', 'tesera_plata', 'unguento', 'emplasto', 'aloe', 'sales', 'antiparalizador', 'antidoto', 'ruda', 'ovillo', 'brebaje_fuerza', 'brebaje_escudo'],
         },
       ],
     },
