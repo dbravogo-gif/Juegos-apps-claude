@@ -1,5 +1,5 @@
 import type { Evento } from '../core/combate';
-import type { EstadisticaCombate, Movimiento } from '../core/modelo';
+import type { EstadisticaCombate, EstadoAlterado, Movimiento } from '../core/modelo';
 import { DATOS } from '../data';
 
 const ESTADISTICA: Record<EstadisticaCombate, string> = {
@@ -8,6 +8,23 @@ const ESTADISTICA: Record<EstadisticaCombate, string> = {
   magia: 'La Magia',
   resMagica: 'La Resistencia mágica',
   celeridad: 'La Celeridad',
+};
+
+/** Nombre corto de cada estado alterado (en femenino: «la criatura») y su color en las fichas. */
+export const ESTADO_VISTA: Record<EstadoAlterado, { etiqueta: string; color: number }> = {
+  quemado: { etiqueta: 'Quemada', color: 0xff7a2f },
+  dormido: { etiqueta: 'Dormida', color: 0x6f7fd8 },
+  paralizado: { etiqueta: 'Paralizada', color: 0xd6a600 },
+  envenenado: { etiqueta: 'Envenenada', color: 0x9b4dca },
+  intoxicado: { etiqueta: 'Intoxicada', color: 0x6a2a8f },
+};
+
+const SE_HA: Record<EstadoAlterado, string> = {
+  quemado: 'se ha quemado',
+  dormido: 'se ha dormido',
+  paralizado: 'se ha paralizado',
+  envenenado: 'se ha envenenado',
+  intoxicado: 'se ha intoxicado gravemente',
 };
 
 export interface ContextoTextos {
@@ -50,8 +67,11 @@ export function textosEvento(ev: Evento, ctx: ContextoTextos): string[] {
       return ['¡Pero falla!'];
     case 'danio': {
       if (ev.causa === 'quemadura') return [`${quien(ev.nombre, ev.lado, ctx)} sufre por la quemadura.`];
+      if (ev.causa === 'veneno') return [`${quien(ev.nombre, ev.lado, ctx)} sufre por el veneno.`];
       if (ev.causa === 'retroceso') return [`${quien(ev.nombre, ev.lado, ctx)} se resiente del golpe.`];
-      if (ev.causa === 'objeto') return [];
+      if (ev.causa === 'confusion') return ['¡Se ha herido a sí mismo en su confusión!'];
+      if (ev.causa === 'drenadoras') return [`El muérdago le roba Vida a ${quien(ev.nombre, ev.lado, ctx)}.`];
+      if (ev.causa === 'objeto' || ev.causa === 'pasiva') return [];
       const t: string[] = [];
       if (ev.critico) t.push('¡Golpe crítico!');
       if (ev.eficacia >= 2) t.push('¡Es supereficaz!');
@@ -65,13 +85,37 @@ export function textosEvento(ev: Evento, ctx: ContextoTextos): string[] {
         ? [`${quien(ev.nombre, ev.lado, ctx)} recupera ${ev.cantidad} de Vida.`]
         : [`La Vida de ${quien(ev.nombre, ev.lado, ctx)} ya está al máximo.`];
     case 'estado':
-      return ev.estado === 'quemado'
-        ? [`¡${quien(ev.nombre, ev.lado, ctx)} se ha quemado!`]
-        : [`¡${quien(ev.nombre, ev.lado, ctx)} se ha dormido!`];
+      return [`¡${quien(ev.nombre, ev.lado, ctx)} ${SE_HA[ev.estado]}!`];
     case 'sigueDormido':
       return [`${quien(ev.nombre, ev.lado, ctx)} sigue dormido.`];
     case 'despierta':
       return [`¡${quien(ev.nombre, ev.lado, ctx)} se despierta!`];
+    case 'noSeMueve':
+      return [`${quien(ev.nombre, ev.lado, ctx)} está paralizado: ¡no se puede mover!`];
+    case 'confunde':
+      return [`¡${quien(ev.nombre, ev.lado, ctx)} se ha confundido!`];
+    case 'confuso':
+      return [`${quien(ev.nombre, ev.lado, ctx)} está confuso.`];
+    case 'finConfusion':
+      return [`¡${quien(ev.nombre, ev.lado, ctx)} ya no está confuso!`];
+    case 'retrocede':
+      return [`¡${quien(ev.nombre, ev.lado, ctx)} ha retrocedido y no puede atacar!`];
+    case 'siembra':
+      return [`¡${quien(ev.nombre, ev.lado, ctx)} ha quedado sembrado de muérdago!`];
+    case 'protege':
+      return [`¡${quien(ev.nombre, ev.lado, ctx)} se cubre con la rodela!`];
+    case 'protegido':
+      return [`¡${quien(ev.nombre, ev.lado, ctx)} se ha protegido del ataque!`];
+    case 'pasiva':
+      return [`¡${ev.pasiva} de ${quien(ev.nombre, ev.lado, ctx)}!`];
+    case 'aguanta':
+      return [`¡${quien(ev.nombre, ev.lado, ctx)} aguanta el golpe!`];
+    case 'aviva':
+      return [`¡Los ataques de tipo Infernal de ${quien(ev.nombre, ev.lado, ctx)} se avivan!`];
+    case 'etapaProtegida':
+      return [`Las estadísticas de ${quien(ev.nombre, ev.lado, ctx)} no bajan.`];
+    case 'rebusca':
+      return [`¡${ev.nombre} ha encontrado ${conArticulo(ev.objeto)} rebuscando!`];
     case 'etapa': {
       const est = ESTADISTICA[ev.estadistica];
       const de = `de ${quien(ev.nombre, ev.lado, ctx)}`;
@@ -132,6 +176,14 @@ const ESTADISTICA_MINUSCULA: Record<EstadisticaCombate, string> = {
   celeridad: 'la Celeridad',
 };
 
+const VERBO_ESTADO: Record<EstadoAlterado, [string, string]> = {
+  quemado: ['quemar', 'Quema'],
+  dormido: ['dormir', 'Duerme'],
+  paralizado: ['paralizar', 'Paraliza'],
+  envenenado: ['envenenar', 'Envenena'],
+  intoxicado: ['intoxicar', 'Intoxica gravemente'],
+};
+
 function fraccionTexto(f: number): string {
   if (f === 0.5) return 'la mitad';
   if (f === 0.25) return 'una cuarta parte';
@@ -148,14 +200,26 @@ export function describirMovimiento(mov: Movimiento, ppActuales?: number): { tit
   cifras.push(`PP ${ppActuales ?? mov.pp}/${mov.pp}`);
 
   const frases: string[] = [];
-  if ((mov.prioridad ?? 0) > 0) frases.push('Ataca siempre primero.');
+  if ((mov.prioridad ?? 0) > 0 && !(mov.efectos ?? []).some((f) => f.tipo === 'proteger')) frases.push('Ataca siempre primero.');
   for (const f of mov.efectos ?? []) {
     switch (f.tipo) {
       case 'estado': {
-        const verbo = f.estado === 'quemado' ? 'quemar' : 'dormir';
-        frases.push(f.prob >= 100 ? `${verbo === 'quemar' ? 'Quema' : 'Duerme'} al rival.` : `${f.prob} % de probabilidad de ${verbo} al rival.`);
+        const [verbo, hace] = VERBO_ESTADO[f.estado];
+        frases.push(f.prob >= 100 ? `${hace} al rival.` : `${f.prob} % de probabilidad de ${verbo} al rival.`);
         break;
       }
+      case 'confundir':
+        frases.push(f.prob >= 100 ? 'Confunde al rival.' : `${f.prob} % de probabilidad de confundir al rival.`);
+        break;
+      case 'retroceso':
+        frases.push(`${f.prob} % de probabilidad de que el rival retroceda, si aún no ha atacado.`);
+        break;
+      case 'drenadoras':
+        frases.push('Siembra al rival: cada turno pierde 1/8 de su Vida y te la llevas tú. No afecta a las de tipo Planta.');
+        break;
+      case 'proteger':
+        frases.push('Te protege de todos los ataques este turno. Si lo usas seguido, puede fallar.');
+        break;
       case 'etapa': {
         const sube = f.cambio > 0;
         const cuanto = Math.abs(f.cambio) >= 2 ? ' mucho' : '';

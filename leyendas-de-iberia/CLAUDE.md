@@ -102,6 +102,15 @@ tocan desde aquí.
     legendarios, propuesta en el GDD §8.
   - Base de los legendarios: personajes con `criatura` (esperan de pie y empiezan el combate) y
     salidas con `requiere` (zonas cerradas hasta tener un objeto o una bandera).
+- **Pedidos del autor (2026-10-26, tras la comparación con Cristal, Esmeralda y Negro 2):**
+  - Hecho: mando hasta abajo, correr (Alpargatas, de Fernando), mochila por bolsillos y
+    vecinos que pasean (`pasea` en el personaje).
+  - Hecho: combate con parálisis, veneno, intoxicación, confusión, retroceso, Muérdago y Rodela
+    (estados volátiles en `LadoCombate.volatil`), y 50 pasivas (`src/data/pasivas.ts`,
+    `src/core/pasivas.ts`), una por especie.
+  - Falta, en este orden: más objetos (bayas, potenciadores de tipo, piedras evolutivas) y
+    Repartir Experiencia en Toledo; pesca y almacén de verdad; rivales recurrentes. La Liga,
+    más adelante.
 - **Siguiente:** capítulo 3 (1571). Alhambrón queda para una zona de ruinas, a petición del
   autor. La vista de espalda de Imperión parece de frente: se puede rehacer.
 - **Mapas (2026-10-25), hecho:** con aspecto de los juegos de criaturas de GBA, a petición
@@ -159,12 +168,13 @@ El código va en español: nombres, comentarios y textos.
   - `modelo.ts`: los tipos de datos.
   - `rng.ts`: el generador con semilla.
   - `estadisticas.ts`, `tipos.ts`, `danio.ts`, `captura.ts`, `progreso.ts` y `criatura.ts`.
+  - `pasivas.ts`: consultas de pasivas e inmunidades a estados.
   - `combate.ts` e `ia.ts`: el combate, como (estado, acción) → (estado, eventos).
   - `mundo.ts`: zonas, personajes, salidas, guiones (`Paso`) y línea de visión.
   - `partida.ts`: el estado de la partida, los encuentros y el resultado de los combates.
   - `guardado.ts`: serializar y migrar partidas.
 - `src/data/`:
-  - Contenido de combate: `especies.ts`, `movimientos.ts`, `tipos.ts`, `temperamentos.ts` y
+  - Contenido de combate: `especies.ts`, `movimientos.ts`, `tipos.ts`, `temperamentos.ts`, `pasivas.ts` y
     `objetos.ts`, reunidos en `DATOS` (`index.ts`).
   - Contenido del mundo: `casillas.ts` (la leyenda de los mapas), `entrenadores.ts`,
     `zonas/capitulo1.ts`, `zonas/capitulo2.ts` y `guion.ts` (atajos para escribir guiones). Se reúnen en `mundo.ts`,

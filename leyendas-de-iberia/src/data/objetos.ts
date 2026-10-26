@@ -87,13 +87,15 @@ const lista: Objeto[] = [
   // Estados
   { id: 'aloe', nombre: 'Antiquemar', articulo: 'un', categoria: 'estados', tipo: 'remedio', estados: ['quemado'], precio: 80, descripcion: 'Cura las quemaduras.' },
   { id: 'sales', nombre: 'Despertar', articulo: 'un', categoria: 'estados', tipo: 'remedio', estados: ['dormido'], precio: 80, descripcion: 'Despierta a una criatura dormida.' },
+  { id: 'antiparalizador', nombre: 'Antiparalizador', articulo: 'un', categoria: 'estados', tipo: 'remedio', estados: ['paralizado'], precio: 100, descripcion: 'Cura la parálisis.' },
+  { id: 'antidoto', nombre: 'Antídoto', articulo: 'un', categoria: 'estados', tipo: 'remedio', estados: ['envenenado', 'intoxicado'], precio: 80, descripcion: 'Cura el envenenamiento.' },
   {
     id: 'panacea',
     nombre: 'Cura total',
     articulo: 'una',
     categoria: 'estados',
     tipo: 'remedio',
-    estados: ['quemado', 'dormido'],
+    estados: ['quemado', 'dormido', 'paralizado', 'envenenado', 'intoxicado'],
     precio: 250,
     descripcion: 'Cura cualquier estado alterado.',
   },
@@ -226,6 +228,16 @@ const lista: Objeto[] = [
     movimiento: 'temblor',
     aprenden: { tipos: ['tierra'] },
     descripcion: 'Enseña Temblor (Tierra). No se gasta.',
+  },
+  {
+    id: 'mt_rodela',
+    nombre: 'MT06 Rodela',
+    articulo: 'una',
+    categoria: 'maquinas',
+    tipo: 'maquina',
+    movimiento: 'rodela',
+    aprenden: { todos: true },
+    descripcion: 'Enseña Rodela (Común): se protege de todo durante un turno. Cualquier criatura puede aprenderlo. No se gasta.',
   },
   // MO: las dan personajes importantes. Sus movimientos también se usan fuera de combate.
   {

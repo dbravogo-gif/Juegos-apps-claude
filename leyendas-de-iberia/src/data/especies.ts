@@ -26,6 +26,8 @@ interface DefEspecie {
   acuatica?: boolean;
   /** Ave o ser alado que puede llevar a una persona (aprende Vuelo). */
   alada?: boolean;
+  /** Id de su pasiva (`pasivas.ts`). */
+  pasiva: string;
   descripcion: string;
 }
 
@@ -33,26 +35,28 @@ interface DefEspecie {
 // evolucionada va en niveles posteriores a su evolución: al evolucionar no se aprende nada.
 const LINEA_TORO: Aprende = [
   [1, 'topetazo'], [1, 'bramido'], [5, 'rescoldo'], [9, 'acometida'], [13, 'cornada_ardiente'],
-  [21, 'desplante'], [26, 'tizne'], [31, 'hoguera'],
+  [17, 'testarazo'], [21, 'desplante'], [26, 'tizne'], [31, 'hoguera'],
 ];
 const LINEA_CANGREJO: Aprende = [
   [1, 'tenaza'], [1, 'bramido'], [5, 'rociada'], [9, 'caparazon'], [13, 'marejada'],
   [21, 'dentellada'], [26, 'golpe_de_mar'], [31, 'remanso'],
 ];
 const LINEA_DRAGO: Aprende = [
-  [1, 'varazo'], [1, 'desplante'], [5, 'hojarasca'], [9, 'sopor'], [14, 'polvareda'], [20, 'savia_de_dragon'],
+  [1, 'varazo'], [1, 'desplante'], [5, 'hojarasca'], [9, 'sopor'], [12, 'muerdago'], [14, 'polvareda'], [17, 'polvo_urticante'],
+  [20, 'savia_de_dragon'],
 ];
 const LINEA_LIBELULA: Aprende = [[1, 'aletazo'], [3, 'acometida'], [6, 'revoloteo'], [10, 'picada']];
-const LINEA_DUENDE: Aprende = [[1, 'trastada'], [4, 'desplante'], [8, 'mal_de_ojo'], [12, 'acometida']];
+const LINEA_DUENDE: Aprende = [[1, 'trastada'], [4, 'desplante'], [8, 'mal_de_ojo'], [10, 'desvario'], [12, 'acometida']];
 const LINEA_ESCARABAJO: Aprende = [[1, 'topetazo'], [1, 'desplante'], [5, 'polvareda'], [9, 'terronazo']];
 // Capítulo 2
 const LINEA_LAGARTO: Aprende = [
   [1, 'topetazo'], [1, 'desplante'], [6, 'terronazo'], [11, 'zarpazo'], [16, 'cantazo'], [21, 'compactar'], [26, 'temblor'],
 ];
 const LINEA_VIBORA: Aprende = [
-  [1, 'trastada'], [1, 'desplante'], [5, 'colmillo_sombrio'], [10, 'emboscada'], [15, 'mal_de_ojo'],
+  [1, 'trastada'], [1, 'desplante'], [5, 'colmillo_sombrio'], [8, 'colmillo_venenoso'], [10, 'emboscada'], [15, 'mal_de_ojo'],
+  [18, 'ponzona'],
 ];
-const LINEA_AVUTARDA: Aprende = [[1, 'topetazo'], [1, 'bramido'], [7, 'pisoton'], [12, 'rueda'], [18, 'aletazo']];
+const LINEA_AVUTARDA: Aprende = [[1, 'topetazo'], [1, 'bramido'], [7, 'pisoton'], [12, 'rueda'], [15, 'peso_muerto'], [18, 'aletazo']];
 const LINEA_AGUILA: Aprende = [[1, 'aletazo'], [1, 'bramido'], [6, 'revoloteo'], [11, 'picada'], [18, 'zarpazo']];
 const LINEA_LOBO: Aprende = [[1, 'topetazo'], [1, 'aullido'], [5, 'zarpazo'], [10, 'dentellada'], [15, 'colmillo_sombrio']];
 
@@ -60,6 +64,7 @@ const DEF = {
   becerro_igneo: {
     numero: 1,
     nombre: 'Ignibue',
+    pasiva: 'brasa_viva',
     tipos: ['infernal'],
     base: [44, 62, 44, 46, 44, 66],
     expBase: 62,
@@ -73,6 +78,7 @@ const DEF = {
   novillo_embolado: {
     numero: 2,
     nombre: 'Braverno',
+    pasiva: 'brasa_viva',
     tipos: ['infernal', 'tierra'],
     base: [62, 85, 62, 60, 56, 80],
     expBase: 142,
@@ -85,6 +91,7 @@ const DEF = {
   toro_de_fuego: {
     numero: 3,
     nombre: 'Ignivárgoth',
+    pasiva: 'brasa_viva',
     tipos: ['infernal', 'tierra'],
     base: [85, 120, 85, 75, 70, 95],
     expBase: 263,
@@ -97,6 +104,7 @@ const DEF = {
   cangrejo: {
     numero: 4,
     nombre: 'Marzuko',
+    pasiva: 'marea_viva',
     tipos: ['agua'],
     base: [46, 58, 64, 42, 50, 50],
     expBase: 63,
@@ -109,6 +117,7 @@ const DEF = {
   necora: {
     numero: 5,
     nombre: 'Nakarra',
+    pasiva: 'marea_viva',
     tipos: ['agua'],
     base: [64, 74, 90, 50, 66, 61],
     expBase: 142,
@@ -121,6 +130,7 @@ const DEF = {
   centollo: {
     numero: 6,
     nombre: 'Talascrón',
+    pasiva: 'marea_viva',
     tipos: ['agua', 'acero'],
     base: [100, 95, 130, 55, 90, 60],
     expBase: 265,
@@ -134,6 +144,7 @@ const DEF = {
   retono_drago: {
     numero: 7,
     nombre: 'Dralín',
+    pasiva: 'savia_viva',
     tipos: ['planta'],
     base: [54, 44, 56, 62, 66, 48],
     expBase: 66,
@@ -147,6 +158,7 @@ const DEF = {
   drago_milenario: {
     numero: 8,
     nombre: 'Dracendro',
+    pasiva: 'savia_viva',
     tipos: ['planta', 'ancestral'],
     base: [100, 70, 100, 100, 105, 55],
     expBase: 263,
@@ -159,6 +171,7 @@ const DEF = {
   libelula: {
     numero: 9,
     nombre: 'Zumbrel',
+    pasiva: 'ojo_avizor',
     tipos: ['aire'],
     base: [38, 48, 34, 38, 36, 76],
     expBase: 50,
@@ -170,6 +183,7 @@ const DEF = {
   caballuco_diablu: {
     numero: 10,
     nombre: 'Diablisca',
+    pasiva: 'carrerilla',
     tipos: ['aire', 'infernal'],
     base: [60, 72, 55, 82, 58, 103],
     expBase: 150,
@@ -181,6 +195,7 @@ const DEF = {
   topillo: {
     numero: 13,
     nombre: 'Túmbriz',
+    pasiva: 'escurridizo',
     tipos: ['comun', 'tierra'],
     base: [35, 50, 38, 25, 35, 67],
     expBase: 45,
@@ -191,6 +206,7 @@ const DEF = {
   barbo: {
     numero: 14,
     nombre: 'Barbaflux',
+    pasiva: 'esponja',
     tipos: ['agua'],
     base: [55, 72, 50, 40, 48, 65],
     expBase: 58,
@@ -202,6 +218,7 @@ const DEF = {
   abejaruco: {
     numero: 15,
     nombre: 'Abezar',
+    pasiva: 'contraveneno',
     tipos: ['aire'],
     base: [42, 58, 40, 45, 40, 80],
     expBase: 55,
@@ -213,6 +230,7 @@ const DEF = {
   duende: {
     numero: 11,
     nombre: 'Brezuco',
+    pasiva: 'rebuscar',
     tipos: ['oscuridad'],
     base: [40, 45, 42, 55, 50, 70],
     expBase: 55,
@@ -225,6 +243,7 @@ const DEF = {
   trasgo: {
     numero: 12,
     nombre: 'Trasgorn',
+    pasiva: 'hora_bruja',
     tipos: ['oscuridad'],
     base: [62, 70, 60, 85, 70, 98],
     expBase: 155,
@@ -235,18 +254,20 @@ const DEF = {
   mandragora: {
     numero: 16,
     nombre: 'Mandragor',
+    pasiva: 'polen_narcotico',
     tipos: ['planta', 'mental'],
     base: [65, 45, 60, 85, 80, 45],
     expBase: 85,
     ratioCaptura: 120,
     // Sus flores tienen los dos sexos.
     sexo: 'hermafrodita',
-    aprende: [[1, 'varazo'], [4, 'sopor'], [8, 'hojarasca'], [12, 'alarido'], [16, 'savia_de_dragon']],
+    aprende: [[1, 'varazo'], [4, 'sopor'], [6, 'polvo_urticante'], [8, 'hojarasca'], [10, 'ofuscacion'], [12, 'alarido'], [16, 'savia_de_dragon'], [20, 'muerdago']],
     descripcion: 'Sus raíces son narcóticas, con efectos parecidos a los de la belladona. Desde la Antigüedad se cuenta que grita cuando la arrancan.',
   },
   galapago: {
     numero: 17,
     nombre: 'Carapachón',
+    pasiva: 'caparazon',
     tipos: ['agua'],
     base: [65, 50, 95, 40, 65, 25],
     expBase: 85,
@@ -258,6 +279,7 @@ const DEF = {
   leon_fuente: {
     numero: 18,
     nombre: 'Alhambrón',
+    pasiva: 'petreo',
     tipos: ['agua', 'tierra'],
     base: [85, 90, 95, 70, 85, 55],
     expBase: 180,
@@ -271,6 +293,7 @@ const DEF = {
   escarabajo_pelotero: {
     numero: 19,
     nombre: 'Broncero',
+    pasiva: 'coraje',
     tipos: ['tierra'],
     base: [45, 60, 55, 25, 35, 40],
     expBase: 50,
@@ -282,6 +305,7 @@ const DEF = {
   escarabajo_bronce: {
     numero: 20,
     nombre: 'Escarbraz',
+    pasiva: 'caparazon',
     tipos: ['tierra', 'acero'],
     base: [65, 78, 98, 35, 62, 45],
     expBase: 125,
@@ -293,6 +317,7 @@ const DEF = {
   escarabajo_joya: {
     numero: 21,
     nombre: 'Mocarabeo',
+    pasiva: 'afinidad',
     tipos: ['acero', 'luz'],
     base: [95, 75, 120, 70, 110, 40],
     expBase: 230,
@@ -305,6 +330,7 @@ const DEF = {
   lagarto: {
     numero: 22,
     nombre: 'Lizarco',
+    pasiva: 'pies_ligeros',
     tipos: ['tierra'],
     base: [50, 60, 55, 35, 45, 65],
     expBase: 62,
@@ -316,6 +342,7 @@ const DEF = {
   lagarto_muralla: {
     numero: 23,
     nombre: 'Bastilag',
+    pasiva: 'firme',
     tipos: ['tierra', 'acero'],
     base: [85, 100, 125, 45, 85, 50],
     expBase: 175,
@@ -326,6 +353,7 @@ const DEF = {
   vibora: {
     numero: 24,
     nombre: 'Viperel',
+    pasiva: 'puas_venenosas',
     tipos: ['oscuridad'],
     base: [40, 60, 40, 45, 40, 70],
     expBase: 52,
@@ -337,6 +365,7 @@ const DEF = {
   vibora_cornuda: {
     numero: 25,
     nombre: 'Viperion',
+    pasiva: 'mirada_torva',
     tipos: ['oscuridad'],
     base: [60, 85, 60, 55, 55, 90],
     expBase: 130,
@@ -348,6 +377,7 @@ const DEF = {
   sierpe: {
     numero: 26,
     nombre: 'Sierpeira',
+    pasiva: 'mirada_torva',
     tipos: ['oscuridad', 'tierra'],
     base: [85, 100, 80, 80, 75, 90],
     expBase: 230,
@@ -358,6 +388,7 @@ const DEF = {
   avutarda: {
     numero: 27,
     nombre: 'Grávico',
+    pasiva: 'sebo',
     tipos: ['comun'],
     base: [55, 65, 50, 30, 40, 50],
     expBase: 58,
@@ -370,6 +401,7 @@ const DEF = {
   avutarda_macho: {
     numero: 28,
     nombre: 'Gravitardo',
+    pasiva: 'corpulencia',
     tipos: ['comun', 'aire'],
     base: [90, 95, 75, 45, 65, 60],
     expBase: 150,
@@ -381,6 +413,7 @@ const DEF = {
   aguila: {
     numero: 29,
     nombre: 'Aquilín',
+    pasiva: 'ojo_avizor',
     tipos: ['aire'],
     base: [45, 65, 40, 40, 40, 90],
     expBase: 70,
@@ -393,6 +426,7 @@ const DEF = {
   aguila_imperial: {
     numero: 30,
     nombre: 'Imperión',
+    pasiva: 'imponente',
     tipos: ['aire', 'luz'],
     base: [80, 105, 70, 85, 75, 110],
     expBase: 240,
@@ -404,6 +438,7 @@ const DEF = {
   lobo: {
     numero: 31,
     nombre: 'Lobaz',
+    pasiva: 'mirada_torva',
     tipos: ['comun'],
     base: [45, 62, 40, 30, 38, 70],
     expBase: 55,
@@ -415,6 +450,7 @@ const DEF = {
   lobo_adulto: {
     numero: 32,
     nombre: 'Lobregón',
+    pasiva: 'mirada_torva',
     tipos: ['comun', 'oscuridad'],
     base: [70, 90, 60, 50, 60, 85],
     expBase: 140,
@@ -426,6 +462,7 @@ const DEF = {
   lobo_animas: {
     numero: 33,
     nombre: 'Lobánima',
+    pasiva: 'hora_bruja',
     tipos: ['espectral', 'oscuridad'],
     base: [80, 60, 65, 110, 90, 100],
     expBase: 230,
@@ -436,33 +473,36 @@ const DEF = {
   toro_guisando: {
     numero: 34,
     nombre: 'Guisandor',
+    pasiva: 'petreo',
     tipos: ['tierra'],
     base: [100, 100, 130, 40, 90, 30],
     expBase: 180,
     ratioCaptura: 25,
     // Una escultura de granito.
     sexo: 'ninguno',
-    aprende: [[1, 'topetazo'], [1, 'compactar'], [8, 'terronazo'], [14, 'cantazo'], [20, 'temblor'], [28, 'molienda']],
+    aprende: [[1, 'topetazo'], [1, 'compactar'], [8, 'terronazo'], [11, 'peso_muerto'], [14, 'cantazo'], [17, 'testarazo'], [20, 'temblor'], [28, 'molienda']],
     descripcion: 'Los Toros de Guisando son cuatro verracos de granito de la Edad del Hierro, en El Tiemblo (Ávila). Junto a ellos se firmó en 1468 el pacto que hizo heredera a Isabel.',
   },
   tarantula: {
     numero: 35,
     nombre: 'Tarantón',
+    pasiva: 'puas_venenosas',
     tipos: ['oscuridad', 'mental'],
     base: [60, 45, 60, 85, 75, 70],
     expBase: 110,
     ratioCaptura: 120,
-    aprende: [[1, 'trastada'], [1, 'tarea_imposible'], [7, 'tarantela'], [12, 'mal_de_ojo'], [18, 'alarido'], [25, 'noche_cerrada']],
+    aprende: [[1, 'trastada'], [1, 'tarea_imposible'], [4, 'desvario'], [7, 'tarantela'], [10, 'ponzona'], [12, 'mal_de_ojo'], [15, 'ofuscacion'], [18, 'alarido'], [25, 'noche_cerrada']],
     descripcion: 'La tarántula ibérica es una araña lobo que caza al acecho desde su madriguera. Su picadura duele, pero es poco peligrosa.',
   },
   erizo: {
     numero: 36,
     nombre: 'Pinchorro',
+    pasiva: 'piel_aspera',
     tipos: ['comun'],
     base: [60, 45, 80, 30, 60, 35],
     expBase: 62,
     ratioCaptura: 200,
-    aprende: [[1, 'topetazo'], [1, 'erizarse'], [6, 'bola_de_puas'], [11, 'dentellada'], [16, 'desplante']],
+    aprende: [[1, 'topetazo'], [1, 'erizarse'], [6, 'bola_de_puas'], [11, 'dentellada'], [16, 'desplante'], [20, 'testarazo']],
     descripcion: 'El erizo europeo tiene entre cinco y siete mil púas. Cuando se siente en peligro, se enrosca en una bola.',
   },
 
@@ -470,6 +510,7 @@ const DEF = {
   papemimico: {
     numero: 129,
     nombre: 'Papemímico',
+    pasiva: 'firme',
     tipos: ['oscuridad', 'acero'],
     base: [120, 105, 115, 65, 95, 45],
     expBase: 220,
@@ -501,6 +542,7 @@ export const ESPECIES: Record<string, Especie> = Object.fromEntries(
     if ('sexo' in d) especie.sexo = d.sexo;
     if ('acuatica' in d) especie.acuatica = d.acuatica;
     if ('alada' in d) especie.alada = d.alada;
+    especie.pasiva = d.pasiva;
     return [id, especie];
   }),
 );

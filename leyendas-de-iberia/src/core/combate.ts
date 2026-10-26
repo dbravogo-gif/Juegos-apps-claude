@@ -11,9 +11,10 @@ import type {
   Etapas,
   Movimiento,
   Objeto,
+  Pasiva,
   Sexo,
 } from './modelo';
-import { crearRng, entero, probabilidad, type EstadoRng } from './rng';
+import { crearRng, elegir, elegirPonderado, entero, probabilidad, type EstadoRng } from './rng';
 import { calcularEstadisticas, multiplicadorEtapa } from './estadisticas';
 import { calcularDanio, PROB_CRITICO, type Combatiente } from './danio';
 import { intentarCaptura } from './captura';
@@ -21,6 +22,7 @@ import { aplicarExperiencia, expGanada } from './progreso';
 import { nombreDe, sexoDe } from './criatura';
 import { elegirAccionIA } from './ia';
 import { aplicarCuracion, motivoNoUsable, seAplicaACriatura, usoDe } from './objetos';
+import { anulaTipo, inmuneAEstado, nuevoEstado, pasivaDe, pasivaTipo, puedeSufrir } from './pasivas';
 
 export type Lado = 'jugador' | 'rival';
 export type ResultadoCombate = 'victoria' | 'derrota' | 'huida' | 'captura';
@@ -32,6 +34,29 @@ export interface LadoCombate {
   /** Cambios de estadísticas del activo. Se pierden al retirarlo. */
   etapas: Etapas;
   objetos: Record<string, number>;
+  /** Lo que le pasa al activo y no es un estado alterado. Se pierde al retirarlo. */
+  volatil: Volatil;
+}
+
+export interface Volatil {
+  /** Turnos de confusión que le quedan. 0: no está confusa. */
+  confusion: number;
+  /** La han sembrado: cada turno pierde Vida y se la lleva el activo del otro lado. */
+  drenadoras: boolean;
+  /** Se ha protegido este turno. */
+  protegido: boolean;
+  /** Protecciones seguidas que han salido bien: cada una deja la siguiente a la mitad. */
+  protecciones: number;
+  /** Perderá el turno si todavía no ha actuado. */
+  retrocede: boolean;
+  /** Brasero: un ataque de tipo Infernal le ha avivado los suyos. */
+  avivado: boolean;
+  /** Ya ha actuado este turno. */
+  actuado: boolean;
+}
+
+export function volatilCero(): Volatil {
+  return { confusion: 0, drenadoras: false, protegido: false, protecciones: 0, retrocede: false, avivado: false, actuado: false };
 }
 
 export interface EstadoCombate {
@@ -82,13 +107,31 @@ export type Evento =
       vidaMax: number;
       eficacia: number;
       critico: boolean;
-      causa: 'ataque' | 'quemadura' | 'retroceso' | 'objeto';
+      causa: 'ataque' | 'quemadura' | 'veneno' | 'retroceso' | 'objeto' | 'confusion' | 'drenadoras' | 'pasiva';
     }
   | { tipo: 'sinEfecto'; lado: Lado; nombre: string }
   | { tipo: 'curacion'; lado: Lado; indice: number; nombre: string; cantidad: number; vida: number; vidaMax: number }
   | { tipo: 'estado'; lado: Lado; nombre: string; estado: EstadoAlterado }
   | { tipo: 'sigueDormido'; lado: Lado; nombre: string }
   | { tipo: 'despierta'; lado: Lado; nombre: string }
+  /** La parálisis no la deja moverse. */
+  | { tipo: 'noSeMueve'; lado: Lado; nombre: string }
+  | { tipo: 'confunde'; lado: Lado; nombre: string }
+  | { tipo: 'confuso'; lado: Lado; nombre: string }
+  | { tipo: 'finConfusion'; lado: Lado; nombre: string }
+  | { tipo: 'retrocede'; lado: Lado; nombre: string }
+  | { tipo: 'siembra'; lado: Lado; nombre: string }
+  | { tipo: 'protege'; lado: Lado; nombre: string }
+  /** Un ataque contra quien se ha protegido. */
+  | { tipo: 'protegido'; lado: Lado; nombre: string }
+  /** Actúa una pasiva. Lo que hace va en los eventos siguientes. */
+  | { tipo: 'pasiva'; lado: Lado; nombre: string; pasiva: string }
+  | { tipo: 'aguanta'; lado: Lado; nombre: string }
+  | { tipo: 'aviva'; lado: Lado; nombre: string }
+  /** Una pasiva impide que le bajen las estadísticas. */
+  | { tipo: 'etapaProtegida'; lado: Lado; nombre: string }
+  /** Rebuscar: encuentra un objeto al acabar el combate. */
+  | { tipo: 'rebusca'; nombre: string; objeto: string }
   | { tipo: 'etapa'; lado: Lado; nombre: string; estadistica: EstadisticaCombate; cambio: number; intento: number }
   | { tipo: 'debilitado'; lado: Lado; nombre: string }
   | { tipo: 'experiencia'; indice: number; nombre: string; cantidad: number }
@@ -110,6 +153,17 @@ export interface Resultado {
   estado: EstadoCombate;
   eventos: Evento[];
 }
+
+/** El golpe que se da a sí misma una criatura confusa: físico, sin tipo y de poder 40. */
+const GOLPE_CONFUSO: Movimiento = {
+  id: 'confusion',
+  nombre: 'Confusión',
+  tipo: '',
+  categoria: 'fisico',
+  poder: 40,
+  precision: null,
+  pp: 1,
+};
 
 /** Lo que se usa cuando no quedan PP: sin tipo y con retroceso. */
 export const ARREBATO: Movimiento = {
@@ -134,7 +188,7 @@ export function activoDe(e: EstadoCombate, lado: Lado): Criatura {
 }
 
 function combatiente(e: EstadoCombate, lado: Lado): Combatiente {
-  return { criatura: activoDe(e, lado), etapas: e[lado].etapas };
+  return { criatura: activoDe(e, lado), etapas: e[lado].etapas, avivado: e[lado].volatil.avivado };
 }
 
 function vidaMax(c: Criatura, datos: DatosJuego): number {
@@ -173,6 +227,7 @@ export function iniciarCombate(
       activo,
       etapas: etapasCero(),
       objetos: { ...(p.objetos ?? {}) },
+      volatil: volatilCero(),
     };
   };
   const estado: EstadoCombate = {
@@ -192,6 +247,8 @@ export function iniciarCombate(
     { tipo: 'entrada', lado: 'rival', indice: estado.rival.activo, ficha: fichaDe(activoDe(estado, 'rival'), datos) },
     { tipo: 'entrada', lado: 'jugador', indice: estado.jugador.activo, ficha: fichaDe(activoDe(estado, 'jugador'), datos) },
   ];
+  alEntrar(estado, 'rival', datos, eventos);
+  alEntrar(estado, 'jugador', datos, eventos);
   return { estado, eventos };
 }
 
@@ -279,21 +336,29 @@ export function resolverTurno(estado: EstadoCombate, accion: Accion, datos: Dato
     return { estado: e, eventos: ev };
   }
   validar(e, accion, datos);
+  jugarTurno(e, accion, datos, ev);
+  if (e.fin && e.fin !== 'derrota') rebuscar(e, datos, ev);
+  return { estado: e, eventos: ev };
+}
 
+function jugarTurno(e: EstadoCombate, accion: Accion, datos: DatosJuego, ev: Evento[]): void {
   const accionRival = elegirAccionIA(e, datos);
 
   switch (accion.tipo) {
     case 'huir':
-      if (huir(e, datos, ev)) return { estado: e, eventos: ev };
+      if (huir(e, datos, ev)) return;
+      e.jugador.volatil.actuado = true;
       ejecutarMovimiento(e, 'rival', indiceDe(accionRival), datos, ev);
       break;
     case 'objeto':
-      if (usarObjeto(e, accion, datos, ev)) return { estado: e, eventos: ev };
+      if (usarObjeto(e, accion, datos, ev)) return;
+      e.jugador.volatil.actuado = true;
       ejecutarMovimiento(e, 'rival', indiceDe(accionRival), datos, ev);
       break;
     case 'cambio':
-      ev.push({ tipo: 'retirada', lado: 'jugador', nombre: nombreDe(activoDe(e, 'jugador'), datos) });
+      retirar(e, 'jugador', datos, ev);
       entrar(e, 'jugador', accion.indice, datos, ev);
+      e.jugador.volatil.actuado = true;
       ejecutarMovimiento(e, 'rival', indiceDe(accionRival), datos, ev);
       break;
     case 'movimiento': {
@@ -306,7 +371,22 @@ export function resolverTurno(estado: EstadoCombate, accion: Accion, datos: Dato
   finDeTurno(e, datos, ev);
   resolverDebilitados(e, datos, ev);
   e.turno += 1;
-  return { estado: e, eventos: ev };
+}
+
+/** Rebuscar: al acabar el combate, las que la tienen pueden encontrar un objeto. */
+function rebuscar(e: EstadoCombate, datos: DatosJuego, ev: Evento[]): void {
+  const hallazgos: Evento[] = [];
+  for (const c of e.jugador.equipo) {
+    const ef = pasivaTipo(c, datos, 'rebuscar');
+    if (!ef || !vivo(c) || !probabilidad(e.rng, ef.prob)) continue;
+    const id = ef.objetos[elegirPonderado(e.rng, ef.objetos.map((o) => o.peso))].objeto;
+    const obj = datos.objetos[id];
+    if (!obj) continue;
+    e.jugador.objetos[id] = (e.jugador.objetos[id] ?? 0) + 1;
+    hallazgos.push({ tipo: 'rebusca', nombre: nombreDe(c, datos), objeto: obj.nombre });
+  }
+  const i = ev.findIndex((x) => x.tipo === 'fin');
+  ev.splice(i < 0 ? ev.length : i, 0, ...hallazgos);
 }
 
 function indiceDe(a: Accion): number {
@@ -319,7 +399,11 @@ function movimientoUsado(c: Criatura, indice: number, datos: DatosJuego): Movimi
 }
 
 function celeridadEfectiva(e: EstadoCombate, lado: Lado, datos: DatosJuego): number {
-  return calcularEstadisticas(activoDe(e, lado), datos).celeridad * multiplicadorEtapa(e[lado].etapas.celeridad);
+  const c = activoDe(e, lado);
+  let v = calcularEstadisticas(c, datos).celeridad * multiplicadorEtapa(e[lado].etapas.celeridad);
+  if (c.estado && pasivaTipo(c, datos, 'piesLigeros')) v *= 1.5;
+  else if (c.estado?.tipo === 'paralizado') v *= 0.5;
+  return v;
 }
 
 function ordenDeActuacion(
@@ -345,14 +429,93 @@ function ordenDeActuacion(
 function entrar(e: EstadoCombate, lado: Lado, indice: number, datos: DatosJuego, ev: Evento[]): void {
   e[lado].activo = indice;
   e[lado].etapas = etapasCero();
-  ev.push({ tipo: 'entrada', lado, indice, ficha: fichaDe(activoDe(e, lado), datos) });
+  e[lado].volatil = volatilCero();
+  const c = activoDe(e, lado);
+  if (c.estado?.tipo === 'intoxicado') c.estado.turnos = 1;
+  ev.push({ tipo: 'entrada', lado, indice, ficha: fichaDe(c, datos) });
+  alEntrar(e, lado, datos, ev);
+}
+
+/** Pasivas que actúan al salir al combate (Mirada torva). */
+function alEntrar(e: EstadoCombate, lado: Lado, datos: DatosJuego, ev: Evento[]): void {
+  const c = activoDe(e, lado);
+  const p = pasivaDe(c, datos);
+  if (p?.efecto.tipo !== 'intimidar' || !vivo(c) || !vivo(activoDe(e, otro(lado)))) return;
+  anunciarPasiva(ev, lado, c, p, datos);
+  cambiarEtapa(e, otro(lado), 'fuerza', -1, datos, ev, true);
+}
+
+/** Se retira por un cambio. Reposo y Brote actúan sin decir nada, como en el género. */
+function retirar(e: EstadoCombate, lado: Lado, datos: DatosJuego, ev: Evento[]): void {
+  const c = activoDe(e, lado);
+  ev.push({ tipo: 'retirada', lado, nombre: nombreDe(c, datos) });
+  const ef = pasivaDe(c, datos)?.efecto;
+  if (ef?.tipo === 'reposo') c.estado = null;
+  if (ef?.tipo === 'brote' && vivo(c)) {
+    const max = vidaMax(c, datos);
+    c.vida = Math.min(max, c.vida + Math.floor(max / 3));
+  }
+}
+
+function anunciarPasiva(ev: Evento[], lado: Lado, c: Criatura, p: Pasiva, datos: DatosJuego): void {
+  ev.push({ tipo: 'pasiva', lado, nombre: nombreDe(c, datos), pasiva: p.nombre });
+}
+
+/** Cambia las etapas de una estadística. `porRival`: Pétreo y Garras duras pueden impedir la bajada. */
+function cambiarEtapa(
+  e: EstadoCombate,
+  lado: Lado,
+  estadistica: EstadisticaCombate,
+  cambio: number,
+  datos: DatosJuego,
+  ev: Evento[],
+  porRival: boolean,
+): void {
+  const c = activoDe(e, lado);
+  const nombre = nombreDe(c, datos);
+  if (porRival && cambio < 0) {
+    const p = pasivaDe(c, datos);
+    if (p && (p.efecto.tipo === 'petreo' || (p.efecto.tipo === 'garrasDuras' && estadistica === 'fuerza'))) {
+      anunciarPasiva(ev, lado, c, p, datos);
+      ev.push({ tipo: 'etapaProtegida', lado, nombre });
+      return;
+    }
+  }
+  const etapas = e[lado].etapas;
+  const antes = etapas[estadistica];
+  const despues = Math.max(-6, Math.min(6, antes + cambio));
+  etapas[estadistica] = despues;
+  ev.push({ tipo: 'etapa', lado, nombre, estadistica, cambio: despues - antes, intento: cambio });
+}
+
+/** Le pone un estado alterado. Con Espejo, quien se lo ha causado sufre lo mismo. */
+function provocarEstado(e: EstadoCombate, lado: Lado, estado: EstadoAlterado, datos: DatosJuego, ev: Evento[], causante?: Lado): void {
+  const c = activoDe(e, lado);
+  c.estado = nuevoEstado(estado, e.rng);
+  ev.push({ tipo: 'estado', lado, nombre: nombreDe(c, datos), estado });
+  comprobarBayaEstado(e, lado, datos, ev);
+  if (!causante || estado === 'dormido') return;
+  const p = pasivaDe(c, datos);
+  if (p?.efecto.tipo !== 'espejo' || !puedeSufrir(activoDe(e, causante), estado, datos)) return;
+  anunciarPasiva(ev, lado, c, p, datos);
+  provocarEstado(e, causante, estado, datos, ev);
+}
+
+function quitarVida(e: EstadoCombate, lado: Lado, cantidad: number, causa: 'quemadura' | 'veneno' | 'retroceso' | 'objeto' | 'confusion' | 'drenadoras' | 'pasiva', datos: DatosJuego, ev: Evento[]): number {
+  const c = activoDe(e, lado);
+  const max = vidaMax(c, datos);
+  const real = Math.min(c.vida, Math.max(1, cantidad));
+  c.vida -= real;
+  ev.push({ tipo: 'danio', lado, nombre: nombreDe(c, datos), cantidad: real, vida: c.vida, vidaMax: max, eficacia: 1, critico: false, causa });
+  return real;
 }
 
 function huir(e: EstadoCombate, datos: DatosJuego, ev: Evento[]): boolean {
   e.intentosHuida += 1;
   const cj = celeridadEfectiva(e, 'jugador', datos);
   const cr = Math.max(1, celeridadEfectiva(e, 'rival', datos));
-  const exito = cj >= cr || entero(e.rng, 0, 255) < Math.floor((cj * 128) / cr) + 30 * e.intentosHuida;
+  const escurridizo = pasivaTipo(activoDe(e, 'jugador'), datos, 'escurridizo') !== null;
+  const exito = escurridizo || cj >= cr || entero(e.rng, 0, 255) < Math.floor((cj * 128) / cr) + 30 * e.intentosHuida;
   ev.push({ tipo: 'huida', exito });
   if (exito) {
     e.fin = 'huida';
@@ -457,8 +620,13 @@ function ejecutarMovimiento(e: EstadoCombate, lado: Lado, indice: number, datos:
   if (e.fin) return;
   const atacante = activoDe(e, lado);
   if (!vivo(atacante)) return;
+  const vol = e[lado].volatil;
+  vol.actuado = true;
+  const racha = vol.protecciones;
+  vol.protecciones = 0;
   const ladoDef = otro(lado);
   const defensor = activoDe(e, ladoDef);
+  const volDef = e[ladoDef].volatil;
   const nAt = nombreDe(atacante, datos);
   const nDef = nombreDe(defensor, datos);
 
@@ -470,6 +638,29 @@ function ejecutarMovimiento(e: EstadoCombate, lado: Lado, indice: number, datos:
     }
     atacante.estado = null;
     ev.push({ tipo: 'despierta', lado, nombre: nAt });
+  }
+  if (vol.retrocede) {
+    vol.retrocede = false;
+    ev.push({ tipo: 'retrocede', lado, nombre: nAt });
+    return;
+  }
+  if (vol.confusion > 0) {
+    vol.confusion -= 1;
+    if (vol.confusion === 0) ev.push({ tipo: 'finConfusion', lado, nombre: nAt });
+    else {
+      ev.push({ tipo: 'confuso', lado, nombre: nAt });
+      if (probabilidad(e.rng, 100 / 3)) {
+        const r = calcularDanio(combatiente(e, lado), combatiente(e, lado), GOLPE_CONFUSO, datos, false, entero(e.rng, 85, 100));
+        quitarVida(e, lado, r.danio, 'confusion', datos, ev);
+        comprobarBaya(e, lado, datos, ev);
+        comprobarDebilitado(e, lado, datos, ev);
+        return;
+      }
+    }
+  }
+  if (atacante.estado?.tipo === 'paralizado' && probabilidad(e.rng, 25)) {
+    ev.push({ tipo: 'noSeMueve', lado, nombre: nAt });
+    return;
   }
 
   const usado = atacante.movimientos[indice];
@@ -483,19 +674,48 @@ function ejecutarMovimiento(e: EstadoCombate, lado: Lado, indice: number, datos:
   }
   ev.push({ tipo: 'usa', lado, nombre: nAt, movimiento: mov.nombre });
 
-  const contraRival = mov.categoria !== 'estado' || (mov.efectos ?? []).some((f) => f.tipo === 'estado' || (f.tipo === 'etapa' && f.objetivo === 'rival'));
+  const efectos = mov.efectos ?? [];
+  if (efectos.some((f) => f.tipo === 'proteger')) {
+    // Falla si el rival ya ha actuado, y cada vez que se repite sale la mitad de veces.
+    const exito = !volDef.actuado && (racha === 0 || probabilidad(e.rng, 100 / 2 ** racha));
+    if (!exito) {
+      ev.push({ tipo: 'falla', lado, nombre: nAt });
+      return;
+    }
+    vol.protegido = true;
+    vol.protecciones = racha + 1;
+    ev.push({ tipo: 'protege', lado, nombre: nAt });
+    return;
+  }
+
+  const contraRival =
+    mov.categoria !== 'estado' ||
+    efectos.some((f) => f.tipo === 'estado' || f.tipo === 'confundir' || f.tipo === 'drenadoras' || (f.tipo === 'etapa' && f.objetivo === 'rival'));
+  if (contraRival && usado && mov !== ARREBATO && usado.pp > 0 && vivo(defensor) && pasivaTipo(defensor, datos, 'imponente')) usado.pp -= 1;
   if (contraRival && !vivo(defensor)) {
     ev.push({ tipo: 'falla', lado, nombre: nAt });
     return;
   }
-  if (mov.precision !== null && entero(e.rng, 1, 100) > mov.precision) {
-    ev.push({ tipo: 'falla', lado, nombre: nAt });
+  if (contraRival && volDef.protegido) {
+    ev.push({ tipo: 'protegido', lado: ladoDef, nombre: nDef });
     return;
+  }
+  if (contraRival && anulaTipo(defensor, mov.tipo, datos)) {
+    absorber(e, ladoDef, datos, ev);
+    return;
+  }
+  const pAt = pasivaDe(atacante, datos)?.efecto;
+  if (mov.precision !== null) {
+    const precision = pAt?.tipo === 'ojoAvizor' ? mov.precision * 1.3 : mov.precision;
+    if (entero(e.rng, 1, 100) > precision) {
+      ev.push({ tipo: 'falla', lado, nombre: nAt });
+      return;
+    }
   }
 
   let danioCausado = 0;
   if (mov.categoria !== 'estado') {
-    const critico = probabilidad(e.rng, PROB_CRITICO);
+    const critico = probabilidad(e.rng, PROB_CRITICO * (pAt?.tipo === 'buenaEstrella' ? 2 : 1)) && !pasivaTipo(defensor, datos, 'caparazon');
     const tirada = entero(e.rng, 85, 100);
     const r = calcularDanio(combatiente(e, lado), combatiente(e, ladoDef), mov, datos, critico, tirada);
     if (r.eficacia === 0) {
@@ -506,8 +726,10 @@ function ejecutarMovimiento(e: EstadoCombate, lado: Lado, indice: number, datos:
     const efDef = efectoEquipo(defensor, datos);
     const danio = efAt?.tipo === 'potenciar' ? Math.floor(r.danio * efAt.multiplicador) : r.danio;
     danioCausado = Math.min(defensor.vida, danio);
-    const aguanta = efDef?.tipo === 'aguantar' && defensor.vida === vidaMax(defensor, datos) && danioCausado >= defensor.vida;
-    if (aguanta) danioCausado = defensor.vida - 1;
+    const golpeLetal = defensor.vida === vidaMax(defensor, datos) && danioCausado >= defensor.vida;
+    const firme = golpeLetal && pasivaTipo(defensor, datos, 'firme') !== null;
+    const aguanta = golpeLetal && !firme && efDef?.tipo === 'aguantar';
+    if (firme || aguanta) danioCausado = defensor.vida - 1;
     defensor.vida -= danioCausado;
     ev.push({
       tipo: 'danio',
@@ -520,6 +742,10 @@ function ejecutarMovimiento(e: EstadoCombate, lado: Lado, indice: number, datos:
       critico: r.critico,
       causa: 'ataque',
     });
+    if (firme) {
+      anunciarPasiva(ev, ladoDef, defensor, pasivaDe(defensor, datos)!, datos);
+      ev.push({ tipo: 'aguanta', lado: ladoDef, nombre: nDef });
+    }
     if (aguanta) {
       ev.push({ tipo: 'objetoEquipado', lado: ladoDef, nombre: nDef, objeto: nombreObjeto(defensor, datos), efecto: 'aguanta' });
       gastar(defensor, datos);
@@ -530,22 +756,18 @@ function ejecutarMovimiento(e: EstadoCombate, lado: Lado, indice: number, datos:
       curar(atacante, Math.max(1, Math.floor(danioCausado * efAt.fraccion)), lado, e[lado].activo, datos, ev);
     }
     if (efAt?.tipo === 'potenciar' && danioCausado > 0 && vivo(atacante)) {
-      const max = vidaMax(atacante, datos);
-      const coste = Math.min(atacante.vida, Math.max(1, Math.floor(max * efAt.coste)));
-      atacante.vida -= coste;
       ev.push({ tipo: 'objetoEquipado', lado, nombre: nAt, objeto: nombreObjeto(atacante, datos), efecto: 'pierde' });
-      ev.push({ tipo: 'danio', lado, nombre: nAt, cantidad: coste, vida: atacante.vida, vidaMax: max, eficacia: 1, critico: false, causa: 'objeto' });
+      quitarVida(e, lado, Math.floor(vidaMax(atacante, datos) * efAt.coste), 'objeto', datos, ev);
     }
-    if (mov === ARREBATO) {
-      const max = vidaMax(atacante, datos);
-      const retroceso = Math.min(atacante.vida, Math.max(1, Math.floor(max / 4)));
-      atacante.vida -= retroceso;
-      ev.push({ tipo: 'danio', lado, nombre: nAt, cantidad: retroceso, vida: atacante.vida, vidaMax: max, eficacia: 1, critico: false, causa: 'retroceso' });
-    }
+    if (mov === ARREBATO) quitarVida(e, lado, Math.floor(vidaMax(atacante, datos) / 4), 'retroceso', datos, ev);
+    if (mov.categoria === 'fisico' && danioCausado > 0 && vivo(atacante)) contacto(e, lado, datos, ev);
     comprobarBaya(e, lado, datos, ev);
+    if (pAt?.tipo === 'hedor' && !efectos.some((f) => f.tipo === 'retroceso')) hacerRetroceder(e, ladoDef, 10, datos);
   }
 
-  for (const f of mov.efectos ?? []) {
+  // Bendición: los efectos añadidos de los ataques salen el doble de a menudo.
+  const prob = (p: number) => (mov.categoria !== 'estado' && pAt?.tipo === 'bendicion' ? Math.min(100, p * 2) : p);
+  for (const f of efectos) {
     switch (f.tipo) {
       case 'drenar': {
         const cantidad = Math.max(1, Math.floor(danioCausado * f.fraccion));
@@ -557,43 +779,97 @@ function ejecutarMovimiento(e: EstadoCombate, lado: Lado, indice: number, datos:
         break;
       case 'estado': {
         if (!vivo(defensor)) break;
-        const inmune =
-          defensor.estado !== null ||
-          (f.estado === 'quemado' && datos.especies[defensor.especie].tipos.includes('infernal'));
-        if (inmune) {
+        if (!puedeSufrir(defensor, f.estado, datos)) {
           if (mov.categoria === 'estado') ev.push({ tipo: 'sinEfecto', lado: ladoDef, nombre: nDef });
           break;
         }
-        if (!probabilidad(e.rng, f.prob)) break;
-        defensor.estado = f.estado === 'dormido' ? { tipo: 'dormido', turnos: entero(e.rng, 1, 3) } : { tipo: 'quemado' };
-        ev.push({ tipo: 'estado', lado: ladoDef, nombre: nDef, estado: f.estado });
-        comprobarBayaEstado(e, ladoDef, datos, ev);
+        if (!probabilidad(e.rng, prob(f.prob))) break;
+        provocarEstado(e, ladoDef, f.estado, datos, ev, lado);
+        break;
+      }
+      case 'confundir': {
+        if (!vivo(defensor)) break;
+        if (volDef.confusion > 0 || inmuneAEstado(defensor, 'confusion', datos)) {
+          if (mov.categoria === 'estado') ev.push({ tipo: 'sinEfecto', lado: ladoDef, nombre: nDef });
+          break;
+        }
+        if (!probabilidad(e.rng, prob(f.prob))) break;
+        volDef.confusion = entero(e.rng, 2, 5);
+        ev.push({ tipo: 'confunde', lado: ladoDef, nombre: nDef });
+        break;
+      }
+      case 'retroceso':
+        hacerRetroceder(e, ladoDef, prob(f.prob), datos);
+        break;
+      case 'drenadoras': {
+        if (!vivo(defensor)) break;
+        if (volDef.drenadoras || datos.especies[defensor.especie].tipos.includes('planta')) {
+          ev.push({ tipo: 'sinEfecto', lado: ladoDef, nombre: nDef });
+          break;
+        }
+        volDef.drenadoras = true;
+        ev.push({ tipo: 'siembra', lado: ladoDef, nombre: nDef });
         break;
       }
       case 'etapa': {
         const objetivoLado = f.objetivo === 'propio' ? lado : ladoDef;
-        const objetivo = activoDe(e, objetivoLado);
-        if (!vivo(objetivo)) break;
-        if (!probabilidad(e.rng, f.prob)) break;
-        const etapas = e[objetivoLado].etapas;
-        const antes = etapas[f.estadistica];
-        const despues = Math.max(-6, Math.min(6, antes + f.cambio));
-        etapas[f.estadistica] = despues;
-        ev.push({
-          tipo: 'etapa',
-          lado: objetivoLado,
-          nombre: nombreDe(objetivo, datos),
-          estadistica: f.estadistica,
-          cambio: despues - antes,
-          intento: f.cambio,
-        });
+        if (!vivo(activoDe(e, objetivoLado))) break;
+        if (!probabilidad(e.rng, prob(f.prob))) break;
+        cambiarEtapa(e, objetivoLado, f.estadistica, f.cambio, datos, ev, objetivoLado !== lado);
         break;
       }
+      case 'proteger':
+        break;
     }
   }
 
   comprobarDebilitado(e, ladoDef, datos, ev);
   comprobarDebilitado(e, lado, datos, ev);
+}
+
+/** El rival retrocede (pierde el turno) si todavía no ha actuado. */
+function hacerRetroceder(e: EstadoCombate, lado: Lado, prob: number, datos: DatosJuego): void {
+  const c = activoDe(e, lado);
+  const v = e[lado].volatil;
+  if (!vivo(c) || v.actuado || inmuneAEstado(c, 'retroceso', datos)) return;
+  if (probabilidad(e.rng, prob)) v.retrocede = true;
+}
+
+/** El ataque es de un tipo que su pasiva anula: no le hace nada y quizá le sirve. */
+function absorber(e: EstadoCombate, lado: Lado, datos: DatosJuego, ev: Evento[]): void {
+  const c = activoDe(e, lado);
+  const p = pasivaDe(c, datos)!;
+  const nombre = nombreDe(c, datos);
+  anunciarPasiva(ev, lado, c, p, datos);
+  if (p.efecto.tipo === 'absorber') {
+    const max = vidaMax(c, datos);
+    if (p.efecto.ganancia === 'curar' && c.vida < max) return curar(c, Math.max(1, Math.floor(max / 4)), lado, e[lado].activo, datos, ev);
+    if (p.efecto.ganancia === 'avivar' && !e[lado].volatil.avivado) {
+      e[lado].volatil.avivado = true;
+      ev.push({ tipo: 'aviva', lado, nombre });
+      return;
+    }
+    if (p.efecto.ganancia === 'fuerza') return cambiarEtapa(e, lado, 'fuerza', 1, datos, ev, false);
+  }
+  ev.push({ tipo: 'sinEfecto', lado, nombre });
+}
+
+/** Pasivas del defensor que castigan al que le golpea con un ataque físico. */
+function contacto(e: EstadoCombate, lado: Lado, datos: DatosJuego, ev: Evento[]): void {
+  const ladoDef = otro(lado);
+  const defensor = activoDe(e, ladoDef);
+  const atacante = activoDe(e, lado);
+  const p = pasivaDe(defensor, datos);
+  if (p?.efecto.tipo === 'contacto') {
+    if (!probabilidad(e.rng, p.efecto.prob)) return;
+    const estado = elegir(e.rng, p.efecto.estados);
+    if (!puedeSufrir(atacante, estado, datos)) return;
+    anunciarPasiva(ev, ladoDef, defensor, p, datos);
+    provocarEstado(e, lado, estado, datos, ev, ladoDef);
+  } else if (p?.efecto.tipo === 'pielAspera') {
+    anunciarPasiva(ev, ladoDef, defensor, p, datos);
+    quitarVida(e, lado, Math.floor(vidaMax(atacante, datos) / 8), 'pasiva', datos, ev);
+  }
 }
 
 function comprobarDebilitado(e: EstadoCombate, lado: Lado, datos: DatosJuego, ev: Evento[]): void {
@@ -637,13 +913,28 @@ function finDeTurno(e: EstadoCombate, datos: DatosJuego, ev: Evento[]): void {
   if (e.fin) return;
   const lados: Lado[] =
     celeridadEfectiva(e, 'jugador', datos) >= celeridadEfectiva(e, 'rival', datos) ? ['jugador', 'rival'] : ['rival', 'jugador'];
+  // Quemaduras y venenos.
   for (const lado of lados) {
     const c = activoDe(e, lado);
-    if (!vivo(c) || c.estado?.tipo !== 'quemado') continue;
+    if (!vivo(c) || !c.estado) continue;
     const max = vidaMax(c, datos);
-    const cantidad = Math.min(c.vida, Math.max(1, Math.floor(max / 16)));
-    c.vida -= cantidad;
-    ev.push({ tipo: 'danio', lado, nombre: nombreDe(c, datos), cantidad, vida: c.vida, vidaMax: max, eficacia: 1, critico: false, causa: 'quemadura' });
+    if (c.estado.tipo === 'quemado') quitarVida(e, lado, Math.floor(max / 16), 'quemadura', datos, ev);
+    else if (c.estado.tipo === 'envenenado') quitarVida(e, lado, Math.floor(max / 8), 'veneno', datos, ev);
+    else if (c.estado.tipo === 'intoxicado') {
+      quitarVida(e, lado, Math.floor((max * c.estado.turnos) / 16), 'veneno', datos, ev);
+      c.estado.turnos = Math.min(15, c.estado.turnos + 1);
+    } else continue;
+    comprobarBaya(e, lado, datos, ev);
+    comprobarDebilitado(e, lado, datos, ev);
+  }
+  // Drenadoras: la Vida que pierde se la lleva el activo del otro lado.
+  for (const lado of lados) {
+    const c = activoDe(e, lado);
+    const ladoReceptor = otro(lado);
+    const receptor = activoDe(e, ladoReceptor);
+    if (!e[lado].volatil.drenadoras || !vivo(c) || !vivo(receptor)) continue;
+    const robado = quitarVida(e, lado, Math.floor(vidaMax(c, datos) / 8), 'drenadoras', datos, ev);
+    if (receptor.vida < vidaMax(receptor, datos)) curar(receptor, robado, ladoReceptor, e[ladoReceptor].activo, datos, ev);
     comprobarBaya(e, lado, datos, ev);
     comprobarDebilitado(e, lado, datos, ev);
   }
@@ -655,6 +946,26 @@ function finDeTurno(e: EstadoCombate, datos: DatosJuego, ev: Evento[]): void {
     if (c.vida >= max) continue;
     ev.push({ tipo: 'objetoEquipado', lado, nombre: nombreDe(c, datos), objeto: nombreObjeto(c, datos), efecto: 'cura' });
     curar(c, Math.max(1, Math.floor(max * ef.fraccion)), lado, e[lado].activo, datos, ev);
+  }
+  // Carrerilla y Muda.
+  for (const lado of lados) {
+    const c = activoDe(e, lado);
+    const p = pasivaDe(c, datos);
+    if (!p || !vivo(c)) continue;
+    if (p.efecto.tipo === 'carrerilla' && e[lado].etapas.celeridad < 6) {
+      anunciarPasiva(ev, lado, c, p, datos);
+      cambiarEtapa(e, lado, 'celeridad', 1, datos, ev, false);
+    } else if (p.efecto.tipo === 'muda' && c.estado && probabilidad(e.rng, 100 / 3)) {
+      anunciarPasiva(ev, lado, c, p, datos);
+      c.estado = null;
+      ev.push({ tipo: 'curaEstado', lado, nombre: nombreDe(c, datos) });
+    }
+  }
+  for (const lado of lados) {
+    const v = e[lado].volatil;
+    v.protegido = false;
+    v.retrocede = false;
+    v.actuado = false;
   }
 }
 
