@@ -453,6 +453,10 @@ PERSONAJES = {
     'aldeana': personaje(pelo=(238, 234, 226), ropa=(150, 96, 60), vestido=(150, 96, 60)),
     # Un sabio: pelo y barba grises, túnica negra.
     'maestro': personaje(pelo=(170, 170, 176), ropa=(52, 50, 64), vestido=(52, 50, 64), barba=(186, 186, 192)),
+    # Los rivales: los dos amigos del protagonista, que viajan como él.
+    'rival_a': personaje(piel='morena', pelo=(40, 32, 30), ropa=(40, 150, 104), calzas=(70, 60, 50), tocado='sombrero',
+                         color_tocado=(120, 84, 52)),
+    'rival_b': personaje(pelo=(214, 132, 60), ropa=(150, 84, 196), calzas=(56, 50, 76), melena=True),
 }
 
 # ---------------------------------------------------------------- dibujo

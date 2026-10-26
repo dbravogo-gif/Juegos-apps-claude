@@ -34,6 +34,8 @@ export const ASPECTOS = [
   'comunero',
   'imperial',
   'espadero',
+  'rival_a',
+  'rival_b',
 ] as const;
 
 export type Aspecto = (typeof ASPECTOS)[number];

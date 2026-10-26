@@ -7,6 +7,54 @@ import type { DefEntrenador } from '../core/mundo';
 // de Tierra en lo alto: con Ignibue sería imposible. Las zonas difíciles vendrán más adelante.
 
 const LISTA: DefEntrenador[] = [
+  // ---------- Rivales (`{rival}`: el nombre que les puso el jugador) ----------
+  {
+    id: 'rival_a_santa_fe',
+    nombre: '{rival}',
+    rival: { cual: 'a', nivel: 4 },
+    equipo: [],
+    valia: 5,
+    premio: 150,
+    antes: ['¡{nombre}! Antes de salir de Santa Fe, vamos a ver qué tal se llevan nuestras compañeras.'],
+    derrota: ['Has tenido suerte. La próxima vez no será tan fácil.'],
+    despues: ['Voy a llenar el Bestiario antes que tú, ya verás.'],
+  },
+  {
+    id: 'rival_b_vega',
+    nombre: '{rival}',
+    rival: { cual: 'b', nivel: 6 },
+    equipo: [{ especie: 'abejaruco', nivel: 5 }],
+    valia: 6,
+    premio: 300,
+    antes: ['¡{nombre}! Dicen que Boabdil espera en la Alhambra.', 'Primero, a ver si estás a la altura.'],
+    derrota: ['Vale, pasa tú. Pero con Boabdil no te confíes.'],
+    despues: ['Iré a la Alhambra después de ti: quiero ver cómo pelea Boabdil.'],
+  },
+  {
+    id: 'rival_a_camino',
+    nombre: '{rival}',
+    rival: { cual: 'a', nivel: 12 },
+    equipo: [{ especie: 'lobo', nivel: 10 }],
+    valia: 6,
+    premio: 500,
+    antes: ['¡{nombre}! Casi treinta años después, y ni una cana. Como yo.', 'He entrenado por la Meseta. ¡Ahora sí!'],
+    derrota: ['¿Otra vez? No sé cómo lo haces.'],
+    despues: ['Toledo está al otro lado del puente. María Pacheco no se rinde así como así.'],
+  },
+  {
+    id: 'rival_b_toledo',
+    nombre: '{rival}',
+    rival: { cual: 'b', nivel: 13 },
+    equipo: [
+      { especie: 'erizo', nivel: 11 },
+      { especie: 'avutarda', nivel: 11 },
+    ],
+    valia: 6,
+    premio: 600,
+    antes: ['¡{nombre}! Doña María está en el Alcázar. Antes de entrar, un combate entre amigos.'],
+    derrota: ['Entra tú primero. Yo todavía tengo que entrenar.'],
+    despues: ['Doña María es la última que resiste. Ojalá aguante.'],
+  },
   // ---------- La Vega (niveles 3 a 5) ----------
   {
     id: 'ballestero_sancho',
@@ -155,5 +203,17 @@ const LISTA: DefEntrenador[] = [
     despues: ['Toledo resistirá lo que pueda.'],
   },
 ];
+
+/**
+ * Los rivales son los otros dos jugadores (GDD §5): dos amigos del protagonista que reciben las
+ * otras dos iniciales y reaparecen en cada época. El jugador les pone nombre al conocerlos.
+ * Los textos no les dan género: el jugador elige el nombre.
+ */
+export const RIVALES: Record<'a' | 'b', { porDefecto: string; pregunta: string }> = {
+  a: { porDefecto: 'Álex', pregunta: '¿Cómo se llama quien lleva sombrero?' },
+  b: { porDefecto: 'Sam', pregunta: '¿Cómo se llama quien lleva melena?' },
+};
+
+export const NOMBRES_RIVALES = { a: RIVALES.a.porDefecto, b: RIVALES.b.porDefecto };
 
 export const ENTRENADORES: Record<string, DefEntrenador> = Object.fromEntries(LISTA.map((e) => [e.id, e]));

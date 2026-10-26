@@ -8,6 +8,7 @@ import { vidaMaxima } from './estadisticas';
 import type { DefEntrenador, Dir, TablaEncuentros } from './mundo';
 import type { ResultadoCombate } from './combate';
 import { guardadas, guardar, paginasVacias, type Pagina } from './almacen';
+import { eficacia } from './tipos';
 
 export const VERSION_PARTIDA = 3;
 export const MAX_EQUIPO = 6;
@@ -43,6 +44,10 @@ export interface Partida {
   revisados: string[];
   /** La última tésera lanzada en un combate: sale a mano en el siguiente. */
   ultimaTesera?: string;
+  /** La especie inicial que eligió. En las partidas antiguas se deduce del equipo (`inicialDe`). */
+  inicial?: string;
+  /** Los nombres que puso el jugador a sus dos rivales. */
+  rivales?: { a?: string; b?: string };
   /** Zonas por las que ha pasado el jugador (para el mapa y Vuelo). Ver `zonasVisitadas`. */
   visitadas?: string[];
   /**
@@ -239,4 +244,69 @@ export function aplicarCombate(
     curarEquipo(p, datos);
   }
   return { premio, perdido, regalos };
+}
+
+// ---------- Rivales ----------
+
+/** La especie y sus evoluciones, en orden (por nivel o con objeto). */
+export function lineaDe(especie: string, datos: DatosJuego): string[] {
+  const linea = [especie];
+  for (let e = datos.especies[especie]?.evoluciona; e && !linea.includes(e.a); e = datos.especies[e.a]?.evoluciona) linea.push(e.a);
+  return linea;
+}
+
+/** La forma que tiene una especie a ese nivel, si evoluciona por nivel. */
+export function formaANivel(especie: string, nivel: number, datos: DatosJuego): string {
+  let e = especie;
+  for (let evo = datos.especies[e].evoluciona; evo?.nivel !== undefined && evo.nivel <= nivel; evo = datos.especies[e].evoluciona) e = evo.a;
+  return e;
+}
+
+/** La inicial del jugador. En las partidas de antes de guardarla, la de la línea que hay en su equipo. */
+export function inicialDe(p: Partida, iniciales: readonly string[], datos: DatosJuego): string | undefined {
+  if (p.inicial) return p.inicial;
+  for (const c of [...p.equipo, ...guardadas(p)]) {
+    const base = iniciales.find((i) => lineaDe(i, datos).includes(c.especie));
+    if (base) return base;
+  }
+  return undefined;
+}
+
+/**
+ * Las iniciales de los rivales, como en el género: el primero se queda con la que gana a la del
+ * jugador y el segundo, con la que queda.
+ */
+export function inicialesRivales(inicial: string | undefined, iniciales: readonly string[], datos: DatosJuego): { a: string; b: string } {
+  const tipo = (id: string) => datos.especies[id].tipos[0];
+  const propia = inicial ?? iniciales[0];
+  const otras = iniciales.filter((x) => x !== propia);
+  const a = otras.find((x) => eficacia(datos.tipos, tipo(x), [tipo(propia)]) > 1) ?? otras[0];
+  return { a, b: otras.find((x) => x !== a) ?? a };
+}
+
+/** El nombre de un rival: el que le puso el jugador o, si aún no lo conoce, el de por defecto. */
+export function nombreRival(p: Partida, cual: 'a' | 'b', porDefecto: Record<'a' | 'b', string>): string {
+  return p.rivales?.[cual] ?? porDefecto[cual];
+}
+
+/** Un entrenador listo para el combate: si es un rival, con su nombre y su inicial. */
+export function prepararEntrenador(
+  def: DefEntrenador,
+  p: Partida,
+  datos: DatosJuego,
+  iniciales: readonly string[],
+  nombresPorDefecto: Record<'a' | 'b', string>,
+): DefEntrenador {
+  if (!def.rival) return def;
+  const nombre = nombreRival(p, def.rival.cual, nombresPorDefecto);
+  const inicial = inicialesRivales(inicialDe(p, iniciales, datos), iniciales, datos)[def.rival.cual];
+  const texto = (t: string) => t.replaceAll('{rival}', nombre).replaceAll('{nombre}', p.nombre);
+  return {
+    ...def,
+    nombre,
+    antes: def.antes.map(texto),
+    derrota: def.derrota.map(texto),
+    despues: def.despues.map(texto),
+    equipo: [...def.equipo, { especie: formaANivel(inicial, def.rival.nivel, datos), nivel: def.rival.nivel }],
+  };
 }

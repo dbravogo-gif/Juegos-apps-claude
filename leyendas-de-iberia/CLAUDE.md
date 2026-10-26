@@ -113,7 +113,10 @@ tocan desde aquí.
     `interruptor`). Las otras cuatro piedras, en `arte/objetos-futuros/`.
   - Hecho: pesca (Caña del pescador de la Vega, `encuentrosPesca`, casillas con `pesca`) y
     almacén en páginas de 30 huecos (`src/core/almacen.ts`, partida v3).
-  - Falta: rivales recurrentes. La Liga, más adelante.
+  - Hecho: rivales recurrentes (`rival` en `DefEntrenador`, `prepararEntrenador` en
+    `partida.ts`, `RIVALES` en `data/entrenadores.ts`, paso `conocerRival`, aspectos `rival_a`
+    y `rival_b`). Cuatro combates en los capítulos 1 y 2.
+  - La Liga, más adelante (decisión del autor).
 - **Siguiente:** capítulo 3 (1571). Alhambrón queda para una zona de ruinas, a petición del
   autor. La vista de espalda de Imperión parece de frente: se puede rehacer.
 - **Mapas (2026-10-25), hecho:** con aspecto de los juegos de criaturas de GBA, a petición

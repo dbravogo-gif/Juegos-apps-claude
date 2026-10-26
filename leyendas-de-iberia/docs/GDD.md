@@ -127,7 +127,11 @@ y no lo explica, como en el género. Desde el primer momento, las criaturas que 
 equipo se guardan en las páginas del Bestiario (§8).
 
 - **Los rivales son los otros dos jugadores**, que reaparecen en cada época. En la fase
-  multijugador, su equipo rival es el equipo real de ese amigo (§9).
+  multijugador, su equipo rival es el equipo real de ese amigo (§9). Hecho en un jugador
+  (2026-10-26): son dos amigos del protagonista, que entran con él en el pabellón de Isabel; el
+  jugador les pone nombre y se quedan con las otras dos iniciales (el primero, con la que gana a
+  la tuya). Los textos no les dan género. Combates: Santa Fe y la Vega (capítulo 1), el camino
+  de Toledo y Toledo (capítulo 2).
 - **El Bestiario crece con la historia.** En el capítulo 6, Goya lo ilustra, enlazando con sus
   *Caprichos* («El sueño de la razón produce monstruos»).
 - En el capítulo 7, el protagonista combate en el bando sublevado (§6).
@@ -633,3 +637,12 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
   - El almacén pasa de una lista a 10 páginas de 30 huecos, como las cajas del género: mover
     tocando la criatura y su destino (si está ocupado, se cambian), ver su ficha y liberarla. El
     equipo nunca se queda vacío ni sin nadie en pie. Las partidas guardadas se migran (v3).
+- **2026-10-26 (18).** Rivales recurrentes.
+  - Dos amigos del protagonista, con sus propios personajes en el mapa (sombrero y melena). Se
+    les pone nombre al conocerlos: en la escena de Isabel o, en las partidas ya empezadas, en el
+    primer combate.
+  - Se quedan con las otras dos iniciales; el primero, con la que gana a la del jugador, como
+    en el género. Su inicial evoluciona con el nivel. La partida guarda la inicial elegida; en
+    las antiguas se deduce del equipo.
+  - Cuatro combates: Santa Fe al salir del pabellón (inicial a nivel 4), la Vega antes de la
+    Alhambra, el camino de Toledo y Toledo antes del Alcázar.

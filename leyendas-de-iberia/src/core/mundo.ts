@@ -33,6 +33,8 @@ export type Paso =
   | { tipo: 'dar'; objeto: string; cantidad: number }
   | { tipo: 'dinero'; cantidad: number }
   | { tipo: 'elegirInicial' }
+  /** Aparece un rival por primera vez: el jugador le pone nombre (si aún no lo tiene). */
+  | { tipo: 'conocerRival'; rival: 'a' | 'b' }
   | { tipo: 'combate'; entrenador: string }
   /** Ids de objeto; el precio sale de los datos del objeto. */
   | { tipo: 'tienda'; productos: string[] }
@@ -60,6 +62,11 @@ export interface DefEntrenador {
   derrota: string[];
   /** Lo que dice si le hablas cuando ya le has vencido. */
   despues: string[];
+  /**
+   * Es uno de los dos rivales: se llama como lo bautizó el jugador (`{rival}` en los textos) y al
+   * final de su equipo lleva la inicial que le tocó, en la forma que tenga a ese nivel.
+   */
+  rival?: { cual: 'a' | 'b'; nivel: number };
 }
 
 export interface Pnj {

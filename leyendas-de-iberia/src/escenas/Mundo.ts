@@ -2,6 +2,9 @@ import Phaser from 'phaser';
 import { DATOS } from '../data';
 import { ASPECTO_JUGADOR, ASPECTO_NAVEGANDO } from '../data/aspectos';
 import { CASILLAS, ENTRENADORES, REGALOS_ATRASADOS, ZONAS } from '../data/mundo';
+import { NOMBRES_RIVALES, RIVALES } from '../data/entrenadores';
+import { INICIALES } from '../data/especies';
+import { pedirNombre } from '../ui/pedirNombre';
 import { crearCriatura, nombreDe } from '../core/criatura';
 import type { Criatura } from '../core/modelo';
 import type { ResultadoCombate } from '../core/combate';
@@ -30,7 +33,11 @@ import {
   equipoEnPie,
   marcarVisitada,
   equipoEntrenador,
+  inicialDe,
+  inicialesRivales,
+  nombreRival,
   pasoRepelente,
+  prepararEntrenador,
   quienSabe,
   repelida,
   semillaCombate,
@@ -653,7 +660,7 @@ export class Mundo extends Phaser.Scene {
   }
 
   private async retoEntrenador(id: string): Promise<void> {
-    const def = ENTRENADORES[id];
+    const def = this.entrenador(id);
     if (this.p.vencidos.includes(id)) {
       await this.ejecutarGuion(def.despues.map((texto) => ({ tipo: 'decir', texto, quien: def.nombre }) as Paso));
       return;
@@ -708,8 +715,30 @@ export class Mundo extends Phaser.Scene {
 
   // ---------- Guiones ----------
 
+  /** Sustituye en los textos el nombre del jugador, los de sus rivales y sus iniciales. */
   private formatear(texto: string): string {
-    return texto.replaceAll('{nombre}', this.p.nombre);
+    const p = this.p;
+    const iniciales = inicialesRivales(inicialDe(p, INICIALES, DATOS), INICIALES, DATOS);
+    return texto
+      .replaceAll('{nombre}', p.nombre)
+      .replaceAll('{rivalA}', nombreRival(p, 'a', NOMBRES_RIVALES))
+      .replaceAll('{rivalB}', nombreRival(p, 'b', NOMBRES_RIVALES))
+      .replaceAll('{inicialA}', DATOS.especies[iniciales.a].nombre)
+      .replaceAll('{inicialB}', DATOS.especies[iniciales.b].nombre);
+  }
+
+  /** Un entrenador listo para pelear: los rivales, con su nombre y su inicial. */
+  private entrenador(id: string): DefEntrenador {
+    return prepararEntrenador(ENTRENADORES[id], this.p, DATOS, INICIALES, NOMBRES_RIVALES);
+  }
+
+  /** La primera vez que aparece un rival, el jugador le pone nombre. */
+  private async conocerRival(cual: 'a' | 'b', presentar = false): Promise<void> {
+    if (this.p.rivales?.[cual]) return;
+    if (presentar) await this.ui.decir('¡Una cara conocida! Es de tu pandilla de siempre.');
+    this.ui.cerrarDialogo();
+    const nombre = await pedirNombre(RIVALES[cual].porDefecto, RIVALES[cual].pregunta, 'Aceptar');
+    this.p.rivales = { ...this.p.rivales, [cual]: nombre };
   }
 
   private async ejecutarGuion(guion: Paso[]): Promise<void> {
@@ -725,7 +754,10 @@ export class Mundo extends Phaser.Scene {
     for (const paso of guion) {
       switch (paso.tipo) {
         case 'decir':
-          await this.ui.decir(this.formatear(paso.texto), paso.quien);
+          await this.ui.decir(this.formatear(paso.texto), paso.quien && this.formatear(paso.quien));
+          break;
+        case 'conocerRival':
+          await this.conocerRival(paso.rival);
           break;
         case 'elegir': {
           const i = await this.ui.elegir(this.formatear(paso.pregunta), paso.opciones.map((o) => o.texto), paso.quien);
@@ -752,13 +784,14 @@ export class Mundo extends Phaser.Scene {
         case 'elegirInicial': {
           this.ui.cerrarDialogo();
           const especie = await this.ui.elegirInicial();
+          p.inicial = especie;
           const c = crearCriatura(DATOS, especie, 5, p.rng);
           anadirCriatura(p, c);
           await this.ui.decir(`¡${nombreDe(c, DATOS)} se une a tu equipo!`);
           break;
         }
         case 'combate':
-          if (!(await this.combateEntrenador(ENTRENADORES[paso.entrenador]))) return false;
+          if (!(await this.combateEntrenador(paso.entrenador))) return false;
           break;
         case 'tienda':
           await this.ui.tienda(paso.productos, p);
@@ -790,8 +823,11 @@ export class Mundo extends Phaser.Scene {
 
   // ---------- Combates ----------
 
-  private async combateEntrenador(def: DefEntrenador): Promise<boolean> {
+  private async combateEntrenador(id: string): Promise<boolean> {
     const p = this.p;
+    const rival = ENTRENADORES[id].rival;
+    if (rival && !p.vencidos.includes(id) && equipoEnPie(p)) await this.conocerRival(rival.cual, true);
+    const def = this.entrenador(id);
     if (p.vencidos.includes(def.id)) {
       p.banderas[`vencido:${def.id}`] = true;
       return true;
