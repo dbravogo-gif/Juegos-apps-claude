@@ -62,7 +62,7 @@ const LISTA: DefEntrenador[] = [
     antes: ['Nadie llega hasta el emir sin pasar antes por mí.'],
     derrota: ['Pasa. El emir te espera junto a la fuente.'],
     despues: [
-      'El emir pelea con los duendes de la Alhambra. Dicen que no soportan la luz ni los poderes de la mente.',
+      'El emir pelea con los duendes de la Alhambra. Dicen que no soportan la luz, la mente… ni la ruda.',
       'Pocos han visto el Patio de los Leones. Míralo bien: quizá sea la última vez que es nuestro.',
     ],
   },
