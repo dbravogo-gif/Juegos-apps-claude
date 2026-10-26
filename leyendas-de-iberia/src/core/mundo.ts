@@ -36,6 +36,8 @@ export type Paso =
   /** Ordenar el equipo con las criaturas guardadas en el Bestiario. */
   | { tipo: 'almacen' }
   | { tipo: 'blason'; id: string; nombre: string }
+  /** Lleva al jugador a otra zona, como una salida: para pasar de capítulo. */
+  | { tipo: 'viajar'; zona: string; x: number; y: number; dir: Dir }
   | { tipo: 'guardar' }
   | { tipo: 'fin'; texto: string[] };
 
@@ -91,7 +93,19 @@ export interface TablaEncuentros {
 }
 
 /** Aspecto del mapa: qué árboles, muros, suelos y paredes se dibujan. Lo interpreta la interfaz. */
-export type EstiloZona = 'campo' | 'pueblo' | 'alhambra' | 'meson' | 'pabellon' | 'patio';
+export type EstiloZona =
+  | 'campo'
+  | 'pueblo'
+  | 'alhambra'
+  | 'meson'
+  | 'pabellon'
+  | 'patio'
+  /** Castilla: hierba más seca, encinas y trigales. */
+  | 'meseta'
+  /** Ciudad de muralla de ladrillo mudéjar y cipreses. */
+  | 'toledo'
+  /** Interior de sillería, con armaduras y armeros. */
+  | 'alcazar';
 
 export interface Zona {
   id: string;

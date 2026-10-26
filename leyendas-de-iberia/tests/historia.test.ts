@@ -37,7 +37,7 @@ function pasosDe(guion: Guion): Paso[] {
   return todos;
 }
 
-describe('zonas del capítulo 1', () => {
+describe('zonas', () => {
   it('son coherentes: filas iguales, caracteres conocidos, salidas y personajes en su sitio', () => {
     for (const z of Object.values(ZONAS)) {
       expect(validarZona(z, CASILLAS, ZONAS, ENTRENADORES)).toEqual([]);
@@ -102,6 +102,7 @@ describe('zonas del capítulo 1', () => {
       for (const p of guiones.flatMap(pasosDe)) {
         if (p.tipo === 'dar') expect(DATOS.objetos[p.objeto], p.objeto).toBeDefined();
         if (p.tipo === 'combate') expect(ENTRENADORES[p.entrenador], p.entrenador).toBeDefined();
+        if (p.tipo === 'viajar') expect(esSolida(ZONAS[p.zona], p.x, p.y, CASILLAS), `viaje a ${p.zona}`).toBe(false);
         if (p.tipo === 'tienda') {
           for (const id of p.productos) expect(DATOS.objetos[id]?.precio, `${id} sin precio`).toBeGreaterThan(0);
         }
@@ -190,7 +191,7 @@ describe('recipientes', () => {
   it('como mucho una tinaja por zona, y solo en ciudades e interiores', () => {
     for (const z of Object.values(ZONAS)) {
       expect(z.recipientes?.length ?? 0, z.id).toBeLessThanOrEqual(1);
-      if (z.recipientes?.length) expect(z.interior || z.estilo === 'pueblo', z.id).toBe(true);
+      if (z.recipientes?.length) expect(z.interior || z.estilo === 'pueblo' || z.estilo === 'toledo', z.id).toBe(true);
       for (const r of z.recipientes ?? []) if (r.objeto) expect(DATOS.objetos[r.objeto], r.objeto).toBeDefined();
     }
   });

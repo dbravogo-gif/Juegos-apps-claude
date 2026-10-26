@@ -10,4 +10,6 @@ export const RETRATOS: Record<string, string> = {
   'Gran Capitán': 'gran_capitan',
   Colón: 'colon',
   Boabdil: 'boabdil',
+  'Juan de Padilla': 'padilla',
+  'María Pacheco': 'maria_pacheco',
 };
