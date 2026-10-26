@@ -203,7 +203,7 @@ const MOVIMIENTOS_DEF = {
   },
   noche_cerrada: {
     nombre: 'Noche cerrada', tipo: 'oscuridad', categoria: 'magico', poder: 80, precision: 100, pp: 15,
-    efectos: [{ tipo: 'etapa', objetivo: 'rival', estadistica: 'magia', cambio: -1, prob: 20 }],
+    efectos: [{ tipo: 'cegar', prob: 20 }],
   },
   vuelo_real: { nombre: 'Vuelo real', tipo: 'aire', categoria: 'fisico', poder: 90, precision: 90, pp: 10 },
   // Los de las MO: también se usan fuera de combate. Pleamar es el Surf del género; su `id`
@@ -216,7 +216,10 @@ const MOVIMIENTOS_DEF = {
     nombre: 'Vuelo', tipo: 'aire', categoria: 'fisico', poder: 90, precision: 95, pp: 15,
     descripcion: 'Sube muy alto y cae en picado. Fuera de combate, te lleva volando a un lugar que ya conoces.',
   },
-  resplandor: { nombre: 'Resplandor', tipo: 'luz', categoria: 'magico', poder: 60, precision: 100, pp: 20 },
+  resplandor: {
+    nombre: 'Resplandor', tipo: 'luz', categoria: 'magico', poder: 60, precision: 100, pp: 20,
+    efectos: [{ tipo: 'cegar', prob: 20 }],
+  },
   lamento: {
     nombre: 'Lamento', tipo: 'espectral', categoria: 'magico', poder: 65, precision: 100, pp: 15,
     efectos: [{ tipo: 'etapa', objetivo: 'rival', estadistica: 'fuerza', cambio: -1, prob: 20 }],
@@ -228,7 +231,7 @@ const MOVIMIENTOS_DEF = {
   },
   hoja_toledana: { nombre: 'Hoja toledana', tipo: 'acero', categoria: 'fisico', poder: 75, precision: 100, pp: 15 },
 
-  // Estados alterados, confusión, retroceso, drenadoras y protección.
+  // Estados alterados, ceguera, retroceso, drenadoras y protección.
   testarazo: {
     nombre: 'Testarazo', tipo: 'comun', categoria: 'fisico', poder: 70, precision: 100, pp: 15,
     efectos: [{ tipo: 'retroceso', prob: 30 }],
@@ -254,13 +257,23 @@ const MOVIMIENTOS_DEF = {
     descripcion: 'Suelta un polvo que entumece.',
   },
   desvario: {
-    nombre: 'Desvarío', tipo: 'mental', categoria: 'estado', poder: 0, precision: 100, pp: 10,
-    efectos: [{ tipo: 'confundir', prob: 100 }],
-    descripcion: 'Le hace perder el juicio.',
+    nombre: 'Desvarío', tipo: 'mental', categoria: 'estado', poder: 0, precision: 90, pp: 10,
+    efectos: [{ tipo: 'estado', estado: 'colera', prob: 100 }],
+    descripcion: 'Le hace perder el juicio: monta en cólera.',
   },
   ofuscacion: {
     nombre: 'Ofuscación', tipo: 'mental', categoria: 'magico', poder: 50, precision: 100, pp: 25,
-    efectos: [{ tipo: 'confundir', prob: 10 }],
+    efectos: [{ tipo: 'estado', estado: 'colera', prob: 10 }],
+  },
+  destello: {
+    nombre: 'Destello', tipo: 'luz', categoria: 'estado', poder: 0, precision: 90, pp: 20,
+    efectos: [{ tipo: 'cegar', prob: 100 }],
+    descripcion: 'Un fogonazo de luz que deja cegado al rival.',
+  },
+  tiniebla: {
+    nombre: 'Tiniebla', tipo: 'oscuridad', categoria: 'estado', poder: 0, precision: 90, pp: 15,
+    efectos: [{ tipo: 'cegar', prob: 100 }],
+    descripcion: 'Lo envuelve en una oscuridad tan cerrada que no ve nada.',
   },
   muerdago: {
     nombre: 'Muérdago', tipo: 'planta', categoria: 'estado', poder: 0, precision: 90, pp: 10,

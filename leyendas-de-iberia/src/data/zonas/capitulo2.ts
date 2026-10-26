@@ -145,6 +145,8 @@ const VILLALAR: Zona = {
     { id: 'sales', x: 20, y: 17, objeto: 'sales' },
     { id: 'mt_rodela', x: 1, y: 13, objeto: 'mt_rodela', visible: true },
     { id: 'baya_perasi', x: 18, y: 1, objeto: 'baya_perasi' },
+    // Las tarántulas de Villalar pueden sacar de quicio a tus criaturas (Desvarío).
+    { id: 'baya_caquic', x: 1, y: 17, objeto: 'baya_caquic' },
   ],
 };
 
@@ -433,7 +435,7 @@ const MESON_TOLEDO: Zona = {
         ...decir('Tendero', 'Con la guerra todo está más caro, pero hay de todo. ¿Qué te pongo?'),
         {
           tipo: 'tienda',
-          productos: ['tesera', 'tesera_plata', 'tesera_rapida', 'tesera_red', 'unguento', 'emplasto', 'aloe', 'sales', 'antiparalizador', 'antidoto', 'ruda', 'ovillo', 'brebaje_fuerza', 'brebaje_escudo'],
+          productos: ['tesera', 'tesera_plata', 'tesera_rapida', 'tesera_red', 'unguento', 'emplasto', 'aloe', 'sales', 'antiparalizador', 'antidoto', 'tila', 'ruda', 'ovillo', 'brebaje_fuerza', 'brebaje_escudo'],
         },
       ],
     },

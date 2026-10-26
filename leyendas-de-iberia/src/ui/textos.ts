@@ -17,6 +17,7 @@ export const ESTADO_VISTA: Record<EstadoAlterado, { etiqueta: string; color: num
   paralizado: { etiqueta: 'Paralizada', color: 0xd6a600 },
   envenenado: { etiqueta: 'Envenenada', color: 0x9b4dca },
   intoxicado: { etiqueta: 'Intoxicada', color: 0x6a2a8f },
+  colera: { etiqueta: 'Colérica', color: 0xc2185b },
 };
 
 const SE_HA: Record<EstadoAlterado, string> = {
@@ -25,6 +26,7 @@ const SE_HA: Record<EstadoAlterado, string> = {
   paralizado: 'se ha paralizado',
   envenenado: 'se ha envenenado',
   intoxicado: 'se ha intoxicado gravemente',
+  colera: 'ha montado en cólera',
 };
 
 export interface ContextoTextos {
@@ -69,7 +71,6 @@ export function textosEvento(ev: Evento, ctx: ContextoTextos): string[] {
       if (ev.causa === 'quemadura') return [`${quien(ev.nombre, ev.lado, ctx)} sufre por la quemadura.`];
       if (ev.causa === 'veneno') return [`${quien(ev.nombre, ev.lado, ctx)} sufre por el veneno.`];
       if (ev.causa === 'retroceso') return [`${quien(ev.nombre, ev.lado, ctx)} se resiente del golpe.`];
-      if (ev.causa === 'confusion') return ['¡Se ha herido a sí mismo en su confusión!'];
       if (ev.causa === 'drenadoras') return [`El muérdago le roba Vida a ${quien(ev.nombre, ev.lado, ctx)}.`];
       if (ev.causa === 'objeto' || ev.causa === 'pasiva') return [];
       const t: string[] = [];
@@ -92,12 +93,14 @@ export function textosEvento(ev: Evento, ctx: ContextoTextos): string[] {
       return [`¡${quien(ev.nombre, ev.lado, ctx)} se despierta!`];
     case 'noSeMueve':
       return [`${quien(ev.nombre, ev.lado, ctx)} está paralizado: ¡no se puede mover!`];
-    case 'confunde':
-      return [`¡${quien(ev.nombre, ev.lado, ctx)} se ha confundido!`];
-    case 'confuso':
-      return [`${quien(ev.nombre, ev.lado, ctx)} está confuso.`];
-    case 'finConfusion':
-      return [`¡${quien(ev.nombre, ev.lado, ctx)} ya no está confuso!`];
+    case 'ciega':
+      return [`¡${quien(ev.nombre, ev.lado, ctx)} ha quedado cegado!`];
+    case 'recuperaVista':
+      return [`¡${quien(ev.nombre, ev.lado, ctx)} vuelve a ver!`];
+    case 'fallaCiego':
+      return [`${quien(ev.nombre, ev.lado, ctx)} no ve bien… ¡y falla!`];
+    case 'arrebatado':
+      return [`¡${quien(ev.nombre, ev.lado, ctx)} está fuera de sí y hace otra cosa!`];
     case 'retrocede':
       return [`¡${quien(ev.nombre, ev.lado, ctx)} ha retrocedido y no puede atacar!`];
     case 'siembra':
@@ -186,6 +189,7 @@ const VERBO_ESTADO: Record<EstadoAlterado, [string, string]> = {
   paralizado: ['paralizar', 'Paraliza'],
   envenenado: ['envenenar', 'Envenena'],
   intoxicado: ['intoxicar', 'Intoxica gravemente'],
+  colera: ['hacer montar en cólera', 'Hace montar en cólera'],
 };
 
 function fraccionTexto(f: number): string {
@@ -212,8 +216,12 @@ export function describirMovimiento(mov: Movimiento, ppActuales?: number): { tit
         frases.push(f.prob >= 100 ? `${hace} al rival.` : `${f.prob} % de probabilidad de ${verbo} al rival.`);
         break;
       }
-      case 'confundir':
-        frases.push(f.prob >= 100 ? 'Confunde al rival.' : `${f.prob} % de probabilidad de confundir al rival.`);
+      case 'cegar':
+        frases.push(
+          f.prob >= 100
+            ? 'Deja cegado al rival de 1 a 4 turnos: falla un 30 % más.'
+            : `${f.prob} % de probabilidad de dejar cegado al rival (falla un 30 % más de 1 a 4 turnos).`,
+        );
         break;
       case 'retroceso':
         frases.push(`${f.prob} % de probabilidad de que el rival retroceda, si aún no ha atacado.`);

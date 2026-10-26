@@ -105,9 +105,10 @@ tocan desde aquí.
 - **Pedidos del autor (2026-10-26, tras la comparación con Cristal, Esmeralda y Negro 2):**
   - Hecho: mando hasta abajo, correr (Alpargatas, de Fernando), mochila por bolsillos y
     vecinos que pasean (`pasea` en el personaje).
-  - Hecho: combate con parálisis, veneno, intoxicación, confusión, retroceso, Muérdago y Rodela
-    (estados volátiles en `LadoCombate.volatil`), y 50 pasivas (`src/data/pasivas.ts`,
-    `src/core/pasivas.ts`), una por especie.
+  - Hecho: combate con parálisis, veneno, intoxicación, cólera, ceguera, retroceso, Muérdago y
+    Rodela (los que se pierden al retirarse, en `LadoCombate.volatil`), y 53 pasivas
+    (`src/data/pasivas.ts`, `src/core/pasivas.ts`), una por especie. La confusión se quitó a
+    petición del autor; el nombre «cólera» está pendiente de que el autor lo confirme.
   - Hecho: más objetos (bayas, potenciadores de tipo, objetos equipables, téseras, Elixires),
     piedras lunar y solar, y Repartir experiencia (maestro de Toledo; objetos `clave` con
     `interruptor`). Las otras cuatro piedras, en `arte/objetos-futuros/`.
