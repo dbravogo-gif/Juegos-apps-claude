@@ -393,7 +393,7 @@ describe('regalos atrasados', () => {
   });
 });
 
-describe('Surf y Vuelo', () => {
+describe('Pleamar y Vuelo', () => {
   it('cada lugar con llegada cae en una casilla transitable', () => {
     for (const [id, l] of Object.entries(LUGARES)) {
       if (!l.llegada) continue;
@@ -402,7 +402,7 @@ describe('Surf y Vuelo', () => {
     }
   });
 
-  it('el Tajo se cruza con Surf: agua profunda, sólida a pie', () => {
+  it('el Tajo se cruza con Pleamar: agua profunda, sólida a pie', () => {
     const z = ZONAS.camino_toledo;
     expect(esNavegable(z, 3, 22, CASILLAS)).toBe(true);
     expect(esSolida(z, 3, 22, CASILLAS)).toBe(true);

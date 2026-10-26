@@ -62,7 +62,7 @@ export interface Especie {
    * sexos) o `ninguno` (estatuas y objetos).
    */
   sexo?: number | 'hermafrodita' | 'ninguno';
-  /** Vive en el agua: solo estas aprenden Surf. */
+  /** Vive en el agua: solo estas aprenden Pleamar. */
   acuatica?: boolean;
   /** Ave o ser con alas capaz de llevar a una persona: solo estas aprenden Vuelo. */
   alada?: boolean;
@@ -158,7 +158,7 @@ export type Objeto = ObjetoBase &
     | { tipo: 'equipo'; efecto: EfectoEquipo; consumible?: boolean }
     /**
      * MT o MO: enseña un movimiento y no se gasta. Las MO (`oculta`) enseñan los movimientos que
-     * también se usan fuera de combate (Surf y Vuelo).
+     * también se usan fuera de combate (Pleamar y Vuelo).
      */
     | {
         tipo: 'maquina';

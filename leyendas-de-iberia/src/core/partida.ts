@@ -96,7 +96,7 @@ export function marcarVisitada(p: Partida, zona: string): void {
   if (!v.includes(zona)) v.push(zona);
 }
 
-/** La primera criatura del equipo que sabe un movimiento (para Surf y Vuelo fuera de combate). */
+/** La primera criatura del equipo que sabe un movimiento (para Pleamar y Vuelo fuera de combate). */
 export function quienSabe(p: Partida, movimiento: string): Criatura | undefined {
   return p.equipo.find((c) => c.movimientos.some((m) => m.id === movimiento));
 }

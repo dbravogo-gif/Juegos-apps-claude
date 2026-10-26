@@ -215,7 +215,7 @@ const lista: Objeto[] = [
   // MO: las dan personajes importantes. Sus movimientos también se usan fuera de combate.
   {
     id: 'mo_surf',
-    nombre: 'MO01 Surf',
+    nombre: 'MO01 Pleamar',
     articulo: 'una',
     categoria: 'maquinas',
     tipo: 'maquina',
@@ -223,7 +223,7 @@ const lista: Objeto[] = [
     oculta: true,
     // Solo las criaturas que viven en el agua: Alhambrón es de tipo Agua, pero es una estatua.
     aprenden: { acuaticas: true },
-    descripcion: 'Enseña Surf (Agua) a una criatura acuática. Fuera de combate, te lleva por ríos y mares. No se gasta.',
+    descripcion: 'Enseña Pleamar (Agua) a una criatura acuática. Fuera de combate, te lleva por ríos y mares. No se gasta.',
   },
   {
     id: 'mo_vuelo',

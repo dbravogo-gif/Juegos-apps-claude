@@ -536,10 +536,10 @@ def hoja(p: dict) -> Image.Image:
     return im
 
 
-# ---------------------------------------------------------------- surcando el agua (Surf)
+# ---------------------------------------------------------------- surcando el agua (Pleamar)
 
 # Una criatura de agua genérica, como en los juegos del género: lomo azul, ojos y espuma. Sea
-# cual sea la criatura que sabe Surf, en el mapa se ve esta.
+# cual sea la criatura que sabe Pleamar, en el mapa se ve esta.
 LOMO = (46, 150, 132)
 LOMO_CLARO = (132, 220, 192)
 LOMO_OSCURO = (18, 62, 64)

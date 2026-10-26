@@ -176,7 +176,7 @@ const CAMINO_TOLEDO: Zona = {
     '#,,,,,,,,.,,,,,#',
     '#########G######',
   ],
-  // En el Tajo, con Surf.
+  // En el Tajo, con Pleamar.
   encuentrosAgua: {
     tasa: 10,
     especies: [{ especie: 'galapago', min: 9, max: 11, peso: 100 }],

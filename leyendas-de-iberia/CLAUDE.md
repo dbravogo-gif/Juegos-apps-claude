@@ -94,11 +94,12 @@ tocan desde aquí.
   - Colón da el Mapa (opción Mapa en el menú); a quien ya pasó por él le llega al cargar
     (`REGALOS_ATRASADOS` en `data/mundo.ts`, que sirve para cualquier regalo añadido tarde).
   - MT y MO en el bolsillo «MT y MO»: no se gastan. Cinco MT (dos de líderes, tres en zurrones
-    en el suelo: `ocultos` con `visible`). MO Surf y Vuelo, con sus usos fuera de combate:
-    Surf cruza el agua profunda (`O`, con `encuentrosAgua`) y solo lo aprenden las especies
+    en el suelo: `ocultos` con `visible`). MO Pleamar (el Surf del género, `id` `surf`) y
+    Vuelo, con sus usos fuera de combate: Pleamar cruza el agua profunda (`O`, con `encuentrosAgua`) y solo lo aprenden las especies
     `acuatica`; Vuelo, solo las `alada`, y viaja desde el mapa a cualquier lugar visitado, de
     cualquier época (decisión del autor; `llegada` en `lugares.ts`).
-  - Quién da las MO y el plan de los legendarios: propuesta en el GDD §8, pendiente del autor.
+  - Pleamar la da Olivares en el capítulo 4 (decidido); quién da Vuelo y el plan de los
+    legendarios, propuesta en el GDD §8.
   - Base de los legendarios: personajes con `criatura` (esperan de pie y empiezan el combate) y
     salidas con `requiere` (zonas cerradas hasta tener un objeto o una bandera).
 - **Siguiente:** capítulo 3 (1571). Alhambrón queda para una zona de ruinas, a petición del

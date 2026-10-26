@@ -18,7 +18,7 @@ export interface DefCasilla {
   solido: boolean;
   /** Hierba alta: puede saltar un encuentro. */
   hierba?: boolean;
-  /** Agua profunda: sólida a pie, pero se cruza con Surf. */
+  /** Agua profunda: sólida a pie, pero se cruza con Pleamar. */
   navegable?: boolean;
 }
 
@@ -136,7 +136,7 @@ export interface Zona {
   /** Color del suelo fuera del mapa y de fondo. */
   fondo?: number;
   encuentros?: TablaEncuentros;
-  /** Encuentros al surcar el agua profunda con Surf (cada paso por el agua). */
+  /** Encuentros al surcar el agua profunda con Pleamar (cada paso por el agua). */
   encuentrosAgua?: TablaEncuentros;
   pnj: Pnj[];
   salidas: Salida[];

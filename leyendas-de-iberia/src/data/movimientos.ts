@@ -200,10 +200,11 @@ const MOVIMIENTOS_DEF = {
     efectos: [{ tipo: 'etapa', objetivo: 'rival', estadistica: 'magia', cambio: -1, prob: 20 }],
   },
   vuelo_real: { nombre: 'Vuelo real', tipo: 'aire', categoria: 'fisico', poder: 90, precision: 90, pp: 10 },
-  // Los de las MO: también se usan fuera de combate.
+  // Los de las MO: también se usan fuera de combate. Pleamar es el Surf del género; su `id`
+  // se queda en `surf`.
   surf: {
-    nombre: 'Surf', tipo: 'agua', categoria: 'magico', poder: 90, precision: 100, pp: 15,
-    descripcion: 'Una ola enorme cae sobre el rival. Fuera de combate, la criatura te lleva por el agua.',
+    nombre: 'Pleamar', tipo: 'agua', categoria: 'magico', poder: 90, precision: 100, pp: 15,
+    descripcion: 'La mar sube en su punto más alto y rompe contra el rival. Fuera de combate, la pleamar te lleva por ríos y mares.',
   },
   vuelo: {
     nombre: 'Vuelo', tipo: 'aire', categoria: 'fisico', poder: 90, precision: 95, pp: 15,

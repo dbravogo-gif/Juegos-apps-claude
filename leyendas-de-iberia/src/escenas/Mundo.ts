@@ -80,7 +80,7 @@ export class Mundo extends Phaser.Scene {
   /** A pulsado a mitad de un paso: se atiende al llegar. */
   private aPendiente = false;
   private listo = false;
-  /** Se ha aceptado entrar en el agua con Surf: el siguiente paso puede pisar agua profunda. */
+  /** Se ha aceptado entrar en el agua con Pleamar: el siguiente paso puede pisar agua profunda. */
   private entrarAlAgua = false;
   /** Con qué hoja se dibuja ahora al jugador: a pie o surcando el agua. */
   private aspectoJugador: string = ASPECTO_JUGADOR;
@@ -229,7 +229,7 @@ export class Mundo extends Phaser.Scene {
     );
   }
 
-  /** El jugador está sobre agua profunda: va con Surf. */
+  /** El jugador está sobre agua profunda: va con Pleamar. */
   private navegando(): boolean {
     const pos = this.p.posicion;
     return esNavegable(this.zona, pos.x, pos.y, CASILLAS);
@@ -256,7 +256,7 @@ export class Mundo extends Phaser.Scene {
     const [dx, dy] = DELTA[dir];
     const nx = pos.x + dx;
     const ny = pos.y + dy;
-    // En el agua profunda solo se entra con Surf; desde el agua se sale a cualquier casilla libre.
+    // En el agua profunda solo se entra con Pleamar; desde el agua se sale a cualquier casilla libre.
     const cerrada = this.zona.salidas.find((s) => s.x === nx && s.y === ny && s.requiere && !cumpleRequisito(s.requiere, this.p.objetos, this.p.banderas));
     if (cerrada?.requiere) {
       this.jugador.parar();
@@ -374,15 +374,15 @@ export class Mundo extends Phaser.Scene {
       void this.conBloqueo(() => this.encontrarOculto(oculto));
       return;
     }
-    if (!this.navegando() && esNavegable(this.zona, tx, ty, CASILLAS)) void this.ofrecerSurf(pos.dir);
+    if (!this.navegando() && esNavegable(this.zona, tx, ty, CASILLAS)) void this.ofrecerPleamar(pos.dir);
   }
 
-  /** Delante hay agua profunda: si alguien del equipo sabe Surf, se ofrece a llevarte. */
-  private async ofrecerSurf(dir: Dir): Promise<void> {
+  /** Delante hay agua profunda: si alguien del equipo sabe Pleamar, se ofrece a llevarte. */
+  private async ofrecerPleamar(dir: Dir): Promise<void> {
     const quien = quienSabe(this.p, 'surf');
     const acepta = await this.conBloqueo(async () => {
       if (!quien) {
-        await this.ui.decir('El agua es profunda. Una criatura que sepa Surf podría llevarte.');
+        await this.ui.decir('El agua es profunda. Una criatura que sepa Pleamar podría llevarte.');
         this.ui.cerrarDialogo();
         return false;
       }
