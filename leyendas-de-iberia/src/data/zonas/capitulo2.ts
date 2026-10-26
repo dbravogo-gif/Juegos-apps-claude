@@ -103,6 +103,7 @@ const VILLALAR: Zona = {
       y: 9,
       dir: 'izquierda',
       aspecto: 'aldeano',
+      pasea: 2,
       guion: decir('Vecino', 'Hoy ha llovido a mares. Los comuneros se retiraban, se atascaron en el barro y la caballería los alcanzó.'),
     },
     {
@@ -298,6 +299,7 @@ const TOLEDO: Zona = {
       y: 10,
       dir: 'abajo',
       aspecto: 'mujer',
+      pasea: 2,
       guion: decir(
         'Vecina',
         'Doña María ha sacado la plata de la catedral para pagar a la tropa. Toledo no se rinde.',

@@ -27,15 +27,15 @@
       }
       /*
        * Arriba, una franja negra para la barra de estado, la isla o la muesca del móvil: lo que
-       * ocupe el sistema y, como mínimo, un 5 % del alto. Abajo, lo justo para la barra de
-       * inicio del iPhone. Es como colocan la pantalla los emuladores de GBA y DS.
+       * ocupe el sistema y, como mínimo, un 5 % del alto. Abajo el juego llega hasta el borde;
+       * el mando deja libre la barra de inicio del iPhone (`MARGEN_INFERIOR` en tema.ts).
        */
       #juego {
         position: fixed;
         left: 0;
         right: 0;
         top: max(env(safe-area-inset-top, 0px), 5vh);
-        bottom: env(safe-area-inset-bottom, 0px);
+        bottom: 0;
       }
     </style>
   </head>

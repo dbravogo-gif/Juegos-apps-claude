@@ -10,11 +10,11 @@ import { LUGARES } from '../data/lugares';
 import { aplicarCuracion, equipar, motivoNoUsable, quitarObjeto, seAplicaACriatura, usoDe } from '../core/objetos';
 import { calcularEstadisticas } from '../core/estadisticas';
 import { aprenderMovimiento, destinoConObjeto, evolucionar, evolucionPendiente, expParaNivel, subirNivel } from '../core/progreso';
-import type { CategoriaObjeto, Criatura, Movimiento } from '../core/modelo';
+import type { Criatura, Movimiento } from '../core/modelo';
 import { NOMBRE_ESTADISTICA, type EstadisticaCombate } from '../core/modelo';
 import { DATOS } from '../data';
 import { INICIALES } from '../data/especies';
-import { CATEGORIAS } from '../data/objetos';
+import { BOLSILLOS, CATEGORIAS } from '../data/objetos';
 import { Barra, Boton, botonFlecha, filaTipos, NOMBRE_SEXO, simboloSexo } from '../ui/componentes';
 import { crearCriaturaVisual } from '../ui/criaturaVisual';
 import { conArticulo, describirMovimiento } from '../ui/textos';
@@ -23,11 +23,11 @@ import { claveRetrato } from '../ui/retratoVisual';
 import { construirTablaTipos, textoMultiplicador } from '../ui/tablaTipos';
 import { debilidades } from '../core/tipos';
 import { guardarPartida } from '../ui/sesion';
-import { aclarar, ALTO, ANCHO, COLOR, estiloTexto, oscurecer, textoSobre } from '../ui/tema';
+import { aclarar, ALTO, ANCHO, COLOR, estiloTexto, MARGEN_INFERIOR, oscurecer, textoSobre } from '../ui/tema';
 import { cabecera, colorPedestal, colorTipoDe, fondoMenu, franja, pildora, ventana } from '../ui/ventanas';
 
-/** Alto del mando, abajo del todo. El mapa ocupa el resto. */
-const ALTO_MANDO = 600;
+/** Alto del mando, abajo del todo y hasta el borde de la pantalla. El mapa ocupa el resto. */
+const ALTO_MANDO = 500 + MARGEN_INFERIOR;
 
 // Capa de interfaz del modo historia, por encima del mapa: mando táctil, teclado, diálogos,
 // elecciones y menús. El mapa le pregunta por la dirección pulsada y escucha los eventos «a» y
@@ -39,11 +39,12 @@ export const MONEDA = 'maravedís';
 
 // El mando va pegado abajo, al alcance del pulgar, como en los emuladores de GBA y DS (los
 // skins de Delta): la cruceta a la izquierda, A y B en diagonal a la derecha y Menú abajo en
-// el centro, donde va Start.
-const CRUCETA = { x: 250, y: ALTO - 300, radio: 190 };
-const BOTON_A = { x: 900, y: ALTO - 360, radio: 100 };
-const BOTON_B = { x: 720, y: ALTO - 220, radio: 84 };
-const BOTON_MENU = { x: ANCHO / 2, y: ALTO - 58 };
+// el centro, donde va Start. Los botones quedan por encima de la barra de inicio del iPhone.
+const SUELO = ALTO - MARGEN_INFERIOR;
+const CRUCETA = { x: 240, y: SUELO - 280, radio: 180 };
+const BOTON_A = { x: 900, y: SUELO - 330, radio: 96 };
+const BOTON_B = { x: 725, y: SUELO - 196, radio: 80 };
+const BOTON_MENU = { x: ANCHO / 2, y: SUELO - 50 };
 const TECLAS_DIR: Record<string, Dir> = {
   arrowup: 'arriba',
   w: 'arriba',
@@ -58,7 +59,9 @@ const TECLAS_DIR: Record<string, Dir> = {
 export class Interfaz extends Phaser.Scene {
   private dirTactil: Dir | null = null;
   private punteroCruceta: number | null = null;
-  private teclas!: Record<'arriba' | 'abajo' | 'izquierda' | 'derecha' | 'w' | 'a' | 's' | 'd', Phaser.Input.Keyboard.Key>;
+  private teclas!: Record<'arriba' | 'abajo' | 'izquierda' | 'derecha' | 'w' | 'a' | 's' | 'd' | 'correr', Phaser.Input.Keyboard.Key>;
+  /** Dedo que mantiene pulsado B (para correr). */
+  private punteroB: number | null = null;
   private flechas: Partial<Record<Dir, Phaser.GameObjects.Graphics>> = {};
 
   private capaDialogo!: Phaser.GameObjects.Container;
@@ -164,7 +167,14 @@ export class Interfaz extends Phaser.Scene {
     this.input.on('pointerupoutside', soltar);
 
     this.botonRedondo(BOTON_A.x, BOTON_A.y, BOTON_A.radio, COLOR.rojo, 'A', 'Hablar', () => this.pulsarA());
-    this.botonRedondo(BOTON_B.x, BOTON_B.y, BOTON_B.radio, COLOR.azul, 'B', 'Volver', () => this.pulsarB());
+    // B mantenido, con las alpargatas, es correr.
+    const b = this.botonRedondo(BOTON_B.x, BOTON_B.y, BOTON_B.radio, COLOR.azul, 'B', 'Volver', () => this.pulsarB());
+    b.on('pointerdown', (p: Phaser.Input.Pointer) => (this.punteroB = p.id));
+    const soltarB = (p: Phaser.Input.Pointer) => {
+      if (p.id === this.punteroB) this.punteroB = null;
+    };
+    this.input.on('pointerup', soltarB);
+    this.input.on('pointerupoutside', soltarB);
     new Boton(this, BOTON_MENU.x, BOTON_MENU.y, { ancho: 240, alto: 80, texto: 'Menú', tamano: 34, alPulsar: () => this.pulsarMenu() });
   }
 
@@ -197,7 +207,7 @@ export class Interfaz extends Phaser.Scene {
     else if (dir && this.capaMenu) this.nav?.mover(dir);
   }
 
-  private botonRedondo(x: number, y: number, r: number, color: number, letra: string, etiqueta: string, accion: () => void): void {
+  private botonRedondo(x: number, y: number, r: number, color: number, letra: string, etiqueta: string, accion: () => void): Phaser.GameObjects.Arc {
     this.add.circle(x, y + 8, r, oscurecer(color, 0.35));
     const c = this.add.circle(x, y, r, color).setInteractive({ useHandCursor: true });
     this.add.circle(x, y - r * 0.35, r * 0.6, 0xffffff, 0.14);
@@ -212,6 +222,7 @@ export class Interfaz extends Phaser.Scene {
     });
     c.on('pointerup', () => c.setScale(1));
     c.on('pointerout', () => c.setScale(1));
+    return c;
   }
 
   private crearTeclado(): void {
@@ -227,6 +238,7 @@ export class Interfaz extends Phaser.Scene {
       a: K.A,
       s: K.S,
       d: K.D,
+      correr: K.SHIFT,
     }) as typeof this.teclas;
     kb.on('keydown', (e: KeyboardEvent) => {
       if (e.repeat) return;
@@ -246,8 +258,14 @@ export class Interfaz extends Phaser.Scene {
   /** Olvida las direcciones que estuvieran pulsadas. */
   soltarControles(): void {
     this.punteroCruceta = null;
+    this.punteroB = null;
     this.setDirTactil(null);
     this.input.keyboard?.resetKeys();
+  }
+
+  /** Mantiene pulsado B (o Mayúsculas en el teclado): con las alpargatas, el jugador corre. */
+  corriendo(): boolean {
+    return this.punteroB !== null || Boolean(this.teclas?.correr.isDown);
   }
 
   /** Dirección que el jugador mantiene pulsada, en pantalla o en el teclado. */
@@ -1323,19 +1341,25 @@ export class Interfaz extends Phaser.Scene {
    * Mochila por bolsillos, como en los juegos actuales: arriba, un icono por bolsillo; en
    * medio, la lista; abajo, la descripción del objeto marcado y lo que se puede hacer con él.
    */
-  private pantallaMochila(p: Partida, volver: () => void, categoria?: CategoriaObjeto, sel = 0): void {
+  private pantallaMochila(p: Partida, volver: () => void, bolsilloId?: string, sel = 0): void {
     const c = this.abrirCapa('Mochila', { icono: 'mochila', color: COLOR.bronce });
-    const tengo = Object.entries(p.objetos).filter(([id, n]) => n > 0 && DATOS.objetos[id]);
+    // Ordenados: por categoría y, dentro, como en la lista de objetos.
+    const orden = Object.keys(DATOS.objetos);
+    const categorias = CATEGORIAS.map((k) => k.id);
+    const tengo = Object.entries(p.objetos)
+      .filter(([id, n]) => n > 0 && DATOS.objetos[id])
+      .sort(([a], [b]) => categorias.indexOf(DATOS.objetos[a].categoria) - categorias.indexOf(DATOS.objetos[b].categoria) || orden.indexOf(a) - orden.indexOf(b));
+    const en = (b: (typeof BOLSILLOS)[number], id: string) => b.categorias.includes(DATOS.objetos[id].categoria);
     if (tengo.length === 0) {
       c.add(ventana(this, 24, 150, ANCHO - 48, 140));
       c.add(this.add.text(ANCHO / 2, 220, 'La mochila está vacía.', estiloTexto(38, COLOR.tinta, true)).setOrigin(0.5));
       this.botonVolver(c, volver);
       return;
     }
-    const bolsillos = CATEGORIAS.filter((k) => tengo.some(([id]) => DATOS.objetos[id].categoria === k.id));
-    const k = Math.max(0, bolsillos.findIndex((b) => b.id === categoria));
+    const bolsillos = BOLSILLOS.filter((b) => tengo.some(([id]) => en(b, id)));
+    const k = Math.max(0, bolsillos.findIndex((b) => b.id === bolsilloId));
     const bolsillo = bolsillos[k];
-    const objetos = tengo.filter(([id]) => DATOS.objetos[id].categoria === bolsillo.id);
+    const objetos = tengo.filter(([id]) => en(bolsillo, id));
     const actual = Math.min(sel, objetos.length - 1);
     const ir = (bk: number, s = 0) => this.pantallaMochila(p, volver, bolsillos[(bk + bolsillos.length) % bolsillos.length].id, s);
 
@@ -1344,7 +1368,7 @@ export class Interfaz extends Phaser.Scene {
     const x0 = ANCHO / 2 - ((bolsillos.length - 1) * paso) / 2;
     bolsillos.forEach((b, j) => {
       const x = x0 + j * paso;
-      const primero = tengo.find(([id]) => DATOS.objetos[id].categoria === b.id)![0];
+      const primero = tengo.find(([id]) => en(b, id))![0];
       const g = this.add.graphics();
       if (j === k) {
         g.fillStyle(0x000000, 0.2).fillCircle(x, 206, 58);

@@ -52,12 +52,17 @@ import type { ResultadoHistoria } from './Combate';
 
 const T = TAM_CASILLA;
 const MS_PASO = 170;
+/** Un paso corriendo, con las alpargatas. */
+const MS_CORRER = 95;
 
 interface PersonaEnMapa {
   pnj: Pnj;
   figura: Persona | CriaturaQuieta;
   x: number;
   y: number;
+  /** Los que pasean: cuándo dan el próximo paso y si están dándolo. */
+  proximo?: number;
+  paseando?: boolean;
 }
 
 export class Mundo extends Phaser.Scene {
@@ -112,6 +117,7 @@ export class Mundo extends Phaser.Scene {
   private async empezar(): Promise<void> {
     this.ui.events.on('a', this.alPulsarA, this);
     this.ui.events.on('menu', this.alPulsarMenu, this);
+    this.time.addEvent({ delay: 250, loop: true, callback: () => this.pasear() });
     this.cargarZona(this.p.posicion);
     this.listo = true;
     await this.conBloqueo(async () => {
@@ -220,6 +226,53 @@ export class Mundo extends Phaser.Scene {
 
   // ---------- Movimiento ----------
 
+  /**
+   * Los personajes con `pasea` dan un paso de vez en cuando, sin alejarse de su sitio. Se paran
+   * mientras hay un diálogo o un menú. Es solo decorado: al volver a la zona, están en su sitio.
+   */
+  private pasear(): void {
+    if (!this.listo || this.ocupado || this.ui.ocupado) return;
+    const ahora = this.time.now;
+    const pos = this.p.posicion;
+    for (const pe of this.personas) {
+      const radio = pe.pnj.pasea;
+      if (!radio || pe.paseando) continue;
+      if (pe.proximo === undefined) {
+        pe.proximo = ahora + Phaser.Math.Between(800, 3000);
+        continue;
+      }
+      if (ahora < pe.proximo) continue;
+      pe.proximo = ahora + Phaser.Math.Between(1500, 4000);
+      const dir = Phaser.Utils.Array.GetRandom(['arriba', 'abajo', 'izquierda', 'derecha'] as Dir[]);
+      pe.figura.setDir(dir);
+      const [dx, dy] = DELTA[dir];
+      const nx = pe.x + dx;
+      const ny = pe.y + dy;
+      const lejos = Math.abs(nx - pe.pnj.x) > radio || Math.abs(ny - pe.pnj.y) > radio;
+      const estorbo =
+        esSolida(this.zona, nx, ny, CASILLAS) ||
+        this.ocupadaPorAlguien(nx, ny) ||
+        (nx === pos.x && ny === pos.y) ||
+        this.zona.salidas.some((s) => s.x === nx && s.y === ny);
+      if (lejos || estorbo) continue;
+      pe.x = nx;
+      pe.y = ny;
+      pe.paseando = true;
+      pe.figura.andar(dir);
+      this.ordenarProfundidad();
+      this.tweens.add({
+        targets: pe.figura,
+        x: nx * T + T / 2,
+        y: ny * T + T / 2,
+        duration: MS_PASO * 1.6,
+        onComplete: () => {
+          pe.paseando = false;
+          pe.figura.parar();
+        },
+      });
+    }
+  }
+
   private ocupadaPorAlguien(x: number, y: number): boolean {
     return (
       this.personas.some((pe) => pe.x === x && pe.y === y) ||
@@ -275,7 +328,9 @@ export class Mundo extends Phaser.Scene {
       return;
     }
     this.moviendo = true;
-    this.jugador.andar(dir);
+    // Se corre manteniendo B, con las alpargatas, y nunca por el agua.
+    const corre = this.ui.corriendo() && (this.p.objetos.alpargatas ?? 0) > 0 && !agua;
+    this.jugador.andar(dir, corre);
     pos.x = nx;
     pos.y = ny;
     this.ordenarProfundidad();
@@ -283,7 +338,7 @@ export class Mundo extends Phaser.Scene {
       targets: this.jugador,
       x: nx * T + T / 2,
       y: ny * T + T / 2,
-      duration: MS_PASO,
+      duration: corre ? MS_CORRER : MS_PASO,
       onComplete: () => {
         this.moviendo = false;
         this.actualizarAspecto();

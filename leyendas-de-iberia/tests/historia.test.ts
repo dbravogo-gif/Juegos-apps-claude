@@ -358,6 +358,17 @@ describe('mapa de la península', () => {
   });
 });
 
+describe('personajes que pasean', () => {
+  it('solo pasean los que no retan ni esperan para luchar', () => {
+    const paseantes = Object.values(ZONAS).flatMap((z) => z.pnj.filter((p) => p.pasea));
+    expect(paseantes.length).toBeGreaterThan(0);
+    for (const p of paseantes) {
+      expect(p.entrenador, p.id).toBeUndefined();
+      expect(p.criatura, p.id).toBeUndefined();
+    }
+  });
+});
+
 describe('legendarios y zonas cerradas', () => {
   it('las criaturas que esperan en el mapa y lo que piden las salidas existen', () => {
     for (const z of Object.values(ZONAS)) {

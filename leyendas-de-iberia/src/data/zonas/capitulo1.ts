@@ -153,6 +153,7 @@ const SANTA_FE: Zona = {
       y: 17,
       dir: 'izquierda',
       aspecto: 'mujer',
+      pasea: 2,
       guion: decir(
         'Vecina',
         'El verano pasado ardió el campamento real entero.',
@@ -284,6 +285,10 @@ const PABELLON: Zona = {
               'Boabdil ha aceptado un último duelo de leyendas en la Alhambra antes de entregar la ciudad.',
               'Ve a verle. Pero antes habla con Gonzalo, el Gran Capitán: está en la plaza y te dará con qué sellar pactos.',
             ),
+            ...decir('Fernando', 'Y de mi parte, esto: unas alpargatas de esparto. Con ellas llegarás antes a todas partes.'),
+            dar('alpargatas', 1),
+            bandera('regalo:alpargatas'),
+            ...decir(undefined, 'Con las alpargatas puedes correr: mantén pulsado B mientras andas.'),
             bandera('inicial'),
             { tipo: 'guardar' },
           ],

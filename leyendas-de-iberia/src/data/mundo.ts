@@ -24,6 +24,7 @@ export const ENTRADAS = entradasDeZonas(ZONAS, [INICIO, INICIO_CAPITULO_2]);
  * si tiene la bandera `si` y no la `marca`, recibe el objeto con el texto (`darAtrasados`).
  */
 export const REGALOS_ATRASADOS = [
+  { si: 'inicial', marca: 'regalo:alpargatas', objeto: 'alpargatas', texto: 'Un criado del rey Fernando te trae unas alpargatas de esparto: mantén pulsado B al andar para correr.' },
   { si: 'colon', marca: 'regalo:mapa', objeto: 'mapa', texto: 'Un paje de Colón te alcanza: te trae el mapa de los reinos que te prometió.' },
   { si: 'vencido:boabdil', marca: 'regalo:mt_boabdil', objeto: 'mt_noche_cerrada', texto: 'Un mensajero de Boabdil te trae la MT01 Noche cerrada.' },
   { si: 'vencido:maria_pacheco', marca: 'regalo:mt_maria', objeto: 'mt_hoja_toledana', texto: 'Un comunero de Toledo te trae, de parte de María Pacheco, la MT02 Hoja toledana.' },

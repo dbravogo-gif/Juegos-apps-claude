@@ -83,6 +83,8 @@ export interface Pnj {
    * huyes, sigue ahí. Con esto, `aspecto` no se usa.
    */
   criatura?: { especie: string; nivel: number };
+  /** Pasea solo, sin alejarse más de estas casillas de su sitio. Solo para quien no reta. */
+  pasea?: number;
 }
 
 export interface Salida {
