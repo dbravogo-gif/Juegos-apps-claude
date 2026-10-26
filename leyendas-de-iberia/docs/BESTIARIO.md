@@ -10,7 +10,8 @@ Diseño de las 150 especies. Parte del prompt maestro que el autor preparó con 
   cambia respecto a la v1.
 - El juego ya usa el capítulo 1 de esta tabla (nombres, estadísticas y movimientos). Los `id`
   internos de `src/data/especies.ts` no cambian, para no romper partidas guardadas.
-- Siguiente: fichas del capítulo 2, cuando el autor dé el visto bueno.
+- **Capítulo 2 (2026-10-26):** sus 15 especies ya están en el juego, con arte. Las fichas,
+  en versión resumida (estadísticas y movimientos), en la fase C.
 - La descripción visual de las 150 especies, lista para generar su imagen, está en
   `DESCRIPCIONES.md`. Sustituye al inventario del prompt.
 
@@ -311,8 +312,8 @@ una ruta con predominio de un tipo y un gimnasio que se prepara con lo que se ca
 2. El gimnasio del capítulo es de un tipo que aparece en la zona, para que el jugador lo vea
    venir.
 3. Antes del gimnasio se puede capturar al menos una criatura que le gane, sea cual sea el
-   inicial. Se pueden repetir especies de capítulos anteriores para conseguirlo (un barbo en el
-   Tajo, por ejemplo).
+   inicial. Se pueden repetir especies de capítulos anteriores para conseguirlo (Carapachón en
+   el Tajo, por ejemplo), siempre que el animal real viva allí.
 4. El tipo del gimnasio no se repite en capítulos seguidos.
 
 **Aplicado a los tres primeros:**
@@ -320,7 +321,7 @@ una ruta con predominio de un tipo y un gimnasio que se prepara con lo que se ca
 | Capítulo | Zonas | Gimnasio | Con qué se gana |
 | --- | --- | --- | --- |
 | 1. Granada | Vega mezclada; Alhambra de Oscuridad (duendes) | Boabdil: Oscuridad | Mandragor (Planta y Mental), en la Vega |
-| 2. Toledo | Llanos de Villalar: Común y Tierra. Camino de Toledo: Oscuridad y Tierra, con Agua junto al Tajo | María Pacheco: Tierra y Acero (las espadas de Toledo y la roca del Tajo) | Las tres iniciales le hacen ×2; Barbaflux y Carapachón en el Tajo; Lizarco |
+| 2. Toledo | Llanos de Villalar: Común y Tierra. Camino de Toledo: Oscuridad y Tierra, con Agua junto al Tajo | María Pacheco: Tierra y Acero (las espadas de Toledo y la roca del Tajo) | Las tres iniciales le hacen ×2; Carapachón en el Tajo; Lizarco |
 | 3. Sevilla | Guadalquivir: Agua | Don Juan de Austria: Agua (Lepanto) | Centellón y el corposanto (Eléctrico y Plasma) |
 
 Los capítulos 4 a 8 se ordenan con la regla cuando toque diseñarlos. El 4 y el 6 necesitan
@@ -1526,6 +1527,58 @@ pendiente del autor.
     - **Postura:** inclinado hacia delante, con la boca abierta de par en par.
     - **Lo que no debe ser:** un cofre del tesoro con dientes. Es siempre un recipiente de uso
       diario de la época.
+
+### Capítulo 2 (resumen, ya en el juego)
+
+Las fichas largas (inspiración, diseño y fuentes) se escribirán si el autor las pide; el texto
+de cada especie en el juego está en `descripcion` (`src/data/especies.ts`), con hechos
+comprobables. Estadísticas: Vida / Fuerza / Escudo / Magia / Resistencia mágica / Celeridad.
+
+| Nº | Nombre | Estadísticas | Suma | Movimientos (nivel) |
+| --- | --- | --- | --- | --- |
+{"vida":50,"fuerza":60,"escudo":55,"magia":35,"resMagica":45,"celeridad":65}
+{"nivel":1,"movimiento":"topetazo"}
+| 022 | Lizarco | 50 / 60 / 55 / 35 / 45 / 65 | 310 | Topetazo (1), Desplante (1), Terronazo (6), Zarpazo (11), Cantazo (16), Compactar (21), Temblor (26) |
+| 023 | Bastilag | 85 / 100 / 125 / 45 / 85 / 50 | 490 | Topetazo (1), Desplante (1), Terronazo (6), Zarpazo (11), Cantazo (16), Compactar (21), Temblor (26), Hoja toledana (31), Molienda (36), Tapazo (42) |
+| 024 | Viperel | 40 / 60 / 40 / 45 / 40 / 70 | 295 | Trastada (1), Desplante (1), Colmillo sombrío (5), Emboscada (10), Mal de ojo (15) |
+| 025 | Viperion | 60 / 85 / 60 / 55 / 55 / 90 | 405 | Trastada (1), Desplante (1), Colmillo sombrío (5), Emboscada (10), Mal de ojo (15), Tarea imposible (21), Noche cerrada (27) |
+| 026 | Sierpeira | 85 / 100 / 80 / 80 / 75 / 90 | 510 | Trastada (1), Desplante (1), Colmillo sombrío (5), Emboscada (10), Mal de ojo (15), Tarea imposible (21), Noche cerrada (27), Temblor (37), Cantazo (42) |
+| 027 | Grávico | 55 / 65 / 50 / 30 / 40 / 50 | 290 | Topetazo (1), Bramido (1), Pisotón (7), Rueda (12), Aletazo (18) |
+| 028 | Gravitardo | 90 / 95 / 75 / 45 / 65 / 60 | 430 | Topetazo (1), Bramido (1), Pisotón (7), Rueda (12), Aletazo (18), Picada (25), Ventolera (30) |
+| 029 | Aquilín | 45 / 65 / 40 / 40 / 40 / 90 | 320 | Aletazo (1), Bramido (1), Revoloteo (6), Picada (11), Zarpazo (18) |
+| 030 | Imperión | 80 / 105 / 70 / 85 / 75 / 110 | 525 | Aletazo (1), Bramido (1), Revoloteo (6), Picada (11), Zarpazo (18), Resplandor (31), Vuelo real (36), Amanecer (42) |
+| 031 | Lobaz | 45 / 62 / 40 / 30 / 38 / 70 | 285 | Topetazo (1), Aullido (1), Zarpazo (5), Dentellada (10), Colmillo sombrío (15) |
+| 032 | Lobregón | 70 / 90 / 60 / 50 / 60 / 85 | 415 | Topetazo (1), Aullido (1), Zarpazo (5), Dentellada (10), Colmillo sombrío (15), Emboscada (23), Noche cerrada (28) |
+| 033 | Lobánima | 80 / 60 / 65 / 110 / 90 / 100 | 505 | Topetazo (1), Aullido (1), Zarpazo (5), Dentellada (10), Colmillo sombrío (15), Emboscada (23), Noche cerrada (28), Lamento (39) |
+| 034 | Guisandor | 100 / 100 / 130 / 40 / 90 / 30 | 490 | Topetazo (1), Compactar (1), Terronazo (8), Cantazo (14), Temblor (20), Molienda (28) |
+| 035 | Tarantón | 60 / 45 / 60 / 85 / 75 / 70 | 395 | Trastada (1), Tarea imposible (1), Tarantela (7), Mal de ojo (12), Alarido (18), Noche cerrada (25) |
+| 036 | Pinchorro | 60 / 45 / 80 / 30 / 60 / 35 | 310 | Topetazo (1), Erizarse (1), Bola de púas (6), Dentellada (11), Desplante (16) |
+
+- **Dónde salen:** Grávico, Lizarco, Pinchorro, Lobaz y Tarantón en Villalar; Viperel, Lizarco,
+  Lobaz, Grávico, Tarantón y, raro, Aquilín en el camino de Toledo, junto a Carapachón
+  (el galápago leproso, que sí vive en el Tajo; el barbo gitano no, por eso no sale aquí).
+- **Sin zona todavía:** Guisandor (los Toros de Guisando, en Ávila, fuera de la ruta) y
+  Lobánima, que en el juego sale de Lobregón a nivel 38 sin más condición; lo del Monte de
+  las Ánimas queda para cuando haya una zona en Soria.
+- **Movimientos nuevos:**
+
+| Movimiento | Tipo | Categoría | Poder | Precisión | Efecto |
+| --- | --- | --- | --- | --- | --- |
+| Zarpazo | Común | Físico | 50 | 100 % | — |
+| Pisotón | Común | Físico | 65 | 95 % | — |
+| Bola de púas | Común | Físico | 60 | 100 % | — |
+| Aullido | Común | Estado | — | — | +1 a la Fuerza propia |
+| Rueda | Común | Estado | — | — | +1 al Escudo y +1 a la Resistencia mágica propios |
+| Erizarse | Común | Estado | — | — | +2 al Escudo propio |
+| Cantazo | Tierra | Físico | 75 | 90 % | — |
+| Temblor | Tierra | Mágico | 70 | 100 % | — |
+| Colmillo sombrío | Oscuridad | Físico | 60 | 100 % | — |
+| Noche cerrada | Oscuridad | Mágico | 80 | 100 % | 20 % de −1 a la Magia del rival |
+| Vuelo real | Aire | Físico | 90 | 90 % | — |
+| Resplandor | Luz | Mágico | 60 | 100 % | — |
+| Lamento | Espectral | Mágico | 65 | 100 % | 20 % de −1 a la Fuerza del rival |
+| Tarantela | Mental | Mágico | 55 | 100 % | 20 % de dormir al rival |
+| Hoja toledana | Acero | Físico | 75 | 100 % | — |
 
 ### Movimientos nuevos de las fichas
 

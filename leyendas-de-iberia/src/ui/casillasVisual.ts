@@ -62,7 +62,13 @@ const SUELO_INTERIOR: Record<EstiloZona, string> = {
   meson: 'suelo.barro',
   pabellon: 'suelo.tablas',
   patio: 'suelo.marmol',
+  meseta: 'suelo.tablas',
+  toledo: 'suelo.losas',
+  alcazar: 'suelo.losas',
 };
+
+/** Estilos con muralla de ladrillo y cipreses en vez de tapial y árboles redondos. */
+const ESTILO_LADRILLO = new Set<EstiloZona>(['alhambra', 'toledo']);
 
 /** Lectura de la zona alrededor de una casilla. Fuera del mapa, `fuera`. */
 class Vecindad {
@@ -102,14 +108,15 @@ function capasDe(zona: Zona, x: number, y: number, f: number): Capa[] {
   const c = v.en(0, 0);
   const estilo = estiloDe(zona);
   const r = ruido(x, y);
-  const hierba = `hierba.${r % 11 === 0 ? 1 : r % 13 === 0 ? 2 : r % 7 === 0 ? 3 : 0}`;
+  const variante = r % 11 === 0 ? 1 : r % 13 === 0 ? 2 : r % 7 === 0 ? 3 : 0;
+  const hierba = `${estilo === 'meseta' ? 'hierba_meseta' : 'hierba'}.${variante}`;
   const base = zona.interior ? SUELO_INTERIOR[estilo] : hierba;
   const capas: Capa[] = [pieza(base)];
 
   if (zona.interior) {
     if (PAREDES.has(c)) {
       const pos = y > 0 ? 'borde' : x === 0 ? 'esquina_i' : x === zona.mapa[0].length - 1 ? 'esquina_d' : 'cara';
-      const material = c === 'Z' ? 'patio' : c === 'L' ? 'pabellon' : 'meson';
+      const material = c === 'Z' ? 'patio' : c === 'L' ? 'pabellon' : estilo === 'alcazar' ? 'alcazar' : 'meson';
       capas.push(pieza(`pared.${material}.${pos}`));
       return capas;
     }
@@ -123,6 +130,9 @@ function capasDe(zona: Zona, x: number, y: number, f: number): Capa[] {
   switch (c) {
     case 'h':
       capas.push(pieza('hierba_alta'));
+      break;
+    case 'w':
+      capas.push(pieza('trigal'));
       break;
     case '*':
       capas.push(pieza(`flores.${r % 3}`));
@@ -191,7 +201,7 @@ function muro(v: Vecindad, c: string, estilo: EstiloZona): Capa[] {
   const vertical = v.es(MURALLA, 0, -1, false) || v.es(MURALLA, 0, 1, false);
   // Un portón entre árboles no es más que camino.
   if (c === 'G' && !horizontal) return [];
-  const piedra = estilo === 'alhambra' ? 'roja' : 'tapial';
+  const piedra = ESTILO_LADRILLO.has(estilo) ? 'roja' : 'tapial';
   const forma = c === 'G' ? 'puerta' : c === 'P' ? 'arco' : horizontal || !vertical ? 'horizontal' : 'vertical';
   return [pieza(`muro.${piedra}.${forma}`)];
 }
@@ -255,13 +265,19 @@ function objetosDe(zona: Zona): Objeto[] {
       if (c === '#') {
         // Junto a un camino, un arbusto: la copa de un árbol taparía el paso.
         const junto = v.es(CAMINO, -1, 0, false) || v.es(CAMINO, 1, 0, false);
-        lista.push(apoyo(estilo === 'alhambra' ? 'cipres' : junto ? 'arbusto' : 'arbol', x, y));
+        const arbol = ESTILO_LADRILLO.has(estilo) ? 'cipres' : junto ? 'arbusto' : estilo === 'meseta' ? 'encina' : 'arbol';
+        lista.push(apoyo(arbol, x, y));
       } else if (c === 'o') lista.push(apoyo('olivo', x, y));
+      else if (c === 'Y') lista.push(apoyo('armadura', x, y));
+      else if (c === 'J') lista.push(apoyo('armero', x, y));
       else if (c === 'n') lista.push(apoyo('naranjo', x, y));
       else if (c === 'Q') lista.push(apoyo('pozo', x, y));
       else if (c === 'C') lista.push(apoyo('columna', x, y));
       else if (c === 'E') lista.push(apoyo('estanteria', x, y));
-      else if (c === 'h') lista.push({ nombre: 'hierba_alta.delante', x: x * PX + PX / 2, y: (y + 1) * PX, profundidad: y + 0.7 });
+      else if (c === 'h' || c === 'w') {
+        const delante = c === 'h' ? 'hierba_alta.delante' : 'trigal.delante';
+        lista.push({ nombre: delante, x: x * PX + PX / 2, y: (y + 1) * PX, profundidad: y + 0.7 });
+      }
       else if (c === 'L' && !zona.interior && v.en(0, -1) !== 'L' && (v.en(-1, 0) !== 'L' || v.en(1, 0) !== 'L')) {
         lista.push({ nombre: 'banderola', x: x * PX + PX / 2, y: y * PX + 6, profundidad: y + 0.95, origenX: 3.5 / 16 });
       }

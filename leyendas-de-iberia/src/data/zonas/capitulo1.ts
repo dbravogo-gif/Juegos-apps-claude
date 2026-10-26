@@ -1,5 +1,22 @@
-import type { Zona } from '../../core/mundo';
+import type { Paso, Zona } from '../../core/mundo';
 import { bandera, dar, decir, si } from '../guion';
+import { INICIO_CAPITULO_2 } from './capitulo2';
+
+/** El salto de 1492 a 1521: el resumen de lo que ha pasado y el viaje a Villalar. */
+const HACIA_CAPITULO_2: Paso[] = [
+  { tipo: 'curar' },
+  {
+    tipo: 'fin',
+    texto: [
+      'Capítulo 2. Castilla, 1521.',
+      'Han pasado casi treinta años. Isabel murió en 1504 y Fernando en 1516.',
+      'Reina su nieto Carlos, que además es emperador y está en Alemania.',
+      'En Castilla, muchas ciudades se han levantado contra el gobierno del rey y sus consejeros flamencos: es la guerra de las Comunidades.',
+      'Las criaturas de tu Bestiario no han envejecido ni un día. Tú, por algún motivo, tampoco.',
+    ],
+  },
+  { tipo: 'viajar', ...INICIO_CAPITULO_2 },
+];
 
 // Capítulo 1: Granada, invierno de 1491 a 1492. Santa Fe → la Vega → la Alhambra.
 // Leyenda de casillas en `src/data/casillas.ts`.
@@ -462,7 +479,21 @@ const PATIO_LEONES: Zona = {
       dir: 'abajo',
       aspecto: 'sultan',
       guion: [
-        si('blason_alhambra', decir('Boabdil', 'Cuida de este patio. Doce leones lo han guardado durante más de cien años.'), [
+        si('blason_alhambra', [
+          ...decir('Boabdil', 'Cuida de este patio. Doce leones lo han guardado durante más de cien años.'),
+          // Para las partidas que acabaron el capítulo 1 antes de que existiera el 2.
+          si('capitulo2', [], [
+            {
+              tipo: 'elegir',
+              quien: 'Boabdil',
+              pregunta: 'Tu camino sigue más allá de Granada. ¿Partes ya hacia Castilla?',
+              opciones: [
+                { texto: 'Sí, en marcha', pasos: [...HACIA_CAPITULO_2] },
+                { texto: 'Todavía no', pasos: decir('Boabdil', 'Las leyendas esperarán.') },
+              ],
+            },
+          ]),
+        ], [
           { tipo: 'combate', entrenador: 'boabdil' },
           si('vencido:boabdil', [
             ...decir('Boabdil', 'Toma este blasón. Que se sepa que venciste en la Alhambra.'),
@@ -477,9 +508,10 @@ const PATIO_LEONES: Zona = {
                 '2 de enero de 1492. Boabdil entrega las llaves de Granada a los Reyes Católicos.',
                 'En abril, en Santa Fe, los Reyes firman con Colón las capitulaciones de su viaje.',
                 'Las leyendas de la Alhambra quedan escritas en tu Bestiario.',
-                'Fin del capítulo 1 (prototipo). Continuará en 1516…',
+                'Fin del capítulo 1.',
               ],
             },
+            ...HACIA_CAPITULO_2,
           ]),
         ]),
       ],

@@ -11,6 +11,8 @@ script y se vuelve a ejecutar (`python3 arte/mapa/tileset.py`).
 - Caminos, empedrado, acequias, fuentes, alfombras y huertos son materiales que se juntan con sus
   vecinos: cinco tiles de referencia que el juego corta en cuartos (`src/ui/casillasVisual.ts`).
 - Las acequias y las fuentes tienen cuatro fotogramas.
+- Capítulo 2: hierba de la meseta, trigales (hierba alta), encinas, losas, muros de sillería
+  gris del Alcázar, armaduras y armeros.
 
 ## Personajes (`personajes/`)
 
@@ -40,20 +42,27 @@ y su ropa. **No se editan a mano.**
 | `aguador.png` | Turbante blanco y camisa azul | Aguador de la Alhambra |
 | `halconero.png` | Turbante verde y barba | Halconero de la Alhambra |
 | `jardinero.png` | Sombrero de paja y camisa verde | Jardinero de la Alhambra |
-| `monje.png`, `aldeano.png`, `aldeano_verde.png`, `aldeana.png`, `maestro.png` | Fraile, aldeanos y un sabio | De reserva |
+| `padilla.png` | Coraza, calzas carmesí y barba | Juan de Padilla |
+| `maria_pacheco.png` | Vestido negro de luto, gorguera blanca y gorro negro | María Pacheco |
+| `comunero.png` | Capacete y sayo carmesí, el color de las Comunidades | Comuneros |
+| `imperial.png` | Capacete, sayo blanco y calzas rojas | Soldados del emperador |
+| `espadero.png` | Gorro, delantal y barba | El espadero de Toledo |
+| `monje.png`, `aldeano.png` | Fraile y aldeano | Villalar |
+| `aldeano_verde.png`, `aldeana.png`, `maestro.png` | Aldeanos y un sabio | De reserva |
 
 ## Retratos (`retratos/`)
 
 `<id>.webp`: bustos de 384 px sobre fondo transparente, apoyados abajo, para los diálogos. Qué
 nombre usa cada uno está en `src/data/retratos.ts`. Solo llevan retrato los personajes
-importantes (decisión del autor): Isabel, Fernando, el Gran Capitán, Colón y Boabdil. Los demás
-están hechos y guardados en `arte/retratos-reserva/`, fuera del juego.
+importantes (decisión del autor): Isabel, Fernando, el Gran Capitán, Colón, Boabdil, Juan de
+Padilla y María Pacheco. Los demás están hechos y guardados en `arte/retratos-reserva/`, fuera
+del juego (entre ellos Carlos V, Felipe II y Juan de Austria, para capítulos siguientes).
 
 - **Origen:** OpenArt (GPT Image 2) el 2026-10-25, en cuatro hojas de 3 × 2, con el estilo de las
   criaturas (dibujo limpio, colores planos con una sombra, contorno fino) y la ropa de la época.
 - **Historia:** Isabel, blanca y de pelo rubio rojizo; Fernando, con melena corta y flequillo;
   Colón, con el pelo ya blanco a los cuarenta, como lo describe su hijo Hernando; Boabdil, de unos
-  treinta años.
+  treinta años; María Pacheco, de luto por Padilla.
 - **Proceso:** el mismo corte que las criaturas, sin vaciar huecos blancos (tocas, turbantes y
   velos son blancos a propósito).
 
@@ -74,6 +83,9 @@ están hechos y guardados en `arte/retratos-reserva/`, fuera del juego.
   siempre sale en el corte. Hay que mirar cada imagen sobre un fondo oscuro y quitar a mano esos
   huecos, sin tocar lo que es blanco a propósito (vapor, motas, alas, mármol, brillos de los
   ojos). Corregidos el 2026-10-25: el drago, el Papemímico, el Trasgorn y el pelotero.
+- **Capítulo 2 (2026-10-26):** las 15 especies nuevas, en cinco hojas por línea evolutiva. La
+  vista de espalda de Imperión (`aguila_imperial_jugador`) parece casi de frente: candidata a
+  rehacerse.
 - Reserva para más adelante: `arte/criaturas-futuras/` (Guayota y la vieja).
 
 ## Objetos (`objetos/`) e iconos de menú (`iconos/`)

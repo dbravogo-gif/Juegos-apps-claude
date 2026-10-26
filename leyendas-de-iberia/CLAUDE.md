@@ -17,6 +17,13 @@ tocan desde aquí.
   - La Vega, con encuentros, ballestero y mercader.
   - La Alhambra, con su guardia.
   - El Patio de los Leones: Boabdil, el blasón y el final.
+- **Capítulo 2, «Castilla, 1521» (2026-10-26), hecho y jugable:** al vencer a Boabdil se pasa
+  (paso `viajar`) a Villalar el día de la derrota comunera, con el mismo protagonista.
+  - Villalar (Padilla da su carta para María Pacheco), el camino de Toledo con el Tajo,
+    Toledo con su mesón y el Alcázar, donde María Pacheco es la líder (Tierra/Acero).
+  - 15 especies nuevas (Bestiario, cap. 2): lagarto, víbora, avutarda, águila, lobo, toro de
+    Guisando, tarántula y erizo, con sus evoluciones, y 15 movimientos nuevos.
+  - Cinco entrenadores de una criatura antes de la líder, como en el capítulo 1.
 - **Hito 4, en curso:**
   - Hecho: el juego ocupa toda la pantalla del móvil.
   - Hecho: es una web instalable (PWA), con manifiesto, iconos y service worker para jugar sin
@@ -29,12 +36,13 @@ tocan desde aquí.
     `arte/mapa/tileset.py` (`src/assets/LEEME.md`). Se cambia el script, nunca el PNG a mano.
   - Personajes que caminan: propios, al mismo estilo, con la ropa y los tocados de la época;
     los genera `arte/mapa/personajes.py`. Ya no queda nada de *Ninja Adventure*.
-  - Criaturas: hechas las 22 del capítulo 1 en el estilo elegido por el autor, con vista de
-    rival y vista del jugador (`src/assets/LEEME.md`). Guayota y la vieja, en reserva, en
+  - Criaturas: hechas las 22 del capítulo 1 y las 15 del capítulo 2 en el estilo elegido por
+    el autor, con vista de rival y vista del jugador (`src/assets/LEEME.md`). Guayota y la vieja, en reserva, en
     `arte/criaturas-futuras/`. Antes de hacer más, lee la guía de diseño visual del Bestiario.
   - Retratos para los diálogos, solo de los personajes importantes (decisión del autor):
-    Isabel, Fernando, el Gran Capitán, Colón y Boabdil (`src/assets/retratos/`,
-    `src/data/retratos.ts`). Hay 19 más hechos, en reserva, en `arte/retratos-reserva/`.
+    Isabel, Fernando, el Gran Capitán, Colón, Boabdil, Juan de Padilla y María Pacheco
+    (`src/assets/retratos/`, `src/data/retratos.ts`). Hay 23 más hechos, en reserva, en
+    `arte/retratos-reserva/` (entre ellos Carlos V, Felipe II y Juan de Austria).
 - **Bestiario (`docs/BESTIARIO.md`), v2:**
   - Hecho: auditoría, segunda revisión de variedad (A.8), tabla de 150 especies y fichas del
     capítulo 1, Gofrón, la vieja, *Gallotia simonyi* y el Papemímico.
@@ -42,7 +50,7 @@ tocan desde aquí.
     retiradas se convierten al cargar la partida (`ESPECIES_RETIRADAS`).
   - `docs/DESCRIPCIONES.md`: la descripción visual de las 150 especies, corregida con todo lo
     decidido. Es la que se usa para generar el arte.
-  - Siguiente: fichas del capítulo 2, cuando el autor dé el visto bueno.
+  - El reparto de tipos por zona y la regla para los capítulos siguientes, en A.9.
 - **Hecho en esta tanda (2026-10-24):**
   - La tabla de tipos (`src/data/tipos.ts`), reducida a petición del autor y consultable en el
     menú, el Bestiario y el combate.
@@ -66,7 +74,10 @@ tocan desde aquí.
   más fácil (cinco entrenadores de una criatura; Boabdil con Brezuco y Trasgorn, sin nada de
   Agua ni Tierra); sin Tésera real al principio; Colón rehecho y con cinco téseras; control
   trabado tras el combate y barra de vida, arreglados.
-- **Siguiente (pedido por el autor):** revisar la tabla de tipos con él y meter el capítulo 2.
+- **Tabla de tipos (2026-10-26):** equilibrada con el autor: los tipos sin inmunidades dan
+  tantos ×2 como ×½; las pruebas lo comprueban.
+- **Siguiente:** capítulo 3 (1571). Alhambrón queda para una zona de ruinas, a petición del
+  autor. La vista de espalda de Imperión parece de frente: se puede rehacer.
 - **Mapas (2026-10-25), hecho:** con aspecto de los juegos de criaturas de GBA, a petición
   del autor.
   - Se descartó pasar el juego a Pokémon Essentials (no va en el navegador ni en iPhone) y usar
@@ -130,7 +141,7 @@ El código va en español: nombres, comentarios y textos.
   - Contenido de combate: `especies.ts`, `movimientos.ts`, `tipos.ts`, `temperamentos.ts` y
     `objetos.ts`, reunidos en `DATOS` (`index.ts`).
   - Contenido del mundo: `casillas.ts` (la leyenda de los mapas), `entrenadores.ts`,
-    `zonas/capitulo1.ts` y `guion.ts` (atajos para escribir guiones). Se reúnen en `mundo.ts`.
+    `zonas/capitulo1.ts`, `zonas/capitulo2.ts` y `guion.ts` (atajos para escribir guiones). Se reúnen en `mundo.ts`.
 - `src/escenas/`:
   - `Arranque`.
   - `Titulo`.
@@ -159,7 +170,9 @@ El código va en español: nombres, comentarios y textos.
   - `pedirNombre.ts`.
 - **Añadir una zona:**
   - Se dibuja en texto con los caracteres de `casillas.ts` y se le pone un `estilo` (pueblo,
-    campo, alhambra, mesón, pabellón, patio), que decide árboles, muros, suelos y paredes.
+    campo, alhambra, mesón, pabellón, patio, meseta, toledo, alcázar), que decide árboles,
+    muros, suelos y paredes.
+  - Para cambiar de capítulo, el guion termina con el paso `viajar` (zona y casilla).
   - Una casilla nueva necesita su entrada en `casillas.ts`, su dibujo en `casillasVisual.ts` y,
     si es una pieza nueva, su función en `arte/mapa/tileset.py`.
   - Cada salida necesita su vuelta en la otra zona.
@@ -172,6 +185,7 @@ El código va en español: nombres, comentarios y textos.
   - `visto:<zona>`: el guion de entrada ya se ha visto.
   - `vencido:<entrenador>`.
   - `blason_alhambra`.
+  - Capítulo 2: `capitulo2`, `carta_padilla`, `blason_toledo`.
 
 ## Comprobar
 

@@ -161,6 +161,56 @@ const MOVIMIENTOS_DEF = {
   // Tierra
   terronazo: { nombre: 'Terronazo', tipo: 'tierra', categoria: 'fisico', poder: 55, precision: 95, pp: 20 },
   polvareda: { nombre: 'Polvareda', tipo: 'tierra', categoria: 'magico', poder: 45, precision: 100, pp: 25 },
+  // Capítulo 2 (Toledo y Castilla)
+  zarpazo: { nombre: 'Zarpazo', tipo: 'comun', categoria: 'fisico', poder: 50, precision: 100, pp: 30 },
+  pisoton: { nombre: 'Pisotón', tipo: 'comun', categoria: 'fisico', poder: 65, precision: 95, pp: 20 },
+  aullido: {
+    nombre: 'Aullido', tipo: 'comun', categoria: 'estado', poder: 0, precision: null, pp: 30,
+    efectos: [{ tipo: 'etapa', objetivo: 'propio', estadistica: 'fuerza', cambio: 1, prob: 100 }],
+    descripcion: 'Sube la Fuerza propia.',
+  },
+  rueda: {
+    nombre: 'Rueda', tipo: 'comun', categoria: 'estado', poder: 0, precision: null, pp: 20,
+    efectos: [
+      { tipo: 'etapa', objetivo: 'propio', estadistica: 'escudo', cambio: 1, prob: 100 },
+      { tipo: 'etapa', objetivo: 'propio', estadistica: 'resMagica', cambio: 1, prob: 100 },
+    ],
+    descripcion: 'Se hincha como la avutarda en celo: sube el Escudo y la Resistencia mágica propios.',
+  },
+  erizarse: {
+    nombre: 'Erizarse', tipo: 'comun', categoria: 'estado', poder: 0, precision: null, pp: 20,
+    efectos: [{ tipo: 'etapa', objetivo: 'propio', estadistica: 'escudo', cambio: 2, prob: 100 }],
+    descripcion: 'Se enrosca con las púas de punta: sube mucho el Escudo propio.',
+  },
+  bola_de_puas: { nombre: 'Bola de púas', tipo: 'comun', categoria: 'fisico', poder: 60, precision: 100, pp: 25 },
+  cantazo: { nombre: 'Cantazo', tipo: 'tierra', categoria: 'fisico', poder: 75, precision: 90, pp: 15 },
+  temblor: { nombre: 'Temblor', tipo: 'tierra', categoria: 'magico', poder: 70, precision: 100, pp: 15 },
+  molienda: {
+    nombre: 'Molienda', tipo: 'tierra', categoria: 'fisico', poder: 75, precision: 100, pp: 15,
+    efectos: [{ tipo: 'etapa', objetivo: 'rival', estadistica: 'escudo', cambio: -1, prob: 30 }],
+  },
+  compactar: {
+    nombre: 'Compactar', tipo: 'tierra', categoria: 'estado', poder: 0, precision: null, pp: 15,
+    efectos: [{ tipo: 'etapa', objetivo: 'propio', estadistica: 'escudo', cambio: 2, prob: 100 }],
+    descripcion: 'Se apelmaza como la tierra pisada: sube mucho el Escudo propio.',
+  },
+  colmillo_sombrio: { nombre: 'Colmillo sombrío', tipo: 'oscuridad', categoria: 'fisico', poder: 60, precision: 100, pp: 25 },
+  noche_cerrada: {
+    nombre: 'Noche cerrada', tipo: 'oscuridad', categoria: 'magico', poder: 80, precision: 100, pp: 15,
+    efectos: [{ tipo: 'etapa', objetivo: 'rival', estadistica: 'magia', cambio: -1, prob: 20 }],
+  },
+  vuelo_real: { nombre: 'Vuelo real', tipo: 'aire', categoria: 'fisico', poder: 90, precision: 90, pp: 10 },
+  resplandor: { nombre: 'Resplandor', tipo: 'luz', categoria: 'magico', poder: 60, precision: 100, pp: 20 },
+  lamento: {
+    nombre: 'Lamento', tipo: 'espectral', categoria: 'magico', poder: 65, precision: 100, pp: 15,
+    efectos: [{ tipo: 'etapa', objetivo: 'rival', estadistica: 'fuerza', cambio: -1, prob: 20 }],
+  },
+  tarantela: {
+    nombre: 'Tarantela', tipo: 'mental', categoria: 'magico', poder: 55, precision: 100, pp: 20,
+    efectos: [{ tipo: 'estado', estado: 'dormido', prob: 20 }],
+    descripcion: 'Un baile que agota: puede dormir al rival.',
+  },
+  hoja_toledana: { nombre: 'Hoja toledana', tipo: 'acero', categoria: 'fisico', poder: 75, precision: 100, pp: 15 },
 } satisfies Record<string, DefMovimiento>;
 
 export type MovimientoId = keyof typeof MOVIMIENTOS_DEF;

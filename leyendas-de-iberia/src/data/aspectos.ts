@@ -28,6 +28,11 @@ export const ASPECTOS = [
   'aguador',
   'halconero',
   'jardinero',
+  'maria_pacheco',
+  'padilla',
+  'comunero',
+  'imperial',
+  'espadero',
 ] as const;
 
 export type Aspecto = (typeof ASPECTOS)[number];

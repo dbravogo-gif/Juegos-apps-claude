@@ -98,6 +98,11 @@ class Lienzo:
 # ---------------------------------------------------------------- paletas
 
 HIERBA = dict(base=rgb(136, 206, 100), oscura=rgb(96, 170, 82), clara=rgb(176, 228, 128), sombra=rgb(80, 150, 74))
+# La meseta en primavera: un verde más amarillo y apagado que el de la Vega.
+HIERBA_MESETA = dict(base=rgb(166, 196, 104), oscura=rgb(128, 160, 80), clara=rgb(200, 220, 136), sombra=rgb(112, 140, 72))
+TRIGO = dict(fondo=rgb(132, 164, 76), tallo=rgb(96, 132, 60), clara=rgb(176, 196, 96), espiga=rgb(226, 204, 110),
+             espiga_osc=rgb(188, 160, 76), contorno=rgb(70, 96, 48))
+PIEDRA_GRIS = dict(clara=rgb(176, 172, 168), media=rgb(146, 142, 140), oscura=rgb(112, 108, 108), junta=rgb(82, 78, 80))
 ALTA = dict(
     fondo=rgb(70, 150, 72), contorno=rgb(30, 86, 52), oscura=rgb(48, 122, 62), media=rgb(84, 172, 82),
     clara=rgb(122, 204, 100), brillo=rgb(176, 232, 132)
@@ -150,15 +155,54 @@ OSCURO = rgb(40, 32, 36)
 
 # ---------------------------------------------------------------- suelo
 
-def hierba(variante: int) -> Lienzo:
-    l = Lienzo(fondo=HIERBA['base'])
+def hierba(variante: int, pal: dict = HIERBA) -> Lienzo:
+    l = Lienzo(fondo=pal['base'])
     # Briznas en sitios fijos, como en los juegos de GBA: el patrón se repite y da textura sin ruido.
     sitios = {0: [(3, 3), (11, 11)], 1: [(3, 3), (11, 11), (12, 4)], 2: [(3, 3)], 3: []}[variante]
     for x, y in sitios:
-        l.dibujo(x, y, ['c.c', 'o.o', '.o.'], {'o': HIERBA['oscura'], 'c': HIERBA['clara']})
+        l.dibujo(x, y, ['c.c', 'o.o', '.o.'], {'o': pal['oscura'], 'c': pal['clara']})
     if variante == 3:
         for x, y in [(4, 5), (5, 5), (10, 12), (11, 12), (12, 12)]:
-            l.pon(x, y, HIERBA['clara'])
+            l.pon(x, y, pal['clara'])
+    return l
+
+
+TRIGAL = [
+    '.e..e..e..e..e..',
+    'eEeeEeeEeeEeeEe.',
+    '.c..c..c..c..c..',
+    '.c.lc..c.lc..c.l',
+    '.t..t..t..t..t..',
+    '.t..t..t..t..t..',
+    'oooooooooooooooo',
+    '................',
+    '..e..e..e..e..e.',
+    '.eEeeEeeEeeEeeEe',
+    '..c..c..c..c..c.',
+    'l.c..c.lc..c..c.',
+    '..t..t..t..t..t.',
+    '..t..t..t..t..t.',
+    'oooooooooooooooo',
+    '................',
+]
+
+
+def trigal() -> Lienzo:
+    """Trigo que empieza a dorar: hileras de tallos con la espiga arriba. Es hierba alta."""
+    t = TRIGO
+    l = Lienzo(fondo=t['fondo'])
+    l.dibujo(0, 0, TRIGAL, {'e': t['espiga'], 'E': t['espiga_osc'], 'c': t['clara'], 'l': t['clara'], 't': t['tallo'],
+                            'o': t['contorno']})
+    return l
+
+
+def trigal_delante() -> Lienzo:
+    base = trigal()
+    l = Lienzo()
+    for y in range(8, 16):
+        for x in range(16):
+            if y >= 11 or TRIGAL[y][x] != '.':
+                l.pon(x, y, base.lee(x, y))
     return l
 
 
@@ -618,6 +662,86 @@ def pozo() -> Lienzo:
     return l
 
 
+def encina() -> Lienzo:
+    """Encina de la meseta: copa ancha, densa y de un verde oscuro grisáceo; tronco corto y oscuro."""
+    pal = dict(contorno=rgb(30, 50, 34), oscura=rgb(52, 84, 54), media=rgb(78, 112, 70), clara=rgb(110, 140, 88),
+               brillo=rgb(148, 170, 112))
+    l = Lienzo(24, 30)
+    l.rect(10, 20, 4, 8, rgb(92, 66, 48))
+    l.rect(12, 20, 2, 8, rgb(62, 44, 34))
+    l.rect(8, 27, 8, 1, rgb(62, 44, 34))
+    copa(l, [(7, 10, 6), (17, 10, 6), (12, 8, 6.5), (5, 15, 5), (19, 15, 5), (12, 16, 6.5)], pal)
+    for y in range(l.h):
+        for x in range(l.w):
+            if l.lee(x, y) == pal['media'] and azar(x, y, 23) < 0.1:
+                l.pon(x, y, pal['oscura'])
+    l.contorno(pal['contorno'])
+    return l
+
+
+def armadura() -> Lienzo:
+    """Armadura completa en su peana, de las que guardaba el Alcázar."""
+    m = dict(o=rgb(40, 40, 52), b=rgb(206, 212, 226), s=rgb(150, 158, 182), d=rgb(108, 114, 140), r=rgb(186, 40, 48),
+             w=MADERA['oscura'], y=rgb(236, 192, 72))
+    l = Lienzo(16, 32)
+    l.dibujo(2, 1, [
+        '....oooo....',
+        '...obbbso...',
+        '...obddso...',
+        '...obbbso...',
+        '....oyyo....',
+        '..oobbbsoo..',
+        '.obbbbbbsso.',
+        '.obsbbbbsso.',
+        '.ob.obbso.so',
+        '.oo.obbso.oo',
+        '....oyyyo...',
+        '....obbsso..',
+        '....obo.so..',
+        '....obo.so..',
+        '....obo.so..',
+        '...oobo.soo.',
+        '...obbo.sso.',
+        '..oooo..ooo.',
+        '..owwwwwwwo.',
+        '..oooooooooo',
+    ], m)
+    return l
+
+
+def armero() -> Lienzo:
+    """Armero con espadas toledanas y una alabarda."""
+    w, o = MADERA, rgb(40, 32, 30)
+    l = Lienzo(16, 32)
+    l.rect(1, 8, 14, 22, o)
+    l.rect(2, 9, 12, 20, w['oscura'])
+    l.rect(2, 26, 12, 3, w['media'])
+    for x in (4, 7, 10):
+        l.rect(x, 4, 1, 22, rgb(214, 220, 232))
+        l.pon(x + 1, 6, rgb(150, 158, 182))
+        l.rect(x - 1, 22, 3, 1, rgb(236, 192, 72))
+        l.rect(x, 23, 1, 3, rgb(90, 60, 40))
+    l.rect(13, 1, 1, 26, rgb(110, 76, 48))
+    l.dibujo(11, 1, ['.oo.', 'osso', '.os.'], {'o': o, 's': rgb(196, 204, 220)})
+    return l
+
+
+def suelo_losas() -> Lienzo:
+    p = PIEDRA_GRIS
+    l = Lienzo()
+    for y in range(16):
+        for x in range(16):
+            fila = y // 8
+            xx = (x + fila * 4) % 8
+            c = p['clara'] if azar((x + fila * 4) // 8, fila, 51) < 0.5 else p['media']
+            if y % 8 == 7 or xx == 7:
+                c = p['junta']
+            elif y % 8 == 0 or xx == 0:
+                c = mezcla(c, rgb(255, 255, 255), 0.15)
+            l.pon(x, y, c)
+    return l
+
+
 # ---------------------------------------------------------------- casas
 
 def tejado(u: bool, d: bool, l_: bool, r: bool) -> Lienzo:
@@ -923,7 +1047,8 @@ def pared_interior(estilo: str, pos: str) -> Lienzo:
     """
     l = Lienzo()
     if pos == 'borde':
-        tope = {'meson': MADERA['contorno'], 'patio': rgb(70, 52, 46), 'pabellon': LONA['roja_osc']}[estilo]
+        tope = {'meson': MADERA['contorno'], 'patio': rgb(70, 52, 46), 'pabellon': LONA['roja_osc'],
+                'alcazar': PIEDRA_GRIS['junta']}[estilo]
         l.rect(0, 0, 16, 16, tope)
         return l
     if estilo == 'meson':
@@ -958,6 +1083,18 @@ def pared_interior(estilo: str, pos: str) -> Lienzo:
                     c = a['negro']
                 l.pon(x, y, c)
         l.rect(0, 15, 16, 1, a['negro'])
+    elif estilo == 'alcazar':
+        # Sillería gris.
+        p = PIEDRA_GRIS
+        for y in range(16):
+            for x in range(16):
+                fila = y // 4
+                c = p['media'] if (x // 8 + fila) % 2 else p['clara']
+                if y % 4 == 3 or (x + (fila % 2) * 4) % 8 == 0:
+                    c = p['junta']
+                l.pon(x, y, c)
+        l.rect(0, 0, 16, 2, p['junta'])
+        l.rect(0, 15, 16, 1, OSCURO)
     else:  # pabellón
         a = LONA
         for y in range(16):
@@ -1221,8 +1358,12 @@ def construir() -> Hoja:
     h = Hoja()
     for v in range(4):
         h.pon(f'hierba.{v}', hierba(v))
+    for v in range(4):
+        h.pon(f'hierba_meseta.{v}', hierba(v, HIERBA_MESETA))
     h.pon('hierba_alta', hierba_alta())
     h.pon('hierba_alta.delante', hierba_alta_delante())
+    h.pon('trigal', trigal())
+    h.pon('trigal.delante', trigal_delante())
     for v in range(3):
         h.pon(f'flores.{v}', flores(v))
 
@@ -1258,10 +1399,12 @@ def construir() -> Hoja:
     h.pon('suelo.barro', suelo_barro())
     h.pon('suelo.marmol', suelo_marmol())
     h.pon('suelo.tablas', suelo_tablas())
-    for estilo in ('meson', 'patio', 'pabellon'):
+    h.pon('suelo.losas', suelo_losas())
+    for estilo in ('meson', 'patio', 'pabellon', 'alcazar'):
         for pos in ('cara', 'borde', 'esquina_i', 'esquina_d'):
             h.pon(f'pared.{estilo}.{pos}', pared_interior(estilo, pos))
-    for nombre, base in [('barro', suelo_barro()), ('marmol', suelo_marmol()), ('tablas', suelo_tablas())]:
+    for nombre, base in [('barro', suelo_barro()), ('marmol', suelo_marmol()), ('tablas', suelo_tablas()),
+                         ('losas', suelo_losas())]:
         h.pon(f'felpudo.{nombre}', felpudo(base))
     for l_ in (False, True):
         for r in (False, True):
@@ -1278,6 +1421,9 @@ def construir() -> Hoja:
                     h.pon(f'seto.{clave}', seto(u, d, l_, r))
     pon_material('huerto', material(pinta_huerto, margen=1, juego=0, redondeo=2, semilla=600))
     h.pon('arbol', arbol())
+    h.pon('encina', encina())
+    h.pon('armadura', armadura())
+    h.pon('armero', armero())
     h.pon('naranjo', naranjo())
     h.pon('pozo', pozo())
     h.pon('arbusto', arbusto())

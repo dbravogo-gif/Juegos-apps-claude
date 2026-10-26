@@ -12,6 +12,7 @@ import { motivoNoUsable, seAplicaACriatura } from '../core/objetos';
 import {
   accionesDisponibles,
   activoDe,
+  fichaDe,
   iniciarCombate,
   resolverTurno,
   type Accion,
@@ -781,6 +782,7 @@ export class Combate extends Phaser.Scene {
         v.destroy();
         const p = POSICION.jugador;
         this.visual.jugador = crearCriaturaVisual(this, nueva.especie, p.x, p.y, p.tam, true, true);
+        this.ficha.jugador.mostrar(fichaDe(nueva, DATOS));
       }
       await this.decir(`¡${antes} se ha convertido en ${DATOS.especies[nueva.especie].nombre}!`, 1600);
     }

@@ -2,9 +2,9 @@ import type { Especie } from '../core/modelo';
 import type { MovimientoId } from './movimientos';
 import type { TipoId } from './tipos';
 
-// Criaturas del capítulo 1 («Granada, 1492»), según las fichas de `docs/BESTIARIO.md`, que es la
-// fuente de verdad. Los `id` son los del prototipo y no cambian aunque cambie el nombre, para no
-// romper las partidas guardadas.
+// Criaturas de los capítulos 1 («Granada, 1492») y 2 («Toledo, 1521»), según las fichas de
+// `docs/BESTIARIO.md`, que es la fuente de verdad. Los `id` no cambian aunque cambie el nombre,
+// para no romper las partidas guardadas.
 // Estadísticas base en el orden de Pokémon: Vida, Fuerza, Escudo, Magia, Resistencia mágica y
 // Celeridad.
 
@@ -39,6 +39,16 @@ const LINEA_DRAGO: Aprende = [
 const LINEA_LIBELULA: Aprende = [[1, 'aletazo'], [3, 'acometida'], [6, 'revoloteo'], [10, 'picada']];
 const LINEA_DUENDE: Aprende = [[1, 'trastada'], [4, 'desplante'], [8, 'mal_de_ojo'], [12, 'acometida']];
 const LINEA_ESCARABAJO: Aprende = [[1, 'topetazo'], [1, 'desplante'], [5, 'polvareda'], [9, 'terronazo']];
+// Capítulo 2
+const LINEA_LAGARTO: Aprende = [
+  [1, 'topetazo'], [1, 'desplante'], [6, 'terronazo'], [11, 'zarpazo'], [16, 'cantazo'], [21, 'compactar'], [26, 'temblor'],
+];
+const LINEA_VIBORA: Aprende = [
+  [1, 'trastada'], [1, 'desplante'], [5, 'colmillo_sombrio'], [10, 'emboscada'], [15, 'mal_de_ojo'],
+];
+const LINEA_AVUTARDA: Aprende = [[1, 'topetazo'], [1, 'bramido'], [7, 'pisoton'], [12, 'rueda'], [18, 'aletazo']];
+const LINEA_AGUILA: Aprende = [[1, 'aletazo'], [1, 'bramido'], [6, 'revoloteo'], [11, 'picada'], [18, 'zarpazo']];
+const LINEA_LOBO: Aprende = [[1, 'topetazo'], [1, 'aullido'], [5, 'zarpazo'], [10, 'dentellada'], [15, 'colmillo_sombrio']];
 
 const DEF = {
   becerro_igneo: {
@@ -265,6 +275,165 @@ const DEF = {
     ratioCaptura: 45,
     aprende: [...LINEA_ESCARABAJO, [20, 'tajo'], [25, 'coraza'], [36, 'mocarabe'], [40, 'amanecer']],
     descripcion: 'Los egipcios veían en el escarabajo que rueda su bola al dios que empujaba el sol. La cúpula de la Sala de las Dos Hermanas, en la Alhambra, tiene más de cinco mil celdas de mocárabes.',
+  },
+
+  // ---------- Capítulo 2: Toledo y Castilla (1516–1556) ----------
+  lagarto: {
+    numero: 22,
+    nombre: 'Lizarco',
+    tipos: ['tierra'],
+    base: [50, 60, 55, 35, 45, 65],
+    expBase: 62,
+    ratioCaptura: 190,
+    aprende: LINEA_LAGARTO,
+    evoluciona: { a: 'lagarto_muralla', nivel: 30 },
+    descripcion: 'El lagarto ocelado es el mayor lagarto de la península: puede pasar de 60 centímetros con la cola. Los machos lucen manchas azules en los costados.',
+  },
+  lagarto_muralla: {
+    numero: 23,
+    nombre: 'Bastilag',
+    tipos: ['tierra', 'acero'],
+    base: [85, 100, 125, 45, 85, 50],
+    expBase: 175,
+    ratioCaptura: 45,
+    aprende: [...LINEA_LAGARTO, [31, 'hoja_toledana'], [36, 'molienda'], [42, 'tapazo']],
+    descripcion: 'Las murallas de Toledo mezclan piedra y ladrillo. Los alarifes mudéjares levantaron puertas como la del Sol, del siglo XIV.',
+  },
+  vibora: {
+    numero: 24,
+    nombre: 'Viperel',
+    tipos: ['oscuridad'],
+    base: [40, 60, 40, 45, 40, 70],
+    expBase: 52,
+    ratioCaptura: 200,
+    aprende: LINEA_VIBORA,
+    evoluciona: { a: 'vibora_cornuda', nivel: 20 },
+    descripcion: 'La víbora hocicuda tiene la punta del hocico levantada como un pequeño cuerno. Es la víbora de casi toda la península, salvo el norte.',
+  },
+  vibora_cornuda: {
+    numero: 25,
+    nombre: 'Viperion',
+    tipos: ['oscuridad'],
+    base: [60, 85, 60, 55, 55, 90],
+    expBase: 130,
+    ratioCaptura: 100,
+    aprende: [...LINEA_VIBORA, [21, 'tarea_imposible'], [27, 'noche_cerrada']],
+    evoluciona: { a: 'sierpe', nivel: 36 },
+    descripcion: 'Las víboras no persiguen a sus presas: esperan inmóviles entre las piedras y atacan en un instante.',
+  },
+  sierpe: {
+    numero: 26,
+    nombre: 'Sierpeira',
+    tipos: ['oscuridad', 'tierra'],
+    base: [85, 100, 80, 80, 75, 90],
+    expBase: 230,
+    ratioCaptura: 45,
+    aprende: [...LINEA_VIBORA, [21, 'tarea_imposible'], [27, 'noche_cerrada'], [37, 'temblor'], [42, 'cantazo']],
+    descripcion: 'Muchos pueblos de Castilla y Aragón cuentan de una sierpe que vivía en una cueva y devoraba el ganado hasta que un caballero o un santo acababa con ella.',
+  },
+  avutarda: {
+    numero: 27,
+    nombre: 'Grávico',
+    tipos: ['comun'],
+    base: [55, 65, 50, 30, 40, 50],
+    expBase: 58,
+    ratioCaptura: 190,
+    aprende: LINEA_AVUTARDA,
+    evoluciona: { a: 'avutarda_macho', nivel: 24 },
+    descripcion: 'La avutarda es una de las aves voladoras más pesadas del mundo: un macho puede pasar de 15 kilos. España tiene la mayor población del planeta.',
+  },
+  avutarda_macho: {
+    numero: 28,
+    nombre: 'Gravitardo',
+    tipos: ['comun', 'aire'],
+    base: [90, 95, 75, 45, 65, 60],
+    expBase: 150,
+    ratioCaptura: 75,
+    aprende: [...LINEA_AVUTARDA, [25, 'picada'], [30, 'ventolera']],
+    descripcion: 'En primavera, el macho de avutarda hace la rueda: vuelve del revés las plumas de la cola y de las alas y se convierte en una bola blanca que se ve desde lejos.',
+  },
+  aguila: {
+    numero: 29,
+    nombre: 'Aquilín',
+    tipos: ['aire'],
+    base: [45, 65, 40, 40, 40, 90],
+    expBase: 70,
+    ratioCaptura: 60,
+    aprende: LINEA_AGUILA,
+    evoluciona: { a: 'aguila_imperial', nivel: 30 },
+    descripcion: 'El águila imperial ibérica solo vive en la península. En los años setenta quedaban unas pocas decenas de parejas; hoy son varios cientos.',
+  },
+  aguila_imperial: {
+    numero: 30,
+    nombre: 'Imperión',
+    tipos: ['aire', 'luz'],
+    base: [80, 105, 70, 85, 75, 110],
+    expBase: 240,
+    ratioCaptura: 30,
+    aprende: [...LINEA_AGUILA, [31, 'resplandor'], [36, 'vuelo_real'], [42, 'amanecer']],
+    descripcion: 'El águila de San Juan sostiene el escudo de los Reyes Católicos. Su nieto Carlos, emperador, usó el águila de dos cabezas.',
+  },
+  lobo: {
+    numero: 31,
+    nombre: 'Lobaz',
+    tipos: ['comun'],
+    base: [45, 62, 40, 30, 38, 70],
+    expBase: 55,
+    ratioCaptura: 220,
+    aprende: LINEA_LOBO,
+    evoluciona: { a: 'lobo_adulto', nivel: 22 },
+    descripcion: 'Al lobo ibérico se le llama signatus, «marcado», por la raya oscura de sus patas delanteras.',
+  },
+  lobo_adulto: {
+    numero: 32,
+    nombre: 'Lobregón',
+    tipos: ['comun', 'oscuridad'],
+    base: [70, 90, 60, 50, 60, 85],
+    expBase: 140,
+    ratioCaptura: 90,
+    aprende: [...LINEA_LOBO, [23, 'emboscada'], [28, 'noche_cerrada']],
+    evoluciona: { a: 'lobo_animas', nivel: 38 },
+    descripcion: 'El lobo ibérico caza sobre todo de noche y en grupo. Cada manada defiende su territorio con aullidos.',
+  },
+  lobo_animas: {
+    numero: 33,
+    nombre: 'Lobánima',
+    tipos: ['espectral', 'oscuridad'],
+    base: [80, 60, 65, 110, 90, 100],
+    expBase: 230,
+    ratioCaptura: 45,
+    aprende: [...LINEA_LOBO, [23, 'emboscada'], [28, 'noche_cerrada'], [39, 'lamento']],
+    descripcion: 'Bécquer situó en el Monte de las Ánimas de Soria su leyenda de la noche de Difuntos, cuando las almas de templarios y nobles vuelven a cazar en el monte.',
+  },
+  toro_guisando: {
+    numero: 34,
+    nombre: 'Guisandor',
+    tipos: ['tierra'],
+    base: [100, 100, 130, 40, 90, 30],
+    expBase: 180,
+    ratioCaptura: 25,
+    aprende: [[1, 'topetazo'], [1, 'compactar'], [8, 'terronazo'], [14, 'cantazo'], [20, 'temblor'], [28, 'molienda']],
+    descripcion: 'Los Toros de Guisando son cuatro verracos de granito de la Edad del Hierro, en El Tiemblo (Ávila). Junto a ellos se firmó en 1468 el pacto que hizo heredera a Isabel.',
+  },
+  tarantula: {
+    numero: 35,
+    nombre: 'Tarantón',
+    tipos: ['oscuridad', 'mental'],
+    base: [60, 45, 60, 85, 75, 70],
+    expBase: 110,
+    ratioCaptura: 120,
+    aprende: [[1, 'trastada'], [1, 'tarea_imposible'], [7, 'tarantela'], [12, 'mal_de_ojo'], [18, 'alarido'], [25, 'noche_cerrada']],
+    descripcion: 'La tarántula ibérica es una araña lobo que caza al acecho desde su madriguera. Su picadura duele, pero es poco peligrosa.',
+  },
+  erizo: {
+    numero: 36,
+    nombre: 'Pinchorro',
+    tipos: ['comun'],
+    base: [60, 45, 80, 30, 60, 35],
+    expBase: 62,
+    ratioCaptura: 200,
+    aprende: [[1, 'topetazo'], [1, 'erizarse'], [6, 'bola_de_puas'], [11, 'dentellada'], [16, 'desplante']],
+    descripcion: 'El erizo europeo tiene entre cinco y siete mil púas. Cuando se siente en peligro, se enrosca en una bola.',
   },
 
   // Encuentro especial: se esconde en las tinajas (ver src/data/recipientes.ts).

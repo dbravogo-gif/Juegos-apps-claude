@@ -60,7 +60,7 @@ Los líderes son sobre todo reyes y generales; los artistas salen como PNJ.
 | # | Época | Ciudad | Líder (candidatos) | PNJ y trama |
 | --- | --- | --- | --- | --- |
 | 1 | Reyes Católicos (1491–1492) | Granada y Santa Fe | Boabdil | **Isabel la Católica (mentora)**, Fernando, el Gran Capitán, Colón |
-| 2 | Carlos V (1516–1556) | Toledo y Villalar | Carlos V | Los comuneros Juan de Padilla y María Pacheco; Hernán Cortés |
+| 2 | Carlos V (1516–1556) | Villalar y Toledo, 1521 | **María Pacheco** (hecho) | Juan de Padilla; Carlos V, ausente, como el poder contra el que se alzan |
 | 3 | Felipe II (1556–1598) | El Escorial y Sevilla | Don Juan de Austria (Lepanto) | Felipe II, Álvaro de Bazán, el duque de Alba; Cervantes, soldado en Lepanto |
 | 4 | Los Austrias menores (1598–1700) | Madrid | Ambrosio Spínola (Breda) | Felipe IV, Olivares; los tercios; Velázquez |
 | 5 | Borbones: **Canarias** (1700–1808) | Tenerife, El Hierro y La Gomera, con un prólogo en Madrid y Cádiz | El general Gutiérrez, que rechazó a Nelson en 1797 | **Carlos III (mentor)** y Jorge Juan, en el prólogo; Nelson, como antagonista; las ánimas de los menceyes |
@@ -514,3 +514,19 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
 - **2026-10-25 (10).** Tabla de tipos equilibrada (ver §8) y decisiones del autor para el
   capítulo 2: el protagonista es siempre el mismo (se descarta la saga familiar) y los
   personajes del capítulo los elige el diseño, cuadrados con la historia.
+- **2026-10-26 (11).** Capítulo 2, «Castilla, 1521», hecho y jugable.
+  - Empieza al vencer a Boabdil: un texto explica el salto (mueren Isabel en 1504 y Fernando en
+    1516; Carlos es emperador y estalla la guerra de las Comunidades) y el jugador aparece en
+    Villalar el 23 de abril de 1521, con el mismo protagonista y su equipo.
+  - Recorrido: Villalar → camino de Toledo (con el Tajo) → Toledo (mesón) → Alcázar.
+  - La líder es María Pacheco, no Carlos V: él no estaba en España en 1521, y ella es quien
+    resiste en Toledo hasta febrero de 1522. Juan de Padilla, antes de ser ejecutado, te da una
+    carta para ella. Equipo de Tierra/Acero (Escarbraz 12 y Bastilag 14): el reparto de tipos
+    de la zona lo anuncia, como pide A.9.
+  - Dificultad comprobada con simulaciones (sin objetos): con el inicial a nivel 14 y un
+    Lizarco de nivel 12, que se captura en Villalar y hace ×2 a los dos, se gana un 34 % con
+    el de fuego, un 59 % con el de agua y un 81 % con el de planta; con pociones, bastante más.
+    El de fuego es el que más sufre, porque Bastilag le pega ×2 con Tierra.
+  - Cinco entrenadores de una criatura, uno por cada tipo nuevo de la zona.
+  - Termina con la tregua de octubre de 1521, la huida de María a Portugal en 1522 (murió en
+    Oporto en 1531) y la vuelta de Carlos en julio de 1522.

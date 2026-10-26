@@ -1,6 +1,6 @@
 # Fase 1: prototipo «Granada, 1492»
 
-Estado: **en curso.** Los hitos 1 a 3 están hechos y el modo historia se juega entero. Falta el hito 4. Las relaciones entre tipos (§4) siguen siendo provisionales.
+Estado: **en curso.** Los hitos 1 a 3 están hechos y el modo historia se juega entero. Falta ajustar el equilibrio del hito 4. La tabla de tipos (§4) está equilibrada con el autor desde el 2026-10-26. El juego ya va más allá del prototipo: el capítulo 2 (Villalar y Toledo, 1521) está hecho; ver `GDD.md` §12 (11).
 
 ## 1. Objetivo
 
@@ -129,7 +129,8 @@ iniciales evolucionan en la fase 2, como en Pokémon, donde lo hacen después de
 
 ## 4. Tipos
 
-- **La lista.** Son los 15 del GDD (§8). Las relaciones entre ellos aún están por decidir.
+- **La lista.** Son los 15 del GDD (§8). Las relaciones están en `GDD.md` §8: los tipos sin
+  inmunidades dan tantos ×2 como ×½.
 - **Tipo doble.** El motor admite dos tipos por criatura desde el principio. Cuesta poco y
   evita rehacerlo después.
 - **La tabla es un dato** (`src/data/tipos.ts`). Se puede cambiar sin tocar el motor, así que no
@@ -185,7 +186,7 @@ leyendas-de-iberia/
 
 Quedan para fases posteriores:
 
-- Evoluciones de los iniciales y más zonas.
+- Evoluciones de los iniciales. (Más zonas: el capítulo 2 ya está hecho.)
 - El laboratorio del Dr. Jangel y los fósiles revividos.
 - Las zonas opcionales anteriores a 1492, con el Cid y Babieca.
 - Música.

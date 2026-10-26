@@ -577,6 +577,10 @@ export class Mundo extends Phaser.Scene {
         case 'fin':
           await this.ui.pantallaFin(paso.texto);
           break;
+        case 'viajar':
+          this.ui.cerrarDialogo();
+          await this.cambiarZona({ x: 0, y: 0, zona: paso.zona, ax: paso.x, ay: paso.y, dir: paso.dir });
+          break;
       }
     }
     return true;
