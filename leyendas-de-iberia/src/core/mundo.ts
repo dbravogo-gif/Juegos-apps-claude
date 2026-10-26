@@ -134,7 +134,9 @@ export type EstiloZona =
   /** Ciudad de muralla de ladrillo mudéjar y cipreses. */
   | 'toledo'
   /** Interior de sillería, con armaduras y armeros. */
-  | 'alcazar';
+  | 'alcazar'
+  /** Montaña: pinos, peñas de granito y arroyos. */
+  | 'sierra';
 
 export interface Zona {
   id: string;

@@ -732,10 +732,14 @@ export class Mundo extends Phaser.Scene {
     return prepararEntrenador(ENTRENADORES[id], this.p, DATOS, INICIALES, NOMBRES_RIVALES);
   }
 
-  /** La primera vez que aparece un rival, el jugador le pone nombre. */
-  private async conocerRival(cual: 'a' | 'b', presentar = false): Promise<void> {
+  /**
+   * La primera vez que aparece un rival, el juego cuenta quién es y el jugador le pone nombre.
+   * `deSorpresa`: aparece de repente (en las partidas que no lo conocieron en Santa Fe).
+   */
+  private async conocerRival(cual: 'a' | 'b', deSorpresa = false): Promise<void> {
     if (this.p.rivales?.[cual]) return;
-    if (presentar) await this.ui.decir('¡Una cara conocida! Es de tu pandilla de siempre.');
+    if (deSorpresa) await this.ui.decir('¡Una cara conocida! Es de tu pandilla del campamento real.');
+    for (const t of RIVALES[cual].presentacion) await this.ui.decir(t);
     this.ui.cerrarDialogo();
     const nombre = await pedirNombre(RIVALES[cual].porDefecto, RIVALES[cual].pregunta, 'Aceptar');
     this.p.rivales = { ...this.p.rivales, [cual]: nombre };

@@ -130,8 +130,11 @@ equipo se guardan en las páginas del Bestiario (§8).
   multijugador, su equipo rival es el equipo real de ese amigo (§9). Hecho en un jugador
   (2026-10-26): son dos amigos del protagonista, que entran con él en el pabellón de Isabel; el
   jugador les pone nombre y se quedan con las otras dos iniciales (el primero, con la que gana a
-  la tuya). Los textos no les dan género. Combates: Santa Fe y la Vega (capítulo 1), el camino
-  de Toledo y Toledo (capítulo 2).
+  la tuya). Los textos no les dan género. Antes de ponerles nombre, el juego cuenta quiénes son:
+  los tres se criaron en el campamento real, siguiendo al ejército de asedio en asedio; uno es
+  de familia de arrieros y nunca te ha dejado ganar sin pelear, y el otro, hijo de la herbolaria
+  del campamento, lo apunta todo en un cuaderno. Combates: Santa Fe y la Vega (capítulo 1), el
+  camino de Toledo y Toledo (capítulo 2).
 - **El Bestiario crece con la historia.** En el capítulo 6, Goya lo ilustra, enlazando con sus
   *Caprichos* («El sueño de la razón produce monstruos»).
 - En el capítulo 7, el protagonista combate en el bando sublevado (§6).
@@ -237,8 +240,13 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
   páginas del Bestiario y se cambian en cualquier mesón. Es el equivalente a las cajas del PC de
   Pokémon: 10 páginas de 30 huecos (6 × 5), donde se mueven, se cambian de sitio, se ve su
   ficha o se liberan.
-- **Pesca.** Con la Caña (la da un pescador de la Vega), delante del agua se pesca. Cada zona
-  con agua puede tener su tabla de pesca (`encuentrosPesca`).
+- **Pesca.** Con la Caña, delante del agua se pesca. Cada zona con agua puede tener su tabla de
+  pesca (`encuentrosPesca`). La Caña llega con el tercer gimnasio (decisión del autor), así que
+  hasta que exista el capítulo 3 no se consigue; el pescador de la Vega solo la anuncia.
+- **Rutas entre ciudades.** Largas, con caminos que serpentean, mucha hierba y algún detalle de
+  la época que se lee en un cartel: la noria y la atalaya nazarí de la Vega; la venta, el
+  puerto, la cascada y la cañada real de la Mesta en la sierra de Guadarrama; el palomar y el
+  puente de Alcántara en el camino de Toledo.
 - **Estados alterados.** Quemadura, sueño, parálisis, veneno, veneno grave (intoxicación) y
   **cólera**; no hay congelación, por decisión del autor. La cólera dura hasta curarla (Tila,
   Baya Caquic, Cura total o el mesón), como la parálisis, y una de cada cinco veces la criatura
@@ -583,7 +591,8 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
   - Empieza al vencer a Boabdil: un texto explica el salto (mueren Isabel en 1504 y Fernando en
     1516; Carlos es emperador y estalla la guerra de las Comunidades) y el jugador aparece en
     Villalar el 23 de abril de 1521, con el mismo protagonista y su equipo.
-  - Recorrido: Villalar → camino de Toledo (con el Tajo) → Toledo (mesón) → Alcázar.
+  - Recorrido: Villalar → camino de Toledo (con el Tajo) → Toledo (mesón) → Alcázar. Desde el
+    registro 20, entre Villalar y el camino está la sierra de Guadarrama.
   - La líder es María Pacheco, no Carlos V: él no estaba en España en 1521, y ella es quien
     resiste en Toledo hasta febrero de 1522. Juan de Padilla, antes de ser ejecutado, te da una
     carta para ella. Equipo de Tierra/Acero (Escarbraz 12 y Bastilag 14): el reparto de tipos
@@ -658,3 +667,18 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
   - Cólera: Desvarío (antes confundía) la provoca siempre y Ofuscación, un 10 %. Cabeza fría la
     impide. Se cura con la Tila (tiendas), la Baya Caquic (escondida en Villalar), la Ziuela,
     la Cura total o el mesón.
+- **2026-10-26 (20).** Rutas más largas, rivales con historia y la Caña más tarde, a petición
+  del autor.
+  - El nombre de los rivales se puede escribir entero: el juego se quedaba con algunas teclas
+    (W, A, S, D, Mayúsculas, M, Z, X) aunque se estuviera escribiendo.
+  - Los rivales ya no se presentan como «el del sombrero» y «la de la melena»: antes de ponerles
+    nombre se cuenta su historia (§5). Isabel explica algo más: la guerra, Santa Fe, las
+    criaturas que solo conocen los pastores y por qué elige al protagonista.
+  - La Caña pasa al tercer gimnasio; el pescador de la Vega ya no la da.
+  - La Vega crece a 32 × 46, con acequias, una noria, una atalaya nazarí, huertas y olivares.
+  - Nueva zona entre Villalar y el camino de Toledo: la sierra de Guadarrama (30 × 44), con
+    pinos, peñas de granito, una cascada, una venta, la cañada real y un halconero. El pastor
+    de la Mesta se muda allí. El camino de Toledo crece a 28 × 40, con un palomar y el puente de
+    Alcántara sobre el Tajo.
+  - Casillas nuevas: cascada (V), peña (k), atalaya (I) y noria (N, se pesca delante); estilo
+    `sierra`.

@@ -103,7 +103,8 @@ describe('pesca', () => {
     expect(dondeSale(ZONAS, 'barbo')).toEqual([expect.objectContaining({ zona: 'vega', pesca: true })]);
     expect(dondeSale(ZONAS, 'galapago').some((d) => d.zona === 'camino_toledo' && d.pesca)).toBe(true);
     // Las acequias de la Vega y el Tajo son agua de pesca.
-    expect(esPescable(ZONAS.vega, 7, 6, CASILLAS) || esPescable(ZONAS.vega, 1, 6, CASILLAS)).toBe(true);
+    expect(esPescable(ZONAS.vega, 7, 15, CASILLAS)).toBe(true);
+    expect(esPescable(ZONAS.vega, 8, 35, CASILLAS)).toBe(true);
     for (const z of Object.values(ZONAS)) {
       for (const e of z.encuentrosPesca?.especies ?? []) expect(DATOS.especies[e.especie], e.especie).toBeDefined();
       if (z.encuentrosPesca) expect(z.mapa.some((f) => [...f].some((ch) => CASILLAS[ch]?.pesca)), z.id).toBe(true);

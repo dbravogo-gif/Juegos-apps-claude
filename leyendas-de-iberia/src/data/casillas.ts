@@ -38,4 +38,9 @@ export const CASILLAS: Record<string, DefCasilla> = {
   w: { nombre: 'Trigal', solido: false, hierba: true },
   Y: { nombre: 'Armadura', solido: true },
   J: { nombre: 'Armero', solido: true },
+  V: { nombre: 'Cascada', solido: true },
+  k: { nombre: 'Peña', solido: true },
+  I: { nombre: 'Atalaya', solido: true },
+  /** Una noria sobre la acequia: es agua, y se pesca a su lado. */
+  N: { nombre: 'Noria', solido: true, pesca: true },
 };

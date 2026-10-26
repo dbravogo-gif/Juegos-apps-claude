@@ -17,6 +17,8 @@ export const LUGARES: Record<string, Lugar> = {
   granada: { nombre: 'Granada', lat: 37.176, lon: -3.588, llegada: { zona: 'santa_fe', x: 12, y: 16, dir: 'arriba' } },
   // Villalar de los Comuneros (Valladolid).
   villalar: { nombre: 'Villalar', lat: 41.553, lon: -5.137, llegada: { zona: 'villalar', x: 11, y: 8, dir: 'arriba' } },
+  // El puerto de Guadarrama (Alto del León), por donde se cruza la sierra.
+  guadarrama: { nombre: 'Sierra de Guadarrama', lat: 40.71, lon: -4.13 },
   toledo: { nombre: 'Toledo', lat: 39.857, lon: -4.024, llegada: { zona: 'toledo', x: 5, y: 5, dir: 'abajo' } },
 };
 
