@@ -17,14 +17,14 @@ export const NOMBRE_ESTADISTICA: Record<Estadistica, string> = {
 };
 
 export type Categoria = 'fisico' | 'magico' | 'estado';
-export type EstadoAlterado = 'quemado' | 'dormido' | 'paralizado' | 'envenenado' | 'intoxicado';
-export const ESTADOS_ALTERADOS: EstadoAlterado[] = ['quemado', 'dormido', 'paralizado', 'envenenado', 'intoxicado'];
+export type EstadoAlterado = 'quemado' | 'dormido' | 'paralizado' | 'envenenado' | 'intoxicado' | 'colera';
+export const ESTADOS_ALTERADOS: EstadoAlterado[] = ['quemado', 'dormido', 'paralizado', 'envenenado', 'intoxicado', 'colera'];
 
 export type Efecto =
   /** Provoca un estado alterado al rival. `prob` en tanto por ciento. */
   | { tipo: 'estado'; estado: EstadoAlterado; prob: number }
-  /** Confunde al rival de 2 a 5 turnos. */
-  | { tipo: 'confundir'; prob: number }
+  /** Deja cegado al rival unos turnos (como la confusión del género): falla más. */
+  | { tipo: 'cegar'; prob: number }
   /** El rival pierde el turno si todavía no ha actuado. */
   | { tipo: 'retroceso'; prob: number }
   /** Siembra al rival: pierde 1/8 de su Vida cada turno y se la lleva quien esté en este lado. */
@@ -81,7 +81,7 @@ export interface Especie {
 }
 
 /** Estados volátiles: no son estados alterados, pero hay pasivas que los impiden. */
-export type EstadoVolatil = 'confusion' | 'retroceso';
+export type EstadoVolatil = 'cegado' | 'retroceso';
 
 export type EfectoPasiva =
   /** Con un tercio de la Vida o menos, sus ataques de ese tipo pegan ×1,5. */
@@ -91,8 +91,10 @@ export type EfectoPasiva =
   /** Los ataques de ese tipo no le hacen nada. */
   | { tipo: 'inmuneTipo'; tipoMov: string }
   | { tipo: 'inmuneEstado'; estados: (EstadoAlterado | EstadoVolatil)[] }
-  /** Quien le golpea con un ataque físico puede sufrir uno de esos estados. */
-  | { tipo: 'contacto'; estados: EstadoAlterado[]; prob: number }
+  /** Quien le golpea con un ataque físico puede sufrir uno de esos estados (o quedar cegado). */
+  | { tipo: 'contacto'; estados: (EstadoAlterado | 'cegado')[]; prob: number }
+  /** Sus ataques pueden dejar cegado al rival. */
+  | { tipo: 'ataqueCegador'; prob: number }
   | { tipo: 'resistir'; tipos: string[] }
   | {
       tipo:
@@ -180,7 +182,7 @@ export type EfectoEquipo =
   /** Al bajar de `umbral` de la Vida, recupera `cura` de la Vida máxima (o `puntos` de Vida). */
   | { tipo: 'baya'; umbral: number; cura?: number; puntos?: number }
   /** Cura alguno de esos estados en cuanto lo sufre. */
-  | { tipo: 'bayaEstado'; estados: (EstadoAlterado | 'confusion')[] }
+  | { tipo: 'bayaEstado'; estados: (EstadoAlterado | 'cegado')[] }
   /** `prob` % de actuar la primera entre los movimientos de su misma prioridad. */
   | { tipo: 'primero'; prob: number }
   /** Multiplica la probabilidad de dar un golpe crítico. */
@@ -270,7 +272,9 @@ export type EstadoCriatura =
   | { tipo: 'paralizado' }
   | { tipo: 'envenenado' }
   /** Veneno grave: cada turno hace más daño (`turnos`/16). */
-  | { tipo: 'intoxicado'; turnos: number };
+  | { tipo: 'intoxicado'; turnos: number }
+  /** Fuera de sí: a veces usa otro de sus movimientos en lugar del elegido. */
+  | { tipo: 'colera' };
 
 export interface MovimientoAprendido {
   id: string;

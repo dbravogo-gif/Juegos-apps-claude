@@ -113,17 +113,28 @@ describe('objetos nuevos', () => {
     }
   });
 
-  it('las bayas de estado curan veneno y confusión, y la Aranja 10 de Vida', () => {
+  it('las bayas de estado curan veneno, ceguera y cólera, y la Aranja 10 de Vida', () => {
     const meloc = combate([criatura('lobo', 20, ['aullido'], 'baya_meloc')], [criatura('vibora', 25, ['ponzona'])], { semilla: 'meloc' });
     const r = resolverTurno(meloc.estado, { tipo: 'movimiento', indice: 0 }, DATOS);
     if (de(r.eventos, 'estado').length > 0) {
       expect(r.estado.jugador.equipo[0].estado).toBeNull();
       expect(r.estado.jugador.equipo[0].objeto).toBeUndefined();
     }
-    const perasi = combate([criatura('lobo', 20, ['aullido'], 'baya_perasi')], [criatura('tarantula', 25, ['desvario'])], { semilla: 'perasi' });
+    const perasi = combate([criatura('lobo', 20, ['aullido'], 'baya_perasi')], [criatura('trasgo', 25, ['tiniebla'])], { semilla: 'perasi' });
     const r2 = resolverTurno(perasi.estado, { tipo: 'movimiento', indice: 0 }, DATOS);
-    expect(de(r2.eventos, 'confunde')).toHaveLength(1);
-    expect(r2.estado.jugador.volatil.confusion).toBe(0);
+    expect(de(r2.eventos, 'ciega')).toHaveLength(1);
+    expect(de(r2.eventos, 'recuperaVista')).toHaveLength(1);
+    expect(r2.estado.jugador.volatil.ceguera).toBe(0);
+    let calmada = 0;
+    for (let i = 0; i < 6; i++) {
+      const caquic = combate([criatura('lobo', 20, ['aullido'], 'baya_caquic')], [criatura('tarantula', 25, ['desvario'])], { semilla: `caq${i}` });
+      const r4 = resolverTurno(caquic.estado, { tipo: 'movimiento', indice: 0 }, DATOS);
+      if (de(r4.eventos, 'estado').length > 0) {
+        expect(r4.estado.jugador.equipo[0].estado).toBeNull();
+        calmada++;
+      }
+    }
+    expect(calmada).toBeGreaterThan(0);
 
     const herido = criatura('lobo', 20, ['aullido'], 'baya_aranja');
     herido.vida = 12;

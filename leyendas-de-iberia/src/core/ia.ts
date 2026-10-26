@@ -17,6 +17,7 @@ const VALOR_ESTADO: Record<EstadoAlterado, number> = {
   intoxicado: 0.5,
   quemado: 0.45,
   envenenado: 0.4,
+  colera: 0.35,
 };
 
 export function elegirAccionIA(e: EstadoCombate, datos: DatosJuego): Accion {
@@ -66,8 +67,8 @@ function puntuar(e: EstadoCombate, mov: Movimiento, datos: DatosJuego): number {
       case 'estado':
         if (puedeSufrir(tu, f.estado, datos)) puntos += VALOR_ESTADO[f.estado];
         break;
-      case 'confundir':
-        if (e.jugador.volatil.confusion === 0 && !inmuneAEstado(tu, 'confusion', datos)) puntos += 0.35;
+      case 'cegar':
+        if (e.jugador.volatil.ceguera === 0 && !inmuneAEstado(tu, 'cegado', datos)) puntos += 0.35;
         break;
       case 'drenadoras':
         if (!e.jugador.volatil.drenadoras && !datos.especies[tu.especie].tipos.includes('planta')) puntos += 0.4;

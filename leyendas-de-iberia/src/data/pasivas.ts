@@ -36,7 +36,8 @@ const lista: Pasiva[] = [
   { id: 'contraveneno', nombre: 'Contraveneno', descripcion: 'Nunca se envenena.', efecto: { tipo: 'inmuneEstado', estados: ['envenenado', 'intoxicado'] } },
   { id: 'flexible', nombre: 'Flexible', descripcion: 'Nunca se paraliza.', efecto: { tipo: 'inmuneEstado', estados: ['paralizado'] } },
   { id: 'piel_humeda', nombre: 'Piel húmeda', descripcion: 'Nunca se quema.', efecto: { tipo: 'inmuneEstado', estados: ['quemado'] } },
-  { id: 'cabeza_fria', nombre: 'Cabeza fría', descripcion: 'Nunca se confunde.', efecto: { tipo: 'inmuneEstado', estados: ['confusion'] } },
+  { id: 'cabeza_fria', nombre: 'Cabeza fría', descripcion: 'Nunca monta en cólera.', efecto: { tipo: 'inmuneEstado', estados: ['colera'] } },
+  { id: 'ojos_de_lince', nombre: 'Ojos de lince', descripcion: 'Nunca queda cegado.', efecto: { tipo: 'inmuneEstado', estados: ['cegado'] } },
   { id: 'temple', nombre: 'Temple', descripcion: 'Nunca retrocede.', efecto: { tipo: 'inmuneEstado', estados: ['retroceso'] } },
 
   // Al recibir un ataque físico (de contacto).
@@ -44,6 +45,9 @@ const lista: Pasiva[] = [
   { id: 'puas_venenosas', nombre: 'Púas venenosas', descripcion: 'Quien le golpea con un ataque físico puede envenenarse (30 %).', efecto: { tipo: 'contacto', estados: ['envenenado'], prob: 30 } },
   { id: 'rescoldos', nombre: 'Rescoldos', descripcion: 'Quien le golpea con un ataque físico puede quemarse (30 %).', efecto: { tipo: 'contacto', estados: ['quemado'], prob: 30 } },
   { id: 'polen_narcotico', nombre: 'Polen narcótico', descripcion: 'Quien le golpea con un ataque físico puede dormirse, paralizarse o envenenarse (30 %).', efecto: { tipo: 'contacto', estados: ['dormido', 'paralizado', 'envenenado'], prob: 30 } },
+  // Cegadoras: solo para criaturas de tipo Luz u Oscuridad (decisión del autor).
+  { id: 'deslumbrante', nombre: 'Deslumbrante', descripcion: 'Brilla tanto que quien le golpea con un ataque físico puede quedar cegado (30 %).', efecto: { tipo: 'contacto', estados: ['cegado'], prob: 30 } },
+  { id: 'tinieblas', nombre: 'Tinieblas', descripcion: 'Sus ataques pueden dejar cegado al rival (10 %).', efecto: { tipo: 'ataqueCegador', prob: 10 } },
   { id: 'piel_aspera', nombre: 'Piel áspera', descripcion: 'Quien le golpea con un ataque físico pierde 1/8 de su Vida.', efecto: { tipo: 'pielAspera' } },
 
   // Más daño.

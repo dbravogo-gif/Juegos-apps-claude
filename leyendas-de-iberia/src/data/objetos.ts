@@ -110,6 +110,7 @@ const lista: Objeto[] = [
   { id: 'aloe', nombre: 'Antiquemar', articulo: 'un', categoria: 'estados', tipo: 'remedio', estados: ['quemado'], precio: 80, descripcion: 'Cura las quemaduras.' },
   { id: 'sales', nombre: 'Despertar', articulo: 'un', categoria: 'estados', tipo: 'remedio', estados: ['dormido'], precio: 80, descripcion: 'Despierta a una criatura dormida.' },
   { id: 'antiparalizador', nombre: 'Antiparalizador', articulo: 'un', categoria: 'estados', tipo: 'remedio', estados: ['paralizado'], precio: 100, descripcion: 'Cura la parálisis.' },
+  { id: 'tila', nombre: 'Tila', articulo: 'una', categoria: 'estados', tipo: 'remedio', estados: ['colera'], precio: 100, descripcion: 'Una taza de tila: calma a una criatura en cólera.' },
   { id: 'antidoto', nombre: 'Antídoto', articulo: 'un', categoria: 'estados', tipo: 'remedio', estados: ['envenenado', 'intoxicado'], precio: 80, descripcion: 'Cura el envenenamiento.' },
   {
     id: 'panacea',
@@ -117,7 +118,7 @@ const lista: Objeto[] = [
     articulo: 'una',
     categoria: 'estados',
     tipo: 'remedio',
-    estados: ['quemado', 'dormido', 'paralizado', 'envenenado', 'intoxicado'],
+    estados: ['quemado', 'dormido', 'paralizado', 'envenenado', 'intoxicado', 'colera'],
     precio: 250,
     descripcion: 'Cura cualquier estado alterado.',
   },
@@ -238,16 +239,17 @@ const lista: Objeto[] = [
   { id: 'endrina', nombre: 'Baya Atania', articulo: 'una', categoria: 'bayas', tipo: 'equipo', efecto: { tipo: 'bayaEstado', estados: ['dormido'] }, consumible: true, descripcion: 'Equipada: se la come y se despierta si se duerme.' },
   { id: 'baya_zreza', nombre: 'Baya Zreza', articulo: 'una', categoria: 'bayas', tipo: 'equipo', efecto: { tipo: 'bayaEstado', estados: ['paralizado'] }, consumible: true, descripcion: 'Equipada: se la come y se cura si la paralizan.' },
   { id: 'baya_meloc', nombre: 'Baya Meloc', articulo: 'una', categoria: 'bayas', tipo: 'equipo', efecto: { tipo: 'bayaEstado', estados: ['envenenado', 'intoxicado'] }, consumible: true, descripcion: 'Equipada: se la come y se cura si la envenenan.' },
-  { id: 'baya_perasi', nombre: 'Baya Perasi', articulo: 'una', categoria: 'bayas', tipo: 'equipo', efecto: { tipo: 'bayaEstado', estados: ['confusion'] }, consumible: true, descripcion: 'Equipada: se la come y se le pasa la confusión.' },
+  { id: 'baya_perasi', nombre: 'Baya Perasi', articulo: 'una', categoria: 'bayas', tipo: 'equipo', efecto: { tipo: 'bayaEstado', estados: ['cegado'] }, consumible: true, descripcion: 'Equipada: se la come y recupera la vista si la ciegan.' },
+  { id: 'baya_caquic', nombre: 'Baya Caquic', articulo: 'una', categoria: 'bayas', tipo: 'equipo', efecto: { tipo: 'bayaEstado', estados: ['colera'] }, consumible: true, descripcion: 'Equipada: se la come y se calma si monta en cólera.' },
   {
     id: 'baya_ziuela',
     nombre: 'Baya Ziuela',
     articulo: 'una',
     categoria: 'bayas',
     tipo: 'equipo',
-    efecto: { tipo: 'bayaEstado', estados: ['quemado', 'dormido', 'paralizado', 'envenenado', 'intoxicado', 'confusion'] },
+    efecto: { tipo: 'bayaEstado', estados: ['quemado', 'dormido', 'paralizado', 'envenenado', 'intoxicado', 'colera', 'cegado'] },
     consumible: true,
-    descripcion: 'Equipada: se la come y se cura de cualquier estado alterado o de la confusión.',
+    descripcion: 'Equipada: se la come y se cura de cualquier estado alterado o de la ceguera.',
   },
   // MT: las dan los líderes o están por el suelo. No se gastan. Su icono es el de `mt` o `mo`.
   {

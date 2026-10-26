@@ -239,11 +239,16 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
   ficha o se liberan.
 - **Pesca.** Con la Caña (la da un pescador de la Vega), delante del agua se pesca. Cada zona
   con agua puede tener su tabla de pesca (`encuentrosPesca`).
-- **Estados alterados.** Quemadura, sueño, parálisis, veneno y veneno grave (intoxicación),
-  como en el género; no hay congelación, por decisión del autor. Además, estados que se
-  pierden al retirarse: confusión, retroceso y Muérdago (las drenadoras). Rodela es la
-  protección del género. El fuego no se quema, el Eléctrico no se paraliza y el Acero no se
-  envenena.
+- **Estados alterados.** Quemadura, sueño, parálisis, veneno, veneno grave (intoxicación) y
+  **cólera**; no hay congelación, por decisión del autor. La cólera dura hasta curarla (Tila,
+  Baya Caquic, Cura total o el mesón), como la parálisis, y una de cada cinco veces la criatura
+  usa otro de sus movimientos en lugar del elegido. Además hay estados que se pierden al
+  retirarse: la **ceguera** (de 1 a 4 turnos, contados como la confusión del género: falla un
+  30 % más, multiplicado por lo demás que cambie la precisión, también con los ataques que no
+  fallan nunca, pero no con lo que se hace a sí misma), el retroceso y Muérdago (las
+  drenadoras). Solo ciegan los ataques y las pasivas de criaturas de Luz u Oscuridad (decisión
+  del autor). La confusión se quitó el 2026-10-26. Rodela es la protección del género. El fuego
+  no se quema, el Eléctrico no se paraliza y el Acero no se envenena.
 - **Pasivas.** Cada especie tiene una, y varias especies comparten la misma: 50 en total
   (`src/data/pasivas.ts`), con los efectos de las habilidades del género y nombres propios.
   Las que aún no lleva nadie quedan para los capítulos siguientes.
@@ -646,3 +651,10 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
     las antiguas se deduce del equipo.
   - Cuatro combates: Santa Fe al salir del pabellón (inicial a nivel 4), la Vega antes de la
     Alhambra, el camino de Toledo y Toledo antes del Alcázar.
+- **2026-10-26 (19).** Fuera la confusión; entran la ceguera y la cólera, a petición del autor.
+  - Ceguera: Destello (Luz) y Tiniebla (Oscuridad) la provocan siempre; Resplandor y Noche
+    cerrada, un 20 %. Pasivas Deslumbrante (Mocarabeo) y Tinieblas (Lobánima); Ojos de lince la
+    impide; la Baya Perasi la cura.
+  - Cólera: Desvarío (antes confundía) la provoca siempre y Ofuscación, un 10 %. Cabeza fría la
+    impide. Se cura con la Tila (tiendas), la Baya Caquic (escondida en Villalar), la Ziuela,
+    la Cura total o el mesón.

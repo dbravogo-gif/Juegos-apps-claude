@@ -46,15 +46,15 @@ const LINEA_DRAGO: Aprende = [
   [20, 'savia_de_dragon'],
 ];
 const LINEA_LIBELULA: Aprende = [[1, 'aletazo'], [3, 'acometida'], [6, 'revoloteo'], [10, 'picada']];
-const LINEA_DUENDE: Aprende = [[1, 'trastada'], [4, 'desplante'], [8, 'mal_de_ojo'], [10, 'desvario'], [12, 'acometida']];
+const LINEA_DUENDE: Aprende = [[1, 'trastada'], [4, 'desplante'], [8, 'mal_de_ojo'], [8, 'tiniebla'], [10, 'desvario'], [12, 'acometida']];
 const LINEA_ESCARABAJO: Aprende = [[1, 'topetazo'], [1, 'desplante'], [5, 'polvareda'], [9, 'terronazo']];
 // Capítulo 2
 const LINEA_LAGARTO: Aprende = [
   [1, 'topetazo'], [1, 'desplante'], [6, 'terronazo'], [11, 'zarpazo'], [16, 'cantazo'], [21, 'compactar'], [26, 'temblor'],
 ];
 const LINEA_VIBORA: Aprende = [
-  [1, 'trastada'], [1, 'desplante'], [5, 'colmillo_sombrio'], [8, 'colmillo_venenoso'], [10, 'emboscada'], [15, 'mal_de_ojo'],
-  [18, 'ponzona'],
+  [1, 'trastada'], [1, 'desplante'], [5, 'colmillo_sombrio'], [8, 'colmillo_venenoso'], [10, 'emboscada'], [13, 'tiniebla'],
+  [15, 'mal_de_ojo'], [18, 'ponzona'],
 ];
 const LINEA_AVUTARDA: Aprende = [[1, 'topetazo'], [1, 'bramido'], [7, 'pisoton'], [12, 'rueda'], [15, 'peso_muerto'], [18, 'aletazo']];
 const LINEA_AGUILA: Aprende = [[1, 'aletazo'], [1, 'bramido'], [6, 'revoloteo'], [11, 'picada'], [18, 'zarpazo']];
@@ -317,12 +317,12 @@ const DEF = {
   escarabajo_joya: {
     numero: 21,
     nombre: 'Mocarabeo',
-    pasiva: 'afinidad',
+    pasiva: 'deslumbrante',
     tipos: ['acero', 'luz'],
     base: [95, 75, 120, 70, 110, 40],
     expBase: 230,
     ratioCaptura: 45,
-    aprende: [...LINEA_ESCARABAJO, [20, 'tajo'], [25, 'coraza'], [36, 'mocarabe'], [40, 'amanecer']],
+    aprende: [...LINEA_ESCARABAJO, [20, 'tajo'], [25, 'coraza'], [36, 'mocarabe'], [38, 'destello'], [40, 'amanecer']],
     descripcion: 'Los egipcios veían en el escarabajo que rueda su bola al dios que empujaba el sol. La cúpula de la Sala de las Dos Hermanas, en la Alhambra, tiene más de cinco mil celdas de mocárabes.',
   },
 
@@ -432,7 +432,7 @@ const DEF = {
     expBase: 240,
     ratioCaptura: 30,
     alada: true,
-    aprende: [...LINEA_AGUILA, [31, 'resplandor'], [36, 'vuelo_real'], [42, 'amanecer']],
+    aprende: [...LINEA_AGUILA, [31, 'resplandor'], [33, 'destello'], [36, 'vuelo_real'], [42, 'amanecer']],
     descripcion: 'El águila de San Juan sostiene el escudo de los Reyes Católicos. Su nieto Carlos, emperador, usó el águila de dos cabezas.',
   },
   lobo: {
@@ -455,19 +455,19 @@ const DEF = {
     base: [70, 90, 60, 50, 60, 85],
     expBase: 140,
     ratioCaptura: 90,
-    aprende: [...LINEA_LOBO, [23, 'emboscada'], [28, 'noche_cerrada']],
+    aprende: [...LINEA_LOBO, [23, 'emboscada'], [28, 'noche_cerrada'], [32, 'tiniebla']],
     evoluciona: { a: 'lobo_animas', nivel: 38, objeto: 'piedra_lunar' },
     descripcion: 'El lobo ibérico caza sobre todo de noche y en grupo. Cada manada defiende su territorio con aullidos.',
   },
   lobo_animas: {
     numero: 33,
     nombre: 'Lobánima',
-    pasiva: 'hora_bruja',
+    pasiva: 'tinieblas',
     tipos: ['espectral', 'oscuridad'],
     base: [80, 60, 65, 110, 90, 100],
     expBase: 230,
     ratioCaptura: 45,
-    aprende: [...LINEA_LOBO, [23, 'emboscada'], [28, 'noche_cerrada'], [39, 'lamento']],
+    aprende: [...LINEA_LOBO, [23, 'emboscada'], [28, 'noche_cerrada'], [32, 'tiniebla'], [39, 'lamento']],
     descripcion: 'Bécquer situó en el Monte de las Ánimas de Soria su leyenda de la noche de Difuntos, cuando las almas de templarios y nobles vuelven a cazar en el monte.',
   },
   toro_guisando: {

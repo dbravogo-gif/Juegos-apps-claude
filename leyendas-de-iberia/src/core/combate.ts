@@ -39,8 +39,11 @@ export interface LadoCombate {
 }
 
 export interface Volatil {
-  /** Turnos de confusión que le quedan. 0: no está confusa. */
-  confusion: number;
+  /**
+   * Turnos de ceguera que le quedan, contando el que la cura (como la confusión del género):
+   * 0, ve bien.
+   */
+  ceguera: number;
   /** La han sembrado: cada turno pierde Vida y se la lleva el activo del otro lado. */
   drenadoras: boolean;
   /** Se ha protegido este turno. */
@@ -56,7 +59,7 @@ export interface Volatil {
 }
 
 export function volatilCero(): Volatil {
-  return { confusion: 0, drenadoras: false, protegido: false, protecciones: 0, retrocede: false, avivado: false, actuado: false };
+  return { ceguera: 0, drenadoras: false, protegido: false, protecciones: 0, retrocede: false, avivado: false, actuado: false };
 }
 
 export interface EstadoCombate {
@@ -111,7 +114,7 @@ export type Evento =
       vidaMax: number;
       eficacia: number;
       critico: boolean;
-      causa: 'ataque' | 'quemadura' | 'veneno' | 'retroceso' | 'objeto' | 'confusion' | 'drenadoras' | 'pasiva';
+      causa: 'ataque' | 'quemadura' | 'veneno' | 'retroceso' | 'objeto' | 'drenadoras' | 'pasiva';
     }
   | { tipo: 'sinEfecto'; lado: Lado; nombre: string }
   | { tipo: 'curacion'; lado: Lado; indice: number; nombre: string; cantidad: number; vida: number; vidaMax: number }
@@ -120,9 +123,12 @@ export type Evento =
   | { tipo: 'despierta'; lado: Lado; nombre: string }
   /** La parálisis no la deja moverse. */
   | { tipo: 'noSeMueve'; lado: Lado; nombre: string }
-  | { tipo: 'confunde'; lado: Lado; nombre: string }
-  | { tipo: 'confuso'; lado: Lado; nombre: string }
-  | { tipo: 'finConfusion'; lado: Lado; nombre: string }
+  | { tipo: 'ciega'; lado: Lado; nombre: string }
+  | { tipo: 'recuperaVista'; lado: Lado; nombre: string }
+  /** Ha fallado estando cegado. */
+  | { tipo: 'fallaCiego'; lado: Lado; nombre: string }
+  /** En cólera, usa otro movimiento en lugar del elegido. */
+  | { tipo: 'arrebatado'; lado: Lado; nombre: string }
   | { tipo: 'retrocede'; lado: Lado; nombre: string }
   | { tipo: 'siembra'; lado: Lado; nombre: string }
   | { tipo: 'protege'; lado: Lado; nombre: string }
@@ -162,16 +168,10 @@ export interface Resultado {
   eventos: Evento[];
 }
 
-/** El golpe que se da a sí misma una criatura confusa: físico, sin tipo y de poder 40. */
-const GOLPE_CONFUSO: Movimiento = {
-  id: 'confusion',
-  nombre: 'Confusión',
-  tipo: '',
-  categoria: 'fisico',
-  poder: 40,
-  precision: null,
-  pp: 1,
-};
+/** Cegado, falla este tanto por ciento más de veces. */
+export const FALLO_CEGADO = 30;
+/** En cólera, este tanto por ciento de las veces usa otro movimiento. */
+export const PROB_ARREBATO = 20;
 
 /** Lo que se usa cuando no quedan PP: sin tipo y con retroceso. */
 export const ARREBATO: Movimiento = {
@@ -527,7 +527,7 @@ function provocarEstado(e: EstadoCombate, lado: Lado, estado: EstadoAlterado, da
   provocarEstado(e, causante, estado, datos, ev);
 }
 
-function quitarVida(e: EstadoCombate, lado: Lado, cantidad: number, causa: 'quemadura' | 'veneno' | 'retroceso' | 'objeto' | 'confusion' | 'drenadoras' | 'pasiva', datos: DatosJuego, ev: Evento[]): number {
+function quitarVida(e: EstadoCombate, lado: Lado, cantidad: number, causa: 'quemadura' | 'veneno' | 'retroceso' | 'objeto' | 'drenadoras' | 'pasiva', datos: DatosJuego, ev: Evento[]): number {
   const c = activoDe(e, lado);
   const max = vidaMax(c, datos);
   const real = Math.min(c.vida, Math.max(1, cantidad));
@@ -634,14 +634,14 @@ function comprobarBaya(e: EstadoCombate, lado: Lado, datos: DatosJuego, ev: Even
   curar(c, ef.puntos ?? Math.max(1, Math.floor(max * (ef.cura ?? 0))), lado, e[lado].activo, datos, ev);
 }
 
-/** Fruto que cura un estado (o la confusión) en cuanto se sufre. */
+/** Fruto que cura un estado (o la ceguera) en cuanto se sufre. */
 function comprobarBayaEstado(e: EstadoCombate, lado: Lado, datos: DatosJuego, ev: Evento[]): void {
   const c = activoDe(e, lado);
   const ef = efectoEquipo(c, datos);
   if (ef?.tipo !== 'bayaEstado' || !vivo(c)) return;
   const estado = c.estado && ef.estados.includes(c.estado.tipo);
-  const confusion = e[lado].volatil.confusion > 0 && ef.estados.includes('confusion');
-  if (!estado && !confusion) return;
+  const ceguera = e[lado].volatil.ceguera > 0 && ef.estados.includes('cegado');
+  if (!estado && !ceguera) return;
   const nombre = nombreDe(c, datos);
   ev.push({ tipo: 'objetoEquipado', lado, nombre, objeto: nombreObjeto(c, datos), efecto: 'come' });
   gastar(c, datos);
@@ -649,9 +649,9 @@ function comprobarBayaEstado(e: EstadoCombate, lado: Lado, datos: DatosJuego, ev
     c.estado = null;
     ev.push({ tipo: 'curaEstado', lado, nombre });
   }
-  if (confusion) {
-    e[lado].volatil.confusion = 0;
-    ev.push({ tipo: 'finConfusion', lado, nombre });
+  if (ceguera) {
+    e[lado].volatil.ceguera = 0;
+    ev.push({ tipo: 'recuperaVista', lado, nombre });
   }
 }
 
@@ -690,23 +690,24 @@ function ejecutarMovimiento(e: EstadoCombate, lado: Lado, indice: number, datos:
     ev.push({ tipo: 'retrocede', lado, nombre: nAt });
     return;
   }
-  if (vol.confusion > 0) {
-    vol.confusion -= 1;
-    if (vol.confusion === 0) ev.push({ tipo: 'finConfusion', lado, nombre: nAt });
-    else {
-      ev.push({ tipo: 'confuso', lado, nombre: nAt });
-      if (probabilidad(e.rng, 100 / 3)) {
-        const r = calcularDanio(combatiente(e, lado), combatiente(e, lado), GOLPE_CONFUSO, datos, false, entero(e.rng, 85, 100));
-        quitarVida(e, lado, r.danio, 'confusion', datos, ev);
-        comprobarBaya(e, lado, datos, ev);
-        comprobarDebilitado(e, lado, datos, ev);
-        return;
-      }
-    }
+  // La ceguera se cuenta en cada turno en que actúa; el último, ya ve.
+  let ciego = false;
+  if (vol.ceguera > 0) {
+    vol.ceguera -= 1;
+    if (vol.ceguera === 0) ev.push({ tipo: 'recuperaVista', lado, nombre: nAt });
+    else ciego = true;
   }
   if (atacante.estado?.tipo === 'paralizado' && probabilidad(e.rng, 25)) {
     ev.push({ tipo: 'noSeMueve', lado, nombre: nAt });
     return;
+  }
+  // En cólera, una de cada cinco veces usa otro de sus movimientos (con PP) en vez del elegido.
+  if (atacante.estado?.tipo === 'colera' && probabilidad(e.rng, PROB_ARREBATO)) {
+    const otros = atacante.movimientos.map((m, i) => (i !== indice && m.pp > 0 ? i : -1)).filter((i) => i >= 0);
+    if (otros.length > 0) {
+      indice = elegir(e.rng, otros);
+      ev.push({ tipo: 'arrebatado', lado, nombre: nAt });
+    }
   }
 
   const usado = atacante.movimientos[indice];
@@ -736,7 +737,7 @@ function ejecutarMovimiento(e: EstadoCombate, lado: Lado, indice: number, datos:
 
   const contraRival =
     mov.categoria !== 'estado' ||
-    efectos.some((f) => f.tipo === 'estado' || f.tipo === 'confundir' || f.tipo === 'drenadoras' || (f.tipo === 'etapa' && f.objetivo === 'rival'));
+    efectos.some((f) => f.tipo === 'estado' || f.tipo === 'cegar' || f.tipo === 'drenadoras' || (f.tipo === 'etapa' && f.objetivo === 'rival'));
   if (contraRival && usado && mov !== ARREBATO && usado.pp > 0 && vivo(defensor) && pasivaTipo(defensor, datos, 'imponente')) usado.pp -= 1;
   if (contraRival && !vivo(defensor)) {
     ev.push({ tipo: 'falla', lado, nombre: nAt });
@@ -752,11 +753,17 @@ function ejecutarMovimiento(e: EstadoCombate, lado: Lado, indice: number, datos:
   }
   const pAt = pasivaDe(atacante, datos)?.efecto;
   const efAt = efectoEquipo(atacante, datos);
-  if (mov.precision !== null) {
+  // Cegado, falla un 30 % más: se multiplica por lo demás que cambia la precisión, y también
+  // afecta a los ataques que no fallan nunca. Lo que hace sobre sí mismo no falla.
+  const cegado = ciego && contraRival;
+  if (mov.precision !== null || cegado) {
     const precision =
-      mov.precision * (pAt?.tipo === 'ojoAvizor' ? 1.3 : 1) * (efAt?.tipo === 'precision' ? efAt.multiplicador : 1);
+      (mov.precision ?? 100) *
+      (pAt?.tipo === 'ojoAvizor' ? 1.3 : 1) *
+      (efAt?.tipo === 'precision' ? efAt.multiplicador : 1) *
+      (cegado ? 1 - FALLO_CEGADO / 100 : 1);
     if (entero(e.rng, 1, 100) > precision) {
-      ev.push({ tipo: 'falla', lado, nombre: nAt });
+      ev.push({ tipo: cegado ? 'fallaCiego' : 'falla', lado, nombre: nAt });
       return;
     }
   }
@@ -811,6 +818,10 @@ function ejecutarMovimiento(e: EstadoCombate, lado: Lado, indice: number, datos:
     if (mov.categoria === 'fisico' && danioCausado > 0 && vivo(atacante)) contacto(e, lado, datos, ev);
     comprobarBaya(e, lado, datos, ev);
     if (pAt?.tipo === 'hedor' && !efectos.some((f) => f.tipo === 'retroceso')) hacerRetroceder(e, ladoDef, 10, datos);
+    if (pAt?.tipo === 'ataqueCegador' && danioCausado > 0 && vivo(defensor) && puedeCegarse(e, ladoDef, datos) && probabilidad(e.rng, pAt.prob)) {
+      anunciarPasiva(ev, lado, atacante, pasivaDe(atacante, datos)!, datos);
+      cegar(e, ladoDef, datos, ev);
+    }
   }
 
   // Bendición: los efectos añadidos de los ataques salen el doble de a menudo.
@@ -835,16 +846,14 @@ function ejecutarMovimiento(e: EstadoCombate, lado: Lado, indice: number, datos:
         provocarEstado(e, ladoDef, f.estado, datos, ev, lado);
         break;
       }
-      case 'confundir': {
+      case 'cegar': {
         if (!vivo(defensor)) break;
-        if (volDef.confusion > 0 || inmuneAEstado(defensor, 'confusion', datos)) {
+        if (!puedeCegarse(e, ladoDef, datos)) {
           if (mov.categoria === 'estado') ev.push({ tipo: 'sinEfecto', lado: ladoDef, nombre: nDef });
           break;
         }
         if (!probabilidad(e.rng, prob(f.prob))) break;
-        volDef.confusion = entero(e.rng, 2, 5);
-        ev.push({ tipo: 'confunde', lado: ladoDef, nombre: nDef });
-        comprobarBayaEstado(e, ladoDef, datos, ev);
+        cegar(e, ladoDef, datos, ev);
         break;
       }
       case 'retroceso':
@@ -874,6 +883,19 @@ function ejecutarMovimiento(e: EstadoCombate, lado: Lado, indice: number, datos:
 
   comprobarDebilitado(e, ladoDef, datos, ev);
   comprobarDebilitado(e, lado, datos, ev);
+}
+
+/** Puede quedar cegado: en pie, sin estarlo ya y sin pasiva que lo impida. */
+function puedeCegarse(e: EstadoCombate, lado: Lado, datos: DatosJuego): boolean {
+  const c = activoDe(e, lado);
+  return vivo(c) && e[lado].volatil.ceguera === 0 && !inmuneAEstado(c, 'cegado', datos);
+}
+
+/** Lo deja cegado de 2 a 5 turnos, como la confusión del género. */
+function cegar(e: EstadoCombate, lado: Lado, datos: DatosJuego, ev: Evento[]): void {
+  e[lado].volatil.ceguera = entero(e.rng, 2, 5);
+  ev.push({ tipo: 'ciega', lado, nombre: nombreDe(activoDe(e, lado), datos) });
+  comprobarBayaEstado(e, lado, datos, ev);
 }
 
 /** El rival retrocede (pierde el turno) si todavía no ha actuado. */
@@ -912,6 +934,12 @@ function contacto(e: EstadoCombate, lado: Lado, datos: DatosJuego, ev: Evento[])
   if (p?.efecto.tipo === 'contacto') {
     if (!probabilidad(e.rng, p.efecto.prob)) return;
     const estado = elegir(e.rng, p.efecto.estados);
+    if (estado === 'cegado') {
+      if (!puedeCegarse(e, lado, datos)) return;
+      anunciarPasiva(ev, ladoDef, defensor, p, datos);
+      cegar(e, lado, datos, ev);
+      return;
+    }
     if (!puedeSufrir(atacante, estado, datos)) return;
     anunciarPasiva(ev, ladoDef, defensor, p, datos);
     provocarEstado(e, lado, estado, datos, ev, ladoDef);

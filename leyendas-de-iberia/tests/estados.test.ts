@@ -4,6 +4,7 @@ import { crearCriatura } from '../src/core/criatura';
 import { iniciarCombate, resolverTurno, type Evento } from '../src/core/combate';
 import { probabilidadCaptura } from '../src/core/captura';
 import type { Criatura, DatosJuego, Movimiento } from '../src/core/modelo';
+import { aplicarCuracion, motivoNoUsable } from '../src/core/objetos';
 import { DATOS } from '../src/data';
 
 function criatura(especie: string, nivel: number, movimientos: string[], datos: DatosJuego = DATOS): Criatura {
@@ -89,20 +90,84 @@ describe('estados alterados', () => {
   });
 });
 
-describe('confusión, retroceso, drenadoras y Rodela', () => {
-  it('Desvarío confunde y la confusión se pasa', () => {
-    const { estado } = combate(criatura('tarantula', 20, ['desvario']), criatura('galapago', 20, ['caparazon']), 'conf');
+describe('ceguera, cólera, retroceso, drenadoras y Rodela', () => {
+  it('Tiniebla ciega y la ceguera se pasa sola', () => {
+    const { estado } = combate(criatura('trasgo', 20, ['tiniebla']), criatura('galapago', 20, ['caparazon']), 'ciega');
     const r = resolverTurno(estado, { tipo: 'movimiento', indice: 0 }, DATOS);
-    expect(hay(r.eventos, 'confunde', 'rival')).toBe(true);
-    expect(r.estado.rival.volatil.confusion).toBeGreaterThanOrEqual(1);
+    expect(hay(r.eventos, 'ciega', 'rival')).toBe(true);
+    expect(r.estado.rival.volatil.ceguera).toBeGreaterThanOrEqual(1);
     let e = r.estado;
     const vistos: Evento[] = [];
     for (let i = 0; i < 6 && !e.fin; i++) {
+      // Para no volver a cegarle, el trasgo pasa a usar solo Aullido.
+      e.jugador.equipo[0].movimientos = [{ id: 'aullido', pp: 30 }];
       const t = resolverTurno(e, { tipo: 'movimiento', indice: 0 }, DATOS);
       vistos.push(...t.eventos);
       e = t.estado;
     }
-    expect(hay(vistos, 'finConfusion', 'rival')).toBe(true);
+    expect(hay(vistos, 'recuperaVista', 'rival')).toBe(true);
+    expect(e.rival.volatil.ceguera).toBe(0);
+  });
+
+  it('cegado falla un 30 % más, también con lo que no falla nunca, pero no con lo propio', () => {
+    const golpe: Movimiento = { id: 'golpe_seco', nombre: 'Golpe seco', tipo: 'comun', categoria: 'fisico', poder: 10, precision: null, pp: 30 };
+    const flojo: Movimiento = { ...golpe, id: 'golpe_flojo', precision: 50 };
+    const datos = { ...conMovimiento(golpe), movimientos: { ...conMovimiento(golpe).movimientos, golpe_flojo: flojo } };
+    const fallos = (mov: string, ciego: boolean) => {
+      let n = 0;
+      for (let i = 0; i < 200; i++) {
+        const { estado } = combate(criatura('lobo', 30, [mov], datos), criatura('galapago', 30, ['caparazon'], datos), `c${i}`, datos);
+        if (ciego) estado.jugador.volatil.ceguera = 5;
+        const r = resolverTurno(estado, { tipo: 'movimiento', indice: 0 }, datos);
+        if (r.eventos.some((x) => (x.tipo === 'falla' || x.tipo === 'fallaCiego') && x.lado === 'jugador')) n++;
+      }
+      return n / 200;
+    };
+    expect(fallos('golpe_seco', false)).toBe(0);
+    const ciego = fallos('golpe_seco', true);
+    expect(ciego).toBeGreaterThan(0.2);
+    expect(ciego).toBeLessThan(0.4);
+    // Con precisión 50, cegado acierta un 35 %.
+    const flojoCiego = fallos('golpe_flojo', true);
+    expect(flojoCiego).toBeGreaterThan(0.55);
+    expect(flojoCiego).toBeLessThan(0.75);
+    expect(fallos('aullido', true)).toBe(0);
+  });
+
+  it('en cólera, una de cada cinco veces usa otro movimiento; dura hasta curarla', () => {
+    let otro = 0;
+    let e0 = null as ReturnType<typeof combate>['estado'] | null;
+    for (let i = 0; i < 200; i++) {
+      const j = criatura('lobo', 30, ['aullido', 'zarpazo']);
+      j.estado = { tipo: 'colera' };
+      const { estado } = combate(j, criatura('galapago', 30, ['caparazon']), `k${i}`);
+      const r = resolverTurno(estado, { tipo: 'movimiento', indice: 0 }, DATOS);
+      if (hay(r.eventos, 'arrebatado', 'jugador')) {
+        otro++;
+        expect(r.eventos.some((x) => x.tipo === 'usa' && x.lado === 'jugador' && x.movimiento === 'Zarpazo')).toBe(true);
+      }
+      expect(r.estado.jugador.equipo[0].estado?.tipo).toBe('colera');
+      e0 = r.estado;
+    }
+    expect(otro / 200).toBeGreaterThan(0.12);
+    expect(otro / 200).toBeLessThan(0.3);
+    const c = e0!.jugador.equipo[0];
+    expect(motivoNoUsable(DATOS.objetos.tila, c, DATOS)).toBeNull();
+    aplicarCuracion(DATOS.objetos.tila, c, DATOS);
+    expect(c.estado).toBeNull();
+  });
+
+  it('Desvarío hace montar en cólera, salvo con Cabeza fría', () => {
+    let colericos = 0;
+    for (let i = 0; i < 10; i++) {
+      const { estado } = combate(criatura('tarantula', 20, ['desvario']), criatura('galapago', 20, ['caparazon']), `d${i}`);
+      const r = resolverTurno(estado, { tipo: 'movimiento', indice: 0 }, DATOS);
+      if (r.estado.rival.equipo[0].estado?.tipo === 'colera') colericos++;
+    }
+    expect(colericos).toBeGreaterThan(5);
+    const datos = conPasiva('galapago', 'cabeza_fria');
+    const { estado } = combate(criatura('tarantula', 20, ['desvario'], datos), criatura('galapago', 20, ['caparazon'], datos), 'fria', datos);
+    expect(resolverTurno(estado, { tipo: 'movimiento', indice: 0 }, datos).estado.rival.equipo[0].estado).toBeNull();
   });
 
   it('el retroceso solo funciona si ataca primero', () => {
@@ -170,7 +235,7 @@ describe('pasivas', () => {
       expect(e.pasiva, e.id).toBeDefined();
       expect(DATOS.pasivas[e.pasiva!], `${e.id}: ${e.pasiva}`).toBeDefined();
     }
-    expect(Object.keys(DATOS.pasivas).length).toBe(50);
+    expect(Object.keys(DATOS.pasivas).length).toBe(53);
     for (const p of Object.values(DATOS.pasivas)) {
       if (p.efecto.tipo === 'rebuscar') for (const o of p.efecto.objetos) expect(DATOS.objetos[o.objeto], o.objeto).toBeDefined();
     }
@@ -233,6 +298,35 @@ describe('pasivas', () => {
     expect(i).toBeGreaterThanOrEqual(0);
     expect(i).toBeLessThan(r.eventos.findIndex((e) => e.tipo === 'fin'));
     expect(r.estado.jugador.objetos.unguento).toBe(1);
+  });
+
+  it('Deslumbrante ciega a quien golpea, Tinieblas ciega al golpear y Ojos de lince lo impiden', () => {
+    let deslumbrados = 0;
+    let entenebrecidos = 0;
+    for (let i = 0; i < 60; i++) {
+      const a = combate(criatura('lobo', 30, ['zarpazo']), criatura('escarabajo_joya', 30, ['coraza']), `l${i}`);
+      if (resolverTurno(a.estado, { tipo: 'movimiento', indice: 0 }, DATOS).estado.jugador.volatil.ceguera > 0) deslumbrados++;
+      const b = combate(criatura('lobo_animas', 40, ['lamento']), criatura('galapago', 40, ['caparazon']), `t${i}`);
+      if (resolverTurno(b.estado, { tipo: 'movimiento', indice: 0 }, DATOS).estado.rival.volatil.ceguera > 0) entenebrecidos++;
+    }
+    expect(deslumbrados).toBeGreaterThan(6);
+    expect(deslumbrados).toBeLessThan(35);
+    expect(entenebrecidos).toBeGreaterThan(0);
+    expect(entenebrecidos).toBeLessThan(20);
+    const datos = conPasiva('galapago', 'ojos_de_lince');
+    const { estado } = combate(criatura('trasgo', 20, ['tiniebla'], datos), criatura('galapago', 20, ['caparazon'], datos), 'lince', datos);
+    expect(resolverTurno(estado, { tipo: 'movimiento', indice: 0 }, datos).estado.rival.volatil.ceguera).toBe(0);
+  });
+
+  it('las pasivas que ciegan solo las llevan criaturas de Luz u Oscuridad', () => {
+    for (const e of Object.values(DATOS.especies)) {
+      const ef = DATOS.pasivas[e.pasiva!].efecto;
+      const ciega = ef.tipo === 'ataqueCegador' || (ef.tipo === 'contacto' && ef.estados.includes('cegado'));
+      if (ciega) expect(e.tipos.some((t) => t === 'luz' || t === 'oscuridad'), e.id).toBe(true);
+    }
+    for (const m of Object.values(DATOS.movimientos)) {
+      if ((m.efectos ?? []).some((f) => f.tipo === 'cegar')) expect(['luz', 'oscuridad'], m.id).toContain(m.tipo);
+    }
   });
 
   it('Coraza y Sebo reducen el daño', () => {

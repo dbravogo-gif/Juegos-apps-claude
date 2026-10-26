@@ -1574,9 +1574,9 @@ comprobables. Estadísticas: Vida / Fuerza / Escudo / Magia / Resistencia mágic
 | Cantazo | Tierra | Físico | 75 | 90 % | — |
 | Temblor | Tierra | Mágico | 70 | 100 % | — |
 | Colmillo sombrío | Oscuridad | Físico | 60 | 100 % | — |
-| Noche cerrada | Oscuridad | Mágico | 80 | 100 % | 20 % de −1 a la Magia del rival |
+| Noche cerrada | Oscuridad | Mágico | 80 | 100 % | 20 % de dejar cegado al rival (desde 2026-10-26; antes, −1 a la Magia) |
 | Vuelo real | Aire | Físico | 90 | 90 % | — |
-| Resplandor | Luz | Mágico | 60 | 100 % | — |
+| Resplandor | Luz | Mágico | 60 | 100 % | 20 % de dejar cegado al rival (desde 2026-10-26) |
 | Lamento | Espectral | Mágico | 65 | 100 % | 20 % de −1 a la Fuerza del rival |
 | Tarantela | Mental | Mágico | 55 | 100 % | 20 % de dormir al rival |
 | Hoja toledana | Acero | Físico | 75 | 100 % | — |
