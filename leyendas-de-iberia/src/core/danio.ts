@@ -92,6 +92,8 @@ function multiplicadorPasivas(
     if (conSexo(s1) && conSexo(s2)) m *= s1 === s2 ? 1.25 : 0.75;
   }
   if (atacante.avivado && mov.tipo === 'infernal') m *= 1.5;
+  const obj = atacante.criatura.objeto ? datos.objetos[atacante.criatura.objeto] : undefined;
+  if (obj?.tipo === 'equipo' && obj.efecto.tipo === 'potenciarTipo' && obj.efecto.tipoMov === mov.tipo) m *= obj.efecto.multiplicador;
   if (pDef?.tipo === 'resistir' && pDef.tipos.includes(mov.tipo)) m *= 0.5;
   if (pDef?.tipo === 'coraza' && ef > 1) m *= 0.75;
   if (pDef?.tipo === 'escamas' && defensor.criatura.vida >= vidaMaxDef) m *= 0.5;

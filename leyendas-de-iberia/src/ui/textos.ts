@@ -114,6 +114,8 @@ export function textosEvento(ev: Evento, ctx: ContextoTextos): string[] {
       return [`¡Los ataques de tipo Infernal de ${quien(ev.nombre, ev.lado, ctx)} se avivan!`];
     case 'etapaProtegida':
       return [`Las estadísticas de ${quien(ev.nombre, ev.lado, ctx)} no bajan.`];
+    case 'recuperaPP':
+      return [`Los PP de ${quien(ev.nombre, ev.lado, ctx)} se han recuperado.`];
     case 'rebusca':
       return [`¡${ev.nombre} ha encontrado ${conArticulo(ev.objeto)} rebuscando!`];
     case 'etapa': {
@@ -128,7 +130,9 @@ export function textosEvento(ev: Evento, ctx: ContextoTextos): string[] {
     case 'debilitado':
       return [`¡${quien(ev.nombre, ev.lado, ctx)} se ha debilitado!`];
     case 'experiencia':
-      return [`${ev.nombre} gana ${ev.cantidad} puntos de experiencia.`];
+      return ev.repartida ? [] : [`${ev.nombre} gana ${ev.cantidad} puntos de experiencia.`];
+    case 'experienciaRepartida':
+      return ['El resto del equipo también gana experiencia gracias al Repartir experiencia.'];
     case 'nivel':
       return [`¡${ev.nombre} sube al nivel ${ev.nivel}!`];
     case 'aprende':

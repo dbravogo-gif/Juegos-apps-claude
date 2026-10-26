@@ -55,6 +55,8 @@ export type DatosCombate =
       nombreRival: string;
       /** El rival salvaje elige sus movimientos como un entrenador. */
       iaAstuta?: boolean;
+      /** Repartir experiencia encendido. */
+      repartir?: boolean;
       ultimaTesera?: string;
       alTerminar: (r: ResultadoHistoria) => void;
     };
@@ -274,6 +276,7 @@ export class Combate extends Phaser.Scene {
         rival: { nombre: nombreRival, equipo: equipoRival },
         salvaje,
         iaAstuta: this.entrada.modo === 'historia' && this.entrada.iaAstuta,
+        repartir: this.entrada.modo === 'historia' && this.entrada.repartir,
       },
       DATOS,
     );
@@ -357,6 +360,7 @@ export class Combate extends Phaser.Scene {
         await this.caer(ev.lado);
         break;
       case 'nivel':
+        if (ev.indice !== this.activoVisual.jugador) break;
         this.ficha.jugador.setNivel(ev.nivel);
         await this.ficha.jugador.setVida(ev.vida, ev.vidaMax, true);
         break;

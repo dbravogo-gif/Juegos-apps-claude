@@ -23,6 +23,7 @@ export function usoDe(obj: Objeto): UsoObjeto {
     case 'curar':
     case 'remedio':
     case 'revivir':
+    case 'pp':
       return { combate: true, fuera: true, equipable: false };
     case 'repelente':
     case 'huida':
@@ -34,13 +35,13 @@ export function usoDe(obj: Objeto): UsoObjeto {
     case 'maquina':
       return { combate: false, fuera: true, equipable: false };
     case 'clave':
-      return { combate: false, fuera: false, equipable: false };
+      return { combate: false, fuera: Boolean(obj.interruptor), equipable: false };
   }
 }
 
 /** Los objetos que se aplican a una criatura concreta del equipo. */
 export function seAplicaACriatura(obj: Objeto): boolean {
-  return ['curar', 'remedio', 'revivir', 'nivel', 'evolucion', 'maquina'].includes(obj.tipo);
+  return ['curar', 'remedio', 'revivir', 'pp', 'nivel', 'evolucion', 'maquina'].includes(obj.tipo);
 }
 
 /** Si una especie puede aprender el movimiento de una MT o MO. */
@@ -69,6 +70,9 @@ export function motivoNoUsable(obj: Objeto, c: Criatura, datos: DatosJuego): str
       return c.estado && obj.estados.includes(c.estado.tipo) ? null : 'No le hace falta';
     case 'revivir':
       return c.vida > 0 ? 'No está debilitada' : null;
+    case 'pp':
+      if (c.vida <= 0) return 'Está debilitada';
+      return c.movimientos.some((m) => m.pp < datos.movimientos[m.id].pp) ? null : 'Tiene todos los PP';
     case 'nivel':
       return c.nivel >= NIVEL_MAX ? 'Ya está en el nivel máximo' : null;
     case 'evolucion':
@@ -90,11 +94,23 @@ export function aplicarCuracion(obj: Objeto, c: Criatura, datos: DatosJuego): nu
   const antes = c.vida;
   if (obj.tipo === 'curar') c.vida = obj.cantidad === 'toda' ? max : Math.min(max, c.vida + obj.cantidad);
   else if (obj.tipo === 'remedio') c.estado = null;
+  else if (obj.tipo === 'pp') {
+    for (const m of c.movimientos) {
+      const tope = datos.movimientos[m.id].pp;
+      m.pp = obj.cantidad === 'toda' ? tope : Math.min(tope, m.pp + obj.cantidad);
+    }
+  }
   else if (obj.tipo === 'revivir') {
     c.vida = Math.max(1, Math.floor(max * obj.fraccion));
     c.estado = null;
   }
   return c.vida - antes;
+}
+
+/** Si un objeto con interruptor (Repartir experiencia) está en la mochila y encendido. */
+export function encendido(p: Partida, id: string, datos: DatosJuego): boolean {
+  const obj = datos.objetos[id];
+  return obj?.tipo === 'clave' && !!obj.interruptor && (p.objetos[id] ?? 0) > 0 && !p.banderas[obj.interruptor.apagado];
 }
 
 /** Equipa un objeto de la mochila. Si ya llevaba otro, vuelve a la mochila. */

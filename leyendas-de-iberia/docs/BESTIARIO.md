@@ -376,10 +376,10 @@ Los niveles de evolución son propuestas. «Final» significa que es la última 
 | 026 | Sierpeira | Oscuridad/Tierra | Final | — | Rara | Atacante de control | Sierpe con cuernos | Leyendas de sierpes |
 | 027 | Grávico | Común | → Gravitardo (24) | Llanos de Villalar | Común | Atacante físico | Ave esteparia | Castilla |
 | 028 | Gravitardo | Común/Aire | Final | — | Poco común | Atacante resistente | Ave grande y pesada | Castilla |
-| 029 | Aquilín | Aire | → Imperión (30) | Montes de Toledo | Rara | Velocista | Rapaz joven | Península (endémica) |
+| 029 | Aquilín | Aire | → Imperión (30, o con la Piedra solar) | Montes de Toledo | Rara | Velocista | Rapaz joven | Península (endémica) |
 | 030 | Imperión | Aire/Luz | Final | — | Muy rara | Atacante rápido y apoyo | Águila heráldica | Península (endémica) |
 | 031 | Lobaz | Común | → Lobregón (22) | Castilla, de noche | Común | Atacante físico | Cánido | Península |
-| 032 | Lobregón | Común/Oscuridad | → Lobánima (nivel 38 en el Monte de las Ánimas) | — | Poco común | Atacante físico | Lobo | Península |
+| 032 | Lobregón | Común/Oscuridad | → Lobánima (nivel 38, o con la Piedra lunar) | — | Poco común | Atacante físico | Lobo | Península |
 | 033 | Lobánima | Espectral/Oscuridad | Final | Soria (zona opcional) | Muy rara | Atacante mágico | Lobo espectral | Soria (Bécquer) |
 | 034 | Guisandor | Tierra | No evoluciona | Toros de Guisando (Ávila) | Muy rara | Tanque físico | Escultura viva: toro de granito | Ávila |
 | 035 | Tarantón | Oscuridad/Mental | No evoluciona | La Mancha, en los rastrojos | Poco común | Control | Araña lobo | Península |
@@ -391,7 +391,7 @@ Los niveles de evolución son propuestas. «Final» significa que es la última 
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 037 | Anguélix | Agua/Espectral | → Sargazón (26) | Guadalquivir | Común | Velocista mágico | Angula transparente | Atlántico y ríos |
 | 038 | Sargazón | Agua/Espectral | Final | — | Poco común | Atacante mágico | Anguila | Atlántico y ríos |
-| 039 | Tremolín | Agua/Eléctrico | → Tremielgón (28) | Desembocadura, en Sanlúcar | Poco común | Atacante mágico | Raya pequeña | Atlántico y Mediterráneo |
+| 039 | Tremolín | Agua/Eléctrico | → Tremielgón (Piedra agua, propuesta) | Desembocadura, en Sanlúcar | Poco común | Atacante mágico | Raya pequeña | Atlántico y Mediterráneo |
 | 040 | Tremielgón | Agua/Eléctrico | Final | — | Rara | Control | Raya eléctrica | Atlántico y Mediterráneo |
 | 041 | Golvín | Aire | → Falcivento (20) | Torres de Sevilla y El Escorial | Común | Velocista | Ave de alas en hoz | Península |
 | 042 | Falcivento | Aire | Final | — | Poco común | Atacante rápido | Vencejo grande | Península |
@@ -399,7 +399,7 @@ Los niveles de evolución son propuestas. «Final» significa que es la última 
 | 044 | Pardalión | Común/Mental | Final | — | Muy rara | Atacante físico veloz | Lince | Península (endémico) |
 | 045 | Noctiván | Oscuridad | → Noctilex (30) | Bosque de La Herrería, en El Escorial | Poco común | Atacante mágico | Búho | Península |
 | 046 | Noctilex | Mental/Oscuridad | Final | Real Biblioteca de El Escorial | Rara | Tanque mágico | Búho guardián de páginas | El Escorial |
-| 047 | Fragatín | Agua | → Telmario (22) | Sanlúcar, con temporal | Poco común | Explorador | Flotador pequeño con tentáculos | Atlántico y Canarias |
+| 047 | Fragatín | Agua | → Telmario (Piedra trueno, propuesta) | Sanlúcar, con temporal | Poco común | Explorador | Flotador pequeño con tentáculos | Atlántico y Canarias |
 | 048 | Telmario | Agua/Plasma | → Corposanto (38) | — | Rara | Atacante mágico | Flotador con cresta como una vela | Atlántico y Canarias |
 | 049 | Corposanto | Plasma/Agua | Final | — | Muy rara | Atacante mágico veloz | Flotador con cresta de plasma | Atlántico y Canarias |
 | 050 | Meloncillo | Común | No evoluciona | Doñana y Sierra Morena | Poco común | Velocista | Mangosta | Sur peninsular |
@@ -408,7 +408,7 @@ Los niveles de evolución son propuestas. «Final» significa que es la última 
 
 | Nº | Nombre | Tipos | Línea | Dónde aparece | Rareza | Rol | Silueta | Origen |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 051 | Ardélix | Común | → Pinariel (20) | Casa de Campo y pinares | Común | Velocista físico | Ardilla | Península |
+| 051 | Ardélix | Común | → Pinariel (Piedra hoja, propuesta) | Casa de Campo y pinares | Común | Velocista físico | Ardilla | Península |
 | 052 | Pinariel | Común/Planta | Final | — | Poco común | Apoyo | Ardilla con agujas de pino | Península |
 | 053 | Umbrel | Oscuridad | → Sonumbra (22) | Cuevas de la sierra, en Patones | Común | Velocista | Murciélago | Península |
 | 054 | Sonumbra | Oscuridad/Aire | Final | — | Poco común | Atacante mágico veloz | Murciélago grande | Península |
@@ -458,7 +458,7 @@ Los niveles de evolución son propuestas. «Final» significa que es la última 
 | 088 | Nivamandra | Agua/Hielo | Final | — | Poco común | Tanque mágico | Salamandra de escarcha | Pirineo |
 | 089 | Armiñel | Hielo | No evoluciona | Pirineo, en invierno | Rara | Velocista | Armiño | Pirineo |
 | 090 | Marmel | Común | No evoluciona | Pirineo, en Benasque | Común | Defensor pequeño | Marmota | Pirineo |
-| 091 | Bombarín | Infernal | → Bombardrak (26) | Riberas de Zaragoza | Común | Atacante mágico | Escarabajo pequeño | Península |
+| 091 | Bombarín | Infernal | → Bombardrak (Piedra fuego, propuesta) | Riberas de Zaragoza | Común | Atacante mágico | Escarabajo pequeño | Península |
 | 092 | Bombardrak | Acero/Infernal | Final | — | Poco común | Atacante resistente | Escarabajo cañón | Península |
 | 093 | Cocorán | Oscuridad/Espectral | No evoluciona | Fuendetodos, de noche | Rara | Control | Sombra con forma (el Coco) | Folclore peninsular |
 | 094 | Centellón | Plasma/Eléctrico | No evoluciona | Puertos del Pirineo, con tormenta | Muy rara | Atacante mágico veloz | Esfera de plasma | Pirineo |
@@ -1558,8 +1558,9 @@ comprobables. Estadísticas: Vida / Fuerza / Escudo / Magia / Resistencia mágic
   Lobaz, Grávico, Tarantón y, raro, Aquilín en el camino de Toledo, junto a Carapachón
   (el galápago leproso, que sí vive en el Tajo; el barbo gitano no, por eso no sale aquí).
 - **Sin zona todavía:** Guisandor (los Toros de Guisando, en Ávila, fuera de la ruta) y
-  Lobánima, que en el juego sale de Lobregón a nivel 38 sin más condición; lo del Monte de
-  las Ánimas queda para cuando haya una zona en Soria.
+  Lobánima, que en el juego sale de Lobregón a nivel 38 o con la Piedra lunar (escondida al
+  otro lado del puente del camino de Toledo); lo del Monte de las Ánimas queda para cuando haya
+  una zona en Soria.
 - **Movimientos nuevos:**
 
 | Movimiento | Tipo | Categoría | Poder | Precisión | Efecto |
@@ -1620,7 +1621,14 @@ Papemímico capturable (con sus 3 Turrones también al capturarlo).
    Mallorca, Extremadura, Cantabria) o se reparten esas criaturas por los capítulos?
 6. **Evoluciones por lugar.** Lobánima (Monte de las Ánimas) y Noctilex (Real Biblioteca) están
    pensadas para evolucionar en un lugar concreto. Es una mecánica nueva. Si no se quiere, se
-   deja por nivel.
+   deja por nivel. Mientras tanto, Lobánima sale también con la Piedra lunar.
+7. **Piedras evolutivas (2026-10-26).** El autor pidió unas seis evoluciones por piedra. Dos ya
+   funcionan (Piedra lunar: Lobregón → Lobánima; Piedra solar: Aquilín → Imperión), además del
+   Gorro colorado de Brezuco. Para las otras cuatro se proponen líneas de capítulos futuros:
+   Piedra fuego (Bombarín → Bombardrak, el escarabajo bombardero), Piedra agua (Tremolín →
+   Tremielgón), Piedra trueno (Fragatín → Telmario, por el fuego de San Telmo, que es una
+   descarga eléctrica) y Piedra hoja (Ardélix → Pinariel, la ardilla que se hace pinar). Sus
+   iconos esperan en `arte/objetos-futuros/`. En esas líneas, la piedra sustituye al nivel.
 
 ### [VERIFICAR]
 

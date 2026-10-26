@@ -79,6 +79,28 @@ const lista: Objeto[] = [
     segura: true,
     descripcion: 'Lleva el sello de la reina. Ninguna criatura salvaje rechaza este pacto. Solo hay una.',
   },
+  {
+    id: 'tesera_rapida',
+    nombre: 'Tésera rápida',
+    articulo: 'una',
+    categoria: 'captura',
+    tipo: 'captura',
+    bonus: 1,
+    bonusSi: { bonus: 5, primerTurno: true },
+    precio: 250,
+    descripcion: 'Un pacto que se sella al vuelo: lanzada en el primer turno, captura muchísimo mejor.',
+  },
+  {
+    id: 'tesera_red',
+    nombre: 'Tésera de red',
+    articulo: 'una',
+    categoria: 'captura',
+    tipo: 'captura',
+    bonus: 1,
+    bonusSi: { bonus: 3, tipos: ['agua', 'aire'] },
+    precio: 250,
+    descripcion: 'Atada a una red de pescador: captura mucho mejor a las criaturas de Agua y de Aire.',
+  },
   // Curación
   { id: 'unguento', nombre: 'Poción', articulo: 'una', categoria: 'curacion', tipo: 'curar', cantidad: 20, precio: 60, descripcion: 'Devuelve 20 puntos de Vida.' },
   { id: 'emplasto', nombre: 'Superpoción', articulo: 'una', categoria: 'curacion', tipo: 'curar', cantidad: 60, precio: 180, descripcion: 'Devuelve 60 puntos de Vida.' },
@@ -99,6 +121,9 @@ const lista: Objeto[] = [
     precio: 250,
     descripcion: 'Cura cualquier estado alterado.',
   },
+  // PP
+  { id: 'elixir', nombre: 'Elixir', articulo: 'un', categoria: 'curacion', tipo: 'pp', cantidad: 10, descripcion: 'Devuelve 10 PP a cada movimiento.' },
+  { id: 'elixir_maximo', nombre: 'Elixir máximo', articulo: 'un', categoria: 'curacion', tipo: 'pp', cantidad: 'toda', descripcion: 'Devuelve todos los PP de todos los movimientos.' },
   // Reanimación
   { id: 'aliento', nombre: 'Revivir', articulo: 'un', categoria: 'reanimacion', tipo: 'revivir', fraccion: 0.5, precio: 500, descripcion: 'Reanima a una criatura debilitada con la mitad de su Vida.' },
   { id: 'aliento_pleno', nombre: 'Revivir máximo', articulo: 'un', categoria: 'reanimacion', tipo: 'revivir', fraccion: 1, descripcion: 'Reanima a una criatura debilitada con toda su Vida.' },
@@ -117,7 +142,10 @@ const lista: Objeto[] = [
   },
   // Progresión
   { id: 'turron', nombre: 'Turrón', articulo: 'un', categoria: 'progresion', tipo: 'nivel', descripcion: 'Un dulce tan bueno que la criatura sube un nivel.' },
-  // Evolución
+  // Evolución: las piedras hacen evolucionar a algunas especies (`evoluciona.objeto`). Las de
+  // fuego, agua, hoja y trueno esperan en `arte/objetos-reserva/` a sus líneas (BESTIARIO.md).
+  { id: 'piedra_lunar', nombre: 'Piedra lunar', articulo: 'una', categoria: 'evolucion', tipo: 'evolucion', descripcion: 'Una piedra pálida que brilla en las noches de ánimas. Lobregón evoluciona a Lobánima con ella.' },
+  { id: 'piedra_solar', nombre: 'Piedra solar', articulo: 'una', categoria: 'evolucion', tipo: 'evolucion', descripcion: 'Una piedra roja que quema como el sol de Castilla. Aquilín evoluciona a Imperión con ella.' },
   {
     id: 'gorro_colorado',
     nombre: 'Gorro colorado',
@@ -165,6 +193,35 @@ const lista: Objeto[] = [
   },
   { id: 'caracola', nombre: 'Campana concha', articulo: 'una', categoria: 'equipo', tipo: 'equipo', efecto: { tipo: 'robarVida', fraccion: 1 / 8 }, descripcion: 'Equipada: recupera 1/8 del daño que hace.' },
   { id: 'azabache', nombre: 'Huevo suerte', articulo: 'un', categoria: 'equipo', tipo: 'equipo', efecto: { tipo: 'experiencia', multiplicador: 1.5 }, descripcion: 'Equipado: gana la mitad más de experiencia.' },
+  { id: 'garra_rapida', nombre: 'Garra rápida', articulo: 'una', categoria: 'equipo', tipo: 'equipo', efecto: { tipo: 'primero', prob: 20 }, descripcion: 'Equipada: a veces (20 %) actúa la primera.' },
+  { id: 'periscopio', nombre: 'Periscopio', articulo: 'un', categoria: 'equipo', tipo: 'equipo', efecto: { tipo: 'critico', multiplicador: 2 }, descripcion: 'Equipado: da golpes críticos el doble de a menudo.' },
+  { id: 'lente_amplia', nombre: 'Lupa', articulo: 'una', categoria: 'equipo', tipo: 'equipo', efecto: { tipo: 'precision', multiplicador: 1.1 }, descripcion: 'Equipada: sus movimientos aciertan un 10 % más.' },
+  { id: 'bola_humo', nombre: 'Bola humo', articulo: 'una', categoria: 'equipo', tipo: 'equipo', efecto: { tipo: 'huida' }, descripcion: 'Equipada: siempre consigue huir de las criaturas salvajes.' },
+  // Potenciadores de tipo (equipados, un 20 % más con los ataques de su tipo).
+  ...([
+    ['panuelo_seda', 'Pañuelo seda', 'un', 'comun', 'Común'],
+    ['agua_mistica', 'Agua mística', 'un', 'agua', 'Agua'],
+    ['carbon', 'Carbón', 'un', 'infernal', 'Infernal'],
+    ['semilla_milagro', 'Semilla milagro', 'una', 'planta', 'Planta'],
+    ['arena_fina', 'Arena fina', 'una', 'tierra', 'Tierra'],
+    ['pico_afilado', 'Pico afilado', 'un', 'aire', 'Aire'],
+    ['iman', 'Imán', 'un', 'electrico', 'Eléctrico'],
+    ['velo_negro', 'Velo negro', 'un', 'oscuridad', 'Oscuridad'],
+    ['revestimiento_metalico', 'Revestimiento metálico', 'un', 'acero', 'Acero'],
+    ['cuchara_torcida', 'Cuchara torcida', 'una', 'mental', 'Mental'],
+    ['antiderretir', 'Antiderretir', 'un', 'hielo', 'Hielo'],
+    ['hechizo', 'Hechizo', 'un', 'espectral', 'Espectral'],
+  ] as const).map(
+    ([id, nombre, articulo, tipoMov, nombreTipo]): Objeto => ({
+      id,
+      nombre,
+      articulo,
+      categoria: 'equipo',
+      tipo: 'equipo',
+      efecto: { tipo: 'potenciarTipo', tipoMov, multiplicador: 1.2 },
+      descripcion: `Equipado: sus ataques de tipo ${nombreTipo} pegan un 20 % más.`,
+    }),
+  ),
   // Bayas: se equipan y se comen solas cuando hacen falta.
   {
     id: 'higo',
@@ -176,8 +233,22 @@ const lista: Objeto[] = [
     consumible: true,
     descripcion: 'Equipada: al bajar de la mitad de la Vida, se la come y recupera 1/4.',
   },
-  { id: 'tuno', nombre: 'Baya Safre', articulo: 'una', categoria: 'bayas', tipo: 'equipo', efecto: { tipo: 'bayaEstado', estado: 'quemado' }, consumible: true, descripcion: 'Equipada: se la come y se cura si se quema.' },
-  { id: 'endrina', nombre: 'Baya Atania', articulo: 'una', categoria: 'bayas', tipo: 'equipo', efecto: { tipo: 'bayaEstado', estado: 'dormido' }, consumible: true, descripcion: 'Equipada: se la come y se despierta si se duerme.' },
+  { id: 'baya_aranja', nombre: 'Baya Aranja', articulo: 'una', categoria: 'bayas', tipo: 'equipo', efecto: { tipo: 'baya', umbral: 0.5, puntos: 10 }, consumible: true, descripcion: 'Equipada: al bajar de la mitad de la Vida, se la come y recupera 10 de Vida.' },
+  { id: 'tuno', nombre: 'Baya Safre', articulo: 'una', categoria: 'bayas', tipo: 'equipo', efecto: { tipo: 'bayaEstado', estados: ['quemado'] }, consumible: true, descripcion: 'Equipada: se la come y se cura si se quema.' },
+  { id: 'endrina', nombre: 'Baya Atania', articulo: 'una', categoria: 'bayas', tipo: 'equipo', efecto: { tipo: 'bayaEstado', estados: ['dormido'] }, consumible: true, descripcion: 'Equipada: se la come y se despierta si se duerme.' },
+  { id: 'baya_zreza', nombre: 'Baya Zreza', articulo: 'una', categoria: 'bayas', tipo: 'equipo', efecto: { tipo: 'bayaEstado', estados: ['paralizado'] }, consumible: true, descripcion: 'Equipada: se la come y se cura si la paralizan.' },
+  { id: 'baya_meloc', nombre: 'Baya Meloc', articulo: 'una', categoria: 'bayas', tipo: 'equipo', efecto: { tipo: 'bayaEstado', estados: ['envenenado', 'intoxicado'] }, consumible: true, descripcion: 'Equipada: se la come y se cura si la envenenan.' },
+  { id: 'baya_perasi', nombre: 'Baya Perasi', articulo: 'una', categoria: 'bayas', tipo: 'equipo', efecto: { tipo: 'bayaEstado', estados: ['confusion'] }, consumible: true, descripcion: 'Equipada: se la come y se le pasa la confusión.' },
+  {
+    id: 'baya_ziuela',
+    nombre: 'Baya Ziuela',
+    articulo: 'una',
+    categoria: 'bayas',
+    tipo: 'equipo',
+    efecto: { tipo: 'bayaEstado', estados: ['quemado', 'dormido', 'paralizado', 'envenenado', 'intoxicado', 'confusion'] },
+    consumible: true,
+    descripcion: 'Equipada: se la come y se cura de cualquier estado alterado o de la confusión.',
+  },
   // MT: las dan los líderes o están por el suelo. No se gastan. Su icono es el de `mt` o `mo`.
   {
     id: 'mt_noche_cerrada',
@@ -265,6 +336,15 @@ const lista: Objeto[] = [
     descripcion: 'Enseña Vuelo (Aire). Fuera de combate, la criatura te lleva volando a un lugar que ya conoces. No se gasta.',
   },
   // Importantes
+  {
+    id: 'repartir_exp',
+    nombre: 'Repartir experiencia',
+    articulo: 'un',
+    categoria: 'clave',
+    tipo: 'clave',
+    interruptor: { apagado: 'repartir_exp:apagado' },
+    descripcion: 'Encendido, las criaturas del equipo que no luchan ganan la mitad de experiencia. Se enciende y se apaga desde la mochila.',
+  },
   {
     id: 'alpargatas',
     nombre: 'Alpargatas',

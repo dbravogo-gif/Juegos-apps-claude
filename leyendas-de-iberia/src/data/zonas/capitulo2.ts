@@ -144,6 +144,7 @@ const VILLALAR: Zona = {
   ocultos: [
     { id: 'sales', x: 20, y: 17, objeto: 'sales' },
     { id: 'mt_rodela', x: 1, y: 13, objeto: 'mt_rodela', visible: true },
+    { id: 'baya_perasi', x: 18, y: 1, objeto: 'baya_perasi' },
   ],
 };
 
@@ -230,6 +231,9 @@ const CAMINO_TOLEDO: Zona = {
     { id: 'mt_temblor', x: 13, y: 13, objeto: 'mt_temblor', visible: true },
     { id: 'unguento', x: 1, y: 13, objeto: 'unguento' },
     { id: 'tesera', x: 14, y: 4, objeto: 'tesera_plata' },
+    { id: 'baya_meloc', x: 1, y: 1, objeto: 'baya_meloc' },
+    // Al otro lado del puente: para cuando Lobaz llegue a Lobregón.
+    { id: 'piedra_lunar', x: 14, y: 24, objeto: 'piedra_lunar' },
   ],
 };
 
@@ -308,6 +312,33 @@ const TOLEDO: Zona = {
         'Doña María ha sacado la plata de la catedral para pagar a la tropa. Toledo no se rinde.',
       ),
     },
+    {
+      id: 'maestro_toledo',
+      nombre: 'Maestro',
+      x: 13,
+      y: 16,
+      dir: 'izquierda',
+      aspecto: 'maestro',
+      guion: [
+        si(
+          'regalo:repartir_exp',
+          decir('Maestro', 'En mi escuela, lo que aprende uno lo aprenden todos. ¿Ves cómo crecen tus criaturas?'),
+          [
+            ...decir(
+              'Maestro',
+              'Enseño a leer y a contar a los muchachos de Toledo. Lo que aprende uno, al final lo aprenden todos.',
+              'Con tus criaturas pasa igual. Toma: con esto, las que no luchan también aprenden algo.',
+            ),
+            dar('repartir_exp', 1),
+            bandera('regalo:repartir_exp'),
+            ...decir(
+              undefined,
+              'Con el Repartir experiencia encendido, las criaturas del equipo que no luchan ganan la mitad de experiencia. Se apaga y se enciende desde la mochila.',
+            ),
+          ],
+        ),
+      ],
+    },
   ],
   salidas: [
     { x: 11, y: 0, zona: 'alcazar_toledo', ax: 5, ay: 11, dir: 'arriba' },
@@ -317,6 +348,8 @@ const TOLEDO: Zona = {
   ],
   carteles: [{ x: 9, y: 14, texto: ['Toledo.', 'Al norte, el Alcázar. El mesón, junto a la plaza de Zocodover.'] }],
   recipientes: [{ id: 'zocodover', x: 21, y: 8 }],
+  // En un zurrón junto a la puerta del sur: Aquilín sale, raro, en el camino de Toledo.
+  ocultos: [{ id: 'piedra_solar', x: 22, y: 18, objeto: 'piedra_solar', visible: true }],
 };
 
 const MESON_TOLEDO: Zona = {
@@ -370,7 +403,7 @@ const MESON_TOLEDO: Zona = {
         ...decir('Tendero', 'Con la guerra todo está más caro, pero hay de todo. ¿Qué te pongo?'),
         {
           tipo: 'tienda',
-          productos: ['tesera', 'tesera_plata', 'unguento', 'emplasto', 'aloe', 'sales', 'antiparalizador', 'antidoto', 'ruda', 'ovillo', 'brebaje_fuerza', 'brebaje_escudo'],
+          productos: ['tesera', 'tesera_plata', 'tesera_rapida', 'tesera_red', 'unguento', 'emplasto', 'aloe', 'sales', 'antiparalizador', 'antidoto', 'ruda', 'ovillo', 'brebaje_fuerza', 'brebaje_escudo'],
         },
       ],
     },

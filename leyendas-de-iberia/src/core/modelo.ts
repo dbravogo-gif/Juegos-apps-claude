@@ -177,10 +177,20 @@ export type EfectoEquipo =
   | { tipo: 'robarVida'; fraccion: number }
   /** Multiplica la experiencia que gana. */
   | { tipo: 'experiencia'; multiplicador: number }
-  /** Al bajar de `umbral` de la Vida, recupera `cura` de la Vida máxima. */
-  | { tipo: 'baya'; umbral: number; cura: number }
-  /** Cura ese estado en cuanto lo sufre. */
-  | { tipo: 'bayaEstado'; estado: EstadoAlterado };
+  /** Al bajar de `umbral` de la Vida, recupera `cura` de la Vida máxima (o `puntos` de Vida). */
+  | { tipo: 'baya'; umbral: number; cura?: number; puntos?: number }
+  /** Cura alguno de esos estados en cuanto lo sufre. */
+  | { tipo: 'bayaEstado'; estados: (EstadoAlterado | 'confusion')[] }
+  /** `prob` % de actuar la primera entre los movimientos de su misma prioridad. */
+  | { tipo: 'primero'; prob: number }
+  /** Multiplica la probabilidad de dar un golpe crítico. */
+  | { tipo: 'critico'; multiplicador: number }
+  /** Multiplica la precisión de sus movimientos. */
+  | { tipo: 'precision'; multiplicador: number }
+  /** Siempre consigue huir de las criaturas salvajes. */
+  | { tipo: 'huida' }
+  /** Sus ataques de ese tipo pegan más. */
+  | { tipo: 'potenciarTipo'; tipoMov: string; multiplicador: number };
 
 export type CategoriaObjeto =
   | 'captura'
@@ -209,10 +219,18 @@ interface ObjetoBase {
 
 export type Objeto = ObjetoBase &
   (
-    | { tipo: 'captura'; bonus: number; segura?: boolean }
+    | {
+        tipo: 'captura';
+        bonus: number;
+        segura?: boolean;
+        /** Otra bonificación cuando se cumple algo: en el primer turno o contra esos tipos. */
+        bonusSi?: { bonus: number; primerTurno?: boolean; tipos?: string[] };
+      }
     | { tipo: 'curar'; cantidad: number | 'toda' }
     | { tipo: 'remedio'; estados: EstadoAlterado[] }
     | { tipo: 'revivir'; fraccion: number }
+    /** Devuelve PP a todos los movimientos: esa cantidad o todos. */
+    | { tipo: 'pp'; cantidad: number | 'toda' }
     | { tipo: 'repelente'; pasos: number }
     | { tipo: 'huida' }
     | { tipo: 'nivel' }
@@ -230,8 +248,11 @@ export type Objeto = ObjetoBase &
         oculta?: boolean;
         aprenden: { todos?: boolean; tipos?: string[]; especies?: string[]; acuaticas?: boolean; aladas?: boolean };
       }
-    /** Objeto de la historia. */
-    | { tipo: 'clave' }
+    /**
+     * Objeto de la historia. Con `interruptor`, se enciende y se apaga desde la mochila: está
+     * encendido mientras no esté puesta la bandera `apagado`.
+     */
+    | { tipo: 'clave'; interruptor?: { apagado: string } }
   );
 
 export interface DatosJuego {

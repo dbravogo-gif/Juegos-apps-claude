@@ -73,6 +73,10 @@ export interface EstadoCombate {
   capturada: Criatura | null;
   /** El rival salvaje elige sus movimientos como un entrenador (el Papemímico). */
   iaAstuta?: boolean;
+  /** Las criaturas del jugador que han salido contra la criatura rival actual: ganan experiencia. */
+  participantes: number[];
+  /** Repartir experiencia encendido: las demás ganan la mitad. */
+  repartir?: boolean;
 }
 
 export type Accion =
@@ -130,11 +134,15 @@ export type Evento =
   | { tipo: 'aviva'; lado: Lado; nombre: string }
   /** Una pasiva impide que le bajen las estadísticas. */
   | { tipo: 'etapaProtegida'; lado: Lado; nombre: string }
+  /** Un Elixir le devuelve los PP. */
+  | { tipo: 'recuperaPP'; lado: Lado; nombre: string }
   /** Rebuscar: encuentra un objeto al acabar el combate. */
   | { tipo: 'rebusca'; nombre: string; objeto: string }
   | { tipo: 'etapa'; lado: Lado; nombre: string; estadistica: EstadisticaCombate; cambio: number; intento: number }
   | { tipo: 'debilitado'; lado: Lado; nombre: string }
-  | { tipo: 'experiencia'; indice: number; nombre: string; cantidad: number }
+  /** `repartida`: la gana por Repartir experiencia, sin haber luchado (no se narra una a una). */
+  | { tipo: 'experiencia'; indice: number; nombre: string; cantidad: number; repartida?: boolean }
+  | { tipo: 'experienciaRepartida' }
   | { tipo: 'nivel'; indice: number; nombre: string; nivel: number; vida: number; vidaMax: number }
   | { tipo: 'aprende'; indice: number; nombre: string; movimiento: string }
   /** Ya sabe cuatro movimientos: la interfaz pregunta si olvida uno al acabar el combate. */
@@ -214,7 +222,14 @@ export interface ParticipanteInicial {
 }
 
 export function iniciarCombate(
-  op: { semilla: number | string; jugador: ParticipanteInicial; rival: ParticipanteInicial; salvaje: boolean; iaAstuta?: boolean },
+  op: {
+    semilla: number | string;
+    jugador: ParticipanteInicial;
+    rival: ParticipanteInicial;
+    salvaje: boolean;
+    iaAstuta?: boolean;
+    repartir?: boolean;
+  },
   datos: DatosJuego,
 ): Resultado {
   const lado = (p: ParticipanteInicial): LadoCombate => {
@@ -241,8 +256,11 @@ export function iniciarCombate(
     intentosHuida: 0,
     fin: null,
     capturada: null,
+    participantes: [],
   };
+  estado.participantes = [estado.jugador.activo];
   if (op.iaAstuta) estado.iaAstuta = true;
+  if (op.repartir) estado.repartir = true;
   const eventos: Evento[] = [
     { tipo: 'entrada', lado: 'rival', indice: estado.rival.activo, ficha: fichaDe(activoDe(estado, 'rival'), datos) },
     { tipo: 'entrada', lado: 'jugador', indice: estado.jugador.activo, ficha: fichaDe(activoDe(estado, 'jugador'), datos) },
@@ -415,7 +433,13 @@ function ordenDeActuacion(
   const pj = movimientoUsado(activoDe(e, 'jugador'), indiceJugador, datos).prioridad ?? 0;
   const pr = movimientoUsado(activoDe(e, 'rival'), indiceRival, datos).prioridad ?? 0;
   let primeroJugador: boolean;
+  const garra = (lado: Lado) => {
+    const ef = efectoEquipo(activoDe(e, lado), datos);
+    return ef?.tipo === 'primero' && probabilidad(e.rng, ef.prob);
+  };
   if (pj !== pr) primeroJugador = pj > pr;
+  else if (garra('jugador')) primeroJugador = true;
+  else if (garra('rival')) primeroJugador = false;
   else {
     const cj = celeridadEfectiva(e, 'jugador', datos);
     const cr = celeridadEfectiva(e, 'rival', datos);
@@ -432,6 +456,8 @@ function entrar(e: EstadoCombate, lado: Lado, indice: number, datos: DatosJuego,
   e[lado].volatil = volatilCero();
   const c = activoDe(e, lado);
   if (c.estado?.tipo === 'intoxicado') c.estado.turnos = 1;
+  if (lado === 'rival') e.participantes = [e.jugador.activo];
+  else if (!e.participantes.includes(indice)) e.participantes.push(indice);
   ev.push({ tipo: 'entrada', lado, indice, ficha: fichaDe(c, datos) });
   alEntrar(e, lado, datos, ev);
 }
@@ -514,7 +540,8 @@ function huir(e: EstadoCombate, datos: DatosJuego, ev: Evento[]): boolean {
   e.intentosHuida += 1;
   const cj = celeridadEfectiva(e, 'jugador', datos);
   const cr = Math.max(1, celeridadEfectiva(e, 'rival', datos));
-  const escurridizo = pasivaTipo(activoDe(e, 'jugador'), datos, 'escurridizo') !== null;
+  const j = activoDe(e, 'jugador');
+  const escurridizo = pasivaTipo(j, datos, 'escurridizo') !== null || efectoEquipo(j, datos)?.tipo === 'huida';
   const exito = escurridizo || cj >= cr || entero(e.rng, 0, 255) < Math.floor((cj * 128) / cr) + 30 * e.intentosHuida;
   ev.push({ tipo: 'huida', exito });
   if (exito) {
@@ -543,6 +570,7 @@ function usarObjeto(e: EstadoCombate, accion: Extract<Accion, { tipo: 'objeto' }
     const nombre = nombreDe(c, datos);
     const recuperada = aplicarCuracion(obj, c, datos);
     if (obj.tipo === 'remedio') ev.push({ tipo: 'curaEstado', lado: 'jugador', nombre });
+    else if (obj.tipo === 'pp') ev.push({ tipo: 'recuperaPP', lado: 'jugador', nombre });
     else if (obj.tipo === 'revivir') ev.push({ tipo: 'reanima', lado: 'jugador', indice, nombre, vida: c.vida, vidaMax: vidaMax(c, datos) });
     else ev.push({ tipo: 'curacion', lado: 'jugador', indice, nombre, cantidad: recuperada, vida: c.vida, vidaMax: vidaMax(c, datos) });
     return false;
@@ -553,7 +581,7 @@ function usarObjeto(e: EstadoCombate, accion: Extract<Accion, { tipo: 'objeto' }
       vida: presa.vida,
       vidaMax: vidaMax(presa, datos),
       ratio: datos.especies[presa.especie].ratioCaptura,
-      bonus: obj.bonus,
+      bonus: bonusTesera(e, obj, presa, datos),
       estado: presa.estado,
       segura: obj.segura,
     },
@@ -566,6 +594,15 @@ function usarObjeto(e: EstadoCombate, accion: Extract<Accion, { tipo: 'objeto' }
     ev.push({ tipo: 'fin', resultado: 'captura' });
   }
   return r.exito;
+}
+
+/** La bonificación de una tésera: la Rápida en el primer turno, la de Red contra Agua y Aire… */
+function bonusTesera(e: EstadoCombate, obj: Extract<Objeto, { tipo: 'captura' }>, presa: Criatura, datos: DatosJuego): number {
+  const si = obj.bonusSi;
+  if (!si) return obj.bonus;
+  const cumple =
+    (si.primerTurno && e.turno === 1) || (si.tipos ?? []).some((t) => datos.especies[presa.especie].tipos.includes(t));
+  return cumple ? si.bonus : obj.bonus;
 }
 
 // ---------- Objetos equipados ----------
@@ -594,19 +631,28 @@ function comprobarBaya(e: EstadoCombate, lado: Lado, datos: DatosJuego, ev: Even
   if (c.vida > Math.floor(max * ef.umbral)) return;
   ev.push({ tipo: 'objetoEquipado', lado, nombre: nombreDe(c, datos), objeto: nombreObjeto(c, datos), efecto: 'come' });
   gastar(c, datos);
-  curar(c, Math.max(1, Math.floor(max * ef.cura)), lado, e[lado].activo, datos, ev);
+  curar(c, ef.puntos ?? Math.max(1, Math.floor(max * (ef.cura ?? 0))), lado, e[lado].activo, datos, ev);
 }
 
-/** Fruto que cura un estado en cuanto se sufre. */
+/** Fruto que cura un estado (o la confusión) en cuanto se sufre. */
 function comprobarBayaEstado(e: EstadoCombate, lado: Lado, datos: DatosJuego, ev: Evento[]): void {
   const c = activoDe(e, lado);
   const ef = efectoEquipo(c, datos);
-  if (ef?.tipo !== 'bayaEstado' || !c.estado || c.estado.tipo !== ef.estado) return;
+  if (ef?.tipo !== 'bayaEstado' || !vivo(c)) return;
+  const estado = c.estado && ef.estados.includes(c.estado.tipo);
+  const confusion = e[lado].volatil.confusion > 0 && ef.estados.includes('confusion');
+  if (!estado && !confusion) return;
   const nombre = nombreDe(c, datos);
   ev.push({ tipo: 'objetoEquipado', lado, nombre, objeto: nombreObjeto(c, datos), efecto: 'come' });
   gastar(c, datos);
-  c.estado = null;
-  ev.push({ tipo: 'curaEstado', lado, nombre });
+  if (estado) {
+    c.estado = null;
+    ev.push({ tipo: 'curaEstado', lado, nombre });
+  }
+  if (confusion) {
+    e[lado].volatil.confusion = 0;
+    ev.push({ tipo: 'finConfusion', lado, nombre });
+  }
 }
 
 function curar(c: Criatura, cantidad: number, lado: Lado, indice: number, datos: DatosJuego, ev: Evento[]): void {
@@ -705,8 +751,10 @@ function ejecutarMovimiento(e: EstadoCombate, lado: Lado, indice: number, datos:
     return;
   }
   const pAt = pasivaDe(atacante, datos)?.efecto;
+  const efAt = efectoEquipo(atacante, datos);
   if (mov.precision !== null) {
-    const precision = pAt?.tipo === 'ojoAvizor' ? mov.precision * 1.3 : mov.precision;
+    const precision =
+      mov.precision * (pAt?.tipo === 'ojoAvizor' ? 1.3 : 1) * (efAt?.tipo === 'precision' ? efAt.multiplicador : 1);
     if (entero(e.rng, 1, 100) > precision) {
       ev.push({ tipo: 'falla', lado, nombre: nAt });
       return;
@@ -715,14 +763,14 @@ function ejecutarMovimiento(e: EstadoCombate, lado: Lado, indice: number, datos:
 
   let danioCausado = 0;
   if (mov.categoria !== 'estado') {
-    const critico = probabilidad(e.rng, PROB_CRITICO * (pAt?.tipo === 'buenaEstrella' ? 2 : 1)) && !pasivaTipo(defensor, datos, 'caparazon');
+    const probCritico = PROB_CRITICO * (pAt?.tipo === 'buenaEstrella' ? 2 : 1) * (efAt?.tipo === 'critico' ? efAt.multiplicador : 1);
+    const critico = probabilidad(e.rng, probCritico) && !pasivaTipo(defensor, datos, 'caparazon');
     const tirada = entero(e.rng, 85, 100);
     const r = calcularDanio(combatiente(e, lado), combatiente(e, ladoDef), mov, datos, critico, tirada);
     if (r.eficacia === 0) {
       ev.push({ tipo: 'sinEfecto', lado: ladoDef, nombre: nDef });
       return;
     }
-    const efAt = efectoEquipo(atacante, datos);
     const efDef = efectoEquipo(defensor, datos);
     const danio = efAt?.tipo === 'potenciar' ? Math.floor(r.danio * efAt.multiplicador) : r.danio;
     danioCausado = Math.min(defensor.vida, danio);
@@ -796,6 +844,7 @@ function ejecutarMovimiento(e: EstadoCombate, lado: Lado, indice: number, datos:
         if (!probabilidad(e.rng, prob(f.prob))) break;
         volDef.confusion = entero(e.rng, 2, 5);
         ev.push({ tipo: 'confunde', lado: ladoDef, nombre: nDef });
+        comprobarBayaEstado(e, ladoDef, datos, ev);
         break;
       }
       case 'retroceso':
@@ -889,22 +938,33 @@ function yaAnunciado(ev: Evento[], lado: Lado): boolean {
   return false;
 }
 
+/**
+ * Ganan experiencia las que han salido contra la derrotada (todas la entera, como en los
+ * juegos modernos del género) y, con Repartir experiencia, las demás la mitad.
+ */
 function darExperiencia(e: EstadoCombate, derrotado: Criatura, datos: DatosJuego, ev: Evento[]): void {
-  const receptor = activoDe(e, 'jugador');
-  if (!vivo(receptor)) return;
-  const ef = efectoEquipo(receptor, datos);
   const base = expGanada(derrotado, datos, !e.salvaje);
-  const cantidad = ef?.tipo === 'experiencia' ? Math.floor(base * ef.multiplicador) : base;
-  const { criatura, subidas } = aplicarExperiencia(receptor, cantidad, datos);
-  Object.assign(receptor, criatura);
-  const nombre = nombreDe(receptor, datos);
-  const indice = e.jugador.activo;
-  ev.push({ tipo: 'experiencia', indice, nombre, cantidad });
-  for (const s of subidas) {
-    ev.push({ tipo: 'nivel', indice, nombre, nivel: s.nivel, vida: s.vida, vidaMax: s.vidaMax });
-    for (const m of s.aprendidos) ev.push({ tipo: 'aprende', indice, nombre, movimiento: datos.movimientos[m].nombre });
-    for (const m of s.pendientes) {
-      ev.push({ tipo: 'noAprende', indice, nombre, movimiento: datos.movimientos[m].nombre, movimientoId: m });
+  const activo = e.jugador.activo;
+  const participantes = [activo, ...e.participantes.filter((i) => i !== activo)];
+  const resto = e.repartir ? e.jugador.equipo.map((_, i) => i).filter((i) => !participantes.includes(i) && vivo(e.jugador.equipo[i])) : [];
+  if (resto.length > 0) ev.push({ tipo: 'experienciaRepartida' });
+  for (const indice of [...participantes, ...resto]) {
+    const receptor = e.jugador.equipo[indice];
+    if (!receptor || !vivo(receptor)) continue;
+    const ef = efectoEquipo(receptor, datos);
+    const repartida = !participantes.includes(indice);
+    const propia = repartida ? Math.max(1, Math.floor(base / 2)) : base;
+    const cantidad = ef?.tipo === 'experiencia' ? Math.floor(propia * ef.multiplicador) : propia;
+    const { criatura, subidas } = aplicarExperiencia(receptor, cantidad, datos);
+    Object.assign(receptor, criatura);
+    const nombre = nombreDe(receptor, datos);
+    ev.push(repartida ? { tipo: 'experiencia', indice, nombre, cantidad, repartida } : { tipo: 'experiencia', indice, nombre, cantidad });
+    for (const s of subidas) {
+      ev.push({ tipo: 'nivel', indice, nombre, nivel: s.nivel, vida: s.vida, vidaMax: s.vidaMax });
+      for (const m of s.aprendidos) ev.push({ tipo: 'aprende', indice, nombre, movimiento: datos.movimientos[m].nombre });
+      for (const m of s.pendientes) {
+        ev.push({ tipo: 'noAprende', indice, nombre, movimiento: datos.movimientos[m].nombre, movimientoId: m });
+      }
     }
   }
 }

@@ -108,9 +108,11 @@ tocan desde aquí.
   - Hecho: combate con parálisis, veneno, intoxicación, confusión, retroceso, Muérdago y Rodela
     (estados volátiles en `LadoCombate.volatil`), y 50 pasivas (`src/data/pasivas.ts`,
     `src/core/pasivas.ts`), una por especie.
-  - Falta, en este orden: más objetos (bayas, potenciadores de tipo, piedras evolutivas) y
-    Repartir Experiencia en Toledo; pesca y almacén de verdad; rivales recurrentes. La Liga,
-    más adelante.
+  - Hecho: más objetos (bayas, potenciadores de tipo, objetos equipables, téseras, Elixires),
+    piedras lunar y solar, y Repartir experiencia (maestro de Toledo; objetos `clave` con
+    `interruptor`). Las otras cuatro piedras, en `arte/objetos-futuros/`.
+  - Falta, en este orden: pesca y almacén de verdad; rivales recurrentes. La Liga, más
+    adelante.
 - **Siguiente:** capítulo 3 (1571). Alhambrón queda para una zona de ruinas, a petición del
   autor. La vista de espalda de Imperión parece de frente: se puede rehacer.
 - **Mapas (2026-10-25), hecho:** con aspecto de los juegos de criaturas de GBA, a petición

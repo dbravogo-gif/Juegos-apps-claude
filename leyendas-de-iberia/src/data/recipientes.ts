@@ -26,6 +26,8 @@ export const OBJETOS_RECIPIENTE: Record<string, { objeto: string; peso: number }
   ],
   toledo: [
     { objeto: 'unguento', peso: 30 },
+    { objeto: 'baya_aranja', peso: 8 },
+    { objeto: 'elixir', peso: 4 },
     { objeto: 'tesera_plata', peso: 20 },
     { objeto: 'emplasto', peso: 15 },
     { objeto: 'tesera', peso: 15 },
