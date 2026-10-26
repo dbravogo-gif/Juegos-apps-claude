@@ -26,31 +26,37 @@ type Relacion = { eficaz: TipoId[]; pocoEficaz: TipoId[]; sinEfecto: TipoId[] };
  * Tabla de eficacias: tipo del movimiento atacante contra el tipo del defensor. Lo que no aparece
  * es ×1. Con dos tipos, los multiplicadores se multiplican.
  *
- * Parte de la tabla del autor (2026-10-23) y la reduce a petición suya (2026-10-24), porque
- * tenía demasiadas debilidades y resistencias:
- * - Solo se resisten a sí mismos Agua, Planta, Infernal, Eléctrico y Plasma, para que una
- *   criatura Agua/Tierra no sea débil al Agua.
- * - Ancestral ya no resiste nada; sigue siendo débil a Hielo y a Ancestral.
- * - Acero solo resiste a Común, Planta y Ancestral.
- * - Cada tipo es muy eficaz contra tres como mucho, y resiste a tres como mucho.
- * - Se quedan las cuatro inmunidades.
+ * Tercera versión, equilibrada a petición del autor (2026-10-25) siguiendo cómo lo hace Pokémon:
+ * - Cada tipo sin inmunidad es muy eficaz contra tantos tipos como los que le resisten (dos y
+ *   dos, o tres y tres). Los que anulan a alguno (Común, Tierra, Eléctrico y Espectral) tienen
+ *   menos.
+ * - Nadie es débil a más de tres tipos ni resiste a más de tres.
+ * - Cambios pedidos por el autor: Planta es poco eficaz contra Aire y ya no contra Acero; Aire ya
+ *   no es eficaz contra Tierra y gana dos tipos (Común, como las rapaces que cazan la fauna
+ *   corriente, y Plasma, porque el viento dispersa el gas).
+ * - Infernal ya no es poco eficaz contra Tierra: el fuego sufría demasiado con tanta Tierra.
+ * - Mental, Luz, Oscuridad y Espectral se relacionan también con los demás: la ruda y el romero
+ *   (Planta) contra el mal de ojo (Oscuridad), lo sagrado (Luz) contra los dragones y gigantes
+ *   (Ancestral), como San Jorge, y el acero que atraviesa a las ánimas sin herirlas.
+ * - Siguen las cuatro inmunidades y los que se resisten a sí mismos (Agua, Planta, Infernal,
+ *   Eléctrico, Plasma y Oscuridad).
  */
 const RELACIONES: Record<TipoId, Relacion> = {
-  comun: { eficaz: [], pocoEficaz: ['acero'], sinEfecto: ['espectral'] },
+  comun: { eficaz: [], pocoEficaz: ['tierra', 'acero'], sinEfecto: ['espectral'] },
   agua: { eficaz: ['infernal', 'tierra'], pocoEficaz: ['agua', 'planta'], sinEfecto: [] },
   tierra: { eficaz: ['electrico', 'infernal', 'acero'], pocoEficaz: ['planta'], sinEfecto: ['aire'] },
-  planta: { eficaz: ['agua', 'tierra'], pocoEficaz: ['planta', 'infernal', 'acero'], sinEfecto: [] },
-  aire: { eficaz: ['planta', 'tierra'], pocoEficaz: ['electrico'], sinEfecto: [] },
+  planta: { eficaz: ['agua', 'tierra', 'oscuridad'], pocoEficaz: ['planta', 'infernal', 'aire'], sinEfecto: [] },
+  aire: { eficaz: ['planta', 'comun', 'plasma'], pocoEficaz: ['electrico', 'tierra', 'ancestral'], sinEfecto: [] },
   electrico: { eficaz: ['agua', 'aire'], pocoEficaz: ['electrico'], sinEfecto: ['tierra'] },
-  hielo: { eficaz: ['planta', 'aire', 'ancestral'], pocoEficaz: ['infernal'], sinEfecto: [] },
-  infernal: { eficaz: ['planta', 'hielo', 'acero'], pocoEficaz: ['infernal', 'agua', 'tierra'], sinEfecto: [] },
-  plasma: { eficaz: ['agua', 'aire', 'acero'], pocoEficaz: ['tierra', 'plasma'], sinEfecto: [] },
-  mental: { eficaz: ['oscuridad', 'espectral'], pocoEficaz: [], sinEfecto: [] },
-  luz: { eficaz: ['oscuridad', 'espectral'], pocoEficaz: [], sinEfecto: [] },
-  oscuridad: { eficaz: ['mental', 'luz'], pocoEficaz: [], sinEfecto: [] },
+  hielo: { eficaz: ['planta', 'aire', 'ancestral'], pocoEficaz: ['agua', 'infernal', 'plasma'], sinEfecto: [] },
+  infernal: { eficaz: ['planta', 'hielo', 'acero'], pocoEficaz: ['agua', 'infernal', 'luz'], sinEfecto: [] },
+  plasma: { eficaz: ['agua', 'aire', 'acero'], pocoEficaz: ['tierra', 'electrico', 'plasma'], sinEfecto: [] },
+  mental: { eficaz: ['oscuridad', 'espectral'], pocoEficaz: ['luz', 'ancestral'], sinEfecto: [] },
+  luz: { eficaz: ['oscuridad', 'espectral', 'ancestral'], pocoEficaz: ['plasma', 'mental', 'acero'], sinEfecto: [] },
+  oscuridad: { eficaz: ['mental', 'luz'], pocoEficaz: ['oscuridad', 'espectral'], sinEfecto: [] },
   espectral: { eficaz: ['mental', 'espectral'], pocoEficaz: ['oscuridad'], sinEfecto: ['comun'] },
-  acero: { eficaz: ['hielo', 'luz'], pocoEficaz: ['agua'], sinEfecto: [] },
-  ancestral: { eficaz: ['ancestral', 'plasma'], pocoEficaz: ['acero'], sinEfecto: [] },
+  acero: { eficaz: ['hielo', 'luz'], pocoEficaz: ['oscuridad', 'espectral'], sinEfecto: [] },
+  ancestral: { eficaz: ['ancestral', 'plasma'], pocoEficaz: ['acero', 'luz'], sinEfecto: [] },
 };
 
 export const TABLA_TIPOS: DefTablaTipos = {

@@ -289,6 +289,46 @@ región y concepto visual, y recortar los motivos repetidos. Resultado:
 
 ---
 
+### A.9 Tipos por zona y gimnasios (2026-10-25)
+
+El autor preguntó si las criaturas están repartidas por zonas según su tipo, como en el género:
+una ruta con predominio de un tipo y un gimnasio que se prepara con lo que se captura antes.
+**Hasta ahora no del todo.** Recuento por capítulo (cada tipo de cada especie cuenta una vez):
+
+| Capítulo | Lo que domina | Lectura |
+| --- | --- | --- |
+| 1. Granada | Mezcla: Tierra 4, Aire 3, Agua 3, Oscuridad 2 | Sin tipo propio. El gimnasio (Oscuridad) sí tiene su contra en la Vega: Mandragor. |
+| 2. Toledo | Oscuridad 6, Común 5, Tierra 4, Aire 3 | Tierra y Común de día, Oscuridad de noche. Encaja. |
+| 3. Sevilla | Agua 7 | El más claro. Además trae Eléctrico y Plasma, que le ganan. |
+| 4. Madrid | Mezcla: Común, Planta, Aire, Mental 3 cada uno | Sin tipo propio. |
+| 5. Canarias | Aire 5, Agua 5, Tierra 4, Planta 3 | Mezcla de costa y volcán. |
+| 6. Zaragoza | Catorce tipos con 1 a 3 especies | El más disperso. |
+| 7. Las Palmas y el Ebro | Agua 5 | Repite el tipo del capítulo 3. |
+| 8. Asturias | Tierra 5 | Claro: minas y montaña. |
+
+**Regla que se propone** para los capítulos que faltan, como en el género:
+1. Cada zona tiene uno o dos tipos que dominan (al menos la mitad de sus especies salvajes).
+2. El gimnasio del capítulo es de un tipo que aparece en la zona, para que el jugador lo vea
+   venir.
+3. Antes del gimnasio se puede capturar al menos una criatura que le gane, sea cual sea el
+   inicial. Se pueden repetir especies de capítulos anteriores para conseguirlo (un barbo en el
+   Tajo, por ejemplo).
+4. El tipo del gimnasio no se repite en capítulos seguidos.
+
+**Aplicado a los tres primeros:**
+
+| Capítulo | Zonas | Gimnasio | Con qué se gana |
+| --- | --- | --- | --- |
+| 1. Granada | Vega mezclada; Alhambra de Oscuridad (duendes) | Boabdil: Oscuridad | Mandragor (Planta y Mental), en la Vega |
+| 2. Toledo | Llanos de Villalar: Común y Tierra. Camino de Toledo: Oscuridad y Tierra, con Agua junto al Tajo | María Pacheco: Tierra y Acero (las espadas de Toledo y la roca del Tajo) | Las tres iniciales le hacen ×2; Barbaflux y Carapachón en el Tajo; Lizarco |
+| 3. Sevilla | Guadalquivir: Agua | Don Juan de Austria: Agua (Lepanto) | Centellón y el corposanto (Eléctrico y Plasma) |
+
+Los capítulos 4 a 8 se ordenan con la regla cuando toque diseñarlos. El 4 y el 6 necesitan
+elegir un tipo propio.
+
+**Ruinas.** Las especies que no encajan en ninguna zona por su tipo (Alhambrón, por ejemplo) irán
+a una zona de ruinas, de cualquier época, como propuso el autor.
+
 ## Fase B. Tabla maestra
 
 Los niveles de evolución son propuestas. «Final» significa que es la última forma de su línea.

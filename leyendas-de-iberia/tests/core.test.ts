@@ -95,7 +95,7 @@ describe('estadísticas', () => {
 
 describe('tabla de tipos', () => {
   const t = DATOS.tipos;
-  it('sigue la tabla reducida: eficaz, poco eficaz e inmune', () => {
+  it('sigue la tabla equilibrada: eficaz, poco eficaz e inmune', () => {
     expect(multiplicadorTipo(t, 'agua', 'infernal')).toBe(2);
     expect(multiplicadorTipo(t, 'infernal', 'agua')).toBe(0.5);
     expect(multiplicadorTipo(t, 'tierra', 'aire')).toBe(0);
@@ -110,6 +110,11 @@ describe('tabla de tipos', () => {
     expect(multiplicadorTipo(t, 'plasma', 'tierra')).toBe(0.5);
     expect(multiplicadorTipo(t, 'comun', 'acero')).toBe(0.5);
     expect(multiplicadorTipo(t, 'comun', 'agua')).toBe(1);
+    // Cambios del autor (2026-10-25).
+    expect(multiplicadorTipo(t, 'planta', 'aire')).toBe(0.5);
+    expect(multiplicadorTipo(t, 'planta', 'acero')).toBe(1);
+    expect(multiplicadorTipo(t, 'aire', 'tierra')).toBe(0.5);
+    expect(multiplicadorTipo(t, 'infernal', 'tierra')).toBe(1);
     expect(multiplicadorTipo(t, '', 'agua')).toBe(1);
   });
 
@@ -117,24 +122,34 @@ describe('tabla de tipos', () => {
     expect(multiplicadorTipo(t, 'mental', 'oscuridad')).toBe(2);
     expect(multiplicadorTipo(t, 'oscuridad', 'mental')).toBe(2);
     expect(multiplicadorTipo(t, 'acero', 'luz')).toBe(2);
-    expect(multiplicadorTipo(t, 'luz', 'acero')).toBe(1);
+    expect(multiplicadorTipo(t, 'luz', 'acero')).toBe(0.5);
   });
 
   it('Ancestral contra Ancestral queda en ×2', () => {
     expect(multiplicadorTipo(t, 'ancestral', 'ancestral')).toBe(2);
   });
 
-  it('ningún tipo es muy eficaz contra más de tres ni resiste a más de tres', () => {
+  it('ningún tipo es muy eficaz contra más de tres, ni débil a más de tres, ni resiste a más de tres', () => {
     for (const [id, r] of Object.entries(t.relaciones)) {
       expect(r.eficaz.length, id).toBeLessThanOrEqual(3);
       const resiste = Object.values(t.relaciones).filter((x) => x.pocoEficaz.includes(id)).length;
       expect(resiste, id).toBeLessThanOrEqual(3);
+      const debil = Object.values(t.relaciones).filter((x) => x.eficaz.includes(id)).length;
+      expect(debil, id).toBeLessThanOrEqual(3);
+    }
+  });
+
+  it('sin inmunidades, cada tipo es muy eficaz contra tantos como los que le resisten', () => {
+    for (const [id, r] of Object.entries(t.relaciones)) {
+      if (r.sinEfecto.length > 0) continue;
+      expect(r.eficaz.length, id).toBe(r.pocoEficaz.length);
     }
   });
 
   it('con dos tipos se multiplican: ×4, ×0,25 y ×0', () => {
     expect(eficacia(t, 'tierra', ['infernal', 'acero'])).toBe(4);
-    expect(eficacia(t, 'infernal', ['agua', 'tierra'])).toBe(0.25);
+    expect(eficacia(t, 'infernal', ['agua', 'tierra'])).toBe(0.5);
+    expect(eficacia(t, 'agua', ['agua', 'planta'])).toBe(0.25);
     expect(eficacia(t, 'tierra', ['agua', 'aire'])).toBe(0);
     expect(eficacia(t, 'hielo', ['planta', 'ancestral'])).toBe(4);
   });
@@ -153,7 +168,7 @@ describe('tabla de tipos', () => {
     const r = resumenTipo(t, 'tierra');
     expect(r.ataque.eficaz).toEqual(['electrico', 'infernal', 'acero']);
     expect(r.ataque.sinEfecto).toEqual(['aire']);
-    expect(r.defensa.debil).toEqual(['agua', 'planta', 'aire']);
+    expect(r.defensa.debil).toEqual(['agua', 'planta']);
     expect(r.defensa.inmune).toEqual(['electrico']);
   });
 

@@ -43,7 +43,8 @@ autor y dos amigos, y se juega en el navegador del móvil y del PC.
 
 Hay que preguntar antes de diseñar sobre ellas.
 
-1. **Marco narrativo y segundo mentor** (se propone Carlos III). Propuesta en §5.
+1. **Segundo mentor** (se propone Carlos III). Propuesta en §5. El protagonista ya está
+   decidido: es siempre el mismo.
 2. **Líderes de los capítulos 2 a 8 y miembros de la Liga.** Propuesta en §4.
 3. **El Dr. Jangel:** quién es y en qué capítulo abre el laboratorio. Propuesta en §7.
 4. **Personajes actuales:** quiénes salen y con qué reglas. Propuesta en §6.
@@ -114,20 +115,19 @@ Los líderes son sobre todo reyes y generales; los artistas salen como PNJ.
 
 ## 5. Marco narrativo (propuesta)
 
-**Una saga familiar.** En 1491, en Santa Fe, frente a Granada, **Isabel la Católica** encarga a
-un joven un *Bestiario*: registrar las leyendas de sus reinos. Es el registro de criaturas, el
-equivalente a la Pokédex, y además la reina le da su primera criatura. Cada capítulo lo
-protagoniza una generación posterior de la familia, que hereda el Bestiario y el equipo. Las
-criaturas, como son leyendas, no envejecen. Desde el primer momento, las que no caben en el
+**El protagonista es siempre el mismo** (decisión del autor, 2026-10-25; se descarta la saga
+familiar). En 1491, en Santa Fe, frente a Granada, **Isabel la Católica** le encarga un
+*Bestiario*: registrar las leyendas de sus reinos. Es el registro de criaturas, el equivalente a la
+Pokédex, y además la reina le da su primera criatura. Entre un capítulo y el siguiente pasan
+décadas, pero ni las criaturas ni quien escribe el Bestiario envejecen: el juego lo dice de pasada
+y no lo explica, como en el género. Desde el primer momento, las criaturas que no caben en el
 equipo se guardan en las páginas del Bestiario (§8).
 
-- Explica de forma natural el salto entre épocas sin viajes en el tiempo.
-- Explica también el protagonista de 1936: es el miembro de la familia de esa generación, en el
-  bando sublevado.
-- **Los rivales son los otros dos jugadores.** Cada amigo tiene su propia familia, que reaparece
-  en cada época. En la fase multijugador, su equipo rival es el equipo real de ese amigo (§9).
-- **El Bestiario crece con la saga.** En el capítulo 6, Goya lo ilustra, enlazando con sus
+- **Los rivales son los otros dos jugadores**, que reaparecen en cada época. En la fase
+  multijugador, su equipo rival es el equipo real de ese amigo (§9).
+- **El Bestiario crece con la historia.** En el capítulo 6, Goya lo ilustra, enlazando con sus
   *Caprichos* («El sueño de la razón produce monstruos»).
+- En el capítulo 7, el protagonista combate en el bando sublevado (§6).
 
 **Carlos III es el segundo mentor**, en el prólogo del capítulo 5 (propuesta). Es el gran rey
 reformista de la Ilustración: renueva el encargo de Isabel y guía la segunda mitad del juego. La
@@ -135,9 +135,7 @@ alternativa sería que el mentor fuera Jorge Juan, en lugar de salir como person
 - **Los gimnasios son pruebas, no enemigos.** El líder puede ser de cualquier bando. Por
   ejemplo, Boabdil acepta un último duelo de leyendas antes de entregar las llaves de Granada.
 
-La alternativa sería un viaje en el tiempo. Se descarta como opción principal porque obliga a
-justificar cada salto y hace que el protagonista elija bando como viajero, lo que encaja peor
-con la Guerra Civil.
+Se descarta el viaje en el tiempo: obliga a justificar cada salto.
 
 ## 6. Personajes reales y tono
 
@@ -255,17 +253,21 @@ con la Guerra Civil.
   | Acero | Armas, armaduras y cañones |
   | Ancestral | Los grandes seres de leyenda: dragones, cuélebres, gigantes |
 
-- **Relaciones entre tipos: cerradas.** Parten de la tabla del autor (2026-10-23), que el
-  autor pidió reducir el 2026-10-24 porque tenía demasiadas debilidades y resistencias. Está en
-  `src/data/tipos.ts`. Con dos tipos, los multiplicadores se multiplican (×4, ×¼…).
-  - Pasa de 82 relaciones que no son ×1 a 54.
-  - Solo se resisten a sí mismos Agua, Planta, Infernal, Eléctrico y Plasma, para que una
-    criatura Agua/Tierra no sea débil al Agua.
-  - Ancestral no resiste nada; Acero solo resiste a Común, Planta y Ancestral.
-  - Ningún tipo es muy eficaz contra más de tres, ni resiste a más de tres.
+- **Relaciones entre tipos: cerradas.** Están en `src/data/tipos.ts`. Con dos tipos, los
+  multiplicadores se multiplican (×4, ×¼…). Tercera versión (2026-10-25), equilibrada a petición
+  del autor siguiendo cómo lo hace Pokémon:
+  - Cada tipo sin inmunidad es muy eficaz contra tantos tipos como los que le resisten (dos y
+    dos, o tres y tres). Los que anulan a alguno (Común, Tierra, Eléctrico y Espectral) tienen
+    menos.
+  - Nadie es débil a más de tres tipos ni resiste a más de tres. Hay 72 relaciones que no son ×1.
+  - Cambios del autor: Planta es poco eficaz contra Aire y ya no contra Acero; Aire ya no es
+    eficaz contra Tierra y gana Común y Plasma.
+  - Infernal ya no es poco eficaz contra Tierra: el fuego sufría demasiado.
+  - Mental, Luz, Oscuridad y Espectral ya no son un círculo cerrado: Planta vence a Oscuridad
+    (la ruda contra el mal de ojo), Luz a Ancestral (San Jorge y el dragón) y Acero no hiere a
+    las ánimas.
   - Se quedan las cuatro inmunidades: Común y Espectral entre sí, Tierra contra Aire y
-    Eléctrico contra Tierra.
-  - Ancestral contra Ancestral es ×2, como los duelos de dragones.
+    Eléctrico contra Tierra. Ancestral contra Ancestral es ×2, como los duelos de dragones.
   - Se consulta desde el menú («Tipos»), desde la ficha de cada especie del Bestiario, que
     muestra sus debilidades y resistencias, y en combate, con el botón «Tipos». Los botones de
     movimiento marcan ×2, ×½ o ×0 contra el rival.
@@ -509,3 +511,6 @@ con la Guerra Civil.
   - Cinco entrenadores en total entre la Vega y la Alhambra, no cuatro por zona.
   - Boabdil lleva Brezuco y Trasgorn, de Oscuridad, en vez de Alhambrón (Agua/Tierra), que hacía
     imposible el combate con el inicial de fuego.
+- **2026-10-25 (10).** Tabla de tipos equilibrada (ver §8) y decisiones del autor para el
+  capítulo 2: el protagonista es siempre el mismo (se descarta la saga familiar) y los
+  personajes del capítulo los elige el diseño, cuadrados con la historia.
