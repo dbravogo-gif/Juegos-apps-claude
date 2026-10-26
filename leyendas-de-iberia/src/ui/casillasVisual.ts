@@ -42,7 +42,7 @@ const CAMINO = new Set(['.', 'S', 'G', '=', 'P']);
 /** Con quién se junta el camino sin dejar borde: también la fuente de una plaza. */
 const JUNTO_CAMINO = new Set([...CAMINO, 'A']);
 const JUNTO_EMPEDRADO = new Set(['S', 'G', 'P', 'A']);
-const ACEQUIA = new Set(['~', '=', 'O']);
+const ACEQUIA = new Set(['~', '=', 'O', 'N', 'V']);
 const MURALLA = new Set(['M', 'G', 'P']);
 const PAREDES = new Set(['W', 'Z', 'L']);
 
@@ -65,6 +65,7 @@ const SUELO_INTERIOR: Record<EstiloZona, string> = {
   meseta: 'suelo.tablas',
   toledo: 'suelo.losas',
   alcazar: 'suelo.losas',
+  sierra: 'suelo.tablas',
 };
 
 /** Estilos con muralla de ladrillo y cipreses en vez de tapial y árboles redondos. */
@@ -139,11 +140,23 @@ function capasDe(zona: Zona, x: number, y: number, f: number): Capa[] {
       break;
     case '~':
     case 'O':
+    case 'N':
       capas.push({ material: `acequia.${f}`, familia: ACEQUIA, fuera: true });
+      // Donde cae una cascada, espuma.
+      if (v.en(0, -1) === 'V') capas.push(pieza(`espuma.${f}`));
       break;
-    case '=':
-      capas.push({ material: `acequia.${f}`, familia: ACEQUIA, fuera: true }, pieza('puente'));
+    case 'V':
+      capas.push(pieza(`cascada.${f}`));
       break;
+    case 'k':
+      capas.push(pieza(v.en(0, -1) === 'k' || v.en(0, -1) === 'V' ? 'risco.medio' : 'risco.alto'));
+      break;
+    case '=': {
+      // Sobre un agua que corre de este a oeste, el puente va de norte a sur, y al revés.
+      const deLado = v.es(ACEQUIA, -1, 0, false) || v.es(ACEQUIA, 1, 0, false);
+      capas.push({ material: `acequia.${f}`, familia: ACEQUIA, fuera: true }, pieza(deLado ? 'puente' : 'puente.horizontal'));
+      break;
+    }
     case 'A':
       capas.push({ material: `fuente.${f}`, familia: new Set(['A']), fuera: false });
       break;
@@ -237,7 +250,7 @@ function pintarCasilla(ctx: CanvasRenderingContext2D, img: CanvasImageSource, zo
   }
 }
 
-const ANIMADAS = new Set(['~', '=', 'O', 'A']);
+const ANIMADAS = new Set(['~', '=', 'O', 'A', 'V', 'N']);
 
 // ---------- Objetos altos ----------
 
@@ -248,6 +261,8 @@ interface Objeto {
   y: number;
   profundidad: number;
   origenX?: number;
+  /** Se anima con el agua: un nombre de pieza por fotograma. */
+  fotogramas?: string[];
 }
 
 function objetosDe(zona: Zona): Objeto[] {
@@ -266,7 +281,15 @@ function objetosDe(zona: Zona): Objeto[] {
       if (c === '#') {
         // Junto a un camino, un arbusto: la copa de un árbol taparía el paso.
         const junto = v.es(CAMINO, -1, 0, false) || v.es(CAMINO, 1, 0, false);
-        const arbol = ESTILO_LADRILLO.has(estilo) ? 'cipres' : junto ? 'arbusto' : estilo === 'meseta' ? 'encina' : 'arbol';
+        const arbol = ESTILO_LADRILLO.has(estilo)
+          ? 'cipres'
+          : junto
+            ? 'arbusto'
+            : estilo === 'meseta'
+              ? 'encina'
+              : estilo === 'sierra'
+                ? 'pino'
+                : 'arbol';
         lista.push(apoyo(arbol, x, y));
       } else if (c === 'o') lista.push(apoyo('olivo', x, y));
       else if (c === 'Y') lista.push(apoyo('armadura', x, y));
@@ -275,6 +298,8 @@ function objetosDe(zona: Zona): Objeto[] {
       else if (c === 'Q') lista.push(apoyo('pozo', x, y));
       else if (c === 'C') lista.push(apoyo('columna', x, y));
       else if (c === 'E') lista.push(apoyo('estanteria', x, y));
+      else if (c === 'I') lista.push(apoyo('atalaya', x, y));
+      else if (c === 'N') lista.push({ ...apoyo('noria.0', x, y), fotogramas: [0, 1, 2, 3].map((f) => `noria.${f}`) });
       else if (c === 'h' || c === 'w') {
         const delante = c === 'h' ? 'hierba_alta.delante' : 'trigal.delante';
         lista.push({ nombre: delante, x: x * PX + PX / 2, y: (y + 1) * PX, profundidad: y + 0.7 });
@@ -324,12 +349,13 @@ export function dibujarZona(scene: Phaser.Scene, zona: Zona, capa: Phaser.GameOb
   lienzo.refresh();
   capa.add(scene.add.image(0, 0, clave).setOrigin(0).setScale(ESCALA).setDepth(-1));
 
+  const conFotogramas: [Phaser.GameObjects.Image, string[]][] = [];
   for (const o of objetosDe(zona)) {
-    capa.add(
-      imagenPieza(scene, o.nombre, o.x * ESCALA, o.y * ESCALA)
-        .setOrigin(o.origenX ?? 0.5, 1)
-        .setDepth(o.profundidad),
-    );
+    const imagen = imagenPieza(scene, o.nombre, o.x * ESCALA, o.y * ESCALA)
+      .setOrigin(o.origenX ?? 0.5, 1)
+      .setDepth(o.profundidad);
+    capa.add(imagen);
+    if (o.fotogramas) conFotogramas.push([imagen, o.fotogramas]);
   }
 
   if (animadas.length > 0) {
@@ -341,6 +367,7 @@ export function dibujarZona(scene: Phaser.Scene, zona: Zona, capa: Phaser.GameOb
         f = (f + 1) % 4;
         for (const [x, y] of animadas) pintarCasilla(ctx, img, zona, x, y, f);
         lienzo.refresh();
+        for (const [imagen, fotogramas] of conFotogramas) imagen.setFrame(fotogramas[f]);
       },
     });
     capa.once(Phaser.GameObjects.Events.DESTROY, () => evento.remove());

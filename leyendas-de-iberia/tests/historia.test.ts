@@ -223,9 +223,9 @@ describe('recipientes', () => {
 describe('línea de visión', () => {
   const vega = ZONAS.vega;
   it('el ballestero ve el camino que tiene delante', () => {
-    expect(enLineaDeVision(vega, CASILLAS, { x: 9, y: 20, dir: 'izquierda' }, 3, { x: 7, y: 20 })).toBe(true);
-    expect(enLineaDeVision(vega, CASILLAS, { x: 9, y: 20, dir: 'izquierda' }, 3, { x: 7, y: 21 })).toBe(false);
-    expect(enLineaDeVision(vega, CASILLAS, { x: 9, y: 20, dir: 'izquierda' }, 1, { x: 7, y: 20 })).toBe(false);
+    expect(enLineaDeVision(vega, CASILLAS, { x: 13, y: 40, dir: 'izquierda' }, 3, { x: 10, y: 40 })).toBe(true);
+    expect(enLineaDeVision(vega, CASILLAS, { x: 13, y: 40, dir: 'izquierda' }, 3, { x: 10, y: 41 })).toBe(false);
+    expect(enLineaDeVision(vega, CASILLAS, { x: 13, y: 40, dir: 'izquierda' }, 1, { x: 10, y: 40 })).toBe(false);
   });
 
   it('un muro corta la vista', () => {
@@ -349,7 +349,7 @@ describe('mapa de la península', () => {
 
   it('dice dónde sale cada especie, con sus niveles y su frecuencia', () => {
     const lagarto = dondeSale(ZONAS, 'lagarto');
-    expect(lagarto.map((d) => d.zona)).toEqual(['villalar', 'camino_toledo']);
+    expect(lagarto.map((d) => d.zona)).toEqual(['villalar', 'sierra_guadarrama', 'camino_toledo']);
     expect(lagarto[0]).toMatchObject({ min: 7, max: 9 });
     expect(dondeSale(ZONAS, 'becerro_igneo')).toEqual([]);
     for (const z of Object.values(ZONAS)) {
@@ -393,7 +393,7 @@ describe('regalos atrasados', () => {
     const p = nuevaPartida('Antigua', 5, INICIO);
     p.banderas.colon = true;
     p.banderas['vencido:boabdil'] = true;
-    expect(darAtrasados(p, REGALOS_ATRASADOS).sort()).toEqual(['cana', 'mapa', 'mt_noche_cerrada']);
+    expect(darAtrasados(p, REGALOS_ATRASADOS).sort()).toEqual(['mapa', 'mt_noche_cerrada']);
     expect(darAtrasados(p, REGALOS_ATRASADOS)).toEqual([]);
     expect(p.objetos.mapa).toBe(1);
   });
@@ -417,8 +417,8 @@ describe('Pleamar y Vuelo', () => {
 
   it('el Tajo se cruza con Pleamar: agua profunda, sólida a pie', () => {
     const z = ZONAS.camino_toledo;
-    expect(esNavegable(z, 3, 22, CASILLAS)).toBe(true);
-    expect(esSolida(z, 3, 22, CASILLAS)).toBe(true);
+    expect(esNavegable(z, 3, 33, CASILLAS)).toBe(true);
+    expect(esSolida(z, 3, 33, CASILLAS)).toBe(true);
     expect(z.encuentrosAgua).toBeDefined();
   });
 

@@ -20,6 +20,9 @@ export function pedirNombre(porDefecto = 'Viajero', pregunta = '¿Cómo te llama
     campo.autocomplete = 'off';
     campo.placeholder = porDefecto;
     campo.style.cssText = `font:700 20px ${FUENTE};padding:12px 14px;border-radius:14px;border:2px solid ${css(COLOR.borde)};background:${css(COLOR.panelSuave)};`;
+    // El juego escucha el teclado en toda la ventana y se queda con algunas teclas (W, A, S, D,
+    // Mayúsculas) y reacciona a otras (M, Z, X): sin esto, esas letras no se podrían escribir.
+    for (const tipo of ['keydown', 'keyup', 'keypress'] as const) campo.addEventListener(tipo, (e) => e.stopPropagation());
     const boton = document.createElement('button');
     boton.type = 'submit';
     boton.textContent = textoBoton;

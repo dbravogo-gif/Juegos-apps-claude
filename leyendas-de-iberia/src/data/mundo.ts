@@ -26,7 +26,6 @@ export const ENTRADAS = entradasDeZonas(ZONAS, [INICIO, INICIO_CAPITULO_2]);
 export const REGALOS_ATRASADOS = [
   { si: 'inicial', marca: 'regalo:alpargatas', objeto: 'alpargatas', texto: 'Un criado del rey Fernando te trae unas alpargatas de esparto: mantén pulsado B al andar para correr.' },
   { si: 'colon', marca: 'regalo:mapa', objeto: 'mapa', texto: 'Un paje de Colón te alcanza: te trae el mapa de los reinos que te prometió.' },
-  { si: 'vencido:boabdil', marca: 'regalo:cana', objeto: 'cana', texto: 'Un pescador de la Vega te manda una caña: ponte delante del agua y pulsa A para pescar.' },
   { si: 'vencido:boabdil', marca: 'regalo:mt_boabdil', objeto: 'mt_noche_cerrada', texto: 'Un mensajero de Boabdil te trae la MT01 Noche cerrada.' },
   { si: 'vencido:maria_pacheco', marca: 'regalo:mt_maria', objeto: 'mt_hoja_toledana', texto: 'Un comunero de Toledo te trae, de parte de María Pacheco, la MT02 Hoja toledana.' },
   { si: 'vencido:maria_pacheco', marca: 'regalo:repartir_exp', objeto: 'repartir_exp', texto: 'Un maestro de Toledo te manda el Repartir experiencia: las criaturas que no luchan ganan la mitad de experiencia. Se apaga desde la mochila.' },

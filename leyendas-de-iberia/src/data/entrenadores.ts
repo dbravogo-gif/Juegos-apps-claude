@@ -27,7 +27,7 @@ const LISTA: DefEntrenador[] = [
     valia: 6,
     premio: 300,
     antes: ['¡{nombre}! Dicen que Boabdil espera en la Alhambra.', 'Primero, a ver si estás a la altura.'],
-    derrota: ['Vale, pasa tú. Pero con Boabdil no te confíes.'],
+    derrota: ['Vale, pasa tú. Lo apunto en el cuaderno: tu compañera es más fuerte de lo que pensaba.', 'Con Boabdil no te confíes.'],
     despues: ['Iré a la Alhambra después de ti: quiero ver cómo pelea Boabdil.'],
   },
   {
@@ -166,6 +166,16 @@ const LISTA: DefEntrenador[] = [
     despues: ['Las cañadas reales cruzan Castilla de norte a sur. Por ellas pasan cada año millones de ovejas.'],
   },
   {
+    id: 'halconero',
+    nombre: 'Halconero',
+    equipo: [{ especie: 'aguila', nivel: 9 }],
+    valia: 5,
+    premio: 200,
+    antes: ['Cazo con aves para la corte del emperador. ¿Te atreves con mi águila?'],
+    derrota: ['Hoy no hay caza. Mi águila necesita descansar.'],
+    despues: ['En la corte, los halconeros acompañan al emperador en sus cacerías.'],
+  },
+  {
     id: 'herbolaria',
     nombre: 'Herbolaria',
     equipo: [{ especie: 'vibora', nivel: 11 }],
@@ -206,12 +216,28 @@ const LISTA: DefEntrenador[] = [
 
 /**
  * Los rivales son los otros dos jugadores (GDD §5): dos amigos del protagonista que reciben las
- * otras dos iniciales y reaparecen en cada época. El jugador les pone nombre al conocerlos.
- * Los textos no les dan género: el jugador elige el nombre.
+ * otras dos iniciales y reaparecen en cada época. Los tres se criaron en el campamento real,
+ * que siguió al ejército de asedio en asedio durante la guerra de Granada. Antes de ponerles
+ * nombre, el juego cuenta quiénes son (`presentacion`). Los textos no les dan género: el
+ * jugador elige el nombre.
  */
-export const RIVALES: Record<'a' | 'b', { porDefecto: string; pregunta: string }> = {
-  a: { porDefecto: 'Álex', pregunta: '¿Cómo se llama quien lleva sombrero?' },
-  b: { porDefecto: 'Sam', pregunta: '¿Cómo se llama quien lleva melena?' },
+export const RIVALES: Record<'a' | 'b', { porDefecto: string; presentacion: string[]; pregunta: string }> = {
+  a: {
+    porDefecto: 'Álex',
+    presentacion: [
+      'Su familia es de arrieros: con sus recuas de mulas llevan trigo, pólvora y noticias de un campamento a otro.',
+      'Desde que aprendisteis a andar os lo habéis disputado todo: quién corre más, quién trepa más alto, quién se queda con la última torta. Nunca te ha dejado ganar sin pelear.',
+    ],
+    pregunta: '¿Cómo se llama quien nunca te deja ganar?',
+  },
+  b: {
+    porDefecto: 'Sam',
+    presentacion: [
+      'Su madre es la herbolaria del campamento, y le ha enseñado el nombre de cada planta y de cada bicho que encontraban por el camino.',
+      'Lo apunta todo en un cuaderno lleno de dibujos. Si alguien sabe más de criaturas que tú, es quien lleva ese cuaderno.',
+    ],
+    pregunta: '¿Cómo se llama quien lo apunta todo en su cuaderno?',
+  },
 };
 
 export const NOMBRES_RIVALES = { a: RIVALES.a.porDefecto, b: RIVALES.b.porDefecto };

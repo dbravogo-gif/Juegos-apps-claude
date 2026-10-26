@@ -1311,6 +1311,170 @@ def puente() -> Lienzo:
     return l
 
 
+def cascada(fotograma: int) -> Lienzo:
+    """Agua que cae entre dos labios de granito. Las vetas de espuma bajan 4 píxeles por fotograma."""
+    a, p = AGUA, PIEDRA_GRIS
+    l = Lienzo()
+    for y in range(PX):
+        for x in range(PX):
+            if x <= 1 or x >= 14:
+                borde = x in (1, 14)
+                c = p['junta'] if borde else (p['media'] if azar(x, y, 41) < 0.6 else p['oscura'])
+                l.pon(x, y, c)
+                continue
+            fase = int(azar(x, 0, 43) * 8)
+            k = (y - fotograma * 4 + fase) % 8
+            if x in (2, 13):
+                c = a['honda']
+            elif k == 0:
+                c = a['espuma']
+            elif k < 3:
+                c = a['clara']
+            else:
+                c = a['media']
+            l.pon(x, y, c)
+    return l
+
+
+def espuma(fotograma: int) -> Lienzo:
+    """Espuma donde la cascada cae en el agua de abajo (se pinta encima del agua)."""
+    a = AGUA
+    l = Lienzo()
+    for y in range(7):
+        for x in range(2, 14):
+            r = azar(x, y + fotograma * 7, 47)
+            umbral = 0.8 - y * 0.11
+            if r < umbral:
+                l.pon(x, y, a['espuma'] if r < umbral * 0.6 else a['clara'])
+    return l
+
+
+def risco(alto: bool) -> Lienzo:
+    """Peña de granito de la sierra: bolos redondeados apiñados. Los bolos salen de puntos repartidos
+    al azar que se repiten de un tile a otro, así la peña no tiene costuras. `alto`: con el borde
+    de hierba de arriba, cuando no hay más peña encima."""
+    p = PIEDRA_GRIS
+    semillas = []
+    for j in range(3):
+        for i in range(3):
+            semillas.append((i * 16 / 3 + azar(i, j, 61) * 4, j * 16 / 3 + azar(i, j, 67) * 4))
+
+    def cercanas(x: float, y: float) -> tuple[float, float, tuple[float, float]]:
+        ds = []
+        for sx, sy in semillas:
+            for ox in (-16, 0, 16):
+                for oy in (-16, 0, 16):
+                    ds.append((math.hypot(x - sx - ox, y - sy - oy), (sx + ox, sy + oy)))
+        ds.sort(key=lambda t: t[0])
+        return ds[0][0], ds[1][0], ds[0][1]
+
+    l = Lienzo()
+    for y in range(PX):
+        for x in range(PX):
+            d1, d2, (sx, sy) = cercanas(x + 0.5, y + 0.5)
+            if d2 - d1 < 1.1:
+                c = p['junta']
+            else:
+                # Luz desde arriba a la izquierda dentro de cada bolo.
+                luz = -((x + 0.5 - sx) * 0.6 + (y + 0.5 - sy) * 0.8) / 4
+                c = p['clara'] if luz > 0.45 else p['media'] if luz > -0.35 else p['oscura']
+            l.pon(x, y, c)
+    if alto:
+        h = HIERBA
+        for x in range(PX):
+            fin = 3 + (1 if azar(x, 0, 51) < 0.4 else 0)
+            for y in range(fin):
+                l.pon(x, y, h['base'] if y < fin - 1 else h['sombra'])
+            l.pon(x, fin, rgb(60, 70, 66))
+    return l
+
+
+def pino() -> Lienzo:
+    """Pino de la sierra de Guadarrama, en pisos de ramas, más alto y oscuro que los árboles de la Vega."""
+    pal = dict(contorno=rgb(16, 52, 44), oscura=rgb(30, 86, 62), media=rgb(46, 118, 76), clara=rgb(80, 152, 92))
+    l = Lienzo(20, 34)
+    l.rect(9, 26, 3, 7, rgb(116, 76, 52))
+    l.rect(11, 26, 1, 7, rgb(80, 52, 38))
+    l.rect(7, 32, 7, 1, rgb(80, 52, 38))
+    for y0, y1, ancho in [(1, 10, 4.5), (6, 16, 6.5), (11, 22, 8.0), (16, 28, 9.4)]:
+        for y in range(y0, y1):
+            t = (y - y0) / (y1 - y0 - 1)
+            medio = 0.8 + (ancho - 0.8) * t
+            for x in range(20):
+                dx = x + 0.5 - 10
+                if abs(dx) > medio:
+                    continue
+                lado = dx / medio
+                c = pal['clara'] if lado < -0.35 else pal['media'] if lado < 0.35 else pal['oscura']
+                if y >= y1 - 2 and abs(dx) > medio - 2.5:
+                    c = pal['oscura']
+                if azar(x, y, 53) < 0.08:
+                    c = pal['oscura']
+                l.pon(x, y, c)
+    l.contorno(pal['contorno'])
+    return l
+
+
+def atalaya() -> Lienzo:
+    """Atalaya nazarí de tapial: torre para vigilar la Vega y avisar con humo de día y fuego de noche."""
+    t = TAPIAL
+    l = Lienzo(20, 46)
+    x0, x1, arriba = 3, 16, 9
+    for y in range(arriba, 45):
+        for x in range(x0, x1 + 1):
+            c = t['clara'] if x < x0 + 4 else t['media'] if x < x1 - 3 else t['oscura']
+            if (y - arriba) % 6 == 5:
+                c = mezcla(c, t['contorno'], 0.35)
+            elif (y - arriba) % 6 == 2 and (x + ((y - arriba) // 6) * 3) % 7 == 0:
+                c = mezcla(c, t['contorno'], 0.55)
+            l.pon(x, y, c)
+    # Almenas.
+    for x in range(x0 - 1, x1 + 2):
+        hueco = (x - (x0 - 1)) % 5 in (3, 4)
+        for y in range(arriba - 4, arriba):
+            if not hueco:
+                l.pon(x, y, t['clara'] if x < x0 + 4 else t['media'])
+    l.rect(x0 - 1, arriba, x1 - x0 + 3, 1, t['oscura'])
+    # Saetera y puerta alta, como en las atalayas reales: se subía con una escala.
+    l.rect(9, 18, 2, 5, t['contorno'])
+    l.rect(8, 30, 4, 6, rgb(70, 50, 40))
+    l.rect(9, 29, 2, 1, rgb(70, 50, 40))
+    l.contorno(t['contorno'])
+    return l
+
+
+def noria(fotograma: int) -> Lienzo:
+    """Noria de madera con sus cangilones de barro, que sube el agua de la acequia. La rueda tiene
+    ocho radios: cuatro fotogramas de 11,25° dan una vuelta continua."""
+    m = MADERA
+    l = Lienzo(28, 30)
+    cx, cy, R = 14, 13, 11.5
+    giro = fotograma * (math.pi / 4) / 4
+    for y in range(l.h):
+        for x in range(l.w):
+            d = math.hypot(x + 0.5 - cx, y + 0.5 - cy)
+            if R - 2 <= d <= R:
+                l.pon(x, y, m['clara'] if y < cy - 3 else m['media'] if y < cy + 4 else m['oscura'])
+    for k in range(8):
+        ang = giro + k * math.pi / 4
+        for paso in range(int(R * 10) - 15):
+            r = paso / 10
+            l.pon(int(cx + r * math.cos(ang)), int(cy + r * math.sin(ang)), m['oscura'])
+    for k in range(8):
+        ang = giro + k * math.pi / 4 + math.pi / 8
+        px, py = int(cx + (R - 1) * math.cos(ang)), int(cy + (R - 1) * math.sin(ang))
+        l.rect(px - 1, py - 1, 3, 3, rgb(196, 108, 60))
+        l.pon(px - 1, py - 1, rgb(232, 152, 96))
+    l.rect(cx - 1, cy - 1, 3, 3, m['contorno'])
+    # Los dos pies de piedra donde apoya el eje.
+    for x in (2, 23):
+        l.rect(x, cy, 3, l.h - cy, PIEDRA['media'])
+        l.rect(x + 2, cy, 1, l.h - cy, PIEDRA['oscura'])
+    l.rect(2, cy - 1, 24, 2, m['media'])
+    l.contorno(m['contorno'])
+    return l
+
+
 def zurron() -> Lienzo:
     """Zurrón de cuero con hebilla: los objetos que se ven en el suelo (MT y otros)."""
     l = Lienzo()
@@ -1471,8 +1635,20 @@ def construir() -> Hoja:
     h.pon('tinaja.abierta', tinaja(True))
     h.pon('cartel', cartel())
     h.pon('puente', puente())
+    # El mismo puente girado, para cruzar de este a oeste un arroyo que baja de norte a sur.
+    girado = Lienzo()
+    girado.im = puente().im.transpose(Image.Transpose.TRANSPOSE)
+    h.pon('puente.horizontal', girado)
     h.pon('sombra', sombra())
     h.pon('zurron', zurron())
+    for f in range(4):
+        h.pon(f'cascada.{f}', cascada(f))
+        h.pon(f'espuma.{f}', espuma(f))
+        h.pon(f'noria.{f}', noria(f))
+    h.pon('risco.alto', risco(True))
+    h.pon('risco.medio', risco(False))
+    h.pon('pino', pino())
+    h.pon('atalaya', atalaya())
     return h
 
 

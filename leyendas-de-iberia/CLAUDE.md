@@ -14,12 +14,13 @@ tocan desde aquí.
   - Título, nueva partida con nombre y guardado automático.
   - Santa Fe: Isabel y la elección de compañera, el Gran Capitán, Colón, el pastor de Orce, y el
     mesón con su tienda.
-  - La Vega, con encuentros, ballestero y mercader.
+  - La Vega (32 × 46), con encuentros, ballestero, mercader, noria y atalaya nazarí.
   - La Alhambra, con su guardia.
   - El Patio de los Leones: Boabdil, el blasón y el final.
 - **Capítulo 2, «Castilla, 1521» (2026-10-26), hecho y jugable:** al vencer a Boabdil se pasa
   (paso `viajar`) a Villalar el día de la derrota comunera, con el mismo protagonista.
-  - Villalar (Padilla da su carta para María Pacheco), el camino de Toledo con el Tajo,
+  - Villalar (Padilla da su carta para María Pacheco), la sierra de Guadarrama (cascada, venta,
+    halconero), el camino de Toledo con el Tajo,
     Toledo con su mesón y el Alcázar, donde María Pacheco es la líder (Tierra/Acero).
   - 15 especies nuevas (Bestiario, cap. 2): lagarto, víbora, avutarda, águila, lobo, toro de
     Guisando, tarántula y erizo, con sus evoluciones, y 15 movimientos nuevos.
@@ -112,11 +113,13 @@ tocan desde aquí.
   - Hecho: más objetos (bayas, potenciadores de tipo, objetos equipables, téseras, Elixires),
     piedras lunar y solar, y Repartir experiencia (maestro de Toledo; objetos `clave` con
     `interruptor`). Las otras cuatro piedras, en `arte/objetos-futuros/`.
-  - Hecho: pesca (Caña del pescador de la Vega, `encuentrosPesca`, casillas con `pesca`) y
+  - Hecho: pesca (`encuentrosPesca`, casillas con `pesca`; la Caña llega con el tercer
+    gimnasio, que aún no existe, así que hoy no se consigue) y
     almacén en páginas de 30 huecos (`src/core/almacen.ts`, partida v3).
   - Hecho: rivales recurrentes (`rival` en `DefEntrenador`, `prepararEntrenador` en
     `partida.ts`, `RIVALES` en `data/entrenadores.ts`, paso `conocerRival`, aspectos `rival_a`
-    y `rival_b`). Cuatro combates en los capítulos 1 y 2.
+    y `rival_b`). Cuatro combates en los capítulos 1 y 2. Se presentan con su historia
+    (`presentacion` en `RIVALES`) antes de ponerles nombre.
   - La Liga, más adelante (decisión del autor).
 - **Siguiente:** capítulo 3 (1571). Alhambrón queda para una zona de ruinas, a petición del
   autor. La vista de espalda de Imperión parece de frente: se puede rehacer.
@@ -218,8 +221,10 @@ El código va en español: nombres, comentarios y textos.
   - `pedirNombre.ts`.
 - **Añadir una zona:**
   - Se dibuja en texto con los caracteres de `casillas.ts` y se le pone un `estilo` (pueblo,
-    campo, alhambra, mesón, pabellón, patio, meseta, toledo, alcázar), que decide árboles,
-    muros, suelos y paredes.
+    campo, alhambra, mesón, pabellón, patio, meseta, sierra, toledo, alcázar), que decide
+    árboles, muros, suelos y paredes.
+  - Las rutas entre ciudades son largas y no rectangulares, con algún detalle de la época
+    (cascada `V`, peña `k`, atalaya `I`, noria `N`) y su cartel.
   - Para cambiar de capítulo, el guion termina con el paso `viajar` (zona y casilla).
   - Una casilla nueva necesita su entrada en `casillas.ts`, su dibujo en `casillasVisual.ts` y,
     si es una pieza nueva, su función en `arte/mapa/tileset.py`.
