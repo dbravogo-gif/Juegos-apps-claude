@@ -613,3 +613,13 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
     Muérdago y Rodela, con sus movimientos; 50 pasivas, una por especie; la captura es más
     fácil con cualquier estado. Antídoto y Antiparalizador en las tiendas, y la MT06 Rodela en
     un zurrón de Villalar.
+- **2026-10-26 (16).** Más objetos, piedras y Repartir experiencia.
+  - Objetos nuevos, como los del género: Tésera rápida y Tésera de red; Elixir y Elixir máximo;
+    Garra rápida, Periscopio, Lupa y Bola humo; doce potenciadores de tipo (Carbón, Agua
+    mística…); bayas Aranja, Zreza, Meloc, Perasi y Ziuela.
+  - Piedras: la lunar (Lobregón → Lobánima) y la solar (Aquilín → Imperión), que adelantan la
+    evolución por nivel. Las de fuego, agua, trueno y hoja quedan para líneas de capítulos
+    futuros (propuesta en `BESTIARIO.md`, decisión abierta 7).
+  - Repartir experiencia: lo da un maestro de Toledo. Las que han salido contra la criatura
+    derrotada ganan la experiencia entera, y con él encendido, las demás la mitad. Se apaga
+    desde la mochila.

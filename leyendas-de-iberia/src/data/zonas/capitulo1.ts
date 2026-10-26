@@ -398,6 +398,8 @@ const VEGA: Zona = {
   carteles: [{ x: 8, y: 26, texto: ['La Vega de Granada.', 'Al norte, la Alhambra.'] }],
   ocultos: [
     { id: 'higo', x: 14, y: 15, objeto: 'higo' },
+    { id: 'baya_aranja', x: 14, y: 18, objeto: 'baya_aranja' },
+    { id: 'baya_zreza', x: 1, y: 26, objeto: 'baya_zreza' },
     { id: 'endrina', x: 1, y: 20, objeto: 'endrina' },
     { id: 'ruda', x: 13, y: 7, objeto: 'ruda' },
     { id: 'mt_pisoton', x: 13, y: 5, objeto: 'mt_pisoton', visible: true },
@@ -467,6 +469,7 @@ const ALHAMBRA: Zona = {
     { id: 'mt_mocarabe', x: 10, y: 9, objeto: 'mt_mocarabe', visible: true },
     { id: 'gorro', x: 2, y: 9, objeto: 'gorro_colorado' },
     { id: 'tuno', x: 11, y: 2, objeto: 'tuno' },
+    { id: 'elixir', x: 11, y: 4, objeto: 'elixir' },
   ],
 };
 

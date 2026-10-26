@@ -1429,7 +1429,8 @@ export class Interfaz extends Phaser.Scene {
     const [id] = objetos[actual];
     const obj = DATOS.objetos[id];
     const uso = usoDe(obj);
-    const accion = uso.equipable ? 'Dar' : uso.fuera ? 'Usar' : null;
+    const interruptor = obj.tipo === 'clave' ? obj.interruptor : undefined;
+    const accion = interruptor ? (p.banderas[interruptor.apagado] ? 'Encender' : 'Apagar') : uso.equipable ? 'Dar' : uso.fuera ? 'Usar' : null;
     c.add(ventana(this, 24, yD, ANCHO - 48, 216, { radio: 36 }));
     const circulo = this.add.graphics();
     circulo.fillStyle(COLOR.panelSuave, 1).fillCircle(112, yD + 108, 72);
@@ -1479,6 +1480,14 @@ export class Interfaz extends Phaser.Scene {
         this.aviso(`${nombreDe(cr, DATOS)} lleva ${obj.nombre}${antes ? `; ${antes} vuelve a la mochila` : ''}`);
         volver();
       });
+      return;
+    }
+    if (obj.tipo === 'clave' && obj.interruptor) {
+      const bandera = obj.interruptor.apagado;
+      if (p.banderas[bandera]) delete p.banderas[bandera];
+      else p.banderas[bandera] = true;
+      this.aviso(`${obj.nombre}: ${p.banderas[bandera] ? 'apagado' : 'encendido'}`);
+      volver();
       return;
     }
     if (!uso.fuera) {
@@ -1564,10 +1573,16 @@ export class Interfaz extends Phaser.Scene {
       return;
     }
     darObjeto(p, id, -1);
-    if (obj.tipo === 'curar' || obj.tipo === 'remedio' || obj.tipo === 'revivir') {
+    if (obj.tipo === 'curar' || obj.tipo === 'remedio' || obj.tipo === 'revivir' || obj.tipo === 'pp') {
       const recuperada = aplicarCuracion(obj, cr, DATOS);
       this.aviso(
-        obj.tipo === 'remedio' ? `${nombre} se ha curado` : obj.tipo === 'revivir' ? `${nombre} se reanima` : `${nombre} recupera ${recuperada} de Vida`,
+        obj.tipo === 'remedio'
+          ? `${nombre} se ha curado`
+          : obj.tipo === 'revivir'
+            ? `${nombre} se reanima`
+            : obj.tipo === 'pp'
+              ? `Los PP de ${nombre} se han recuperado`
+              : `${nombre} recupera ${recuperada} de Vida`,
       );
       return;
     }

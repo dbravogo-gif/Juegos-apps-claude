@@ -39,6 +39,7 @@ import {
 } from '../core/partida';
 import { abrirRecipiente, dibujarCartel, dibujarRecipiente, dibujarZona, ESCALA, imagenPieza, TAM_CASILLA } from '../ui/casillasVisual';
 import { registrarRecipiente, revisado } from '../core/recipientes';
+import { encendido } from '../core/objetos';
 import { MIMICO_MIN_BLASONES, OBJETOS_RECIPIENTE, PROB_RECIPIENTE, RECOMPENSA_MIMICO } from '../data/recipientes';
 import { CriaturaQuieta, Persona } from '../ui/personaVisual';
 import { guardarPartida, sesion } from '../ui/sesion';
@@ -826,6 +827,7 @@ export class Mundo extends Phaser.Scene {
           salvaje,
           nombreRival: def?.nombre ?? 'Salvaje',
           iaAstuta: op.iaAstuta,
+          repartir: encendido(p, 'repartir_exp', DATOS),
           ultimaTesera: p.ultimaTesera,
           alTerminar: (r: ResultadoHistoria) => {
             this.scene.stop('Combate');

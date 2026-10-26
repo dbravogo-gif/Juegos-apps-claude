@@ -420,7 +420,7 @@ const DEF = {
     ratioCaptura: 60,
     alada: true,
     aprende: LINEA_AGUILA,
-    evoluciona: { a: 'aguila_imperial', nivel: 30 },
+    evoluciona: { a: 'aguila_imperial', nivel: 30, objeto: 'piedra_solar' },
     descripcion: 'El águila imperial ibérica solo vive en la península. En los años setenta quedaban unas pocas decenas de parejas; hoy son varios cientos.',
   },
   aguila_imperial: {
@@ -456,7 +456,7 @@ const DEF = {
     expBase: 140,
     ratioCaptura: 90,
     aprende: [...LINEA_LOBO, [23, 'emboscada'], [28, 'noche_cerrada']],
-    evoluciona: { a: 'lobo_animas', nivel: 38 },
+    evoluciona: { a: 'lobo_animas', nivel: 38, objeto: 'piedra_lunar' },
     descripcion: 'El lobo ibérico caza sobre todo de noche y en grupo. Cada manada defiende su territorio con aullidos.',
   },
   lobo_animas: {
