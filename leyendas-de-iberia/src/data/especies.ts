@@ -20,6 +20,8 @@ interface DefEspecie {
   ratioCaptura: number;
   aprende: Aprende;
   evoluciona?: { a: string; nivel?: number; objeto?: string };
+  /** Porcentaje de machos (50 si no se dice), `hermafrodita` o `ninguno`. */
+  sexo?: number | 'hermafrodita' | 'ninguno';
   descripcion: string;
 }
 
@@ -58,6 +60,8 @@ const DEF = {
     base: [44, 62, 44, 46, 44, 66],
     expBase: 62,
     ratioCaptura: 45,
+    // Toros: siempre machos.
+    sexo: 100,
     aprende: LINEA_TORO,
     evoluciona: { a: 'novillo_embolado', nivel: 16 },
     descripcion: 'En las fiestas de muchos pueblos sale de noche un toro de fuego: un armazón con forma de toro, cargado de cohetes, que alguien lleva a hombros. Ignibue embiste igual, pero el fuego es suyo.',
@@ -69,6 +73,7 @@ const DEF = {
     base: [62, 85, 62, 60, 56, 80],
     expBase: 142,
     ratioCaptura: 45,
+    sexo: 100,
     aprende: [...LINEA_TORO, [18, 'terronazo']],
     evoluciona: { a: 'toro_de_fuego', nivel: 36 },
     descripcion: 'El basalto es lava que se enfrió deprisa. Es la roca de la que están hechas buena parte de las islas volcánicas, Canarias incluida.',
@@ -80,6 +85,7 @@ const DEF = {
     base: [85, 120, 85, 75, 70, 95],
     expBase: 263,
     ratioCaptura: 45,
+    sexo: 100,
     aprende: [...LINEA_TORO, [18, 'terronazo'], [38, 'colada']],
     descripcion: 'Diodoro de Sicilia cuenta que en el 228 a. C., en Helike, los oretanos lanzaron contra el ejército de Amílcar Barca carros de bueyes cargados de leña ardiendo.',
   },
@@ -125,6 +131,8 @@ const DEF = {
     base: [54, 44, 56, 62, 66, 48],
     expBase: 66,
     ratioCaptura: 45,
+    // El drago tiene flores con los dos sexos.
+    sexo: 'hermafrodita',
     aprende: LINEA_DRAGO,
     evoluciona: { a: 'drago_milenario', nivel: 26 },
     descripcion: 'El drago no forma anillos en el tronco: su edad solo se estima contando las veces que se ha ramificado. Su savia se vuelve roja al secarse, y se vendía como «sangre de drago».',
@@ -136,6 +144,7 @@ const DEF = {
     base: [100, 70, 100, 100, 105, 55],
     expBase: 263,
     ratioCaptura: 45,
+    sexo: 'hermafrodita',
     aprende: [...LINEA_DRAGO, [28, 'ira_ancestral'], [33, 'resina_roja']],
     descripcion: 'Al Drago Milenario de Icod de los Vinos se le llama milenario, pero un estudio de 1975 le calculó unos 250 años. Mide unos 21 metros.',
   },
@@ -220,6 +229,8 @@ const DEF = {
     base: [65, 45, 60, 85, 80, 45],
     expBase: 85,
     ratioCaptura: 120,
+    // Sus flores tienen los dos sexos.
+    sexo: 'hermafrodita',
     aprende: [[1, 'varazo'], [4, 'sopor'], [8, 'hojarasca'], [12, 'alarido'], [16, 'savia_de_dragon']],
     descripcion: 'Sus raíces son narcóticas, con efectos parecidos a los de la belladona. Desde la Antigüedad se cuenta que grita cuando la arrancan.',
   },
@@ -240,6 +251,8 @@ const DEF = {
     base: [85, 90, 95, 70, 85, 55],
     expBase: 180,
     ratioCaptura: 3,
+    // Una estatua de mármol.
+    sexo: 'ninguno',
     aprende: [[1, 'dentellada'], [1, 'bramido'], [1, 'rociada'], [8, 'terronazo'], [13, 'remanso'], [18, 'golpe_de_mar']],
     descripcion: 'Los doce leones de la fuente son de mármol de Macael. En el borde de la taza se tallaron versos de Ibn Zamrak, el poeta de la corte nazarí, que describen la fuente.',
   },
@@ -412,6 +425,8 @@ const DEF = {
     base: [100, 100, 130, 40, 90, 30],
     expBase: 180,
     ratioCaptura: 25,
+    // Una escultura de granito.
+    sexo: 'ninguno',
     aprende: [[1, 'topetazo'], [1, 'compactar'], [8, 'terronazo'], [14, 'cantazo'], [20, 'temblor'], [28, 'molienda']],
     descripcion: 'Los Toros de Guisando son cuatro verracos de granito de la Edad del Hierro, en El Tiemblo (Ávila). Junto a ellos se firmó en 1468 el pacto que hizo heredera a Isabel.',
   },
@@ -444,6 +459,8 @@ const DEF = {
     base: [120, 105, 115, 65, 95, 45],
     expBase: 220,
     ratioCaptura: 3,
+    // Una tinaja.
+    sexo: 'ninguno',
     aprende: [[1, 'tapazo'], [1, 'emboscada'], [1, 'mal_de_ojo'], [1, 'escondite']],
     descripcion: 'Se hace pasar por una tinaja cualquiera. Quien mete la mano se lleva un susto… y, si lo vence, tres turrones.',
   },
@@ -466,6 +483,7 @@ export const ESPECIES: Record<string, Especie> = Object.fromEntries(
       descripcion: d.descripcion,
     };
     if ('evoluciona' in d) especie.evoluciona = { ...d.evoluciona };
+    if ('sexo' in d) especie.sexo = d.sexo;
     return [id, especie];
   }),
 );

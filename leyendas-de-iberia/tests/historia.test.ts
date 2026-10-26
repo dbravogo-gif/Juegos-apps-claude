@@ -2,8 +2,9 @@ import { describe, expect, it } from 'vitest';
 import { DATOS } from '../src/data';
 import { ASPECTOS } from '../src/data/aspectos';
 import { RETRATOS } from '../src/data/retratos';
-import { CASILLAS, ENTRENADORES, INICIO, ZONAS } from '../src/data/mundo';
-import { enLineaDeVision, esSolida, validarZona, type Guion, type Paso } from '../src/core/mundo';
+import { CAPITULOS, CASILLAS, ENTRADAS, ENTRENADORES, INICIO, ZONAS } from '../src/data/mundo';
+import { aPixel, LUGARES, MAPA_ALTO, MAPA_ANCHO } from '../src/data/lugares';
+import { dondeSale, enLineaDeVision, esSolida, validarZona, type Guion, type Paso } from '../src/core/mundo';
 import {
   ajustarADatos,
   anadirCriatura,
@@ -18,7 +19,7 @@ import { ESPECIES_RETIRADAS } from '../src/data/especies';
 import { vidaMaxima } from '../src/core/estadisticas';
 import { ESPECIE_MIMICO, registrarRecipiente, revisado } from '../src/core/recipientes';
 import { MIMICO_MIN_BLASONES, OBJETOS_RECIPIENTE, PROB_RECIPIENTE, RECOMPENSA_MIMICO } from '../src/data/recipientes';
-import { crearCriatura } from '../src/core/criatura';
+import { crearCriatura, sexoPara } from '../src/core/criatura';
 import { crearRng } from '../src/core/rng';
 
 function pasosDe(guion: Guion): Paso[] {
@@ -311,5 +312,104 @@ describe('guardado', () => {
     expect(deserializar('no es json')).toBeNull();
     expect(deserializar('{"version":1}')).toBeNull();
     expect(deserializar('{"version":99,"nombre":"x"}')).toBeNull();
+  });
+});
+
+describe('mapa de la península', () => {
+  it('cada zona está en un lugar o un camino del mapa, y cada lugar se usa', () => {
+    const usados = new Set<string>();
+    for (const z of Object.values(ZONAS)) {
+      expect(z.enMapa, z.id).toBeDefined();
+      const lugares = 'lugar' in z.enMapa! ? [z.enMapa.lugar] : z.enMapa!.ruta;
+      for (const l of lugares) {
+        expect(LUGARES[l], `${z.id}: ${l}`).toBeDefined();
+        usados.add(l);
+      }
+    }
+    expect([...usados].sort()).toEqual(Object.keys(LUGARES).sort());
+  });
+
+  it('los lugares caen dentro del mapa', () => {
+    for (const [id, l] of Object.entries(LUGARES)) {
+      const p = aPixel(l.lat, l.lon);
+      expect(p.x, id).toBeGreaterThanOrEqual(0);
+      expect(p.x, id).toBeLessThan(MAPA_ANCHO);
+      expect(p.y, id).toBeGreaterThanOrEqual(0);
+      expect(p.y, id).toBeLessThan(MAPA_ALTO);
+    }
+    // Las Palmas de Gran Canaria va al recuadro de Canarias, abajo a la izquierda.
+    const lasPalmas = aPixel(28.1, -15.43);
+    expect(lasPalmas.x).toBeLessThan(60);
+    expect(lasPalmas.y).toBeGreaterThan(MAPA_ALTO - 30);
+  });
+
+  it('dice dónde sale cada especie, con sus niveles y su frecuencia', () => {
+    const lagarto = dondeSale(ZONAS, 'lagarto');
+    expect(lagarto.map((d) => d.zona)).toEqual(['villalar', 'camino_toledo']);
+    expect(lagarto[0]).toMatchObject({ min: 7, max: 9 });
+    expect(dondeSale(ZONAS, 'becerro_igneo')).toEqual([]);
+    for (const z of Object.values(ZONAS)) {
+      if (!z.encuentros) continue;
+      const suma = z.encuentros.especies.reduce((s, e) => s + (dondeSale({ [z.id]: z }, e.especie)[0]?.porcentaje ?? 0), 0);
+      expect(Math.abs(suma - 100), z.id).toBeLessThanOrEqual(z.encuentros.especies.length);
+    }
+  });
+});
+
+describe('modo desarrollador', () => {
+  it('se puede viajar a todas las zonas, y se llega a una casilla transitable', () => {
+    for (const id of Object.keys(ZONAS)) {
+      const e = ENTRADAS[id];
+      expect(e, id).toBeDefined();
+      expect(esSolida(ZONAS[id], e.x, e.y, CASILLAS), id).toBe(false);
+    }
+    expect(CAPITULOS.flatMap((k) => k.zonas).sort()).toEqual(Object.keys(ZONAS).sort());
+  });
+
+  it('su partida se guarda con la marca y se recupera igual', () => {
+    const p = nuevaPartida('Pruebas', 1, INICIO);
+    p.dev = true;
+    p.banderas['dev:sin_encuentros'] = true;
+    const q = deserializar(serializar(p))!;
+    expect(q.dev).toBe(true);
+    expect(q.banderas['dev:sin_encuentros']).toBe(true);
+  });
+});
+
+describe('sexo', () => {
+  it('los toros son machos, las plantas hermafroditas y las estatuas no tienen sexo', () => {
+    const rng = crearRng('sexo');
+    for (let i = 0; i < 20; i++) {
+      expect(crearCriatura(DATOS, 'becerro_igneo', 5, rng).sexo).toBe('macho');
+      expect(crearCriatura(DATOS, 'retono_drago', 5, rng).sexo).toBe('hermafrodita');
+      expect(crearCriatura(DATOS, 'mandragora', 5, rng).sexo).toBe('hermafrodita');
+      expect(crearCriatura(DATOS, 'leon_fuente', 5, rng).sexo).toBe('ninguno');
+    }
+  });
+
+  it('las demás especies salen más o menos mitad machos y mitad hembras', () => {
+    const rng = crearRng('mitad');
+    let machos = 0;
+    for (let i = 0; i < 1000; i++) if (crearCriatura(DATOS, 'lobo', 5, rng).sexo === 'macho') machos++;
+    expect(machos).toBeGreaterThan(420);
+    expect(machos).toBeLessThan(580);
+  });
+
+  it('no gasta números del generador: lo que sale después no cambia', () => {
+    const a = crearRng('igual');
+    const b = crearRng('igual');
+    crearCriatura(DATOS, 'lobo', 5, a);
+    crearCriatura(DATOS, 'lobo', 5, b);
+    expect(a).toEqual(b);
+  });
+
+  it('las criaturas de partidas antiguas reciben su sexo al cargarse, siempre el mismo', () => {
+    const p = nuevaPartida('Antigua', 3, INICIO);
+    const c = crearCriatura(DATOS, 'lobo', 5, crearRng(4));
+    delete c.sexo;
+    p.equipo.push(c);
+    const q = deserializar(serializar(p))!;
+    ajustarADatos(q, DATOS, ESPECIES_RETIRADAS);
+    expect(q.equipo[0].sexo).toBe(sexoPara(DATOS, 'lobo', c.uid));
   });
 });

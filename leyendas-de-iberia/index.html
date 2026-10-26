@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
     <!-- Juego privado entre amigos: que no salga en buscadores. -->
     <meta name="robots" content="noindex, nofollow" />
-    <meta name="theme-color" content="#151a3d" />
+    <meta name="theme-color" content="#000000" />
     <link rel="icon" href="./icon.svg" type="image/svg+xml" />
     <link rel="manifest" href="./manifest.webmanifest" />
     <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
@@ -18,16 +18,24 @@
       html, body {
         margin: 0;
         height: 100%;
-        background: #151a3d;
+        background: #000;
         overflow: hidden;
         overscroll-behavior: none;
         touch-action: none;
         -webkit-user-select: none;
         user-select: none;
       }
+      /*
+       * Arriba, una franja negra para la barra de estado, la isla o la muesca del móvil: lo que
+       * ocupe el sistema y, como mínimo, un 5 % del alto. Abajo, lo justo para la barra de
+       * inicio del iPhone. Es como colocan la pantalla los emuladores de GBA y DS.
+       */
       #juego {
-        width: 100vw;
-        height: 100dvh;
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: max(env(safe-area-inset-top, 0px), 5vh);
+        bottom: env(safe-area-inset-bottom, 0px);
       }
     </style>
   </head>

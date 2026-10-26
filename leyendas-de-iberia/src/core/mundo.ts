@@ -130,6 +130,39 @@ export interface Zona {
   recipientes?: { id: string; x: number; y: number; objeto?: string }[];
   /** Guion que se ejecuta la primera vez que se entra (usa la bandera `visto:<id>`). */
   alEntrar?: Guion;
+  /**
+   * Dónde se dibuja en el mapa de la península (`src/data/lugares.ts`): en un lugar o, si es un
+   * camino, entre dos.
+   */
+  enMapa?: { lugar: string } | { ruta: [string, string] };
+}
+
+/** Una zona donde sale una especie, con sus niveles y la probabilidad de cada encuentro. */
+export interface ZonaDeEspecie {
+  zona: string;
+  min: number;
+  max: number;
+  /** Porcentaje de los encuentros de la zona que son de esta especie. */
+  porcentaje: number;
+}
+
+/** Las zonas donde se encuentra una especie en libertad, en el orden de `zonas`. */
+export function dondeSale(zonas: Record<string, Zona>, especie: string): ZonaDeEspecie[] {
+  const lista: ZonaDeEspecie[] = [];
+  for (const z of Object.values(zonas)) {
+    const tabla = z.encuentros;
+    if (!tabla) continue;
+    const total = tabla.especies.reduce((s, e) => s + e.peso, 0);
+    const propias = tabla.especies.filter((e) => e.especie === especie);
+    if (propias.length === 0 || total <= 0) continue;
+    lista.push({
+      zona: z.id,
+      min: Math.min(...propias.map((e) => e.min)),
+      max: Math.max(...propias.map((e) => e.max)),
+      porcentaje: Math.max(1, Math.round((propias.reduce((s, e) => s + e.peso, 0) / total) * 100)),
+    });
+  }
+  return lista;
 }
 
 export function ancho(z: Zona): number {
@@ -207,4 +240,21 @@ export function validarZona(
     if (p.entrenador && !entrenadores[p.entrenador]) errores.push(`${z.id}: ${p.id} usa un entrenador que no existe`);
   }
   return errores;
+}
+
+/**
+ * Una casilla por la que se entra en cada zona: la llegada de la primera salida que lleva a ella.
+ * La usa el modo desarrollador para viajar a cualquier zona. `extra` son entradas que no salen
+ * de ninguna salida (el principio de cada capítulo).
+ */
+export function entradasDeZonas(
+  zonas: Record<string, Zona>,
+  extra: { zona: string; x: number; y: number; dir: Dir }[] = [],
+): Record<string, { zona: string; x: number; y: number; dir: Dir }> {
+  const entradas: Record<string, { zona: string; x: number; y: number; dir: Dir }> = {};
+  for (const e of extra) entradas[e.zona] ??= { ...e };
+  for (const z of Object.values(zonas)) {
+    for (const s of z.salidas) entradas[s.zona] ??= { zona: s.zona, x: s.ax, y: s.ay, dir: s.dir };
+  }
+  return entradas;
 }

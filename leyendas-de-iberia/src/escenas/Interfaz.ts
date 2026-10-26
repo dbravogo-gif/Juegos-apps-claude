@@ -1,17 +1,20 @@
 import Phaser from 'phaser';
 import type { Dir } from '../core/mundo';
-import type { Partida } from '../core/partida';
-import { darObjeto, marcarCapturado, MAX_EQUIPO } from '../core/partida';
+import type { Partida, Posicion } from '../core/partida';
+import { anadirCriatura, curarEquipo, darObjeto, marcarCapturado, marcarVisto, MAX_EQUIPO } from '../core/partida';
+import { crearCriatura, nombreDe, sexoDe } from '../core/criatura';
+import { CAPITULOS, ENTRADAS, ZONAS } from '../data/mundo';
+import { dondeSale } from '../core/mundo';
+import { escalaMapa, MAPA_ALTO, MAPA_ANCHO, mapaZonas } from '../ui/mapaVisual';
 import { aplicarCuracion, equipar, motivoNoUsable, quitarObjeto, seAplicaACriatura, usoDe } from '../core/objetos';
 import { calcularEstadisticas } from '../core/estadisticas';
-import { nombreDe } from '../core/criatura';
 import { aprenderMovimiento, destinoConObjeto, evolucionar, evolucionPendiente, expParaNivel, subirNivel } from '../core/progreso';
 import type { CategoriaObjeto, Criatura, Movimiento } from '../core/modelo';
 import { NOMBRE_ESTADISTICA, type EstadisticaCombate } from '../core/modelo';
 import { DATOS } from '../data';
 import { INICIALES } from '../data/especies';
 import { CATEGORIAS } from '../data/objetos';
-import { Barra, Boton, botonFlecha, filaTipos } from '../ui/componentes';
+import { Barra, Boton, botonFlecha, filaTipos, NOMBRE_SEXO, simboloSexo } from '../ui/componentes';
 import { crearCriaturaVisual } from '../ui/criaturaVisual';
 import { conArticulo, describirMovimiento } from '../ui/textos';
 import { iconoObjeto, iconoUI, type IconoUI } from '../ui/objetoVisual';
@@ -23,7 +26,7 @@ import { aclarar, ALTO, ANCHO, COLOR, estiloTexto, oscurecer, textoSobre } from 
 import { cabecera, colorPedestal, colorTipoDe, fondoMenu, franja, pildora, ventana } from '../ui/ventanas';
 
 /** Alto del mando, abajo del todo. El mapa ocupa el resto. */
-const ALTO_MANDO = 680;
+const ALTO_MANDO = 600;
 
 // Capa de interfaz del modo historia, por encima del mapa: mando táctil, teclado, diálogos,
 // elecciones y menús. El mapa le pregunta por la dirección pulsada y escucha los eventos «a» y
@@ -33,9 +36,13 @@ const ALTO_MANDO = 680;
 export const ALTO_MAPA = ALTO - ALTO_MANDO;
 export const MONEDA = 'maravedís';
 
-const CRUCETA = { x: 250, y: ALTO_MAPA + 320, radio: 200 };
-const BOTON_A = { x: 880, y: ALTO_MAPA + 250, radio: 100 };
-const BOTON_B = { x: 690, y: ALTO_MAPA + 400, radio: 82 };
+// El mando va pegado abajo, al alcance del pulgar, como en los emuladores de GBA y DS (los
+// skins de Delta): la cruceta a la izquierda, A y B en diagonal a la derecha y Menú abajo en
+// el centro, donde va Start.
+const CRUCETA = { x: 250, y: ALTO - 300, radio: 190 };
+const BOTON_A = { x: 900, y: ALTO - 360, radio: 100 };
+const BOTON_B = { x: 720, y: ALTO - 220, radio: 84 };
+const BOTON_MENU = { x: ANCHO / 2, y: ALTO - 58 };
 const TECLAS_DIR: Record<string, Dir> = {
   arrowup: 'arriba',
   w: 'arriba',
@@ -116,8 +123,8 @@ export class Interfaz extends Phaser.Scene {
     // Cruceta: una sola zona circular; la dirección sale del ángulo del dedo.
     const { x, y, radio } = CRUCETA;
     this.add.circle(x, y, radio, 0x1f2550).setStrokeStyle(6, 0x2c3470);
-    const brazo = 120;
-    const grosor = 120;
+    const brazo = 116;
+    const grosor = 116;
     this.add.rectangle(x, y, grosor, brazo * 2 + grosor, 0x343d80).setRounded(26);
     this.add.rectangle(x, y, brazo * 2 + grosor, grosor, 0x343d80).setRounded(26);
     const puntas: Record<Dir, [number, number]> = {
@@ -157,7 +164,7 @@ export class Interfaz extends Phaser.Scene {
 
     this.botonRedondo(BOTON_A.x, BOTON_A.y, BOTON_A.radio, COLOR.rojo, 'A', 'Hablar', () => this.pulsarA());
     this.botonRedondo(BOTON_B.x, BOTON_B.y, BOTON_B.radio, COLOR.azul, 'B', 'Volver', () => this.pulsarB());
-    new Boton(this, 880, ALTO_MAPA + 570, { ancho: 260, alto: 100, texto: 'Menú', tamano: 38, alPulsar: () => this.pulsarMenu() });
+    new Boton(this, BOTON_MENU.x, BOTON_MENU.y, { ancho: 240, alto: 80, texto: 'Menú', tamano: 34, alPulsar: () => this.pulsarMenu() });
   }
 
   private dibujarFlecha(g: Phaser.GameObjects.Graphics, x: number, y: number, dir: Dir, activa: boolean): void {
@@ -178,7 +185,7 @@ export class Interfaz extends Phaser.Scene {
     if (dir === this.dirTactil) return;
     const anterior = this.dirTactil;
     this.dirTactil = dir;
-    const brazo = 120;
+    const brazo = 116;
     const pos: Record<Dir, [number, number]> = { arriba: [0, -brazo], abajo: [0, brazo], izquierda: [-brazo, 0], derecha: [brazo, 0] };
     for (const d of [anterior, dir]) {
       if (!d) continue;
@@ -510,7 +517,7 @@ export class Interfaz extends Phaser.Scene {
    * iconos a la derecha y, arriba, tu tarjeta. Devuelve `'ovillo'` si se ha usado una Cuerda
    * huida, para que el mapa lleve al jugador al mesón.
    */
-  menu(p: Partida, op: { ovilloPermitido: boolean } = { ovilloPermitido: false }): Promise<'ovillo' | undefined> {
+  menu(p: Partida, op: { ovilloPermitido: boolean } = { ovilloPermitido: false }): Promise<'ovillo' | { viajar: Posicion } | undefined> {
     this.ovilloPermitido = op.ovilloPermitido;
     return new Promise((resolve) => {
       this.alUsarOvillo = () => {
@@ -554,6 +561,17 @@ export class Interfaz extends Phaser.Scene {
           },
           { texto: 'Cerrar', icono: 'cerrar', color: COLOR.tintaSuave, ayuda: 'Vuelve al camino.', activo: true, accion: () => this.alAtras?.() },
         ];
+        if (p.dev) {
+          const viajar = (pos: Posicion) => resolve({ viajar: pos });
+          opciones.splice(opciones.length - 1, 0, {
+            texto: 'Desarrollador',
+            icono: 'opciones',
+            color: COLOR.morado,
+            ayuda: 'Objetos, criaturas, viajes y más, para probar el juego.',
+            activo: true,
+            accion: () => this.pantallaDesarrollador(p, volverA(1, opciones.length - 2), viajar),
+          });
+        }
         const y0 = 186;
         const paso = 128;
         const alto = 112;
@@ -895,7 +913,9 @@ export class Interfaz extends Phaser.Scene {
     else this.tweens.add({ targets: figura, y: figura.y - 8, duration: 800, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     c.add(figura);
     const tx = 336;
-    c.add(this.add.text(tx, 196, nombreDe(cr, DATOS), estiloTexto(46, COLOR.tinta, true)).setOrigin(0, 0.5));
+    const sexo = sexoDe(cr, DATOS);
+    const nombre = this.add.text(tx, 196, nombreDe(cr, DATOS), estiloTexto(46, COLOR.tinta, true)).setOrigin(0, 0.5);
+    c.add([nombre, simboloSexo(this, tx + nombre.width + 34, 196, sexo, 42)]);
     c.add(pildora(this, tx, 252, `Nv ${cr.nivel}`, COLOR.tinta, 24));
     c.add(pildora(this, tx + 116, 252, `Nº ${String(e.numero).padStart(3, '0')}`, COLOR.panelSuave, 22, COLOR.tintaSuave));
     if (cr.vida <= 0) c.add(pildora(this, tx + 250, 252, 'Debilitada', COLOR.rojo, 22));
@@ -928,23 +948,8 @@ export class Interfaz extends Phaser.Scene {
       c.add(this.add.text(tx, 380, 'No lleva nada', estiloTexto(28, COLOR.tintaSuave)).setOrigin(0, 0.5));
     }
 
-    // Pestañas en un control segmentado.
-    const pestanas = ['Datos', 'Estadísticas', 'Movimientos'];
-    const yP = 468;
-    const anchoP = (ANCHO - 48 - 16) / 3;
-    c.add(ventana(this, 24, yP, ANCHO - 48, 92, { radio: 46 }));
-    pestanas.forEach((nombre, k) => {
-      const x = 32 + k * anchoP;
-      if (k === pestana) {
-        const g = this.add.graphics();
-        g.fillStyle(COLOR.tinta, 1).fillRoundedRect(x, yP + 8, anchoP, 76, 38);
-        c.add(g);
-      }
-      c.add(this.add.text(x + anchoP / 2, yP + 46, nombre, estiloTexto(30, k === pestana ? COLOR.panel : COLOR.tintaSuave, true)).setOrigin(0.5));
-      const zona = this.add.rectangle(x + anchoP / 2, yP + 46, anchoP, 92, 0xffffff, 0.001).setInteractive({ useHandCursor: true });
-      zona.on('pointerup', () => ir(i, k));
-      c.add(zona);
-    });
+    const pestanas = ['Datos', 'Estadísticas', 'Movimientos', 'Zona'];
+    this.pestanas(c, pestanas, pestana, 468, (k) => ir(i, k));
 
     const yC = 584;
     const altoC = ALTO_MAPA - 170 - yC;
@@ -960,6 +965,7 @@ export class Interfaz extends Phaser.Scene {
         : '';
       const filas: [string, string][] = [
         ['Especie', e.nombre],
+        ['Sexo', NOMBRE_SEXO[sexo]],
         ['Temperamento', temperamento],
         ['Valía', `${cr.valia} de 14`],
       ];
@@ -968,7 +974,7 @@ export class Interfaz extends Phaser.Scene {
         c.add(this.add.text(64, y, etiqueta, estiloTexto(26, COLOR.tintaSuave, true)).setOrigin(0, 0.5));
         c.add(this.add.text(300, y, valor, { ...estiloTexto(30, COLOR.tinta, true), wordWrap: { width: ANCHO - 360 } }).setOrigin(0, 0.5));
       });
-      const yExp = yC + 52 + 3 * 60;
+      const yExp = yC + 52 + filas.length * 60;
       c.add(this.add.text(64, yExp, 'Experiencia', estiloTexto(26, COLOR.tintaSuave, true)).setOrigin(0, 0.5));
       const barra = new Barra(this, 300, yExp, ANCHO - 380, 22, false);
       void barra.setFraccion((cr.exp - desde) / Math.max(1, hasta - desde), false);
@@ -981,6 +987,8 @@ export class Interfaz extends Phaser.Scene {
       linea.lineStyle(3, COLOR.borde, 1).lineBetween(64, yTexto, ANCHO - 64, yTexto);
       c.add(linea);
       c.add(this.add.text(64, yTexto + 22, e.descripcion, { ...estiloTexto(28, COLOR.tintaSuave), wordWrap: { width: ANCHO - 128 }, lineSpacing: 6 }));
+    } else if (pestana === 3) {
+      this.zonaDeCaptura(c, cr.especie, yC, yC + altoC);
     } else if (pestana === 1) {
       // Estadísticas, con barras del color de su tipo. ▲ y ▼: lo que sube y baja su temperamento.
       const orden: (keyof typeof stats)[] = ['vida', 'fuerza', 'escudo', 'magia', 'resMagica', 'celeridad'];
@@ -1111,23 +1119,30 @@ export class Interfaz extends Phaser.Scene {
     };
   }
 
-  private pantallaEspecie(p: Partida, id: string, volver: () => void): void {
+  private pantallaEspecie(p: Partida, id: string, volver: () => void, pestana = 0): void {
     const e = DATOS.especies[id];
     const color = colorTipoDe(id);
     const c = this.abrirCapa(e.nombre, { icono: 'bestiario', color });
-    c.add(ventana(this, 24, 140, ANCHO - 48, ALTO_MAPA - 140 - 170, { radio: 36 }));
+    this.pestanas(c, ['Datos', 'Zona de captura'], pestana, 140, (k) => this.pantallaEspecie(p, id, volver, k));
+    this.nav = { mover: (dir) => (dir === 'izquierda' || dir === 'derecha' ? this.pantallaEspecie(p, id, volver, 1 - pestana) : undefined), aceptar: () => undefined };
+    c.add(ventana(this, 24, 248, ANCHO - 48, ALTO_MAPA - 248 - 170, { radio: 36 }));
+    c.add(pildora(this, 56, 284, `Nº ${String(e.numero).padStart(3, '0')}`, COLOR.tinta, 24));
+    if (pestana === 1) {
+      this.zonaDeCaptura(c, id, 330, ALTO_MAPA - 170);
+      this.botonVolver(c, volver);
+      return;
+    }
     const circulo = this.add.graphics();
-    circulo.fillStyle(aclarar(color, 0.55), 1).fillCircle(ANCHO / 2, 360, 180);
-    circulo.fillStyle(0xffffff, 0.35).fillCircle(ANCHO / 2, 360, 140);
+    circulo.fillStyle(aclarar(color, 0.55), 1).fillCircle(ANCHO / 2, 420, 150);
+    circulo.fillStyle(0xffffff, 0.35).fillCircle(ANCHO / 2, 420, 116);
     c.add(circulo);
-    c.add(crearCriaturaVisual(this, id, ANCHO / 2, 350, 330));
-    c.add(pildora(this, 56, 176, `Nº ${String(e.numero).padStart(3, '0')}`, COLOR.tinta, 24));
+    c.add(crearCriaturaVisual(this, id, ANCHO / 2, 412, 280));
     const tipos = this.add.container(0, 0);
-    const anchoTipos = filaTipos(this, tipos, 0, 580, e.tipos, 30);
+    const anchoTipos = filaTipos(this, tipos, 0, 600, e.tipos, 30);
     tipos.x = ANCHO / 2 - anchoTipos / 2;
     c.add(tipos);
     const texto = p.capturados.includes(id) ? e.descripcion : 'Sella un pacto con esta criatura para saber más de ella.';
-    c.add(this.add.text(ANCHO / 2, 640, texto, { ...estiloTexto(30, COLOR.tinta), align: 'center', wordWrap: { width: ANCHO - 160 }, lineSpacing: 6 }).setOrigin(0.5, 0));
+    c.add(this.add.text(ANCHO / 2, 650, texto, { ...estiloTexto(30, COLOR.tinta), align: 'center', wordWrap: { width: ANCHO - 160 }, lineSpacing: 6 }).setOrigin(0.5, 0));
     // Debilidades y resistencias, en píldoras del color de cada tipo.
     const d = debilidades(DATOS.tipos, e.tipos);
     const def = (t: string) => DATOS.tipos.tipos.find((x) => x.id === t);
@@ -1136,7 +1151,7 @@ export class Interfaz extends Phaser.Scene {
       ['Resiste', (m) => m > 0 && m < 1],
       ['Inmune a', (m) => m === 0],
     ];
-    let y = 830;
+    let y = 840;
     for (const [etiqueta, f] of grupos) {
       const lista = d.filter((x) => f(x.multiplicador));
       if (lista.length === 0) continue;
@@ -1167,6 +1182,59 @@ export class Interfaz extends Phaser.Scene {
       }),
     );
     this.botonVolver(c, volver, 290);
+  }
+
+  /** Control segmentado de pestañas, con la elegida en azul noche. */
+  private pestanas(c: Phaser.GameObjects.Container, nombres: string[], actual: number, y: number, alElegir: (k: number) => void): void {
+    const ancho = (ANCHO - 48 - 16) / nombres.length;
+    c.add(ventana(this, 24, y, ANCHO - 48, 92, { radio: 46 }));
+    nombres.forEach((nombre, k) => {
+      const x = 32 + k * ancho;
+      if (k === actual) {
+        const g = this.add.graphics();
+        g.fillStyle(COLOR.tinta, 1).fillRoundedRect(x, y + 8, ancho, 76, 38);
+        c.add(g);
+      }
+      c.add(this.add.text(x + ancho / 2, y + 46, nombre, estiloTexto(30, k === actual ? COLOR.panel : COLOR.tintaSuave, true)).setOrigin(0.5));
+      const zona = this.add.rectangle(x + ancho / 2, y + 46, ancho, 92, 0xffffff, 0.001).setInteractive({ useHandCursor: true });
+      zona.on('pointerup', () => alElegir(k));
+      c.add(zona);
+    });
+  }
+
+  /**
+   * Zona de captura, entre `y` y `yFin`: el mapa de la península con las zonas donde sale la
+   * especie y, debajo, cada zona con sus niveles y lo a menudo que sale.
+   */
+  private zonaDeCaptura(c: Phaser.GameObjects.Container, especie: string, y: number, yFin: number): void {
+    const donde = dondeSale(ZONAS, especie);
+    const filas = Math.min(donde.length, 5);
+    const altoFila = 54;
+    const altoLista = Math.max(1, filas) * altoFila + 30;
+    const escala = escalaMapa(ANCHO - 112, yFin - y - altoLista - 40);
+    const anchoMapa = MAPA_ANCHO * escala;
+    c.add(mapaZonas(this, (ANCHO - anchoMapa) / 2, y + 24, escala, donde.map((d) => d.zona)));
+    let yl = y + 24 + MAPA_ALTO * escala + 30 + altoFila / 2;
+    if (donde.length === 0) {
+      const origen = Object.values(DATOS.especies).find((e) => e.evoluciona?.a === especie);
+      const texto = origen
+        ? `No vive en libertad: se consigue haciendo evolucionar a ${origen.nombre}.`
+        : INICIALES.includes(especie as (typeof INICIALES)[number])
+          ? 'No vive en libertad: es una de las compañeras que entrega Isabel la Católica.'
+          : 'Todavía no se ha visto en libertad en ninguna zona.';
+      c.add(this.add.text(ANCHO / 2, yl, texto, { ...estiloTexto(28, COLOR.tintaSuave, true), align: 'center', wordWrap: { width: ANCHO - 160 } }).setOrigin(0.5, 0.5));
+      return;
+    }
+    for (const d of donde.slice(0, filas)) {
+      const punto = this.add.graphics();
+      punto.fillStyle(COLOR.rojo, 1).fillCircle(76, yl, 10);
+      c.add(punto);
+      c.add(this.add.text(100, yl, ZONAS[d.zona].nombre, estiloTexto(30, COLOR.tinta, true)).setOrigin(0, 0.5));
+      const niveles = d.min === d.max ? `Nv ${d.min}` : `Nv ${d.min}–${d.max}`;
+      c.add(this.add.text(ANCHO - 72, yl, `${niveles} · ${d.porcentaje} %`, estiloTexto(26, COLOR.tintaSuave, true)).setOrigin(1, 0.5));
+      yl += altoFila;
+    }
+    if (donde.length > filas) c.add(this.add.text(100, yl, `y ${donde.length - filas} zonas más`, estiloTexto(24, COLOR.tintaSuave)).setOrigin(0, 0.5));
   }
 
   private pantallaTipos(volver: () => void, tipo?: string): void {
@@ -1422,6 +1490,242 @@ export class Interfaz extends Phaser.Scene {
       c.add(new Boton(this, ANCHO / 2, 830, { ancho: 520, alto: 112, texto: 'No aprenderlo', tamano: 36, color: COLOR.rojo, alPulsar: () => resolve(-1) }));
       this.alAtras = () => resolve(-1);
     });
+  }
+
+  // ---------- Modo desarrollador ----------
+
+  /**
+   * Herramientas para probar el juego sin jugarlo entero. Solo salen en la partida del modo
+   * desarrollador (`p.dev`). `viajar` cierra el menú y lleva al jugador a otra zona.
+   */
+  private pantallaDesarrollador(p: Partida, volver: () => void, viajar: (pos: Posicion) => void, sel = 0): void {
+    const c = this.abrirCapa('Desarrollador', { icono: 'opciones', color: COLOR.morado });
+    const volverAqui = (k: number) => () => this.pantallaDesarrollador(p, volver, viajar, k);
+    const sinEncuentros = Boolean(p.banderas['dev:sin_encuentros']);
+    const opciones: { texto: string; ayuda: string; icono: IconoUI; accion: () => void }[] = [
+      { texto: 'Dar objetos', ayuda: 'Cualquier objeto, en la cantidad que quieras.', icono: 'mochila', accion: () => this.pantallaDevObjetos(p, volverAqui(0)) },
+      { texto: 'Dar criaturas', ayuda: 'Cualquier especie, al nivel que quieras.', icono: 'bestiario', accion: () => this.pantallaDevCriaturas(p, volverAqui(1)) },
+      { texto: 'Viajar', ayuda: 'A cualquier zona de cualquier capítulo.', icono: 'mapa', accion: () => this.pantallaDevViajar(p, volverAqui(2), viajar) },
+      {
+        texto: 'Curar el equipo',
+        ayuda: 'Vida, estados y usos de los movimientos, como en un mesón.',
+        icono: 'equipo',
+        accion: () => {
+          curarEquipo(p, DATOS);
+          this.aviso('Equipo curado');
+        },
+      },
+      {
+        texto: '+10 000 maravedís',
+        ayuda: `Tienes ${p.dinero} ${MONEDA}.`,
+        icono: 'dinero',
+        accion: () => {
+          p.dinero += 10000;
+          this.aviso(`Ahora tienes ${p.dinero} ${MONEDA}`);
+          volverAqui(4)();
+        },
+      },
+      {
+        texto: sinEncuentros ? 'Encuentros: no' : 'Encuentros: sí',
+        ayuda: 'Quita o devuelve los combates con criaturas salvajes en la hierba alta.',
+        icono: 'huir',
+        accion: () => {
+          p.banderas['dev:sin_encuentros'] = !sinEncuentros;
+          volverAqui(5)();
+        },
+      },
+      {
+        texto: 'Ver todo el Bestiario',
+        ayuda: 'Marca todas las especies como vistas, para mirar sus fichas y zonas.',
+        icono: 'bestiario',
+        accion: () => {
+          for (const id of Object.keys(DATOS.especies)) marcarVisto(p, id);
+          this.aviso('Bestiario visto entero');
+        },
+      },
+    ];
+    const y0 = 160;
+    const paso = 124;
+    const alto = 108;
+    const marcas = opciones.map((o, i) => {
+      const y = y0 + i * paso;
+      const marca = franja(this, 32, y - 8, ANCHO - 64, alto + 16);
+      c.add(marca);
+      c.add(ventana(this, 40, y, ANCHO - 80, alto, { radio: alto / 2 }));
+      const circulo = this.add.graphics();
+      circulo.fillStyle(COLOR.morado, 1).fillCircle(100, y + alto / 2, 42);
+      c.add(circulo);
+      c.add(iconoUI(this, o.icono, 100, y + alto / 2, 70));
+      c.add(this.add.text(166, y + alto / 2, o.texto, estiloTexto(38, COLOR.tinta, true)).setOrigin(0, 0.5));
+      const zona = this.add.rectangle(ANCHO / 2, y + alto / 2, ANCHO - 80, alto, 0xffffff, 0.001).setInteractive({ useHandCursor: true });
+      zona.on('pointerup', () => elegir(i));
+      c.add(zona);
+      return marca;
+    });
+    const ayuda = this.barraAyuda(c, '', 600);
+    let actual = sel;
+    const marcar = (i: number) => {
+      actual = i;
+      marcas.forEach((m, k) => m.setVisible(k === i));
+      ayuda.setText(opciones[i].ayuda);
+    };
+    const elegir = (i: number) => {
+      marcar(i);
+      opciones[i].accion();
+    };
+    marcar(Math.min(sel, opciones.length - 1));
+    c.add(new Boton(this, ANCHO - 190, ALTO_MAPA - 77, { ancho: 300, alto: 112, texto: 'Volver', tamano: 36, icono: { ui: 'cerrar', tam: 52 }, alPulsar: volver }));
+    this.alAtras = volver;
+    this.nav = {
+      mover: (dir) => {
+        if (dir === 'arriba' || dir === 'abajo') marcar((actual + (dir === 'arriba' ? -1 : 1) + opciones.length) % opciones.length);
+      },
+      aceptar: () => elegir(actual),
+    };
+  }
+
+  /** Todos los objetos en una cuadrícula: cada toque da la cantidad elegida arriba. */
+  private pantallaDevObjetos(p: Partida, volver: () => void, pagina = 0, cantidad = 1): void {
+    const c = this.abrirCapa('Dar objetos', { icono: 'mochila', color: COLOR.bronce });
+    const orden = CATEGORIAS.map((k) => k.id);
+    const todos = Object.values(DATOS.objetos).sort((a, b) => orden.indexOf(a.categoria) - orden.indexOf(b.categoria) || a.nombre.localeCompare(b.nombre, 'es'));
+    const porPagina = 18;
+    const paginas = Math.ceil(todos.length / porPagina);
+    const ir = (k: number, n = cantidad) => this.pantallaDevObjetos(p, volver, Math.max(0, Math.min(paginas - 1, k)), n);
+    [1, 10, 99].forEach((n, k) => {
+      c.add(new Boton(this, ANCHO - 396 + k * 126, 66, { ancho: 114, alto: 76, texto: `×${n}`, tamano: 30, color: n === cantidad ? COLOR.morado : COLOR.panel, alPulsar: () => ir(pagina, n) }));
+    });
+    const columnas = 3;
+    const ancho = 328;
+    const alto = 150;
+    todos.slice(pagina * porPagina, (pagina + 1) * porPagina).forEach((o, i) => {
+      const x = 24 + (i % columnas) * (ancho + 12);
+      const y = 140 + Math.floor(i / columnas) * (alto + 12);
+      c.add(ventana(this, x, y, ancho, alto, { radio: 26 }));
+      c.add(iconoObjeto(this, x + 64, y + alto / 2, o.id, 84));
+      c.add(this.add.text(x + 120, y + 52, o.nombre, { ...estiloTexto(26, COLOR.tinta, true), wordWrap: { width: ancho - 132 } }).setOrigin(0, 0.5));
+      c.add(this.add.text(x + 120, y + 112, `Tienes ${p.objetos[o.id] ?? 0}`, estiloTexto(22, COLOR.tintaSuave, true)).setOrigin(0, 0.5));
+      const zona = this.add.rectangle(x + ancho / 2, y + alto / 2, ancho, alto, 0xffffff, 0.001).setInteractive({ useHandCursor: true });
+      zona.on('pointerup', () => {
+        darObjeto(p, o.id, cantidad);
+        this.aviso(`${o.nombre} ×${cantidad}`);
+        ir(pagina);
+      });
+      c.add(zona);
+    });
+    this.paginacion(c, pagina, paginas, ir);
+    this.botonVolver(c, volver);
+    this.nav = { mover: (dir) => (dir === 'izquierda' ? ir(pagina - 1) : dir === 'derecha' ? ir(pagina + 1) : undefined), aceptar: () => undefined };
+  }
+
+  /** Todas las especies, como en el Bestiario; al elegir una se decide su nivel. */
+  private pantallaDevCriaturas(p: Partida, volver: () => void, pagina = 0): void {
+    const c = this.abrirCapa('Dar criaturas', { icono: 'bestiario', color: COLOR.verde });
+    const todas = Object.values(DATOS.especies).sort((a, b) => a.numero - b.numero);
+    const porPagina = 20;
+    const paginas = Math.ceil(todas.length / porPagina);
+    const ir = (k: number) => this.pantallaDevCriaturas(p, volver, Math.max(0, Math.min(paginas - 1, k)));
+    c.add(pildora(this, ANCHO - 330, 66, `Equipo ${p.equipo.length}/${MAX_EQUIPO}`, COLOR.tinta, 24));
+    const columnas = 4;
+    const ancho = 243;
+    const alto = 176;
+    todas.slice(pagina * porPagina, (pagina + 1) * porPagina).forEach((e, i) => {
+      const x = 24 + (i % columnas) * (ancho + 12);
+      const y = 140 + Math.floor(i / columnas) * (alto + 12);
+      c.add(ventana(this, x, y, ancho, alto, { radio: 26 }));
+      c.add(this.add.text(x + 16, y + 20, String(e.numero).padStart(3, '0'), estiloTexto(20, COLOR.tintaSuave, true)).setOrigin(0, 0.5));
+      const circulo = this.add.graphics();
+      circulo.fillStyle(colorPedestal(e.id), 1).fillCircle(x + ancho / 2, y + 74, 52);
+      c.add(circulo);
+      c.add(crearCriaturaVisual(this, e.id, x + ancho / 2, y + 70, 104));
+      c.add(this.add.text(x + ancho / 2, y + 150, e.nombre, estiloTexto(24, COLOR.tinta, true)).setOrigin(0.5));
+      const zona = this.add.rectangle(x + ancho / 2, y + alto / 2, ancho, alto, 0xffffff, 0.001).setInteractive({ useHandCursor: true });
+      zona.on('pointerup', () => this.pantallaDevNivel(p, e.id, () => ir(pagina)));
+      c.add(zona);
+    });
+    this.paginacion(c, pagina, paginas, ir);
+    this.botonVolver(c, volver);
+    this.nav = { mover: (dir) => (dir === 'izquierda' ? ir(pagina - 1) : dir === 'derecha' ? ir(pagina + 1) : undefined), aceptar: () => undefined };
+  }
+
+  private pantallaDevNivel(p: Partida, especie: string, volver: () => void, nivel = 5): void {
+    const e = DATOS.especies[especie];
+    const color = colorTipoDe(especie);
+    const c = this.abrirCapa(e.nombre, { icono: 'bestiario', color });
+    const ir = (n: number) => this.pantallaDevNivel(p, especie, volver, Math.max(1, Math.min(100, n)));
+    c.add(ventana(this, 24, 140, ANCHO - 48, ALTO_MAPA - 140 - 170, { radio: 36 }));
+    const circulo = this.add.graphics();
+    circulo.fillStyle(aclarar(color, 0.55), 1).fillCircle(ANCHO / 2, 360, 170);
+    circulo.fillStyle(0xffffff, 0.35).fillCircle(ANCHO / 2, 360, 130);
+    c.add(circulo);
+    c.add(crearCriaturaVisual(this, especie, ANCHO / 2, 350, 310));
+    const tipos = this.add.container(0, 0);
+    tipos.x = ANCHO / 2 - filaTipos(this, tipos, 0, 580, e.tipos, 30) / 2;
+    c.add(tipos);
+    c.add(this.add.text(ANCHO / 2, 690, 'Nivel', estiloTexto(30, COLOR.tintaSuave, true)).setOrigin(0.5));
+    c.add(this.add.text(ANCHO / 2, 770, String(nivel), estiloTexto(80, COLOR.tinta, true)).setOrigin(0.5));
+    [-10, -1, 1, 10].forEach((d, k) => {
+      const x = [130, 290, 790, 950][k];
+      c.add(new Boton(this, x, 770, { ancho: 140, alto: 110, texto: d > 0 ? `+${d}` : `${d}`, tamano: 36, alPulsar: () => ir(nivel + d) }));
+    });
+    c.add(
+      new Boton(this, ANCHO / 2, 960, {
+        ancho: 640,
+        alto: 130,
+        texto: p.equipo.length < MAX_EQUIPO ? 'Añadir al equipo' : 'Añadir (va al Bestiario)',
+        tamano: 38,
+        color: COLOR.verde,
+        alPulsar: () => {
+          const cr = crearCriatura(DATOS, especie, nivel, p.rng);
+          const donde = anadirCriatura(p, cr);
+          this.aviso(donde === 'equipo' ? `${e.nombre} (Nv ${nivel}) se une al equipo` : `${e.nombre} va al Bestiario: el equipo está lleno`);
+          ir(nivel);
+        },
+      }),
+    );
+    this.botonVolver(c, volver);
+    this.nav = { mover: (dir) => ir(nivel + ({ izquierda: -1, derecha: 1, arriba: 10, abajo: -10 } as const)[dir]), aceptar: () => undefined };
+  }
+
+  /** Una página por capítulo, con sus zonas. */
+  private pantallaDevViajar(p: Partida, volver: () => void, viajar: (pos: Posicion) => void, pagina?: number): void {
+    const actual = CAPITULOS.findIndex((k) => k.zonas.includes(p.posicion.zona));
+    const k = Math.max(0, Math.min(CAPITULOS.length - 1, pagina ?? Math.max(0, actual)));
+    const cap = CAPITULOS[k];
+    const c = this.abrirCapa('Viajar', { icono: 'mapa', color: COLOR.azul });
+    const ir = (n: number) => this.pantallaDevViajar(p, volver, viajar, n);
+    c.add(pildora(this, 40, 176, cap.nombre, COLOR.tinta, 28));
+    cap.zonas.forEach((id, i) => {
+      const destino = ENTRADAS[id];
+      const x = i % 2 === 0 ? 282 : 798;
+      const y = 290 + Math.floor(i / 2) * 140;
+      c.add(
+        new Boton(this, x, y, {
+          ancho: 500,
+          alto: 120,
+          texto: ZONAS[id].nombre,
+          subtexto: id === p.posicion.zona ? 'Estás aquí' : undefined,
+          tamano: 30,
+          color: id === p.posicion.zona ? COLOR.celeste : COLOR.panel,
+          alPulsar: () => {
+            if (!destino) return;
+            this.cerrarCapa();
+            viajar(destino);
+          },
+        }).setActivo(Boolean(destino)),
+      );
+    });
+    this.paginacion(c, k, CAPITULOS.length, ir);
+    this.botonVolver(c, volver);
+    this.nav = { mover: (dir) => (dir === 'izquierda' ? ir(k - 1) : dir === 'derecha' ? ir(k + 1) : undefined), aceptar: () => undefined };
+  }
+
+  /** Flechas y número de página abajo, junto al botón de volver. */
+  private paginacion(c: Phaser.GameObjects.Container, pagina: number, paginas: number, ir: (k: number) => void): void {
+    if (paginas <= 1) return;
+    c.add(botonFlecha(this, 110, ALTO_MAPA - 80, -1, () => ir(pagina - 1), 170, 112).setActivo(pagina > 0));
+    c.add(botonFlecha(this, ANCHO - 110, ALTO_MAPA - 80, 1, () => ir(pagina + 1), 170, 112).setActivo(pagina < paginas - 1));
+    c.add(pildora(this, ANCHO / 2 - 70, ALTO_MAPA - 168, `Página ${pagina + 1} de ${paginas}`, COLOR.tinta, 22));
   }
 
   // ---------- Tienda y almacén ----------

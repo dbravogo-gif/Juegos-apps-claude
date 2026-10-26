@@ -530,3 +530,11 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
   - Cinco entrenadores de una criatura, uno por cada tipo nuevo de la zona.
   - Termina con la tregua de octubre de 1521, la huida de María a Portugal en 1522 (murió en
     Oporto en 1531) y la vuelta de Carlos en julio de 1522.
+- **2026-10-26 (12).** Pedidos del autor tras jugar en el iPhone.
+  - Franja negra arriba para la barra de estado y la isla (al menos un 5 % del alto) y el mando
+    pegado abajo, colocado como en los skins de los emuladores de GBA y DS.
+  - Modo desarrollador, con su propia partida, para probar capítulos avanzados sin jugarlo
+    todo.
+  - Sexo de cada criatura: macho, hembra, hermafrodita o sin sexo. Se añade «sin sexo», que el
+    autor no pidió, para las estatuas y la tinaja: llamarlas hermafroditas sería falso.
+  - Zona de captura en un mapa de la península, como el área del Pokédex.

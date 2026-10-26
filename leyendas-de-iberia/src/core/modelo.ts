@@ -57,8 +57,15 @@ export interface Especie {
   aprende: { nivel: number; movimiento: string }[];
   /** Por nivel o al usar un objeto de evolución (o las dos cosas). */
   evoluciona?: { a: string; nivel?: number; objeto?: string };
+  /**
+   * Porcentaje de machos (si no se dice, 50), o `hermafrodita` (plantas con flores de los dos
+   * sexos) o `ninguno` (estatuas y objetos).
+   */
+  sexo?: number | 'hermafrodita' | 'ninguno';
   descripcion: string;
 }
+
+export type Sexo = 'macho' | 'hembra' | 'hermafrodita' | 'ninguno';
 
 export interface Temperamento {
   id: string;
@@ -178,4 +185,6 @@ export interface Criatura {
   estado: EstadoCriatura | null;
   /** Objeto equipado (id). */
   objeto?: string;
+  /** Se decide al crearla (`sexoPara`). Las partidas antiguas lo reciben al cargarse. */
+  sexo?: Sexo;
 }

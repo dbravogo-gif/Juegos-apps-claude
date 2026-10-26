@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { COLOR, estiloTexto, oscurecer, textoSobre } from './tema';
 import { DATOS } from '../data';
 import { iconoObjeto, iconoUI, type IconoUI } from './objetoVisual';
+import type { Sexo } from '../core/modelo';
 
 export interface OpcionesBoton {
   ancho: number;
@@ -254,4 +255,44 @@ export function panel(scene: Phaser.Scene, x: number, y: number, ancho: number, 
     .setOrigin(0, 0)
     .setRounded(28)
     .setStrokeStyle(4, COLOR.borde);
+}
+
+/** Color con que se pinta cada símbolo de sexo: azul ♂, rojo ♀ y morado ⚥. */
+const COLOR_SEXO: Record<Exclude<Sexo, 'ninguno'>, number> = { macho: COLOR.azul, hembra: COLOR.rojo, hermafrodita: COLOR.morado };
+
+/** Nombre del sexo para los textos. */
+export const NOMBRE_SEXO: Record<Sexo, string> = { macho: 'Macho', hembra: 'Hembra', hermafrodita: 'Hermafrodita', ninguno: 'Sin sexo' };
+
+/**
+ * ♂, ♀ o ⚥ dibujados con líneas, centrados en (x, y), de `tam` de alto: la fuente del juego no
+ * trae esos caracteres y el móvil los pintaría como emojis. Sin sexo no se dibuja nada.
+ */
+export function simboloSexo(scene: Phaser.Scene, x: number, y: number, sexo: Sexo, tam = 40): Phaser.GameObjects.Graphics {
+  const g = scene.add.graphics({ x, y });
+  if (sexo === 'ninguno') return g;
+  g.lineStyle(Math.max(3, tam * 0.12), COLOR_SEXO[sexo], 1);
+  const t = tam;
+  const flecha = (cx: number, cy: number, r: number, largo: number) => {
+    const d = Math.SQRT1_2;
+    const punta = { x: cx + largo * d, y: cy - largo * d };
+    g.lineBetween(cx + r * d, cy - r * d, punta.x, punta.y);
+    g.lineBetween(punta.x, punta.y, punta.x - t * 0.22, punta.y);
+    g.lineBetween(punta.x, punta.y, punta.x, punta.y + t * 0.22);
+  };
+  const cruz = (cx: number, cy: number, r: number, largo: number) => {
+    g.lineBetween(cx, cy + r, cx, cy + largo);
+    g.lineBetween(cx - t * 0.16, cy + (r + largo) / 2, cx + t * 0.16, cy + (r + largo) / 2);
+  };
+  if (sexo === 'macho') {
+    g.strokeCircle(-t * 0.1, t * 0.12, t * 0.26);
+    flecha(-t * 0.1, t * 0.12, t * 0.26, t * 0.62);
+  } else if (sexo === 'hembra') {
+    g.strokeCircle(0, -t * 0.16, t * 0.26);
+    cruz(0, -t * 0.16, t * 0.26, t * 0.62);
+  } else {
+    g.strokeCircle(-t * 0.06, -t * 0.04, t * 0.22);
+    flecha(-t * 0.06, -t * 0.04, t * 0.22, t * 0.54);
+    cruz(-t * 0.06, -t * 0.04, t * 0.22, t * 0.56);
+  }
+  return g;
 }

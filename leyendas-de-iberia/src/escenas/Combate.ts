@@ -22,7 +22,7 @@ import {
   type Lado,
   type ResultadoCombate,
 } from '../core/combate';
-import { Barra, Boton, botonFlecha, filaTipos, type OpcionesBoton } from '../ui/componentes';
+import { Barra, Boton, botonFlecha, filaTipos, simboloSexo, type OpcionesBoton } from '../ui/componentes';
 import { cabecera, colorPedestal, fondoMenu, pildora, ventana } from '../ui/ventanas';
 import { iconoObjeto } from '../ui/objetoVisual';
 import { crearCriaturaVisual } from '../ui/criaturaVisual';
@@ -71,6 +71,7 @@ const POSICION: Record<Lado, { x: number; y: number; tam: number }> = {
 class Ficha {
   private capa: Phaser.GameObjects.Container;
   private nombre: Phaser.GameObjects.Text;
+  private sexo?: Phaser.GameObjects.Graphics;
   private nivel: Phaser.GameObjects.Text;
   private estado: Phaser.GameObjects.Text;
   private tipos: Phaser.GameObjects.Container;
@@ -109,7 +110,10 @@ class Ficha {
   mostrar(ficha: FichaCombate): void {
     this.nombre.setText(ficha.nombre);
     // Si el nombre es largo, se encoge para no pisar el nivel.
-    this.nombre.setScale(Math.min(1, (this.ancho - 200) / Math.max(1, this.nombre.width / this.nombre.scaleX)));
+    this.nombre.setScale(Math.min(1, (this.ancho - 250) / Math.max(1, this.nombre.width / this.nombre.scaleX)));
+    this.sexo?.destroy();
+    this.sexo = simboloSexo(this.scene, 30 + this.nombre.displayWidth + 26, 46, ficha.sexo, 36);
+    this.capa.add(this.sexo);
     this.nivel.setText(`Nv ${ficha.nivel}`);
     this.tipos.removeAll(true);
     filaTipos(this.scene, this.tipos, 30, 104, DATOS.especies[ficha.especie].tipos, 22);

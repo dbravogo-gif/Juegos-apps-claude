@@ -8,6 +8,7 @@ import { bandera, dar, decir, si } from '../guion';
 const VILLALAR: Zona = {
   id: 'villalar',
   nombre: 'Villalar',
+  enMapa: { lugar: 'villalar' },
   estilo: 'meseta',
   mapa: [
     '######################',
@@ -145,6 +146,7 @@ const VILLALAR: Zona = {
 const CAMINO_TOLEDO: Zona = {
   id: 'camino_toledo',
   nombre: 'Camino de Toledo',
+  enMapa: { ruta: ['villalar', 'toledo'] },
   estilo: 'meseta',
   mapa: [
     '#######G########',
@@ -224,6 +226,7 @@ const CAMINO_TOLEDO: Zona = {
 const TOLEDO: Zona = {
   id: 'toledo',
   nombre: 'Toledo',
+  enMapa: { lugar: 'toledo' },
   estilo: 'toledo',
   mapa: [
     'MMMMMMMMMMMPMMMMMMMMMMMM',
@@ -308,6 +311,7 @@ const TOLEDO: Zona = {
 const MESON_TOLEDO: Zona = {
   id: 'meson_toledo',
   nombre: 'Mesón de Toledo',
+  enMapa: { lugar: 'toledo' },
   estilo: 'meson',
   interior: true,
   mapa: [
@@ -367,6 +371,7 @@ const MESON_TOLEDO: Zona = {
 const ALCAZAR_TOLEDO: Zona = {
   id: 'alcazar_toledo',
   nombre: 'Alcázar de Toledo',
+  enMapa: { lugar: 'toledo' },
   estilo: 'alcazar',
   interior: true,
   mapa: [

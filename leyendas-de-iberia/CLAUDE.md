@@ -76,6 +76,20 @@ tocan desde aquí.
   trabado tras el combate y barra de vida, arreglados.
 - **Tabla de tipos (2026-10-26):** equilibrada con el autor: los tipos sin inmunidades dan
   tantos ×2 como ×½; las pruebas lo comprueban.
+- **Pedidos del autor (2026-10-26), hechos:**
+  - Pantalla como en los emuladores de GBA y DS (medidas de los skins de Delta): franja negra
+    arriba (lo que ocupe el sistema y al menos un 5 %, en `index.html`), margen para la barra
+    de inicio y el mando pegado abajo (cruceta a la izquierda, A y B en diagonal, Menú donde va
+    Start).
+  - Modo desarrollador: enlace en el título; partida aparte (`p.dev`, otra clave de
+    `localStorage`) con una opción más en el menú de pausa para darse objetos, criaturas a
+    cualquier nivel, viajar a cualquier zona, curar, dinero, quitar encuentros y ver todo el
+    Bestiario.
+  - Sexo de las criaturas: macho, hembra, hermafrodita (el drago y la mandrágora, que tienen
+    flores de los dos sexos) o sin sexo (Alhambrón, Guisandor y el Papemímico, que son estatuas
+    o una tinaja). Los toros son siempre machos. Sale en la ficha y en el combate.
+  - Zona de captura: mapa pixelado de la península en la ficha (pestaña Zona) y en el Bestiario,
+    con los lugares donde sale la especie resaltados, y sus niveles y frecuencia.
 - **Siguiente:** capítulo 3 (1571). Alhambrón queda para una zona de ruinas, a petición del
   autor. La vista de espalda de Imperión parece de frente: se puede rehacer.
 - **Mapas (2026-10-25), hecho:** con aspecto de los juegos de criaturas de GBA, a petición
@@ -141,7 +155,10 @@ El código va en español: nombres, comentarios y textos.
   - Contenido de combate: `especies.ts`, `movimientos.ts`, `tipos.ts`, `temperamentos.ts` y
     `objetos.ts`, reunidos en `DATOS` (`index.ts`).
   - Contenido del mundo: `casillas.ts` (la leyenda de los mapas), `entrenadores.ts`,
-    `zonas/capitulo1.ts`, `zonas/capitulo2.ts` y `guion.ts` (atajos para escribir guiones). Se reúnen en `mundo.ts`.
+    `zonas/capitulo1.ts`, `zonas/capitulo2.ts` y `guion.ts` (atajos para escribir guiones). Se reúnen en `mundo.ts`,
+    que también da `CAPITULOS` y `ENTRADAS` (por dónde se entra en cada zona).
+  - `lugares.ts`: los lugares del mapa de la península, con su latitud y longitud, y la
+    proyección del mapa.
 - `src/escenas/`:
   - `Arranque`.
   - `Titulo`.
@@ -162,6 +179,7 @@ El código va en español: nombres, comentarios y textos.
   - `personaVisual.ts`: los personajes, con las hojas de `arte/mapa/personajes.py`.
   - `objetoVisual.ts`: los iconos ilustrados de objetos y menús.
   - `retratoVisual.ts`: los retratos de los diálogos, por el nombre de quien habla.
+  - `mapaVisual.ts`: el mapa de la zona de captura, con los lugares resaltados.
   - `tablaTipos.ts`: la consulta de la tabla de tipos.
   - `criaturaVisual.ts`: las imágenes de `src/assets/criaturas/` (de frente y `_jugador`) o una
     figura provisional.
@@ -186,6 +204,9 @@ El código va en español: nombres, comentarios y textos.
   - `vencido:<entrenador>`.
   - `blason_alhambra`.
   - Capítulo 2: `capitulo2`, `carta_padilla`, `blason_toledo`.
+  - Modo desarrollador: `dev:sin_encuentros`.
+- **Cada zona nueva** necesita `enMapa` (su lugar de `lugares.ts`, o el camino entre dos) para
+  salir en el mapa de la zona de captura; las pruebas lo exigen.
 
 ## Comprobar
 

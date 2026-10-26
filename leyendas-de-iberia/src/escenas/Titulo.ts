@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { nuevaPartida } from '../core/partida';
+import { nuevaPartida, type Partida } from '../core/partida';
 import { INICIO } from '../data/mundo';
 import { Boton } from '../ui/componentes';
 import { crearCriaturaVisual } from '../ui/criaturaVisual';
@@ -57,6 +57,11 @@ export class Titulo extends Phaser.Scene {
     });
 
     this.add
+      .text(ANCHO / 2, ALTO - 170, 'Modo desarrollador', estiloTexto(30, COLOR.tintaSuave))
+      .setOrigin(0.5)
+      .setInteractive({ useHandCursor: true })
+      .on('pointerup', () => this.modoDesarrollador());
+    this.add
       .text(ANCHO / 2, ALTO - 110, 'Laboratorio de combate', estiloTexto(30, COLOR.tintaSuave))
       .setOrigin(0.5)
       .setInteractive({ useHandCursor: true })
@@ -78,6 +83,73 @@ export class Titulo extends Phaser.Scene {
     guardarPartida(p);
     sesion.partida = p;
     this.scene.start('Mundo');
+  }
+
+  /**
+   * El modo historia con herramientas para probar el juego (objetos, criaturas, viajes). Usa su
+   * propia partida guardada, así que no toca la de verdad.
+   */
+  private modoDesarrollador(): void {
+    if (this.confirmando || this.empezando) return;
+    this.confirmando = true;
+    const guardada = cargarPartida(true);
+    const c = this.add.container(0, 0).setDepth(10);
+    c.add(this.add.rectangle(0, -MARGEN_VERTICAL, ANCHO, ALTO + 2 * MARGEN_VERTICAL, 0x000000, 0.7).setOrigin(0, 0).setInteractive());
+    c.add(this.add.rectangle(ANCHO / 2, ALTO / 2 - 40, 900, 760, COLOR.panel).setRounded(24).setStrokeStyle(6, COLOR.tinta));
+    c.add(this.add.text(ANCHO / 2, ALTO / 2 - 340, 'Modo desarrollador', estiloTexto(48, COLOR.tinta, true)).setOrigin(0.5));
+    c.add(
+      this.add
+        .text(ANCHO / 2, ALTO / 2 - 250, 'El modo historia con un menú para darte objetos y criaturas y viajar a cualquier zona. Se guarda aparte.', {
+          ...estiloTexto(30, COLOR.tintaSuave),
+          align: 'center',
+          wordWrap: { width: 780 },
+        })
+        .setOrigin(0.5),
+    );
+    const empezar = (p: Partida) => {
+      this.empezando = true;
+      sesion.partida = p;
+      this.scene.start('Mundo');
+    };
+    let y = ALTO / 2 - 110;
+    if (guardada) {
+      c.add(
+        new Boton(this, ANCHO / 2, y, {
+          ancho: 760,
+          alto: 140,
+          texto: 'Continuar',
+          subtexto: `${guardada.capturados.length} criaturas · ${guardada.blasones.length} blasones`,
+          color: COLOR.morado,
+          alPulsar: () => empezar(guardada),
+        }),
+      );
+      y += 170;
+    }
+    c.add(
+      new Boton(this, ANCHO / 2, y, {
+        ancho: 760,
+        alto: 130,
+        texto: guardada ? 'Empezar otra' : 'Empezar',
+        color: guardada ? undefined : COLOR.morado,
+        alPulsar: () => {
+          const p = nuevaPartida('Pruebas', Date.now(), INICIO);
+          p.dev = true;
+          guardarPartida(p);
+          empezar(p);
+        },
+      }),
+    );
+    c.add(
+      new Boton(this, ANCHO / 2, ALTO / 2 + 250, {
+        ancho: 400,
+        alto: 110,
+        texto: 'Cancelar',
+        alPulsar: () => {
+          this.confirmando = false;
+          c.destroy();
+        },
+      }),
+    );
   }
 
   private confirmar(pregunta: string): Promise<boolean> {

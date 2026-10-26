@@ -11,13 +11,14 @@ import type {
   Etapas,
   Movimiento,
   Objeto,
+  Sexo,
 } from './modelo';
 import { crearRng, entero, probabilidad, type EstadoRng } from './rng';
 import { calcularEstadisticas, multiplicadorEtapa } from './estadisticas';
 import { calcularDanio, PROB_CRITICO, type Combatiente } from './danio';
 import { intentarCaptura } from './captura';
 import { aplicarExperiencia, expGanada } from './progreso';
-import { nombreDe } from './criatura';
+import { nombreDe, sexoDe } from './criatura';
 import { elegirAccionIA } from './ia';
 import { aplicarCuracion, motivoNoUsable, seAplicaACriatura, usoDe } from './objetos';
 
@@ -63,6 +64,7 @@ export interface FichaCombate {
   vida: number;
   vidaMax: number;
   estado: EstadoAlterado | null;
+  sexo: Sexo;
 }
 
 export type Evento =
@@ -147,6 +149,7 @@ export function fichaDe(c: Criatura, datos: DatosJuego): FichaCombate {
     vida: c.vida,
     vidaMax: vidaMax(c, datos),
     estado: c.estado?.tipo ?? null,
+    sexo: sexoDe(c, datos),
   };
 }
 
