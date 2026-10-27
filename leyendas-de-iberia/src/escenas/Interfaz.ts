@@ -475,7 +475,7 @@ export class Interfaz extends Phaser.Scene {
             c.add(tipos);
             c.add(
               this.add
-                .text(cx, 650, e.descripcion, { ...estiloTexto(23, COLOR.tintaSuave), align: 'center', wordWrap: { width: ancho - 40 }, lineSpacing: 4 })
+                .text(cx, 640, e.descripcion, { ...estiloTexto(23, COLOR.tintaSuave), align: 'center', wordWrap: { width: ancho - 40 }, lineSpacing: 4 })
                 .setOrigin(0.5, 0),
             );
             const zona = this.add.rectangle(cx, 550, ancho, 760, 0xffffff, 0.001).setInteractive({ useHandCursor: true });
@@ -1927,7 +1927,8 @@ export class Interfaz extends Phaser.Scene {
           c.add(iconoObjeto(this, 110, y + 98, id, 100));
           c.add(this.add.text(196, y + 40, obj.nombre, estiloTexto(34, COLOR.tinta, true)).setOrigin(0, 0.5));
           c.add(pildora(this, 196, y + 88, `${precio} ${MONEDA}`, COLOR.oro, 22, COLOR.tinta));
-          c.add(this.add.text(196, y + 120, obj.descripcion, { ...estiloTexto(22, COLOR.tintaSuave), wordWrap: { width: 470 } }));
+          // Hasta los botones de comprar, que empiezan en ANCHO - 330.
+          c.add(this.add.text(196, y + 120, obj.descripcion, { ...estiloTexto(22, COLOR.tintaSuave), wordWrap: { width: 530 } }));
           c.add(this.add.text(ANCHO - 190, y + 40, `Tienes ${p.objetos[id] ?? 0}`, estiloTexto(24, COLOR.tintaSuave, true)).setOrigin(0.5));
           for (const [k, cantidad] of [1, 5].entries()) {
             c.add(
