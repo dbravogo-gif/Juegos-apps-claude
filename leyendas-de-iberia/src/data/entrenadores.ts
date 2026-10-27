@@ -1,10 +1,16 @@
-import type { DefEntrenador } from '../core/mundo';
+import type { DefEntrenador, Paso } from '../core/mundo';
+import { decir } from './guion';
 
 // Capítulo 1, a petición del autor (2026-10-25): cinco entrenadores entre la Vega y la Alhambra,
 // cada uno con una sola criatura y nivel bajo, para que la primera zona sea fácil con cualquier
 // inicial. Las criaturas varían de tipo para que ninguna inicial tenga todos los combates en
 // contra; Infernal sufre contra Agua y Tierra, así que hay pocas. Boabdil no lleva nada de Agua ni
 // de Tierra en lo alto: con Ignibue sería imposible. Las zonas difíciles vendrán más adelante.
+
+// Castigos de los duendes del palacio de Boabdil cuando se falla la pregunta de un entrenador.
+const SUSTO: Paso[] = [...decir(undefined, '¡Un duende sale de detrás de un azulejo y os da un buen susto!'), { tipo: 'herir', fraccion: 0.2 }];
+const ADORMIDERA: Paso[] = [...decir(undefined, 'Un duende os sopla a la cara polvo de adormidera.'), { tipo: 'alterar', estado: 'dormido' }];
+const TIRON_OREJAS: Paso[] = [...decir(undefined, 'Un duende os tira de las orejas hasta sacaros de quicio.'), { tipo: 'alterar', estado: 'colera' }];
 
 const LISTA: DefEntrenador[] = [
   // ---------- Rivales (`{rival}`: el nombre que les puso el jugador) ----------
@@ -107,11 +113,11 @@ const LISTA: DefEntrenador[] = [
     valia: 5,
     premio: 200,
     objetos: { ruda: 1 },
-    antes: ['Nadie llega hasta el emir sin pasar antes por mí.'],
+    antes: ['Nadie llega hasta el emir sin pasar antes por mí. Pero antes, dime una cosa.'],
+    pregunta: { texto: '¿Qué quiere decir «Alhambra» en árabe?', respuestas: ['La blanca', 'La roja', 'La alta'], correcta: 1, castigo: SUSTO },
     derrota: ['Pasa. El emir te espera junto a la fuente.'],
     despues: [
       'El emir pelea con los duendes de la Alhambra. Dicen que no soportan la luz, la mente… ni la ruda.',
-      'Si el portero te pregunta, fíjate en el color de estas murallas al atardecer.',
       'Pocos han visto el Patio de los Leones. Míralo bien: quizá sea la última vez que es nuestro.',
     ],
   },
@@ -122,11 +128,12 @@ const LISTA: DefEntrenador[] = [
     equipo: [{ especie: 'mandragora', nivel: 6 }],
     valia: 5,
     premio: 180,
-    antes: ['Los versos de estas paredes los escribieron poetas de la corte, como yo. A ver si tu Bestiario rima.'],
-    derrota: ['Me he quedado sin versos.'],
+    antes: ['Los versos de estas paredes los escribieron poetas de la corte, como yo. A ver si sabes dónde estás.'],
+    pregunta: { texto: '¿Qué río corre a los pies de la Alhambra?', respuestas: ['El Genil', 'El Darro', 'El Guadalquivir'], correcta: 1, castigo: ADORMIDERA },
+    derrota: ['Me he quedado sin versos. Ve a ver la fuente del patio: la sostienen doce leones de mármol.'],
     despues: [
       'Los reyes nazaríes llenaron estas paredes de versos: hay poemas hasta en la fuente del patio.',
-      'El de la fuente lo escribió Ibn Zamrak, visir y poeta. La sostienen doce leones de mármol.',
+      'El de la fuente lo escribió Ibn Zamrak, visir y poeta.',
     ],
   },
   {
@@ -136,7 +143,8 @@ const LISTA: DefEntrenador[] = [
     valia: 5,
     premio: 220,
     objetos: { unguento: 1 },
-    antes: ['Soy alarife: cuido de que estos techos no se caigan. ¿Te atreves con mi duende?'],
+    antes: ['Soy alarife: cuido de que estos techos no se caigan. Antes de mi duende, una pregunta.'],
+    pregunta: { texto: '¿Cuántos leones sostienen la fuente del patio?', respuestas: ['Doce', 'Ocho', 'Diez'], correcta: 0, castigo: TIRON_OREJAS },
     derrota: ['Ni un mocárabe fuera de su sitio… y aun así he perdido.'],
     despues: ['Las bóvedas de mocárabes parecen panales. Están hechas de miles de piezas de yeso.'],
   },

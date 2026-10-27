@@ -73,6 +73,12 @@ export interface DefEntrenador {
    * final de su equipo lleva la inicial que le tocó, en la forma que tenga a ese nivel.
    */
   rival?: { cual: 'a' | 'b'; nivel: number };
+  /**
+   * Pregunta antes del primer combate, en los gimnasios de preguntas. Se hace una sola vez
+   * (`pregunta:<id>`): si pierdes y vuelves, solo queda el combate. Fallarla trae el castigo
+   * (`herir`, `alterar`…), que ya se nota en ese combate. `correcta` es su índice en `respuestas`.
+   */
+  pregunta?: { texto: string; respuestas: string[]; correcta: number; castigo: Paso[] };
 }
 
 export interface Pnj {
@@ -154,6 +160,11 @@ export interface Zona {
   estilo?: EstiloZona;
   /** Color del suelo fuera del mapa y de fondo. */
   fondo?: number;
+  /**
+   * Zona a oscuras, como las cuevas del género: solo se ve un círculo de este radio (en casillas)
+   * alrededor del jugador.
+   */
+  oscuridad?: number;
   encuentros?: TablaEncuentros;
   /** Encuentros al surcar el agua profunda con Pleamar (cada paso por el agua). */
   encuentrosAgua?: TablaEncuentros;

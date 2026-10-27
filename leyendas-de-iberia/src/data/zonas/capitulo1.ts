@@ -1,5 +1,5 @@
 import type { Paso, Zona } from '../../core/mundo';
-import { bandera, dar, decir, pregunta, si } from '../guion';
+import { bandera, dar, decir, si } from '../guion';
 import { INICIO_CAPITULO_2 } from './capitulo2';
 
 /** El salto de 1492 a 1521: el resumen de lo que ha pasado y el viaje a Villalar. */
@@ -543,7 +543,17 @@ const ALHAMBRA: Zona = {
     { x: 6, y: 11, zona: 'vega', ax: 6, ay: 1, dir: 'abajo' },
     { x: 6, y: 0, zona: 'patio_leones', ax: 6, ay: 32, dir: 'arriba' },
   ],
-  carteles: [{ x: 5, y: 10, texto: ['La Alhambra.', 'Palacio de los reyes nazaríes de Granada.'] }],
+  carteles: [
+    {
+      x: 5,
+      y: 10,
+      texto: [
+        'La Alhambra.',
+        'Palacio de los reyes nazaríes, en lo alto de la colina de la Sabika, sobre el río Darro.',
+        'Su nombre viene del árabe y quiere decir «la roja», por el color de sus muros.',
+      ],
+    },
+  ],
   ocultos: [
     { id: 'mt_mocarabe', x: 10, y: 9, objeto: 'mt_mocarabe', visible: true },
     { id: 'gorro', x: 2, y: 9, objeto: 'gorro_colorado' },
@@ -552,16 +562,11 @@ const ALHAMBRA: Zona = {
   ],
 };
 
-// Castigos de los duendes del palacio cuando se falla una pregunta de los porteros.
-const SUSTO: Paso[] = [...decir(undefined, '¡Un duende sale de detrás de un azulejo y os da un buen susto!'), { tipo: 'herir', fraccion: 0.2 }];
-const ADORMIDERA: Paso[] = [...decir(undefined, 'Un duende os sopla a la cara polvo de adormidera.'), { tipo: 'alterar', estado: 'dormido' }];
-const TIRON_OREJAS: Paso[] = [...decir(undefined, 'Un duende os tira de las orejas hasta sacaros de quicio.'), { tipo: 'alterar', estado: 'colera' }];
-
 /**
- * El gimnasio de Boabdil: los Palacios Nazaríes. Tres salas separadas por puertas con portero, que
- * no deja pasar sin acertar su pregunta (`puerta:patio_leones:<n>`), y al fondo el Patio de los
- * Leones. Dos entrenadores guardan las puertas y un tercero, en el Patio de los Arrayanes, se puede
- * esquivar por el otro lado del estanque.
+ * El gimnasio de Boabdil: los Palacios Nazaríes. Tres salas (Mexuar, Patio de los Arrayanes y una
+ * de mocárabes) y al fondo el Patio de los Leones. Junto a cada puerta, un entrenador que no se
+ * puede esquivar y que pregunta antes de combatir (`pregunta` en `entrenadores.ts`). Al líder se
+ * llega sin pregunta.
  */
 const PATIO_LEONES: Zona = {
   id: 'patio_leones',
@@ -607,8 +612,8 @@ const PATIO_LEONES: Zona = {
   ],
   alEntrar: decir(
     undefined,
-    'Los Palacios Nazaríes. Hasta el emir hay tres puertas, y cada una tiene su portero.',
-    'Dicen que quien no sabe responder se las ve con los duendes del palacio.',
+    'Los Palacios Nazaríes. Cada sala tiene quien la guarde, y antes de combatir te pondrá a prueba.',
+    'Dicen que a quien no sabe responder le castigan los duendes del palacio.',
   ),
   pnj: [
     {
@@ -671,41 +676,15 @@ const PATIO_LEONES: Zona = {
       guion: [],
     },
     {
-      id: 'portero_1',
-      nombre: 'Portero',
-      x: 6,
-      y: 26,
-      dir: 'abajo',
-      aspecto: 'anciano',
-      ocultoSi: 'puerta:patio_leones:1',
-      guion: [
-        ...decir('Portero', 'Esta es la puerta del Mexuar. Quien quiera cruzarla, que sepa al menos dónde está.'),
-        ...pregunta('Portero', '¿Qué quiere decir «Alhambra» en árabe?', ['La blanca', 'La roja', 'La alta'], 1, 'puerta:patio_leones:1', SUSTO),
-      ],
-    },
-    {
       id: 'poeta',
       nombre: 'Poeta de la corte',
-      x: 1,
-      y: 20,
+      x: 5,
+      y: 15,
       dir: 'derecha',
       aspecto: 'noble',
       entrenador: 'poeta_corte',
-      vision: 2,
+      vision: 1,
       guion: [],
-    },
-    {
-      id: 'portero_2',
-      nombre: 'Portero',
-      x: 6,
-      y: 14,
-      dir: 'abajo',
-      aspecto: 'anciano',
-      ocultoSi: 'puerta:patio_leones:2',
-      guion: [
-        ...decir('Portero', 'Este estanque refleja el palacio entero. Pero ¿sabes quién lo mandó levantar?'),
-        ...pregunta('Portero', '¿Qué familia de reyes construyó estos palacios?', ['Los omeyas', 'Los almohades', 'Los nazaríes'], 2, 'puerta:patio_leones:2', ADORMIDERA),
-      ],
     },
     {
       id: 'alarife',
@@ -717,19 +696,6 @@ const PATIO_LEONES: Zona = {
       entrenador: 'alarife',
       vision: 1,
       guion: [],
-    },
-    {
-      id: 'portero_3',
-      nombre: 'Portero',
-      x: 6,
-      y: 8,
-      dir: 'abajo',
-      aspecto: 'anciano',
-      ocultoSi: 'puerta:patio_leones:3',
-      guion: [
-        ...decir('Portero', 'Detrás de mí está el patio del emir. Una última pregunta.'),
-        ...pregunta('Portero', '¿Cuántos leones sostienen la fuente del patio?', ['Doce', 'Ocho', 'Diez'], 0, 'puerta:patio_leones:3', TIRON_OREJAS),
-      ],
     },
   ],
   salidas: [{ x: 6, y: 33, zona: 'alhambra', ax: 6, ay: 1, dir: 'abajo' }],

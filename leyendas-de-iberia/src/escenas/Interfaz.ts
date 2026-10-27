@@ -369,7 +369,8 @@ export class Interfaz extends Phaser.Scene {
   }
 
   /** Pregunta con opciones. Devuelve el índice elegido; B elige la última (cancelar). */
-  elegir(pregunta: string, opciones: string[], quien?: string): Promise<number> {
+  /** `cancelar`: la opción que elige B (la última, si no se dice); con `null`, B no hace nada. */
+  elegir(pregunta: string, opciones: string[], quien?: string, cancelar: number | null = opciones.length - 1): Promise<number> {
     this.mostrarTexto(pregunta, quien, false);
     return new Promise((resolve) => {
       const c = this.add.container(0, 0).setDepth(30);
@@ -399,7 +400,7 @@ export class Interfaz extends Phaser.Scene {
       });
       this.seleccion = 0;
       this.marcarSeleccion();
-      this.alCancelar = () => terminar(opciones.length - 1);
+      this.alCancelar = cancelar === null ? null : () => terminar(cancelar);
     });
   }
 

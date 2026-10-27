@@ -564,9 +564,10 @@ const ALCAZAR_TOLEDO: Zona = {
   enMapa: { lugar: 'toledo' },
   estilo: 'alcazar',
   interior: true,
-  // El gimnasio de María Pacheco: un laberinto entre los muros de la armería, con tres entrenadores
-  // en huecos de la pared que dan al camino (no se pueden esquivar) y objetos al fondo de los
-  // callejones sin salida.
+  // El gimnasio de María Pacheco: un laberinto a oscuras entre los muros de la armería, con tres
+  // entrenadores en huecos de la pared que dan al camino (no se pueden esquivar) y objetos al
+  // fondo de los callejones sin salida.
+  oscuridad: 3,
   mapa: [
     'WWWWWWWWWWWWW',
     'WYBBBBBBBBBYW',
@@ -600,7 +601,7 @@ const ALCAZAR_TOLEDO: Zona = {
   alEntrar: decir(
     undefined,
     'La armería del Alcázar. Picas, rodelas y arneses forman un laberinto de pasillos.',
-    'Doña María espera al fondo.',
+    'Han apagado las antorchas para que nadie llegue hasta doña María. Solo ves lo que tienes alrededor.',
   ),
   pnj: [
     {
