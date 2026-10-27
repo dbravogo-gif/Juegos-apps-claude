@@ -128,6 +128,20 @@ describe('zonas', () => {
     }
   });
 
+  // El cuadro de diálogo tiene tres líneas: 146 caracteres aún caben y 152 ya no.
+  // Los nombres que pone el jugador cuentan con su largo máximo, 12.
+  it('ningún texto pasa de tres líneas en el cuadro de diálogo', () => {
+    const textos: string[] = [];
+    const recoger = (x: unknown): void => {
+      if (typeof x === 'string') textos.push(x.replace(/\{\w+\}/g, 'x'.repeat(12)));
+      else if (Array.isArray(x)) x.forEach(recoger);
+      else if (x && typeof x === 'object') Object.values(x).forEach(recoger);
+    };
+    recoger(ZONAS);
+    recoger(ENTRENADORES);
+    for (const t of textos) expect(t.length, t).toBeLessThanOrEqual(146);
+  });
+
   it('cada salida tiene vuelta', () => {
     for (const z of Object.values(ZONAS)) {
       for (const s of z.salidas) {

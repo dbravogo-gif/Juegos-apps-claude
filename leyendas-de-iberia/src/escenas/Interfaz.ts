@@ -467,6 +467,23 @@ export class Interfaz extends Phaser.Scene {
             zona.on('pointerup', () => resolve(id));
             c.add(zona);
           });
+          // Con teclado: izquierda y derecha eligen, A acepta. El marco dorado señala cuál.
+          const marco = this.add.graphics();
+          c.add(marco);
+          let elegida = 0;
+          const marcar = () => {
+            marco.clear();
+            marco.lineStyle(8, COLOR.oro, 1).strokeRoundedRect(24 + elegida * (ancho + 24) - 6, 164, ancho + 12, 772, 40);
+          };
+          marcar();
+          this.nav = {
+            mover: (dir) => {
+              if (dir !== 'izquierda' && dir !== 'derecha') return;
+              elegida = (elegida + (dir === 'derecha' ? 1 : -1) + INICIALES.length) % INICIALES.length;
+              marcar();
+            },
+            aceptar: () => resolve(INICIALES[elegida]),
+          };
         });
         this.cerrarCapa();
         const si = await this.elegir(`¿Eliges a ${DATOS.especies[especie].nombre}?`, ['Sí', 'No']);

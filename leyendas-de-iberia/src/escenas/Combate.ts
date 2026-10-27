@@ -185,6 +185,12 @@ export class Combate extends Phaser.Scene {
   private saltar: (() => void) | null = null;
   private ocupado = false;
   private ultimaTesera = 'tesera';
+  /** Teclado: el botón del menú con el foco y el marco que lo señala. */
+  private foco: Boton | null = null;
+  private menuConFoco?: Phaser.GameObjects.Container;
+  private marcoFoco?: Phaser.GameObjects.Graphics;
+  /** El marco del foco solo se ve si se juega con teclado: con el dedo no hace falta. */
+  private usaTeclado = false;
 
   constructor() {
     super('Combate');
@@ -192,6 +198,8 @@ export class Combate extends Phaser.Scene {
 
   init(data: DatosCombate): void {
     this.entrada = data;
+    this.foco = null;
+    this.menuConFoco = undefined;
     this.rivalesVistos = new Set();
     this.pendientesAprender = [];
     this.visual = { jugador: null, rival: null };
@@ -248,6 +256,8 @@ export class Combate extends Phaser.Scene {
 
     // Tocar la pantalla adelanta el texto.
     this.input.on('pointerdown', () => this.saltar?.());
+    this.input.keyboard?.on('keydown', (e: KeyboardEvent) => this.tecla(e));
+    this.marcoFoco = this.add.graphics().setDepth(50);
 
     let equipoJugador: Criatura[];
     let equipoRival: Criatura[];
@@ -452,6 +462,95 @@ export class Combate extends Phaser.Scene {
     const desde = expParaNivel(j.nivel);
     const hasta = expParaNivel(j.nivel + 1);
     this.ficha.jugador.setExp((j.exp - desde) / Math.max(1, hasta - desde));
+  }
+
+  // ---------- Teclado ----------
+
+  /** Con teclado: las flechas mueven el foco por los botones del menú, Intro pulsa y Esc vuelve. */
+  private tecla(e: KeyboardEvent): void {
+    if (e.repeat) return;
+    this.usaTeclado = true;
+    const k = e.key.toLowerCase();
+    const aceptar = k === 'enter' || k === ' ' || k === 'z';
+    if (this.saltar && (aceptar || k === 'escape' || k === 'x')) {
+      this.saltar();
+      return;
+    }
+    const botones = this.botonesMenu();
+    if (botones.length === 0) return;
+    if (!this.foco || !botones.includes(this.foco)) this.enfocar(botones);
+    const dir = { arrowup: [0, -1], w: [0, -1], arrowdown: [0, 1], s: [0, 1], arrowleft: [-1, 0], a: [-1, 0], arrowright: [1, 0], d: [1, 0] }[k];
+    if (dir) {
+      this.moverFoco(botones, dir[0], dir[1]);
+      return;
+    }
+    if (aceptar) this.foco?.pulsar();
+    else if (k === 'escape' || k === 'x' || k === 'backspace') botones.find((b) => b.texto === 'Volver')?.pulsar();
+  }
+
+  /** Los botones del menú que se pueden pulsar, en orden de lectura. */
+  private botonesMenu(): Boton[] {
+    const out: Boton[] = [];
+    const recorrer = (lista: Phaser.GameObjects.GameObject[]) =>
+      lista.forEach((o) => {
+        if (o instanceof Boton) {
+          if (o.estaActivo && o.visible) out.push(o);
+        } else if (o instanceof Phaser.GameObjects.Container) recorrer(o.list);
+      });
+    if (this.menu) recorrer(this.menu.list);
+    return out;
+  }
+
+  private enfocar(botones: Boton[], boton?: Boton): void {
+    this.foco = boton ?? botones[0] ?? null;
+    this.menuConFoco = this.menu;
+    this.dibujarFoco();
+  }
+
+  /** El botón más cercano en esa dirección. */
+  private moverFoco(botones: Boton[], dx: number, dy: number): void {
+    const f = this.foco!.getBounds();
+    let mejor: Boton | undefined;
+    let distancia = Infinity;
+    for (const b of botones) {
+      if (b === this.foco) continue;
+      const r = b.getBounds();
+      const vx = r.centerX - f.centerX;
+      const vy = r.centerY - f.centerY;
+      const avance = vx * dx + vy * dy;
+      if (avance <= 0) continue;
+      const lateral = Math.abs(vx * dy) + Math.abs(vy * dx);
+      const d = avance + lateral * 2;
+      if (d < distancia) {
+        distancia = d;
+        mejor = b;
+      }
+    }
+    if (mejor) this.enfocar(botones, mejor);
+  }
+
+  private dibujarFoco(): void {
+    const g = this.marcoFoco;
+    if (!g) return;
+    g.clear();
+    const b = this.foco;
+    if (!b || !b.visible || !this.usaTeclado) return;
+    // Los botones van dentro de contenedores: hace falta su sitio en pantalla.
+    const r = b.getBounds();
+    g.lineStyle(8, COLOR.oro, 1).strokeRoundedRect(r.x - 8, r.y - 8, r.width + 16, r.height + 16, 34);
+  }
+
+  update(): void {
+    // Un menú nuevo: el foco vuelve a su primer botón. Sin menú, no se ve.
+    if (this.menu !== this.menuConFoco) {
+      this.foco = null;
+      this.menuConFoco = this.menu;
+      this.marcoFoco?.clear();
+      if (this.menu && this.usaTeclado) {
+        const botones = this.botonesMenu();
+        if (botones.length) this.enfocar(botones);
+      }
+    }
   }
 
   // ---------- Menús ----------

@@ -135,6 +135,19 @@ export class Boton extends Phaser.GameObjects.Container {
     return this;
   }
 
+  get estaActivo(): boolean {
+    return this.activo;
+  }
+
+  get texto(): string {
+    return this.etiqueta.text;
+  }
+
+  /** Lo mismo que tocarlo: para el teclado. */
+  pulsar(): void {
+    if (this.activo) this.alPulsar();
+  }
+
   setTexto(texto: string, subtexto?: string): this {
     this.etiqueta.setText(texto);
     if (this.sub && subtexto !== undefined) this.sub.setText(subtexto);
