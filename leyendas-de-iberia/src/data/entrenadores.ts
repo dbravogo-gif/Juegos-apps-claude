@@ -83,7 +83,7 @@ const LISTA: DefEntrenador[] = [
     equipo: [{ especie: 'libelula', nivel: 5 }],
     valia: 4,
     premio: 160,
-    objetos: { tarro_miel: 1 },
+    objetos: { tesera: 3 },
     antes: ['Vengo de Génova a hacer negocios con la corte. ¿Un duelo? ¡Trato hecho!'],
     derrota: ['¡Qué mala inversión!'],
     despues: ['Dicen que otro genovés, un tal Colón, lleva años pidiendo barcos a la reina.'],
@@ -106,7 +106,7 @@ const LISTA: DefEntrenador[] = [
     equipo: [{ especie: 'duende', nivel: 6 }],
     valia: 5,
     premio: 200,
-    objetos: { amuleto_tanit: 1 },
+    objetos: { ruda: 1 },
     antes: ['Nadie llega hasta el emir sin pasar antes por mí.'],
     derrota: ['Pasa. El emir te espera junto a la fuente.'],
     despues: [
@@ -124,7 +124,7 @@ const LISTA: DefEntrenador[] = [
     ],
     valia: 7,
     premio: 600,
-    objetos: { caracola: 1, velo_negro: 1 },
+    objetos: { emplasto: 2 },
     antes: [
       'Soy Muhammad, emir de Granada. Los cristianos me llaman Boabdil.',
       'Mañana entregaré la ciudad. Pero antes, las leyendas de la Alhambra merecen un último duelo.',

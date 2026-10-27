@@ -14,7 +14,7 @@ tocan desde aquí.
   - Título, nueva partida con nombre y guardado automático.
   - Santa Fe: Isabel y la elección de compañera, el Gran Capitán, Colón, el pastor de Orce, y el
     mesón con su tienda.
-  - La Vega (32 × 46), con encuentros, ballestero, mercader, noria y atalaya nazarí.
+  - La Vega, con encuentros, ballestero, mercader, noria y atalaya nazarí.
   - La Alhambra, con su guardia.
   - El Patio de los Leones: Boabdil, el blasón y el final.
 - **Capítulo 2, «Castilla, 1521» (2026-10-26), hecho y jugable:** al vencer a Boabdil se pasa
@@ -223,8 +223,12 @@ El código va en español: nombres, comentarios y textos.
   - Se dibuja en texto con los caracteres de `casillas.ts` y se le pone un `estilo` (pueblo,
     campo, alhambra, mesón, pabellón, patio, meseta, sierra, toledo, alcázar), que decide
     árboles, muros, suelos y paredes.
-  - Las rutas entre ciudades son largas y no rectangulares, con algún detalle de la época
-    (cascada `V`, peña `k`, atalaya `I`, noria `N`) y su cartel.
+  - Las rutas entre ciudades son pasillos de 13 casillas de ancho (lo que cabe en el móvil),
+    con bandas de hierba alta que hay que cruzar, algún entrenador en un paso estrecho y algún
+    detalle de la época (cascada `V`, peña `k`, atalaya `I`, noria `N`) con su cartel. Cada ruta
+    nueva va en `RUTAS` (`tests/historia.test.ts`), con sus entrenadores que no se esquivan.
+  - Los objetos fuertes tienen capítulo mínimo (`CAPITULO_MINIMO` en `data/objetos.ts`); una
+    prueba lo revisa en mapas, guiones, tiendas, premios y tinajas.
   - Para cambiar de capítulo, el guion termina con el paso `viajar` (zona y casilla).
   - Una casilla nueva necesita su entrada en `casillas.ts`, su dibujo en `casillasVisual.ts` y,
     si es una pieza nueva, su función en `arte/mapa/tileset.py`.
