@@ -12,4 +12,6 @@ export const RETRATOS: Record<string, string> = {
   Boabdil: 'boabdil',
   'Juan de Padilla': 'padilla',
   'María Pacheco': 'maria_pacheco',
+  'Felipe II': 'felipe_ii',
+  'Menéndez de Avilés': 'menendez',
 };

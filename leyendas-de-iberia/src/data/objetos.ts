@@ -312,6 +312,16 @@ const lista: Objeto[] = [
     aprenden: { todos: true },
     descripcion: 'Enseña Rodela (Común): se protege de todo durante un turno. Cualquier criatura puede aprenderlo. No se gasta.',
   },
+  {
+    id: 'mt_resaca',
+    nombre: 'MT07 Resaca',
+    articulo: 'una',
+    categoria: 'maquinas',
+    tipo: 'maquina',
+    movimiento: 'resaca',
+    aprenden: { tipos: ['agua'] },
+    descripcion: 'Enseña Resaca (Agua): puede bajar la Celeridad del rival. No se gasta.',
+  },
   // MO: las dan personajes importantes. Sus movimientos también se usan fuera de combate.
   {
     id: 'mo_surf',

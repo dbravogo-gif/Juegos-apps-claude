@@ -2,7 +2,7 @@ import type { Especie } from '../core/modelo';
 import type { MovimientoId } from './movimientos';
 import type { TipoId } from './tipos';
 
-// Criaturas de los capítulos 1 («Granada, 1492») y 2 («Toledo, 1521»), según las fichas de
+// Criaturas de los capítulos 1 («Granada, 1492»), 2 («Toledo, 1521») y 3 («Sevilla, 1571»), según las fichas de
 // `docs/BESTIARIO.md`, que es la fuente de verdad. Los `id` no cambian aunque cambie el nombre,
 // para no romper las partidas guardadas.
 // Estadísticas base en el orden de Pokémon: Vida, Fuerza, Escudo, Magia, Resistencia mágica y
@@ -59,6 +59,19 @@ const LINEA_VIBORA: Aprende = [
 const LINEA_AVUTARDA: Aprende = [[1, 'topetazo'], [1, 'bramido'], [7, 'pisoton'], [12, 'rueda'], [15, 'peso_muerto'], [18, 'aletazo']];
 const LINEA_AGUILA: Aprende = [[1, 'aletazo'], [1, 'bramido'], [6, 'revoloteo'], [11, 'picada'], [18, 'zarpazo']];
 const LINEA_LOBO: Aprende = [[1, 'topetazo'], [1, 'aullido'], [5, 'zarpazo'], [10, 'dentellada'], [15, 'colmillo_sombrio']];
+// Capítulo 3
+const LINEA_ANGULA: Aprende = [[1, 'brazada'], [1, 'desplante'], [6, 'rociada'], [11, 'estela_fantasma'], [16, 'lamento'], [21, 'marejada']];
+const LINEA_TREMIELGA: Aprende = [
+  [1, 'brazada'], [1, 'chispazo'], [7, 'caparazon'], [12, 'rociada'], [17, 'calambre'], [22, 'marejada'], [26, 'descarga'],
+];
+const LINEA_VENCEJO: Aprende = [[1, 'aletazo'], [1, 'vuelo_rasante'], [6, 'revoloteo'], [11, 'picada'], [16, 'ventolera']];
+const LINEA_LINCE: Aprende = [
+  [1, 'zarpazo'], [1, 'bramido'], [6, 'acometida'], [11, 'dentellada'], [16, 'acecho'], [22, 'emboscada'], [27, 'tarantela'],
+];
+const LINEA_BUHO: Aprende = [
+  [1, 'aletazo'], [1, 'tiniebla'], [6, 'trastada'], [11, 'mal_de_ojo'], [16, 'ulular'], [21, 'vuelo_silencioso'], [26, 'tarantela'],
+];
+const LINEA_FRAGATA: Aprende = [[1, 'rociada'], [1, 'bramido'], [5, 'ponzona'], [10, 'brazada'], [15, 'marejada'], [19, 'chispazo']];
 
 const DEF = {
   becerro_igneo: {
@@ -519,6 +532,179 @@ const DEF = {
     sexo: 'ninguno',
     aprende: [[1, 'tapazo'], [1, 'emboscada'], [1, 'mal_de_ojo'], [1, 'escondite']],
     descripcion: 'Se hace pasar por una tinaja cualquiera. Quien mete la mano se lleva un susto… y, si lo vence, tres turrones.',
+  },
+  // ---------- Capítulo 3: El Escorial, Sevilla y el Guadalquivir ----------
+  angula: {
+    numero: 37,
+    nombre: 'Anguélix',
+    pasiva: 'escurridizo',
+    tipos: ['agua', 'espectral'],
+    base: [45, 35, 40, 65, 50, 85],
+    expBase: 60,
+    ratioCaptura: 190,
+    acuatica: true,
+    aprende: LINEA_ANGULA,
+    evoluciona: { a: 'anguila', nivel: 26 },
+    descripcion: 'Las angulas son crías de anguila que cruzan el océano y remontan los ríos. Son tan transparentes que se les ve la espina.',
+  },
+  anguila: {
+    numero: 38,
+    nombre: 'Sargazón',
+    pasiva: 'marea_viva',
+    tipos: ['agua', 'espectral'],
+    base: [80, 55, 65, 105, 85, 90],
+    expBase: 170,
+    ratioCaptura: 60,
+    acuatica: true,
+    aprende: [...LINEA_ANGULA, [27, 'camuflaje_algas'], [32, 'resaca'], [38, 'noche_cerrada']],
+    descripcion: 'Las anguilas pasan años en los ríos y vuelven al mar de los Sargazos, al otro lado del Atlántico, para desovar. Nadie las ha visto todavía hacerlo.',
+  },
+  tremielga: {
+    numero: 39,
+    nombre: 'Tremolín',
+    pasiva: 'chispas',
+    tipos: ['agua', 'electrico'],
+    base: [50, 40, 55, 70, 55, 45],
+    expBase: 62,
+    ratioCaptura: 140,
+    acuatica: true,
+    aprende: LINEA_TREMIELGA,
+    evoluciona: { a: 'tremielga_grande', nivel: 28 },
+    descripcion: 'La tremielga es un pez plano que vive medio enterrado en la arena y caza aturdiendo a sus presas con descargas eléctricas.',
+  },
+  tremielga_grande: {
+    numero: 40,
+    nombre: 'Tremielgón',
+    pasiva: 'imantado',
+    tipos: ['agua', 'electrico'],
+    base: [85, 55, 85, 100, 90, 55],
+    expBase: 175,
+    ratioCaptura: 50,
+    acuatica: true,
+    aprende: [...LINEA_TREMIELGA, [29, 'resaca'], [35, 'remanso']],
+    descripcion: 'Sus órganos eléctricos, a los lados de la cabeza, son columnas en forma de panal. Los médicos de la antigua Roma la usaban contra el dolor de cabeza.',
+  },
+  vencejo: {
+    numero: 41,
+    nombre: 'Golvín',
+    pasiva: 'carrerilla',
+    tipos: ['aire'],
+    base: [40, 50, 35, 35, 35, 95],
+    expBase: 50,
+    ratioCaptura: 255,
+    alada: true,
+    aprende: LINEA_VENCEJO,
+    evoluciona: { a: 'vencejo_grande', nivel: 20 },
+    descripcion: 'El vencejo casi nunca se posa: come, bebe y hasta duerme volando. Llega en primavera y en verano se marcha a África.',
+  },
+  vencejo_grande: {
+    numero: 42,
+    nombre: 'Falcivento',
+    pasiva: 'carrerilla',
+    tipos: ['aire'],
+    base: [65, 85, 55, 50, 55, 125],
+    expBase: 150,
+    ratioCaptura: 90,
+    alada: true,
+    aprende: [...LINEA_VENCEJO, [21, 'hoz_de_viento'], [27, 'acometida'], [33, 'vuelo_real']],
+    descripcion: 'Un vencejo joven puede pasar casi un año en el aire, sin posarse, desde que deja el nido.',
+  },
+  lince: {
+    numero: 43,
+    nombre: 'Lincel',
+    pasiva: 'ojos_de_lince',
+    tipos: ['comun'],
+    base: [50, 70, 45, 35, 45, 90],
+    expBase: 68,
+    ratioCaptura: 60,
+    aprende: LINEA_LINCE,
+    evoluciona: { a: 'lince_adulto', nivel: 30 },
+    descripcion: 'El lince ibérico solo vive en la península. Los cachorros nacen en primavera, en huecos de árboles o entre las rocas.',
+  },
+  lince_adulto: {
+    numero: 44,
+    nombre: 'Pardalión',
+    pasiva: 'punteria',
+    tipos: ['comun', 'mental'],
+    base: [80, 115, 70, 60, 75, 120],
+    expBase: 240,
+    ratioCaptura: 30,
+    aprende: [...LINEA_LINCE, [31, 'testarazo'], [37, 'alarido']],
+    descripcion: 'Los pinceles negros de las orejas y las patillas en barba son su seña. Caza sobre todo conejos.',
+  },
+  buho: {
+    numero: 45,
+    nombre: 'Noctiván',
+    pasiva: 'duermevela',
+    tipos: ['oscuridad'],
+    base: [55, 40, 50, 70, 60, 50],
+    expBase: 64,
+    ratioCaptura: 120,
+    alada: true,
+    aprende: LINEA_BUHO,
+    evoluciona: { a: 'buho_guardian', nivel: 30 },
+    descripcion: 'El búho real es la mayor rapaz nocturna de Europa. Caza en silencio: sus plumas apagan el ruido del vuelo.',
+  },
+  buho_guardian: {
+    numero: 46,
+    nombre: 'Noctilex',
+    pasiva: 'imponente',
+    tipos: ['mental', 'oscuridad'],
+    base: [100, 55, 85, 100, 115, 50],
+    expBase: 220,
+    ratioCaptura: 45,
+    alada: true,
+    aprende: [...LINEA_BUHO, [31, 'alarido'], [36, 'noche_cerrada']],
+    descripcion: 'Felipe II reunió en El Escorial una biblioteca enorme, con libros y manuscritos en latín, griego, árabe y hebreo.',
+  },
+  fragata: {
+    numero: 47,
+    nombre: 'Fragatín',
+    pasiva: 'puas_venenosas',
+    tipos: ['agua'],
+    base: [45, 30, 40, 55, 50, 60],
+    expBase: 50,
+    ratioCaptura: 160,
+    acuatica: true,
+    aprende: LINEA_FRAGATA,
+    evoluciona: { a: 'telmario', nivel: 22 },
+    descripcion: 'La carabela portuguesa parece una medusa, pero es una colonia de muchos animales pequeños. Flota con una vela de gas y el viento la lleva.',
+  },
+  telmario: {
+    numero: 48,
+    nombre: 'Telmario',
+    pasiva: 'puas_venenosas',
+    tipos: ['agua', 'plasma'],
+    base: [65, 40, 60, 85, 70, 75],
+    expBase: 140,
+    ratioCaptura: 75,
+    acuatica: true,
+    aprende: [...LINEA_FRAGATA, [23, 'fuego_de_san_telmo'], [29, 'resaca'], [34, 'destello']],
+    evoluciona: { a: 'corposanto', nivel: 38 },
+    descripcion: 'Los marineros llaman fuego de San Telmo a las luces azuladas que aparecen en los mástiles durante las tormentas. San Telmo es su patrón.',
+  },
+  corposanto: {
+    numero: 49,
+    nombre: 'Corposanto',
+    pasiva: 'ingravido',
+    tipos: ['plasma', 'agua'],
+    base: [80, 50, 70, 120, 90, 110],
+    expBase: 240,
+    ratioCaptura: 30,
+    acuatica: true,
+    aprende: [...LINEA_FRAGATA, [23, 'fuego_de_san_telmo'], [29, 'resaca'], [34, 'destello'], [39, 'corona'], [45, 'descarga']],
+    descripcion: 'Corposanto es otro nombre del fuego de San Telmo. Pigafetta, que dio la vuelta al mundo con Elcano, cuenta que su luz calmaba a los marineros en las tormentas.',
+  },
+  meloncillo: {
+    numero: 50,
+    nombre: 'Meloncillo',
+    pasiva: 'contraveneno',
+    tipos: ['comun'],
+    base: [60, 80, 55, 40, 50, 110],
+    expBase: 120,
+    ratioCaptura: 120,
+    aprende: [[1, 'zarpazo'], [1, 'aullido'], [6, 'acometida'], [11, 'dentellada'], [16, 'emboscada'], [21, 'colmillo_sombrio'], [26, 'testarazo'], [31, 'acecho']],
+    descripcion: 'El meloncillo es la única mangosta que vive en Europa. Caza conejos, roedores y serpientes, y aguanta su veneno mejor que otros animales.',
   },
 } satisfies Record<string, DefEspecie>;
 

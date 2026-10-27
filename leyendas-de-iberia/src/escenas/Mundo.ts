@@ -12,6 +12,7 @@ import {
   DELTA,
   enLineaDeVision,
   esHierba,
+  esResbaladiza,
   cumpleRequisito,
   esNavegable,
   esPescable,
@@ -82,6 +83,8 @@ export class Mundo extends Phaser.Scene {
   private zona!: Zona;
   private capa?: Phaser.GameObjects.Container;
   private jugador!: Persona;
+  /** Va resbalando por una cubierta mojada: no hace caso al mando hasta pararse. */
+  private resbalando = false;
   /** La capa negra de las zonas a oscuras, que sigue al jugador. */
   private oscuridad?: Phaser.GameObjects.Container;
   private personas: PersonaEnMapa[] = [];
@@ -149,7 +152,7 @@ export class Mundo extends Phaser.Scene {
 
   update(): void {
     this.oscuridad?.setPosition(this.jugador.x, this.jugador.y);
-    if (!this.listo || this.moviendo) return;
+    if (!this.listo || this.moviendo || this.resbalando) return;
     const dir = this.ocupado || this.ui.ocupado ? null : this.ui.direccion();
     if (dir) this.intentarMover(dir);
     else this.jugador?.parar();
@@ -323,7 +326,8 @@ export class Mundo extends Phaser.Scene {
     this.ordenarProfundidad();
   }
 
-  private intentarMover(dir: Dir): void {
+  /** Da un paso hacia `dir`. `deslizando`: va resbalando, sin andar. Devuelve si se ha movido. */
+  private intentarMover(dir: Dir, deslizando = false): boolean {
     const pos = this.p.posicion;
     if (this.jugador.dir !== dir) this.jugador.setDir(dir);
     pos.dir = dir;
@@ -339,19 +343,20 @@ export class Mundo extends Phaser.Scene {
         await this.ui.decir(texto);
         this.ui.cerrarDialogo();
       });
-      return;
+      return false;
     }
     const agua = esNavegable(this.zona, nx, ny, CASILLAS);
     const libre = agua ? this.navegando() || this.entrarAlAgua : !esSolida(this.zona, nx, ny, CASILLAS);
     this.entrarAlAgua = false;
     if (!libre || this.ocupadaPorAlguien(nx, ny)) {
       this.jugador.parar();
-      return;
+      return false;
     }
     this.moviendo = true;
     // Se corre manteniendo B, con las alpargatas, y nunca por el agua.
-    const corre = this.ui.corriendo() && (this.p.objetos.alpargatas ?? 0) > 0 && !agua;
-    this.jugador.andar(dir, corre);
+    const corre = !deslizando && this.ui.corriendo() && (this.p.objetos.alpargatas ?? 0) > 0 && !agua;
+    if (deslizando) this.jugador.parar();
+    else this.jugador.andar(dir, corre);
     pos.x = nx;
     pos.y = ny;
     this.ordenarProfundidad();
@@ -359,7 +364,7 @@ export class Mundo extends Phaser.Scene {
       targets: this.jugador,
       x: nx * T + T / 2,
       y: ny * T + T / 2,
-      duration: corre ? MS_CORRER : MS_PASO,
+      duration: deslizando ? MS_PASO * 0.6 : corre ? MS_CORRER : MS_PASO,
       onComplete: () => {
         this.moviendo = false;
         this.actualizarAspecto();
@@ -371,6 +376,7 @@ export class Mundo extends Phaser.Scene {
         });
       },
     });
+    return true;
   }
 
   private async alLlegar(): Promise<void> {
@@ -378,6 +384,7 @@ export class Mundo extends Phaser.Scene {
     p.pasos += 1;
     const salida = this.zona.salidas.find((s) => s.x === p.posicion.x && s.y === p.posicion.y);
     if (salida) {
+      this.resbalando = false;
       await this.conBloqueo(() => this.cambiarZona(salida));
       return;
     }
@@ -385,7 +392,16 @@ export class Mundo extends Phaser.Scene {
       await this.ui.decir('El repelente ha dejado de hacer efecto.');
       this.ui.cerrarDialogo();
     });
-    if (await this.comprobarEntrenadores()) return;
+    if (await this.comprobarEntrenadores()) {
+      this.resbalando = false;
+      return;
+    }
+    // Sobre la cubierta mojada se sigue resbalando hasta chocar o pisar tabla seca.
+    if (esResbaladiza(this.zona, p.posicion.x, p.posicion.y, CASILLAS)) {
+      this.resbalando = this.intentarMover(p.posicion.dir, true);
+      if (this.resbalando) return;
+    }
+    this.resbalando = false;
     const tabla = this.navegando() ? this.zona.encuentrosAgua : esHierba(this.zona, p.posicion.x, p.posicion.y, CASILLAS) ? this.zona.encuentros : undefined;
     if (tabla && !p.banderas['dev:sin_encuentros'] && equipoEnPie(p)) {
       const salvaje = tirarEncuentro(p, tabla, DATOS);
@@ -421,7 +437,7 @@ export class Mundo extends Phaser.Scene {
   // ---------- Hablar e interactuar ----------
 
   private alPulsarA(): void {
-    if (this.moviendo) {
+    if (this.moviendo || this.resbalando) {
       this.aPendiente = true;
       return;
     }
@@ -635,7 +651,7 @@ export class Mundo extends Phaser.Scene {
   }
 
   private alPulsarMenu(): void {
-    if (!this.listo || this.moviendo || this.ocupado) return;
+    if (!this.listo || this.moviendo || this.resbalando || this.ocupado) return;
     void this.conBloqueo(async () => {
       const ovilloPermitido = Boolean(this.zona.encuentros) && !this.zona.interior;
       const accion = await this.ui.menu(this.p, { ovilloPermitido, exterior: !this.zona.interior });
