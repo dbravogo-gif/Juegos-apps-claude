@@ -26,7 +26,7 @@ export interface Partida {
   nombre: string;
   rng: EstadoRng;
   posicion: Posicion;
-  /** Dónde reapareces si pierdes: el último mesón. */
+  /** Dónde reapareces si pierdes: el último sitio donde descansaste (mesón, fraile…). */
   regreso: Posicion;
   equipo: Criatura[];
   /** Las criaturas que no van en el equipo viven en las páginas del Bestiario (`almacen.ts`). */

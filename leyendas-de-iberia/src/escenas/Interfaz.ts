@@ -64,6 +64,8 @@ export class Interfaz extends Phaser.Scene {
   /** Dedo que mantiene pulsado B (para correr). */
   private punteroB: number | null = null;
   private flechas: Partial<Record<Dir, Phaser.GameObjects.Graphics>> = {};
+  /** El rótulo bajo A, que cambia según lo que haya en pantalla. */
+  private rotuloA!: Phaser.GameObjects.Text;
 
   private capaDialogo!: Phaser.GameObjects.Container;
   private textoDialogo!: Phaser.GameObjects.Text;
@@ -167,9 +169,9 @@ export class Interfaz extends Phaser.Scene {
     this.input.on('pointerup', soltar);
     this.input.on('pointerupoutside', soltar);
 
-    this.botonRedondo(BOTON_A.x, BOTON_A.y, BOTON_A.radio, COLOR.rojo, 'A', 'Hablar', () => this.pulsarA());
+    this.rotuloA = this.botonRedondo(BOTON_A.x, BOTON_A.y, BOTON_A.radio, COLOR.rojo, 'A', 'Hablar', () => this.pulsarA()).rotulo;
     // B mantenido, con las alpargatas, es correr.
-    const b = this.botonRedondo(BOTON_B.x, BOTON_B.y, BOTON_B.radio, COLOR.azul, 'B', 'Volver', () => this.pulsarB());
+    const b = this.botonRedondo(BOTON_B.x, BOTON_B.y, BOTON_B.radio, COLOR.azul, 'B', 'Volver', () => this.pulsarB()).circulo;
     b.on('pointerdown', (p: Phaser.Input.Pointer) => (this.punteroB = p.id));
     const soltarB = (p: Phaser.Input.Pointer) => {
       if (p.id === this.punteroB) this.punteroB = null;
@@ -208,12 +210,20 @@ export class Interfaz extends Phaser.Scene {
     else if (dir && this.capaMenu) this.nav?.mover(dir);
   }
 
-  private botonRedondo(x: number, y: number, r: number, color: number, letra: string, etiqueta: string, accion: () => void): Phaser.GameObjects.Arc {
+  private botonRedondo(
+    x: number,
+    y: number,
+    r: number,
+    color: number,
+    letra: string,
+    etiqueta: string,
+    accion: () => void,
+  ): { circulo: Phaser.GameObjects.Arc; rotulo: Phaser.GameObjects.Text } {
     this.add.circle(x, y + 8, r, oscurecer(color, 0.35));
     const c = this.add.circle(x, y, r, color).setInteractive({ useHandCursor: true });
     this.add.circle(x, y - r * 0.35, r * 0.6, 0xffffff, 0.14);
     this.add.text(x, y, letra, estiloTexto(Math.round(r * 0.8), COLOR.panel, true)).setOrigin(0.5);
-    this.add.text(x, y + r + 30, etiqueta, estiloTexto(28, COLOR.panelSuave, true)).setOrigin(0.5);
+    const rotulo = this.add.text(x, y + r + 30, etiqueta, estiloTexto(28, COLOR.panelSuave, true)).setOrigin(0.5);
     let ultima = -Infinity;
     c.on('pointerdown', () => {
       c.setScale(0.94);
@@ -223,7 +233,12 @@ export class Interfaz extends Phaser.Scene {
     });
     c.on('pointerup', () => c.setScale(1));
     c.on('pointerout', () => c.setScale(1));
-    return c;
+    return { circulo: c, rotulo };
+  }
+
+  update(): void {
+    const a = this.alAvanzar ? 'Seguir' : this.capaEleccion || this.capaMenu ? 'Aceptar' : 'Hablar';
+    if (this.rotuloA.text !== a) this.rotuloA.setText(a);
   }
 
   private crearTeclado(): void {
@@ -460,13 +475,30 @@ export class Interfaz extends Phaser.Scene {
             c.add(tipos);
             c.add(
               this.add
-                .text(cx, 650, e.descripcion, { ...estiloTexto(23, COLOR.tintaSuave), align: 'center', wordWrap: { width: ancho - 40 }, lineSpacing: 4 })
+                .text(cx, 640, e.descripcion, { ...estiloTexto(23, COLOR.tintaSuave), align: 'center', wordWrap: { width: ancho - 40 }, lineSpacing: 4 })
                 .setOrigin(0.5, 0),
             );
             const zona = this.add.rectangle(cx, 550, ancho, 760, 0xffffff, 0.001).setInteractive({ useHandCursor: true });
             zona.on('pointerup', () => resolve(id));
             c.add(zona);
           });
+          // Con teclado: izquierda y derecha eligen, A acepta. El marco dorado señala cuál.
+          const marco = this.add.graphics();
+          c.add(marco);
+          let elegida = 0;
+          const marcar = () => {
+            marco.clear();
+            marco.lineStyle(8, COLOR.oro, 1).strokeRoundedRect(24 + elegida * (ancho + 24) - 6, 164, ancho + 12, 772, 40);
+          };
+          marcar();
+          this.nav = {
+            mover: (dir) => {
+              if (dir !== 'izquierda' && dir !== 'derecha') return;
+              elegida = (elegida + (dir === 'derecha' ? 1 : -1) + INICIALES.length) % INICIALES.length;
+              marcar();
+            },
+            aceptar: () => resolve(INICIALES[elegida]),
+          };
         });
         this.cerrarCapa();
         const si = await this.elegir(`¿Eliges a ${DATOS.especies[especie].nombre}?`, ['Sí', 'No']);
@@ -536,7 +568,7 @@ export class Interfaz extends Phaser.Scene {
   /**
    * Menú de pausa, como en los juegos actuales: el equipo a la izquierda, las opciones con
    * iconos a la derecha y, arriba, tu tarjeta. Devuelve `'ovillo'` si se ha usado una Cuerda
-   * huida, para que el mapa lleve al jugador al mesón.
+   * huida, para que el mapa lleve al jugador al último sitio donde descansó.
    */
   menu(
     p: Partida,
@@ -1895,7 +1927,8 @@ export class Interfaz extends Phaser.Scene {
           c.add(iconoObjeto(this, 110, y + 98, id, 100));
           c.add(this.add.text(196, y + 40, obj.nombre, estiloTexto(34, COLOR.tinta, true)).setOrigin(0, 0.5));
           c.add(pildora(this, 196, y + 88, `${precio} ${MONEDA}`, COLOR.oro, 22, COLOR.tinta));
-          c.add(this.add.text(196, y + 120, obj.descripcion, { ...estiloTexto(22, COLOR.tintaSuave), wordWrap: { width: 470 } }));
+          // Hasta los botones de comprar, que empiezan en ANCHO - 330.
+          c.add(this.add.text(196, y + 120, obj.descripcion, { ...estiloTexto(22, COLOR.tintaSuave), wordWrap: { width: 530 } }));
           c.add(this.add.text(ANCHO - 190, y + 40, `Tienes ${p.objetos[id] ?? 0}`, estiloTexto(24, COLOR.tintaSuave, true)).setOrigin(0.5));
           for (const [k, cantidad] of [1, 5].entries()) {
             c.add(

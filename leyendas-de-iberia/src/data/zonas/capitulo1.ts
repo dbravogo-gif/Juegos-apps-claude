@@ -289,7 +289,8 @@ const PABELLON: Zona = {
             ...decir(
               'Isabel',
               'Así que tú eres {nombre}. Acércate.',
-              'Diez años llevamos de guerra por Granada. Este verano ardió nuestro campamento, y en su lugar levantamos esta ciudad de piedra, Santa Fe, para que Boabdil viera que no pensamos marcharnos.',
+              'Diez años llevamos de guerra por Granada. Este verano ardió nuestro campamento, y en su lugar levantamos esta ciudad de piedra, Santa Fe.',
+              'Así Boabdil ve que no pensamos marcharnos.',
               'Granada está a punto de rendirse. Pero en estas tierras no solo luchan los hombres: también las leyendas.',
               'Hay toros que echan fuego, dragos que sangran y duendes que esconden las llaves de las casas. Los pastores los conocen; los cronistas, no.',
               'Quiero que alguien las registre en este Bestiario. Cada criatura que veas y cada pacto que selles quedarán escritos en él.',
@@ -309,7 +310,8 @@ const PABELLON: Zona = {
             ...decir(undefined, 'Con las alpargatas puedes correr: mantén pulsado B mientras andas.'),
             ...decir(
               undefined,
-              'Detrás de ti entran tus dos amigos de siempre. Los tres os criasteis en el campamento real, siguiendo al ejército de asedio en asedio: Málaga, Baza… y ahora, Granada.',
+              'Detrás de ti entran tus dos amigos de siempre.',
+              'Los tres os criasteis en el campamento real, siguiendo al ejército de asedio en asedio: Málaga, Baza… y ahora, Granada.',
             ),
             { tipo: 'conocerRival', rival: 'a' },
             ...decir('{rivalA}', '¡{nombre}! ¿Ya tienes compañera? Pues yo también voy a tener una. Y mejor.'),
@@ -537,6 +539,21 @@ const ALHAMBRA: Zona = {
       entrenador: 'jardinero',
       vision: 1,
       guion: [],
+    },
+    {
+      // Antes del gimnasio hay dónde curar: si no, había que volver a Santa Fe cruzando la Vega.
+      id: 'aguador',
+      nombre: 'Aguador',
+      x: 7,
+      y: 2,
+      dir: 'izquierda',
+      aspecto: 'aguador',
+      guion: [
+        ...decir('Aguador', 'Traigo agua fresca de la Acequia Real, la que sube hasta la Alhambra. Que beban también tus criaturas.'),
+        { tipo: 'curar' },
+        { tipo: 'regreso' },
+        ...decir('Aguador', 'Ya están descansadas. Boabdil te espera en los palacios, ahí arriba.'),
+      ],
     },
   ],
   salidas: [

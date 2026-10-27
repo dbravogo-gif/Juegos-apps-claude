@@ -86,7 +86,8 @@ const LISTA: DefEntrenador[] = [
   {
     id: 'mercader_genoves',
     nombre: 'Mercader genovés',
-    equipo: [{ especie: 'libelula', nivel: 5 }],
+    // Neutral para las tres iniciales: con Aire, Dralín empezaba la Vega con tres combates en contra.
+    equipo: [{ especie: 'duende', nivel: 5 }],
     valia: 4,
     premio: 160,
     objetos: { tesera: 3 },

@@ -495,7 +495,8 @@ const TOLEDO: Zona = {
             bandera('regalo:repartir_exp'),
             ...decir(
               undefined,
-              'Con el Repartir experiencia encendido, las criaturas del equipo que no luchan ganan la mitad de experiencia. Se apaga y se enciende desde la mochila.',
+              'Con el Repartir experiencia encendido, las criaturas del equipo que no luchan ganan la mitad de experiencia.',
+              'Se apaga y se enciende desde la mochila.',
             ),
           ],
         ),
