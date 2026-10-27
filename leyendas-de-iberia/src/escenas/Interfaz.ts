@@ -64,6 +64,8 @@ export class Interfaz extends Phaser.Scene {
   /** Dedo que mantiene pulsado B (para correr). */
   private punteroB: number | null = null;
   private flechas: Partial<Record<Dir, Phaser.GameObjects.Graphics>> = {};
+  /** El rótulo bajo A, que cambia según lo que haya en pantalla. */
+  private rotuloA!: Phaser.GameObjects.Text;
 
   private capaDialogo!: Phaser.GameObjects.Container;
   private textoDialogo!: Phaser.GameObjects.Text;
@@ -167,9 +169,9 @@ export class Interfaz extends Phaser.Scene {
     this.input.on('pointerup', soltar);
     this.input.on('pointerupoutside', soltar);
 
-    this.botonRedondo(BOTON_A.x, BOTON_A.y, BOTON_A.radio, COLOR.rojo, 'A', 'Hablar', () => this.pulsarA());
+    this.rotuloA = this.botonRedondo(BOTON_A.x, BOTON_A.y, BOTON_A.radio, COLOR.rojo, 'A', 'Hablar', () => this.pulsarA()).rotulo;
     // B mantenido, con las alpargatas, es correr.
-    const b = this.botonRedondo(BOTON_B.x, BOTON_B.y, BOTON_B.radio, COLOR.azul, 'B', 'Volver', () => this.pulsarB());
+    const b = this.botonRedondo(BOTON_B.x, BOTON_B.y, BOTON_B.radio, COLOR.azul, 'B', 'Volver', () => this.pulsarB()).circulo;
     b.on('pointerdown', (p: Phaser.Input.Pointer) => (this.punteroB = p.id));
     const soltarB = (p: Phaser.Input.Pointer) => {
       if (p.id === this.punteroB) this.punteroB = null;
@@ -208,12 +210,20 @@ export class Interfaz extends Phaser.Scene {
     else if (dir && this.capaMenu) this.nav?.mover(dir);
   }
 
-  private botonRedondo(x: number, y: number, r: number, color: number, letra: string, etiqueta: string, accion: () => void): Phaser.GameObjects.Arc {
+  private botonRedondo(
+    x: number,
+    y: number,
+    r: number,
+    color: number,
+    letra: string,
+    etiqueta: string,
+    accion: () => void,
+  ): { circulo: Phaser.GameObjects.Arc; rotulo: Phaser.GameObjects.Text } {
     this.add.circle(x, y + 8, r, oscurecer(color, 0.35));
     const c = this.add.circle(x, y, r, color).setInteractive({ useHandCursor: true });
     this.add.circle(x, y - r * 0.35, r * 0.6, 0xffffff, 0.14);
     this.add.text(x, y, letra, estiloTexto(Math.round(r * 0.8), COLOR.panel, true)).setOrigin(0.5);
-    this.add.text(x, y + r + 30, etiqueta, estiloTexto(28, COLOR.panelSuave, true)).setOrigin(0.5);
+    const rotulo = this.add.text(x, y + r + 30, etiqueta, estiloTexto(28, COLOR.panelSuave, true)).setOrigin(0.5);
     let ultima = -Infinity;
     c.on('pointerdown', () => {
       c.setScale(0.94);
@@ -223,7 +233,12 @@ export class Interfaz extends Phaser.Scene {
     });
     c.on('pointerup', () => c.setScale(1));
     c.on('pointerout', () => c.setScale(1));
-    return c;
+    return { circulo: c, rotulo };
+  }
+
+  update(): void {
+    const a = this.alAvanzar ? 'Seguir' : this.capaEleccion || this.capaMenu ? 'Aceptar' : 'Hablar';
+    if (this.rotuloA.text !== a) this.rotuloA.setText(a);
   }
 
   private crearTeclado(): void {
