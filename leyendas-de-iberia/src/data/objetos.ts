@@ -322,6 +322,16 @@ const lista: Objeto[] = [
     aprenden: { tipos: ['agua'] },
     descripcion: 'Enseña Resaca (Agua): puede bajar la Celeridad del rival. No se gasta.',
   },
+  {
+    id: 'mt_lanzada',
+    nombre: 'MT08 Lanzada',
+    articulo: 'una',
+    categoria: 'maquinas',
+    tipo: 'maquina',
+    movimiento: 'lanzada',
+    aprenden: { tipos: ['comun', 'acero'] },
+    descripcion: 'Enseña Lanzada (Común): una acometida con la pica por delante. No se gasta.',
+  },
   // MO: las dan personajes importantes. Sus movimientos también se usan fuera de combate.
   {
     id: 'mo_surf',

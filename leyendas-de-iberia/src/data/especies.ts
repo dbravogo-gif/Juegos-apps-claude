@@ -2,7 +2,7 @@ import type { Especie } from '../core/modelo';
 import type { MovimientoId } from './movimientos';
 import type { TipoId } from './tipos';
 
-// Criaturas de los capítulos 1 («Granada, 1492»), 2 («Toledo, 1521») y 3 («Sevilla, 1571»), según las fichas de
+// Criaturas de los capítulos 1 («Granada, 1492»), 2 («Toledo, 1521»), 3 («Sevilla, 1571») y 4 («Madrid, 1628»), según las fichas de
 // `docs/BESTIARIO.md`, que es la fuente de verdad. Los `id` no cambian aunque cambie el nombre,
 // para no romper las partidas guardadas.
 // Estadísticas base en el orden de Pokémon: Vida, Fuerza, Escudo, Magia, Resistencia mágica y
@@ -72,6 +72,15 @@ const LINEA_BUHO: Aprende = [
   [1, 'aletazo'], [1, 'tiniebla'], [6, 'trastada'], [11, 'mal_de_ojo'], [16, 'ulular'], [21, 'vuelo_silencioso'], [26, 'tarantela'],
 ];
 const LINEA_FRAGATA: Aprende = [[1, 'rociada'], [1, 'bramido'], [5, 'ponzona'], [10, 'brazada'], [15, 'marejada'], [19, 'chispazo']];
+// Capítulo 4
+const LINEA_ARDILLA: Aprende = [[1, 'topetazo'], [1, 'desplante'], [5, 'acometida'], [9, 'dentellada'], [14, 'despensa'], [18, 'trastada']];
+const LINEA_MURCIELAGO: Aprende = [[1, 'aletazo'], [1, 'tiniebla'], [6, 'trastada'], [11, 'mal_de_ojo'], [16, 'vuelo_silencioso'], [21, 'sonar']];
+const LINEA_CABRA: Aprende = [
+  [1, 'topetazo'], [1, 'escarcha'], [6, 'bramido'], [11, 'carambano'], [16, 'testarazo'], [21, 'compactar'], [26, 'ventisca'],
+];
+const LINEA_LUCIERNAGA: Aprende = [[1, 'topetazo'], [1, 'destello'], [6, 'luz_fria'], [11, 'amanecer'], [16, 'resplandor']];
+const LINEA_ORUGA: Aprende = [[1, 'varazo'], [1, 'desplante'], [5, 'polvo_urticante'], [9, 'sopor'], [14, 'hojarasca'], [19, 'resina_roja']];
+const LINEA_MANTIS: Aprende = [[1, 'zarpazo'], [1, 'desplante'], [6, 'acometida'], [11, 'siega'], [16, 'acecho'], [21, 'emboscada']];
 
 const DEF = {
   becerro_igneo: {
@@ -705,6 +714,170 @@ const DEF = {
     ratioCaptura: 120,
     aprende: [[1, 'zarpazo'], [1, 'aullido'], [6, 'acometida'], [11, 'dentellada'], [16, 'emboscada'], [21, 'colmillo_sombrio'], [26, 'testarazo'], [31, 'acecho']],
     descripcion: 'El meloncillo es la única mangosta que vive en Europa. Caza conejos, roedores y serpientes, y aguanta su veneno mejor que otros animales.',
+  },
+  // ---------- Capítulo 4. Madrid y su sierra ----------
+  ardilla: {
+    numero: 51,
+    nombre: 'Ardélix',
+    pasiva: 'rebuscar',
+    tipos: ['comun'],
+    base: [45, 60, 40, 30, 40, 80],
+    expBase: 56,
+    ratioCaptura: 190,
+    aprende: LINEA_ARDILLA,
+    evoluciona: { a: 'ardilla_pinar', nivel: 20 },
+    descripcion: 'La ardilla roja entierra piñas y bellotas para el invierno y olvida muchas: así siembra el bosque.',
+  },
+  ardilla_pinar: {
+    numero: 52,
+    nombre: 'Pinariel',
+    pasiva: 'reposo',
+    tipos: ['comun', 'planta'],
+    base: [75, 80, 75, 55, 75, 90],
+    expBase: 150,
+    ratioCaptura: 75,
+    aprende: [...LINEA_ARDILLA, [20, 'pinazo'], [25, 'polvo_urticante'], [30, 'hojarasca'], [36, 'muerdago']],
+    descripcion: 'En los pinares de Guadarrama, las ardillas abren las piñas escama a escama para comerse los piñones.',
+  },
+  murcielago: {
+    numero: 53,
+    nombre: 'Umbrel',
+    pasiva: 'ojo_avizor',
+    tipos: ['oscuridad'],
+    base: [40, 45, 35, 40, 40, 80],
+    expBase: 50,
+    ratioCaptura: 190,
+    aprende: LINEA_MURCIELAGO,
+    evoluciona: { a: 'murcielago_grande', nivel: 22 },
+    descripcion: 'El murciélago orejudo tiene las orejas casi tan largas como el cuerpo. Caza polillas de noche guiándose por el eco de sus gritos.',
+  },
+  murcielago_grande: {
+    numero: 54,
+    nombre: 'Sonumbra',
+    pasiva: 'tinieblas',
+    tipos: ['oscuridad', 'aire'],
+    base: [75, 65, 65, 90, 70, 110],
+    expBase: 160,
+    ratioCaptura: 75,
+    alada: true,
+    aprende: [...LINEA_MURCIELAGO, [22, 'ventolera'], [28, 'colmillo_sombrio'], [34, 'noche_cerrada']],
+    descripcion: 'Los murciélagos ven con el oído: lanzan gritos tan agudos que las personas no los oyen y escuchan cómo rebotan.',
+  },
+  cabra_montes: {
+    numero: 55,
+    nombre: 'Carámbex',
+    pasiva: 'cabeza_fria',
+    tipos: ['hielo'],
+    base: [50, 65, 45, 45, 45, 75],
+    expBase: 64,
+    ratioCaptura: 150,
+    aprende: LINEA_CABRA,
+    evoluciona: { a: 'macho_montes', nivel: 30 },
+    descripcion: 'Las crías de cabra montés siguen a su madre por los riscos a los pocos días de nacer.',
+  },
+  macho_montes: {
+    numero: 56,
+    nombre: 'Nevárion',
+    pasiva: 'petreo',
+    tipos: ['hielo', 'tierra'],
+    base: [85, 115, 100, 50, 70, 70],
+    expBase: 180,
+    ratioCaptura: 45,
+    sexo: 100,
+    aprende: [...LINEA_CABRA, [30, 'alud'], [35, 'temblor'], [40, 'cantazo']],
+    descripcion: 'A los machos de cabra montés les sale cada año un anillo nuevo en los cuernos: por los anillos se sabe su edad.',
+  },
+  gusano_luz: {
+    numero: 57,
+    nombre: 'Fulgora',
+    pasiva: 'deslumbrante',
+    tipos: ['luz'],
+    base: [50, 30, 45, 60, 60, 45],
+    expBase: 60,
+    ratioCaptura: 150,
+    aprende: LINEA_LUCIERNAGA,
+    evoluciona: { a: 'luciernaga', nivel: 24 },
+    descripcion: 'La hembra de la luciérnaga no tiene alas: se sube a una brizna de hierba y enciende la cola para que la encuentren.',
+  },
+  luciernaga: {
+    numero: 58,
+    nombre: 'Farolera',
+    pasiva: 'bendicion',
+    tipos: ['luz', 'aire'],
+    base: [75, 45, 70, 95, 95, 80],
+    expBase: 165,
+    ratioCaptura: 45,
+    aprende: [...LINEA_LUCIERNAGA, [24, 'revoloteo'], [28, 'ventolera'], [33, 'mocarabe']],
+    descripcion: 'La luz de las luciérnagas es luz fría: casi toda la energía se convierte en luz y apenas da calor.',
+  },
+  oruga: {
+    numero: 59,
+    nombre: 'Velaria',
+    pasiva: 'muda',
+    tipos: ['planta'],
+    base: [50, 35, 55, 40, 50, 30],
+    expBase: 50,
+    ratioCaptura: 190,
+    aprende: LINEA_ORUGA,
+    evoluciona: { a: 'mariposa_isabelina', nivel: 22 },
+    descripcion: 'La oruga de la mariposa isabelina come agujas de pino. Vive en los pinares de Guadarrama y en muy pocos sitios más del mundo.',
+  },
+  mariposa_isabelina: {
+    numero: 60,
+    nombre: 'Ilusaria',
+    pasiva: 'polen_narcotico',
+    tipos: ['aire', 'mental'],
+    base: [70, 45, 60, 100, 85, 95],
+    expBase: 165,
+    ratioCaptura: 45,
+    aprende: [...LINEA_ORUGA, [22, 'revoloteo'], [25, 'tarantela'], [30, 'desvario'], [35, 'ventolera'], [40, 'ofuscacion']],
+    descripcion: 'La mariposa isabelina es de las más bonitas de Europa. Un naturalista le puso el nombre en 1849, en honor de la reina Isabel II.',
+  },
+  madrono: {
+    numero: 61,
+    nombre: 'Madroñal',
+    pasiva: 'brote',
+    tipos: ['planta'],
+    base: [100, 55, 75, 70, 100, 30],
+    expBase: 150,
+    ratioCaptura: 75,
+    sexo: 'hermafrodita',
+    aprende: [[1, 'varazo'], [1, 'desplante'], [6, 'hojarasca'], [11, 'sopor'], [16, 'fruto_maduro'], [21, 'muerdago'], [27, 'polvo_urticante'], [33, 'pinazo']],
+    descripcion: 'El madroño da flores y frutos a la vez, porque los frutos tardan un año en madurar. Con el oso, está en el escudo de Madrid.',
+  },
+  mantis: {
+    numero: 62,
+    nombre: 'Orantis',
+    pasiva: 'tecnica',
+    tipos: ['comun'],
+    base: [45, 70, 45, 30, 40, 70],
+    expBase: 60,
+    ratioCaptura: 150,
+    aprende: LINEA_MANTIS,
+    evoluciona: { a: 'mantis_religiosa', nivel: 26 },
+    descripcion: 'Las crías de mantis salen todas juntas de una cápsula de espuma endurecida, y ya parecen mantis en pequeño.',
+  },
+  mantis_religiosa: {
+    numero: 63,
+    nombre: 'Mantisanta',
+    pasiva: 'punteria',
+    tipos: ['mental'],
+    base: [70, 110, 65, 60, 65, 100],
+    expBase: 175,
+    ratioCaptura: 45,
+    aprende: [...LINEA_MANTIS, [26, 'plegaria'], [30, 'tarantela'], [36, 'alarido'], [42, 'ofuscacion']],
+    descripcion: 'La mantis religiosa espera inmóvil, con las patas delanteras recogidas como si rezara, y caza en un instante.',
+  },
+  basilisco: {
+    numero: 64,
+    nombre: 'Basiliscón',
+    pasiva: 'mirada_torva',
+    tipos: ['tierra', 'mental'],
+    base: [85, 90, 100, 90, 90, 50],
+    expBase: 200,
+    ratioCaptura: 15,
+    aprende: [[1, 'mirada_petrea'], [1, 'terronazo'], [10, 'colmillo_venenoso'], [20, 'temblor'], [30, 'ofuscacion'], [35, 'cantazo'], [40, 'mal_de_ojo']],
+    descripcion: 'Dicen los bestiarios antiguos que el basilisco mata con la mirada, y que solo se le vence con un espejo: muere al ver su propio reflejo.',
   },
 } satisfies Record<string, DefEspecie>;
 

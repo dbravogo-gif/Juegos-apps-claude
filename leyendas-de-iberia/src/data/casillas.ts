@@ -55,4 +55,14 @@ export const CASILLAS: Record<string, DefCasilla> = {
   x: { nombre: 'Galeón', solido: true },
   s: { nombre: 'Sillares', solido: true },
   a: { nombre: 'Andamio', solido: true },
+  // Capítulo 4. Las trincheras del campo de Breda: cauces con compuerta que se secan o se inundan
+  // según las palancas `a` y `b` de la zona (sin echar, `c` e `i` están inundados).
+  c: { nombre: 'Cauce', solido: true, compuerta: { palanca: 'a', seca: true } },
+  e: { nombre: 'Cauce', solido: false, compuerta: { palanca: 'a', seca: false } },
+  i: { nombre: 'Cauce', solido: true, compuerta: { palanca: 'b', seca: true } },
+  j: { nombre: 'Cauce', solido: false, compuerta: { palanca: 'b', seca: false } },
+  /** Cestón de mimbre lleno de tierra, de los asedios. */
+  F: { nombre: 'Gavión', solido: true },
+  /** Suelo de cueva o galería donde salen criaturas, como la hierba alta. */
+  y: { nombre: 'Galería', solido: false, hierba: true },
 };

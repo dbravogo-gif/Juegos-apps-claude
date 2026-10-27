@@ -1637,6 +1637,83 @@ def canon() -> Lienzo:
     return l
 
 
+# ---------------------------------------------------------------- capítulo 4: el campo de Breda
+
+def cauce_seco() -> Lienzo:
+    """Cauce de una trinchera con la compuerta cerrada: barro oscuro con charcos y un paso de
+    tablas atravesado, por donde se cruza."""
+    m = MADERA
+    l = Lienzo(fondo=rgb(112, 82, 58))
+    for y in range(16):
+        for x in range(16):
+            n = azar(x, y, 77)
+            if n < 0.12:
+                l.pon(x, y, rgb(94, 68, 48))
+            elif n > 0.93:
+                l.pon(x, y, rgb(134, 102, 74))
+    # Charcos que quedan al bajar el agua.
+    for (cx, cy) in ((3, 2), (12, 13)):
+        l.rect(cx - 1, cy, 3, 1, rgb(96, 128, 150))
+        l.pon(cx, cy - 1, rgb(96, 128, 150))
+    # Tablas de lado a lado, con su clavazón.
+    for y0 in (4, 8):
+        l.rect(1, y0, 14, 3, m['media'])
+        l.rect(1, y0, 14, 1, m['clara'])
+        l.rect(1, y0 + 2, 14, 1, m['oscura'])
+        l.pon(2, y0 + 1, OSCURO)
+        l.pon(13, y0 + 1, OSCURO)
+    return l
+
+
+def palanca(echada: bool) -> Lienzo:
+    """Palanca de una compuerta: un poste de madera con su brazo de hierro y el puño rojo. Echada,
+    el brazo cae a la derecha; sin echar, apunta arriba a la izquierda."""
+    m = MADERA
+    l = Lienzo(16, 24)
+    hierro = rgb(80, 82, 92)
+    # Brazo.
+    if echada:
+        puntos = [(8 + i, 14 + i // 2) for i in range(7)]
+        puno = (14, 17)
+    else:
+        puntos = [(8 - i // 2, 14 - i) for i in range(10)]
+        puno = (3, 4)
+    for (x, y) in puntos:
+        l.rect(x, y, 2, 2, hierro)
+    l.rect(puno[0] - 1, puno[1] - 1, 3, 3, rgb(196, 48, 52))
+    l.pon(puno[0] - 1, puno[1] - 1, rgb(236, 110, 104))
+    # Poste y base de piedra.
+    l.rect(6, 12, 4, 8, m['media'])
+    l.rect(6, 12, 1, 8, m['clara'])
+    l.rect(9, 12, 1, 8, m['oscura'])
+    l.rect(3, 19, 10, 4, GRANITO['media'])
+    l.rect(3, 19, 10, 1, GRANITO['clara'])
+    l.contorno(m['contorno'])
+    return l
+
+
+def gavion() -> Lienzo:
+    """Gavión (cestón) de mimbre lleno de tierra, de los que se usaban en los asedios para
+    proteger las baterías y las trincheras."""
+    l = Lienzo()
+    mimbre = dict(clara=rgb(200, 164, 104), media=rgb(166, 128, 76), oscura=rgb(120, 88, 52))
+    l.rect(2, 4, 12, 11, mimbre['media'])
+    # Trenzado: franjas alternas.
+    for y in range(5, 15):
+        for x in range(2, 14):
+            if (x + (y // 2)) % 3 == 0:
+                l.pon(x, y, mimbre['oscura'])
+            elif (x + (y // 2)) % 3 == 1 and y % 2 == 0:
+                l.pon(x, y, mimbre['clara'])
+    # Tierra por arriba, con hierbajos.
+    l.rect(2, 2, 12, 3, rgb(120, 86, 58))
+    l.rect(3, 2, 10, 1, rgb(146, 108, 74))
+    l.pon(5, 1, HIERBA['oscura'])
+    l.pon(10, 1, rgb(70, 120, 60))
+    l.contorno(rgb(70, 50, 34))
+    return l
+
+
 def giralda() -> Lienzo:
     """La Giralda en 1571: el alminar almohade de ladrillo, con sus paños de sebka, y encima el
     campanario que acabó Hernán Ruiz en 1568, con el Giraldillo en lo alto."""
@@ -1897,6 +1974,10 @@ def construir() -> Hoja:
     h.pon('galeon', galeon())
     h.pon('sillares', sillares())
     h.pon('andamio', andamio())
+    h.pon('cauce.seco', cauce_seco())
+    h.pon('palanca.0', palanca(False))
+    h.pon('palanca.1', palanca(True))
+    h.pon('gavion', gavion())
     return h
 
 

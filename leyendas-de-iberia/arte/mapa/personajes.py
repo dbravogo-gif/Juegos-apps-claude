@@ -466,6 +466,23 @@ PERSONAJES = {
                          tocado='gorro', color_tocado=(120, 116, 110), barba=(90, 64, 44), delantal=True),
     'arriero': personaje(piel='morena', pelo=(56, 42, 34), ropa=(124, 86, 52), calzas=(70, 56, 46),
                          tocado='sombrero', color_tocado=(70, 50, 40), barba=(56, 42, 34)),
+    # Capítulo 4. Felipe IV, rubio y de negro con golilla; el conde-duque de Olivares, moreno y
+    # corpulento, con la cruz verde de Alcántara (aquí, el cuello verde); Spínola, canoso, con
+    # armadura y la banda roja de general; un soldado de los tercios con morrión; un montero real
+    # de verde; un cartujo de El Paular, de blanco, y Velázquez, de negro con golilla.
+    'felipe_iv': personaje(pelo=(214, 160, 96), ropa=(34, 32, 40), cuello=(244, 240, 232), calzas=(30, 28, 36),
+                           barba=(214, 160, 96)),
+    'olivares': personaje(piel='tostada', pelo=(40, 32, 30), ropa=(34, 32, 40), cuello=(244, 240, 232),
+                          calzas=(30, 28, 36), barba=(40, 32, 30), capa=(40, 110, 60)),
+    'spinola': personaje(pelo=(176, 176, 180), ropa=(70, 74, 86), cuello=(244, 240, 232), calzas=(50, 50, 60),
+                         barba=(176, 176, 180), capa=(170, 30, 40)),
+    'tercio': personaje(pelo=(70, 50, 40), ropa=(196, 160, 96), cuello=(170, 30, 40), calzas=(110, 80, 56),
+                        tocado='capacete', color_tocado=(176, 180, 190), barba=(70, 50, 40)),
+    'montero': personaje(piel='tostada', pelo=(80, 56, 40), ropa=(60, 110, 60), calzas=(90, 70, 50),
+                         tocado='sombrero', color_tocado=(50, 80, 46), barba=(80, 56, 40)),
+    'cartujo': personaje(ropa=(236, 232, 222), vestido=(236, 232, 222), tocado='capucha', color_tocado=(236, 232, 222)),
+    'velazquez': personaje(pelo=(40, 32, 30), ropa=(34, 32, 40), cuello=(244, 240, 232), calzas=(30, 28, 36),
+                           barba=(40, 32, 30), melena=True),
     # Los rivales: los dos amigos del protagonista, que viajan como él.
     'rival_a': personaje(piel='morena', pelo=(40, 32, 30), ropa=(40, 150, 104), calzas=(70, 60, 50), tocado='sombrero',
                          color_tocado=(120, 84, 52)),

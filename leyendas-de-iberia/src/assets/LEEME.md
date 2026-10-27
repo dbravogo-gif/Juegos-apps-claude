@@ -20,6 +20,9 @@ script y se vuelve a ejecutar (`python3 arte/mapa/tileset.py`).
   centradas y apoyadas en la fila de abajo: la Giralda (`g`, 2 × 3, con el campanario que acabó
   Hernán Ruiz en 1568), la Torre del Oro (`t`, 2 × 2, sin la linterna, que es de 1760) y el
   galeón (`x`, 3 × 2, sobre el agua).
+- Capítulo 4: el cauce seco de una trinchera (barro y un paso de tablas; inundado se dibuja como
+  una acequia), la palanca de las compuertas (`palanca.0`, sin echar; `palanca.1`, echada) y el
+  gavión, el cestón de mimbre lleno de tierra de los asedios.
 - `zurron`: el zurrón de cuero con hebilla de los objetos que se ven en el suelo (las MT).
 - El agua profunda (`O`, la del Tajo) se dibuja como las acequias; con Pleamar se puede cruzar.
 
@@ -81,6 +84,13 @@ y su ropa. **No se editan a mano.**
 | `marinero.png` | Camisa clara y gorro rojo de marinero | Los marineros del galeón |
 | `cantero.png` | Gorro gris, delantal y barba | Canteros de El Escorial |
 | `arriero.png` | Sombrero de ala y barba | El arriero de Sierra Morena |
+| `felipe_iv.png` | Rubio, de negro con golilla | Felipe IV |
+| `olivares.png` | Moreno, de negro, con capa verde (la cruz de Alcántara) | El conde-duque de Olivares |
+| `spinola.png` | Canoso, con armadura y la banda roja de general | Ambrosio Spínola |
+| `tercio.png` | Morrión y coleto de ante | Soldados de los tercios |
+| `montero.png` | Sombrero y ropa verde | Monteros del rey |
+| `cartujo.png` | Hábito y capucha blancos | El cartujo de El Paular |
+| `velazquez.png` | De negro con golilla, melena y bigote | Velázquez |
 | `muchacho_agua.png` | El jugador sobre una criatura de agua genérica, verde azulada, como en el género | El jugador con Pleamar |
 | `monje.png`, `aldeano.png` | Fraile y aldeano | Villalar |
 | `aldeano_verde.png`, `aldeana.png`, `maestro.png` | Aldeanos y un sabio | De reserva |
@@ -90,10 +100,11 @@ y su ropa. **No se editan a mano.**
 `<id>.webp`: bustos de 384 px sobre fondo transparente, apoyados abajo, para los diálogos. Qué
 nombre usa cada uno está en `src/data/retratos.ts`. Solo llevan retrato los personajes
 importantes (decisión del autor): Isabel, Fernando, el Gran Capitán, Colón, Boabdil, Juan de
-Padilla, María Pacheco, Felipe II y Pedro Menéndez de Avilés. Los demás están hechos y guardados
-en `arte/retratos-reserva/`, fuera del juego (entre ellos Carlos V y Juan de Austria, para
-capítulos siguientes). El de Menéndez se hizo aparte el 2026-10-27, con la cruz roja de
-Santiago en el pecho.
+Padilla, María Pacheco, Felipe II, Pedro Menéndez de Avilés, Felipe IV, Olivares y Spínola. Los
+demás están hechos y guardados en `arte/retratos-reserva/`, fuera del juego (entre ellos Carlos V
+y Juan de Austria, para capítulos siguientes). El de Menéndez se hizo aparte el 2026-10-27, con la
+cruz roja de Santiago en el pecho; los de Felipe IV (con el Toisón), Olivares (con la cruz verde
+de Alcántara) y Spínola (con armadura y la banda roja), también ese día.
 
 - **Origen:** OpenArt (GPT Image 2) el 2026-10-25, en cuatro hojas de 3 × 2, con el estilo de las
   criaturas (dibujo limpio, colores planos con una sombra, contorno fino) y la ropa de la época.
@@ -125,6 +136,10 @@ Santiago en el pecho.
   rehacerse.
 - **Capítulo 3 (2026-10-27):** las 14 especies nuevas, en hojas de N columnas × 2 filas: arriba
   la vista de rival y abajo la del jugador de la misma criatura, para que salgan iguales.
+- **Capítulo 4 (2026-10-27):** las 14 especies nuevas, igual. En Farolera y Mantisanta el halo de
+  luz quedaba como un borde blanco opaco: en los píxeles muy claros, el blanco se pasa a
+  transparencia (`blanco_a_alfa.py` en el scratchpad de esa sesión), y el brillo queda
+  translúcido. Ilusaria sale de frente, con las alas abiertas, y no de tres cuartos.
 - Reserva para más adelante: `arte/criaturas-futuras/` (Guayota y la vieja).
 
 ## Objetos (`objetos/`) e iconos de menú (`iconos/`)

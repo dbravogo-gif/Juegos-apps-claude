@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
-import type { EstiloZona, Zona } from '../core/mundo';
+import { cauceSeco, type EstiloZona, type Zona } from '../core/mundo';
+import { CASILLAS } from '../data/casillas';
 import hoja from '../assets/mundo/iberia.json';
 import urlHoja from '../assets/mundo/iberia.png?url';
 
@@ -43,6 +44,15 @@ const CAMINO = new Set(['.', 'S', 'G', '=', 'P']);
 const JUNTO_CAMINO = new Set([...CAMINO, 'A']);
 const JUNTO_EMPEDRADO = new Set(['S', 'G', 'P', 'A']);
 const ACEQUIA = new Set(['~', '=', 'O', 'N', 'V', 'x']);
+/** Cauces con compuerta: agua o barro según las palancas. */
+const CAUCES = new Set(Object.entries(CASILLAS).filter(([, d]) => d.compuerta).map(([c]) => c));
+
+/** Lo que es agua ahora en la zona: las acequias y los cauces inundados. */
+function aguaDe(zona: Zona, banderas: Record<string, boolean>): Set<string> {
+  const agua = new Set(ACEQUIA);
+  for (const c of CAUCES) if (!cauceSeco(zona.id, CASILLAS[c].compuerta!, banderas)) agua.add(c);
+  return agua;
+}
 const MURALLA = new Set(['M', 'G', 'P']);
 const PAREDES = new Set(['W', 'Z', 'L']);
 
@@ -107,7 +117,7 @@ const pieza = (nombre: string): Capa => ({ pieza: nombre });
 const bits = (...b: boolean[]) => b.map((x) => (x ? '1' : '0')).join('');
 
 /** Capas del suelo de una casilla, de abajo arriba. `f` es el fotograma del agua. */
-function capasDe(zona: Zona, x: number, y: number, f: number): Capa[] {
+function capasDe(zona: Zona, x: number, y: number, f: number, agua: Set<string>): Capa[] {
   const v = new Vecindad(zona, x, y);
   const c = v.en(0, 0);
   const estilo = estiloDe(zona);
@@ -145,7 +155,7 @@ function capasDe(zona: Zona, x: number, y: number, f: number): Capa[] {
     case 'O':
     case 'N':
     case 'x':
-      capas.push({ material: `acequia.${f}`, familia: ACEQUIA, fuera: true });
+      capas.push({ material: `acequia.${f}`, familia: agua, fuera: true });
       // Donde cae una cascada, espuma.
       if (v.en(0, -1) === 'V') capas.push(pieza(`espuma.${f}`));
       break;
@@ -160,10 +170,19 @@ function capasDe(zona: Zona, x: number, y: number, f: number): Capa[] {
       break;
     case '=': {
       // Sobre un agua que corre de este a oeste, el puente va de norte a sur, y al revés.
-      const deLado = v.es(ACEQUIA, -1, 0, false) || v.es(ACEQUIA, 1, 0, false);
-      capas.push({ material: `acequia.${f}`, familia: ACEQUIA, fuera: true }, pieza(deLado ? 'puente' : 'puente.horizontal'));
+      const deLado = v.es(agua, -1, 0, false) || v.es(agua, 1, 0, false);
+      capas.push({ material: `acequia.${f}`, familia: agua, fuera: true }, pieza(deLado ? 'puente' : 'puente.horizontal'));
       break;
     }
+    case 'c':
+    case 'e':
+    case 'i':
+    case 'j':
+      capas.push(agua.has(c) ? { material: `acequia.${f}`, familia: agua, fuera: true } : pieza('cauce.seco'));
+      break;
+    case 'F':
+      capas.push(pieza('gavion'));
+      break;
     case 'A':
       capas.push({ material: `fuente.${f}`, familia: new Set(['A']), fuera: false });
       break;
@@ -232,9 +251,9 @@ function muro(v: Vecindad, c: string, estilo: EstiloZona): Capa[] {
 const FORMA_CUARTO = (h: boolean, v: boolean, d: boolean) =>
   !h && !v ? 'esquina' : h && !v ? 'horizontal' : !h && v ? 'vertical' : d ? 'lleno' : 'interior';
 
-function pintarCasilla(ctx: CanvasRenderingContext2D, img: CanvasImageSource, zona: Zona, x: number, y: number, f: number): void {
+function pintarCasilla(ctx: CanvasRenderingContext2D, img: CanvasImageSource, zona: Zona, x: number, y: number, f: number, agua: Set<string>): void {
   const v = new Vecindad(zona, x, y);
-  for (const capa of capasDe(zona, x, y, f)) {
+  for (const capa of capasDe(zona, x, y, f, agua)) {
     if ('pieza' in capa) {
       const [px, py] = PIEZAS[capa.pieza];
       ctx.drawImage(img, px, py, PX, PX, x * PX, y * PX, PX, PX);
@@ -257,7 +276,7 @@ function pintarCasilla(ctx: CanvasRenderingContext2D, img: CanvasImageSource, zo
   }
 }
 
-const ANIMADAS = new Set(['~', '=', 'O', 'A', 'V', 'N']);
+const ANIMADAS = new Set(['~', '=', 'O', 'A', 'V', 'N', ...CAUCES]);
 
 // ---------- Objetos altos ----------
 
@@ -352,8 +371,10 @@ function objetosDe(zona: Zona): Objeto[] {
 /**
  * Dibuja la zona en `capa`: el suelo a profundidad −1 y los objetos altos a la de su fila más un
  * poco, para que tapen a quien esté justo detrás (al norte) y no a quien esté delante.
+ * `banderas` son las de la partida (se leen al pintar: así los cauces siguen a las palancas).
+ * Devuelve cómo repintar el suelo entero, para cuando se mueve una palanca.
  */
-export function dibujarZona(scene: Phaser.Scene, zona: Zona, capa: Phaser.GameObjects.Container): void {
+export function dibujarZona(scene: Phaser.Scene, zona: Zona, capa: Phaser.GameObjects.Container, banderas: Record<string, boolean> = {}): () => void {
   const ancho = zona.mapa[0].length;
   const alto = zona.mapa.length;
   const clave = `suelo-${zona.id}`;
@@ -362,12 +383,16 @@ export function dibujarZona(scene: Phaser.Scene, zona: Zona, capa: Phaser.GameOb
   const ctx = lienzo.context;
   const img = scene.textures.get(CLAVE).getSourceImage() as CanvasImageSource;
   const animadas: [number, number][] = [];
+  let f = 0;
+  const pintarTodo = () => {
+    const agua = aguaDe(zona, banderas);
+    for (let y = 0; y < alto; y++) for (let x = 0; x < ancho; x++) pintarCasilla(ctx, img, zona, x, y, f, agua);
+    lienzo.refresh();
+  };
   zona.mapa.forEach((fila, y) => {
-    for (let x = 0; x < ancho; x++) {
-      pintarCasilla(ctx, img, zona, x, y, 0);
-      if (ANIMADAS.has(fila[x])) animadas.push([x, y]);
-    }
+    for (let x = 0; x < ancho; x++) if (ANIMADAS.has(fila[x])) animadas.push([x, y]);
   });
+  pintarTodo();
   lienzo.setFilter(Phaser.Textures.FilterMode.NEAREST);
   lienzo.refresh();
   capa.add(scene.add.image(0, 0, clave).setOrigin(0).setScale(ESCALA).setDepth(-1));
@@ -382,19 +407,25 @@ export function dibujarZona(scene: Phaser.Scene, zona: Zona, capa: Phaser.GameOb
   }
 
   if (animadas.length > 0) {
-    let f = 0;
     const evento = scene.time.addEvent({
       delay: 260,
       loop: true,
       callback: () => {
         f = (f + 1) % 4;
-        for (const [x, y] of animadas) pintarCasilla(ctx, img, zona, x, y, f);
+        const agua = aguaDe(zona, banderas);
+        for (const [x, y] of animadas) pintarCasilla(ctx, img, zona, x, y, f, agua);
         lienzo.refresh();
         for (const [imagen, fotogramas] of conFotogramas) imagen.setFrame(fotogramas[f]);
       },
     });
     capa.once(Phaser.GameObjects.Events.DESTROY, () => evento.remove());
   }
+  return pintarTodo;
+}
+
+/** Palanca de una compuerta, apoyada en el borde inferior de su casilla. */
+export function dibujarPalanca(scene: Phaser.Scene, x: number, y: number, echada: boolean): Phaser.GameObjects.Image {
+  return imagenPieza(scene, echada ? 'palanca.1' : 'palanca.0', (x + 0.5) * TAM_CASILLA, (y + 1) * TAM_CASILLA).setOrigin(0.5, 1).setDepth(y + 0.4);
 }
 
 /** Cartel de madera, apoyado en el borde inferior de su casilla. */

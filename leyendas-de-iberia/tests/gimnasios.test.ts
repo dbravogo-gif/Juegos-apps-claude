@@ -4,7 +4,7 @@ import { CASILLAS, ENTRADAS, ENTRENADORES, INICIO, ZONAS } from '../src/data/mun
 import { crearCriatura } from '../src/core/criatura';
 import { vidaMaxima } from '../src/core/estadisticas';
 import { crearRng } from '../src/core/rng';
-import { ancho, deslizamiento, DELTA, enLineaDeVision, esSolida, posicionValida, type Dir, type Paso, type Zona } from '../src/core/mundo';
+import { ancho, banderaPalanca, cauceSeco, casillaEn, deslizamiento, DELTA, enLineaDeVision, esSolida, posicionValida, type Dir, type Paso, type Zona } from '../src/core/mundo';
 import { alterarUna, anadirCriatura, aplicarCombate, herirUna, nuevaPartida } from '../src/core/partida';
 
 function partidaCon(...especies: string[]) {
@@ -102,6 +102,31 @@ describe('cubierta resbaladiza', () => {
   });
 });
 
+describe('compuertas', () => {
+  const trinchera: Zona = {
+    id: 'prueba',
+    nombre: 'Prueba',
+    mapa: ['BcB', 'BeB'],
+    pnj: [],
+    salidas: [],
+    carteles: [],
+    palancas: [{ id: 'a', x: 0, y: 0 }],
+  };
+
+  it('sin echar la palanca, un cauce está inundado y el otro seco; echada, al revés', () => {
+    expect(esSolida(trinchera, 1, 0, CASILLAS)).toBe(true);
+    expect(esSolida(trinchera, 1, 1, CASILLAS)).toBe(false);
+    const echada = { [banderaPalanca('prueba', 'a')]: true };
+    expect(esSolida(trinchera, 1, 0, CASILLAS, echada)).toBe(false);
+    expect(esSolida(trinchera, 1, 1, CASILLAS, echada)).toBe(true);
+    expect(cauceSeco('prueba', CASILLAS.c.compuerta!, echada)).toBe(true);
+  });
+
+  it('las palancas son de su zona: la de otra no cuenta', () => {
+    expect(esSolida(trinchera, 1, 0, CASILLAS, { [banderaPalanca('otra', 'a')]: true })).toBe(true);
+  });
+});
+
 /**
  * Los gimnasios (decisiones del autor, 2026-10-27): caben de ancho en la pantalla, tienen dos o
  * tres entrenadores además del líder y algo que los haga distintos (preguntas, laberinto…).
@@ -109,37 +134,72 @@ describe('cubierta resbaladiza', () => {
  * preguntan antes de combatir. `laberinto`: el camino hasta el líder es al menos el doble de largo
  * que la distancia en línea recta, y a oscuras. `resbaladizo`: hay que resbalar con cabeza (al
  * menos `resbaladizo` movimientos) y desde ningún sitio de la cubierta te quedas sin poder volver.
+ * `palancas`: sin moverlas no se llega al líder, hace falta moverlas al menos tantas veces, y
+ * nadie se queda dentro de un cauce que se inunda.
  */
-const GIMNASIOS: Record<string, { lider: string; obligatorios: string[]; preguntas?: boolean; laberinto?: boolean; resbaladizo?: number }> = {
+const GIMNASIOS: Record<
+  string,
+  { lider: string; obligatorios: string[]; preguntas?: boolean; laberinto?: boolean; resbaladizo?: number; palancas?: number }
+> = {
   patio_leones: { lider: 'boabdil', obligatorios: ['guardia', 'poeta', 'alarife'], preguntas: true },
   alcazar_toledo: { lider: 'maria_pacheco', obligatorios: ['escudero', 'espadero', 'artillero'], laberinto: true },
   galeon: { lider: 'menendez', obligatorios: ['grumete', 'marinero', 'contramaestre'], resbaladizo: 20 },
+  breda: { lider: 'spinola', obligatorios: ['piquero', 'arcabucero', 'alferez'], palancas: 3 },
 };
 
 /**
- * Movimientos desde una casilla, con los personajes como estorbo y resbalando donde resbala (en
- * suelo seco, un movimiento es un paso). Un resbalón que cruza una casilla prohibida no vale.
+ * Movimientos desde una casilla, con los personajes como estorbo, resbalando donde resbala y
+ * moviendo las palancas que haya (en suelo seco, un movimiento es un paso; mover una palanca,
+ * otro). Un resbalón que cruza una casilla prohibida no vale. Devuelve, por casilla, el mínimo de
+ * movimientos con cualquier posición de las palancas, y cuántas veces hubo que moverlas.
+ * `conPalancas = false`: como si no se pudieran mover.
  */
-function distancias(z: Zona, desde: [number, number], prohibidas = new Set<string>()): Map<string, number> {
-  const estorbos = new Set([...z.pnj, ...z.carteles, ...(z.recipientes ?? [])].map((o) => `${o.x},${o.y}`));
-  const libre = (x: number, y: number) => !esSolida(z, x, y, CASILLAS) && !estorbos.has(`${x},${y}`);
-  const dist = new Map([[desde.join(','), 0]]);
-  const cola = [desde];
+function recorrer(z: Zona, desde: [number, number], prohibidas = new Set<string>(), conPalancas = true) {
+  const estorbos = new Set([...z.pnj, ...z.carteles, ...(z.recipientes ?? []), ...(z.palancas ?? [])].map((o) => `${o.x},${o.y}`));
+  const palancas = conPalancas ? (z.palancas ?? []) : [];
+  type Estado = { x: number; y: number; b: Record<string, boolean>; n: number; tirones: number };
+  const libre = (b: Record<string, boolean>) => (x: number, y: number) => !esSolida(z, x, y, CASILLAS, b) && !estorbos.has(`${x},${y}`);
+  const clave = (e: Pick<Estado, 'x' | 'y' | 'b'>) => `${e.x},${e.y}|${palancas.map((p) => (e.b[banderaPalanca(z.id, p.id)] ? 1 : 0)).join('')}`;
+  const inicio: Estado = { x: desde[0], y: desde[1], b: {}, n: 0, tirones: 0 };
+  const vistos = new Set([clave(inicio)]);
+  const dist = new Map<string, number>([[desde.join(','), 0]]);
+  const tirones = new Map<string, number>([[desde.join(','), 0]]);
+  const cola = [inicio];
+  const nuevo = (e: Estado) => {
+    const k = clave(e);
+    if (vistos.has(k)) return;
+    vistos.add(k);
+    cola.push(e);
+    const pos = `${e.x},${e.y}`;
+    if (!dist.has(pos)) {
+      dist.set(pos, e.n);
+      tirones.set(pos, e.tirones);
+    }
+  };
   while (cola.length > 0) {
-    const [x, y] = cola.shift()!;
+    const e = cola.shift()!;
+    const puede = libre(e.b);
     for (const [dir, [dx, dy]] of Object.entries(DELTA) as [Dir, [number, number]][]) {
-      if (!libre(x + dx, y + dy)) continue;
-      const camino = deslizamiento(z, { x: x + dx, y: y + dy }, dir, CASILLAS, libre);
+      const palanca = palancas.find((p) => p.x === e.x + dx && p.y === e.y + dy);
+      if (palanca) {
+        const k = banderaPalanca(z.id, palanca.id);
+        const b = { ...e.b, [k]: !e.b[k] };
+        // Nunca se inunda el cauce donde uno está.
+        if (libre(b)(e.x, e.y)) nuevo({ x: e.x, y: e.y, b, n: e.n + 1, tirones: e.tirones + 1 });
+        continue;
+      }
+      if (!puede(e.x + dx, e.y + dy)) continue;
+      const camino = deslizamiento(z, { x: e.x + dx, y: e.y + dy }, dir, CASILLAS, puede);
       if (camino.some((c) => prohibidas.has(`${c.x},${c.y}`))) continue;
       const fin = camino.at(-1)!;
-      const clave = `${fin.x},${fin.y}`;
-      if (!dist.has(clave)) {
-        dist.set(clave, dist.get(`${x},${y}`)! + 1);
-        cola.push([fin.x, fin.y]);
-      }
+      nuevo({ x: fin.x, y: fin.y, b: e.b, n: e.n + 1, tirones: e.tirones });
     }
   }
-  return dist;
+  return { dist, tirones };
+}
+
+function distancias(z: Zona, desde: [number, number], prohibidas = new Set<string>()): Map<string, number> {
+  return recorrer(z, desde, prohibidas).dist;
 }
 
 const castiga = (pasos: Paso[]) => pasos.some((p) => p.tipo === 'herir' || p.tipo === 'alterar');
@@ -200,6 +260,27 @@ describe('gimnasios', () => {
         for (const clave of d.keys()) {
           const [x, y] = clave.split(',').map(Number);
           expect(distancias(z, [x, y]).has(entrada.join(',')), clave).toBe(true);
+        }
+      });
+    }
+
+    if (g.palancas) {
+      it(`${id}: hay que mover las palancas, y bien`, () => {
+        const meta = [[1, 0], [-1, 0], [0, 1], [0, -1]].map(([dx, dy]) => `${lider.x + dx},${lider.y + dy}`);
+        expect(meta.some((m) => recorrer(z, entrada, new Set(), false).dist.has(m))).toBe(false);
+        const { dist, tirones } = recorrer(z, entrada);
+        const mejor = meta.filter((m) => dist.has(m)).sort((a, b) => dist.get(a)! - dist.get(b)!)[0];
+        expect(tirones.get(mejor)).toBeGreaterThanOrEqual(g.palancas!);
+      });
+
+      it(`${id}: ninguna palanca está junto a un cauce, ni un entrenador mira por encima de uno`, () => {
+        const cauce = (x: number, y: number) => Boolean(CASILLAS[casillaEn(z, x, y)]?.compuerta);
+        for (const p of z.palancas ?? []) {
+          for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) expect(cauce(p.x + dx, p.y + dy), `palanca ${p.id}`).toBe(false);
+        }
+        for (const p of entrenadores) {
+          const [dx, dy] = DELTA[p.dir];
+          for (let i = 1; i <= (p.vision ?? 0); i++) expect(cauce(p.x + dx * i, p.y + dy * i), p.id).toBe(false);
         }
       });
     }

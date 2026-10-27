@@ -261,6 +261,55 @@ const MOVIMIENTOS_DEF = {
     descripcion: 'Un ulular grave y lento que duerme al rival.',
   },
 
+  // Capítulo 4 (Madrid y su sierra): los primeros de Hielo.
+  escarcha: {
+    nombre: 'Escarcha', tipo: 'hielo', categoria: 'magico', poder: 40, precision: 100, pp: 30,
+    efectos: [{ tipo: 'etapa', objetivo: 'rival', estadistica: 'celeridad', cambio: -1, prob: 10 }],
+    descripcion: 'Una capa de escarcha que entumece: puede bajar la Celeridad del rival.',
+  },
+  carambano: {
+    nombre: 'Carámbano', tipo: 'hielo', categoria: 'fisico', poder: 65, precision: 100, pp: 20,
+    efectos: [{ tipo: 'retroceso', prob: 10 }],
+    descripcion: 'Le clava un carámbano afilado: el rival puede retroceder.',
+  },
+  ventisca: { nombre: 'Ventisca', tipo: 'hielo', categoria: 'magico', poder: 90, precision: 85, pp: 10 },
+  alud: {
+    nombre: 'Alud', tipo: 'hielo', categoria: 'fisico', poder: 90, precision: 90, pp: 10,
+    descripcion: 'Se le viene encima la nieve de toda una ladera.',
+  },
+  despensa: {
+    nombre: 'Despensa', tipo: 'comun', categoria: 'estado', poder: 0, precision: null, pp: 10,
+    efectos: [{ tipo: 'curar', fraccion: 0.5 }],
+    descripcion: 'Saca algo de lo que tenía enterrado y recupera la mitad de la Vida.',
+  },
+  pinazo: { nombre: 'Piñazo', tipo: 'planta', categoria: 'fisico', poder: 75, precision: 95, pp: 15 },
+  sonar: {
+    nombre: 'Sónar', tipo: 'aire', categoria: 'magico', poder: 70, precision: null, pp: 15,
+    descripcion: 'Un grito tan agudo que no se oye: rebota en el rival y no falla nunca.',
+  },
+  luz_fria: {
+    nombre: 'Luz fría', tipo: 'luz', categoria: 'magico', poder: 50, precision: 100, pp: 25,
+    efectos: [{ tipo: 'etapa', objetivo: 'propio', estadistica: 'resMagica', cambio: 1, prob: 20 }],
+    descripcion: 'La luz de las luciérnagas, que casi no da calor. Puede subir la Resistencia mágica propia.',
+  },
+  fruto_maduro: {
+    nombre: 'Fruto maduro', tipo: 'planta', categoria: 'estado', poder: 0, precision: null, pp: 10,
+    efectos: [{ tipo: 'curar', fraccion: 0.5 }],
+    descripcion: 'Se come uno de sus frutos y recupera la mitad de la Vida.',
+  },
+  siega: { nombre: 'Siega', tipo: 'comun', categoria: 'fisico', poder: 70, precision: 100, pp: 20, descripcion: 'Un tajo de las patas delanteras, como una guadaña.' },
+  plegaria: {
+    nombre: 'Plegaria', tipo: 'mental', categoria: 'estado', poder: 0, precision: null, pp: 20,
+    efectos: [{ tipo: 'etapa', objetivo: 'propio', estadistica: 'fuerza', cambio: 2, prob: 100 }],
+    descripcion: 'Se queda inmóvil, como rezando, y se concentra: sube mucho la Fuerza propia.',
+  },
+  mirada_petrea: {
+    nombre: 'Mirada pétrea', tipo: 'tierra', categoria: 'estado', poder: 0, precision: 75, pp: 10,
+    efectos: [{ tipo: 'estado', estado: 'paralizado', prob: 100 }],
+    descripcion: 'Una mirada que deja al rival de piedra: lo paraliza.',
+  },
+  lanzada: { nombre: 'Lanzada', tipo: 'comun', categoria: 'fisico', poder: 80, precision: 100, pp: 15, descripcion: 'Una acometida con la pica por delante, como los tercios.' },
+
   // Los de las MO: también se usan fuera de combate. Pleamar es el Surf del género; su `id`
   // se queda en `surf`.
   surf: {
