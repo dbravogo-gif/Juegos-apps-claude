@@ -1,5 +1,21 @@
-import type { Zona } from '../../core/mundo';
+import type { Paso, Zona } from '../../core/mundo';
 import { bandera, dar, decir, si } from '../guion';
+import { INICIO_CAPITULO_3 } from './capitulo3';
+
+const HACIA_CAPITULO_3: Paso[] = [
+  { tipo: 'curar' },
+  {
+    tipo: 'fin',
+    texto: [
+      'Capítulo 3. Sevilla, 1571.',
+      'Han pasado cincuenta años. Carlos renunció al trono en 1556 y murió dos años después en el monasterio de Yuste.',
+      'Reina su hijo, Felipe II. En 1561 llevó la corte a Madrid, y en la sierra, no muy lejos, levanta un enorme monasterio: San Lorenzo de El Escorial.',
+      'Este año, España, Venecia y el Papa se han unido en la Santa Liga contra el Imperio otomano, que domina el Mediterráneo oriental.',
+      'Tus criaturas siguen sin envejecer. Tú tampoco. A estas alturas, ya no te extraña.',
+    ],
+  },
+  { tipo: 'viajar', ...INICIO_CAPITULO_3 },
+];
 
 // Capítulo 2: Castilla, primavera de 1521, al final de la guerra de las Comunidades.
 // Villalar → el camino de Toledo → Toledo y su Alcázar, donde espera María Pacheco.
@@ -644,7 +660,21 @@ const ALCAZAR_TOLEDO: Zona = {
       dir: 'abajo',
       aspecto: 'maria_pacheco',
       guion: [
-        si('blason_toledo', decir('María Pacheco', 'Toledo resistirá lo que pueda. Gracias por traerme sus últimas palabras.'), [
+        si('blason_toledo', [
+          ...decir('María Pacheco', 'Toledo resistirá lo que pueda. Gracias por traerme sus últimas palabras.'),
+          // Para las partidas que acabaron el capítulo 2 antes de que existiera el 3.
+          si('capitulo3', [], [
+            {
+              tipo: 'elegir',
+              quien: 'María Pacheco',
+              pregunta: 'Tu camino sigue más allá de Toledo. ¿Partes ya?',
+              opciones: [
+                { texto: 'Sí, en marcha', pasos: [...HACIA_CAPITULO_3] },
+                { texto: 'Todavía no', pasos: decir('María Pacheco', 'Toledo no se irá a ninguna parte.') },
+              ],
+            },
+          ]),
+        ], [
           ...decir('María Pacheco', '¿Vienes de Villalar? ¿Traes algo de Juan?'),
           ...decir(undefined, 'Le das la carta de Padilla. María Pacheco la lee en silencio.'),
           ...decir(
@@ -669,9 +699,10 @@ const ALCAZAR_TOLEDO: Zona = {
                 'Febrero de 1522. La lucha vuelve a estallar y María Pacheco huye a Portugal. Morirá en Oporto en 1531.',
                 'En julio de 1522, Carlos vuelve a España. Gobernará medio mundo, de Flandes a las Indias.',
                 'Las leyendas de Castilla quedan escritas en tu Bestiario.',
-                'Fin del capítulo 2. Continuará en 1571…',
+                'Fin del capítulo 2.',
               ],
             },
+            ...HACIA_CAPITULO_3,
           ]),
         ]),
       ],

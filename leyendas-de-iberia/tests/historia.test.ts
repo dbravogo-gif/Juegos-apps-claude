@@ -195,7 +195,7 @@ describe('recipientes', () => {
   it('como mucho una tinaja por zona, y solo en ciudades e interiores', () => {
     for (const z of Object.values(ZONAS)) {
       expect(z.recipientes?.length ?? 0, z.id).toBeLessThanOrEqual(1);
-      if (z.recipientes?.length) expect(z.interior || z.estilo === 'pueblo' || z.estilo === 'toledo', z.id).toBe(true);
+      if (z.recipientes?.length) expect(z.interior || ['pueblo', 'toledo', 'sevilla'].includes(z.estilo ?? ''), z.id).toBe(true);
       for (const r of z.recipientes ?? []) if (r.objeto) expect(DATOS.objetos[r.objeto], r.objeto).toBeDefined();
     }
   });
@@ -229,6 +229,9 @@ const RUTAS: Record<string, string[]> = {
   vega: ['rival_b', 'mercader', 'ballestero'],
   sierra_guadarrama: ['halconero'],
   camino_toledo: ['rival_a'],
+  bosque_herreria: ['cantero', 'rival_b'],
+  sierra_morena: ['salteador'],
+  marismas: ['guarda_coto'],
 };
 /** Lo que cabe de ancho en la pantalla: 1080 px entre casillas de 80 (16 px a escala 5). */
 const CASILLAS_DE_ANCHO = 13;
@@ -289,6 +292,23 @@ describe('rutas', () => {
       });
     }
   }
+});
+
+describe('Sevilla', () => {
+  it('no se sube al galeón sin pasar por el rival', () => {
+    const z = ZONAS.sevilla;
+    const rival = z.pnj.find((p) => p.id === 'rival_a')!;
+    const plancha = z.salidas.find((s) => s.zona === 'galeon')!;
+    const prohibidas = new Set([`${rival.x},${rival.y}`]);
+    z.mapa.forEach((fila, y) =>
+      [...fila].forEach((_, x) => {
+        if (enLineaDeVision(z, CASILLAS, rival, rival.vision ?? 0, { x, y })) prohibidas.add(`${x},${y}`);
+      }),
+    );
+    const norte: [number, number] = [6, 1];
+    expect(alcanzables(z, norte, new Set()).has(`${plancha.x},${plancha.y}`)).toBe(true);
+    expect(alcanzables(z, norte, prohibidas).has(`${plancha.x},${plancha.y}`)).toBe(false);
+  });
 });
 
 describe('línea de visión', () => {
@@ -422,7 +442,7 @@ describe('mapa de la península', () => {
 
   it('dice dónde sale cada especie, con sus niveles y su frecuencia', () => {
     const lagarto = dondeSale(ZONAS, 'lagarto');
-    expect(lagarto.map((d) => d.zona)).toEqual(['villalar', 'sierra_guadarrama', 'camino_toledo']);
+    expect(lagarto.map((d) => d.zona)).toEqual(['villalar', 'sierra_guadarrama', 'camino_toledo', 'bosque_herreria', 'sierra_morena']);
     expect(lagarto[0]).toMatchObject({ min: 7, max: 9 });
     expect(dondeSale(ZONAS, 'becerro_igneo')).toEqual([]);
     for (const z of Object.values(ZONAS)) {

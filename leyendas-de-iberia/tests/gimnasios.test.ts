@@ -4,7 +4,7 @@ import { CASILLAS, ENTRADAS, ENTRENADORES, INICIO, ZONAS } from '../src/data/mun
 import { crearCriatura } from '../src/core/criatura';
 import { vidaMaxima } from '../src/core/estadisticas';
 import { crearRng } from '../src/core/rng';
-import { ancho, enLineaDeVision, esSolida, posicionValida, type Paso, type Zona } from '../src/core/mundo';
+import { ancho, deslizamiento, DELTA, enLineaDeVision, esSolida, posicionValida, type Dir, type Paso, type Zona } from '../src/core/mundo';
 import { alterarUna, anadirCriatura, aplicarCombate, herirUna, nuevaPartida } from '../src/core/partida';
 
 function partidaCon(...especies: string[]) {
@@ -74,31 +74,68 @@ describe('posición al cargar', () => {
   });
 });
 
+describe('cubierta resbaladiza', () => {
+  const cubierta: Zona = {
+    id: 'prueba',
+    nombre: 'Prueba',
+    mapa: ['WWWWWWW', 'WBDDDBW', 'WDDKDDW', 'WDDDDDW', 'WWWWWWW'],
+    pnj: [],
+    salidas: [],
+    carteles: [],
+  };
+  const libre = (x: number, y: number) => !esSolida(cubierta, x, y, CASILLAS);
+
+  it('se resbala hasta pisar tabla seca', () => {
+    expect(deslizamiento(cubierta, { x: 2, y: 1 }, 'derecha', CASILLAS, libre).at(-1)).toEqual({ x: 5, y: 1 });
+  });
+
+  it('o hasta chocar, quedándose en la última casilla mojada', () => {
+    expect(deslizamiento(cubierta, { x: 1, y: 2 }, 'derecha', CASILLAS, libre)).toEqual([
+      { x: 1, y: 2 },
+      { x: 2, y: 2 },
+    ]);
+    expect(deslizamiento(cubierta, { x: 5, y: 2 }, 'abajo', CASILLAS, libre).at(-1)).toEqual({ x: 5, y: 3 });
+  });
+
+  it('en tabla seca no se resbala', () => {
+    expect(deslizamiento(cubierta, { x: 1, y: 1 }, 'abajo', CASILLAS, libre)).toEqual([{ x: 1, y: 1 }]);
+  });
+});
+
 /**
  * Los gimnasios (decisiones del autor, 2026-10-27): caben de ancho en la pantalla, tienen dos o
  * tres entrenadores además del líder y algo que los haga distintos (preguntas, laberinto…).
  * `obligatorios`: los entrenadores que no se pueden esquivar. `preguntas`: todos sus entrenadores
  * preguntan antes de combatir. `laberinto`: el camino hasta el líder es al menos el doble de largo
- * que la distancia en línea recta, y a oscuras.
+ * que la distancia en línea recta, y a oscuras. `resbaladizo`: hay que resbalar con cabeza (al
+ * menos `resbaladizo` movimientos) y desde ningún sitio de la cubierta te quedas sin poder volver.
  */
-const GIMNASIOS: Record<string, { lider: string; obligatorios: string[]; preguntas?: boolean; laberinto?: boolean }> = {
+const GIMNASIOS: Record<string, { lider: string; obligatorios: string[]; preguntas?: boolean; laberinto?: boolean; resbaladizo?: number }> = {
   patio_leones: { lider: 'boabdil', obligatorios: ['guardia', 'poeta', 'alarife'], preguntas: true },
   alcazar_toledo: { lider: 'maria_pacheco', obligatorios: ['escudero', 'espadero', 'artillero'], laberinto: true },
+  galeon: { lider: 'menendez', obligatorios: ['grumete', 'marinero', 'contramaestre'], resbaladizo: 20 },
 };
 
-/** Distancias andando desde una casilla, con los personajes como estorbo. */
+/**
+ * Movimientos desde una casilla, con los personajes como estorbo y resbalando donde resbala (en
+ * suelo seco, un movimiento es un paso). Un resbalón que cruza una casilla prohibida no vale.
+ */
 function distancias(z: Zona, desde: [number, number], prohibidas = new Set<string>()): Map<string, number> {
   const estorbos = new Set([...z.pnj, ...z.carteles, ...(z.recipientes ?? [])].map((o) => `${o.x},${o.y}`));
-  const pisable = (x: number, y: number) => !esSolida(z, x, y, CASILLAS) && !estorbos.has(`${x},${y}`) && !prohibidas.has(`${x},${y}`);
+  const libre = (x: number, y: number) => !esSolida(z, x, y, CASILLAS) && !estorbos.has(`${x},${y}`);
   const dist = new Map([[desde.join(','), 0]]);
   const cola = [desde];
   while (cola.length > 0) {
     const [x, y] = cola.shift()!;
-    for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
-      const clave = `${x + dx},${y + dy}`;
-      if (!dist.has(clave) && pisable(x + dx, y + dy)) {
+    for (const [dir, [dx, dy]] of Object.entries(DELTA) as [Dir, [number, number]][]) {
+      if (!libre(x + dx, y + dy)) continue;
+      const camino = deslizamiento(z, { x: x + dx, y: y + dy }, dir, CASILLAS, libre);
+      if (camino.some((c) => prohibidas.has(`${c.x},${c.y}`))) continue;
+      const fin = camino.at(-1)!;
+      const clave = `${fin.x},${fin.y}`;
+      if (!dist.has(clave)) {
         dist.set(clave, dist.get(`${x},${y}`)! + 1);
-        cola.push([x + dx, y + dy]);
+        cola.push([fin.x, fin.y]);
       }
     }
   }
@@ -152,6 +189,18 @@ describe('gimnasios', () => {
           }),
         );
         expect(alLado(distancias(z, entrada, prohibidas))).toBe(Infinity);
+      });
+    }
+
+    if (g.resbaladizo) {
+      it(`${id}: hay que resbalar con cabeza, y no hay donde quedarse atascado`, () => {
+        const d = distancias(z, entrada);
+        expect(alLado(d)).toBeGreaterThanOrEqual(g.resbaladizo!);
+        // Desde todo lo que se alcanza se puede volver a la entrada.
+        for (const clave of d.keys()) {
+          const [x, y] = clave.split(',').map(Number);
+          expect(distancias(z, [x, y]).has(entrada.join(',')), clave).toBe(true);
+        }
       });
     }
 

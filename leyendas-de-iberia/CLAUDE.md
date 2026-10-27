@@ -28,6 +28,15 @@ tocan desde aquí.
   - 15 especies nuevas (Bestiario, cap. 2): lagarto, víbora, avutarda, águila, lobo, toro de
     Guisando, tarántula y erizo, con sus evoluciones, y 15 movimientos nuevos.
   - Entrenadores de una criatura en las rutas y tres en el gimnasio, como en el capítulo 1.
+- **Capítulo 3, «Sevilla, 1571» (2026-10-27), hecho y jugable:** al vencer a María Pacheco se
+  pasa a El Escorial en obras, donde Felipe II da un despacho para Pedro Menéndez de Avilés.
+  - El bosque de La Herrería, Sierra Morena, Sevilla (Giralda, Arenal, Torre del Oro), su mesón,
+    el galeón de Menéndez, las marismas y Sanlúcar, donde acaba el capítulo con la noticia de
+    Lepanto. La licencia histórica está en el GDD §4.
+  - El gimnasio es la cubierta mojada del galeón: se resbala hasta chocar o pisar tabla seca
+    (`resbala` en `casillas.ts`, `deslizamiento` en `core/mundo.ts`). Tres marineros que no se
+    esquivan y Menéndez (Agua), que da la MT07 Resaca y la Caña.
+  - 14 especies nuevas con su arte, 12 movimientos y entrenadores de una o dos criaturas.
 - **Hito 4, en curso:**
   - Hecho: el juego ocupa toda la pantalla del móvil.
   - Hecho: es una web instalable (PWA), con manifiesto, iconos y service worker para jugar sin
@@ -40,13 +49,13 @@ tocan desde aquí.
     `arte/mapa/tileset.py` (`src/assets/LEEME.md`). Se cambia el script, nunca el PNG a mano.
   - Personajes que caminan: propios, al mismo estilo, con la ropa y los tocados de la época;
     los genera `arte/mapa/personajes.py`. Ya no queda nada de *Ninja Adventure*.
-  - Criaturas: hechas las 22 del capítulo 1 y las 15 del capítulo 2 en el estilo elegido por
+  - Criaturas: hechas las 22 del capítulo 1, las 15 del capítulo 2 y las 14 del 3 en el estilo elegido por
     el autor, con vista de rival y vista del jugador (`src/assets/LEEME.md`). Guayota y la vieja, en reserva, en
     `arte/criaturas-futuras/`. Antes de hacer más, lee la guía de diseño visual del Bestiario.
   - Retratos para los diálogos, solo de los personajes importantes (decisión del autor):
-    Isabel, Fernando, el Gran Capitán, Colón, Boabdil, Juan de Padilla y María Pacheco
-    (`src/assets/retratos/`, `src/data/retratos.ts`). Hay 23 más hechos, en reserva, en
-    `arte/retratos-reserva/` (entre ellos Carlos V, Felipe II y Juan de Austria).
+    Isabel, Fernando, el Gran Capitán, Colón, Boabdil, Juan de Padilla, María Pacheco, Felipe II
+    y Menéndez de Avilés (`src/assets/retratos/`, `src/data/retratos.ts`). Hay 22 más hechos, en
+    reserva, en `arte/retratos-reserva/` (entre ellos Carlos V y Juan de Austria).
 - **Bestiario (`docs/BESTIARIO.md`), v2:**
   - Hecho: auditoría, segunda revisión de variedad (A.8), tabla de 150 especies y fichas del
     capítulo 1, Gofrón, la vieja, *Gallotia simonyi* y el Papemímico.
@@ -191,7 +200,7 @@ El código va en español: nombres, comentarios y textos.
   - Contenido de combate: `especies.ts`, `movimientos.ts`, `tipos.ts`, `temperamentos.ts`, `pasivas.ts` y
     `objetos.ts`, reunidos en `DATOS` (`index.ts`).
   - Contenido del mundo: `casillas.ts` (la leyenda de los mapas), `entrenadores.ts`,
-    `zonas/capitulo1.ts`, `zonas/capitulo2.ts` y `guion.ts` (atajos para escribir guiones). Se reúnen en `mundo.ts`,
+    `zonas/capitulo1.ts`, `zonas/capitulo2.ts`, `zonas/capitulo3.ts` y `guion.ts` (atajos para escribir guiones). Se reúnen en `mundo.ts`,
     que también da `CAPITULOS` y `ENTRADAS` (por dónde se entra en cada zona).
   - `lugares.ts`: los lugares del mapa de la península, con su latitud y longitud, y la
     proyección del mapa.

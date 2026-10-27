@@ -64,7 +64,7 @@ Los líderes son sobre todo reyes y generales; los artistas salen como PNJ.
 | --- | --- | --- | --- | --- |
 | 1 | Reyes Católicos (1491–1492) | Granada y Santa Fe | Boabdil | **Isabel la Católica (mentora)**, Fernando, el Gran Capitán, Colón |
 | 2 | Carlos V (1516–1556) | Villalar y Toledo, 1521 | **María Pacheco** (hecho) | Juan de Padilla; Carlos V, ausente, como el poder contra el que se alzan |
-| 3 | Felipe II (1556–1598) | El Escorial y Sevilla | Don Juan de Austria (Lepanto) | Felipe II, Álvaro de Bazán, el duque de Alba; Cervantes, soldado en Lepanto |
+| 3 | Felipe II (1556–1598) | El Escorial, Sevilla y Sanlúcar, 1571 | **Pedro Menéndez de Avilés** (hecho) | Felipe II y Juan de Herrera en las obras de El Escorial; Lepanto (don Juan de Austria, Cervantes) llega como noticia al final |
 | 4 | Los Austrias menores (1598–1700) | Madrid | Ambrosio Spínola (Breda) | Felipe IV, Olivares; los tercios; Velázquez |
 | 5 | Borbones: **Canarias** (1700–1808) | Tenerife, El Hierro y La Gomera, con un prólogo en Madrid y Cádiz | El general Gutiérrez, que rechazó a Nelson en 1797 | **Carlos III (mentor)** y Jorge Juan, en el prólogo; Nelson, como antagonista; las ánimas de los menceyes |
 | 6 | Independencia y siglo XIX (1808–1898) | Zaragoza | Agustina de Aragón | Palafox, Castaños (Bailén), el Empecinado, Prim; Goya |
@@ -72,6 +72,18 @@ Los líderes son sobre todo reyes y generales; los artistas salen como PNJ.
 | 8 | Franquismo (1939–1975) | Asturias (propuesta del Bestiario) | Por decidir (Franco, Carrero Blanco…) | Hay que decidir el enfoque: posguerra o desarrollismo. Félix Rodríguez de la Fuente, como personaje |
 | Liga | Transición y democracia (1975–hoy) | Madrid | Cuatro rivales y un campeón: reyes, presidentes, Gutiérrez Mellado… | §6 |
 
+- **El capítulo 3 (hecho, 2026-10-27).** Felipe II da en El Escorial un despacho para Pedro
+  Menéndez de Avilés, que tiene su galeón en el Arenal de Sevilla. El capítulo acaba en Sanlúcar
+  con la noticia de Lepanto (7 de octubre de 1571).
+  - **Licencia:** no consta que Menéndez estuviera en Sevilla ni en Sanlúcar en el otoño de 1571,
+    ni que Felipe II le mandara ese despacho. Lo demás lleva su fecha real: la primera piedra de
+    El Escorial (1563), la muerte de Juan Bautista de Toledo (1567), San Agustín (1565), el
+    campanario de la Giralda (1568), la Casa de la Contratación (1503), Magallanes y Elcano
+    (1519–1522), Cervantes herido en Lepanto a los 24 años y la muerte de Menéndez en Santander
+    (1574).
+  - Se evitan anacronismos: no se dice «Doñana» (el nombre es posterior), Sierra Morena se cruza
+    por el puerto del Muradal (el camino de Despeñaperros es de 1779), la Torre del Oro no lleva
+    aún su remate de 1760 y las peñas de la «Silla de Felipe II» se presentan como «dicen que».
 - **Lo que queda apretado.** El XIX y el XX tienen un gimnasio cada uno. Si se quiere más
   peso ahí, se pueden juntar los capítulos 3 y 4.
 - **Saltos de tiempo dentro de un capítulo.** Un capítulo puede abarcar varias décadas de su
@@ -152,12 +164,15 @@ alternativa sería que el mentor fuera Jorge Juan, en lugar de salir como person
       Se pregunta una sola vez.
     - Laberinto a oscuras: solo se ve un círculo alrededor del jugador, como en las cuevas del
       género.
+    - Suelo resbaladizo: la cubierta mojada del galeón (`resbala` en la casilla) se cruza
+      resbalando hasta chocar o pisar tabla seca, como el hielo del género. La prueba resuelve
+      el puzzle con esa misma física (`deslizamiento`) y comprueba que no hay sitio donde
+      quedarse atascado.
   - El líder no pregunta: a su combate se entra sin más.
   - No es sitio de buscar objetos: como mucho uno en el suelo.
   - Si pierdes, lo ganado se queda: los entrenadores vencidos y las preguntas respondidas no
     se repiten, y el camino está libre hasta el entrenador que te ganó.
-  - Ideas para los siguientes: suelo resbaladizo, palancas que abren rejas, baldosas que
-    devuelven al principio.
+  - Ideas para los siguientes: palancas que abren rejas, baldosas que devuelven al principio.
   - Cabe de ancho en la pantalla, como las rutas.
   - Las preguntas son de historia y con datos comprobados. La pista se puede encontrar en el
     propio gimnasio.
@@ -259,8 +274,9 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
   Pokémon: 10 páginas de 30 huecos (6 × 5), donde se mueven, se cambian de sitio, se ve su
   ficha o se liberan.
 - **Pesca.** Con la Caña, delante del agua se pesca. Cada zona con agua puede tener su tabla de
-  pesca (`encuentrosPesca`). La Caña llega con el tercer gimnasio (decisión del autor), así que
-  hasta que exista el capítulo 3 no se consigue; el pescador de la Vega solo la anuncia.
+  pesca (`encuentrosPesca`). La Caña llega con el tercer gimnasio (decisión del autor): la da
+  Menéndez de Avilés al vencerle. Se pesca en el Guadalquivir (Sevilla y las marismas) y en el
+  mar de Sanlúcar, que da Fragatín y Tremolín; el pescador de la Vega solo la anuncia.
 - **Rutas entre ciudades** (decisión del autor, 2026-10-27), como en el género:
   - Son pasillos de 13 casillas de ancho, lo que cabe en la pantalla del móvil, así que se ve
     todo el ancho. La longitud sale de encadenar tramos de una pantalla, no de un rectángulo
@@ -270,7 +286,9 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
     una puerta) y ven todo el paso. Los demás están a un lado.
   - Algún detalle de la época, con su cartel: la noria y la atalaya nazarí de la Vega; la venta,
     el puerto, la cascada y la cañada real de la Mesta en la sierra de Guadarrama; el palomar y
-    el puente de Alcántara en el camino de Toledo.
+    el puente de Alcántara en el camino de Toledo; las peñas de la «Silla de Felipe II» y el
+    arroyo del bosque de La Herrería; la venta y el puerto del Muradal en Sierra Morena; los
+    caños de las marismas del Guadalquivir.
   - Las pruebas lo comprueban en cada ruta (`RUTAS` en `tests/historia.test.ts`).
 - **Objetos según el capítulo.** Los que deciden combates (Banda focus, Garra rápida, Restos,
   Vidasfera, Campana concha, Huevo suerte, Periscopio), las curas máximas y la Tésera de oro,
@@ -761,3 +779,25 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
     20 % de vida, y el sueño o la cólera también le tocan a una sola.
   - En el laberinto solo queda la Superpoción. Por el mismo criterio, en el palacio de Boabdil
     solo queda la Tila (fuera el Turrón y el Despertar).
+- **2026-10-27 (25).** Capítulo 3, «Sevilla, 1571», a petición del autor (líder: Menéndez de
+  Avilés; prueba: cubierta resbaladiza; arte con OpenArt).
+  - Al vencer a María Pacheco se pasa a 1571 (paso `viajar`), con texto de transición: Carlos
+    renuncia (1556) y muere en Yuste (1558), Felipe II lleva la corte a Madrid (1561) y levanta
+    El Escorial; la Santa Liga. A quien ya lo había terminado, María le ofrece seguir.
+  - Zonas: El Escorial en obras (Felipe II, Juan de Herrera, un jerónimo que cura, canteros), el
+    bosque de La Herrería, Sierra Morena, Sevilla (Giralda, Casa de la Contratación, Arenal,
+    Torre del Oro y el galeón), su mesón, las marismas y Sanlúcar de Barrameda. Rutas de 13 de
+    ancho con hierba y entrenadores obligatorios, como las del capítulo 2.
+  - El gimnasio es la cubierta del galeón: tres tramos mojados, cada uno guardado por un
+    marinero que no se puede esquivar (grumete, marinero y contramaestre); 24 movimientos como
+    mínimo hasta Menéndez. Solo una Superpoción en el suelo, en el alcázar de popa.
+  - Menéndez (Anguélix 19, Fragatín 20, Telmario 22) da el Blasón de Sevilla, la MT07 Resaca,
+    la Caña y tres Téseras de oro. El capítulo acaba en Sanlúcar con la noticia de Lepanto.
+  - Rivales: el del cuaderno, al final del bosque de La Herrería; el de los arrieros, en el
+    Arenal, delante de la plancha del galeón.
+  - 14 especies nuevas con su arte (angula, tremielga, vencejo, lince, búho, fragata y sus
+    evoluciones, y el meloncillo), 12 movimientos, retratos de Felipe II y Menéndez de Avilés, y
+    piezas nuevas del tileset (cubierta seca y mojada, mástil, cañón, Giralda, Torre del Oro,
+    galeón, sillares y andamio).
+  - Para quien eligió a Ignibue, la Mandrágora (Planta) sale en Sierra Morena, antes del
+    gimnasio de Agua.
