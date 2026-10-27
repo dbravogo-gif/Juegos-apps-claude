@@ -5,7 +5,7 @@ import { ASPECTOS } from '../src/data/aspectos';
 import { RETRATOS } from '../src/data/retratos';
 import { CAPITULOS, CASILLAS, ENTRADAS, ENTRENADORES, INICIO, REGALOS_ATRASADOS, ZONAS } from '../src/data/mundo';
 import { aPixel, LUGARES, MAPA_ALTO, MAPA_ANCHO } from '../src/data/lugares';
-import { cumpleRequisito, dondeSale, enLineaDeVision, esNavegable, esSolida, validarZona, type Guion, type Paso } from '../src/core/mundo';
+import { ancho, cumpleRequisito, dondeSale, enLineaDeVision, esNavegable, esSolida, validarZona, type Guion, type Paso, type Zona } from '../src/core/mundo';
 import {
   ajustarADatos,
   anadirCriatura,
@@ -220,17 +220,90 @@ describe('recipientes', () => {
   });
 });
 
+/**
+ * Las rutas entre ciudades y los entrenadores que no se pueden esquivar en cada una. Una ruta
+ * nueva se añade aquí (decisión del autor, 2026-10-27): cabe de ancho en la pantalla, obliga a
+ * pisar hierba alta y tiene algún entrenador en un paso estrecho, como en el género.
+ */
+const RUTAS: Record<string, string[]> = {
+  vega: ['rival_b', 'mercader', 'ballestero'],
+  sierra_guadarrama: ['halconero'],
+  camino_toledo: ['rival_a'],
+};
+/** Lo que cabe de ancho en la pantalla: 1080 px entre casillas de 80 (16 px a escala 5). */
+const CASILLAS_DE_ANCHO = 13;
+
+/** Casillas a las que se llega desde una, sin pisar las prohibidas (y, si se pide, sin hierba alta). */
+function alcanzables(z: Zona, desde: [number, number], prohibidas: Set<string>, sinHierba = false): Set<string> {
+  const estorbos = new Set(
+    [...z.pnj.filter((p) => !p.ocultoSi), ...z.carteles, ...(z.recipientes ?? []), ...(z.ocultos ?? []).filter((o) => o.visible)].map((o) => `${o.x},${o.y}`),
+  );
+  const pisable = (x: number, y: number) =>
+    !esSolida(z, x, y, CASILLAS) &&
+    !estorbos.has(`${x},${y}`) &&
+    !prohibidas.has(`${x},${y}`) &&
+    !(sinHierba && CASILLAS[z.mapa[y][x]].hierba);
+  const vistas = new Set([desde.join(',')]);
+  const cola = [desde];
+  while (cola.length > 0) {
+    const [x, y] = cola.shift()!;
+    for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+      const clave = `${x + dx},${y + dy}`;
+      if (!vistas.has(clave) && pisable(x + dx, y + dy)) {
+        vistas.add(clave);
+        cola.push([x + dx, y + dy]);
+      }
+    }
+  }
+  return vistas;
+}
+
+describe('rutas', () => {
+  for (const [id, obligatorios] of Object.entries(RUTAS)) {
+    const z = ZONAS[id];
+    const [entrada, salida] = z.salidas.map((s) => [s.x, s.y] as [number, number]);
+    const llega = (prohibidas: Set<string>, sinHierba = false) => alcanzables(z, entrada, prohibidas, sinHierba).has(salida.join(','));
+
+    it(`${id}: cabe de ancho en la pantalla y va de una salida a la otra`, () => {
+      expect(ancho(z)).toBeLessThanOrEqual(CASILLAS_DE_ANCHO);
+      expect(z.salidas).toHaveLength(2);
+      expect(llega(new Set())).toBe(true);
+    });
+
+    it(`${id}: no se cruza sin pisar hierba alta`, () => {
+      expect(llega(new Set(), true)).toBe(false);
+    });
+
+    for (const pid of obligatorios) {
+      it(`${id}: no se puede esquivar a ${pid}`, () => {
+        const p = z.pnj.find((o) => o.id === pid)!;
+        expect(p.entrenador).toBeDefined();
+        // Ni su casilla ni lo que ve: si hay otro camino a la salida, se le puede esquivar.
+        const prohibidas = new Set([`${p.x},${p.y}`]);
+        z.mapa.forEach((fila, y) =>
+          [...fila].forEach((_, x) => {
+            if (enLineaDeVision(z, CASILLAS, p, p.vision ?? 0, { x, y })) prohibidas.add(`${x},${y}`);
+          }),
+        );
+        expect(llega(prohibidas)).toBe(false);
+      });
+    }
+  }
+});
+
 describe('línea de visión', () => {
   const vega = ZONAS.vega;
   it('el ballestero ve el camino que tiene delante', () => {
-    expect(enLineaDeVision(vega, CASILLAS, { x: 13, y: 40, dir: 'izquierda' }, 3, { x: 10, y: 40 })).toBe(true);
-    expect(enLineaDeVision(vega, CASILLAS, { x: 13, y: 40, dir: 'izquierda' }, 3, { x: 10, y: 41 })).toBe(false);
-    expect(enLineaDeVision(vega, CASILLAS, { x: 13, y: 40, dir: 'izquierda' }, 1, { x: 10, y: 40 })).toBe(false);
+    // Guarda la salida del puente de la noria: quien lo cruza pasa por delante.
+    expect(enLineaDeVision(vega, CASILLAS, { x: 3, y: 37, dir: 'izquierda' }, 1, { x: 2, y: 37 })).toBe(true);
+    expect(enLineaDeVision(vega, CASILLAS, { x: 3, y: 37, dir: 'izquierda' }, 1, { x: 2, y: 38 })).toBe(false);
+    expect(enLineaDeVision(vega, CASILLAS, { x: 3, y: 37, dir: 'izquierda' }, 1, { x: 1, y: 37 })).toBe(false);
   });
 
-  it('un muro corta la vista', () => {
-    // Desde la orilla de la acequia mirando hacia arriba, el agua no tapa pero un árbol sí.
-    expect(enLineaDeVision(vega, CASILLAS, { x: 1, y: 3, dir: 'arriba' }, 5, { x: 1, y: 0 })).toBe(false);
+  it('un árbol corta la vista', () => {
+    // En el olivar: por la fila libre se ve; por la de los olivos, no.
+    expect(enLineaDeVision(vega, CASILLAS, { x: 6, y: 9, dir: 'izquierda' }, 5, { x: 3, y: 9 })).toBe(true);
+    expect(enLineaDeVision(vega, CASILLAS, { x: 6, y: 8, dir: 'izquierda' }, 5, { x: 3, y: 8 })).toBe(false);
   });
 });
 
@@ -417,8 +490,8 @@ describe('Pleamar y Vuelo', () => {
 
   it('el Tajo se cruza con Pleamar: agua profunda, sólida a pie', () => {
     const z = ZONAS.camino_toledo;
-    expect(esNavegable(z, 3, 33, CASILLAS)).toBe(true);
-    expect(esSolida(z, 3, 33, CASILLAS)).toBe(true);
+    expect(esNavegable(z, 3, 30, CASILLAS)).toBe(true);
+    expect(esSolida(z, 3, 30, CASILLAS)).toBe(true);
     expect(z.encuentrosAgua).toBeDefined();
   });
 

@@ -382,3 +382,29 @@ const lista: Objeto[] = [
 ];
 
 export const OBJETOS: Record<string, Objeto> = Object.fromEntries(lista.map((o) => [o.id, o]));
+
+/**
+ * Objetos demasiado buenos para el principio, como en el género: el capítulo desde el que se pueden
+ * esconder, dar, vender o ganar (decisión del autor, 2026-10-27). Los que no están, desde el
+ * capítulo 1. Las pruebas lo comprueban en mapas, guiones, tiendas, premios y tinajas.
+ */
+export const CAPITULO_MINIMO: Record<string, number> = {
+  // Capítulo 2: la Lupa y los potenciadores de tipo, que solo suben un 20 %.
+  lente_amplia: 2,
+  ...Object.fromEntries(lista.filter((o) => o.tipo === 'equipo' && o.efecto.tipo === 'potenciarTipo').map((o) => [o.id, 2])),
+  // Capítulo 3: los equipables que deciden combates, las curas máximas y la Tésera de oro.
+  amuleto_tanit: 3,
+  garra_rapida: 3,
+  tarro_miel: 3,
+  polvora: 3,
+  caracola: 3,
+  azabache: 3,
+  periscopio: 3,
+  triaca: 3,
+  balsamo_fierabras: 3,
+  aliento_pleno: 3,
+  elixir_maximo: 3,
+  tesera_oro: 3,
+  // La Tésera real, la que no falla, casi al final (propuesta).
+  tesera_real: 6,
+};

@@ -160,6 +160,8 @@ export class Mundo extends Phaser.Scene {
   // ---------- Dibujo de la zona ----------
 
   private cargarZona(pos: Posicion): void {
+    // Un vecino a medio paso: si su paso acabara con la zona ya quitada, pararía una figura destruida.
+    this.tweens.killTweensOf(this.personas.map((pe) => pe.figura));
     this.capa?.destroy();
     this.personas = [];
     const zona = ZONAS[pos.zona];

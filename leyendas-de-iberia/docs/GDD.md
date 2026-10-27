@@ -243,10 +243,22 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
 - **Pesca.** Con la Caña, delante del agua se pesca. Cada zona con agua puede tener su tabla de
   pesca (`encuentrosPesca`). La Caña llega con el tercer gimnasio (decisión del autor), así que
   hasta que exista el capítulo 3 no se consigue; el pescador de la Vega solo la anuncia.
-- **Rutas entre ciudades.** Largas, con caminos que serpentean, mucha hierba y algún detalle de
-  la época que se lee en un cartel: la noria y la atalaya nazarí de la Vega; la venta, el
-  puerto, la cascada y la cañada real de la Mesta en la sierra de Guadarrama; el palomar y el
-  puente de Alcántara en el camino de Toledo.
+- **Rutas entre ciudades** (decisión del autor, 2026-10-27), como en el género:
+  - Son pasillos de 13 casillas de ancho, lo que cabe en la pantalla del móvil, así que se ve
+    todo el ancho. La longitud sale de encadenar tramos de una pantalla, no de un rectángulo
+    enorme.
+  - Hay que cruzar hierba alta sí o sí: bandas de lado a lado entre los tramos.
+  - Algunos entrenadores no se pueden esquivar: están en pasos estrechos (un puente, un puerto,
+    una puerta) y ven todo el paso. Los demás están a un lado.
+  - Algún detalle de la época, con su cartel: la noria y la atalaya nazarí de la Vega; la venta,
+    el puerto, la cascada y la cañada real de la Mesta en la sierra de Guadarrama; el palomar y
+    el puente de Alcántara en el camino de Toledo.
+  - Las pruebas lo comprueban en cada ruta (`RUTAS` en `tests/historia.test.ts`).
+- **Objetos según el capítulo.** Los que deciden combates (Banda focus, Garra rápida, Restos,
+  Vidasfera, Campana concha, Huevo suerte, Periscopio), las curas máximas y la Tésera de oro,
+  desde el capítulo 3; la Lupa y los potenciadores de tipo, desde el 2; la Tésera real, casi al
+  final (propuesta: capítulo 6). Está en `CAPITULO_MINIMO` y una prueba revisa mapas, guiones,
+  tiendas, premios y tinajas.
 - **Estados alterados.** Quemadura, sueño, parálisis, veneno, veneno grave (intoxicación) y
   **cólera**; no hay congelación, por decisión del autor. La cólera dura hasta curarla (Tila,
   Baya Caquic, Cura total o el mesón), como la parálisis, y una de cada cinco veces la criatura
@@ -675,10 +687,25 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
     nombre se cuenta su historia (§5). Isabel explica algo más: la guerra, Santa Fe, las
     criaturas que solo conocen los pastores y por qué elige al protagonista.
   - La Caña pasa al tercer gimnasio; el pescador de la Vega ya no la da.
-  - La Vega crece a 32 × 46, con acequias, una noria, una atalaya nazarí, huertas y olivares.
+  - La Vega crece a 32 × 46, con acequias, una noria, una atalaya nazarí, huertas y olivares
+    (en el registro 21 se rehace como pasillo de 13 de ancho).
   - Nueva zona entre Villalar y el camino de Toledo: la sierra de Guadarrama (30 × 44), con
     pinos, peñas de granito, una cascada, una venta, la cañada real y un halconero. El pastor
     de la Mesta se muda allí. El camino de Toledo crece a 28 × 40, con un palomar y el puente de
     Alcántara sobre el Tajo.
   - Casillas nuevas: cascada (V), peña (k), atalaya (I) y noria (N, se pesca delante); estilo
     `sierra`.
+- **2026-10-27 (21).** Rutas que se ven en pantalla y objetos fuertes más tarde, a petición del
+  autor.
+  - Las tres rutas, rehechas como pasillos de 13 de ancho (§8): la Vega (13 × 48), la sierra de
+    Guadarrama (13 × 46) y el camino de Toledo (13 × 37). Cada una obliga a cruzar dos o tres
+    bandas de hierba alta.
+  - Entrenadores que no se pueden esquivar: en la Vega, el ballestero (salida del puente de la
+    noria), el mercader (paso del olivar) y el rival (puerta de Granada); en la sierra, el
+    halconero (el puerto); en el camino, el rival (salida del puente de Alcántara). El labrador,
+    el pastor y la herbolaria quedan a un lado.
+  - Fuera del capítulo 1: el Huevo suerte de Santa Fe (ahora una Superpoción), los Restos del
+    mercader (ahora 3 téseras), la Banda focus del guardia de la Alhambra (ahora un Repelente) y
+    la Campana concha y el Velo negro de Boabdil (ahora 2 Superpociones). Quien ya los tenga se
+    los queda.
+  - Arreglado: cambiar de zona mientras un vecino daba un paso daba un error.
