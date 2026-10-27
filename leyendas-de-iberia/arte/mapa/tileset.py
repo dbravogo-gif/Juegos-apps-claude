@@ -151,6 +151,13 @@ AZULEJO = dict(
     verde=rgb(46, 138, 96), azul=rgb(46, 86, 168), ocre=rgb(220, 170, 64), negro=rgb(42, 40, 50), blanco=rgb(242, 236, 222)
 )
 OSCURO = rgb(40, 32, 36)
+# Granito de la sierra de Guadarrama, el de El Escorial: sillares grises.
+GRANITO = dict(
+    clara=rgb(200, 198, 194), media=rgb(166, 164, 162), oscura=rgb(124, 122, 124), contorno=rgb(70, 68, 74),
+    camino=rgb(212, 208, 200)
+)
+CUBIERTA = dict(clara=rgb(204, 166, 116), media=rgb(180, 140, 94), junta=rgb(104, 72, 48), brea=rgb(70, 50, 40))
+BRONCE = dict(clara=rgb(232, 190, 108), media=rgb(190, 138, 60), oscura=rgb(140, 96, 40), contorno=rgb(78, 52, 30))
 
 
 # ---------------------------------------------------------------- suelo
@@ -1550,6 +1557,238 @@ class Hoja:
         return im
 
 
+# ---------------------------------------------------------------- capítulo 3
+
+def cubierta(mojada: bool) -> Lienzo:
+    """Tablas de la cubierta de un galeón, de proa a popa, con las juntas calafateadas de brea. Mojada,
+    recién baldeada: más oscura y azulada, con brillos. Sobre ella se resbala."""
+    c = CUBIERTA
+    l = Lienzo()
+    for y in range(16):
+        for x in range(16):
+            tabla = x // 4
+            col = c['clara'] if tabla % 2 == 0 else c['media']
+            if x % 4 == 3:
+                col = c['brea']
+            elif (y + tabla * 5) % 16 == 0:
+                col = c['junta']
+            if mojada:
+                col = mezcla(col, rgb(96, 128, 160), 0.38)
+            l.pon(x, y, col)
+    if mojada:
+        brillo = rgb(214, 232, 246)
+        for x, y in [(1, 2), (2, 3), (9, 6), (10, 7), (5, 11), (6, 12), (13, 13), (14, 14)]:
+            l.pon(x, y, brillo)
+        # Un charco.
+        for y in range(8, 11):
+            for x in range(10, 15):
+                if ((x - 12) / 2.6) ** 2 + ((y - 9.5) / 1.6) ** 2 <= 1:
+                    l.pon(x, y, rgb(122, 168, 208) if y > 8 else rgb(170, 204, 232))
+    return l
+
+
+def mastil() -> Lienzo:
+    """Palo de un galeón con su cofa, la verga y la vela recogida, y los obenques."""
+    m = MADERA
+    l = Lienzo(16, 64)
+    # Obenques: cabos que bajan de la cofa a la borda.
+    for y in range(10, 62):
+        t = (y - 10) / 52
+        l.pon(round(6 - 6 * t), y, rgb(92, 72, 56))
+        l.pon(round(9 + 6 * t), y, rgb(92, 72, 56))
+    l.rect(6, 4, 4, 60, m['media'])
+    l.rect(6, 4, 1, 60, m['clara'])
+    l.rect(9, 4, 1, 60, m['oscura'])
+    # Cofa.
+    l.rect(3, 8, 10, 3, m['oscura'])
+    l.rect(3, 8, 10, 1, m['clara'])
+    # Verga con la vela recogida.
+    l.rect(0, 18, 16, 2, m['oscura'])
+    l.rect(1, 20, 14, 3, rgb(238, 228, 204))
+    l.rect(1, 22, 14, 1, rgb(204, 190, 160))
+    for x in (3, 7, 11):
+        l.pon(x, 21, rgb(160, 140, 110))
+    # Calzo y zuncho del pie.
+    l.rect(5, 58, 6, 5, m['oscura'])
+    l.rect(5, 59, 6, 1, rgb(80, 80, 90))
+    l.contorno(m['contorno'])
+    return l
+
+
+def canon() -> Lienzo:
+    """Cañón de bronce sobre su cureña de madera, asomado a la borda."""
+    m = MADERA
+    b = BRONCE
+    l = Lienzo()
+    l.rect(1, 9, 12, 4, m['media'])
+    l.rect(1, 9, 12, 1, m['clara'])
+    for x in (3, 10):
+        l.rect(x - 1, 12, 3, 3, rgb(60, 44, 34))
+        l.pon(x, 13, rgb(120, 90, 60))
+    l.rect(3, 5, 12, 4, b['media'])
+    l.rect(3, 5, 12, 1, b['clara'])
+    l.rect(3, 8, 12, 1, b['oscura'])
+    l.rect(13, 4, 3, 6, b['oscura'])
+    l.rect(13, 4, 3, 1, b['clara'])
+    l.pon(15, 6, OSCURO)
+    l.pon(15, 7, OSCURO)
+    l.rect(1, 6, 2, 2, b['oscura'])
+    l.contorno(b['contorno'])
+    return l
+
+
+def giralda() -> Lienzo:
+    """La Giralda en 1571: el alminar almohade de ladrillo, con sus paños de sebka, y encima el
+    campanario que acabó Hernán Ruiz en 1568, con el Giraldillo en lo alto."""
+    lad = dict(clara=rgb(228, 178, 124), media=rgb(206, 152, 100), oscura=rgb(166, 114, 74), contorno=rgb(96, 60, 44))
+    cal = dict(clara=rgb(246, 242, 232), media=rgb(226, 220, 206), oscura=rgb(190, 182, 168))
+    l = Lienzo(30, 112)
+    x0, x1 = 4, 25
+    for y in range(42, 112):
+        for x in range(x0, x1 + 1):
+            c = lad['clara'] if x < x0 + 5 else lad['media'] if x < x1 - 4 else lad['oscura']
+            if y % 4 == 3 and azar(x, y, 7) < 0.4:
+                c = mezcla(c, lad['oscura'], 0.4)
+            l.pon(x, y, c)
+    # Paños de sebka: una red de rombos en relieve.
+    for y in range(50, 86):
+        for x in range(x0 + 3, x1 - 2):
+            if (x + y) % 8 == 0 or (x - y) % 8 == 0:
+                l.pon(x, y, lad['oscura'] if x > 14 else mezcla(lad['clara'], lad['oscura'], 0.5))
+    # Ventanas de arco.
+    for y0 in (90, 100):
+        l.rect(13, y0, 4, 6, OSCURO)
+        l.pon(13, y0, lad['media'])
+        l.pon(16, y0, lad['media'])
+    l.rect(x0 - 1, 40, x1 - x0 + 3, 2, cal['oscura'])
+    # Campanario renacentista, encalado, con las campanas en sus arcos.
+    for y in range(24, 40):
+        for x in range(6, 24):
+            l.pon(x, y, cal['clara'] if x < 10 else cal['media'] if x < 20 else cal['oscura'])
+    for ax in (8, 17):
+        l.rect(ax, 27, 5, 10, OSCURO)
+        l.rect(ax + 1, 26, 3, 1, OSCURO)
+        l.rect(ax + 1, 31, 3, 4, BRONCE['media'])
+        l.rect(ax + 1, 31, 1, 4, BRONCE['clara'])
+    l.rect(5, 23, 20, 1, cal['oscura'])
+    # Cuerpos altos, cada vez más estrechos.
+    for (a0, a1, y0, y1) in [(9, 20, 14, 23), (11, 18, 8, 14)]:
+        for y in range(y0, y1):
+            for x in range(a0, a1 + 1):
+                l.pon(x, y, cal['clara'] if x < a0 + 3 else cal['media'] if x < a1 - 2 else cal['oscura'])
+        l.rect(a0 + 2, y0 + 2, 2, y1 - y0 - 3, OSCURO)
+        l.rect(a1 - 3, y0 + 2, 2, y1 - y0 - 3, OSCURO)
+    l.rect(12, 5, 6, 3, BRONCE['oscura'])
+    l.rect(13, 4, 4, 1, BRONCE['media'])
+    # El Giraldillo: la estatua de bronce que hace de veleta, con su escudo.
+    l.rect(14, 0, 2, 4, BRONCE['oscura'])
+    l.rect(16, 1, 2, 2, BRONCE['clara'])
+    l.contorno(lad['contorno'])
+    return l
+
+
+def torre_oro() -> Lienzo:
+    """La Torre del Oro en 1571: el cuerpo almohade de doce lados y el segundo cuerpo, también
+    almenado. La linterna con la cúpula dorada no se añadió hasta 1760."""
+    pal = dict(clara=rgb(236, 202, 132), media=rgb(214, 174, 104), oscura=rgb(176, 136, 76), contorno=rgb(102, 72, 44))
+    l = Lienzo(32, 50)
+
+    def cuerpo(a0: int, a1: int, y0: int, y1: int) -> None:
+        for y in range(y0, y1):
+            for x in range(a0, a1 + 1):
+                cara = (x - a0) * 6 // (a1 - a0 + 1)
+                c = pal['clara'] if cara < 2 else pal['media'] if cara < 4 else pal['oscura']
+                if (x - a0) % ((a1 - a0 + 1) // 6) == 0:
+                    c = mezcla(c, pal['contorno'], 0.35)
+                l.pon(x, y, c)
+        for x in range(a0, a1 + 1):
+            if (x - a0) % 4 < 2:
+                l.rect(x, y0 - 3, 1, 3, pal['clara'] if x < (a0 + a1) // 2 else pal['media'])
+
+    cuerpo(3, 28, 22, 50)
+    cuerpo(9, 22, 6, 22)
+    for y0 in (28, 38):
+        l.rect(14, y0, 3, 5, OSCURO)
+    l.rect(15, 11, 2, 4, OSCURO)
+    l.contorno(pal['contorno'])
+    return l
+
+
+def galeon() -> Lienzo:
+    """Un galeón de la Carrera de Indias amarrado en el Arenal: casco con sus castillos, tres palos con
+    las velas recogidas y la cruz de Borgoña en el tope."""
+    m = MADERA
+    l = Lienzo(48, 58)
+    # Casco.
+    for y in range(36, 52):
+        t = (y - 36) / 16
+        a0 = int(3 + 6 * t)
+        a1 = int(44 - 4 * t)
+        for x in range(a0, a1 + 1):
+            c = m['media'] if y < 44 else m['oscura']
+            if y in (39, 46):
+                c = rgb(206, 166, 82)
+            l.pon(x, y, c)
+    # Castillo de popa (a la derecha) y de proa.
+    l.rect(32, 26, 13, 10, m['media'])
+    l.rect(32, 26, 13, 1, m['clara'])
+    for x in (35, 39, 43):
+        l.rect(x, 29, 2, 3, OSCURO)
+    l.rect(4, 30, 8, 6, m['media'])
+    l.rect(4, 30, 8, 1, m['clara'])
+    # Portas de la artillería.
+    for x in range(12, 32, 5):
+        l.rect(x, 41, 2, 2, OSCURO)
+    # Palos, vergas y velas recogidas.
+    for px, alto in ((12, 6), (24, 2), (37, 10)):
+        l.rect(px, alto, 2, 36 - alto, m['oscura'])
+        for vy in (alto + 6, alto + 16):
+            l.rect(px - 6, vy, 14, 1, m['oscura'])
+            l.rect(px - 5, vy + 1, 12, 2, rgb(238, 228, 204))
+    # La cruz de Borgoña, la bandera de los barcos de Felipe II.
+    l.rect(26, 2, 6, 4, rgb(246, 244, 236))
+    for k in range(4):
+        l.pon(26 + k + 1, 2 + k, rgb(196, 30, 40))
+        l.pon(31 - k - 1, 2 + k, rgb(196, 30, 40))
+    l.contorno(m['contorno'])
+    # Reflejo en el agua.
+    for x in range(10, 40):
+        if x % 3 != 0:
+            l.pon(x, 53, rgb(44, 100, 176))
+    return l
+
+
+def sillares() -> Lienzo:
+    """Sillares de granito apilados en las obras de El Escorial."""
+    g = GRANITO
+    l = Lienzo()
+    for (x, y, w, h) in [(1, 9, 7, 6), (8, 9, 7, 6), (4, 3, 8, 6)]:
+        l.rect(x, y, w, h, g['media'])
+        l.rect(x, y, w, 1, g['clara'])
+        l.rect(x, y + h - 1, w, 1, g['oscura'])
+        l.rect(x + w - 1, y, 1, h, g['oscura'])
+        l.pon(x + 2, y + 2, g['oscura'])
+    l.contorno(g['contorno'])
+    return l
+
+
+def andamio() -> Lienzo:
+    """Andamio de madera de las obras, atado con cuerdas."""
+    m = MADERA
+    l = Lienzo(16, 34)
+    for x in (2, 13):
+        l.rect(x, 0, 2, 34, m['media'])
+        l.rect(x, 0, 1, 34, m['clara'])
+    for y in (6, 17, 28):
+        l.rect(0, y, 16, 2, m['oscura'])
+        l.rect(0, y, 16, 1, m['clara'])
+    for k in range(10):
+        l.pon(4 + k, 8 + k, m['oscura'])
+        l.pon(4 + k, 19 + k, m['oscura'])
+    l.contorno(m['contorno'])
+    return l
+
+
 def construir() -> Hoja:
     h = Hoja()
     for v in range(4):
@@ -1588,7 +1827,7 @@ def construir() -> Hoja:
                 h.pon(f'fachada.{hueco or "lisa"}.{clave}', fachada(l_, r, hueco))
             h.pon(f'lona.puerta.{clave}', lona_exterior(True, False, l_, r, True))
 
-    for nombre, pal, ladrillo in [('tapial', TAPIAL, False), ('roja', ROJA, True)]:
+    for nombre, pal, ladrillo in [('tapial', TAPIAL, False), ('roja', ROJA, True), ('granito', GRANITO, True)]:
         for forma in ('horizontal', 'vertical', 'puerta', 'arco'):
             h.pon(f'muro.{nombre}.{forma}', muro(pal, forma, ladrillo))
 
@@ -1649,6 +1888,15 @@ def construir() -> Hoja:
     h.pon('risco.medio', risco(False))
     h.pon('pino', pino())
     h.pon('atalaya', atalaya())
+    h.pon('cubierta.seca', cubierta(False))
+    h.pon('cubierta.mojada', cubierta(True))
+    h.pon('mastil', mastil())
+    h.pon('canon', canon())
+    h.pon('giralda', giralda())
+    h.pon('torre_oro', torre_oro())
+    h.pon('galeon', galeon())
+    h.pon('sillares', sillares())
+    h.pon('andamio', andamio())
     return h
 
 

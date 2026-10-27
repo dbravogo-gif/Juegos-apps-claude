@@ -24,6 +24,8 @@ export interface DefCasilla {
   navegable?: boolean;
   /** Agua donde se puede pescar con la Caña. */
   pesca?: boolean;
+  /** Suelo resbaladizo: quien entra sigue deslizándose en la misma dirección (`seDesliza`). */
+  resbala?: boolean;
 }
 
 export type Paso =
@@ -148,7 +150,13 @@ export type EstiloZona =
   /** Interior de sillería, con armaduras y armeros. */
   | 'alcazar'
   /** Montaña: pinos, peñas de granito y arroyos. */
-  | 'sierra';
+  | 'sierra'
+  /** Las obras de El Escorial: muros de sillares de granito. */
+  | 'escorial'
+  /** Sevilla: casas encaladas y naranjos. */
+  | 'sevilla'
+  /** La cubierta de un galeón (interior): tablas, mástiles y cañones. */
+  | 'galeon';
 
 export interface Zona {
   id: string;
@@ -245,6 +253,34 @@ export function casillaEn(z: Zona, x: number, y: number): string {
 
 export function esSolida(z: Zona, x: number, y: number, casillas: Record<string, DefCasilla>): boolean {
   return casillas[casillaEn(z, x, y)]?.solido ?? true;
+}
+
+export function esResbaladiza(z: Zona, x: number, y: number, casillas: Record<string, DefCasilla>): boolean {
+  return Boolean(casillas[casillaEn(z, x, y)]?.resbala);
+}
+
+/**
+ * Adónde llega quien entra andando en `desde` hacia `dir`, como en el hielo del género: si la
+ * casilla resbala, sigue en la misma dirección hasta chocar con algo (y se queda en la última
+ * casilla resbaladiza) o hasta pisar suelo que no resbala. Devuelve todas las casillas que
+ * recorre, la última es donde se para. `libre` dice si se puede entrar en una casilla.
+ */
+export function deslizamiento(
+  z: Zona,
+  desde: { x: number; y: number },
+  dir: Dir,
+  casillas: Record<string, DefCasilla>,
+  libre: (x: number, y: number) => boolean,
+): { x: number; y: number }[] {
+  const [dx, dy] = DELTA[dir];
+  const camino = [{ ...desde }];
+  let { x, y } = desde;
+  while (esResbaladiza(z, x, y, casillas) && libre(x + dx, y + dy) && camino.length < 200) {
+    x += dx;
+    y += dy;
+    camino.push({ x, y });
+  }
+  return camino;
 }
 
 export function esHierba(z: Zona, x: number, y: number, casillas: Record<string, DefCasilla>): boolean {

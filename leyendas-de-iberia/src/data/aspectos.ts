@@ -34,6 +34,11 @@ export const ASPECTOS = [
   'comunero',
   'imperial',
   'espadero',
+  'felipe_ii',
+  'almirante',
+  'marinero',
+  'cantero',
+  'arriero',
   'rival_a',
   'rival_b',
 ] as const;

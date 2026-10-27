@@ -100,7 +100,7 @@ describe('pesca', () => {
   it('el barbo sale pescando en la Vega y el galápago en el Tajo', async () => {
     const { ZONAS, CASILLAS } = await import('../src/data/mundo');
     const { dondeSale, esPescable } = await import('../src/core/mundo');
-    expect(dondeSale(ZONAS, 'barbo')).toEqual([expect.objectContaining({ zona: 'vega', pesca: true })]);
+    expect(dondeSale(ZONAS, 'barbo')).toContainEqual(expect.objectContaining({ zona: 'vega', pesca: true }));
     expect(dondeSale(ZONAS, 'galapago').some((d) => d.zona === 'camino_toledo' && d.pesca)).toBe(true);
     // Las acequias de la Vega y el Tajo son agua de pesca.
     expect(esPescable(ZONAS.vega, 3, 20, CASILLAS)).toBe(true);

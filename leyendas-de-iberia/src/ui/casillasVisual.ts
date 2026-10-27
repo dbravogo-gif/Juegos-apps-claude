@@ -42,7 +42,7 @@ const CAMINO = new Set(['.', 'S', 'G', '=', 'P']);
 /** Con quién se junta el camino sin dejar borde: también la fuente de una plaza. */
 const JUNTO_CAMINO = new Set([...CAMINO, 'A']);
 const JUNTO_EMPEDRADO = new Set(['S', 'G', 'P', 'A']);
-const ACEQUIA = new Set(['~', '=', 'O', 'N', 'V']);
+const ACEQUIA = new Set(['~', '=', 'O', 'N', 'V', 'x']);
 const MURALLA = new Set(['M', 'G', 'P']);
 const PAREDES = new Set(['W', 'Z', 'L']);
 
@@ -66,6 +66,9 @@ const SUELO_INTERIOR: Record<EstiloZona, string> = {
   toledo: 'suelo.losas',
   alcazar: 'suelo.losas',
   sierra: 'suelo.tablas',
+  escorial: 'suelo.losas',
+  sevilla: 'suelo.barro',
+  galeon: 'cubierta.seca',
 };
 
 /** Estilos con muralla de ladrillo y cipreses en vez de tapial y árboles redondos. */
@@ -141,12 +144,16 @@ function capasDe(zona: Zona, x: number, y: number, f: number): Capa[] {
     case '~':
     case 'O':
     case 'N':
+    case 'x':
       capas.push({ material: `acequia.${f}`, familia: ACEQUIA, fuera: true });
       // Donde cae una cascada, espuma.
       if (v.en(0, -1) === 'V') capas.push(pieza(`espuma.${f}`));
       break;
     case 'V':
       capas.push(pieza(`cascada.${f}`));
+      break;
+    case 'D':
+      capas.push(pieza('cubierta.mojada'));
       break;
     case 'k':
       capas.push(pieza(v.en(0, -1) === 'k' || v.en(0, -1) === 'V' ? 'risco.medio' : 'risco.alto'));
@@ -215,7 +222,7 @@ function muro(v: Vecindad, c: string, estilo: EstiloZona): Capa[] {
   const vertical = v.es(MURALLA, 0, -1, false) || v.es(MURALLA, 0, 1, false);
   // Un portón entre árboles no es más que camino.
   if (c === 'G' && !horizontal) return [];
-  const piedra = ESTILO_LADRILLO.has(estilo) ? 'roja' : 'tapial';
+  const piedra = ESTILO_LADRILLO.has(estilo) ? 'roja' : estilo === 'escorial' ? 'granito' : 'tapial';
   const forma = c === 'G' ? 'puerta' : c === 'P' ? 'arco' : horizontal || !vertical ? 'horizontal' : 'vertical';
   return [pieza(`muro.${piedra}.${forma}`)];
 }
@@ -265,6 +272,9 @@ interface Objeto {
   fotogramas?: string[];
 }
 
+/** Piezas que ocupan un bloque de casillas del mismo carácter. */
+const PIEZA_GRANDE: Record<string, string> = { g: 'giralda', t: 'torre_oro', x: 'galeon' };
+
 function objetosDe(zona: Zona): Objeto[] {
   const estilo = estiloDe(zona);
   const lista: Objeto[] = [];
@@ -289,7 +299,9 @@ function objetosDe(zona: Zona): Objeto[] {
               ? 'encina'
               : estilo === 'sierra'
                 ? 'pino'
-                : 'arbol';
+                : estilo === 'sevilla'
+                  ? 'naranjo'
+                  : 'arbol';
         lista.push(apoyo(arbol, x, y));
       } else if (c === 'o') lista.push(apoyo('olivo', x, y));
       else if (c === 'Y') lista.push(apoyo('armadura', x, y));
@@ -299,6 +311,17 @@ function objetosDe(zona: Zona): Objeto[] {
       else if (c === 'C') lista.push(apoyo('columna', x, y));
       else if (c === 'E') lista.push(apoyo('estanteria', x, y));
       else if (c === 'I') lista.push(apoyo('atalaya', x, y));
+      else if (c === 'U') lista.push(apoyo('mastil', x, y));
+      else if (c === 'H') lista.push(apoyo('canon', x, y));
+      else if (c === 's') lista.push(apoyo('sillares', x, y));
+      else if (c === 'a') lista.push(apoyo('andamio', x, y));
+      else if (c in PIEZA_GRANDE && v.en(-1, 0) !== c && v.en(0, 1) !== c) {
+        // Una pieza grande ocupa un bloque de casillas: se pone una vez, centrada en el bloque y
+        // apoyada en su fila de abajo.
+        let ancho = 1;
+        while (v.en(ancho, 0) === c) ancho++;
+        lista.push({ nombre: PIEZA_GRANDE[c], x: (x + ancho / 2) * PX, y: (y + 1) * PX, profundidad: y + 0.9 });
+      }
       else if (c === 'N') lista.push({ ...apoyo('noria.0', x, y), fotogramas: [0, 1, 2, 3].map((f) => `noria.${f}`) });
       else if (c === 'h' || c === 'w') {
         const delante = c === 'h' ? 'hierba_alta.delante' : 'trigal.delante';

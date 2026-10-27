@@ -20,6 +20,12 @@ export const LUGARES: Record<string, Lugar> = {
   // El puerto de Guadarrama (Alto del León), por donde se cruza la sierra.
   guadarrama: { nombre: 'Sierra de Guadarrama', lat: 40.71, lon: -4.13 },
   toledo: { nombre: 'Toledo', lat: 39.857, lon: -4.024, llegada: { zona: 'toledo', x: 5, y: 5, dir: 'abajo' } },
+  // El monasterio de San Lorenzo de El Escorial, en obras desde 1563.
+  escorial: { nombre: 'El Escorial', lat: 40.589, lon: -4.148, llegada: { zona: 'el_escorial', x: 6, y: 11, dir: 'arriba' } },
+  // El puerto del Muradal, por donde el camino real cruzaba Sierra Morena (antes de Despeñaperros).
+  sierra_morena: { nombre: 'Sierra Morena', lat: 38.37, lon: -3.58 },
+  sevilla: { nombre: 'Sevilla', lat: 37.389, lon: -5.993, llegada: { zona: 'sevilla', x: 6, y: 1, dir: 'abajo' } },
+  sanlucar: { nombre: 'Sanlúcar de Barrameda', lat: 36.778, lon: -6.353, llegada: { zona: 'sanlucar', x: 6, y: 1, dir: 'abajo' } },
 };
 
 /** Tamaño de la imagen del mapa (`arte/mapa/mapa_iberia.py`), en sus píxeles. */

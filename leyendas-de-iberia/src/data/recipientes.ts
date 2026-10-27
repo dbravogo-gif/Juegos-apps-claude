@@ -34,6 +34,15 @@ export const OBJETOS_RECIPIENTE: Record<string, { objeto: string; peso: number }
     { objeto: 'aloe', peso: 10 },
     { objeto: 'sales', peso: 10 },
   ],
+  sevilla: [
+    { objeto: 'emplasto', peso: 28 },
+    { objeto: 'tesera_plata', peso: 22 },
+    { objeto: 'unguento', peso: 18 },
+    { objeto: 'tesera_oro', peso: 10 },
+    { objeto: 'triaca', peso: 8 },
+    { objeto: 'baya_aranja', peso: 8 },
+    { objeto: 'elixir', peso: 6 },
+  ],
 };
 
 /** Lo que da el Papemímico al vencerlo o capturarlo, una vez por encuentro. */

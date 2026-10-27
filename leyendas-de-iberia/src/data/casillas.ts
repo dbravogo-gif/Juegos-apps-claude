@@ -43,4 +43,16 @@ export const CASILLAS: Record<string, DefCasilla> = {
   I: { nombre: 'Atalaya', solido: true },
   /** Una noria sobre la acequia: es agua, y se pesca a su lado. */
   N: { nombre: 'Noria', solido: true, pesca: true },
+  // Capítulo 3. La cubierta del galeón del gimnasio de Sevilla: mojada, se resbala hasta chocar o
+  // pisar tabla seca, como el hielo de los juegos del género.
+  D: { nombre: 'Cubierta mojada', solido: false, resbala: true },
+  U: { nombre: 'Mástil', solido: true },
+  H: { nombre: 'Cañón', solido: true },
+  // Piezas grandes: se dibujan una vez por bloque (el de abajo a la izquierda manda).
+  g: { nombre: 'Giralda', solido: true },
+  t: { nombre: 'Torre del Oro', solido: true },
+  /** Un galeón amarrado: está sobre el río. */
+  x: { nombre: 'Galeón', solido: true },
+  s: { nombre: 'Sillares', solido: true },
+  a: { nombre: 'Andamio', solido: true },
 };

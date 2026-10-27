@@ -13,6 +13,13 @@ script y se vuelve a ejecutar (`python3 arte/mapa/tileset.py`).
 - Las acequias y las fuentes tienen cuatro fotogramas.
 - Capítulo 2: hierba de la meseta, trigales (hierba alta), encinas, losas, muros de sillería
   gris del Alcázar, armaduras y armeros.
+- Capítulo 3: muro de granito de El Escorial, sillares y andamio; naranjos de Sevilla; la
+  cubierta del galeón, seca y mojada (la mojada, más gris y con brillos de agua: se nota cuál
+  resbala), mástil y cañón.
+- Piezas grandes, que ocupan un bloque de casillas del mismo carácter y se dibujan una vez,
+  centradas y apoyadas en la fila de abajo: la Giralda (`g`, 2 × 3, con el campanario que acabó
+  Hernán Ruiz en 1568), la Torre del Oro (`t`, 2 × 2, sin la linterna, que es de 1760) y el
+  galeón (`x`, 3 × 2, sobre el agua).
 - `zurron`: el zurrón de cuero con hebilla de los objetos que se ven en el suelo (las MT).
 - El agua profunda (`O`, la del Tajo) se dibuja como las acequias; con Pleamar se puede cruzar.
 
@@ -69,6 +76,11 @@ y su ropa. **No se editan a mano.**
 | `comunero.png` | Capacete y sayo carmesí, el color de las Comunidades | Comuneros |
 | `imperial.png` | Capacete, sayo blanco y calzas rojas | Soldados del emperador |
 | `espadero.png` | Gorro, delantal y barba | El espadero de Toledo |
+| `felipe_ii.png` | De negro, con gorguera blanca y barba rubia, como en sus retratos | Felipe II |
+| `almirante.png` | Jubón oscuro y capa roja | Pedro Menéndez de Avilés |
+| `marinero.png` | Camisa clara y gorro rojo de marinero | Los marineros del galeón |
+| `cantero.png` | Gorro gris, delantal y barba | Canteros de El Escorial |
+| `arriero.png` | Sombrero de ala y barba | El arriero de Sierra Morena |
 | `muchacho_agua.png` | El jugador sobre una criatura de agua genérica, verde azulada, como en el género | El jugador con Pleamar |
 | `monje.png`, `aldeano.png` | Fraile y aldeano | Villalar |
 | `aldeano_verde.png`, `aldeana.png`, `maestro.png` | Aldeanos y un sabio | De reserva |
@@ -78,8 +90,10 @@ y su ropa. **No se editan a mano.**
 `<id>.webp`: bustos de 384 px sobre fondo transparente, apoyados abajo, para los diálogos. Qué
 nombre usa cada uno está en `src/data/retratos.ts`. Solo llevan retrato los personajes
 importantes (decisión del autor): Isabel, Fernando, el Gran Capitán, Colón, Boabdil, Juan de
-Padilla y María Pacheco. Los demás están hechos y guardados en `arte/retratos-reserva/`, fuera
-del juego (entre ellos Carlos V, Felipe II y Juan de Austria, para capítulos siguientes).
+Padilla, María Pacheco, Felipe II y Pedro Menéndez de Avilés. Los demás están hechos y guardados
+en `arte/retratos-reserva/`, fuera del juego (entre ellos Carlos V y Juan de Austria, para
+capítulos siguientes). El de Menéndez se hizo aparte el 2026-10-27, con la cruz roja de
+Santiago en el pecho.
 
 - **Origen:** OpenArt (GPT Image 2) el 2026-10-25, en cuatro hojas de 3 × 2, con el estilo de las
   criaturas (dibujo limpio, colores planos con una sombra, contorno fino) y la ropa de la época.
@@ -109,6 +123,8 @@ del juego (entre ellos Carlos V, Felipe II y Juan de Austria, para capítulos si
 - **Capítulo 2 (2026-10-26):** las 15 especies nuevas, en cinco hojas por línea evolutiva. La
   vista de espalda de Imperión (`aguila_imperial_jugador`) parece casi de frente: candidata a
   rehacerse.
+- **Capítulo 3 (2026-10-27):** las 14 especies nuevas, en hojas de N columnas × 2 filas: arriba
+  la vista de rival y abajo la del jugador de la misma criatura, para que salgan iguales.
 - Reserva para más adelante: `arte/criaturas-futuras/` (Guayota y la vieja).
 
 ## Objetos (`objetos/`) e iconos de menú (`iconos/`)

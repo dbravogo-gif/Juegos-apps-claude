@@ -206,6 +206,61 @@ const MOVIMIENTOS_DEF = {
     efectos: [{ tipo: 'cegar', prob: 20 }],
   },
   vuelo_real: { nombre: 'Vuelo real', tipo: 'aire', categoria: 'fisico', poder: 90, precision: 90, pp: 10 },
+  // Capítulo 3 (El Escorial, Sevilla y el Guadalquivir): los primeros de Eléctrico y de Plasma.
+  chispazo: {
+    nombre: 'Chispazo', tipo: 'electrico', categoria: 'magico', poder: 40, precision: 100, pp: 30,
+    efectos: [{ tipo: 'estado', estado: 'paralizado', prob: 10 }],
+  },
+  descarga: {
+    nombre: 'Descarga', tipo: 'electrico', categoria: 'magico', poder: 80, precision: 100, pp: 15,
+    efectos: [{ tipo: 'estado', estado: 'paralizado', prob: 10 }],
+    descripcion: 'Suelta de golpe la electricidad que guarda, como la tremielga.',
+  },
+  calambre: {
+    nombre: 'Calambre', tipo: 'electrico', categoria: 'estado', poder: 0, precision: 90, pp: 20,
+    efectos: [{ tipo: 'estado', estado: 'paralizado', prob: 100 }],
+    descripcion: 'Un calambre que deja paralizado al rival.',
+  },
+  fuego_de_san_telmo: {
+    nombre: 'Fuego de San Telmo', tipo: 'plasma', categoria: 'magico', poder: 65, precision: 100, pp: 20,
+    efectos: [{ tipo: 'etapa', objetivo: 'propio', estadistica: 'magia', cambio: 1, prob: 20 }],
+    descripcion: 'Penachos de luz azulada que no queman, como los que ven los marineros en los mástiles. Pueden subirle la Magia.',
+  },
+  corona: {
+    nombre: 'Corona', tipo: 'plasma', categoria: 'magico', poder: 95, precision: 90, pp: 10,
+    descripcion: 'Un halo de plasma que estalla alrededor de quien lo lanza.',
+  },
+  estela_fantasma: {
+    nombre: 'Estela fantasma', tipo: 'espectral', categoria: 'magico', poder: 50, precision: 100, pp: 25,
+    efectos: [{ tipo: 'etapa', objetivo: 'propio', estadistica: 'celeridad', cambio: 1, prob: 100 }],
+    descripcion: 'Pasa como una sombra de agua y gana velocidad.',
+  },
+  resaca: {
+    nombre: 'Resaca', tipo: 'agua', categoria: 'magico', poder: 80, precision: 100, pp: 15,
+    efectos: [{ tipo: 'etapa', objetivo: 'rival', estadistica: 'celeridad', cambio: -1, prob: 30 }],
+    descripcion: 'La corriente de vuelta de las olas arrastra al rival: puede bajarle la Celeridad.',
+  },
+  vuelo_rasante: {
+    nombre: 'Vuelo rasante', tipo: 'aire', categoria: 'fisico', poder: 40, precision: 100, pp: 30, prioridad: 1,
+    descripcion: 'Ataca siempre primero.',
+  },
+  hoz_de_viento: { nombre: 'Hoz de viento', tipo: 'aire', categoria: 'fisico', poder: 85, precision: 95, pp: 15 },
+  acecho: {
+    nombre: 'Acecho', tipo: 'mental', categoria: 'estado', poder: 0, precision: null, pp: 20,
+    efectos: [{ tipo: 'etapa', objetivo: 'propio', estadistica: 'celeridad', cambio: 2, prob: 100 }],
+    descripcion: 'Espera agazapado y lee al rival: sube mucho la Celeridad.',
+  },
+  vuelo_silencioso: {
+    nombre: 'Vuelo silencioso', tipo: 'oscuridad', categoria: 'fisico', poder: 60, precision: 100, pp: 20,
+    efectos: [{ tipo: 'retroceso', prob: 20 }],
+    descripcion: 'Cae sin hacer ruido: el rival puede retroceder.',
+  },
+  ulular: {
+    nombre: 'Ulular', tipo: 'mental', categoria: 'estado', poder: 0, precision: 70, pp: 15,
+    efectos: [{ tipo: 'estado', estado: 'dormido', prob: 100 }],
+    descripcion: 'Un ulular grave y lento que duerme al rival.',
+  },
+
   // Los de las MO: también se usan fuera de combate. Pleamar es el Surf del género; su `id`
   // se queda en `surf`.
   surf: {

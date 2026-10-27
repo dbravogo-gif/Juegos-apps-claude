@@ -453,6 +453,19 @@ PERSONAJES = {
     'aldeana': personaje(pelo=(238, 234, 226), ropa=(150, 96, 60), vestido=(150, 96, 60)),
     # Un sabio: pelo y barba grises, túnica negra.
     'maestro': personaje(pelo=(170, 170, 176), ropa=(52, 50, 64), vestido=(52, 50, 64), barba=(186, 186, 192)),
+    # Capítulo 3. Felipe II, de negro con gorguera blanca, como en sus retratos; Pedro Menéndez de
+    # Avilés, capitán general de la flota, con la capa roja; un marinero, un cantero de las obras
+    # de El Escorial y un arriero de Sierra Morena.
+    'felipe_ii': personaje(pelo=(196, 160, 100), ropa=(36, 34, 42), cuello=(244, 240, 232), calzas=(30, 28, 36),
+                           tocado='gorro', color_tocado=(28, 26, 32), barba=(196, 160, 100), capa=(30, 28, 36)),
+    'almirante': personaje(piel='tostada', pelo=(48, 38, 34), ropa=(40, 38, 48), cuello=(240, 236, 226),
+                           calzas=(40, 38, 48), barba=(70, 62, 58), capa=(150, 30, 42)),
+    'marinero': personaje(piel='tostada', pelo=(80, 56, 40), ropa=(226, 220, 200), calzas=(60, 80, 130),
+                          tocado='gorro', color_tocado=(190, 40, 44)),
+    'cantero': personaje(piel='tostada', pelo=(90, 64, 44), ropa=(170, 150, 120), calzas=(110, 90, 70),
+                         tocado='gorro', color_tocado=(120, 116, 110), barba=(90, 64, 44), delantal=True),
+    'arriero': personaje(piel='morena', pelo=(56, 42, 34), ropa=(124, 86, 52), calzas=(70, 56, 46),
+                         tocado='sombrero', color_tocado=(70, 50, 40), barba=(56, 42, 34)),
     # Los rivales: los dos amigos del protagonista, que viajan como él.
     'rival_a': personaje(piel='morena', pelo=(40, 32, 30), ropa=(40, 150, 104), calzas=(70, 60, 50), tocado='sombrero',
                          color_tocado=(120, 84, 52)),
