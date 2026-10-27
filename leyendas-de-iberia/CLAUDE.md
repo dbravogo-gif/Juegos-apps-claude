@@ -141,8 +141,8 @@ tocan desde aquí.
     y `rival_b`). Cuatro combates en los capítulos 1 y 2. Se presentan con su historia
     (`presentacion` en `RIVALES`) antes de ponerles nombre.
   - La Liga, más adelante (decisión del autor).
-- **Partida de prueba completa (2026-10-27):** un programa jugó los capítulos 1 a 4 en el
-  navegador como un jugador. Lo que salió y lo arreglado, en el registro 27 del GDD: teclado en
+- **Partida de prueba completa (2026-10-27):** un programa (`herramientas/partida-de-prueba.mts`)
+  jugó los capítulos 1 a 4 en el navegador como un jugador. Lo que salió y lo arreglado, en el registro 27 del GDD: teclado en
   el combate, textos que se salían, un aguador que cura antes del primer gimnasio, el mercader
   de la Vega y la dificultad medida de cada líder (con equipo de tres, todos se ganan).
 - **Siguiente:** capítulo 5 (Canarias), con las decisiones abiertas que faltan. Alhambrón queda para una zona de ruinas, a petición del
@@ -296,6 +296,11 @@ El código va en español: nombres, comentarios y textos.
   - Usa un viewport de 390 × 844, con toques y teclado: flechas, Intro (A), Esc (B) y M (menú).
   - `window.juego` da acceso a las escenas para comprobar el estado; por ejemplo,
     `juego.scene.getScene('Mundo').p` es la partida.
+- **Partida de prueba:** `npx tsx herramientas/partida-de-prueba.mts`, con el juego servido.
+  Juega el modo historia entero como un jugador (habla, combate, captura, se cura, entrena a un
+  equipo de tres) y deja el registro y los problemas en `dev/partida-de-prueba/` (ignorada por
+  git). Cada capítulo nuevo añade sus objetivos a `PLAN_COMPLETO`. Las opciones, al principio
+  del archivo; con `REANUDAR=1 DESDE=n` sigue una partida cortada.
 - **Publicación.** `.github/workflows/publicar-juego.yml` publica al hacer push a `main`:
   - Ejecuta `npm ci`, `npm test` y `npm run build` aquí.
   - Copia `dist/` a `web/leyendas-de-iberia/`.

@@ -846,7 +846,10 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
     todas antes del gimnasio.
 - **2026-10-27 (27).** Partida de prueba de principio a fin, a petición del autor («crearme una
   partida de verdad, ir haciendo todo y ver qué problemas hay»). La juega un programa en el
-  navegador, como un jugador: habla, combate, captura, se cura y entrena. Lo que salió:
+  navegador, como un jugador: habla, combate, captura, se cura y entrena
+  (`herramientas/partida-de-prueba.mts`). Llegó al final del capítulo 4 con 319 combates,
+  7 derrotas y 9 capturas, sin textos rotos, errores de la página ni sitios donde quedarse
+  atascado. Lo que salió:
   - Arreglado:
     - El combate y la elección de compañera no se podían jugar con teclado. Ahora las flechas
       (o WASD) mueven un marco dorado, Intro/Espacio/Z pulsa y Esc/X vuelve.
