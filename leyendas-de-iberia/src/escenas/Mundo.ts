@@ -48,7 +48,7 @@ import {
   type Partida,
   type Posicion,
 } from '../core/partida';
-import { abrirRecipiente, dibujarCartel, dibujarRecipiente, dibujarZona, ESCALA, imagenPieza, TAM_CASILLA } from '../ui/casillasVisual';
+import { abrirRecipiente, crearOscuridad, dibujarCartel, dibujarRecipiente, dibujarZona, ESCALA, imagenPieza, TAM_CASILLA } from '../ui/casillasVisual';
 import { registrarRecipiente, revisado } from '../core/recipientes';
 import { encendido } from '../core/objetos';
 import { MIMICO_MIN_BLASONES, OBJETOS_RECIPIENTE, PROB_RECIPIENTE, RECOMPENSA_MIMICO } from '../data/recipientes';
@@ -82,6 +82,8 @@ export class Mundo extends Phaser.Scene {
   private zona!: Zona;
   private capa?: Phaser.GameObjects.Container;
   private jugador!: Persona;
+  /** La capa negra de las zonas a oscuras, que sigue al jugador. */
+  private oscuridad?: Phaser.GameObjects.Container;
   private personas: PersonaEnMapa[] = [];
   private recipientes: { def: NonNullable<Zona['recipientes']>[number]; figura: Phaser.GameObjects.Image }[] = [];
   /** Zurrones de los objetos visibles que aún no se han recogido, por su id. */
@@ -146,6 +148,7 @@ export class Mundo extends Phaser.Scene {
   }
 
   update(): void {
+    this.oscuridad?.setPosition(this.jugador.x, this.jugador.y);
     if (!this.listo || this.moviendo) return;
     const dir = this.ocupado || this.ui.ocupado ? null : this.ui.direccion();
     if (dir) this.intentarMover(dir);
@@ -205,6 +208,8 @@ export class Mundo extends Phaser.Scene {
     this.jugador = new Persona(this, pos.x * T + T / 2, pos.y * T + T / 2, this.aspectoJugador, pos.dir);
     capa.add(this.jugador);
     this.ordenarProfundidad();
+    this.oscuridad?.destroy();
+    this.oscuridad = zona.oscuridad ? crearOscuridad(this, zona.oscuridad).setPosition(this.jugador.x, this.jugador.y) : undefined;
 
     const cam = this.cameras.main;
     cam.setBackgroundColor(zona.interior ? COLOR.fondo : 0x2f4a2a);
@@ -860,6 +865,7 @@ export class Mundo extends Phaser.Scene {
       return false;
     }
     for (const t of def.antes) await this.ui.decir(t, def.nombre);
+    if (def.pregunta && !p.banderas[`pregunta:${def.id}`]) await this.preguntar(def);
     this.ui.cerrarDialogo();
     const resultado = await this.combatir(equipoEntrenador(def, DATOS), false, def);
     if (resultado !== 'victoria') {
@@ -874,6 +880,23 @@ export class Mundo extends Phaser.Scene {
     }
     this.regalos = {};
     return true;
+  }
+
+  /**
+   * La pregunta de un entrenador de gimnasio, antes de combatir y una sola vez: si pierdes y
+   * vuelves, solo queda el combate. B no responde por ti. Si fallas, el castigo se nota ya en
+   * este combate.
+   */
+  private async preguntar(def: DefEntrenador): Promise<void> {
+    const q = def.pregunta!;
+    const i = await this.ui.elegir(q.texto, q.respuestas, def.nombre, null);
+    this.p.banderas[`pregunta:${def.id}`] = true;
+    if (i === q.correcta) {
+      await this.ui.decir('¡Correcto! Veamos ahora qué tal peleas.', def.nombre);
+      return;
+    }
+    await this.ui.decir(`No es eso: es «${q.respuestas[q.correcta]}».`, def.nombre);
+    await this.ejecutar(q.castigo);
   }
 
   /** Un legendario que esperaba de pie: su guion, el combate y, si lo vences o capturas, se va. */

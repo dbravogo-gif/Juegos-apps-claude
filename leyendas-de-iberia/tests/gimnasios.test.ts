@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { DATOS } from '../src/data';
-import { CASILLAS, ENTRADAS, INICIO, ZONAS } from '../src/data/mundo';
+import { CASILLAS, ENTRADAS, ENTRENADORES, INICIO, ZONAS } from '../src/data/mundo';
 import { crearCriatura } from '../src/core/criatura';
 import { vidaMaxima } from '../src/core/estadisticas';
 import { crearRng } from '../src/core/rng';
 import { ancho, enLineaDeVision, esSolida, posicionValida, type Paso, type Zona } from '../src/core/mundo';
-import { alterarEquipo, anadirCriatura, herirEquipo, nuevaPartida } from '../src/core/partida';
+import { alterarEquipo, anadirCriatura, aplicarCombate, herirEquipo, nuevaPartida } from '../src/core/partida';
 
 function partidaCon(...especies: string[]) {
   const p = nuevaPartida('Prueba', 7, INICIO);
@@ -64,21 +64,20 @@ describe('posición al cargar', () => {
 });
 
 /**
- * Los gimnasios (decisión del autor, 2026-10-27): caben de ancho en la pantalla, tienen dos o tres
- * entrenadores además del líder y algo que los haga distintos (puertas con pregunta, laberinto…).
- * `obligatorios`: los entrenadores que no se pueden esquivar. `laberinto`: el camino hasta el líder
- * tiene que ser al menos el doble de largo que la distancia en línea recta.
+ * Los gimnasios (decisiones del autor, 2026-10-27): caben de ancho en la pantalla, tienen dos o
+ * tres entrenadores además del líder y algo que los haga distintos (preguntas, laberinto…).
+ * `obligatorios`: los entrenadores que no se pueden esquivar. `preguntas`: todos sus entrenadores
+ * preguntan antes de combatir. `laberinto`: el camino hasta el líder es al menos el doble de largo
+ * que la distancia en línea recta, y a oscuras.
  */
-const GIMNASIOS: Record<string, { lider: string; obligatorios: string[]; laberinto?: boolean }> = {
-  patio_leones: { lider: 'boabdil', obligatorios: ['guardia', 'alarife'] },
+const GIMNASIOS: Record<string, { lider: string; obligatorios: string[]; preguntas?: boolean; laberinto?: boolean }> = {
+  patio_leones: { lider: 'boabdil', obligatorios: ['guardia', 'poeta', 'alarife'], preguntas: true },
   alcazar_toledo: { lider: 'maria_pacheco', obligatorios: ['escudero', 'espadero', 'artillero'], laberinto: true },
 };
 
-const esPuerta = (ocultoSi?: string) => Boolean(ocultoSi?.startsWith('puerta:'));
-
-/** Distancias andando desde una casilla, con todos los personajes como estorbo salvo los que se quitan. */
-function distancias(z: Zona, desde: [number, number], quitar: (id: string) => boolean, prohibidas = new Set<string>()): Map<string, number> {
-  const estorbos = new Set([...z.pnj.filter((p) => !quitar(p.id)), ...z.carteles, ...(z.recipientes ?? [])].map((o) => `${o.x},${o.y}`));
+/** Distancias andando desde una casilla, con los personajes como estorbo. */
+function distancias(z: Zona, desde: [number, number], prohibidas = new Set<string>()): Map<string, number> {
+  const estorbos = new Set([...z.pnj, ...z.carteles, ...(z.recipientes ?? [])].map((o) => `${o.x},${o.y}`));
   const pisable = (x: number, y: number) => !esSolida(z, x, y, CASILLAS) && !estorbos.has(`${x},${y}`) && !prohibidas.has(`${x},${y}`);
   const dist = new Map([[desde.join(','), 0]]);
   const cola = [desde];
@@ -95,10 +94,7 @@ function distancias(z: Zona, desde: [number, number], quitar: (id: string) => bo
   return dist;
 }
 
-/** Los pasos de un guion, entrando en las ramas. */
-function pasos(g: Paso[]): Paso[] {
-  return g.flatMap((p) => [p, ...(p.tipo === 'si' ? [...pasos(p.entonces), ...pasos(p.sino ?? [])] : []), ...(p.tipo === 'elegir' ? p.opciones.flatMap((o) => pasos(o.pasos)) : [])]);
-}
+const castiga = (pasos: Paso[]) => pasos.some((p) => p.tipo === 'herir' || p.tipo === 'alterar');
 
 describe('gimnasios', () => {
   for (const [id, g] of Object.entries(GIMNASIOS)) {
@@ -107,35 +103,26 @@ describe('gimnasios', () => {
     const entrada = [ENTRADAS[id].x, ENTRADAS[id].y] as [number, number];
     const alLado = (d: Map<string, number>) =>
       Math.min(...[[1, 0], [-1, 0], [0, 1], [0, -1]].map(([dx, dy]) => d.get(`${lider.x + dx},${lider.y + dy}`) ?? Infinity));
-    // Con las puertas ya abiertas: los porteros se han apartado.
-    const abiertas = (pid: string) => esPuerta(z.pnj.find((p) => p.id === pid)?.ocultoSi);
+    const entrenadores = z.pnj.filter((p) => p.entrenador);
 
-    it(`${id}: cabe de ancho en la pantalla y tiene al menos dos entrenadores además del líder`, () => {
+    it(`${id}: cabe de ancho en la pantalla, tiene dos o tres entrenadores y se llega al líder`, () => {
       expect(ancho(z)).toBeLessThanOrEqual(13);
       expect(lider).toBeDefined();
-      expect(z.pnj.filter((p) => p.entrenador).length).toBeGreaterThanOrEqual(2);
-      expect(alLado(distancias(z, entrada, abiertas))).toBeLessThan(Infinity);
+      expect(entrenadores.length).toBeGreaterThanOrEqual(2);
+      expect(entrenadores.length).toBeLessThanOrEqual(3);
+      expect(alLado(distancias(z, entrada))).toBeLessThan(Infinity);
     });
 
-    const porteros = z.pnj.filter((p) => esPuerta(p.ocultoSi));
-    if (porteros.length > 0) {
-      it(`${id}: sin acertar las preguntas no se llega al líder`, () => {
-        expect(alLado(distancias(z, entrada, () => false))).toBe(Infinity);
-      });
+    it(`${id}: el líder no pregunta: se entra a su combate sin más`, () => {
+      const combates = JSON.stringify(lider.guion).match(/"entrenador":"(\w+)"/g) ?? [];
+      expect(combates.length).toBeGreaterThan(0);
+      for (const c of combates) expect(ENTRENADORES[c.split('"')[3]].pregunta).toBeUndefined();
+    });
 
-      for (const portero of porteros) {
-        it(`${id}: ${portero.id} tiene una sola respuesta buena, castigo en las malas y «Ahora no»`, () => {
-          const eleccion = pasos(portero.guion).find((p) => p.tipo === 'elegir');
-          if (eleccion?.tipo !== 'elegir') throw new Error('sin pregunta');
-          const abre = (o: { pasos: Paso[] }) => pasos(o.pasos).some((p) => p.tipo === 'bandera' && p.nombre === portero.ocultoSi);
-          const castiga = (o: { pasos: Paso[] }) => pasos(o.pasos).some((p) => p.tipo === 'herir' || p.tipo === 'alterar');
-          const respuestas = eleccion.opciones.slice(0, -1);
-          const cancelar = eleccion.opciones.at(-1)!;
-          expect(respuestas.filter(abre)).toHaveLength(1);
-          for (const o of respuestas.filter((o) => !abre(o))) expect(castiga(o), o.texto).toBe(true);
-          expect(abre(cancelar) || castiga(cancelar)).toBe(false);
-        });
-      }
+    if (g.preguntas) {
+      it(`${id}: todos sus entrenadores preguntan antes de combatir`, () => {
+        for (const p of entrenadores) expect(ENTRENADORES[p.entrenador!].pregunta, p.id).toBeDefined();
+      });
     }
 
     for (const pid of g.obligatorios) {
@@ -148,15 +135,47 @@ describe('gimnasios', () => {
             if (enLineaDeVision(z, CASILLAS, p, p.vision ?? 0, { x, y })) prohibidas.add(`${x},${y}`);
           }),
         );
-        expect(alLado(distancias(z, entrada, abiertas, prohibidas))).toBe(Infinity);
+        expect(alLado(distancias(z, entrada, prohibidas))).toBe(Infinity);
       });
     }
 
     if (g.laberinto) {
-      it(`${id}: es un laberinto de verdad`, () => {
+      it(`${id}: es un laberinto de verdad, y a oscuras`, () => {
         const recta = Math.abs(lider.x - entrada[0]) + Math.abs(lider.y - entrada[1]);
-        expect(alLado(distancias(z, entrada, abiertas))).toBeGreaterThanOrEqual(2 * recta);
+        expect(alLado(distancias(z, entrada))).toBeGreaterThanOrEqual(2 * recta);
+        expect(z.oscuridad).toBeGreaterThan(0);
       });
     }
   }
+
+  it('cada pregunta tiene una respuesta buena y castigo', () => {
+    for (const e of Object.values(ENTRENADORES)) {
+      if (!e.pregunta) continue;
+      const q = e.pregunta;
+      expect(q.respuestas.length, e.id).toBeGreaterThanOrEqual(2);
+      expect(q.correcta, e.id).toBeGreaterThanOrEqual(0);
+      expect(q.correcta, e.id).toBeLessThan(q.respuestas.length);
+      expect(new Set(q.respuestas).size, e.id).toBe(q.respuestas.length);
+      expect(castiga(q.castigo), e.id).toBe(true);
+    }
+  });
+
+  it('perder no deshace lo ganado: los vencidos y las preguntas siguen hechos', () => {
+    const p = nuevaPartida('Prueba', 7, INICIO);
+    anadirCriatura(p, crearCriatura(DATOS, 'duende', 10, crearRng('d')));
+    p.vencidos.push('guardia_alhambra');
+    p.banderas['vencido:guardia_alhambra'] = true;
+    p.banderas['pregunta:guardia_alhambra'] = true;
+    p.banderas['pregunta:poeta_corte'] = true;
+    p.regreso = { zona: 'santa_fe', x: 5, y: 5, dir: 'abajo' };
+    p.posicion = { zona: 'patio_leones', x: 6, y: 16, dir: 'arriba' };
+    const caida = p.equipo.map((c) => ({ ...c, vida: 0 }));
+    aplicarCombate(p, { resultado: 'derrota', equipo: caida, objetos: p.objetos, capturada: null, rivales: [], entrenador: ENTRENADORES.poeta_corte }, DATOS);
+    expect(p.posicion.zona).toBe('santa_fe');
+    expect(p.vencidos).toContain('guardia_alhambra');
+    expect(p.banderas['vencido:guardia_alhambra']).toBe(true);
+    // Al volver, el poeta ya no repite la pregunta: solo queda el combate.
+    expect(p.banderas['pregunta:poeta_corte']).toBe(true);
+    expect(p.equipo.every((c) => c.vida > 0)).toBe(true);
+  });
 });

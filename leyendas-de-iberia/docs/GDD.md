@@ -147,9 +147,13 @@ alternativa sería que el mentor fuera Jorge Juan, en lugar de salir como person
 - **Cómo es un gimnasio** (decisión del autor, 2026-10-27):
   - Dos o tres entrenadores además del líder, con criaturas de su tipo o de su época.
   - Una prueba propia que lo haga entretenido. Las de ahora:
-    - Puertas con portero que pregunta: si fallas, castigo al equipo (pierde vida o coge un
-      estado), y se puede volver a intentar.
-    - Laberinto.
+    - Preguntas: cada entrenador pregunta antes de combatir, y si fallas, castigo al equipo
+      (pierde vida o coge un estado) que ya se nota en ese combate. Se pregunta una sola vez.
+    - Laberinto a oscuras: solo se ve un círculo alrededor del jugador, como en las cuevas del
+      género.
+  - El líder no pregunta: a su combate se entra sin más.
+  - Si pierdes, lo ganado se queda: los entrenadores vencidos y las preguntas respondidas no
+    se repiten, y el camino está libre hasta el entrenador que te ganó.
   - Ideas para los siguientes: suelo resbaladizo, palancas que abren rejas, baldosas que
     devuelven al principio.
   - Cabe de ancho en la pantalla, como las rutas.
@@ -738,3 +742,15 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
   - Pasos de guion nuevos: `herir` y `alterar`, castigos fuera de combate que nunca debilitan.
   - Al cargar, una partida guardada en un sitio que ya no es transitable (porque el mapa cambió)
     va a la entrada de su zona.
+- **2026-10-27 (23).** Correcciones del autor a los gimnasios.
+  - Las preguntas las hacen los entrenadores antes de combatir, y no unos porteros después. El
+    guardia pregunta qué quiere decir «Alhambra», el poeta qué río corre a sus pies (el Darro)
+    y el alarife cuántos leones tiene la fuente.
+    - Los tres están junto a las puertas y no se pueden esquivar.
+    - B no responde por ti. Si fallas, te dicen la buena y llega el castigo.
+    - Las pistas están en el cartel de la Alhambra, en el bosque, y en lo que dice el poeta al
+      perder.
+  - Boabdil no pregunta: al Patio de los Leones se entra sin pregunta.
+  - Si pierdes, no se repite nada de lo ganado (ya era así; ahora lo comprueba una prueba).
+  - La armería del Alcázar, a oscuras: un círculo de luz de tres casillas alrededor del jugador
+    (`oscuridad` en la zona).

@@ -389,3 +389,42 @@ export function abrirRecipiente(figura: Phaser.GameObjects.Image): void {
   if (!figura.scene) return;
   figura.setFrame('tinaja.abierta');
 }
+
+/**
+ * La oscuridad de las zonas sin luz, como las cuevas del género: todo negro salvo un círculo de
+ * `radio` casillas alrededor del jugador, con el borde difuminado. Es una imagen pequeña con el
+ * agujero y cuatro rectángulos negros que tapan el resto; la escena la mueve con el jugador.
+ */
+export function crearOscuridad(scene: Phaser.Scene, radio: number): Phaser.GameObjects.Container {
+  const clave = 'oscuridad';
+  const L = 128;
+  if (!scene.textures.exists(clave)) {
+    const lienzo = scene.textures.createCanvas(clave, L, L)!;
+    const ctx = lienzo.context;
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, L, L);
+    // Se ve del todo hasta el 70 % del radio y se va oscureciendo hasta el borde.
+    ctx.globalCompositeOperation = 'destination-out';
+    const luz = ctx.createRadialGradient(L / 2, L / 2, L * 0.35, L / 2, L / 2, L / 2);
+    luz.addColorStop(0, 'rgba(0,0,0,1)');
+    luz.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = luz;
+    ctx.fillRect(0, 0, L, L);
+    lienzo.refresh();
+  }
+  const lado = 2 * radio * TAM_CASILLA;
+  const medio = lado / 2;
+  // Lo bastante para tapar la pantalla entera esté donde esté el jugador; se solapan un poco con
+  // la imagen para que no asome ninguna rendija.
+  const lejos = 8000;
+  const negro = (x: number, y: number, w: number, h: number) => scene.add.rectangle(x, y, w, h, 0x000000).setOrigin(0);
+  return scene.add
+    .container(0, 0, [
+      scene.add.image(0, 0, clave).setDisplaySize(lado, lado),
+      negro(-lejos, -lejos, 2 * lejos, lejos - medio + 2),
+      negro(-lejos, medio - 2, 2 * lejos, lejos),
+      negro(-lejos, -medio, lejos - medio + 2, lado),
+      negro(medio - 2, -medio, lejos, lado),
+    ])
+    .setDepth(10000);
+}
