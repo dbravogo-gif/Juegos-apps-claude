@@ -5,7 +5,7 @@ import { ASPECTOS } from '../src/data/aspectos';
 import { RETRATOS } from '../src/data/retratos';
 import { CAPITULOS, CASILLAS, ENTRADAS, ENTRENADORES, INICIO, REGALOS_ATRASADOS, ZONAS } from '../src/data/mundo';
 import { aPixel, LUGARES, MAPA_ALTO, MAPA_ANCHO } from '../src/data/lugares';
-import { ancho, cumpleRequisito, dondeSale, enLineaDeVision, esNavegable, esSolida, validarZona, type Guion, type Paso, type Zona } from '../src/core/mundo';
+import { ancho, casillaEn, cumpleRequisito, dondeSale, enLineaDeVision, esNavegable, esSolida, validarZona, type Guion, type Paso, type Zona } from '../src/core/mundo';
 import {
   ajustarADatos,
   anadirCriatura,
@@ -69,12 +69,18 @@ describe('zonas', () => {
   });
 
   it('se llega a todas las salidas, personajes, carteles, tinajas y objetos escondidos', () => {
-    // Los personajes que se apartan con una bandera (`ocultoSi`) no cuentan como estorbo.
+    // Los personajes que se apartan con una bandera (`ocultoSi`) no cuentan como estorbo. El agua
+    // profunda se cruza con Pleamar y los cauces con compuerta se secan con su palanca (el
+    // gimnasio que los usa se comprueba con las palancas de verdad en `gimnasios.test.ts`).
     for (const z of Object.values(ZONAS)) {
       const ocupadas = new Set(
-        [...z.pnj.filter((p) => !p.ocultoSi), ...z.carteles, ...(z.recipientes ?? []), ...(z.ocultos ?? []).filter((o) => o.visible)].map((o) => `${o.x},${o.y}`),
+        [...z.pnj.filter((p) => !p.ocultoSi), ...z.carteles, ...(z.recipientes ?? []), ...(z.ocultos ?? []).filter((o) => o.visible), ...(z.palancas ?? [])].map(
+          (o) => `${o.x},${o.y}`,
+        ),
       );
-      const pisable = (x: number, y: number) => !esSolida(z, x, y, CASILLAS) && !ocupadas.has(`${x},${y}`);
+      const pisable = (x: number, y: number) =>
+        (!esSolida(z, x, y, CASILLAS) || esNavegable(z, x, y, CASILLAS) || Boolean(CASILLAS[casillaEn(z, x, y)]?.compuerta)) &&
+        !ocupadas.has(`${x},${y}`);
       const llegadas = Object.values(ZONAS).flatMap((o) => o.salidas.filter((s) => s.zona === z.id).map((s) => [s.ax, s.ay]));
       if (z.id === INICIO.zona) llegadas.push([INICIO.x, INICIO.y]);
       const vistas = new Set<string>();
@@ -112,7 +118,8 @@ describe('zonas', () => {
         }
       }
       for (const e of z.encuentros?.especies ?? []) expect(DATOS.especies[e.especie], e.especie).toBeDefined();
-      for (const pnj of z.pnj) expect(ASPECTOS, `${z.id}/${pnj.id}`).toContain(pnj.aspecto);
+      // Las criaturas que esperan de pie se dibujan con su arte, no con un aspecto.
+      for (const pnj of z.pnj.filter((o) => !o.criatura)) expect(ASPECTOS, `${z.id}/${pnj.id}`).toContain(pnj.aspecto);
       for (const o of z.ocultos ?? []) expect(DATOS.objetos[o.objeto], o.objeto).toBeDefined();
     }
     for (const e of Object.values(ENTRENADORES)) {
@@ -232,6 +239,8 @@ const RUTAS: Record<string, string[]> = {
   bosque_herreria: ['cantero', 'rival_b'],
   sierra_morena: ['salteador'],
   marismas: ['guarda_coto'],
+  penalara: ['nevero', 'rival_a'],
+  monte_pardo: ['montero'],
 };
 /** Lo que cabe de ancho en la pantalla: 1080 px entre casillas de 80 (16 px a escala 5). */
 const CASILLAS_DE_ANCHO = 13;
@@ -292,6 +301,22 @@ describe('rutas', () => {
       });
     }
   }
+});
+
+describe('Madrid', () => {
+  it('no se cruza el puente de Segovia sin pasar por el rival', () => {
+    const z = ZONAS.madrid;
+    const rival = z.pnj.find((p) => p.id === 'rival_b')!;
+    const puente = z.salidas.find((s) => s.zona === 'breda')!;
+    const prohibidas = new Set([`${rival.x},${rival.y}`]);
+    z.mapa.forEach((fila, y) =>
+      [...fila].forEach((_, x) => {
+        if (enLineaDeVision(z, CASILLAS, rival, rival.vision ?? 0, { x, y })) prohibidas.add(`${x},${y}`);
+      }),
+    );
+    expect(alcanzables(z, [6, 1], new Set()).has(`${puente.x},${puente.y}`)).toBe(true);
+    expect(alcanzables(z, [6, 1], prohibidas).has(`${puente.x},${puente.y}`)).toBe(false);
+  });
 });
 
 describe('Sevilla', () => {

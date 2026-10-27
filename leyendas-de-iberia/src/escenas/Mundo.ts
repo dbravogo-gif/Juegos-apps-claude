@@ -19,6 +19,7 @@ import {
   esSolida,
   OPUESTA,
   posicionValida,
+  banderaPalanca,
   type DefEntrenador,
   type Dir,
   type Paso,
@@ -49,7 +50,7 @@ import {
   type Partida,
   type Posicion,
 } from '../core/partida';
-import { abrirRecipiente, crearOscuridad, dibujarCartel, dibujarRecipiente, dibujarZona, ESCALA, imagenPieza, TAM_CASILLA } from '../ui/casillasVisual';
+import { abrirRecipiente, crearOscuridad, dibujarCartel, dibujarPalanca, dibujarRecipiente, dibujarZona, ESCALA, imagenPieza, TAM_CASILLA } from '../ui/casillasVisual';
 import { registrarRecipiente, revisado } from '../core/recipientes';
 import { encendido } from '../core/objetos';
 import { MIMICO_MIN_BLASONES, OBJETOS_RECIPIENTE, PROB_RECIPIENTE, RECOMPENSA_MIMICO } from '../data/recipientes';
@@ -91,6 +92,10 @@ export class Mundo extends Phaser.Scene {
   private recipientes: { def: NonNullable<Zona['recipientes']>[number]; figura: Phaser.GameObjects.Image }[] = [];
   /** Zurrones de los objetos visibles que aún no se han recogido, por su id. */
   private zurrones = new Map<string, Phaser.GameObjects.Image>();
+  /** Palancas de las compuertas de la zona, con su figura. */
+  private palancas: { def: NonNullable<Zona['palancas']>[number]; figura: Phaser.GameObjects.Image }[] = [];
+  /** Vuelve a pintar el suelo (los cauces cambian al mover una palanca). */
+  private repintarSuelo: () => void = () => {};
   private moviendo = false;
   private ocupado = false;
   /** Dinero perdido en la última derrota, para contarlo al volver al mesón. */
@@ -136,7 +141,7 @@ export class Mundo extends Phaser.Scene {
     this.ui.events.on('menu', this.alPulsarMenu, this);
     this.time.addEvent({ delay: 250, loop: true, callback: () => this.pasear() });
     // Una partida guardada en un mapa que luego cambió podría quedar dentro de un muro.
-    this.p.posicion = posicionValida(this.p.posicion, ZONAS, CASILLAS, ENTRADAS, INICIO);
+    this.p.posicion = posicionValida(this.p.posicion, ZONAS, CASILLAS, ENTRADAS, INICIO, this.p.banderas);
     this.cargarZona(this.p.posicion);
     this.listo = true;
     await this.conBloqueo(async () => {
@@ -180,8 +185,13 @@ export class Mundo extends Phaser.Scene {
     marcarVisitada(this.p, zona.id);
     const capa = this.add.container(0, 0);
     this.capa = capa;
-    dibujarZona(this, zona, capa);
+    this.repintarSuelo = dibujarZona(this, zona, capa, this.p.banderas);
     for (const cartel of zona.carteles) capa.add(dibujarCartel(this, cartel.x, cartel.y));
+    this.palancas = (zona.palancas ?? []).map((def) => {
+      const figura = dibujarPalanca(this, def.x, def.y, Boolean(this.p.banderas[banderaPalanca(zona.id, def.id)]));
+      capa.add(figura);
+      return { def, figura };
+    });
     this.recipientes = [];
     for (const r of zona.recipientes ?? []) {
       const abierto = revisado(this.p, zona.id, r.id);
@@ -274,7 +284,7 @@ export class Mundo extends Phaser.Scene {
       const ny = pe.y + dy;
       const lejos = Math.abs(nx - pe.pnj.x) > radio || Math.abs(ny - pe.pnj.y) > radio;
       const estorbo =
-        esSolida(this.zona, nx, ny, CASILLAS) ||
+        esSolida(this.zona, nx, ny, CASILLAS, this.p.banderas) ||
         this.ocupadaPorAlguien(nx, ny) ||
         (nx === pos.x && ny === pos.y) ||
         this.zona.salidas.some((s) => s.x === nx && s.y === ny);
@@ -302,6 +312,7 @@ export class Mundo extends Phaser.Scene {
       this.personas.some((pe) => pe.x === x && pe.y === y) ||
       this.zona.carteles.some((c) => c.x === x && c.y === y) ||
       (this.zona.recipientes ?? []).some((r) => r.x === x && r.y === y) ||
+      (this.zona.palancas ?? []).some((r) => r.x === x && r.y === y) ||
       (this.zona.ocultos ?? []).some((o) => o.visible && o.x === x && o.y === y && this.zurrones.has(o.id))
     );
   }
@@ -346,7 +357,7 @@ export class Mundo extends Phaser.Scene {
       return false;
     }
     const agua = esNavegable(this.zona, nx, ny, CASILLAS);
-    const libre = agua ? this.navegando() || this.entrarAlAgua : !esSolida(this.zona, nx, ny, CASILLAS);
+    const libre = agua ? this.navegando() || this.entrarAlAgua : !esSolida(this.zona, nx, ny, CASILLAS, this.p.banderas);
     this.entrarAlAgua = false;
     if (!libre || this.ocupadaPorAlguien(nx, ny)) {
       this.jugador.parar();
@@ -461,12 +472,40 @@ export class Mundo extends Phaser.Scene {
       void this.conBloqueo(() => this.registrar(recipiente));
       return;
     }
+    const palanca = this.palancas.find((r) => r.def.x === tx && r.def.y === ty);
+    if (palanca) {
+      void this.conBloqueo(() => this.moverPalanca(palanca));
+      return;
+    }
     const oculto = (this.zona.ocultos ?? []).find((o) => o.x === tx && o.y === ty && !this.p.banderas[`oculto:${this.zona.id}:${o.id}`]);
     if (oculto) {
       void this.conBloqueo(() => this.encontrarOculto(oculto));
       return;
     }
     if (esPescable(this.zona, tx, ty, CASILLAS)) void this.asomarseAlAgua(pos.dir, esNavegable(this.zona, tx, ty, CASILLAS));
+  }
+
+  /**
+   * Echa o levanta la palanca de una compuerta: unos cauces se secan y otros se inundan. No se
+   * mueve si inundaría el cauce donde está alguien (el jugador o un vecino que se acercó).
+   */
+  private async moverPalanca(palanca: (typeof this.palancas)[number]): Promise<void> {
+    const b = this.p.banderas;
+    const clave = banderaPalanca(this.zona.id, palanca.def.id);
+    const echada = !b[clave];
+    const despues = { ...b, [clave]: echada };
+    const alguien = [{ x: this.p.posicion.x, y: this.p.posicion.y }, ...this.personas];
+    if (alguien.some((a) => !esSolida(this.zona, a.x, a.y, CASILLAS, b) && esSolida(this.zona, a.x, a.y, CASILLAS, despues))) {
+      await this.ui.decir('La palanca no cede: alguien está en el cauce que se inundaría.');
+      this.ui.cerrarDialogo();
+      return;
+    }
+    b[clave] = echada;
+    palanca.figura.setFrame(echada ? 'palanca.1' : 'palanca.0');
+    this.repintarSuelo();
+    guardarPartida(this.p);
+    await this.ui.decir(echada ? 'Echas la palanca. Las compuertas se mueven y el agua cambia de cauce.' : 'Levantas la palanca. Las compuertas vuelven a su sitio y el agua cambia de cauce.');
+    this.ui.cerrarDialogo();
   }
 
   /**
@@ -703,7 +742,7 @@ export class Mundo extends Phaser.Scene {
       const id = pe.pnj.entrenador;
       if (!id || p.vencidos.includes(id) || !pe.pnj.vision || !equipoEnPie(p)) continue;
       const otros = (x: number, y: number) => this.personas.some((o) => o !== pe && o.x === x && o.y === y);
-      if (!enLineaDeVision(this.zona, CASILLAS, { x: pe.x, y: pe.y, dir: pe.figura.dir }, pe.pnj.vision, p.posicion, otros)) continue;
+      if (!enLineaDeVision(this.zona, CASILLAS, { x: pe.x, y: pe.y, dir: pe.figura.dir }, pe.pnj.vision, p.posicion, otros, p.banderas)) continue;
       await this.conBloqueo(async () => {
         await this.exclamacion(pe);
         await this.acercarse(pe);

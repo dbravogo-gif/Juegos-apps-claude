@@ -26,6 +26,11 @@ export interface DefCasilla {
   pesca?: boolean;
   /** Suelo resbaladizo: quien entra sigue deslizándose en la misma dirección (`seDesliza`). */
   resbala?: boolean;
+  /**
+   * Cauce con compuerta: está seco (se pisa) o inundado (no se pasa) según la palanca `palanca` de
+   * la zona. `seca`: está seco con la palanca echada (si no, al revés). Ver `cauceSeco`.
+   */
+  compuerta?: { palanca: string; seca: boolean };
 }
 
 export type Paso =
@@ -195,6 +200,11 @@ export interface Zona {
   /** Guion que se ejecuta la primera vez que se entra (usa la bandera `visto:<id>`). */
   alEntrar?: Guion;
   /**
+   * Palancas que abren y cierran las compuertas de los cauces (`compuerta` en la casilla). Se
+   * mueven pulsando A delante; su estado es la bandera `palanca:<zona>:<id>`. Bloquean el paso.
+   */
+  palancas?: { id: string; x: number; y: number }[];
+  /**
    * Dónde se dibuja en el mapa de la península (`src/data/lugares.ts`): en un lugar o, si es un
    * camino, entre dos.
    */
@@ -251,8 +261,22 @@ export function casillaEn(z: Zona, x: number, y: number): string {
   return z.mapa[y][x];
 }
 
-export function esSolida(z: Zona, x: number, y: number, casillas: Record<string, DefCasilla>): boolean {
-  return casillas[casillaEn(z, x, y)]?.solido ?? true;
+/** Bandera de la palanca `id` de la zona: puesta, la palanca está echada. */
+export function banderaPalanca(zona: string, id: string): string {
+  return `palanca:${zona}:${id}`;
+}
+
+/** ¿Está seco un cauce con compuerta, con las palancas como estén? */
+export function cauceSeco(zona: string, compuerta: NonNullable<DefCasilla['compuerta']>, banderas: Record<string, boolean>): boolean {
+  return Boolean(banderas[banderaPalanca(zona, compuerta.palanca)]) === compuerta.seca;
+}
+
+/** Sin `banderas`, las palancas cuentan como sin echar. */
+export function esSolida(z: Zona, x: number, y: number, casillas: Record<string, DefCasilla>, banderas: Record<string, boolean> = {}): boolean {
+  const def = casillas[casillaEn(z, x, y)];
+  if (!def) return true;
+  if (def.compuerta) return !cauceSeco(z.id, def.compuerta, banderas);
+  return def.solido;
 }
 
 export function esResbaladiza(z: Zona, x: number, y: number, casillas: Record<string, DefCasilla>): boolean {
@@ -303,13 +327,14 @@ export function enLineaDeVision(
   vision: number,
   objetivo: { x: number; y: number },
   bloqueos: (x: number, y: number) => boolean = () => false,
+  banderas: Record<string, boolean> = {},
 ): boolean {
   const [dx, dy] = DELTA[desde.dir];
   for (let i = 1; i <= vision; i++) {
     const x = desde.x + dx * i;
     const y = desde.y + dy * i;
     if (x === objetivo.x && y === objetivo.y) return true;
-    if (esSolida(z, x, y, casillas) || bloqueos(x, y)) return false;
+    if (esSolida(z, x, y, casillas, banderas) || bloqueos(x, y)) return false;
   }
   return false;
 }
@@ -343,6 +368,17 @@ export function validarZona(
     if (esSolida(z, r.x, r.y, casillas)) errores.push(`${z.id}: el recipiente ${r.id} está en una casilla sólida`);
     if (ocupadas.has(`${r.x},${r.y}`)) errores.push(`${z.id}: el recipiente ${r.id} pisa a otro elemento`);
   }
+  const palancas = new Set((z.palancas ?? []).map((p) => p.id));
+  for (const p of z.palancas ?? []) {
+    if (esSolida(z, p.x, p.y, casillas)) errores.push(`${z.id}: la palanca ${p.id} está en una casilla sólida`);
+    if (ocupadas.has(`${p.x},${p.y}`)) errores.push(`${z.id}: la palanca ${p.id} pisa a otro elemento`);
+  }
+  z.mapa.forEach((fila, y) =>
+    [...fila].forEach((c, x) => {
+      const compuerta = casillas[c]?.compuerta;
+      if (compuerta && !palancas.has(compuerta.palanca)) errores.push(`${z.id}: el cauce de (${x}, ${y}) no tiene su palanca ${compuerta.palanca}`);
+    }),
+  );
   for (const p of z.pnj) {
     if (esSolida(z, p.x, p.y, casillas)) errores.push(`${z.id}: ${p.id} está sobre una casilla sólida`);
     if (p.entrenador && !entrenadores[p.entrenador]) errores.push(`${z.id}: ${p.id} usa un entrenador que no existe`);
@@ -365,11 +401,12 @@ export function posicionValida<P extends { zona: string; x: number; y: number; d
   casillas: Record<string, DefCasilla>,
   entradas: Record<string, { zona: string; x: number; y: number; dir: Dir }>,
   porDefecto: { zona: string; x: number; y: number; dir: Dir },
+  banderas: Record<string, boolean> = {},
 ): { zona: string; x: number; y: number; dir: Dir } {
   const z = zonas[pos.zona];
   if (!z) return { ...porDefecto };
   const dentro = pos.y >= 0 && pos.y < z.mapa.length && pos.x >= 0 && pos.x < ancho(z);
-  if (dentro && (!esSolida(z, pos.x, pos.y, casillas) || esNavegable(z, pos.x, pos.y, casillas))) return pos;
+  if (dentro && (!esSolida(z, pos.x, pos.y, casillas, banderas) || esNavegable(z, pos.x, pos.y, casillas))) return pos;
   return { ...(entradas[pos.zona] ?? porDefecto) };
 }
 

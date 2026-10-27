@@ -26,6 +26,12 @@ export const LUGARES: Record<string, Lugar> = {
   sierra_morena: { nombre: 'Sierra Morena', lat: 38.37, lon: -3.58 },
   sevilla: { nombre: 'Sevilla', lat: 37.389, lon: -5.993, llegada: { zona: 'sevilla', x: 6, y: 1, dir: 'abajo' } },
   sanlucar: { nombre: 'Sanlúcar de Barrameda', lat: 36.778, lon: -6.353, llegada: { zona: 'sanlucar', x: 6, y: 1, dir: 'abajo' } },
+  // Rascafría, en el valle del Lozoya, junto al monasterio de El Paular.
+  rascafria: { nombre: 'Rascafría', lat: 40.887, lon: -3.889, llegada: { zona: 'rascafria', x: 6, y: 10, dir: 'arriba' } },
+  // El palacio y el monte de El Pardo, cazadero de los reyes.
+  el_pardo: { nombre: 'El Pardo', lat: 40.525, lon: -3.775, llegada: { zona: 'monte_pardo', x: 6, y: 2, dir: 'abajo' } },
+  // La Plaza Mayor.
+  madrid: { nombre: 'Madrid', lat: 40.415, lon: -3.707, llegada: { zona: 'madrid', x: 6, y: 1, dir: 'abajo' } },
 };
 
 /** Tamaño de la imagen del mapa (`arte/mapa/mapa_iberia.py`), en sus píxeles. */

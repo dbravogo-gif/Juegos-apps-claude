@@ -1,5 +1,21 @@
-import type { Zona } from '../../core/mundo';
+import type { Paso, Zona } from '../../core/mundo';
 import { bandera, dar, decir, si } from '../guion';
+import { INICIO_CAPITULO_4 } from './capitulo4';
+
+const HACIA_CAPITULO_4: Paso[] = [
+  { tipo: 'curar' },
+  {
+    tipo: 'fin',
+    texto: [
+      'Capítulo 4. Madrid, 1628.',
+      'Han pasado casi sesenta años. Felipe II murió en 1598 en El Escorial; después reinó su hijo, Felipe III.',
+      'Ahora reina su nieto, Felipe IV, de veintitrés años. Gobierna con su valido, el conde-duque de Olivares.',
+      'En Flandes, la guerra con los holandeses empezó hace sesenta años. En 1625, el general Ambrosio Spínola tomó la ciudad de Breda. Este año ha vuelto a la corte.',
+      'Tú sigues igual. Tus criaturas, también.',
+    ],
+  },
+  { tipo: 'viajar', ...INICIO_CAPITULO_4 },
+];
 
 // Capítulo 3: 1571, el año de Lepanto. Felipe II manda al jugador desde las obras de El Escorial
 // a Sevilla con un despacho para Pedro Menéndez de Avilés, que tiene su galeón en el Arenal.
@@ -784,7 +800,21 @@ const SANLUCAR: Zona = {
       aspecto: 'almirante',
       visibleSi: 'blason_sevilla',
       guion: [
-        si('fin_capitulo3', decir('Menéndez de Avilés', 'El mar no espera a nadie. Que Dios te guarde.'), [
+        si('fin_capitulo3', [
+          ...decir('Menéndez de Avilés', 'El mar no espera a nadie. Que Dios te guarde.'),
+          // Para las partidas que acabaron el capítulo 3 antes de que existiera el 4.
+          si('capitulo4', [], [
+            {
+              tipo: 'elegir',
+              quien: 'Menéndez de Avilés',
+              pregunta: 'Tu camino sigue lejos de aquí. ¿Partes ya?',
+              opciones: [
+                { texto: 'Sí, en marcha', pasos: [...HACIA_CAPITULO_4] },
+                { texto: 'Todavía no', pasos: decir('Menéndez de Avilés', 'El mar seguirá aquí.') },
+              ],
+            },
+          ]),
+        ], [
           ...decir('Menéndez de Avilés', 'Has llegado. Mira la barra: con la marea alta, las naos salen al océano de una en una.'),
           ...decir(undefined, 'Un jinete llega al galope por la playa, gritando.'),
           ...decir('Mensajero', '¡Victoria! ¡La flota de la Santa Liga ha vencido al turco en el golfo de Lepanto!'),
@@ -797,9 +827,10 @@ const SANLUCAR: Zona = {
               'Entre los heridos hay un soldado de 24 años, Miguel de Cervantes. Pierde el movimiento de la mano izquierda.',
               'Pedro Menéndez de Avilés seguirá sirviendo al rey en el mar. Morirá en Santander en 1574, mientras prepara una gran armada.',
               'Las leyendas de Sevilla quedan escritas en tu Bestiario.',
-              'Fin del capítulo 3. Continuará…',
+              'Fin del capítulo 3.',
             ],
           },
+          ...HACIA_CAPITULO_4,
         ]),
       ],
     },
