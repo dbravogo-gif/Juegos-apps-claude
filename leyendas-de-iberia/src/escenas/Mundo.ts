@@ -27,13 +27,13 @@ import {
 } from '../core/mundo';
 import {
   anadirCriatura,
-  alterarEquipo,
+  alterarUna,
   aplicarCombate,
   curarEquipo,
   darAtrasados,
   darObjeto,
   equipoEnPie,
-  herirEquipo,
+  herirUna,
   marcarVisitada,
   equipoEntrenador,
   inicialDe,
@@ -809,13 +809,14 @@ export class Mundo extends Phaser.Scene {
         case 'combate':
           if (!(await this.combateEntrenador(paso.entrenador))) return false;
           break;
-        case 'herir':
-          herirEquipo(p, paso.fraccion, DATOS);
+        case 'herir': {
+          const c = herirUna(p, paso.fraccion, DATOS);
           this.cameras.main.shake(250, 0.01);
-          await this.ui.decir('Tu equipo pierde vida.');
+          if (c) await this.ui.decir(`¡${nombreDe(c, DATOS)} pierde vida!`);
           break;
+        }
         case 'alterar': {
-          const c = alterarEquipo(p, paso.estado, DATOS);
+          const c = alterarUna(p, paso.estado, DATOS);
           await this.ui.decir(c ? `¡${nombreDe(c, DATOS)} ${SE_HA[paso.estado]}!` : 'Tu equipo aguanta sin inmutarse.');
           break;
         }

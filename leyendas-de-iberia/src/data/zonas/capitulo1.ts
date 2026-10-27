@@ -700,13 +700,9 @@ const PATIO_LEONES: Zona = {
   ],
   salidas: [{ x: 6, y: 33, zona: 'alhambra', ax: 6, ay: 1, dir: 'abajo' }],
   carteles: [],
-  ocultos: [
-    { id: 'turron', x: 11, y: 13, objeto: 'turron' },
-    // Para los castigos de los duendes: un Despertar tras la puerta del sueño y una Tila antes de
-    // la de la cólera.
-    { id: 'sales', x: 11, y: 16, objeto: 'sales' },
-    { id: 'tila', x: 1, y: 9, objeto: 'tila' },
-  ],
+  // Un gimnasio no es sitio para ir buscando objetos (decisión del autor): solo una Tila, por si
+  // los duendes encolerizan a alguien antes de Boabdil.
+  ocultos: [{ id: 'tila', x: 1, y: 9, objeto: 'tila' }],
 };
 
 export const ZONAS_CAPITULO_1: Zona[] = [SANTA_FE, MESON, PABELLON, VEGA, ALHAMBRA, PATIO_LEONES];

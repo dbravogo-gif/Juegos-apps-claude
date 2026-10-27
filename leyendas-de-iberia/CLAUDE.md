@@ -24,7 +24,7 @@ tocan desde aquí.
   - Villalar (Padilla da su carta para María Pacheco), la sierra de Guadarrama (cascada, venta,
     halconero), el camino de Toledo con el Tajo,
     Toledo con su mesón y el Alcázar, donde María Pacheco es la líder (Tierra/Acero). El
-    Alcázar es un laberinto a oscuras con tres entrenadores y objetos en los callejones.
+    Alcázar es un laberinto a oscuras con tres entrenadores y una Superpoción.
   - 15 especies nuevas (Bestiario, cap. 2): lagarto, víbora, avutarda, águila, lobo, toro de
     Guisando, tarántula y erizo, con sus evoluciones, y 15 movimientos nuevos.
   - Entrenadores de una criatura en las rutas y tres en el gimnasio, como en el capítulo 1.
@@ -235,8 +235,9 @@ El código va en español: nombres, comentarios y textos.
   - Los gimnasios: dos o tres entrenadores además del líder y una prueba propia (preguntas,
     laberinto…). Van en `GIMNASIOS` (`tests/gimnasios.test.ts`).
     - Las preguntas son `pregunta` en el entrenador (`entrenadores.ts`): se hacen antes de su
-      primer combate, una sola vez, y el castigo usa los pasos `herir` y `alterar`. El líder no
-      pregunta.
+      primer combate, una sola vez, y el castigo usa los pasos `herir` y `alterar` (a una sola
+      criatura al azar). El líder no pregunta.
+    - Como mucho un objeto en el suelo: un gimnasio no es sitio de buscar objetos.
     - Una zona a oscuras lleva `oscuridad` (el radio de luz en casillas).
   - Para cambiar de capítulo, el guion termina con el paso `viajar` (zona y casilla).
   - Una casilla nueva necesita su entrada en `casillas.ts`, su dibujo en `casillasVisual.ts` y,

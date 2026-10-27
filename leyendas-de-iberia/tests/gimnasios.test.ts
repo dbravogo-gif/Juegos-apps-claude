@@ -5,7 +5,7 @@ import { crearCriatura } from '../src/core/criatura';
 import { vidaMaxima } from '../src/core/estadisticas';
 import { crearRng } from '../src/core/rng';
 import { ancho, enLineaDeVision, esSolida, posicionValida, type Paso, type Zona } from '../src/core/mundo';
-import { alterarEquipo, anadirCriatura, aplicarCombate, herirEquipo, nuevaPartida } from '../src/core/partida';
+import { alterarUna, anadirCriatura, aplicarCombate, herirUna, nuevaPartida } from '../src/core/partida';
 
 function partidaCon(...especies: string[]) {
   const p = nuevaPartida('Prueba', 7, INICIO);
@@ -14,33 +14,44 @@ function partidaCon(...especies: string[]) {
 }
 
 describe('castigos fuera de combate', () => {
-  it('herir quita vida a las que están en pie, sin debilitar a ninguna', () => {
+  it('herir quita un 20 % a una sola criatura en pie, sin debilitarla', () => {
     const p = partidaCon('duende', 'topillo', 'lagarto');
-    p.equipo[1].vida = 2;
     p.equipo[2].vida = 0;
-    const antes = p.equipo[0].vida;
-    herirEquipo(p, 0.25, DATOS);
-    expect(p.equipo[0].vida).toBe(antes - Math.floor(vidaMaxima(p.equipo[0], DATOS) * 0.25));
-    expect(p.equipo[1].vida).toBe(1);
-    expect(p.equipo[2].vida).toBe(0);
-    herirEquipo(p, 0.25, DATOS);
-    expect(p.equipo[1].vida).toBe(1);
+    const antes = p.equipo.map((c) => c.vida);
+    const c = herirUna(p, 0.2, DATOS)!;
+    const cambiadas = p.equipo.filter((x, i) => x.vida !== antes[i]);
+    expect(cambiadas).toEqual([c]);
+    expect(c).not.toBe(p.equipo[2]);
+    expect(c.vida).toBe(antes[p.equipo.indexOf(c)] - Math.floor(vidaMaxima(c, DATOS) * 0.2));
+    // Nunca la debilita.
+    c.vida = 2;
+    for (let i = 0; i < 10; i++) herirUna(p, 0.2, DATOS);
+    expect(p.equipo.filter((x) => x !== p.equipo[2]).every((x) => x.vida >= 1)).toBe(true);
   });
 
-  it('alterar da el estado a la primera que puede sufrirlo', () => {
-    const p = partidaCon('duende', 'topillo');
+  it('herir no siempre elige a la misma: va al azar', () => {
+    const elegidas = new Set<string>();
+    for (let s = 0; s < 20; s++) {
+      const p = partidaCon('duende', 'topillo', 'lagarto');
+      p.rng = crearRng(`castigo${s}`);
+      elegidas.add(herirUna(p, 0.2, DATOS)!.especie);
+    }
+    expect(elegidas.size).toBeGreaterThan(1);
+  });
+
+  it('alterar da el estado a una sola de las que pueden sufrirlo', () => {
+    const p = partidaCon('duende', 'topillo', 'lagarto');
     p.equipo[0].estado = { tipo: 'quemado' };
-    const c = alterarEquipo(p, 'dormido', DATOS);
-    expect(c).toBe(p.equipo[1]);
-    expect(p.equipo[1].estado?.tipo).toBe('dormido');
-    // Ya no queda nadie que pueda.
-    expect(alterarEquipo(p, 'paralizado', DATOS)).toBeNull();
+    const c = alterarUna(p, 'dormido', DATOS)!;
+    expect(c).not.toBe(p.equipo[0]);
+    expect(c.estado?.tipo).toBe('dormido');
+    expect(p.equipo.filter((x) => x.estado?.tipo === 'dormido')).toHaveLength(1);
   });
 
   it('alterar respeta las inmunidades de tipo', () => {
     // El acero no se envenena.
     const p = partidaCon('escarabajo_bronce');
-    expect(alterarEquipo(p, 'envenenado', DATOS)).toBeNull();
+    expect(alterarUna(p, 'envenenado', DATOS)).toBeNull();
     expect(p.equipo[0].estado).toBeNull();
   });
 });
@@ -111,6 +122,11 @@ describe('gimnasios', () => {
       expect(entrenadores.length).toBeGreaterThanOrEqual(2);
       expect(entrenadores.length).toBeLessThanOrEqual(3);
       expect(alLado(distancias(z, entrada))).toBeLessThan(Infinity);
+    });
+
+    it(`${id}: no es sitio de buscar objetos: como mucho uno en el suelo`, () => {
+      expect((z.ocultos ?? []).length).toBeLessThanOrEqual(1);
+      expect((z.recipientes ?? []).length).toBe(0);
     });
 
     it(`${id}: el líder no pregunta: se entra a su combate sin más`, () => {
