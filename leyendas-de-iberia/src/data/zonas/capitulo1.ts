@@ -540,6 +540,21 @@ const ALHAMBRA: Zona = {
       vision: 1,
       guion: [],
     },
+    {
+      // Antes del gimnasio hay dónde curar: si no, había que volver a Santa Fe cruzando la Vega.
+      id: 'aguador',
+      nombre: 'Aguador',
+      x: 7,
+      y: 2,
+      dir: 'izquierda',
+      aspecto: 'aguador',
+      guion: [
+        ...decir('Aguador', 'Traigo agua fresca de la Acequia Real, la que sube hasta la Alhambra. Que beban también tus criaturas.'),
+        { tipo: 'curar' },
+        { tipo: 'regreso' },
+        ...decir('Aguador', 'Ya están descansadas. Boabdil te espera en los palacios, ahí arriba.'),
+      ],
+    },
   ],
   salidas: [
     { x: 6, y: 11, zona: 'vega', ax: 6, ay: 1, dir: 'abajo' },

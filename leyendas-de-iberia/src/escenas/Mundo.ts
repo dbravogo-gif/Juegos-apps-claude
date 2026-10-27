@@ -98,7 +98,7 @@ export class Mundo extends Phaser.Scene {
   private repintarSuelo: () => void = () => {};
   private moviendo = false;
   private ocupado = false;
-  /** Dinero perdido en la última derrota, para contarlo al volver al mesón. */
+  /** Dinero perdido en la última derrota, para contarlo al reaparecer. */
   private perdido = 0;
   /** El último Papemímico ha soltado su premio (para contarlo al volver del combate). */
   private premioMimico = false;
@@ -705,10 +705,10 @@ export class Mundo extends Phaser.Scene {
     });
   }
 
-  /** La Cuerda huida devuelve al último mesón. */
+  /** La Cuerda huida devuelve al último sitio donde descansaste (un mesón, un fraile…). */
   private async usarOvillo(): Promise<void> {
     const cam = this.cameras.main;
-    await this.ui.decir('Usas la Cuerda huida y vuelves al último mesón…');
+    await this.ui.decir('Usas la Cuerda huida y vuelves al último sitio donde descansaste…');
     this.ui.cerrarDialogo();
     cam.fadeOut(250, 0, 0, 0);
     await this.esperar(280);
@@ -1029,7 +1029,7 @@ export class Mundo extends Phaser.Scene {
 
   private async trasDerrota(): Promise<void> {
     const perdida = this.perdido > 0 ? ` Por el camino pierdes ${this.perdido} ${MONEDA}.` : '';
-    await this.ui.decir(`No te quedan criaturas en pie… Vuelves a toda prisa al último mesón.${perdida}`);
+    await this.ui.decir(`No te quedan criaturas en pie… Vuelves a toda prisa al último sitio donde descansaste.${perdida}`);
     this.ui.cerrarDialogo();
     this.cargarZona(this.p.posicion);
     guardarPartida(this.p);

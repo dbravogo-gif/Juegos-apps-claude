@@ -139,7 +139,7 @@ const lista: Objeto[] = [
     categoria: 'exploracion',
     tipo: 'huida',
     precio: 150,
-    descripcion: 'Te lleva de vuelta al último mesón. Solo sirve en los caminos, no en pueblos ni casas.',
+    descripcion: 'Te devuelve al último sitio donde descansaste. Solo sirve en caminos, no en pueblos ni casas.',
   },
   // Progresión
   { id: 'turron', nombre: 'Turrón', articulo: 'un', categoria: 'progresion', tipo: 'nivel', descripcion: 'Un dulce tan bueno que la criatura sube un nivel.' },

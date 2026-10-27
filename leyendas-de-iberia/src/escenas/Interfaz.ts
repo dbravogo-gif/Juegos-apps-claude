@@ -568,7 +568,7 @@ export class Interfaz extends Phaser.Scene {
   /**
    * Menú de pausa, como en los juegos actuales: el equipo a la izquierda, las opciones con
    * iconos a la derecha y, arriba, tu tarjeta. Devuelve `'ovillo'` si se ha usado una Cuerda
-   * huida, para que el mapa lleve al jugador al mesón.
+   * huida, para que el mapa lleve al jugador al último sitio donde descansó.
    */
   menu(
     p: Partida,
