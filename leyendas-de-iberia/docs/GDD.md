@@ -65,7 +65,7 @@ Los líderes son sobre todo reyes y generales; los artistas salen como PNJ.
 | 1 | Reyes Católicos (1491–1492) | Granada y Santa Fe | Boabdil | **Isabel la Católica (mentora)**, Fernando, el Gran Capitán, Colón |
 | 2 | Carlos V (1516–1556) | Villalar y Toledo, 1521 | **María Pacheco** (hecho) | Juan de Padilla; Carlos V, ausente, como el poder contra el que se alzan |
 | 3 | Felipe II (1556–1598) | El Escorial, Sevilla y Sanlúcar, 1571 | **Pedro Menéndez de Avilés** (hecho) | Felipe II y Juan de Herrera en las obras de El Escorial; Lepanto (don Juan de Austria, Cervantes) llega como noticia al final |
-| 4 | Los Austrias menores (1598–1700) | Madrid | Ambrosio Spínola (Breda) | Felipe IV, Olivares; los tercios; Velázquez |
+| 4 | Los Austrias menores (1598–1700) | Madrid, 1628 | **Ambrosio Spínola** (hecho) | Felipe IV, Olivares, Velázquez; los tercios; Rubens, de oídas |
 | 5 | Borbones: **Canarias** (1700–1808) | Tenerife, El Hierro y La Gomera, con un prólogo en Madrid y Cádiz | El general Gutiérrez, que rechazó a Nelson en 1797 | **Carlos III (mentor)** y Jorge Juan, en el prólogo; Nelson, como antagonista; las ánimas de los menceyes |
 | 6 | Independencia y siglo XIX (1808–1898) | Zaragoza | Agustina de Aragón | Palafox, Castaños (Bailén), el Empecinado, Prim; Goya |
 | 7 | Restauración, República y Guerra Civil (1898–1939) | Las Palmas y Madrid | Un general republicano (Miaja o Vicente Rojo) | Alfonso XIII. La guerra puede empezar en Las Palmas, de donde salió Franco el 18 de julio de 1936. El protagonista, en el bando sublevado (§6) |
@@ -84,6 +84,23 @@ Los líderes son sobre todo reyes y generales; los artistas salen como PNJ.
   - Se evitan anacronismos: no se dice «Doñana» (el nombre es posterior), Sierra Morena se cruza
     por el puerto del Muradal (el camino de Despeñaperros es de 1779), la Torre del Oro no lleva
     aún su remate de 1760 y las peñas de la «Silla de Felipe II» se presentan como «dicen que».
+- **El capítulo 4 (hecho, 2026-10-27).** Madrid, otoño de 1628: Spínola ha vuelto de Flandes a la
+  corte (llegó a principios de 1628 y partió a Italia en 1629). Felipe IV, de caza en El Pardo,
+  manda al jugador a medirse con él; Olivares da la licencia y, tras el gimnasio, Pleamar.
+  - **Licencias:** el campo de maniobras de Spínola en la Casa de Campo, con trincheras como las
+    de Breda, es inventado, y no consta que Felipe IV mandara a nadie a medirse con él.
+  - **Pleamar, en el Alcázar y no en el Buen Retiro.** La decisión era que Olivares la diera en
+    el Estanque Grande del Buen Retiro, pero el estanque es de 1634–1635 y Spínola murió en 1630:
+    las dos cosas no caben en el mismo capítulo. Se queda Spínola (1628) y Olivares da Pleamar en
+    el Real Alcázar. **Pendiente del autor:** confirmarlo, o pasar el capítulo a 1635 sin
+    Spínola.
+  - Con fecha real: El Paular (1390), el palacio de El Pardo (ardió en 1604), la corte en Madrid
+    (1561), el puente de Segovia (1584), el corral del Príncipe, los viajes de agua, la llegada de
+    Rubens (septiembre de 1628), Velázquez pintor del rey (1623), Matanzas (septiembre de 1628),
+    el viaje de Velázquez a Italia bajo la protección de Spínola (Barcelona, agosto de 1629), la
+    muerte de Spínola en el sitio de Casale (1630) y «La rendición de Breda» (hacia 1635).
+  - El basilisco del viaje de agua sale como «dicen que»: la leyenda del pozo de la calle del
+    Basilisco no se ha podido comprobar (sigue **[VERIFICAR]** en el Bestiario).
 - **Lo que queda apretado.** El XIX y el XX tienen un gimnasio cada uno. Si se quiere más
   peso ahí, se pueden juntar los capítulos 3 y 4.
 - **Saltos de tiempo dentro de un capítulo.** Un capítulo puede abarcar varias décadas de su
@@ -164,6 +181,11 @@ alternativa sería que el mentor fuera Jorge Juan, en lugar de salir como person
       Se pregunta una sola vez.
     - Laberinto a oscuras: solo se ve un círculo alrededor del jugador, como en las cuevas del
       género.
+    - Compuertas: en el campo de Breda, dos palancas mueven las compuertas de las trincheras;
+      unos cauces se secan (se cruzan por las tablas) y otros se inundan (`compuerta` en la
+      casilla, `palancas` en la zona). Hay que ir y volver entre tramos. La prueba lo resuelve
+      moviendo las palancas de verdad, y ninguna palanca está junto a un cauce, para no
+      inundar a nadie.
     - Suelo resbaladizo: la cubierta mojada del galeón (`resbala` en la casilla) se cruza
       resbalando hasta chocar o pisar tabla seca, como el hielo del género. La prueba resuelve
       el puzzle con esa misma física (`deslizamiento`) y comprueba que no hay sitio donde
@@ -172,7 +194,7 @@ alternativa sería que el mentor fuera Jorge Juan, en lugar de salir como person
   - No es sitio de buscar objetos: como mucho uno en el suelo.
   - Si pierdes, lo ganado se queda: los entrenadores vencidos y las preguntas respondidas no
     se repiten, y el camino está libre hasta el entrenador que te ganó.
-  - Ideas para los siguientes: palancas que abren rejas, baldosas que devuelven al principio.
+  - Ideas para los siguientes: baldosas que devuelven al principio, puentes que se derrumban.
   - Cabe de ancho en la pantalla, como las rutas.
   - Las preguntas son de historia y con datos comprobados. La pista se puede encontrar en el
     propio gimnasio.
@@ -400,10 +422,10 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
     - **Pleamar** (el Surf del género; nombre elegido por el autor): cruzar ríos y mares por el
       agua profunda (casilla `O`), con sus propios encuentros. Solo lo aprenden las criaturas
       acuáticas (`acuatica` en la especie). **Decidido:** la da el conde-duque de Olivares en
-      el **capítulo 4**, en Madrid, en el Estanque Grande del Buen Retiro, que se hizo
-      navegable en 1634–1635 y donde la corte de Felipe IV celebraba naumaquias con barcos de
-      guerra en miniatura. Olivares había regalado el Buen Retiro al rey. Jorge Juan, en el
-      capítulo 5, no da ninguna MO: te lleva a las islas en su barco.
+      el **capítulo 4**. Hecho: la da en el Real Alcázar al vencer a Spínola (1628). La idea
+      de darla en el Estanque Grande del Buen Retiro no cabe en 1628 (el estanque es de
+      1634–1635; ver §4). Jorge Juan, en el capítulo 5, no da ninguna MO: te lleva a las islas
+      en su barco.
     - **Vuelo:** viajar a un lugar ya visitado desde el mapa. Propuesta: **Diego Marín
       Aguilera**, el «hombre pájaro» de Coruña del Conde (Burgos), que la noche del 15 de mayo
       de 1793 se lanzó desde el castillo con una máquina de madera y plumas y voló unas 431
@@ -801,3 +823,24 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
     galeón, sillares y andamio).
   - Para quien eligió a Ignibue, la Mandrágora (Planta) sale en Sierra Morena, antes del
     gimnasio de Agua.
+- **2026-10-27 (26).** Capítulo 4, «Madrid, 1628», a petición del autor (seguir haciendo
+  capítulos).
+  - Al acabar el 3 en Sanlúcar se pasa a 1628, con texto de transición (muerte de Felipe II en
+    1598, Felipe III, Felipe IV y Olivares, la guerra de Flandes y Breda). A quien ya lo había
+    terminado, Menéndez le ofrece seguir.
+  - Zonas: Rascafría y El Paular (un cartujo cura), Peñalara con su laguna (con Pleamar se llega
+    a un islote), el monte de El Pardo (Felipe IV de caza da el encargo), Madrid (Plaza Mayor,
+    corral del Príncipe, Alcázar, mesón, puente de Segovia), el Real Alcázar (Olivares y
+    Velázquez), un viaje de agua a oscuras con el basilisco esperando (nivel 30) y el campo de
+    Breda (gimnasio).
+  - Gimnasio de Spínola (Común): trincheras con compuertas que se mueven con dos palancas (79
+    movimientos y cuatro palancas como mínimo) y tres soldados de los tercios que no se
+    esquivan. Spínola (Lobregón 27, Gravitardo 27, Pinariel 28, Pardalión 30) da el Blasón de
+    Madrid, la MT08 Lanzada y tres Téseras de oro. Olivares da Pleamar y cierra el capítulo.
+  - Rivales: el de los arrieros, al final de Peñalara; el del cuaderno, en el puente de Segovia.
+  - 14 especies nuevas con arte (ardilla, murciélago, cabra montés, luciérnaga, oruga y mariposa
+    isabelina, mantis, madroño y basilisco), los primeros movimientos de Hielo y 13 movimientos
+    en total, retratos de Felipe IV, Olivares y Spínola, siete personajes de mapa y piezas
+    nuevas del tileset (cauce seco, palanca, gavión).
+  - Para el gimnasio de Común sirve lo que vuela: Sonumbra, Ilusaria, Farolera o Falcivento,
+    todas antes del gimnasio.

@@ -37,6 +37,14 @@ tocan desde aquí.
     (`resbala` en `casillas.ts`, `deslizamiento` en `core/mundo.ts`). Tres marineros que no se
     esquivan y Menéndez (Agua), que da la MT07 Resaca y la Caña.
   - 14 especies nuevas con su arte, 12 movimientos y entrenadores de una o dos criaturas.
+- **Capítulo 4, «Madrid, 1628» (2026-10-27), hecho y jugable:** al acabar el 3 en Sanlúcar se
+  pasa a Rascafría (El Paular). Felipe IV, de caza en El Pardo, manda al jugador a medirse con
+  Spínola; Olivares da la licencia y, tras el gimnasio, Pleamar.
+  - Peñalara, el monte de El Pardo, Madrid (Plaza Mayor, corral, puente de Segovia), el Real
+    Alcázar, un viaje de agua a oscuras con el basilisco y el campo de Breda (gimnasio).
+  - El gimnasio usa compuertas: cauces que se secan o se inundan según dos palancas
+    (`compuerta` en `casillas.ts`, `palancas` en la zona, `esSolida` con las banderas).
+  - Pendiente del autor: Pleamar se da en el Alcázar y no en el Buen Retiro (GDD §4).
 - **Hito 4, en curso:**
   - Hecho: el juego ocupa toda la pantalla del móvil.
   - Hecho: es una web instalable (PWA), con manifiesto, iconos y service worker para jugar sin
@@ -49,12 +57,12 @@ tocan desde aquí.
     `arte/mapa/tileset.py` (`src/assets/LEEME.md`). Se cambia el script, nunca el PNG a mano.
   - Personajes que caminan: propios, al mismo estilo, con la ropa y los tocados de la época;
     los genera `arte/mapa/personajes.py`. Ya no queda nada de *Ninja Adventure*.
-  - Criaturas: hechas las 22 del capítulo 1, las 15 del capítulo 2 y las 14 del 3 en el estilo elegido por
+  - Criaturas: hechas las 22 del capítulo 1, las 15 del 2, las 14 del 3 y las 14 del 4 en el estilo elegido por
     el autor, con vista de rival y vista del jugador (`src/assets/LEEME.md`). Guayota y la vieja, en reserva, en
     `arte/criaturas-futuras/`. Antes de hacer más, lee la guía de diseño visual del Bestiario.
   - Retratos para los diálogos, solo de los personajes importantes (decisión del autor):
-    Isabel, Fernando, el Gran Capitán, Colón, Boabdil, Juan de Padilla, María Pacheco, Felipe II
-    y Menéndez de Avilés (`src/assets/retratos/`, `src/data/retratos.ts`). Hay 22 más hechos, en
+    Isabel, Fernando, el Gran Capitán, Colón, Boabdil, Juan de Padilla, María Pacheco, Felipe II,
+    Menéndez de Avilés, Felipe IV, Olivares y Spínola (`src/assets/retratos/`, `src/data/retratos.ts`). Hay 22 más hechos, en
     reserva, en `arte/retratos-reserva/` (entre ellos Carlos V y Juan de Austria).
 - **Bestiario (`docs/BESTIARIO.md`), v2:**
   - Hecho: auditoría, segunda revisión de variedad (A.8), tabla de 150 especies y fichas del
@@ -125,15 +133,15 @@ tocan desde aquí.
   - Hecho: más objetos (bayas, potenciadores de tipo, objetos equipables, téseras, Elixires),
     piedras lunar y solar, y Repartir experiencia (maestro de Toledo; objetos `clave` con
     `interruptor`). Las otras cuatro piedras, en `arte/objetos-futuros/`.
-  - Hecho: pesca (`encuentrosPesca`, casillas con `pesca`; la Caña llega con el tercer
-    gimnasio, que aún no existe, así que hoy no se consigue) y
+  - Hecho: pesca (`encuentrosPesca`, casillas con `pesca`; la Caña la da Menéndez de Avilés,
+    el tercer líder) y
     almacén en páginas de 30 huecos (`src/core/almacen.ts`, partida v3).
   - Hecho: rivales recurrentes (`rival` en `DefEntrenador`, `prepararEntrenador` en
     `partida.ts`, `RIVALES` en `data/entrenadores.ts`, paso `conocerRival`, aspectos `rival_a`
     y `rival_b`). Cuatro combates en los capítulos 1 y 2. Se presentan con su historia
     (`presentacion` en `RIVALES`) antes de ponerles nombre.
   - La Liga, más adelante (decisión del autor).
-- **Siguiente:** capítulo 3 (1571). Alhambrón queda para una zona de ruinas, a petición del
+- **Siguiente:** capítulo 5 (Canarias) y una partida completa de prueba. Alhambrón queda para una zona de ruinas, a petición del
   autor. La vista de espalda de Imperión parece de frente: se puede rehacer.
 - **Mapas (2026-10-25), hecho:** con aspecto de los juegos de criaturas de GBA, a petición
   del autor.
@@ -200,7 +208,7 @@ El código va en español: nombres, comentarios y textos.
   - Contenido de combate: `especies.ts`, `movimientos.ts`, `tipos.ts`, `temperamentos.ts`, `pasivas.ts` y
     `objetos.ts`, reunidos en `DATOS` (`index.ts`).
   - Contenido del mundo: `casillas.ts` (la leyenda de los mapas), `entrenadores.ts`,
-    `zonas/capitulo1.ts`, `zonas/capitulo2.ts`, `zonas/capitulo3.ts` y `guion.ts` (atajos para escribir guiones). Se reúnen en `mundo.ts`,
+    `zonas/capitulo1.ts` a `zonas/capitulo4.ts` y `guion.ts` (atajos para escribir guiones). Se reúnen en `mundo.ts`,
     que también da `CAPITULOS` y `ENTRADAS` (por dónde se entra en cada zona).
   - `lugares.ts`: los lugares del mapa de la península, con su latitud y longitud, y la
     proyección del mapa.
@@ -248,6 +256,9 @@ El código va en español: nombres, comentarios y textos.
       criatura al azar). El líder no pregunta.
     - Como mucho un objeto en el suelo: un gimnasio no es sitio de buscar objetos.
     - Una zona a oscuras lleva `oscuridad` (el radio de luz en casillas).
+    - Compuertas: casillas con `compuerta` (en `casillas.ts`: `c`/`e` con la palanca `a`,
+      `i`/`j` con la `b`) y `palancas` en la zona. Ninguna palanca junto a un cauce.
+    - Suelo resbaladizo: casillas con `resbala` (`D`, la cubierta mojada).
   - Para cambiar de capítulo, el guion termina con el paso `viajar` (zona y casilla).
   - Una casilla nueva necesita su entrada en `casillas.ts`, su dibujo en `casillasVisual.ts` y,
     si es una pieza nueva, su función en `arte/mapa/tileset.py`.
@@ -266,6 +277,9 @@ El código va en español: nombres, comentarios y textos.
   - Regalos dados (para no repetirlos): `regalo:mapa`, `regalo:mt_boabdil`, `regalo:mt_maria`.
   - `fijo:<zona>:<id>`: legendario que esperaba de pie, ya vencido o capturado.
   - `pregunta:<entrenador>`: ya respondió su pregunta (bien o mal); no se repite.
+  - `palanca:<zona>:<id>`: la palanca está echada.
+  - Capítulos 3 y 4: `capitulo3`, `despacho_rey`, `blason_sevilla`, `fin_capitulo3`, `capitulo4`,
+    `encargo_rey`, `licencia_olivares`, `blason_madrid`, `fin_capitulo4`.
 - **Cada zona nueva** necesita `enMapa` (su lugar de `lugares.ts`, o el camino entre dos) para
   salir en el mapa de la zona de captura; las pruebas lo exigen.
 
