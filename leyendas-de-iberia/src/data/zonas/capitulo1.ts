@@ -1,5 +1,5 @@
 import type { Paso, Zona } from '../../core/mundo';
-import { bandera, dar, decir, si } from '../guion';
+import { bandera, dar, decir, pregunta, si } from '../guion';
 import { INICIO_CAPITULO_2 } from './capitulo2';
 
 /** El salto de 1492 a 1521: el resumen de lo que ha pasado y el viaje a Villalar. */
@@ -538,21 +538,10 @@ const ALHAMBRA: Zona = {
       vision: 1,
       guion: [],
     },
-    {
-      id: 'guardia',
-      nombre: 'Guardia de la Alhambra',
-      x: 7,
-      y: 3,
-      dir: 'izquierda',
-      aspecto: 'guardia_nazari',
-      entrenador: 'guardia_alhambra',
-      vision: 2,
-      guion: [],
-    },
   ],
   salidas: [
     { x: 6, y: 11, zona: 'vega', ax: 6, ay: 1, dir: 'abajo' },
-    { x: 6, y: 0, zona: 'patio_leones', ax: 5, ay: 10, dir: 'arriba' },
+    { x: 6, y: 0, zona: 'patio_leones', ax: 6, ay: 32, dir: 'arriba' },
   ],
   carteles: [{ x: 5, y: 10, texto: ['La Alhambra.', 'Palacio de los reyes nazaríes de Granada.'] }],
   ocultos: [
@@ -563,32 +552,70 @@ const ALHAMBRA: Zona = {
   ],
 };
 
+// Castigos de los duendes del palacio cuando se falla una pregunta de los porteros.
+const SUSTO: Paso[] = [...decir(undefined, '¡Un duende sale de detrás de un azulejo y os da un buen susto!'), { tipo: 'herir', fraccion: 0.2 }];
+const ADORMIDERA: Paso[] = [...decir(undefined, 'Un duende os sopla a la cara polvo de adormidera.'), { tipo: 'alterar', estado: 'dormido' }];
+const TIRON_OREJAS: Paso[] = [...decir(undefined, 'Un duende os tira de las orejas hasta sacaros de quicio.'), { tipo: 'alterar', estado: 'colera' }];
+
+/**
+ * El gimnasio de Boabdil: los Palacios Nazaríes. Tres salas separadas por puertas con portero, que
+ * no deja pasar sin acertar su pregunta (`puerta:patio_leones:<n>`), y al fondo el Patio de los
+ * Leones. Dos entrenadores guardan las puertas y un tercero, en el Patio de los Arrayanes, se puede
+ * esquivar por el otro lado del estanque.
+ */
 const PATIO_LEONES: Zona = {
   id: 'patio_leones',
-  nombre: 'Patio de los Leones',
+  nombre: 'Palacios Nazaríes',
   enMapa: { lugar: 'granada' },
   estilo: 'patio',
   interior: true,
   mapa: [
-    'ZZZZZZZZZZZZ',
-    'ZCBBBBBBBBCZ',
-    'ZBBBBBBBBBBZ',
-    'ZBCBBBBBBCBZ',
-    'ZBBBAAAABBBZ',
-    'ZBBBAAAABBBZ',
-    'ZBCBBBBBBCBZ',
-    'ZBBBBBBBBBBZ',
-    'ZBBBBRRBBBBZ',
-    'ZCBBBRRBBBCZ',
-    'ZBBBBRRBBBBZ',
-    'ZZZZZPZZZZZZ',
+    'ZZZZZZZZZZZZZ',
+    'ZCBBBBBBBBBCZ',
+    'ZBBBBBBBBBBBZ',
+    'ZBCBBAAABBCBZ',
+    'ZBBBBAAABBBBZ',
+    'ZBCBBBBBBBCBZ',
+    'ZBBBBBRBBBBBZ',
+    'ZCBBBBRBBBBCZ',
+    'ZZZZZZBZZZZZZ',
+    'ZBBBBBRBBBBBZ',
+    'ZBCBBBRBBBCBZ',
+    'ZBBBBBRBBBBBZ',
+    'ZBCBBBRBBBCBZ',
+    'ZBBBBBRBBBBBZ',
+    'ZZZZZZBZZZZZZ',
+    'ZCBBBBRBBBBCZ',
+    'ZBBBBBBBBBBBZ',
+    'ZBBBvvvvvBBBZ',
+    'ZBBBv~~~vBBBZ',
+    'ZBBBv~~~vBBBZ',
+    'ZBBBv~~~vBBBZ',
+    'ZBBBv~~~vBBBZ',
+    'ZBBBv~~~vBBBZ',
+    'ZBBBvvvvvBBBZ',
+    'ZBBBBBBBBBBBZ',
+    'ZCBBBBRBBBBCZ',
+    'ZZZZZZBZZZZZZ',
+    'ZCBBBBRBBBBCZ',
+    'ZBBBBBRBBBBBZ',
+    'ZBCBBBRBBBCBZ',
+    'ZBBBBBRBBBBBZ',
+    'ZBCBBBRBBBCBZ',
+    'ZCBBBBRBBBBCZ',
+    'ZZZZZZPZZZZZZ',
   ],
+  alEntrar: decir(
+    undefined,
+    'Los Palacios Nazaríes. Hasta el emir hay tres puertas, y cada una tiene su portero.',
+    'Dicen que quien no sabe responder se las ve con los duendes del palacio.',
+  ),
   pnj: [
     {
       id: 'boabdil',
       nombre: 'Boabdil',
-      x: 5,
-      y: 2,
+      x: 6,
+      y: 1,
       dir: 'abajo',
       aspecto: 'sultan',
       guion: [
@@ -632,10 +659,88 @@ const PATIO_LEONES: Zona = {
         ]),
       ],
     },
+    {
+      id: 'guardia',
+      nombre: 'Guardia de la Alhambra',
+      x: 5,
+      y: 27,
+      dir: 'derecha',
+      aspecto: 'guardia_nazari',
+      entrenador: 'guardia_alhambra',
+      vision: 1,
+      guion: [],
+    },
+    {
+      id: 'portero_1',
+      nombre: 'Portero',
+      x: 6,
+      y: 26,
+      dir: 'abajo',
+      aspecto: 'anciano',
+      ocultoSi: 'puerta:patio_leones:1',
+      guion: [
+        ...decir('Portero', 'Esta es la puerta del Mexuar. Quien quiera cruzarla, que sepa al menos dónde está.'),
+        ...pregunta('Portero', '¿Qué quiere decir «Alhambra» en árabe?', ['La blanca', 'La roja', 'La alta'], 1, 'puerta:patio_leones:1', SUSTO),
+      ],
+    },
+    {
+      id: 'poeta',
+      nombre: 'Poeta de la corte',
+      x: 1,
+      y: 20,
+      dir: 'derecha',
+      aspecto: 'noble',
+      entrenador: 'poeta_corte',
+      vision: 2,
+      guion: [],
+    },
+    {
+      id: 'portero_2',
+      nombre: 'Portero',
+      x: 6,
+      y: 14,
+      dir: 'abajo',
+      aspecto: 'anciano',
+      ocultoSi: 'puerta:patio_leones:2',
+      guion: [
+        ...decir('Portero', 'Este estanque refleja el palacio entero. Pero ¿sabes quién lo mandó levantar?'),
+        ...pregunta('Portero', '¿Qué familia de reyes construyó estos palacios?', ['Los omeyas', 'Los almohades', 'Los nazaríes'], 2, 'puerta:patio_leones:2', ADORMIDERA),
+      ],
+    },
+    {
+      id: 'alarife',
+      nombre: 'Alarife',
+      x: 7,
+      y: 9,
+      dir: 'izquierda',
+      aspecto: 'maestro',
+      entrenador: 'alarife',
+      vision: 1,
+      guion: [],
+    },
+    {
+      id: 'portero_3',
+      nombre: 'Portero',
+      x: 6,
+      y: 8,
+      dir: 'abajo',
+      aspecto: 'anciano',
+      ocultoSi: 'puerta:patio_leones:3',
+      guion: [
+        ...decir('Portero', 'Detrás de mí está el patio del emir. Una última pregunta.'),
+        ...pregunta('Portero', '¿Cuántos leones sostienen la fuente del patio?', ['Doce', 'Ocho', 'Diez'], 0, 'puerta:patio_leones:3', TIRON_OREJAS),
+      ],
+    },
   ],
-  salidas: [{ x: 5, y: 11, zona: 'alhambra', ax: 6, ay: 1, dir: 'abajo' }],
+  salidas: [{ x: 6, y: 33, zona: 'alhambra', ax: 6, ay: 1, dir: 'abajo' }],
   carteles: [],
-  ocultos: [{ id: 'turron', x: 1, y: 10, objeto: 'turron' }],
+  ocultos: [
+    { id: 'turron', x: 11, y: 13, objeto: 'turron' },
+    // Para los castigos de los duendes: un Despertar tras la puerta del sueño y una Tila antes de
+    // la de la cólera.
+    { id: 'sales', x: 11, y: 16, objeto: 'sales' },
+    { id: 'tila', x: 1, y: 9, objeto: 'tila' },
+  ],
 };
 
 export const ZONAS_CAPITULO_1: Zona[] = [SANTA_FE, MESON, PABELLON, VEGA, ALHAMBRA, PATIO_LEONES];

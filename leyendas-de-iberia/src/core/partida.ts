@@ -1,7 +1,7 @@
 // Estado de una partida del modo historia. Es JSON plano: se guarda tal cual. Las funciones
 // de este módulo modifican la partida que reciben, como las del generador aleatorio.
 
-import type { Criatura, DatosJuego } from './modelo';
+import type { Criatura, DatosJuego, EstadoAlterado } from './modelo';
 import { crearRng, elegirPonderado, entero, probabilidad, type EstadoRng } from './rng';
 import { crearCriatura, curarDelTodo, sexoPara } from './criatura';
 import { vidaMaxima } from './estadisticas';
@@ -9,6 +9,7 @@ import type { DefEntrenador, Dir, TablaEncuentros } from './mundo';
 import type { ResultadoCombate } from './combate';
 import { guardadas, guardar, paginasVacias, type Pagina } from './almacen';
 import { eficacia } from './tipos';
+import { nuevoEstado, puedeSufrir } from './pasivas';
 
 export const VERSION_PARTIDA = 3;
 export const MAX_EQUIPO = 6;
@@ -157,6 +158,27 @@ export function darObjeto(p: Partida, objeto: string, cantidad: number): void {
 
 export function curarEquipo(p: Partida, datos: DatosJuego): void {
   p.equipo = p.equipo.map((c) => curarDelTodo(c, datos));
+}
+
+/**
+ * Castigo fuera de combate (una pregunta fallada, una trampa): cada criatura en pie pierde esa
+ * fracción de su Vida máxima, pero ninguna llega a debilitarse.
+ */
+export function herirEquipo(p: Partida, fraccion: number, datos: DatosJuego): void {
+  for (const c of p.equipo) {
+    if (c.vida <= 0) continue;
+    c.vida = Math.max(1, c.vida - Math.max(1, Math.floor(vidaMaxima(c, datos) * fraccion)));
+  }
+}
+
+/**
+ * Castigo fuera de combate: la primera criatura en pie que pueda sufrir el estado lo coge.
+ * Devuelve cuál, o `null` si ninguna puede (ya tienen otro estado o son inmunes).
+ */
+export function alterarEquipo(p: Partida, estado: EstadoAlterado, datos: DatosJuego): Criatura | null {
+  const c = p.equipo.find((x) => puedeSufrir(x, estado, datos)) ?? null;
+  if (c) c.estado = nuevoEstado(estado, p.rng);
+  return c;
 }
 
 export function equipoEnPie(p: Partida): boolean {

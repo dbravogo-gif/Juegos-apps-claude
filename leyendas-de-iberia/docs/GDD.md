@@ -144,6 +144,18 @@ reformista de la Ilustración: renueva el encargo de Isabel y guía la segunda m
 alternativa sería que el mentor fuera Jorge Juan, en lugar de salir como personaje.
 - **Los gimnasios son pruebas, no enemigos.** El líder puede ser de cualquier bando. Por
   ejemplo, Boabdil acepta un último duelo de leyendas antes de entregar las llaves de Granada.
+- **Cómo es un gimnasio** (decisión del autor, 2026-10-27):
+  - Dos o tres entrenadores además del líder, con criaturas de su tipo o de su época.
+  - Una prueba propia que lo haga entretenido. Las de ahora:
+    - Puertas con portero que pregunta: si fallas, castigo al equipo (pierde vida o coge un
+      estado), y se puede volver a intentar.
+    - Laberinto.
+  - Ideas para los siguientes: suelo resbaladizo, palancas que abren rejas, baldosas que
+    devuelven al principio.
+  - Cabe de ancho en la pantalla, como las rutas.
+  - Las preguntas son de historia y con datos comprobados. La pista se puede encontrar en el
+    propio gimnasio.
+  - Las pruebas lo comprueban (`GIMNASIOS` en `tests/gimnasios.test.ts`).
 
 Se descarta el viaje en el tiempo: obliga a justificar cada salto.
 
@@ -709,3 +721,20 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
     la Campana concha y el Velo negro de Boabdil (ahora 2 Superpociones). Quien ya los tenga se
     los queda.
   - Arreglado: cambiar de zona mientras un vecino daba un paso daba un error.
+- **2026-10-27 (22).** Gimnasios más elaborados, a petición del autor.
+  - Boabdil: los Palacios Nazaríes (13 × 34). El orden es Mexuar, Patio de los Arrayanes con su
+    estanque, sala de mocárabes y Patio de los Leones.
+    - Tres porteros preguntan: qué quiere decir «Alhambra» («la roja»), qué dinastía levantó los
+      palacios (los nazaríes) y cuántos leones sostienen la fuente (doce).
+    - Si fallas, los duendes castigan: un susto que quita un 20 % de vida, polvo de adormidera
+      (sueño) o un tirón de orejas (cólera).
+    - Entrenadores: el guardia (se muda del bosque), el poeta de la corte (se puede esquivar) y
+      el alarife. Hay un Despertar y una Tila escondidos para los castigos.
+  - María Pacheco: la armería del Alcázar es un laberinto (13 × 28, 66 pasos hasta ella, siete
+    callejones sin salida).
+    - Entrenadores: el escudero, un espadero y un artillero comunero, en huecos de la pared que
+      dan al camino.
+    - En los callejones hay una Tésera de plata, un Elixir, una Superpoción y un Revivir.
+  - Pasos de guion nuevos: `herir` y `alterar`, castigos fuera de combate que nunca debilitan.
+  - Al cargar, una partida guardada en un sitio que ya no es transitable (porque el mapa cambió)
+    va a la entrada de su zona.

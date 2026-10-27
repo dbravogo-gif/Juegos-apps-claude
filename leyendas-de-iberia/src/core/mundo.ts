@@ -1,6 +1,8 @@
 // Modelo del mundo explorable: zonas dibujadas como texto, personajes, salidas y guiones.
 // Todo son datos JSON; la escena de Phaser solo los pinta y los recorre.
 
+import type { EstadoAlterado } from './modelo';
+
 export type Dir = 'arriba' | 'abajo' | 'izquierda' | 'derecha';
 
 export const DELTA: Record<Dir, [number, number]> = {
@@ -36,6 +38,10 @@ export type Paso =
   /** Aparece un rival por primera vez: el jugador le pone nombre (si aún no lo tiene). */
   | { tipo: 'conocerRival'; rival: 'a' | 'b' }
   | { tipo: 'combate'; entrenador: string }
+  /** Castigo fuera de combate: el equipo pierde esa fracción de su Vida, sin debilitarse. */
+  | { tipo: 'herir'; fraccion: number }
+  /** Castigo fuera de combate: la primera criatura que pueda sufrirlo coge el estado. */
+  | { tipo: 'alterar'; estado: EstadoAlterado }
   /** Ids de objeto; el precio sale de los datos del objeto. */
   | { tipo: 'tienda'; productos: string[] }
   | { tipo: 'regreso' }
@@ -302,6 +308,24 @@ export function validarZona(
  * La usa el modo desarrollador para viajar a cualquier zona. `extra` son entradas que no salen
  * de ninguna salida (el principio de cada capítulo).
  */
+/**
+ * La posición guardada si sigue valiendo. Si el mapa ha cambiado y ha quedado dentro de un muro o
+ * fuera del mapa, la entrada de su zona; si la zona ya no existe, `porDefecto`.
+ */
+export function posicionValida<P extends { zona: string; x: number; y: number; dir: Dir }>(
+  pos: P,
+  zonas: Record<string, Zona>,
+  casillas: Record<string, DefCasilla>,
+  entradas: Record<string, { zona: string; x: number; y: number; dir: Dir }>,
+  porDefecto: { zona: string; x: number; y: number; dir: Dir },
+): { zona: string; x: number; y: number; dir: Dir } {
+  const z = zonas[pos.zona];
+  if (!z) return { ...porDefecto };
+  const dentro = pos.y >= 0 && pos.y < z.mapa.length && pos.x >= 0 && pos.x < ancho(z);
+  if (dentro && (!esSolida(z, pos.x, pos.y, casillas) || esNavegable(z, pos.x, pos.y, casillas))) return pos;
+  return { ...(entradas[pos.zona] ?? porDefecto) };
+}
+
 export function entradasDeZonas(
   zonas: Record<string, Zona>,
   extra: { zona: string; x: number; y: number; dir: Dir }[] = [],

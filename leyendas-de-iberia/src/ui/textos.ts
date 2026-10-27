@@ -20,7 +20,7 @@ export const ESTADO_VISTA: Record<EstadoAlterado, { etiqueta: string; color: num
   colera: { etiqueta: 'Colérica', color: 0xc2185b },
 };
 
-const SE_HA: Record<EstadoAlterado, string> = {
+export const SE_HA: Record<EstadoAlterado, string> = {
   quemado: 'se ha quemado',
   dormido: 'se ha dormido',
   paralizado: 'se ha paralizado',
