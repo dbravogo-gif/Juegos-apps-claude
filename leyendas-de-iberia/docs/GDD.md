@@ -844,3 +844,28 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
     nuevas del tileset (cauce seco, palanca, gavión).
   - Para el gimnasio de Común sirve lo que vuela: Sonumbra, Ilusaria, Farolera o Falcivento,
     todas antes del gimnasio.
+- **2026-10-27 (27).** Partida de prueba de principio a fin, a petición del autor («crearme una
+  partida de verdad, ir haciendo todo y ver qué problemas hay»). La juega un programa en el
+  navegador, como un jugador: habla, combate, captura, se cura y entrena. Lo que salió:
+  - Arreglado:
+    - El combate y la elección de compañera no se podían jugar con teclado. Ahora las flechas
+      (o WASD) mueven un marco dorado, Intro/Espacio/Z pulsa y Esc/X vuelve.
+    - Cuatro diálogos ocupaban cuatro líneas y se salían del cuadro (caben tres): partidos. Una
+      prueba nueva limita los textos a 146 caracteres, con los nombres del jugador a su largo
+      máximo.
+    - En la tienda, la descripción de la tésera se salía de su hueco; la de Ignibue rozaba el
+      borde de su tarjeta.
+    - El botón A decía siempre «Hablar»; ahora dice Hablar, Seguir o Aceptar.
+    - Antes del primer gimnasio no había dónde curar: había que volver a Santa Fe cruzando la
+      Vega entera. Un aguador, con agua de la Acequia Real, cura en el Bosque de la Alhambra.
+    - Al perder ya no se dice «vuelves al último mesón»: también se reaparece junto a frailes,
+      el cartujo o el aguador.
+    - Con Dralín, tres de los cinco primeros entrenadores de la Vega llevaban Aire. El mercader
+      genovés lleva ahora un Brezuco (Oscuridad), que pega igual a las tres iniciales.
+  - Dificultad, con simulaciones (20 combates, sin objetos):
+    - Con la inicial sola: Boabdil se gana un 30 % a nivel 12 (aceptado por el autor) y un
+      95 % a nivel 14; a Menéndez y a Spínola no se les gana con la de fuego ni con la de agua.
+    - Con un equipo de tres (la inicial y dos criaturas de la zona), los cuatro líderes se
+      ganan entre un 90 % y un 100 %. La curva está bien si se usa el equipo.
+    - El combate más duro del capítulo 4 es el rival del puente de Segovia, no Spínola: sin
+      Hielo se gana entre un 0 % y un 45 %; con un Carámbex de Peñalara, entre un 80 % y un 90 %.

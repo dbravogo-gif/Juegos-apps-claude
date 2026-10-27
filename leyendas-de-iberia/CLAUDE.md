@@ -141,7 +141,11 @@ tocan desde aquí.
     y `rival_b`). Cuatro combates en los capítulos 1 y 2. Se presentan con su historia
     (`presentacion` en `RIVALES`) antes de ponerles nombre.
   - La Liga, más adelante (decisión del autor).
-- **Siguiente:** capítulo 5 (Canarias) y una partida completa de prueba. Alhambrón queda para una zona de ruinas, a petición del
+- **Partida de prueba completa (2026-10-27):** un programa jugó los capítulos 1 a 4 en el
+  navegador como un jugador. Lo que salió y lo arreglado, en el registro 27 del GDD: teclado en
+  el combate, textos que se salían, un aguador que cura antes del primer gimnasio, el mercader
+  de la Vega y la dificultad medida de cada líder (con equipo de tres, todos se ganan).
+- **Siguiente:** capítulo 5 (Canarias), con las decisiones abiertas que faltan. Alhambrón queda para una zona de ruinas, a petición del
   autor. La vista de espalda de Imperión parece de frente: se puede rehacer.
 - **Mapas (2026-10-25), hecho:** con aspecto de los juegos de criaturas de GBA, a petición
   del autor.
