@@ -38,9 +38,9 @@ export type Paso =
   /** Aparece un rival por primera vez: el jugador le pone nombre (si aún no lo tiene). */
   | { tipo: 'conocerRival'; rival: 'a' | 'b' }
   | { tipo: 'combate'; entrenador: string }
-  /** Castigo fuera de combate: el equipo pierde esa fracción de su Vida, sin debilitarse. */
+  /** Castigo fuera de combate: una criatura al azar pierde esa fracción de su Vida, sin debilitarse. */
   | { tipo: 'herir'; fraccion: number }
-  /** Castigo fuera de combate: la primera criatura que pueda sufrirlo coge el estado. */
+  /** Castigo fuera de combate: una criatura al azar de las que pueden sufrirlo coge el estado. */
   | { tipo: 'alterar'; estado: EstadoAlterado }
   /** Ids de objeto; el precio sale de los datos del objeto. */
   | { tipo: 'tienda'; productos: string[] }

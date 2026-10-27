@@ -161,23 +161,26 @@ export function curarEquipo(p: Partida, datos: DatosJuego): void {
 }
 
 /**
- * Castigo fuera de combate (una pregunta fallada, una trampa): cada criatura en pie pierde esa
- * fracción de su Vida máxima, pero ninguna llega a debilitarse.
+ * Castigo fuera de combate (una pregunta fallada, una trampa): una criatura en pie, al azar, pierde
+ * esa fracción de su Vida máxima, sin llegar a debilitarse. Devuelve cuál, o `null` si no hay.
  */
-export function herirEquipo(p: Partida, fraccion: number, datos: DatosJuego): void {
-  for (const c of p.equipo) {
-    if (c.vida <= 0) continue;
-    c.vida = Math.max(1, c.vida - Math.max(1, Math.floor(vidaMaxima(c, datos) * fraccion)));
-  }
+export function herirUna(p: Partida, fraccion: number, datos: DatosJuego): Criatura | null {
+  const enPie = p.equipo.filter((c) => c.vida > 0);
+  if (enPie.length === 0) return null;
+  const c = enPie[entero(p.rng, 0, enPie.length - 1)];
+  c.vida = Math.max(1, c.vida - Math.max(1, Math.floor(vidaMaxima(c, datos) * fraccion)));
+  return c;
 }
 
 /**
- * Castigo fuera de combate: la primera criatura en pie que pueda sufrir el estado lo coge.
+ * Castigo fuera de combate: una criatura al azar de las que pueden sufrir el estado lo coge.
  * Devuelve cuál, o `null` si ninguna puede (ya tienen otro estado o son inmunes).
  */
-export function alterarEquipo(p: Partida, estado: EstadoAlterado, datos: DatosJuego): Criatura | null {
-  const c = p.equipo.find((x) => puedeSufrir(x, estado, datos)) ?? null;
-  if (c) c.estado = nuevoEstado(estado, p.rng);
+export function alterarUna(p: Partida, estado: EstadoAlterado, datos: DatosJuego): Criatura | null {
+  const pueden = p.equipo.filter((x) => puedeSufrir(x, estado, datos));
+  if (pueden.length === 0) return null;
+  const c = pueden[entero(p.rng, 0, pueden.length - 1)];
+  c.estado = nuevoEstado(estado, p.rng);
   return c;
 }
 

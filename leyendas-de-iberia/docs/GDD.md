@@ -147,11 +147,13 @@ alternativa sería que el mentor fuera Jorge Juan, en lugar de salir como person
 - **Cómo es un gimnasio** (decisión del autor, 2026-10-27):
   - Dos o tres entrenadores además del líder, con criaturas de su tipo o de su época.
   - Una prueba propia que lo haga entretenido. Las de ahora:
-    - Preguntas: cada entrenador pregunta antes de combatir, y si fallas, castigo al equipo
-      (pierde vida o coge un estado) que ya se nota en ese combate. Se pregunta una sola vez.
+    - Preguntas: cada entrenador pregunta antes de combatir, y si fallas, castigo a una sola
+      criatura al azar (pierde un 20 % de vida o coge un estado) que ya se nota en ese combate.
+      Se pregunta una sola vez.
     - Laberinto a oscuras: solo se ve un círculo alrededor del jugador, como en las cuevas del
       género.
   - El líder no pregunta: a su combate se entra sin más.
+  - No es sitio de buscar objetos: como mucho uno en el suelo.
   - Si pierdes, lo ganado se queda: los entrenadores vencidos y las preguntas respondidas no
     se repiten, y el camino está libre hasta el entrenador que te ganó.
   - Ideas para los siguientes: suelo resbaladizo, palancas que abren rejas, baldosas que
@@ -754,3 +756,8 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
   - Si pierdes, no se repite nada de lo ganado (ya era así; ahora lo comprueba una prueba).
   - La armería del Alcázar, a oscuras: un círculo de luz de tres casillas alrededor del jugador
     (`oscuridad` en la zona).
+- **2026-10-27 (24).** Más correcciones del autor a los gimnasios.
+  - Los castigos de las preguntas afectan a una sola criatura al azar: el susto le quita un
+    20 % de vida, y el sueño o la cólera también le tocan a una sola.
+  - En el laberinto solo queda la Superpoción. Por el mismo criterio, en el palacio de Boabdil
+    solo queda la Tila (fuera el Turrón y el Despertar).

@@ -565,8 +565,7 @@ const ALCAZAR_TOLEDO: Zona = {
   estilo: 'alcazar',
   interior: true,
   // El gimnasio de María Pacheco: un laberinto a oscuras entre los muros de la armería, con tres
-  // entrenadores en huecos de la pared que dan al camino (no se pueden esquivar) y objetos al
-  // fondo de los callejones sin salida.
+  // entrenadores en huecos de la pared que dan al camino (no se pueden esquivar).
   oscuridad: 3,
   mapa: [
     'WWWWWWWWWWWWW',
@@ -680,12 +679,8 @@ const ALCAZAR_TOLEDO: Zona = {
   ],
   salidas: [{ x: 6, y: 27, zona: 'toledo', ax: 11, ay: 1, dir: 'abajo' }],
   carteles: [],
-  ocultos: [
-    { id: 'tesera_plata', x: 7, y: 5, objeto: 'tesera_plata', visible: true },
-    { id: 'elixir', x: 11, y: 15, objeto: 'elixir', visible: true },
-    { id: 'emplasto', x: 11, y: 21, objeto: 'emplasto', visible: true },
-    { id: 'aliento', x: 1, y: 7, objeto: 'aliento' },
-  ],
+  // Un gimnasio no es sitio para ir buscando objetos (decisión del autor): solo una Superpoción.
+  ocultos: [{ id: 'emplasto', x: 11, y: 21, objeto: 'emplasto', visible: true }],
 };
 
 export const ZONAS_CAPITULO_2: Zona[] = [VILLALAR, SIERRA, CAMINO_TOLEDO, TOLEDO, MESON_TOLEDO, ALCAZAR_TOLEDO];
