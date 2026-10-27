@@ -111,10 +111,35 @@ const LISTA: DefEntrenador[] = [
     derrota: ['Pasa. El emir te espera junto a la fuente.'],
     despues: [
       'El emir pelea con los duendes de la Alhambra. Dicen que no soportan la luz, la mente… ni la ruda.',
+      'Si el portero te pregunta, fíjate en el color de estas murallas al atardecer.',
       'Pocos han visto el Patio de los Leones. Míralo bien: quizá sea la última vez que es nuestro.',
     ],
   },
-  // ---------- Patio de los Leones ----------
+  // ---------- Palacios Nazaríes: el gimnasio de Boabdil (el guardia de arriba, y estos dos) ----------
+  {
+    id: 'poeta_corte',
+    nombre: 'Poeta de la corte',
+    equipo: [{ especie: 'mandragora', nivel: 6 }],
+    valia: 5,
+    premio: 180,
+    antes: ['Los versos de estas paredes los escribieron poetas de la corte, como yo. A ver si tu Bestiario rima.'],
+    derrota: ['Me he quedado sin versos.'],
+    despues: [
+      'Los reyes nazaríes llenaron estas paredes de versos: hay poemas hasta en la fuente del patio.',
+      'El de la fuente lo escribió Ibn Zamrak, visir y poeta. La sostienen doce leones de mármol.',
+    ],
+  },
+  {
+    id: 'alarife',
+    nombre: 'Alarife',
+    equipo: [{ especie: 'duende', nivel: 7 }],
+    valia: 5,
+    premio: 220,
+    objetos: { unguento: 1 },
+    antes: ['Soy alarife: cuido de que estos techos no se caigan. ¿Te atreves con mi duende?'],
+    derrota: ['Ni un mocárabe fuera de su sitio… y aun así he perdido.'],
+    despues: ['Las bóvedas de mocárabes parecen panales. Están hechas de miles de piezas de yeso.'],
+  },
   {
     id: 'boabdil',
     nombre: 'Boabdil',
@@ -186,7 +211,28 @@ const LISTA: DefEntrenador[] = [
     derrota: ['Toma, para las heridas. Yo ya tengo más.'],
     despues: ['La ruda espanta el mal de ojo. A las víboras, no tanto.'],
   },
-  // ---------- Alcázar de Toledo ----------
+  // ---------- Alcázar de Toledo: el gimnasio de María Pacheco (el escudero, y estos dos) ----------
+  {
+    id: 'espadero_alcazar',
+    nombre: 'Espadero',
+    equipo: [{ especie: 'escarabajo_pelotero', nivel: 12 }],
+    valia: 6,
+    premio: 240,
+    antes: ['El acero de Toledo es el mejor del mundo. ¿Probamos el temple de tus criaturas?'],
+    derrota: ['Buen temple. Mejor que el de mis hojas.'],
+    despues: ['Dicen que las espadas de Toledo se templan en el agua del Tajo. Yo no lo desmiento.'],
+  },
+  {
+    id: 'artillero',
+    nombre: 'Artillero comunero',
+    equipo: [{ especie: 'escarabajo_bronce', nivel: 11 }],
+    valia: 6,
+    premio: 260,
+    objetos: { emplasto: 1 },
+    antes: ['¡Doña María nos ha dado la artillería del Alcázar! Por aquí no pasa nadie.'],
+    derrota: ['¡Se me ha mojado la pólvora!'],
+    despues: ['Para pagar a los soldados, doña María llegó a sacar la plata de la catedral.'],
+  },
   {
     id: 'escudero',
     nombre: 'Escudero',

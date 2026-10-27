@@ -15,16 +15,19 @@ tocan desde aquí.
   - Santa Fe: Isabel y la elección de compañera, el Gran Capitán, Colón, el pastor de Orce, y el
     mesón con su tienda.
   - La Vega, con encuentros, ballestero, mercader, noria y atalaya nazarí.
-  - La Alhambra, con su guardia.
-  - El Patio de los Leones: Boabdil, el blasón y el final.
+  - El bosque de la Alhambra, con el jardinero.
+  - El gimnasio de Boabdil, los Palacios Nazaríes: tres porteros con preguntas (si fallas, los
+    duendes castigan al equipo), tres entrenadores y el Patio de los Leones con el blasón y el
+    final.
 - **Capítulo 2, «Castilla, 1521» (2026-10-26), hecho y jugable:** al vencer a Boabdil se pasa
   (paso `viajar`) a Villalar el día de la derrota comunera, con el mismo protagonista.
   - Villalar (Padilla da su carta para María Pacheco), la sierra de Guadarrama (cascada, venta,
     halconero), el camino de Toledo con el Tajo,
-    Toledo con su mesón y el Alcázar, donde María Pacheco es la líder (Tierra/Acero).
+    Toledo con su mesón y el Alcázar, donde María Pacheco es la líder (Tierra/Acero). El
+    Alcázar es un laberinto con tres entrenadores y objetos en los callejones.
   - 15 especies nuevas (Bestiario, cap. 2): lagarto, víbora, avutarda, águila, lobo, toro de
     Guisando, tarántula y erizo, con sus evoluciones, y 15 movimientos nuevos.
-  - Cinco entrenadores de una criatura antes de la líder, como en el capítulo 1.
+  - Entrenadores de una criatura en las rutas y tres en el gimnasio, como en el capítulo 1.
 - **Hito 4, en curso:**
   - Hecho: el juego ocupa toda la pantalla del móvil.
   - Hecho: es una web instalable (PWA), con manifiesto, iconos y service worker para jugar sin
@@ -229,6 +232,10 @@ El código va en español: nombres, comentarios y textos.
     nueva va en `RUTAS` (`tests/historia.test.ts`), con sus entrenadores que no se esquivan.
   - Los objetos fuertes tienen capítulo mínimo (`CAPITULO_MINIMO` en `data/objetos.ts`); una
     prueba lo revisa en mapas, guiones, tiendas, premios y tinajas.
+  - Los gimnasios: dos o tres entrenadores además del líder y una prueba propia (preguntas,
+    laberinto…). Van en `GIMNASIOS` (`tests/gimnasios.test.ts`). Las preguntas se escriben con
+    `pregunta` (`data/guion.ts`): el portero tiene `ocultoSi: 'puerta:<zona>:<n>'` y el castigo
+    usa los pasos `herir` y `alterar`.
   - Para cambiar de capítulo, el guion termina con el paso `viajar` (zona y casilla).
   - Una casilla nueva necesita su entrada en `casillas.ts`, su dibujo en `casillasVisual.ts` y,
     si es una pieza nueva, su función en `arte/mapa/tileset.py`.
@@ -246,6 +253,7 @@ El código va en español: nombres, comentarios y textos.
   - Modo desarrollador: `dev:sin_encuentros`.
   - Regalos dados (para no repetirlos): `regalo:mapa`, `regalo:mt_boabdil`, `regalo:mt_maria`.
   - `fijo:<zona>:<id>`: legendario que esperaba de pie, ya vencido o capturado.
+  - `puerta:<zona>:<n>`: pregunta de un portero ya acertada (el portero se aparta).
 - **Cada zona nueva** necesita `enMapa` (su lugar de `lugares.ts`, o el camino entre dos) para
   salir en el mapa de la zona de captura; las pruebas lo exigen.
 

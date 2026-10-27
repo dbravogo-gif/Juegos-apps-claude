@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import { DATOS } from '../data';
 import { ASPECTO_JUGADOR, ASPECTO_NAVEGANDO } from '../data/aspectos';
-import { CASILLAS, ENTRENADORES, REGALOS_ATRASADOS, ZONAS } from '../data/mundo';
+import { CASILLAS, ENTRADAS, ENTRENADORES, INICIO, REGALOS_ATRASADOS, ZONAS } from '../data/mundo';
 import { NOMBRES_RIVALES, RIVALES } from '../data/entrenadores';
 import { INICIALES } from '../data/especies';
 import { pedirNombre } from '../ui/pedirNombre';
@@ -17,6 +17,7 @@ import {
   esPescable,
   esSolida,
   OPUESTA,
+  posicionValida,
   type DefEntrenador,
   type Dir,
   type Paso,
@@ -26,11 +27,13 @@ import {
 } from '../core/mundo';
 import {
   anadirCriatura,
+  alterarEquipo,
   aplicarCombate,
   curarEquipo,
   darAtrasados,
   darObjeto,
   equipoEnPie,
+  herirEquipo,
   marcarVisitada,
   equipoEntrenador,
   inicialDe,
@@ -51,7 +54,7 @@ import { encendido } from '../core/objetos';
 import { MIMICO_MIN_BLASONES, OBJETOS_RECIPIENTE, PROB_RECIPIENTE, RECOMPENSA_MIMICO } from '../data/recipientes';
 import { CriaturaQuieta, Persona } from '../ui/personaVisual';
 import { guardarPartida, sesion } from '../ui/sesion';
-import { conArticulo } from '../ui/textos';
+import { conArticulo, SE_HA } from '../ui/textos';
 import { ANCHO, COLOR, estiloTexto } from '../ui/tema';
 import { ALTO_MAPA, MONEDA, type Interfaz } from './Interfaz';
 import type { ResultadoHistoria } from './Combate';
@@ -127,6 +130,8 @@ export class Mundo extends Phaser.Scene {
     this.ui.events.on('a', this.alPulsarA, this);
     this.ui.events.on('menu', this.alPulsarMenu, this);
     this.time.addEvent({ delay: 250, loop: true, callback: () => this.pasear() });
+    // Una partida guardada en un mapa que luego cambió podría quedar dentro de un muro.
+    this.p.posicion = posicionValida(this.p.posicion, ZONAS, CASILLAS, ENTRADAS, INICIO);
     this.cargarZona(this.p.posicion);
     this.listo = true;
     await this.conBloqueo(async () => {
@@ -799,6 +804,16 @@ export class Mundo extends Phaser.Scene {
         case 'combate':
           if (!(await this.combateEntrenador(paso.entrenador))) return false;
           break;
+        case 'herir':
+          herirEquipo(p, paso.fraccion, DATOS);
+          this.cameras.main.shake(250, 0.01);
+          await this.ui.decir('Tu equipo pierde vida.');
+          break;
+        case 'alterar': {
+          const c = alterarEquipo(p, paso.estado, DATOS);
+          await this.ui.decir(c ? `¡${nombreDe(c, DATOS)} ${SE_HA[paso.estado]}!` : 'Tu equipo aguanta sin inmutarse.');
+          break;
+        }
         case 'tienda':
           await this.ui.tienda(paso.productos, p);
           break;
