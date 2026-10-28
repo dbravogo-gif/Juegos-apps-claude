@@ -179,6 +179,9 @@ tocan desde aquí.
     (capítulo 5).
   - Los héroes anteriores a 1492, como el Cid, solo salen como ánimas en las zonas opcionales.
 - **Canarias.** Los jugadores son de allí, y al menos un gimnasio tiene que estar en las islas.
+- **Desde el capítulo 5, equipos de seis.** El jugador ya lleva seis criaturas: entrenadores y
+  líder con equipos más grandes, la dificultad se mide contra un equipo de seis y no se mira
+  cómo le va a cada inicial (decisión del autor).
 - **Hechos y fechas reales correctos.** Lo fantástico son las criaturas, no la historia. Si un
   dato es dudoso, se marca como tal o se pregunta.
 - **Personas vivas:** solo figuras públicas y en su papel público, con retratos dibujados (nunca

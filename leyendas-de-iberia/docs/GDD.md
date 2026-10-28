@@ -23,6 +23,7 @@ autor y dos amigos, y se juega en el navegador del móvil y del PC.
 | Personajes históricos | **Nunca son capturables.** Son entrenadores, líderes de gimnasio, PNJ del mapa y parte de la trama. Tienen prioridad los reyes, los generales y los guerreros; algún artista sí, pero pocos. |
 | Mentores | Isabel la Católica en el capítulo 1 y un segundo mentor en el capítulo 4 o 5. Se propone Carlos III (§5). Se eligen por su peso histórico, no por su relación con los animales. |
 | Canarias | El capítulo 5 transcurre entero en Canarias: el Teide con Guayota, una zona de buceo y la invasión de Nelson. La torre de combates del final del juego también está allí (§4). |
+| Equipos desde el capítulo 5 | A partir del quinto gimnasio se diseña contando con que el jugador lleva seis criaturas: los entrenadores y el líder llevan equipos más grandes, la dificultad se mide contra un equipo de seis y no se mira cómo le va a cada inicial (decisión del autor, 2026-10-28). |
 | Almacén de criaturas | Existe desde el minuto 1: las criaturas que no caben en el equipo se guardan en el Bestiario (§8). |
 | Época | De 1492 a hoy. Incluye la Guerra Civil, el franquismo y personajes actuales. |
 | Antes de 1492 | No hay capítulos. Atapuerca, Numancia o Mérida son ruinas y zonas opcionales. Los héroes anteriores, como el Cid, aparecen como ánimas que hacen de jefes opcionales (§4). |
@@ -882,3 +883,5 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
     una MO: siguen siendo dos.
   - Vuelo lo da Diego Marín, el «hombre pájaro» de Coruña del Conde, en el prólogo.
   - El gimnasio del general Gutiérrez tiene cañones que barren filas por turnos.
+  - Desde el quinto gimnasio, equipos de seis: entrenadores y líder con más criaturas,
+    dificultad medida contra un equipo de seis y sin mirar cómo le va a cada inicial.
