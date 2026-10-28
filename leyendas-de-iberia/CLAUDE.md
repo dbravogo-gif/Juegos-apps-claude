@@ -119,8 +119,8 @@ tocan desde aquí.
     Vuelo, con sus usos fuera de combate: Pleamar cruza el agua profunda (`O`, con `encuentrosAgua`) y solo lo aprenden las especies
     `acuatica`; Vuelo, solo las `alada`, y viaja desde el mapa a cualquier lugar visitado, de
     cualquier época (decisión del autor; `llegada` en `lugares.ts`).
-  - Pleamar la da Olivares en el capítulo 4 y Vuelo, Diego Marín en el prólogo del 5
-    (decidido); el plan de los legendarios, propuesta en el GDD §8.
+  - Pleamar la da Olivares en el capítulo 4 y Vuelo, Diego Marín al final del 5, tras el
+    gimnasio (decidido); el plan de los legendarios, propuesta en el GDD §8.
   - Base de los legendarios: personajes con `criatura` (esperan de pie y empiezan el combate) y
     salidas con `requiere` (zonas cerradas hasta tener un objeto o una bandera).
 - **Pedidos del autor (2026-10-26, tras la comparación con Cristal, Esmeralda y Negro 2):**

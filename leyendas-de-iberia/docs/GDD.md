@@ -55,7 +55,7 @@ Hay que preguntar antes de diseñar sobre ellas.
 6. **Bestiario.** La propuesta de 150 especies está en `BESTIARIO.md` (v2, con la revisión de
    variedad que pidió el autor). Falta su visto bueno a las decisiones del final del archivo.
 7. **Dónde va cada legendario.** Propuesta en §8 («MT, MO y legendarios»). Decidido: Vuelo
-   lo da Diego Marín en el prólogo del capítulo 5 y Guayota espera en el Teide tras el gimnasio
+   lo da Diego Marín al final del capítulo 5 y Guayota espera en el Teide tras el gimnasio
    del capítulo 5.
 
 ## 4. Épocas y gimnasios (propuesta)
@@ -434,8 +434,9 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
     - **Vuelo:** viajar a un lugar ya visitado desde el mapa. **Decidido** (2026-10-28): **Diego Marín
       Aguilera**, el «hombre pájaro» de Coruña del Conde (Burgos), que la noche del 15 de mayo
       de 1793 se lanzó desde el castillo con una máquina de madera y plumas y voló unas 431
-      varas (unos 360 m) antes de que se le rompiera una pieza. La da en el prólogo del
-      capítulo 5.
+      varas (unos 360 m) antes de que se le rompiera una pieza. La da al final del capítulo 5,
+      tras el gimnasio (1797), en Coruña del Conde: con Vuelo se vuelve al Teide a por Guayota.
+      No cabe en el prólogo: Jorge Juan murió en 1773 y Carlos III en 1788, antes de su vuelo.
       Se descartó Leonardo: sus códices de Madrid son de mecánica, no de vuelo.
   - **Legendarios.** Llegan tarde, como en el género. Esperan de pie en su guarida (un
     personaje con `criatura`): al hablarles empieza el combate; si los vences o los capturas,
@@ -882,7 +883,9 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
   - Pleamar se queda en el Real Alcázar, en 1628, con Spínola de líder.
   - Bucear en el Mar de las Calmas es un objeto clave, una campana de buzo que da Jorge Juan, no
     una MO: siguen siendo dos.
-  - Vuelo lo da Diego Marín, el «hombre pájaro» de Coruña del Conde, en el prólogo.
+  - Vuelo lo da Diego Marín, el «hombre pájaro» de Coruña del Conde. Primero se pensó en el
+    prólogo, pero voló en 1793, cuando Jorge Juan (1773) y Carlos III (1788) ya habían muerto:
+    lo da al final del capítulo, tras el gimnasio (1797). El autor dejó la elección a Claude.
   - El gimnasio del general Gutiérrez tiene cañones que barren filas por turnos.
   - Desde el quinto gimnasio, equipos de seis: entrenadores y líder con más criaturas,
     dificultad medida contra un equipo de seis y sin mirar cómo le va a cada inicial.
