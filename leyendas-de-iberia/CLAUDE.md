@@ -181,6 +181,14 @@ tocan desde aquí.
 - **Desde el capítulo 5, equipos de seis.** El jugador ya lleva seis criaturas: entrenadores y
   líder con equipos más grandes, la dificultad se mide contra un equipo de seis y no se mira
   cómo le va a cada inicial (decisión del autor).
+- **Créditos de OpenArt: gastar poco** (petición del autor, 2026-10-28, tras gastar de más).
+  - Nunca calidad `high`: cuesta 150 por imagen frente a 40 en `medium`, y no se nota en el juego
+    (criaturas y retratos acaban en 384 × 384).
+  - Antes de cada tanda: mirar el saldo y el precio (`openart_model_cost`), y decirle al autor
+    cuánto va a costar. Un presupuesto por capítulo, sin pasarse.
+  - Nunca relanzar una generación sin comprobar antes su estado: así se repitieron tres.
+  - Aprovechar cada imagen: varias criaturas por hoja y cuatro retratos por imagen (2 × 2).
+  - Reutilizar lo que hay: retratos en reserva (`arte/retratos-reserva/`) y criaturas futuras.
 - **Hechos y fechas reales correctos.** Lo fantástico son las criaturas, no la historia. Si un
   dato es dudoso, se marca como tal o se pregunta.
 - **Personas vivas:** solo figuras públicas y en su papel público, con retratos dibujados (nunca
