@@ -53,7 +53,8 @@ Hay que preguntar antes de diseñar sobre ellas.
 5. **Phaser 3 o Phaser 4.** Ver §10.
 6. **Bestiario.** La propuesta de 150 especies está en `BESTIARIO.md` (v2, con la revisión de
    variedad que pidió el autor). Falta su visto bueno a las decisiones del final del archivo.
-7. **Quién da Vuelo y dónde va cada legendario.** Propuesta en §8 («MT, MO y legendarios»).
+7. **Dónde va cada legendario.** Propuesta en §8 («MT, MO y legendarios»). Vuelo ya está
+   decidido: lo da Diego Marín en el prólogo del capítulo 5.
 
 ## 4. Épocas y gimnasios (propuesta)
 
@@ -92,8 +93,7 @@ Los líderes son sobre todo reyes y generales; los artistas salen como PNJ.
   - **Pleamar, en el Alcázar y no en el Buen Retiro.** La decisión era que Olivares la diera en
     el Estanque Grande del Buen Retiro, pero el estanque es de 1634–1635 y Spínola murió en 1630:
     las dos cosas no caben en el mismo capítulo. Se queda Spínola (1628) y Olivares da Pleamar en
-    el Real Alcázar. **Pendiente del autor:** confirmarlo, o pasar el capítulo a 1635 sin
-    Spínola.
+    el Real Alcázar. **Confirmado por el autor** (2026-10-28).
   - Con fecha real: El Paular (1390), el palacio de El Pardo (ardió en 1604), la corte en Madrid
     (1561), el puente de Segovia (1584), el corral del Príncipe, los viajes de agua, la llegada de
     Rubens (septiembre de 1628), Velázquez pintor del rey (1623), Matanzas (septiembre de 1628),
@@ -116,11 +116,14 @@ Los líderes son sobre todo reyes y generales; los artistas salen como PNJ.
     - La Cueva del Viento, en Icod de los Vinos, es uno de los tubos volcánicos más largos del
       mundo.
   - **Zona de buceo.** Es una mecánica nueva: se explora el fondo del mar, con criaturas propias
-    y pecios. Se propone el Mar de las Calmas, en El Hierro, que es reserva marina. Falta decidir
-    cómo se consigue la capacidad de bucear.
+    y pecios. Se propone el Mar de las Calmas, en El Hierro, que es reserva marina.
+    **Decidido** (2026-10-28): se bucea con un objeto clave, una campana de buzo, que da Jorge
+    Juan al llevarte a las islas (licencia histórica). No es una MO: siguen siendo dos.
   - **La invasión de Nelson (1797).** Es el clímax del capítulo:
     - Una secuencia de combates en la defensa de Santa Cruz y, después, el gimnasio del general
       Antonio Gutiérrez.
+    - **Prueba del gimnasio, decidida** (2026-10-28): las baterías del castillo barren filas
+      cada pocos pasos y hay que cruzar en el momento justo.
     - Nelson perdió allí el brazo derecho.
     - Se conserva el cañón Tigre, al que la tradición atribuye el disparo.
   - **La torre de combates, en La Gomera.** Está en la Torre del Conde, del siglo XV, en la isla
@@ -426,10 +429,11 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
       de darla en el Estanque Grande del Buen Retiro no cabe en 1628 (el estanque es de
       1634–1635; ver §4). Jorge Juan, en el capítulo 5, no da ninguna MO: te lleva a las islas
       en su barco.
-    - **Vuelo:** viajar a un lugar ya visitado desde el mapa. Propuesta: **Diego Marín
+    - **Vuelo:** viajar a un lugar ya visitado desde el mapa. **Decidido** (2026-10-28): **Diego Marín
       Aguilera**, el «hombre pájaro» de Coruña del Conde (Burgos), que la noche del 15 de mayo
       de 1793 se lanzó desde el castillo con una máquina de madera y plumas y voló unas 431
-      varas (unos 360 m) antes de que se le rompiera una pieza. Encaja con el quinto gimnasio.
+      varas (unos 360 m) antes de que se le rompiera una pieza. La da en el prólogo del
+      capítulo 5.
       Se descartó Leonardo: sus códices de Madrid son de mecánica, no de vuelo.
   - **Legendarios.** Llegan tarde, como en el género. Esperan de pie en su guarida (un
     personaje con `criatura`): al hablarles empieza el combate; si los vences o los capturas,
@@ -872,3 +876,9 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
       ganan entre un 90 % y un 100 %. La curva está bien si se usa el equipo.
     - El combate más duro del capítulo 4 es el rival del puente de Segovia, no Spínola: sin
       Hielo se gana entre un 0 % y un 45 %; con un Carámbex de Peñalara, entre un 80 % y un 90 %.
+- **2026-10-28 (28).** Decisiones del autor para seguir con el capítulo 5:
+  - Pleamar se queda en el Real Alcázar, en 1628, con Spínola de líder.
+  - Bucear en el Mar de las Calmas es un objeto clave, una campana de buzo que da Jorge Juan, no
+    una MO: siguen siendo dos.
+  - Vuelo lo da Diego Marín, el «hombre pájaro» de Coruña del Conde, en el prólogo.
+  - El gimnasio del general Gutiérrez tiene cañones que barren filas por turnos.

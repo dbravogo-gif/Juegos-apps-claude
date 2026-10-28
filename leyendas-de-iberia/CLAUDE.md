@@ -44,7 +44,7 @@ tocan desde aquí.
     Alcázar, un viaje de agua a oscuras con el basilisco y el campo de Breda (gimnasio).
   - El gimnasio usa compuertas: cauces que se secan o se inundan según dos palancas
     (`compuerta` en `casillas.ts`, `palancas` en la zona, `esSolida` con las banderas).
-  - Pendiente del autor: Pleamar se da en el Alcázar y no en el Buen Retiro (GDD §4).
+  - Pleamar se da en el Alcázar y no en el Buen Retiro (confirmado por el autor, GDD §4).
 - **Hito 4, en curso:**
   - Hecho: el juego ocupa toda la pantalla del móvil.
   - Hecho: es una web instalable (PWA), con manifiesto, iconos y service worker para jugar sin
@@ -119,8 +119,8 @@ tocan desde aquí.
     Vuelo, con sus usos fuera de combate: Pleamar cruza el agua profunda (`O`, con `encuentrosAgua`) y solo lo aprenden las especies
     `acuatica`; Vuelo, solo las `alada`, y viaja desde el mapa a cualquier lugar visitado, de
     cualquier época (decisión del autor; `llegada` en `lugares.ts`).
-  - Pleamar la da Olivares en el capítulo 4 (decidido); quién da Vuelo y el plan de los
-    legendarios, propuesta en el GDD §8.
+  - Pleamar la da Olivares en el capítulo 4 y Vuelo, Diego Marín en el prólogo del 5
+    (decidido); el plan de los legendarios, propuesta en el GDD §8.
   - Base de los legendarios: personajes con `criatura` (esperan de pie y empiezan el combate) y
     salidas con `requiere` (zonas cerradas hasta tener un objeto o una bandera).
 - **Pedidos del autor (2026-10-26, tras la comparación con Cristal, Esmeralda y Negro 2):**
