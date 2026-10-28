@@ -175,8 +175,7 @@ tocan desde aquí.
   Dr. Jangel.
 - **A quién elegir.** Primero reyes, generales y guerreros; artistas, pocos.
   - Se eligen por su peso histórico. No hace falta buscarles relación con los animales.
-  - Los mentores son Isabel la Católica (capítulo 1) y, según la propuesta, Carlos III
-    (capítulo 5).
+  - Los mentores son Isabel la Católica (capítulo 1) y Carlos III (capítulo 5, decidido).
   - Los héroes anteriores a 1492, como el Cid, solo salen como ánimas en las zonas opcionales.
 - **Canarias.** Los jugadores son de allí, y al menos un gimnasio tiene que estar en las islas.
 - **Desde el capítulo 5, equipos de seis.** El jugador ya lleva seis criaturas: entrenadores y

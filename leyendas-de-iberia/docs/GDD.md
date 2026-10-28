@@ -21,7 +21,7 @@ autor y dos amigos, y se juega en el navegador del móvil y del PC.
 | Criaturas | Salen de la mitología y la fauna ibérica: Trasgu, Cuélebre, Basajaun, Tarasca, lince, toro… |
 | Legendarios | Unos pocos. Son seres mitológicos o animales célebres, como Babieca, el caballo del Cid. |
 | Personajes históricos | **Nunca son capturables.** Son entrenadores, líderes de gimnasio, PNJ del mapa y parte de la trama. Tienen prioridad los reyes, los generales y los guerreros; algún artista sí, pero pocos. |
-| Mentores | Isabel la Católica en el capítulo 1 y un segundo mentor en el capítulo 4 o 5. Se propone Carlos III (§5). Se eligen por su peso histórico, no por su relación con los animales. |
+| Mentores | Isabel la Católica en el capítulo 1 y Carlos III en el capítulo 5 (decidido, 2026-10-28; §5). Se eligen por su peso histórico, no por su relación con los animales. |
 | Canarias | El capítulo 5 transcurre entero en Canarias: el Teide con Guayota, una zona de buceo y la invasión de Nelson. La torre de combates del final del juego también está allí (§4). |
 | Equipos desde el capítulo 5 | A partir del quinto gimnasio se diseña contando con que el jugador lleva seis criaturas: los entrenadores y el líder llevan equipos más grandes, la dificultad se mide contra un equipo de seis y no se mira cómo le va a cada inicial (decisión del autor, 2026-10-28). |
 | Almacén de criaturas | Existe desde el minuto 1: las criaturas que no caben en el equipo se guardan en el Bestiario (§8). |
@@ -46,16 +46,17 @@ autor y dos amigos, y se juega en el navegador del móvil y del PC.
 
 Hay que preguntar antes de diseñar sobre ellas.
 
-1. **Segundo mentor** (se propone Carlos III). Propuesta en §5. El protagonista ya está
-   decidido: es siempre el mismo.
+1. **Segundo mentor:** decidido, Carlos III, en el prólogo del capítulo 5 (2026-10-28). El
+   protagonista ya está decidido: es siempre el mismo.
 2. **Líderes de los capítulos 2 a 8 y miembros de la Liga.** Propuesta en §4.
 3. **El Dr. Jangel:** quién es y en qué capítulo abre el laboratorio. Propuesta en §7.
 4. **Personajes actuales:** quiénes salen y con qué reglas. Propuesta en §6.
 5. **Phaser 3 o Phaser 4.** Ver §10.
 6. **Bestiario.** La propuesta de 150 especies está en `BESTIARIO.md` (v2, con la revisión de
    variedad que pidió el autor). Falta su visto bueno a las decisiones del final del archivo.
-7. **Dónde va cada legendario.** Propuesta en §8 («MT, MO y legendarios»). Vuelo ya está
-   decidido: lo da Diego Marín en el prólogo del capítulo 5.
+7. **Dónde va cada legendario.** Propuesta en §8 («MT, MO y legendarios»). Decidido: Vuelo
+   lo da Diego Marín en el prólogo del capítulo 5 y Guayota espera en el Teide tras el gimnasio
+   del capítulo 5.
 
 ## 4. Épocas y gimnasios (propuesta)
 
@@ -446,7 +447,7 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
     | Legendario | Guarida (Bestiario) | Se abre con (propuesta) |
     | --- | --- | --- |
     | Tarasca | Granada, en el Corpus | Tras la Liga: la ciudad del capítulo 1, cerrada hasta el final |
-    | Guayota | Teide | Tras el gimnasio del capítulo 5; hace falta Vuelo o Pleamar para llegar |
+    | Guayota | Teide | Tras el gimnasio del capítulo 5 (decidido); hace falta Vuelo o Pleamar para llegar |
     | Magec | Cumbre del Teide, al amanecer | Tras vencer o capturar a Guayota |
     | Cuélebre | Covadonga | Un candil para entrar en la cueva |
     | Mari | Anboto | Una cuerda con garfio para subir a su cueva |
@@ -885,3 +886,6 @@ Se descarta el viaje en el tiempo: obliga a justificar cada salto.
   - El gimnasio del general Gutiérrez tiene cañones que barren filas por turnos.
   - Desde el quinto gimnasio, equipos de seis: entrenadores y líder con más criaturas,
     dificultad medida contra un equipo de seis y sin mirar cómo le va a cada inicial.
+  - Carlos III es el segundo mentor (prólogo) y Guayota entra en el capítulo 5, tras el gimnasio.
+  - Arte: quedan pocos créditos; se prueba un modelo más barato con una hoja ya hecha como
+    referencia de estilo.
