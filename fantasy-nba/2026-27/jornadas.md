@@ -11,3 +11,12 @@ Formato por GameWeek: plantilla, fichajes (entra/sale y motivo), capitán, punto
 - Baratos que destacan: Jonathan Mogbo (SAC, 5.0, 24 min, 36 FPPG; SAC tiene a sus pívots lesionados), Darius Acuff Jr. (SAC, 8.0, titular 3/3, 26 min, 34 FPPG), Tristan da Silva (ORL, 6.5, 23 min, 32 FPPG), Aday Mara (OKC, 6.0, titular mientras Holmgren estuvo de baja).
 - Propuesta neutra en presupuesto: Sims→Mogbo, Spencer→Acuff, Saraf→Ryan Conwell (MIA, 4.5).
 - Normativa 2026-27: lotería 3-2-1 anti-tanking (menos parones de veteranos en equipos malos a final de temporada) y énfasis arbitral en flops y uso del brazo libre. Sin cambios de reglas del juego fantasy detectados.
+
+## Plantilla actual (3-nov)
+
+- BC: Austin Reaves (LAL), Ajay Mitchell (OKC), Cam Spencer (MEM), Brandon Williams (GSW), Sidy Cissoko (POR)
+- FC: Scottie Barnes (TOR), Walker Kessler (LAL), Kyshawn George (WAS), Jalen Johnson (ATL), Leonard Miller (CHI)
+- Lesionados cortos: J. Johnson (tobillo, vuelve 4-nov), B. Williams (cuádriceps, vuelve 5-nov).
+- Jalen Williams (OKC) fuera hasta marzo: Ajay Mitchell titular a largo plazo.
+- Flojos: Cissoko (minutos a la baja, 9-17 FP) y Miller (9-11 min). Candidatos: Meleek Thomas (CLE, BC 5.0), Kobe Sanders (LAC, BC 5.5), Dean Wade (PHI, FC 5.5), Georges Niang (GSW, FC 5.0).
+- Wildcard 1 caduca el 29-nov: plan de usarla hacia el 22-28 nov.
