@@ -20,3 +20,15 @@ Formato por GameWeek: plantilla, fichajes (entra/sale y motivo), capitán, punto
 - Jalen Williams (OKC) fuera hasta marzo: Ajay Mitchell titular a largo plazo.
 - Flojos: Cissoko (minutos a la baja, 9-17 FP) y Miller (9-11 min). Candidatos: Meleek Thomas (CLE, BC 5.0), Kobe Sanders (LAC, BC 5.5), Dean Wade (PHI, FC 5.5), Georges Niang (GSW, FC 5.0).
 - Wildcard 1 caduca el 29-nov: plan de usarla hacia el 22-28 nov.
+
+## Análisis 3-nov: wildcard ahora (optimizador GW3-GW6, hasta 29-nov, sin Nurkić)
+
+| Escenario | Puntos esperados |
+|---|---|
+| Sin cambios | 3355 |
+| Mejor con 2 cambios (J. Johnson + Kessler → Wembanyama + Paul Reed) | 3636 |
+| Wildcard robusta (mantiene Barnes, Ajay, K. George) | 3911 |
+| Wildcard máxima del modelo | 3931 |
+
+Wildcard 1 caduca el 29-nov y la 2 se abre el 1-dic: esperar no ahorra nada.
+Propuesta: BC Ty Jerome, Anthony Black, Ajay Mitchell, Dillon Brooks, Bones Hyland · FC Wembanyama, Barnes, K. George, Isaiah Jackson, Tristan da Silva (98.7).
