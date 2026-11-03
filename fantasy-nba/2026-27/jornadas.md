@@ -31,4 +31,4 @@ Formato por GameWeek: plantilla, fichajes (entra/sale y motivo), capitán, punto
 | Wildcard máxima del modelo | 3931 |
 
 Wildcard 1 caduca el 29-nov y la 2 se abre el 1-dic: esperar no ahorra nada.
-Propuesta: BC Ty Jerome, Anthony Black, Ajay Mitchell, Dillon Brooks, Bones Hyland · FC Wembanyama, Barnes, K. George, Isaiah Jackson, Tristan da Silva (98.7).
+Propuesta (revisada): BC Ty Jerome, Ayo Dosunmu, Ajay Mitchell, Dillon Brooks, Tyler Kolek · FC Wembanyama, Barnes, K. George, Isaiah Jackson, Tristan da Silva (98.7, 3887 pts). Dosunmu en vez de Anthony Black: Black solo 4 partidos, descansando y pierde rol cuando vuelva Suggs (10-nov).
