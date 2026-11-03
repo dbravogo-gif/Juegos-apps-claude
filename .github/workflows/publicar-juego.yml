@@ -2,6 +2,7 @@
 #   game/                en la raíz:                https://dbravogo-gif.github.io/Juegos-apps-claude/
 #   aerolinea/           en /aerolinea/:            https://dbravogo-gif.github.io/Juegos-apps-claude/aerolinea/
 #   leyendas-de-iberia/  en /leyendas-de-iberia/:   https://dbravogo-gif.github.io/Juegos-apps-claude/leyendas-de-iberia/
+#   gymlog-fase1/        en /gymlog-fase1/:         https://dbravogo-gif.github.io/Juegos-apps-claude/gymlog-fase1/
 # Un repositorio solo tiene un sitio de Pages, así que se publican juntos. Antes pasan los
 # tests de todos: si fallan, no se despliega.
 name: Publicar juegos
@@ -9,7 +10,7 @@ name: Publicar juegos
 on:
   push:
     branches: [main]
-    paths: ['game/**', 'aerolinea/**', 'leyendas-de-iberia/**', '.github/workflows/publicar-juego.yml']
+    paths: ['game/**', 'aerolinea/**', 'leyendas-de-iberia/**', 'gymlog-fase1/**', '.github/workflows/publicar-juego.yml']
   workflow_dispatch:
 
 permissions:
@@ -54,6 +55,9 @@ jobs:
           node aerolinea/tools/paginas-pilotos.mjs web/aerolinea
           mkdir web/leyendas-de-iberia
           cp -r leyendas-de-iberia/dist/. web/leyendas-de-iberia/
+          # App estática (sin build): se copia tal cual.
+          mkdir web/gymlog-fase1
+          cp -r gymlog-fase1/. web/gymlog-fase1/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
