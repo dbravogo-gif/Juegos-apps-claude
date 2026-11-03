@@ -1,7 +1,7 @@
 /* GymLog (fase 1) — Service Worker
    Sube APP_VERSION cada vez que publiques cambios: eso invalida la caché
    antigua y hace que la app se actualice sola en el móvil. */
-const APP_VERSION = "v1.2.0";
+const APP_VERSION = "v1.3.0";
 const CACHE_PREFIX = "gymlog-fase1-";
 const CACHE = CACHE_PREFIX + APP_VERSION;
 

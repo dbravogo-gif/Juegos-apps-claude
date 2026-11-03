@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFE4D6"/>
+      <stop offset="1" stop-color="#F7C6CF"/>
+    </linearGradient>
+    <radialGradient id="mask" cx="50%" cy="58%" r="50%">
+      <stop offset="0" stop-color="#3B2218"/>
+      <stop offset="0.55" stop-color="#5A3626"/>
+      <stop offset="1" stop-color="#EBD5B8" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="cloudy" cx="45%" cy="40%" r="60%">
+      <stop offset="0" stop-color="#EEF2F5"/>
+      <stop offset="0.6" stop-color="#C3CED6"/>
+      <stop offset="1" stop-color="#9FB0BC"/>
+    </radialGradient>
+    <radialGradient id="blue" cx="45%" cy="40%" r="60%">
+      <stop offset="0" stop-color="#A9E2FF"/>
+      <stop offset="1" stop-color="#3FA5DE"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <!-- orejas -->
+  <path d="M128 222 L150 96 Q156 80 170 90 L246 168 Z" fill="#3E2419"/>
+  <path d="M384 222 L362 96 Q356 80 342 90 L266 168 Z" fill="#3E2419"/>
+  <path d="M152 196 L164 120 L216 170 Z" fill="#7A4B3A"/>
+  <path d="M360 196 L348 120 L296 170 Z" fill="#7A4B3A"/>
+  <!-- cabeza -->
+  <ellipse cx="256" cy="288" rx="154" ry="136" fill="#EBD5B8"/>
+  <!-- máscara siamesa -->
+  <ellipse cx="256" cy="300" rx="122" ry="112" fill="url(#mask)"/>
+  <!-- cinta de deporte -->
+  <path d="M118 222 Q256 160 394 222 L388 252 Q256 196 124 252 Z" fill="#FF7FA6"/>
+  <path d="M120 238 Q256 180 392 238" fill="none" stroke="#FFC2D4" stroke-width="5" stroke-linecap="round"/>
+  <!-- ojo con catarata (izquierda del espectador) -->
+  <path d="M160 294 Q200 248 240 294 Q200 326 160 294 Z" fill="url(#cloudy)" stroke="#2A160F" stroke-width="4"/>
+  <ellipse cx="201" cy="292" rx="9" ry="14" fill="#8C9AA5" opacity="0.5"/>
+  <circle cx="190" cy="282" r="7" fill="#FFFFFF" opacity="0.9"/>
+  <!-- ojo azul -->
+  <path d="M272 294 Q312 248 352 294 Q312 326 272 294 Z" fill="url(#blue)" stroke="#2A160F" stroke-width="4"/>
+  <ellipse cx="312" cy="292" rx="9" ry="15" fill="#14212B"/>
+  <circle cx="302" cy="281" r="7" fill="#FFFFFF"/>
+  <!-- nariz y boca -->
+  <path d="M243 332 L269 332 L256 346 Z" fill="#1E110B"/>
+  <path d="M256 346 Q250 364 234 356 M256 346 Q262 364 278 356" fill="none" stroke="#1E110B" stroke-width="4" stroke-linecap="round"/>
+  <!-- bigotes -->
+  <g stroke="#F6EEE4" stroke-width="3" stroke-linecap="round" opacity="0.9">
+    <path d="M206 344 Q160 336 118 340"/>
+    <path d="M206 354 Q162 356 124 368"/>
+    <path d="M306 344 Q352 336 394 340"/>
+    <path d="M306 354 Q350 356 388 368"/>
+  </g>
+</svg>
