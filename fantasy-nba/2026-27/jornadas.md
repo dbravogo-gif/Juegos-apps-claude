@@ -32,3 +32,12 @@ Formato por GameWeek: plantilla, fichajes (entra/sale y motivo), capitán, punto
 
 Wildcard 1 caduca el 29-nov y la 2 se abre el 1-dic: esperar no ahorra nada.
 Propuesta (revisada): BC Ty Jerome, Ayo Dosunmu, Ajay Mitchell, Dillon Brooks, Tyler Kolek · FC Wembanyama, Barnes, K. George, Isaiah Jackson, Tristan da Silva (98.7, 3887 pts). Dosunmu en vez de Anthony Black: Black solo 4 partidos, descansando y pierde rol cuando vuelva Suggs (10-nov).
+
+## Propuesta FINAL wildcard (3-nov, modelo corregido)
+
+Correcciones tras el caso Black: ajuste "adj" por rol inflado (compañeros que vuelven) y disponibilidad limitada por partidos perdidos.
+Hasta 29-nov: sin cambios 3355 · mejor con 2 cambios (J. Johnson + Kessler → Wembanyama + Kuminga) 3632 · wildcard libre 3848 · **wildcard con Barnes 3829 (elegida)**.
+
+- BC: Ajay Mitchell (9.0), Dillon Brooks (8.5), Cam Spencer (6.9), Bones Hyland (5.0), Tyler Kolek (4.5)
+- FC: Wembanyama (19.5, capitán), Scottie Barnes (15.5), Deni Avdija (14.5), Kyshawn George (9.0), Tristan da Silva (6.5)
+- Salen: Reaves, Kessler, Jalen Johnson, Brandon Williams, Cissoko, Miller. Coste 98.9.

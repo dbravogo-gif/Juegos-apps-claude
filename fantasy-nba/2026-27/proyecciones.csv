@@ -1,4 +1,4 @@
-name,mult,avail,fppg,note
+name,mult,avail,fppg,note,adj
 Luka Doncic,1.03,,,Sin LeBron: más balón
 Tyrese Maxey,0.88,,,Comparte balón con J.Brown y LeBron
 Jaylen Brown,0.88,,,De 1ª opción en BOS a compartir en PHI
@@ -31,7 +31,6 @@ Walker Kessler,1.0,0.9,36,Titular en LAL; base 24-25 (35.7)
 Naz Reid,1.12,,,Titular por 1ª vez
 Kawhi Leonard,,0.8,,Historial de lesiones
 Zion Williamson,,0.75,,
-Ty Jerome,0.9,0.88,,Base titular de MEM; ha jugado todos los partidos de 26-27 (historial de lesiones)
 Zach Edey,0.95,0.75,,Pívot titular de MEM; tobillo
 Fred VanVleet,0.85,0.8,,Tras LCA
 Dejounte Murray,0.95,0.8,,
@@ -48,3 +47,11 @@ Darryn Peterson,,0.9,29,Novato nº2
 Caleb Wilson,,0.9,26,Novato nº4
 Micah Potter,0.6,,,Viene de IND; suplente en una rotación de pívots muy llena (POR); contrato no garantizado
 Brandon Williams,1.0,,,Viene de DAL; mismo rol de base suplente en GSW con bajas al inicio
+Ty Jerome,0.9,0.88,,Base titular de MEM; ha jugado todo 26-27; vuelve Pippen Jr. (4-nov),0.92
+Anthony Black,,,,ORL: vuelven Suggs (10-nov) y Banchero (22-nov),0.85
+Tristan da Silva,,,,ORL: vuelve Banchero (22-nov),0.92
+Isaiah Jackson,,,,LAC: vuelven Ingram (8-nov) Hachimura y Jones Jr. (4-nov),0.8
+Kobe Sanders,,,,LAC: vuelve Beal (8-nov),0.8
+Kris Dunn,,,,LAC: vuelve Beal (8-nov),0.9
+Paul Reed,,,,DET: vuelve Duren (9-nov),0.75
+Mo Bamba,,,,UTA: vuelve Nurkic (4-nov),0.7

@@ -24,7 +24,9 @@ Proyección por jugador (puntos por partido esperados):
           (mult 0.85 por defecto si cambió de equipo o no jugó la temporada pasada).
   proj  = media de prior (peso PRIOR_GAMES partidos) y FPPG de sus últimos 10 partidos de esta
           temporada (boxscores de 2026-27/boxscores/).
-  avail = probabilidad de jugar (proyecciones.csv; por defecto según estado en el juego)
+          Después se multiplica por "adj" de proyecciones.csv (rol inflado por lesiones de compañeros que vuelven).
+  avail = probabilidad de jugar (proyecciones.csv; por defecto según estado en el juego). Si se ha
+          perdido partidos de su equipo esta temporada, se limita a 0.4 + 0.6·(jugados/equipo).
   back  = fecha de regreso de la noticia del juego ("expected back AAAA-MM-DD"): antes de esa fecha
           no puede jugar ni ser titular; un lesionado ("i") con fecha de regreso se trata como 0.85 al volver.
 """
@@ -59,21 +61,25 @@ def latest_snapshot():
 
 
 def season_form():
-    """{nombre normalizado: (partidos, FPPG últimos RECENT_GAMES)} de esta temporada."""
-    games = defaultdict(list)
+    """({nombre: (partidos, FPPG últimos RECENT_GAMES)}, {equipo: partidos jugados}) de esta temporada."""
+    games, team_dates = defaultdict(list), defaultdict(set)
     for f in sorted((SEASON / "boxscores").glob("*.csv")):
         for r in csv.DictReader(open(f)):
             games[norm(r["name"])].append((r["date"], float(r["FP"])))
+            team_dates[r["team"]].add(r["date"])
     form = {}
     for k, g in games.items():
         last = [fp for _, fp in sorted(g)[-RECENT_GAMES:]]
         form[k] = (len(g), sum(last) / len(last))
-    return form
+    return form, {t: len(d) for t, d in team_dates.items()}
 
 
 def load_players(snap):
     overrides = {r["name"]: r for r in csv.DictReader(open(SEASON / "proyecciones.csv"))}
-    form = season_form()
+    form, team_games = season_form()
+    # ESPN y el juego usan algunas abreviaturas distintas
+    espn = {"GS": "GSW", "NY": "NYK", "NO": "NOP", "SA": "SAS", "UTAH": "UTA", "WSH": "WAS"}
+    team_games = {espn.get(t, t): n for t, n in team_games.items()}
     players = []
     for r in csv.DictReader(open(snap / "players.csv")):
         last_g, prev_g = int(r["last_g"]), int(r["prev_g"])
@@ -87,7 +93,7 @@ def load_players(snap):
         mult = float(o["mult"]) if o.get("mult") else (NEW_TEAM_MULT if moved else 1.0)
         prior = float(o["fppg"]) if o.get("fppg") else base * mult
         g26, fppg26 = form.get(norm(r["name"]), (0, 0.0))
-        proj = (prior * PRIOR_GAMES + fppg26 * g26) / (PRIOR_GAMES + g26)
+        proj = (prior * PRIOR_GAMES + fppg26 * g26) / (PRIOR_GAMES + g26) * float(o.get("adj") or 1)
         m = BACK_RE.search(r["news"])
         back = m.group(1) if m else ""
         if o.get("avail"):
@@ -96,6 +102,9 @@ def load_players(snap):
             avail = 0.85  # vuelve de una lesión con fecha: disponible tras esa fecha
         else:
             avail = DEFAULT_AVAIL.get(r["status"], 0)
+        tg = team_games.get(r["team"], 0)
+        if not o.get("avail") and tg >= 5:
+            avail = min(avail, 0.4 + 0.6 * min(g26, tg) / tg)
         players.append({
             "name": r["name"], "team": r["team"], "pos": r["pos"], "price": float(r["price"]),
             "proj": round(proj, 1), "exp": proj * avail, "avail": avail,
