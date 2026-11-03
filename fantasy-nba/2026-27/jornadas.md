@@ -41,3 +41,7 @@ Hasta 29-nov: sin cambios 3355 · mejor con 2 cambios (J. Johnson + Kessler → 
 - BC: Ajay Mitchell (9.0), Dillon Brooks (8.5), Cam Spencer (6.9), Bones Hyland (5.0), Tyler Kolek (4.5)
 - FC: Wembanyama (19.5, capitán), Scottie Barnes (15.5), Deni Avdija (14.5), Kyshawn George (9.0), Tristan da Silva (6.5)
 - Salen: Reaves, Kessler, Jalen Johnson, Brandon Williams, Cissoko, Miller. Coste 98.9.
+
+### Variante equilibrada (misma puntuación)
+Con BC estrella (forzado): Jamal Murray 3752 · Cade 3763 · Curry 3715 → peores que la propuesta (3829).
+Sin Avdija (libre): 3828 → BC Dosunmu, Ajay Mitchell, Dillon Brooks, Brandon Williams, Tyler Kolek · FC Wembanyama, Barnes, McDaniels, K. George, da Silva (99.0).
