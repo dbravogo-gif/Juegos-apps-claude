@@ -42,6 +42,7 @@ pip install pulp                               # solo para el optimizador
 python3 fantasy-nba/scripts/optimize.py --gw 1 6 [--must "Nombre"] [--exclude "Nombre"]
 ```
 
+- `boxscores.py AAAAMMDD AAAAMMDD`: boxscores de ESPN por día en `2026-27/boxscores/` (minutos, titular y FP de cada jugador). Requiere `*.espn.com` permitido.
 - `fetch.py`: descarga de nbafantasy.nba.com (precios, % de selección, estado/lesiones, calendario) y de basketball-reference (stats por partido de las dos últimas temporadas). Solo librería estándar.
 - `optimize.py`: elige los 10 que maximizan los puntos esperados en las GameWeeks indicadas, simulando las alineaciones diarias (5 titulares, máx. 3 por posición), los suplentes automáticos y el capitán semanal.
 - `2026-27/proyecciones.csv`: ajustes manuales (multiplicador, disponibilidad o FPPG fijo). Es donde va el criterio humano; revisarlo cada semana.

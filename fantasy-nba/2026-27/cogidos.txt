@@ -1,10 +1,34 @@
-# Jugadores que ya tiene otro equipo de nuestra liga (no se pueden fichar). Un nombre por línea, como en el juego.
-Luka Doncic
-Nikola Jokic
-Cade Cunningham
-Dylan Harper
-Cason Wallace
-Ajay Mitchell
-Cameron Boozer
-Yaxel Lendeborg
+# Jugadores que tienen los otros equipos de la liga (3-nov, tras sus wildcards). Un nombre por línea, como en el juego.
+# Equipo 1
+Shai Gilgeous-Alexander
+Christian Braun
+Matisse Thybulle
+Jayson Tatum
+Tari Eason
+Daniel Gafford
+Grayson Allen
+Keon Ellis
+Duncan Robinson
+Ace Bailey
+# Equipo 2
 Darius Acuff Jr.
+Luka Doncic
+Cooper Flagg
+Yaxel Lendeborg
+Karl-Anthony Towns
+Davion Mitchell
+Aaron Wiggins
+Jaxson Hayes
+Aday Mara
+Quenton Jackson
+# Equipo 3
+Amen Thompson
+Tyrese Maxey
+Caleb Wilson
+Cameron Boozer
+Brandon Miller
+Terrence Shannon Jr.
+Jeremiah Fears
+Zaccharie Risacher
+Ja'Kobe Walter
+Trevon Brazile
