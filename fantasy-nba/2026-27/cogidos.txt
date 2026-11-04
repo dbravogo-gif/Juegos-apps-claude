@@ -1,27 +1,5 @@
-# Jugadores que tienen los otros equipos de la liga (3-nov, tras sus wildcards). Un nombre por línea, como en el juego.
-# Equipo 1
-Shai Gilgeous-Alexander
-Christian Braun
-Matisse Thybulle
-Jayson Tatum
-Tari Eason
-Daniel Gafford
-Grayson Allen
-Keon Ellis
-Duncan Robinson
-Ace Bailey
-# Equipo 2
-Darius Acuff Jr.
-Luka Doncic
-Cooper Flagg
-Yaxel Lendeborg
-Karl-Anthony Towns
-Davion Mitchell
-Aaron Wiggins
-Jaxson Hayes
-Aday Mara
-Quenton Jackson
-# Equipo 3
+# Jugadores de los otros equipos de la liga (GameDay 14). Generado por league.py.
+# 67
 Amen Thompson
 Tyrese Maxey
 Caleb Wilson
@@ -32,3 +10,25 @@ Jeremiah Fears
 Zaccharie Risacher
 Ja'Kobe Walter
 Trevon Brazile
+# 1 over u
+Darius Acuff Jr.
+Luka Doncic
+Cooper Flagg
+Yaxel Lendeborg
+Karl-Anthony Towns
+Davion Mitchell
+Aaron Wiggins
+Jaxson Hayes
+Aday Mara
+Quenton Jackson
+# Aaroners
+Shai Gilgeous-Alexander
+Christian Braun
+Matisse Thybulle
+Jayson Tatum
+Tari Eason
+Daniel Gafford
+Grayson Allen
+Keon Ellis
+Duncan Robinson
+Ace Bailey

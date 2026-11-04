@@ -5,6 +5,10 @@ Inicio de temporada NBA: 20-oct-2026.
 
 ## Reglas de NUESTRA liga (prevalecen sobre las del juego)
 
+- Liga **Klk** (id 578, 4 equipos). Mi equipo: **Nitos** (entry 8005).
+- `python3 fantasy-nba/scripts/league.py` lee del juego clasificación, chips, banco y plantillas de todos,
+  y regenera `2026-27/cogidos.txt` y `2026-27/mi_plantilla.txt`. Ejecutarlo antes de cada análisis.
+
 - **Jugadores exclusivos**: si otro equipo tiene a un jugador, no se puede fichar. Lista en `2026-27/cogidos.txt` (el optimizador la excluye sola). Actualizarla en cada cambio.
 - **Alineación**: 3 BC + 2 FC o 2 BC + 3 FC (nunca 4 de una posición). Se elige cada día según quién juegue.
 

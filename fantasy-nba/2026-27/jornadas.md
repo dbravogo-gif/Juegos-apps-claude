@@ -45,3 +45,10 @@ Hasta 29-nov: sin cambios 3355 · mejor con 2 cambios (J. Johnson + Kessler → 
 ### Variante equilibrada (misma puntuación)
 Con BC estrella (forzado): Jamal Murray 3752 · Cade 3763 · Curry 3715 → peores que la propuesta (3829).
 Sin Avdija (libre): 3828 → BC Dosunmu, Ajay Mitchell, Dillon Brooks, Brandon Williams, Tyler Kolek · FC Wembanyama, Barnes, McDaniels, K. George, da Silva (99.0).
+
+## 4-nov: datos reales del juego (league.py)
+
+Klk: 1. 67 (2305) · 2. 1 over u (2191) · 3. **Nitos (2003)** · 4. Aaroners (1389). Banco 1.0, wildcard sin usar.
+Hasta 29-nov (presupuesto 100.0): sin cambios 3355 · 1 cambio (J. Johnson → Giannis) 3501 ·
+2 cambios manteniendo a Barnes (Reaves + J. Johnson → Cade + Avdija) 3682 · 2 cambios libres (J. Johnson + Barnes → Wembanyama + Avdija) 3701 · wildcard 3849.
+Plan: 2 cambios ahora (Cade + Avdija) y wildcard 1 hacia el 20-28 nov con datos frescos (caduca el 29-nov).
