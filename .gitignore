@@ -1,0 +1,3 @@
+# Claude Code: ajustes personales y caché del comprobador de pruebas
+.claude/settings.local.json
+.claude/cache/

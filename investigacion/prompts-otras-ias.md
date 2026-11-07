@@ -1,5 +1,12 @@
 # Prompts para que otras IAs investiguen
 
+A quién mandarlo, según la experiencia del 2026-11-07 (ver `09-informe-externo.md`):
+
+- Perplexity y Grok para datos. Grok lee X.
+- Gemini solo para vídeos de YouTube: aporta datos sin fuente.
+- DeepSeek, no.
+- La consolidación, con ChatGPT. Pásale también a Claude los informes originales si puedes.
+
 Hay dos prompts:
 
 1. **Investigación:** el mismo texto para cada IA.

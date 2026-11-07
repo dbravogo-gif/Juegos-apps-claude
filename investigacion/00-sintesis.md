@@ -122,50 +122,27 @@ Detalle en `08-reglas-y-contexto.md`.
 - **Las reglas crecen por fallos observados.**
 - **Safari en iPhone** tiene WebGPU desde iOS 26, con vuelta a WebGL2.
 
-## Candidatas a reglas
+## De la investigación a las reglas
 
-Para el documento de reglas que se escribirá al terminar de estudiar.
+Las 18 candidatas se adoptaron el 2026-11-07 en un método único. Las reglas vigentes están solo
+en `CLAUDE.md` (de la R1 a la R12), para que no haya dos versiones que se contradigan.
 
-1. Nada se construye sin especificación escrita. En juegos: brief, contrato del bucle y plan de
-   nivel.
-2. Cada tarea tiene su comprobación con resultado sí o no. «Hecho» exige mostrar la prueba: el
-   comando y su salida, o la captura.
-3. Quien construye no se puntúa a sí mismo: revisa otro, con rúbrica y anclas.
-4. Primero lo jugable y feo; después la belleza. Primero una escena representativa completa;
-   después multiplicar el contenido.
-5. Gráficos en orden: forma, material, luz, efectos.
-6. Núcleo determinista: generador con semilla, sin `Math.random` ni reloj en la lógica.
-   Ganchos de prueba en `window`.
-7. El estado vive en archivos: progreso, decisiones y lo aprendido. Cada sesión empieza
-   leyéndolos y termina actualizándolos.
-8. Cada error repetido se convierte en una barrera (prueba, hook o regla) en la misma sesión.
-9. Nada de copiar marcas, personajes ni arte de otros: solo mecánicas.
-10. Cuando una regla no se vaya a seguir, se avisa *antes*, diciendo cuál y por qué.
-11. Arte con guía de estilo escrita:
-    - Paleta fija con nombre; nada de colores improvisados.
-    - Sombras de color, no negras.
-    - Silueta distinta por cada rol del juego.
-    - Prueba en escala de grises.
-12. Calidad por niveles (móvil y escritorio) y panel de depuración para ajustar en vivo desde
-    el principio.
-13. Recursos de terceros solo con licencia comprobada, apuntada en `CREDITS.md`.
-14. Contrato de arquitectura (`ARCHITECTURE.md`), como en *Claude of Duty*:
-    - Subsistemas con interfaz común y dueño por carpeta.
-    - Nada de imports cruzados; tabla de eventos.
-    - Ninguna dependencia nueva sin justificarla.
-    - Nada de crear objetos por fotograma; `dispose` de todo.
-15. Causa raíz, no parches. Ante un fallo repetido, se busca el error de diseño en vez de añadir
-    comprobaciones defensivas.
-16. Disciplina de coste:
-    - Esfuerzo y modelo según la tarea.
-    - `/clear` entre tareas.
-    - Subagentes baratos para lo simple.
-    - Flujos de trabajo de tamaño `small` o `medium`.
-    - Medir con `/usage`.
-17. Listón de calidad alcanzable y del estilo elegido. Un listón inalcanzable (copiar un AAA)
-    dio 5/10 incluso con 11 críticos.
-18. Explicaciones interactivas de la arquitectura para que el autor no pierda la comprensión del
-    proyecto («deuda cognitiva», Willison).
+| Candidata | Dónde quedó |
+| --- | --- |
+| Especificación antes de construir | R1, con tamaños S, M y L, y `/nuevo-proyecto` |
+| «Hecho» con prueba | R2, más el hook `herramientas/comprobar-al-terminar.mjs` |
+| Quien construye no se puntúa | R3 y el agente `probador` |
+| Primero jugable; una escena antes de multiplicar | R5 y la skill `juego-3d` |
+| Gráficos en orden; guía de arte; calidad por niveles; panel de depuración | Skill `juego-3d` y plantilla `ARTE.md` |
+| Núcleo determinista; ganchos de prueba | Convenciones de `CLAUDE.md` y `/nuevo-proyecto` |
+| Estado en archivos | R7, `ESTADO.md` (importado en `CLAUDE.md`) y la skill `cierre` |
+| Error repetido → barrera; causa raíz | R6 y `APRENDIDO.md` |
+| Originalidad; licencias en `CREDITS.md`; dependencias justificadas | R8 |
+| Avisar antes de saltarse una regla | Encabezado de las reglas en `CLAUDE.md` (formato «⚠️ Excepción R<n>») |
+| Contrato de arquitectura | Plantilla `arquitectura.md` de `/nuevo-proyecto` |
+| Disciplina de coste | R9 y los modos de gasto de `CLAUDE.md` |
+| Listón alcanzable | Skill `juego-3d` y rúbrica |
+| Explicaciones para no perder la comprensión | «explícame X», en `COMO-TRABAJAMOS.md` |
 
 ## Huecos para las próximas rondas
 
