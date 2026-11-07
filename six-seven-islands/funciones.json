@@ -7,7 +7,7 @@
       "tanda": 1,
       "descripcion": "Proyecto Vite + TypeScript + Three.js con WebGPURenderer y vuelta a WebGL2, el motor de subsistemas (ctx, eventos, paso fijo), los niveles de calidad, el panel de depuración solo en desarrollo, los ganchos de window.__JUEGO__, la web instalable y la publicación en /six-seven-islands/.",
       "como_se_comprueba": "npm test y npm run build en verde. capturar.mjs muestra una escena vacía sin errores en 390 × 844 y en escritorio. __JUEGO__.estado() devuelve el fotograma. El workflow incluye el proyecto.",
-      "hecha": false
+      "hecha": true
     },
     {
       "id": "F02-nucleo-portado",

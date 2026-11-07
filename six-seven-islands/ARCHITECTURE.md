@@ -11,6 +11,12 @@ agentes. El patrón viene de *Claude of Duty* (Matt Shumer, MIT).
 | `vite` | Desarrollo y build. La misma versión que Leyendas de Iberia |
 | `typescript` | Tipos en el núcleo, que es grande. La misma que Leyendas de Iberia |
 | `vitest` | Pruebas del núcleo. La misma que Leyendas de Iberia |
+| `@types/three` | Los tipos de Three.js para TypeScript. Solo en desarrollo |
+
+- **Instalar:** `npm ci`. El `npm install` desde cero falla con un error interno de npm 10.9
+  (`edgesOut`). Para añadir un paquete, se parte de este `package-lock.json`.
+- **El paquete pesa 822 KB (223 KB comprimido),** casi todo de Three.js con WebGPU. Se vigila en
+  cada build.
 
 - Sin motor de física: el mundo es una rejilla de casillas con alturas.
 - El sonido, más adelante, con Web Audio o ZzFX (MIT, menos de 1 KB).
@@ -57,13 +63,17 @@ export class Sistema implements Subsistema {
   async init(ctx: Ctx) {}     // crea recursos
   pasoFijo?(h: number, ctx: Ctx) {}     // lógica determinista a frecuencia fija
   actualizar?(dt: number, ctx: Ctx) {}  // una vez por fotograma
+  dibujar?(ctx: Ctx) {}                 // al final del fotograma: solo el render
   redimensionar?(w: number, h: number, ctx: Ctx) {}
   dispose() {}
 }
 ```
 
-`ctx` da acceso a: `escena`, `camara`, `config` (con el nivel de calidad), `eventos`, `entrada`,
-`tiempo`, `rng` y `get(id)`.
+- **`ctx` da acceso a:** `escena`, `camara`, `config` (con el nivel de calidad), `eventos`,
+  `tiempo`, `rng`, `get(id)` y `tiene(id)`.
+- **La entrada** será el subsistema `entrada`, que se pide con `get`.
+- **Orden de cada fotograma:** los pasos fijos que tocan, después `actualizar()` de todos y al
+  final `dibujar()`. Es el código de `src/motor/motor.ts`.
 
 ## Mapa de propiedad
 
@@ -83,6 +93,7 @@ export class Sistema implements Subsistema {
 | `interfaz` | `src/sistemas/interfaz/` | La interfaz en DOM: menús, diálogos, marcador, tienda y equipo |
 | `partida` | `src/sistemas/partida/` | El estado del núcleo, los modos (explorar, combate, diálogo y menú) y el guardado automático |
 | `depuracion` | `src/sistemas/depuracion/` | El panel de ajustes (solo en desarrollo) y los ganchos de `window.__JUEGO__` |
+| `prueba` | `src/sistemas/prueba/` | **Temporal:** una isla de formas simples para comprobar el andamiaje. Se borra en `F05` |
 | `audio` | `src/sistemas/audio/` | El sonido generado por código. Llegará después |
 | `red` | `src/sistemas/red/` | Presencia, retos y cooperativo. Llegará en la fase online |
 
@@ -109,8 +120,16 @@ Un evento nuevo se añade a esta tabla en el mismo commit.
 - `estado()`: fotograma, modo, zona, posición, equipo resumido, dinero y fase del combate.
 - `semilla(n)`: reinicia el generador.
 - `poner(estado)`: carga un estado, sea una partida guardada o un escenario de prueba.
+- `contadores()`: los del render en el último fotograma dibujado. Se toman al dibujar, porque
+  Three.js los pone a cero al empezar cada fotograma.
+- `calidad(nivel)`: cambia el nivel de calidad en vivo.
 
 Los bots juegan con el estado, no con los píxeles (skill `juego-3d`).
+
+**Panel de depuración:** sale en desarrollo y, en la web publicada, añadiendo `?depurar` a la
+dirección. Muestra el backend, los FPS, los contadores y el selector de calidad. Sirve para que
+el autor mida en su iPhone, que es donde los FPS valen. Otros parámetros: `?calidad=bajo|medio|alto`
+y `?semilla=n`.
 
 ## Guardado
 

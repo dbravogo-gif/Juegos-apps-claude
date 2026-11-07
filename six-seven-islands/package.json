@@ -1,0 +1,23 @@
+{
+  "name": "six-seven-islands",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Juego de criaturas en 3D en un archipiélago de diorama. Vite + TypeScript + Three.js.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "three": "0.187.0"
+  },
+  "devDependencies": {
+    "@types/three": "0.187.0",
+    "typescript": "6.0.3",
+    "vite": "8.3.4",
+    "vitest": "5.0.5"
+  }
+}
