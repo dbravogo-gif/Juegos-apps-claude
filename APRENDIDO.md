@@ -4,6 +4,20 @@ Errores ya pagados y la barrera que evita repetirlos (regla R6). Formato: fecha 
 causa · barrera. Lo más reciente va arriba. Si un error vuelve a pasar, su barrera sube de
 nivel: de nota a regla, y de regla a prueba o hook.
 
+- **2026-11-07 · El `probador` encontró 8 fallos que 54 pruebas en verde no veían** (combate de
+  Six-seven islands).
+  - Causa:
+    - las acciones se validaban hueco a hueco y no por lado;
+    - el bot de las pruebas evitaba a propósito el caso malo (no sacaba dos veces al mismo
+      suplente);
+    - las invariantes no miraban esa propiedad.
+  - Barrera:
+    - validar el conjunto de decisiones de un lado (`validarDecisiones`);
+    - comprobar las invariantes sobre el estado (ninguna criatura en dos huecos), no fiarse del
+      bot;
+    - una prueba por hallazgo, verificada deshaciendo la corrección.
+    - El `probador` se lanza siempre al cerrar una fase, aunque las pruebas estén en verde.
+
 - **2026-11-07 · Los contadores del render salían a 0 en el panel** (Three.js r187,
   `WebGPURenderer`).
   - Causa: el bucle interno de Three.js (`Animation.js`) pone `renderer.info` a cero al empezar

@@ -21,16 +21,22 @@ agentes. El patrón viene de *Claude of Duty* (Matt Shumer, MIT).
 - Sin motor de física: el mundo es una rejilla de casillas con alturas.
 - El sonido, más adelante, con Web Audio o ZzFX (MIT, menos de 1 KB).
 
-## El núcleo viene de Leyendas de Iberia
+## El núcleo: reglas de Leyendas de Iberia, código propio
 
-Se **copia y se adapta** `leyendas-de-iberia/src/core/`, que es obra del autor: generador con
-semilla, tipos, estadísticas con Valía, daño, combate, captura, IA, pasivas y objetos.
+De Leyendas de Iberia, obra del autor, solo se toman **reglas de juego**, nunca contenido
+(indicación del autor, 2026-11-07). El detalle, archivo por archivo, está en
+`src/core/ORIGEN.md`.
 
-- **No se importa entre proyectos.** Cada proyecto se construye y se publica por separado, y
-  Leyendas de Iberia no se toca.
-- El commit de origen se apunta en `src/core/ORIGEN.md`.
-- **El cambio principal: el combate pasa a N contra N.** Cada lado tiene 1 o 2 criaturas activas,
-  y cada acción lleva su objetivo. Hay que hacerlo antes de construir nada encima (R6).
+- **No se importa entre proyectos.** La única excepción es una prueba, que compara la tabla de
+  tipos con la de Leyendas.
+- **El combate es nuevo y N contra N:**
+  - cada lado tiene 1 o 2 huecos activos;
+  - cada acción lleva su objetivo;
+  - cada lado lo controla un jugador o la IA.
+- **La interfaz valida antes de enviar.** Usa `validarDecisiones` con todas las acciones de su
+  lado, nunca hueco a hueco, antes de emitir `combate:decision`.
+- **La IA solo la llama el combate.** Consume el generador, así que llamarla sobre el estado en
+  vivo desincroniza a los jugadores online.
 
 ## Reglas duras
 
@@ -104,7 +110,7 @@ export class Sistema implements Subsistema {
 | `zona:entrar` | `{ zonaId }` | `partida` |
 | `encuentro:inicio` | `{ salvajes, visible }` | `partida` |
 | `combate:evento` | un `EventoCombate` del núcleo | `partida` |
-| `combate:decision` | `{ lado, activo, accion, objetivo }` | `interfaz` |
+| `combate:decision` | `{ lado, hueco, accion }`; la acción lleva su objetivo | `interfaz` |
 | `combate:fin` | `{ resultado }` | `partida` |
 | `captura:lanzar` | `{ calidad }`, de 0 a 1 | `captura` |
 | `captura:resultado` | `{ exito, sacudidas }` | `partida` |
