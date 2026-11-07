@@ -116,6 +116,9 @@ Los bots juegan con el estado, no con los píxeles (skill `juego-3d`).
 
 - **Automático:** al cambiar de zona, al acabar cada combate y cada pocos segundos mientras se
   explora. Va en `localStorage`, con una versión de formato y migraciones.
+- **Registro de partidas completadas:** con qué iniciales se ha terminado el juego. Va en una
+  clave aparte, que sobrevive al empezar una partida nueva, porque lo necesita el regalo por
+  rejugar (`DISENO.md`).
 - **Riesgo en Safari:**
   - WebKit borra el almacenamiento de las webs que llevan 7 días sin visitarse; las instaladas
     en la pantalla de inicio quedan fuera de esa regla. Fuente: el blog de WebKit, «Full

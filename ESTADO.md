@@ -24,17 +24,15 @@ invertir dinero. Concepto y decisiones en `investigacion/11-conceptos-criaturas.
 - **Con amigos:** verlos en la misma zona, retarlos 1 contra 1 y unirse en combates
   cooperativos 2 contra 2. El motor admite 2 contra 2 desde el principio.
 
-- **Six-seven islands** (`six-seven-islands/`): entrevista hecha. Diorama, archipiélago de
+- **Six-seven islands** (`six-seven-islands/`): diseño aprobado. Diorama, archipiélago de
   6 islas + 1 secreta, 200 criaturas, los 15 tipos de Leyendas. Detalle en su `DISENO.md`.
 
 ## Siguiente paso
 
-1. Visto bueno del autor a los documentos de `six-seven-islands/` (fase 2).
-2. Andamiaje y núcleo portado de Leyendas con combate 2 contra 2 (`F01` a `F03`).
-3. Prueba de arte del generador de criaturas (`F04`). Si no convence, plan B o C de `ARTE.md`.
+1. Andamiaje y núcleo portado de Leyendas con combate 2 contra 2 (`F01` a `F03`).
+2. Prueba de arte del generador de criaturas (`F04`). Si no convence, plan B o C de `ARTE.md`.
 
 ## Pendiente del autor
 
-- Revisar `six-seven-islands/DISENO.md`, sobre todo las «Decisiones abiertas».
 - Más adelante, en la fase online, crear una cuenta gratuita en el servicio de tiempo real que
   se elija.

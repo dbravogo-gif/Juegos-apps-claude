@@ -21,7 +21,7 @@ Entrevista del 2026-11-07. Se queda en el qué y el porqué; el cómo está en `
 - **Cada 1 a 5 minutos, cambia:** acaba un combate (experiencia, nivel, una captura), aparece un
   entrenador, se abre una zona, se cumple un recado o evoluciona una criatura.
 - **Cómo pierde, aprende y lo vuelve a intentar:**
-  - Si caen todas sus criaturas, despierta en el último refugio con el equipo curado y algo
+  - Si caen todas sus criaturas, despierta en el último refugio con el equipo curado y un 10 %
     menos de dinero. Conserva capturas y progreso.
   - Aprende la tabla de tipos y a llevar un equipo variado.
   - El entrenador que le ganó sigue esperándole.
@@ -63,7 +63,7 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
 - **Mundo:**
   - Un archipiélago de 6 islas, cada una con su clima y su campeón.
   - Una séptima isla secreta, desaparecida, que se descubre siguiendo el hilo del misterio.
-  - La última isla alberga la Liga.
+    Reaparece al final y en ella está la Liga.
 - **Tono de la historia:** ligero y con humor. Se vence al campeón de cada isla para avanzar,
   mientras se investiga por qué desapareció la séptima.
 - **Contenido:**
@@ -83,11 +83,19 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
 - Al empezar se cuentan las historias de las tres criaturas iniciales, y el jugador elige con
   cuál se identifica.
 - La elección fija la **variante** de la partida. Cambian:
-  - la ropa y la historia del equipo enemigo,
-  - y 2 salas pequeñas exclusivas a lo largo del juego.
+  - la historia y los uniformes del equipo enemigo, desde el principio;
+  - y, más adelante, 2 salas pequeñas exclusivas.
 
   Todo lo demás es común.
-- Las iniciales son líneas de 3 formas.
+- **Las iniciales:** Agua, Planta e Infernal, todas con líneas de 3 formas. En la tabla forman
+  un triángulo perfecto: cada una vence a otra y resiste a la tercera.
+- **Las otras dos iniciales se consiguen intercambiando con amigos.**
+- **Regalo por rejugar:** si ya has completado el juego con una inicial y empiezas otra partida
+  con otra, al vencer al campeón de la isla 4 te regalan la inicial con la que lo completaste.
+  - El registro de partidas completadas se guarda aparte de la partida, para que sobreviva al
+    empezar una nueva.
+  - El momento de la isla 4 es una propuesta de Claude para lo que pediste como «un nivel medio
+    alto».
 
 ### Combate
 
@@ -107,8 +115,14 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
 
 - Todas las criaturas salvajes salen por sorpresa al cruzar la hierba alta, como en los juegos
   clásicos del género. Cada zona tiene su tabla de aparición.
-- **Excepción:** las que tienen las estadísticas casi perfectas, al menos el 90 % (Valía 13 o
-  14), se ven caminando sobre la hierba con un brillo sutil, y se puede ir a por ellas.
+- **Excepción, las criaturas visibles:** al entrar en un parche de hierba alta hay un 2,5 % de
+  probabilidad (1 de cada 40, de media) de que camine por él una criatura que se ve, con un
+  brillo sutil.
+  - Siempre es una de las especies fuertes de la zona, al nivel más alto de la zona, y con
+    Valía 13 o 14: estadísticas al 90 % o más.
+  - Cada parche se sortea una vez por visita a la zona: salir y volver a entrar no repite el
+    sorteo.
+  - Online, cada jugador ve las suyas.
 
 ### Personaje y nombres
 
@@ -137,7 +151,8 @@ turno. El servicio de tiempo real gratuito se elige al llegar a esa fase.
   - Rutas con hierba y entrenadores rivales.
   - Un bosque.
   - Un pueblo con tienda y refugio.
-  - La sala del equipo enemigo de la variante elegida.
+  - La base del equipo enemigo. Es común a las tres variantes; cambian los uniformes y los
+    diálogos.
   - La ciudad del campeón, que cierra la versión.
 - **Historia con diálogos:** el arranque del misterio de la séptima isla y la primera aparición
   del equipo enemigo.
@@ -157,14 +172,15 @@ turno. El servicio de tiempo real gratuito se elige al llegar a esa fase.
 - Todo lo online: presencia, retos, cooperativo 2 contra 2 e intercambios.
 - Las islas 2 a 7.
 - Las terceras formas, las evoluciones tardías y las ramificadas.
-- La segunda sala exclusiva de cada variante.
+- Las salas exclusivas de cada variante.
+- El regalo de la inicial al rejugar: hace falta completar el juego.
 - La personalización amplia del personaje.
 
 ## Plan de nivel de la isla 1
 
 - **Formato espacial:**
   - La isla en miniatura se divide en zonas conectadas: el pueblo inicial, la ruta 1, el
-    bosque, el pueblo 2, la ruta costera, la sala del equipo enemigo y la ciudad del campeón.
+    bosque, el pueblo 2, la ruta costera, la base del equipo enemigo y la ciudad del campeón.
   - La cámara, alta e inclinada, sigue al jugador. Se ve su zona y, al fondo, el mar con las
     otras islas.
 - **Inicio:** la casa del jugador, las tres historias, la elección de la inicial y el primer
@@ -190,21 +206,26 @@ turno. El servicio de tiempo real gratuito se elige al llegar a esa fase.
 
 - 2026-11-07 · Concepto A, con amigos y por fases (`investigacion/11-conceptos-criaturas.md`).
 - 2026-11-07 · Nombre: Six-seven islands.
-- 2026-11-07 · Mundo: un archipiélago de 6 islas, una séptima secreta y la Liga en la última.
+- 2026-11-07 · Mundo: un archipiélago de 6 islas y una séptima secreta, que reaparece al final
+  con la Liga.
 - 2026-11-07 · Estilo visual: diorama de juguete (`ARTE.md`).
 - 2026-11-07 · 200 criaturas, con evoluciones de 2 y 3 formas, algunas ramificadas, y especies
   sin evolución.
 - 2026-11-07 · Los 15 tipos y la tabla de Leyendas de Iberia.
 - 2026-11-07 · Combate por turnos clásico. El motor admite 2 contra 2.
 - 2026-11-07 · Captura: lanzar deslizando el dedo o arrastrando el ratón.
-- 2026-11-07 · Derrota: vuelta al refugio, con pérdida de dinero.
-- 2026-11-07 · Encuentros por sorpresa en la hierba. Se ven solo las criaturas casi perfectas.
-- 2026-11-07 · Tres historias de inicio, con variantes del equipo enemigo y 2 salas pequeñas
-  exclusivas por variante.
+- 2026-11-07 · Derrota: vuelta al refugio, con el 10 % menos de dinero.
+- 2026-11-07 · Equipo de 6 criaturas.
+- 2026-11-07 · Encuentros por sorpresa en la hierba. Las únicas que se ven aparecen en 1 de
+  cada 40 parches de media: fuertes y con Valía 13 o 14.
+- 2026-11-07 · Tres historias de inicio, con Agua, Planta e Infernal. Cambian la historia y
+  los uniformes del equipo enemigo; las 2 salas exclusivas por variante llegan más tarde.
+- 2026-11-07 · Las otras iniciales, por intercambio, y de regalo al rejugar con otra.
 - 2026-11-07 · Personalización básica del personaje.
 - 2026-11-07 · Nombres: casi todos inventados, con raíces en inglés o japonés, y pocos juegos de
   palabras.
-- 2026-11-07 · Primera versión: la isla 1 para un jugador, con el contenido de arriba.
+- 2026-11-07 · Primera versión: la isla 1 para un jugador, con el contenido de arriba. Unas
+  2 horas de juego.
 - 2026-11-07 · Más largo que Leyendas de Iberia: más contenido entre campeones.
 - 2026-11-07 · Sesiones abiertas con guardado automático.
 
@@ -212,23 +233,8 @@ turno. El servicio de tiempo real gratuito se elige al llegar a esa fase.
 
 No se diseñan sin el autor. Cada una lleva la propuesta de Claude.
 
-- **La séptima isla y la Liga.** Propuesta: la isla secreta reaparece al final y en ella está la
-  Liga. Es una inferencia que une dos respuestas.
-- **Tipos de las iniciales.** Propuesta: Agua, Planta e Infernal, que forman un triángulo
-  perfecto en la tabla: cada una vence a otra y resiste a la tercera.
-- **Las otras dos iniciales.** Propuesta: solo se consiguen intercambiando con amigos, para dar
-  motivo a intercambiar.
-- **Salas exclusivas en la isla 1.** Propuesta: 1 por variante, que es la base del equipo
-  enemigo. La segunda, en una isla posterior.
-- **Frecuencia de las criaturas visibles.**
-  - Con los pesos actuales de la Valía, el 13 o el 14 sale el 3,1 % de las veces (3 de 96), y
-    solo el 14, el 1 %.
-  - Propuesta: Valía 13 o 14, como se pidió, y medir si se ven demasiadas.
-  - Además, falta decidir si online cada jugador ve las suyas o si son compartidas.
-- **Dinero que se pierde en una derrota.** Propuesta: el 10 %.
-- **Tamaño del equipo.** Propuesta: 6, como es habitual en el género.
-- **Duración de la isla 1.** Propuesta: unas 2 horas.
-- **Nombres:** del equipo enemigo (uno por variante), de las islas y de los personajes.
+- **Nombres:** del equipo enemigo (uno por variante), de las islas, de los personajes y de las
+  criaturas. Claude los propone antes de la tanda 3.
 - **Formato de la Liga.**
 - **Servicio de tiempo real** para la fase online.
 
