@@ -29,8 +29,7 @@ invertir dinero. Concepto y decisiones en `investigacion/11-conceptos-criaturas.
 
 ## Siguiente paso
 
-1. Visto bueno del autor a los documentos de `six-seven-islands/` (fase 2 de
-   `/nuevo-proyecto`).
+1. Visto bueno del autor a los documentos de `six-seven-islands/` (fase 2).
 2. Andamiaje y núcleo portado de Leyendas con combate 2 contra 2 (`F01` a `F03`).
 3. Prueba de arte del generador de criaturas (`F04`). Si no convence, plan B o C de `ARTE.md`.
 
