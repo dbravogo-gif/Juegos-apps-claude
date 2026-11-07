@@ -64,6 +64,8 @@ export interface EstadoCombate {
   intentosHuida: number;
   fin: ResultadoCombate | null;
   capturada: Criatura | null;
+  /** Lado de la última criatura debilitada: desempata si caen a la vez las últimas de los dos. */
+  ultimaCaida: IdLado | null;
 }
 
 export type Accion =
@@ -122,8 +124,8 @@ export interface ParametrosCombate {
   salvaje: boolean;
   control: [Control, Control];
   rng: EstadoRng;
-  /** Por defecto, sí. En los retos entre amigos, no. */
-  experiencia?: boolean;
+  /** Si el lado 0 gana experiencia. Obligatorio: en los retos entre amigos, `false`. */
+  experiencia: boolean;
 }
 
 /** Sin PP en ningún movimiento: golpe sin tipo y retroceso de un cuarto del daño. */
@@ -216,12 +218,13 @@ export function iniciarCombate(p: ParametrosCombate, datos: DatosJuego): Resulta
     rng: structuredClone(p.rng),
     turno: 0,
     salvaje: p.salvaje,
-    experiencia: p.experiencia ?? true,
+    experiencia: p.experiencia,
     lados,
     pendientes: [],
     intentosHuida: 0,
     fin: null,
     capturada: null,
+    ultimaCaida: null,
   };
   const eventos: Evento[] = [];
   for (const lado of [1, 0] as IdLado[]) {
@@ -268,6 +271,32 @@ export function validarAccion(e: EstadoCombate, ref: Ref, a: Accion, datos: Dato
   }
 }
 
+/**
+ * Valida las acciones de todos los huecos de un lado a la vez: además de cada una por separado,
+ * que dos huecos no saquen a la misma criatura ni usen dos objetos sobre la misma. La interfaz la
+ * usa antes de enviar las decisiones.
+ */
+export function validarDecisiones(e: EstadoCombate, lado: IdLado, acciones: (Accion | null | undefined)[], datos: DatosJuego): void {
+  const cambios = new Set<number>();
+  const curados = new Set<number>();
+  for (const ref of refsVivas(e, lado)) {
+    const a = acciones[ref.hueco];
+    if (!a) throw new Error(`Falta la decisión del hueco ${lado}:${ref.hueco}`);
+    validarAccion(e, ref, a, datos);
+    if (a.tipo === 'cambio') {
+      if (cambios.has(a.indice)) throw new Error(`La criatura ${a.indice} no puede salir a dos huecos`);
+      cambios.add(a.indice);
+    }
+    if (a.tipo === 'objeto' && datos.objetos[a.objeto].tipo !== 'captura') {
+      if (curados.has(a.objetivo!)) throw new Error('Dos objetos sobre la misma criatura en un turno');
+      curados.add(a.objetivo!);
+    }
+    if (a.tipo === 'objeto' && datos.objetos[a.objeto].tipo === 'captura' && acciones.some((b, h) => h !== ref.hueco && b?.tipo === 'objeto' && datos.objetos[b.objeto].tipo === 'captura')) {
+      throw new Error('Solo se lanza un objeto de captura por turno');
+    }
+  }
+}
+
 // ——— Turno ———
 
 interface Turno {
@@ -291,11 +320,13 @@ export function resolverTurno(estado: EstadoCombate, decisiones: Decisiones, dat
 
   const turnos: Turno[] = [];
   for (const lado of [0, 1] as IdLado[]) {
+    const acciones: (Accion | null | undefined)[] =
+      e.lados[lado].control === 'ia'
+        ? e.lados[lado].activos.map((_, hueco) => (vivo(criaturaEn(e, { lado, hueco })) ? elegirAccionIA(e, { lado, hueco }, datos) : null))
+        : (decisiones[lado] ?? []);
+    validarDecisiones(e, lado, acciones, datos);
     for (const ref of refsVivas(e, lado)) {
-      const accion =
-        e.lados[lado].control === 'ia' ? elegirAccionIA(e, ref, datos) : decisiones[lado]?.[ref.hueco];
-      if (!accion) throw new Error(`Falta la decisión del hueco ${lado}:${ref.hueco}`);
-      validarAccion(e, ref, accion, datos);
+      const accion = acciones[ref.hueco]!;
       const c = criaturaEn(e, ref)!;
       const mov = accion.tipo === 'movimiento' ? movimientoUsado(c, accion.indice, datos) : null;
       turnos.push({
@@ -352,6 +383,8 @@ function actuar(e: EstadoCombate, ref: Ref, a: Accion, datos: DatosJuego, ev: Ev
     }
     case 'cambio': {
       const c = criaturaEn(e, ref)!;
+      // Al retirarse, la intoxicación vuelve a empezar desde 1/16.
+      if (c.estado?.tipo === 'intoxicado') c.estado.turnos = 1;
       ev.push({ tipo: 'retirada', ref, nombre: nombreDe(c, datos) });
       meter(e, ref, a.indice, datos, ev);
       return;
@@ -446,15 +479,12 @@ function ejecutarMovimiento(
       vol.protegido = true;
       vol.usosProteger += 1;
       ev.push({ tipo: 'protege', ref, nombre });
-    } else {
-      vol.usosProteger = 0;
-      ev.push({ tipo: 'falla', ref, nombre });
-    }
+    } else ev.push({ tipo: 'falla', ref, nombre });
     return;
   }
-  vol.usosProteger = 0;
 
   const destino = objetivoDe(mov);
+  let alcanza = destino === 'propio';
   if (destino !== 'propio') {
     const objetivos = elegirObjetivos(e, ref, destino, a.objetivo);
     if (objetivos.length === 0) {
@@ -462,10 +492,10 @@ function ejecutarMovimiento(
       return;
     }
     const extra = objetivos.length > 1 ? MULT_VARIOS_OBJETIVOS : 1;
-    for (const obj of objetivos) golpear(e, ref, obj, mov, extra, datos, ev);
+    for (const obj of objetivos) alcanza = golpear(e, ref, obj, mov, extra, datos, ev) || alcanza;
   }
-  // Lo que el movimiento hace sobre quien lo usa, una sola vez.
-  if (vivo(c)) {
+  // Lo que el movimiento hace sobre quien lo usa, una sola vez y solo si ha alcanzado a alguien.
+  if (vivo(c) && alcanza) {
     for (const f of efectos) {
       if (f.tipo === 'etapa' && f.a === 'propio' && probabilidad(e.rng, f.prob)) cambiarEtapa(e, ref, f.estadistica, f.cambio, datos, ev);
       if (f.tipo === 'curar') curar(e, ref, Math.floor(vidaMaxima(c, datos) * f.fraccion), datos, ev);
@@ -481,17 +511,18 @@ function elegirObjetivos(e: EstadoCombate, ref: Ref, destino: ObjetivoMovimiento
   return elegido ? [elegido] : rivales.slice(0, 1);
 }
 
-function golpear(e: EstadoCombate, ref: Ref, obj: Ref, mov: Movimiento, extra: number, datos: DatosJuego, ev: Evento[]): void {
+/** Devuelve si el movimiento ha alcanzado al objetivo (ni parado, ni fallado, ni sin efecto). */
+function golpear(e: EstadoCombate, ref: Ref, obj: Ref, mov: Movimiento, extra: number, datos: DatosJuego, ev: Evento[]): boolean {
   const at = criaturaEn(e, ref)!;
   const def = criaturaEn(e, obj)!;
   const nombreDef = nombreDe(def, datos);
   if (e.lados[obj.lado].volatil[obj.hueco].protegido) {
     ev.push({ tipo: 'protegido', ref: obj, nombre: nombreDef });
-    return;
+    return false;
   }
   if (mov.precision !== null && !probabilidad(e.rng, mov.precision)) {
     ev.push({ tipo: 'falla', ref, nombre: nombreDe(at, datos) });
-    return;
+    return false;
   }
   const efectos = mov.efectos ?? [];
   if (mov.categoria !== 'estado') {
@@ -500,18 +531,18 @@ function golpear(e: EstadoCombate, ref: Ref, obj: Ref, mov: Movimiento, extra: n
     const r = calcularDanio(combatiente(e, ref), combatiente(e, obj), mov, datos, critico, tirada, extra);
     if (r.eficacia === 0) {
       ev.push({ tipo: 'sinEfecto', ref: obj, nombre: nombreDef });
-      return;
+      return false;
     }
     const hecho = quitarVida(e, obj, r.danio, datos, ev, 'golpe', r.eficacia, r.critico);
     for (const f of efectos) if (f.tipo === 'drenar') curar(e, ref, Math.max(1, Math.floor(hecho * f.fraccion)), datos, ev);
     if (mov === EMPUJON) quitarVida(e, ref, Math.max(1, Math.floor(hecho / 4)), datos, ev, 'retroceso');
-    if (!vivo(def)) return;
-    for (const f of efectos) efectoSecundario(e, obj, f, datos, ev);
-  } else {
-    let algo = false;
-    for (const f of efectos) algo = efectoSecundario(e, obj, f, datos, ev) || algo;
-    if (!algo) ev.push({ tipo: 'sinEfecto', ref: obj, nombre: nombreDef });
+    if (vivo(def)) for (const f of efectos) efectoSecundario(e, obj, f, datos, ev);
+    return true;
   }
+  let algo = false;
+  for (const f of efectos) algo = efectoSecundario(e, obj, f, datos, ev) || algo;
+  if (!algo) ev.push({ tipo: 'sinEfecto', ref: obj, nombre: nombreDef });
+  return algo;
 }
 
 /** Efecto sobre el objetivo. Devuelve si ha hecho algo. */
@@ -580,6 +611,7 @@ function quitarVida(
 function debilitar(e: EstadoCombate, ref: Ref, datos: DatosJuego, ev: Evento[]): void {
   const c = criaturaEn(e, ref)!;
   c.estado = null;
+  e.ultimaCaida = ref.lado;
   ev.push({ tipo: 'debilitado', ref, nombre: nombreDe(c, datos) });
   if (ref.lado === 1 && e.experiencia) repartirExperiencia(e, c, datos, ev);
 }
@@ -616,6 +648,8 @@ function finDeTurno(e: EstadoCombate, datos: DatosJuego, ev: Evento[]): void {
   }
   for (const lado of e.lados) {
     for (const v of lado.volatil) {
+      // Proteger solo encadena si este turno ha protegido de verdad.
+      if (!v.protegido) v.usosProteger = 0;
       v.protegido = false;
       v.retrocede = false;
       v.actuado = false;
@@ -639,7 +673,7 @@ function prepararReemplazos(e: EstadoCombate, datos: DatosJuego, ev: Evento[]): 
       if (l.control === 'ia') meter(e, ref, elegirReemplazoIA(e, lado, banquillo(e, lado), datos), datos, ev);
       else {
         e.pendientes.push(ref);
-        ev.push({ tipo: 'reemplazoPendiente', ref });
+        ev.push({ tipo: 'reemplazoPendiente', ref: { ...ref } });
       }
     });
   }
@@ -648,8 +682,13 @@ function prepararReemplazos(e: EstadoCombate, datos: DatosJuego, ev: Evento[]): 
 function comprobarFin(e: EstadoCombate, ev: Evento[]): void {
   if (e.fin) return;
   const enPie = (lado: IdLado) => e.lados[lado].equipo.some((c) => vivo(c));
-  if (!enPie(0)) terminar(e, 'derrota', ev);
-  else if (!enPie(1)) terminar(e, 'victoria', ev);
+  const sin0 = !enPie(0);
+  const sin1 = !enPie(1);
+  // Si caen a la vez las últimas de los dos lados, gana el lado cuya última criatura cayó
+  // después (como con el daño de retroceso en el género). Así ningún lado gana los empates.
+  if (sin0 && sin1) terminar(e, e.ultimaCaida === 0 ? 'victoria' : 'derrota', ev);
+  else if (sin0) terminar(e, 'derrota', ev);
+  else if (sin1) terminar(e, 'victoria', ev);
 }
 
 function terminar(e: EstadoCombate, resultado: ResultadoCombate, ev: Evento[]): void {

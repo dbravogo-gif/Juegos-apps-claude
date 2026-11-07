@@ -41,6 +41,10 @@ function puntuar(e: EstadoCombate, ref: Ref, obj: Ref, mov: Movimiento, datos: D
   return p * precision;
 }
 
+/**
+ * Solo la llama resolverTurno, sobre su copia del estado: consume el generador del combate. Si
+ * otro código la llamara sobre el estado en vivo, los jugadores online se desincronizarían.
+ */
 export function elegirAccionIA(e: EstadoCombate, ref: Ref, datos: DatosJuego): Accion {
   const c = criaturaEn(e, ref)!;
   const rivales = refsVivas(e, ref.lado === 0 ? 1 : 0);

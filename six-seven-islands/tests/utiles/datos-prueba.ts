@@ -56,6 +56,7 @@ const movimientos: Movimiento[] = [
   mov({ id: 'onda', nombre: 'Onda', tipo: 'comun', categoria: 'magico', poder: 50, precision: 100, pp: 15, objetivo: 'rivales' }),
   mov({ id: 'somnifero', nombre: 'Somnífero', tipo: 'planta', categoria: 'estado', poder: 0, precision: 75, pp: 15, efectos: [{ tipo: 'estado', estado: 'dormido', prob: 100 }] }),
   mov({ id: 'toxina', nombre: 'Toxina', tipo: 'comun', categoria: 'estado', poder: 0, precision: 90, pp: 10, efectos: [{ tipo: 'estado', estado: 'intoxicado', prob: 100 }] }),
+  mov({ id: 'carga', nombre: 'Carga', tipo: 'comun', categoria: 'fisico', poder: 40, precision: 100, pp: 20, efectos: [{ tipo: 'etapa', a: 'propio', estadistica: 'fuerza', cambio: 1, prob: 100 }] }),
   mov({ id: 'rapido', nombre: 'Rápido', tipo: 'comun', categoria: 'fisico', poder: 40, precision: 100, pp: 30, prioridad: 1, efectos: [{ tipo: 'retroceso', prob: 100 }] }),
 ];
 

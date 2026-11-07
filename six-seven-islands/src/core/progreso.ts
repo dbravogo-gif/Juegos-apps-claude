@@ -68,16 +68,28 @@ export function aplicarExperiencia(
   return { criatura: r, subidas };
 }
 
-/** Sustituye el movimiento del hueco `indice` por uno nuevo. Devuelve una copia. */
+/**
+ * Enseña un movimiento: sustituye el del hueco `indice` o, si hay sitio, lo añade al final
+ * (`indice` igual al número de movimientos). No admite huecos ni movimientos repetidos.
+ */
 export function aprenderMovimiento(c: Criatura, movimiento: string, indice: number, datos: DatosJuego): Criatura {
-  if (indice < 0 || indice >= MAX_MOVIMIENTOS) throw new Error(`Hueco de movimiento no válido: ${indice}`);
+  if (!datos.movimientos[movimiento]) throw new Error(`Movimiento desconocido: ${movimiento}`);
+  const n = c.movimientos.length;
+  if (!Number.isInteger(indice) || indice < 0 || indice > n || indice >= MAX_MOVIMIENTOS) {
+    throw new Error(`Hueco de movimiento no válido: ${indice}`);
+  }
+  if (c.movimientos.some((m) => m.id === movimiento)) throw new Error(`Ya sabe ${movimiento}`);
   const r = structuredClone(c);
   r.movimientos[indice] = { id: movimiento, pp: datos.movimientos[movimiento].pp };
   return r;
 }
 
-/** Evoluciones que ya puede hacer. Más de una: evolución ramificada, elige el jugador. */
+/**
+ * Evoluciones que ya puede hacer. Más de una: evolución ramificada, elige el jugador. Debilitada
+ * no evoluciona, como en el género: lo hará cuando vuelva a subir de nivel en pie.
+ */
 export function evolucionesPosibles(c: Criatura, datos: DatosJuego): Evolucion[] {
+  if (c.vida <= 0) return [];
   return (datos.especies[c.especie].evoluciona ?? []).filter((e) => c.nivel >= e.nivel);
 }
 
@@ -88,6 +100,6 @@ export function evolucionar(c: Criatura, a: string, datos: DatosJuego): Criatura
   }
   const perdida = vidaMaxima(c, datos) - c.vida;
   const r: Criatura = { ...structuredClone(c), especie: a };
-  r.vida = Math.max(c.vida > 0 ? 1 : 0, vidaMaxima(r, datos) - perdida);
+  r.vida = Math.max(1, vidaMaxima(r, datos) - perdida);
   return r;
 }

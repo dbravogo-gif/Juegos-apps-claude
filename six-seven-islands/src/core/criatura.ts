@@ -22,7 +22,8 @@ export function crearCriatura(
 ): Criatura {
   if (!datos.especies[especie]) throw new Error(`Especie desconocida: ${especie}`);
   const c: Criatura = {
-    uid: opciones.uid ?? `c${entero(rng, 0, 0x7fffffff).toString(36)}`,
+    // 62 bits: dos criaturas de amigos distintos no deben coincidir al intercambiarlas.
+    uid: opciones.uid ?? `c${entero(rng, 0, 0x7fffffff).toString(36)}${entero(rng, 0, 0x7fffffff).toString(36).padStart(6, '0')}`,
     especie,
     nivel,
     exp: expParaNivel(nivel),

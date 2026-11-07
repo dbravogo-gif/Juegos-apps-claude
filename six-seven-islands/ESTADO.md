@@ -4,7 +4,8 @@ Actualizado: 2026-11-07. Solo el presente; el historial está en git. Máximo 40
 
 ## Fase actual
 
-Fase 3 de `/nuevo-proyecto`, el andamiaje: hecha, a falta de la revisión del `probador`.
+Fase 3 de `/nuevo-proyecto`, el andamiaje: cerrada. El `probador` encontró 8 fallos en el
+combate, todos corregidos y con su prueba (62 pruebas).
 
 ## Hecho
 
@@ -27,6 +28,7 @@ Fase 3 de `/nuevo-proyecto`, el andamiaje: hecha, a falta de la revisión del `p
 
 ## Pendiente del autor
 
+- Confirmar la regla del empate (`DISENO.md`, decisiones abiertas).
 - Decidir si las pasivas entran en el juego, como contenido propio. Propuesta de Claude: sí,
   después de la isla 1.
 - Antes de la tanda 3, elegir los nombres que proponga Claude.

@@ -33,6 +33,10 @@ De Leyendas de Iberia, obra del autor, solo se toman **reglas de juego**, nunca 
   - cada lado tiene 1 o 2 huecos activos;
   - cada acción lleva su objetivo;
   - cada lado lo controla un jugador o la IA.
+- **La interfaz valida antes de enviar.** Usa `validarDecisiones` con todas las acciones de su
+  lado, nunca hueco a hueco, antes de emitir `combate:decision`.
+- **La IA solo la llama el combate.** Consume el generador, así que llamarla sobre el estado en
+  vivo desincroniza a los jugadores online.
 
 ## Reglas duras
 

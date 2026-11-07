@@ -5,6 +5,7 @@ import {
   reemplazar,
   resolverTurno,
   validarAccion,
+  validarDecisiones,
   type Control,
   type EstadoCombate,
   type Evento,
@@ -12,6 +13,7 @@ import {
 import { crearCriatura } from '../src/core/criatura';
 import { vidaMaxima } from '../src/core/estadisticas';
 import type { Criatura } from '../src/core/modelo';
+import { aprenderMovimiento, evolucionar, evolucionesPosibles } from '../src/core/progreso';
 import { crearRng, elegir, entero } from '../src/core/rng';
 import { DATOS_PRUEBA as D } from './utiles/datos-prueba';
 import { jugarHastaElFinal, repetir } from './utiles/bots';
@@ -35,7 +37,7 @@ function combate(
       salvaje: opciones.salvaje ?? false,
       control: opciones.control ?? ['jugador', 'jugador'],
       rng: crearRng(opciones.semilla ?? 67),
-      experiencia: opciones.experiencia,
+      experiencia: opciones.experiencia ?? true,
     },
     D,
   ).estado;
@@ -45,20 +47,18 @@ const mover = (indice: number, hueco = 0, lado: 0 | 1 = 1) => ({ tipo: 'movimien
 const tipos = (ev: Evento[]) => ev.map((x) => x.tipo);
 
 describe('combate determinista', () => {
-  it('con la misma semilla y las mismas decisiones, el resultado es idéntico', () => {
-    const inicial = combate([cr('agua1'), cr('planta1')], [cr('infernal1'), cr('rama')], { formato: 2, semilla: 'red' });
-    const a = jugarHastaElFinal(inicial, D, crearRng('bot'));
-    const b = repetir(inicial, a.decisiones, D);
-    expect(a.estado.fin).not.toBeNull();
-    expect(JSON.stringify(b.estado)).toBe(JSON.stringify(a.estado));
-    expect(JSON.stringify(b.eventos)).toBe(JSON.stringify(a.eventos));
-  });
-
-  it('no modifica el estado recibido', () => {
-    const inicial = combate([cr('agua1')], [cr('infernal1')]);
-    const copia = JSON.stringify(inicial);
-    resolverTurno(inicial, { 0: [mover(0)], 1: [mover(0, 0, 0)] }, D);
-    expect(JSON.stringify(inicial)).toBe(copia);
+  it('50 combates repetidos con los mismos pasos, pasando el estado por JSON, dan lo mismo', () => {
+    const especies = Object.keys(D.especies);
+    for (let i = 0; i < 50; i++) {
+      const rng = crearRng(`det-${i}`);
+      const equipo = () => Array.from({ length: entero(rng, 2, 5) }, () => crearCriatura(D, elegir(rng, especies), entero(rng, 5, 30), rng));
+      const inicial = combate(equipo(), equipo(), { formato: (1 + (i % 2)) as 1 | 2, control: ['jugador', i % 3 ? 'ia' : 'jugador'], semilla: i });
+      const a = jugarHastaElFinal(inicial, D, crearRng(`bot-det-${i}`));
+      const b = repetir(inicial, a.pasos, D);
+      expect(a.estado.fin, `combate ${i}`).not.toBeNull();
+      expect(JSON.stringify(b.estado), `combate ${i}`).toBe(JSON.stringify(a.estado));
+      expect(JSON.stringify(b.eventos), `combate ${i}`).toBe(JSON.stringify(a.eventos));
+    }
   });
 });
 
@@ -78,8 +78,11 @@ describe('1.000 combates de bots', () => {
         control,
         semilla: i,
       });
-      const p = jugarHastaElFinal(inicial, D, crearRng(`bot-${i}`), 400, (e) => {
+      const p = jugarHastaElFinal(inicial, D, crearRng(`bot-${i}`), 400, (antes, e, copiaAntes) => {
+        expect(JSON.stringify(antes), 'el paso ha modificado el estado recibido').toBe(copiaAntes);
         for (const lado of e.lados) {
+          const ocupados = lado.activos.filter((a) => a >= 0);
+          expect(new Set(ocupados).size, 'una criatura en dos huecos').toBe(ocupados.length);
           for (const c of lado.equipo) {
             expect(c.vida).toBeGreaterThanOrEqual(0);
             expect(c.vida).toBeLessThanOrEqual(vidaMaxima(c, D));
@@ -238,5 +241,75 @@ describe('salvajes, objetos y cambios', () => {
     expect(con.estado.fin).toBe('victoria');
     expect(tipos(con.eventos)).toContain('experiencia');
     expect(tipos(jugar(false).eventos)).not.toContain('experiencia');
+  });
+});
+
+describe('barreras de la revisión del probador (2026-11-07)', () => {
+  it('dos huecos no pueden sacar a la misma criatura', () => {
+    const e = combate([cr('agua1'), cr('rama'), cr('planta1')], [cr('rama'), cr('rama')], { formato: 2 });
+    expect(() => validarDecisiones(e, 0, [{ tipo: 'cambio', indice: 2 }, { tipo: 'cambio', indice: 2 }], D)).toThrow(/dos huecos/);
+    expect(() => resolverTurno(e, { 0: [{ tipo: 'cambio', indice: 2 }, { tipo: 'cambio', indice: 2 }], 1: [mover(0, 0, 0), mover(0, 0, 0)] }, D)).toThrow();
+  });
+
+  it('dos objetos sobre la misma criatura no se aceptan', () => {
+    const herida = cr('agua1');
+    herida.vida -= 3;
+    const e = combate([herida, cr('rama')], [cr('rama'), cr('rama')], { formato: 2 });
+    const pocion = { tipo: 'objeto' as const, objeto: 'pocion', objetivo: 0 };
+    expect(() => validarDecisiones(e, 0, [pocion, pocion], D)).toThrow(/misma criatura/);
+  });
+
+  it('una criatura debilitada no evoluciona', () => {
+    const c = { ...cr('agua1', 16), vida: 0 };
+    expect(evolucionesPosibles(c, D)).toEqual([]);
+    expect(() => evolucionar(c, 'agua2', D)).toThrow();
+  });
+
+  it('aprender un movimiento no deja huecos ni repite', () => {
+    const c = conMovs(cr('planta1'), 'golpe', 'hoja');
+    expect(() => aprenderMovimiento(c, 'onda', 3, D)).toThrow(/Hueco/);
+    expect(() => aprenderMovimiento(c, 'golpe', 0, D)).toThrow(/Ya sabe/);
+    expect(aprenderMovimiento(c, 'onda', 2, D).movimientos.map((m) => m.id)).toEqual(['golpe', 'hoja', 'onda']);
+  });
+
+  it('si caen a la vez las últimas criaturas, gana quien cayó después: no siempre el lado 0', () => {
+    const sinPP = (c: Criatura) => ({ ...c, vida: 1, movimientos: c.movimientos.map((m) => ({ ...m, pp: 0 })) });
+    const fragil = (c: Criatura) => ({ ...c, vida: 1 });
+    // Usa el Empujón el lado 0: el rival cae primero y el lado 0 después, por el retroceso.
+    const a = combate([sinPP(cr('infernal1', 30))], [fragil(conMovs(cr('rama', 5), 'golpe'))], { control: ['jugador', 'jugador'] });
+    expect(resolverTurno(a, { 0: [mover(0)], 1: [mover(0, 0, 0)] }, D).estado.fin).toBe('victoria');
+    // Usa el Empujón el lado 1.
+    const b = combate([fragil(conMovs(cr('rama', 5), 'golpe'))], [sinPP(cr('infernal1', 30))], { control: ['jugador', 'jugador'] });
+    expect(resolverTurno(b, { 0: [mover(0)], 1: [mover(0, 0, 0)] }, D).estado.fin).toBe('derrota');
+  });
+
+  it('los efectos sobre uno mismo no se aplican si el golpe lo paran', () => {
+    const e = combate([conMovs(cr('agua1'), 'carga')], [conMovs(cr('rama', 5), 'escudo')], { control: ['jugador', 'jugador'] });
+    const { eventos } = resolverTurno(e, { 0: [mover(0)], 1: [{ tipo: 'movimiento', indice: 0 }] }, D);
+    expect(tipos(eventos)).toContain('protegido');
+    expect(eventos.some((x) => x.tipo === 'etapa' && x.ref.lado === 0)).toBe(false);
+  });
+
+  it('proteger vuelve a salir siempre tras un turno sin proteger, aunque no haya movido', () => {
+    for (let s = 0; s < 60; s++) {
+      const herida = conMovs(cr('agua1', 30), 'escudo');
+      herida.vida -= 10;
+      let e = combate([herida], [cr('rama', 5)], { control: ['jugador', 'ia'], semilla: s });
+      e = resolverTurno(e, { 0: [{ tipo: 'movimiento', indice: 0 }] }, D).estado;
+      e = resolverTurno(e, { 0: [{ tipo: 'objeto', objeto: 'pocion', objetivo: 0 }] }, D).estado;
+      expect(tipos(resolverTurno(e, { 0: [{ tipo: 'movimiento', indice: 0 }] }, D).eventos)).toContain('protege');
+    }
+  });
+
+  it('al retirarse, la intoxicación vuelve a empezar', () => {
+    const e = combate([cr('agua1', 40, { estado: { tipo: 'intoxicado', turnos: 5 } }), cr('rama', 40)], [conMovs(cr('rama', 40), 'escudo')], { control: ['jugador', 'jugador'] });
+    const { estado } = resolverTurno(e, { 0: [{ tipo: 'cambio', indice: 1 }], 1: [{ tipo: 'movimiento', indice: 0 }] }, D);
+    expect(estado.lados[0].equipo[0].estado).toEqual({ tipo: 'intoxicado', turnos: 1 });
+  });
+
+  it('los uid tienen 62 bits y no se repiten en 20.000 criaturas', () => {
+    const rng = crearRng('uid');
+    const uids = new Set(Array.from({ length: 20000 }, () => crearCriatura(D, 'rama', 5, rng).uid));
+    expect(uids.size).toBe(20000);
   });
 });
