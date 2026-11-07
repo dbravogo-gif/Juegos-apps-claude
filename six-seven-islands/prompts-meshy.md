@@ -142,7 +142,16 @@ El autor pasó a 3D una bestia del bosque (cuadrúpedo con astas, melena de hoja
   - La cara es casi humana y con ceño, nada «bonita».
   - Cientos de hojas pequeñas: a un tercio de la pantalla del móvil son ruido.
   - Hay manchas blancas en las hojas de los lados que la imagen no enseñaba.
-- **Causa probable:** el estilo lo decide la imagen 2D; Meshy la copia. Por eso el bloque de
+- **Causa confirmada** con la imagen 2D que usó el autor:
+  - era un dibujo de cómic occidental muy recargado, con cara de león seria y vista de
+    perfil puro;
+  - Meshy la copió con mucha fidelidad (la flor de la cola, las lianas, las patas de madera);
+  - al ser de perfil, tuvo que inventarse el frente y el otro lado, y de ahí la cara rara y las
+    manchas blancas.
+  - Conclusión: si la imagen es buena, el 3D sale bueno. La imagen va siempre en tres cuartos.
+- **Meshy 7** entrega la criatura separada en partes que se pueden ver despiezadas. Sirve para
+  animar cola, cabeza y piezas por separado.
+- **Lo que hizo falta cambiar en el estilo:** Por eso el bloque de
   estilo pide ahora una cara de animal con ojos grandes (nunca humana) y pocas formas grandes.
 - **Meshy 7 para las difíciles:**
   - «High Detail» con Meshy 7.1 (20 créditos).
