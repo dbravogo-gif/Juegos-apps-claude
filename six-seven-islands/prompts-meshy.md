@@ -53,19 +53,19 @@ las 200 comparten estilo y las imágenes sirven de retrato en los menús.
 1. Épica (Aire):
 
 ```text
-A legendary sky serpent dragon, long graceful serpentine body coiled in an elegant S-shape, floating, sky-blue body with a pearl-white belly, golden crescent horns, cloud-like fins along its spine, small feathered wing-fins behind the head, glowing aquamarine eyes, ribbon tail ending in a cloud tuft, majestic. Official-quality 2D character concept art in the clean anime style of modern monster-collecting RPGs: crisp clean linework, cel shading with soft highlights, flat saturated colors, moderate detail, big expressive eyes, appealing silhouette. Single creature, full body, three-quarter front view, centered, plain white background, no shadow, no text.
+A legendary sky serpent dragon, long graceful serpentine body coiled in an elegant S-shape, floating, sky-blue body with a pearl-white belly, golden crescent horns, cloud-like fins along its spine, small feathered wing-fins behind the head, glowing aquamarine eyes, ribbon tail ending in a cloud tuft, majestic. Official-quality 2D character concept art in the clean anime style of modern monster-collecting RPGs: crisp clean linework, cel shading with soft highlights, flat saturated colors, moderate detail, big expressive eyes, appealing silhouette. Cute animal face with big round eyes and a small muzzle, never a human face. Bold simple shapes: a few large leaves, feathers or scales instead of many small ones. Single creature, full body, three-quarter front view, centered, plain white background, no shadow, no text.
 ```
 
 2. Débil (Agua):
 
 ```text
-A small chubby baby water creature like a sea otter pup, round body standing on four short legs, big glossy eyes, a translucent water-droplet crest on its head, webbed paws, flat paddle tail, cobalt-blue body with cream muzzle and belly, light-blue wave markings on its back, cheerful. Official-quality 2D character concept art in the clean anime style of modern monster-collecting RPGs: crisp clean linework, cel shading with soft highlights, flat saturated colors, moderate detail, big expressive eyes, appealing silhouette. Single creature, full body, three-quarter front view, centered, plain white background, no shadow, no text.
+A small chubby baby water creature like a sea otter pup, round body standing on four short legs, big glossy eyes, a translucent water-droplet crest on its head, webbed paws, flat paddle tail, cobalt-blue body with cream muzzle and belly, light-blue wave markings on its back, cheerful. Official-quality 2D character concept art in the clean anime style of modern monster-collecting RPGs: crisp clean linework, cel shading with soft highlights, flat saturated colors, moderate detail, big expressive eyes, appealing silhouette. Cute animal face with big round eyes and a small muzzle, never a human face. Bold simple shapes: a few large leaves, feathers or scales instead of many small ones. Single creature, full body, three-quarter front view, centered, plain white background, no shadow, no text.
 ```
 
 3. Neutra (Común):
 
 ```text
-A sturdy young bull creature, compact strong body standing on four legs, cream-beige body, fluffy chocolate-brown mane on neck and shoulders, two short ivory horns curving forward, single tufted tail, dark hooves, friendly determined eyes. Official-quality 2D character concept art in the clean anime style of modern monster-collecting RPGs: crisp clean linework, cel shading with soft highlights, flat saturated colors, moderate detail, big expressive eyes, appealing silhouette. Single creature, full body, three-quarter front view, centered, plain white background, no shadow, no text.
+A sturdy young bull creature, compact strong body standing on four legs, cream-beige body, fluffy chocolate-brown mane on neck and shoulders, two short ivory horns curving forward, single tufted tail, dark hooves, friendly determined eyes. Official-quality 2D character concept art in the clean anime style of modern monster-collecting RPGs: crisp clean linework, cel shading with soft highlights, flat saturated colors, moderate detail, big expressive eyes, appealing silhouette. Cute animal face with big round eyes and a small muzzle, never a human face. Bold simple shapes: a few large leaves, feathers or scales instead of many small ones. Single creature, full body, three-quarter front view, centered, plain white background, no shadow, no text.
 ```
 
 
@@ -130,3 +130,27 @@ retratos.
 
 Claude los coloca en la vitrina, con la misma luz que las criaturas del generador, para
 comparar en el iPhone.
+
+## Lo aprendido con la primera criatura de Meshy (2026-11-07)
+
+El autor pasó a 3D una bestia del bosque (cuadrúpedo con astas, melena de hojas y flores).
+
+- **Bien:** el detalle y la silueta suben muchísimo frente al generador por piezas; se lee
+  épica y de tipo Planta de un vistazo.
+- **Mal:**
+  - El estilo es de fantasía occidental pintada, no el dibujo limpio del género.
+  - La cara es casi humana y con ceño, nada «bonita».
+  - Cientos de hojas pequeñas: a un tercio de la pantalla del móvil son ruido.
+  - Hay manchas blancas en las hojas de los lados que la imagen no enseñaba.
+- **Causa probable:** el estilo lo decide la imagen 2D; Meshy la copia. Por eso el bloque de
+  estilo pide ahora una cara de animal con ojos grandes (nunca humana) y pocas formas grandes.
+- **Meshy 7 para las difíciles:**
+  - «High Detail» con Meshy 7.1 (20 créditos).
+  - Después «Remesh» a triángulos, que es gratis; con el plan gratis solo hay un objetivo.
+  - Textura con Meshy 7 Flagship (10).
+  - En total, 30 créditos. Las normales siguen en 15 (Smart Topology T2 más textura).
+- **Esqueleto:** Meshy hace gratis el de los humanoides y el de los cuadrúpedos («Quadruped
+  Dog», con su animación de andar). Las demás formas usan «Smart Rig», sin biblioteca de
+  animaciones. Fuente: docs.meshy.ai, rigging.
+- **Cuenta para la isla 1:** ~23 criaturas, 3 difíciles a 30 y 20 normales a 15, son 390
+  créditos; con repeticiones, unos 800. Cabe en un mes de Pro (1.000).
