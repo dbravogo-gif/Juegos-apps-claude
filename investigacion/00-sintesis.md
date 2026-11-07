@@ -69,6 +69,20 @@ textos que se salen de su recuadro.
 - Muchos MCP y muchos agentes «por si acaso».
 - Fiarse de una puntuación sin leer las transcripciones.
 
+## Ronda 2: el escaparate de Opus 5.5
+
+Detalle en `05-escaparate-opus-5-5.md`.
+
+- **El salto está en lo visual hecho solo con código:** 3D, movimiento y animación.
+- **Sin gastar en herramientas:** el 60 % de los juegos virales solo usó herramientas gratuitas.
+- **Lo que tienen en común los mejores prompts:**
+  - un listón de calidad explícito,
+  - restricciones técnicas cerradas,
+  - un plan en archivo antes de construir,
+  - autocrítica con capturas por partes,
+  - y un inventario concreto del mundo.
+- **«Un prompt» suele significar horas de trabajo autónomo.**
+
 ## Huecos para las próximas rondas
 
 1. **Diseño de juegos con Claude:** qué hace divertido un juego (bucle, progresión, *juice*) y
