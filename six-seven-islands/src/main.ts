@@ -4,12 +4,13 @@
 import { PerspectiveCamera, Scene } from 'three/webgpu';
 import { nivelInicial, CALIDADES, type NivelCalidad } from './motor/calidad';
 import { Motor, type ClaseSubsistema } from './motor/motor';
+import { Criaturas } from './sistemas/criaturas/criaturas';
 import { Depuracion } from './sistemas/depuracion/depuracion';
 import { Prueba } from './sistemas/prueba/prueba';
 import { Render } from './sistemas/render/render';
 import './estilo.css';
 
-const SUBSISTEMAS: ClaseSubsistema[] = [Render, Prueba, Depuracion];
+const SUBSISTEMAS: ClaseSubsistema[] = [Render, Criaturas, Prueba, Depuracion];
 
 function mostrarFallo(e: unknown): void {
   const aviso = document.createElement('p');

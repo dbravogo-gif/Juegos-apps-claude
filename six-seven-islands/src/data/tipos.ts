@@ -52,3 +52,28 @@ export const TABLA_TIPOS: DefTablaTipos = {
   tipos: TIPOS.map((t) => ({ ...t })),
   relaciones: RELACIONES,
 };
+
+/**
+ * Color principal de las criaturas de cada tipo (ARTE.md): el de la tabla de arriba con la
+ * luminosidad ajustada en la prueba de arte (F04). Se ajusta en OKLCH: se fija la luminosidad,
+ * se conserva el tono y se recorta el croma solo si se sale de sRGB. Criterio: contraste de
+ * valor con la hierba menta (L ≈ 0,81), para que se lean también en gris. Los tipos de tono
+ * medio van a L 0,54–0,66 y los claros (aire, eléctrico, hielo y luz) a 0,86–0,94.
+ */
+export const COLOR_CRIATURA: Record<TipoId, number> = {
+  comun: 0xa9a39f,
+  agua: 0x3a81f5,
+  tierra: 0xa96a17,
+  planta: 0x1fa74e,
+  aire: 0x96dcff,
+  electrico: 0xffc83e,
+  hielo: 0x8bf1ff,
+  infernal: 0xe4312e,
+  plasma: 0xc933df,
+  mental: 0xed499a,
+  luz: 0xffeb9e,
+  oscuridad: 0x504c47,
+  espectral: 0x7c39ed,
+  acero: 0x91a0b5,
+  ancestral: 0xbc5b18,
+};

@@ -1,5 +1,5 @@
 // Subsistema «render»: dueño del renderizador, la luz, las sombras, la niebla y el cielo.
-// WebGPU si el navegador lo tiene; si no, Three.js cae solo a WebGL2. Colores: ARTE.md.
+// WebGPU si el navegador lo tiene; si no, Three.js cae solo a WebGL2. Colores: src/arte/paleta.ts.
 
 import {
   Color,
@@ -11,17 +11,8 @@ import {
   WebGPURenderer,
 } from 'three/webgpu';
 import type { Ctx, Subsistema } from '../../motor/motor';
+import { COLORES } from '../../arte/paleta';
 
-export const COLORES = {
-  hierbaMenta: '#7ED6A5',
-  arenaCaramelo: '#E8B878',
-  acentoCoral: '#FF6B6B',
-  sombraLavanda: '#6B7BB8',
-  cieloMelocoton: '#FFD8B0',
-  aguaTurquesa: '#3CC8D8',
-  sol: '#FFE2B8',
-  rellenoCielo: '#BFD0F2',
-} as const;
 
 export interface Contadores {
   backend: string;
@@ -65,9 +56,9 @@ export class Render implements Subsistema {
     escena.fog = new Fog(COLORES.cieloMelocoton, 45, 110);
 
     // Relleno azulado del cielo y rebote del suelo; el sol bajo de tarde entra de lado a ~35°.
-    this.relleno = new HemisphereLight(COLORES.rellenoCielo, COLORES.hierbaMenta, 1.1);
+    this.relleno = new HemisphereLight(COLORES.rellenoCielo, COLORES.hierbaMenta, 1.5);
     escena.add(this.relleno);
-    this.sol = new DirectionalLight(COLORES.sol, 2.4);
+    this.sol = new DirectionalLight(COLORES.sol, 2.3);
     this.sol.position.set(-22, 17, 12);
     this.sol.castShadow = true;
     const camSombra = this.sol.shadow.camera;
