@@ -149,6 +149,23 @@ Para el documento de reglas que se escribirá al terminar de estudiar.
 12. Calidad por niveles (móvil y escritorio) y panel de depuración para ajustar en vivo desde
     el principio.
 13. Recursos de terceros solo con licencia comprobada, apuntada en `CREDITS.md`.
+14. Contrato de arquitectura (`ARCHITECTURE.md`), como en *Claude of Duty*:
+    - Subsistemas con interfaz común y dueño por carpeta.
+    - Nada de imports cruzados; tabla de eventos.
+    - Ninguna dependencia nueva sin justificarla.
+    - Nada de crear objetos por fotograma; `dispose` de todo.
+15. Causa raíz, no parches. Ante un fallo repetido, se busca el error de diseño en vez de añadir
+    comprobaciones defensivas.
+16. Disciplina de coste:
+    - Esfuerzo y modelo según la tarea.
+    - `/clear` entre tareas.
+    - Subagentes baratos para lo simple.
+    - Flujos de trabajo de tamaño `small` o `medium`.
+    - Medir con `/usage`.
+17. Listón de calidad alcanzable y del estilo elegido. Un listón inalcanzable (copiar un AAA)
+    dio 5/10 incluso con 11 críticos.
+18. Explicaciones interactivas de la arquitectura para que el autor no pierda la comprensión del
+    proyecto («deuda cognitiva», Willison).
 
 ## Huecos para las próximas rondas
 
