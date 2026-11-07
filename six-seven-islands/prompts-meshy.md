@@ -10,7 +10,10 @@ género. Se prueba la IA 3D de Meshy con su plan gratis antes de decidir el mét
   diseño propio: colores, piezas y anatomía distintos de cualquier criatura conocida.
 - Si un resultado recuerda claramente a una criatura existente, se descarta.
 - El color principal es el de su tipo (`ARTE.md`).
-- Los tres comparten el mismo bloque de estilo, para que parezcan del mismo juego.
+- Los tres comparten el mismo bloque de estilo, para que parezcan del mismo juego. Se busca el
+  estilo de dibujo del género (formas limpias, colores planos con sombreado suave, ojos
+  expresivos y detalle moderado), no los rasgos de ninguna criatura. Nada de «juguete de
+  vinilo»: es el aspecto que el autor descartó en la primera prueba.
 - En inglés, porque los generadores responden mejor así.
 
 ## Las tres criaturas
@@ -24,19 +27,19 @@ género. Se prueba la IA 3D de Meshy con su plan gratis antes de decidir el mét
 ### 1. Épica: dragón serpiente del cielo (Aire)
 
 ```text
-A legendary sky serpent dragon, long graceful serpentine body coiled in an elegant S-shape as if floating in the air, pearl-white belly and sky-blue scales, golden crescent horns, flowing cloud-like fins along its spine, small feathered wing-fins behind the head, glowing aquamarine eyes, long ribbon tail ending in a wispy cloud tuft, majestic and kind. Stylized 3D creature for a cute monster-collecting adventure game, smooth vinyl-toy finish, clean readable silhouette, saturated colors, single creature, full body, no base.
+A legendary sky serpent dragon, long graceful serpentine body coiled in an elegant S-shape, floating, sky-blue body with a pearl-white belly, golden crescent horns, cloud-like fins along its spine, small feathered wing-fins behind the head, glowing aquamarine eyes, ribbon tail ending in a cloud tuft, majestic. Stylized 3D creature in the style of modern Japanese monster-collecting RPGs: clean smooth shapes, moderate detail, solid color areas with soft shading, no realistic fur or scale texture, big expressive anime eyes, appealing readable silhouette, single creature, full body, no base.
 ```
 
 ### 2. Débil: cría de agua (Agua, inicial)
 
 ```text
-A small chubby baby sea-otter-like water creature, round soft body on four short stubby legs, short soft fur, big glossy eyes, a translucent water-droplet crest on top of its head, webbed paws, flat paddle tail, cobalt-blue fur with a cream muzzle and belly and light-blue wave markings on its back, cheerful and a little shy. Stylized 3D creature for a cute monster-collecting adventure game, smooth vinyl-toy finish, clean readable silhouette, saturated colors, single creature, full body, standing, no base.
+A small chubby baby water creature like a sea otter pup, round body standing on four short legs, big glossy eyes, a translucent water-droplet crest on its head, webbed paws, flat paddle tail, cobalt-blue body with cream muzzle and belly, light-blue wave markings on its back, cheerful. Stylized 3D creature in the style of modern Japanese monster-collecting RPGs: clean smooth shapes, moderate detail, solid color areas with soft shading, no realistic fur or scale texture, big expressive anime eyes, appealing readable silhouette, single creature, full body, no base.
 ```
 
 ### 3. Neutra: toro joven (Común)
 
 ```text
-A sturdy young bull creature, compact muscular body standing proudly on four legs, warm cream-beige short fur, a fluffy chocolate-brown mane around the neck and shoulders, two short ivory horns curving forward, a single tufted tail, dark hooves, friendly but determined eyes. Stylized 3D creature for a cute monster-collecting adventure game, smooth vinyl-toy finish, clean readable silhouette, saturated colors, single creature, full body, standing, no base.
+A sturdy young bull creature, compact strong body standing on four legs, cream-beige body, fluffy chocolate-brown mane on neck and shoulders, two short ivory horns curving forward, single tufted tail, dark hooves, friendly determined eyes. Stylized 3D creature in the style of modern Japanese monster-collecting RPGs: clean smooth shapes, moderate detail, solid color areas with soft shading, no realistic fur or scale texture, big expressive anime eyes, appealing readable silhouette, single creature, full body, no base.
 ```
 
 ## Cómo generarlas
