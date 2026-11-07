@@ -14,9 +14,9 @@ sirven de referencia.
 
 - **Investigación:** los mejores usos de Claude, juegos 3D, arte sin artistas, reglas y coste.
   Está en `investigacion/00-sintesis.md` y los archivos 01 a 09.
+- **Constitución** (`CONSTITUCION.md`): 12 mandamientos para todo, más los modos de gasto.
 - **Método de trabajo:**
-  - Reglas y modos en `CLAUDE.md`.
-  - La guía del autor en `COMO-TRABAJAMOS.md`.
+  - La guía del autor en `COMO-TRABAJAMOS.md`, con la versión para claude.ai.
   - Skills, el agente `probador` y el hook de pruebas.
 
 ## Siguiente paso
@@ -28,6 +28,8 @@ sirven de referencia.
 ## Pendiente del autor
 
 - **Fusionar esta rama en `main`.** Sin eso, las sesiones nuevas no ven este método.
+- **Pegar la constitución en las preferencias personales de claude.ai.** El texto está en
+  `COMO-TRABAJAMOS.md`, en «La constitución en todas partes».
 - **Datos que necesito:**
   - El modelo de móvil y la versión de iOS (o Android), para saber si hay WebGPU.
   - El plan de Claude (Pro o Max), que cambia cuánto se puede paralelizar.

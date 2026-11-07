@@ -125,7 +125,7 @@ Detalle en `08-reglas-y-contexto.md`.
 ## De la investigación a las reglas
 
 Las 18 candidatas se adoptaron el 2026-11-07 en un método único. Las reglas vigentes están solo
-en `CLAUDE.md` (de la R1 a la R12), para que no haya dos versiones que se contradigan.
+en `CONSTITUCION.md` (de la R1 a la R12), para que no haya dos versiones que se contradigan.
 
 | Candidata | Dónde quedó |
 | --- | --- |
@@ -138,9 +138,9 @@ en `CLAUDE.md` (de la R1 a la R12), para que no haya dos versiones que se contra
 | Estado en archivos | R7, `ESTADO.md` (importado en `CLAUDE.md`) y la skill `cierre` |
 | Error repetido → barrera; causa raíz | R6 y `APRENDIDO.md` |
 | Originalidad; licencias en `CREDITS.md`; dependencias justificadas | R8 |
-| Avisar antes de saltarse una regla | Encabezado de las reglas en `CLAUDE.md` (formato «⚠️ Excepción R<n>») |
+| Avisar antes de saltarse una regla | Encabezado de `CONSTITUCION.md` (formato «⚠️ Excepción R<n>») |
 | Contrato de arquitectura | Plantilla `arquitectura.md` de `/nuevo-proyecto` |
-| Disciplina de coste | R9 y los modos de gasto de `CLAUDE.md` |
+| Disciplina de coste | R9 y los modos de gasto de `CONSTITUCION.md` |
 | Listón alcanzable | Skill `juego-3d` y rúbrica |
 | Explicaciones para no perder la comprensión | «explícame X», en `COMO-TRABAJAMOS.md` |
 
