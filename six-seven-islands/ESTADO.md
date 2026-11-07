@@ -37,5 +37,4 @@ sin aprobar.
 
 ## Defectos conocidos
 
-- Sin comprobar en el iPhone: la instalación en la pantalla de inicio. WebGPU sí: el autor vio
-  WebGPU a 60 FPS con `?depurar` (2026-11-07).
+- Sin comprobar en el iPhone: la instalación como app. WebGPU sí: 60 FPS (2026-11-07).
