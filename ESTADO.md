@@ -29,8 +29,7 @@ invertir dinero. Concepto y decisiones en `investigacion/11-conceptos-criaturas.
 
 ## Siguiente paso
 
-1. Núcleo portado de Leyendas con combate 2 contra 2 (`F02` y `F03`). El andamiaje (`F01`)
-   está hecho.
+1. Andamiaje, núcleo y combate 2 contra 2 hechos (`F01` a `F03`). De Leyendas, solo reglas.
 2. Prueba de arte del generador de criaturas (`F04`). Si no convence, plan B o C de `ARTE.md`.
 
 ## Pendiente del autor

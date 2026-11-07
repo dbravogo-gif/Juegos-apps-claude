@@ -7,7 +7,8 @@ export interface MapaEventos {
   'zona:entrar': { zonaId: string };
   'encuentro:inicio': { salvajes: unknown[]; visible: boolean };
   'combate:evento': unknown;
-  'combate:decision': { lado: number; activo: number; accion: unknown; objetivo: number };
+  /** Una acción del jugador para un hueco (`Accion` de src/core/combate.ts, con su objetivo). */
+  'combate:decision': { lado: number; hueco: number; accion: unknown };
   'combate:fin': { resultado: string };
   'captura:lanzar': { calidad: number };
   'captura:resultado': { exito: boolean; sacudidas: number };

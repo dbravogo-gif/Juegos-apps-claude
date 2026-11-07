@@ -21,7 +21,7 @@
       "tanda": 1,
       "descripcion": "El motor de combate admite 1 contra 1 y 2 contra 2: activos por lado, objetivo de cada acción, orden por velocidad y prioridad, cambios y fin del combate.",
       "como_se_comprueba": "Pruebas de 1 contra 1 y de 2 contra 2. Dos bots juegan 1.000 combates con semillas distintas sin bloqueos. La misma semilla con las mismas decisiones da un resultado idéntico.",
-      "hecha": false
+      "hecha": true
     },
     {
       "id": "F04-prueba-de-arte",

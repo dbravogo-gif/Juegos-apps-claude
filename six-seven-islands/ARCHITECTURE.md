@@ -106,7 +106,7 @@ export class Sistema implements Subsistema {
 | `zona:entrar` | `{ zonaId }` | `partida` |
 | `encuentro:inicio` | `{ salvajes, visible }` | `partida` |
 | `combate:evento` | un `EventoCombate` del núcleo | `partida` |
-| `combate:decision` | `{ lado, activo, accion, objetivo }` | `interfaz` |
+| `combate:decision` | `{ lado, hueco, accion }`; la acción lleva su objetivo | `interfaz` |
 | `combate:fin` | `{ resultado }` | `partida` |
 | `captura:lanzar` | `{ calidad }`, de 0 a 1 | `captura` |
 | `captura:resultado` | `{ exito, sacudidas }` | `partida` |
