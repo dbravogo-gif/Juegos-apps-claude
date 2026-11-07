@@ -96,6 +96,21 @@ Detalle en `06-juego-3d.md`.
   de render.
 - **Esta sesión** solo tiene WebGL2 por software. Los FPS de aquí no sirven como prueba.
 
+## Ronda 4: arte sin artistas y concepto
+
+Detalle en `07-arte-y-concepto.md`.
+
+- **La receta de estilo de Bruno Simon** (r187, TSL, Rapier):
+  - Color de una paleta compartida.
+  - Rebote de luz falso.
+  - Sombra propia con bordes ajustables.
+  - Sombras de color.
+  - Niebla.
+  - *Bloom* solo para lo emisivo.
+  - Calidad por niveles y panel de depuración.
+- **Arte:** silueta, lenguaje de formas, prueba en grises y paleta limitada escrita.
+- **Concepto:** pitch en una frase, restricciones, un verbo con profundidad y presión real.
+
 ## Candidatas a reglas
 
 Para el documento de reglas que se escribirá al terminar de estudiar.
@@ -115,6 +130,14 @@ Para el documento de reglas que se escribirá al terminar de estudiar.
 8. Cada error repetido se convierte en una barrera (prueba, hook o regla) en la misma sesión.
 9. Nada de copiar marcas, personajes ni arte de otros: solo mecánicas.
 10. Cuando una regla no se vaya a seguir, se avisa *antes*, diciendo cuál y por qué.
+11. Arte con guía de estilo escrita:
+    - Paleta fija con nombre; nada de colores improvisados.
+    - Sombras de color, no negras.
+    - Silueta distinta por cada rol del juego.
+    - Prueba en escala de grises.
+12. Calidad por niveles (móvil y escritorio) y panel de depuración para ajustar en vivo desde
+    el principio.
+13. Recursos de terceros solo con licencia comprobada, apuntada en `CREDITS.md`.
 
 ## Huecos para las próximas rondas
 
