@@ -24,15 +24,16 @@ sin aprobar.
 
 ## Siguiente
 
-1. Decidir el método de arte de las criaturas (`DISENO.md`, decisiones abiertas).
-2. Después, el bucle con formas simples: de `F05` a `F10`. No depende del arte.
+1. Prueba de Meshy: 3 criaturas que genera el autor (`prompts-meshy.md`); Claude las pone en
+   la vitrina para comparar. Después, decidir el método de arte (`DISENO.md`).
+2. El bucle con formas simples (`F05` a `F10`) no depende del arte.
 
 ## Pendiente del autor
 
 - Decidir si las pasivas entran en el juego, como contenido propio. Propuesta de Claude: sí,
   después de la isla 1.
 - Antes de la tanda 3, elegir los nombres que proponga Claude.
-- Elegir el método de arte de las criaturas (`DISENO.md`).
+- Generar en Meshy las 3 criaturas y subir los `.glb` (`prompts-meshy.md`).
 
 ## Defectos conocidos
 

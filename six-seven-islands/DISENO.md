@@ -254,6 +254,9 @@ No se diseñan sin el autor. Cada una lleva la propuesta de Claude.
     Recomienda seguir con el generador; el riesgo que ve es la variedad entre 200 (misma cara,
     tripa y patas; «anguloso» no cambia el cuerpo). Condición: una hoja de 10 a 12 criaturas
     variadas, con una tercera forma, antes de hacer contenido.
+  - **El autor elige probar Meshy** (2026-11-07): quiere criaturas bonitas y algunas épicas;
+    acepta un gasto pequeño si hace falta. Tres criaturas de prueba (épica, débil y neutra);
+    prompts y pasos en `prompts-meshy.md`. También mira los paquetes de Quaternius.
   - Fallos locales que solo importan si el generador sigue: al debilitarse se hunde en el
     suelo, los ojos cerrados parecen tajos, las mejillas salen caqui en los tipos verdes,
     faltan el bloom y el tilt-shift, tres parejas de tipos se confunden por color y «luz» se ve
