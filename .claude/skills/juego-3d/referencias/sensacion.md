@@ -24,7 +24,7 @@ de la sacudida de cámara, de 0 a 1.
 | Evento | Respuesta |
 | --- | --- |
 | Recoger | «Pop» del objeto, golpe en el contador, tono variado y trauma 0,15 |
-| Recibir un golpe | *Hitstop* de 70 ms, trauma 0,4, destello, pulso en la interfaz y vibración de 180 ms |
+| Recibir un golpe | *Hitstop* de 70 ms, trauma 0,4, destello y pulso en la interfaz; vibración solo donde exista (no en iPhone) |
 | Eliminar un enemigo | *Hitstop* de 40 ms, trauma 0,3, destello y golpe con tono variado |
 | Impulso o carrera | Campo de visión +6°, estirar a 1,15 y silbido |
 | Saltar y aterrizar | Estirar al saltar, aplastar a 0,9 al aterrizar, sonido de paso y trauma 0,2 |
@@ -51,7 +51,12 @@ de la sacudida de cámara, de 0 a 1.
 - **Tolerancias de control** (conocimiento previo; son puntos de partida):
   - *Coyote time* de unos 0,1 s: se puede saltar justo después de dejar el borde.
   - Búfer de entrada de 0,1 a 0,15 s: pulsar un poco antes también cuenta.
-- **En móvil:** zonas táctiles grandes, sin depender de la precisión fina.
+- **Controles:** el tacto primero (uno o dos dedos: tocar, arrastrar, pellizcar), y lo mismo
+  con ratón y teclado en PC. Nada que necesite un mando.
+- **En móvil:** zonas táctiles grandes y sin depender de la precisión fina. Hay que dejar sitio
+  al pulgar sin tapar la acción, y respetar las zonas seguras.
+- **Vibración:** Safari en iPhone no tiene vibración web (WebKit nunca la ha implementado). La
+  respuesta tiene que funcionar solo con imagen y sonido.
 
 ## Lo que no se puede comprobar aquí
 

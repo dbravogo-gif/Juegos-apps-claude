@@ -17,6 +17,9 @@ proponer nada, pregunta:
 - Qué quiere sentir al jugar, y con quién: solo o con amigos.
 - Si tiene ideas propias, aunque sean a medias.
 
+Los controles ya están decididos: el tacto en móvil, y ratón y teclado en PC; nunca un mando. Un
+concepto que solo funcione bien con mando se descarta.
+
 Después propón 2 o 3 conceptos que salgan de esas respuestas, cada uno con el pitch, el verbo, la
 presión y el riesgo principal. Recomienda uno. Solo se toman mecánicas de sus juegos favoritos,
 nunca la obra (regla R8).
