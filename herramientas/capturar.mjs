@@ -4,7 +4,15 @@
 // un cambio con pruebas de verdad: si hay errores, termina con código 1.
 //
 // Uso:
-//   node herramientas/capturar.mjs <carpeta|url> [--salida dir] [--pasos "..."] [--ancho 390 --alto 844]
+//   node herramientas/capturar.mjs <carpeta|url> [--salida dir] [--pasos "..."]
+//        [--dispositivo iphone16 | iphone16-app | escritorio] [--ancho 390 --alto 844]
+//
+// Dispositivos (el autor juega en un iPhone 16):
+//   iphone16       393 × 659: lo que se ve en Safari con sus barras
+//   iphone16-app   393 × 852: instalado en la pantalla de inicio (hay que respetar las zonas seguras)
+//   escritorio     1280 × 800
+// Sin --dispositivo: 390 × 844. --ancho y --alto mandan sobre el dispositivo.
+// Aquí solo hay Chromium: lo propio de Safari (WebKit) se comprueba en el iPhone del autor.
 //
 // Ejemplos:
 //   node herramientas/capturar.mjs gymlog-fase1
@@ -52,8 +60,19 @@ if (!objetivo) {
 }
 
 const salida = resolve(opcion('salida', join(tmpdir(), 'capturas', objetivo.replace(/[^\w.-]+/g, '_'))));
-const ancho = Number(opcion('ancho', 390));
-const alto = Number(opcion('alto', 844));
+const DISPOSITIVOS = {
+  iphone16: { ancho: 393, alto: 659, tactil: true },
+  'iphone16-app': { ancho: 393, alto: 852, tactil: true },
+  escritorio: { ancho: 1280, alto: 800, tactil: false },
+};
+const nombreDispositivo = opcion('dispositivo', null);
+if (nombreDispositivo && !DISPOSITIVOS[nombreDispositivo]) {
+  console.error(`Dispositivo desconocido «${nombreDispositivo}». Usa: ${Object.keys(DISPOSITIVOS).join(', ')}.`);
+  process.exit(2);
+}
+const dispositivo = DISPOSITIVOS[nombreDispositivo] || { ancho: 390, alto: 844, tactil: true };
+const ancho = Number(opcion('ancho', dispositivo.ancho));
+const alto = Number(opcion('alto', dispositivo.alto));
 const pasos = opcion('pasos', 'espera:1500,captura:inicio')
   .split(',')
   .map((p) => p.trim())
@@ -122,8 +141,8 @@ const navegador = await chromium.launch();
 const contexto = await navegador.newContext({
   viewport: { width: ancho, height: alto },
   deviceScaleFactor: 1,
-  hasTouch: true,
-  isMobile: true,
+  hasTouch: dispositivo.tactil,
+  isMobile: dispositivo.tactil,
   serviceWorkers: 'block', // un service worker con caché vieja falsea la comprobación
 });
 const pagina = await contexto.newPage();
@@ -168,7 +187,7 @@ await navegador.close();
 servidor?.close();
 
 console.log(`URL: ${url}`);
-console.log(`Pantalla: ${ancho} × ${alto}, táctil`);
+console.log(`Pantalla: ${ancho} × ${alto}${dispositivo.tactil ? ', táctil' : ''}${nombreDispositivo ? ` (${nombreDispositivo})` : ''}`);
 console.log(`Capturas (${capturas.length}):`);
 for (const c of capturas) console.log(`  ${c}`);
 if (avisos.length) {

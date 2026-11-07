@@ -22,6 +22,10 @@ constitución. No toques un proyecto distinto del que te han pedido.
 
 - Código, comentarios y textos en español.
 - Móvil primero: todo se usa con el dedo en 390 × 844 y también con teclado.
+- **Dispositivo del autor: iPhone 16.**
+  - En Safari se ven 393 × 659 px, con las barras del navegador. Instalado como app, 393 × 852
+    con zonas seguras. Densidad de píxeles 3: limitar el render a 2.
+  - Aquí solo hay Chromium: lo propio de Safari (WebKit) se comprueba en su iPhone.
 - La lógica va en un núcleo puro y determinista (semilla, sin DOM, sin `Math.random` ni reloj),
   con pruebas. El contenido son datos.
 

@@ -10,27 +10,29 @@ Crear desde cero un juego 3D original para navegador, con buenos gráficos y que
 interesante. Móvil primero y sin invertir dinero. Los proyectos antiguos del repositorio no
 sirven de referencia.
 
+## Datos del autor
+
+- **iPhone 16 con Safari.** Falta confirmar la versión de iOS: con iOS 26 o posterior, hay
+  WebGPU.
+- **Plan Pro de Claude:**
+  - Los flujos de trabajo están apagados por defecto (se activan en `/config`) y son pequeños.
+  - Los límites de uso son justos: pasos pequeños y un modelo más barato para lo rutinario.
+- **Unas 7 horas a la semana** para probar y decidir.
+
 ## Hecho
 
-- **Investigación:** los mejores usos de Claude, juegos 3D, arte sin artistas, reglas y coste.
-  Está en `investigacion/00-sintesis.md` y los archivos 01 a 09.
-- **Constitución** (`CONSTITUCION.md`): 12 mandamientos para todo, más los modos de gasto.
-- **Método de trabajo:**
-  - La guía del autor en `COMO-TRABAJAMOS.md`, con la versión para claude.ai.
-  - Skills, el agente `probador` y el hook de pruebas.
+- **Investigación:** `investigacion/00-sintesis.md` y los archivos 01 a 09.
+- **Constitución** (`CONSTITUCION.md`) y **método:** la guía, las skills, el agente `probador` y
+  el hook de pruebas.
+- **3 conceptos de juego** con su comparación: `investigacion/10-conceptos.md` (recomendado:
+  Brasa).
 
 ## Siguiente paso
 
-1. Proponer 3 conceptos de juego que cumplan los 8 criterios de
-   `investigacion/07-arte-y-concepto.md`. El autor elige uno.
+1. El autor elige un concepto, o pide otros.
 2. `/nuevo-proyecto` con el concepto elegido: entrevista, documentos y escena representativa.
 
 ## Pendiente del autor
 
-- **Fusionar esta rama en `main`.** Sin eso, las sesiones nuevas no ven este método.
-- **Pegar la constitución en las preferencias personales de claude.ai.** El texto está en
-  `COMO-TRABAJAMOS.md`, en «La constitución en todas partes».
-- **Datos que necesito:**
-  - El modelo de móvil y la versión de iOS (o Android), para saber si hay WebGPU.
-  - El plan de Claude (Pro o Max), que cambia cuánto se puede paralelizar.
-  - Cuánto tiempo a la semana puede jugar y probar.
+- Fusionar en `main` el PR del método.
+- Confirmar la versión de iOS (Ajustes → General → Información).
