@@ -25,7 +25,8 @@ las 200 comparten estilo y las imágenes sirven de retrato en los menús.
 - **Imagen:** con un generador gratuito desde el móvil (Gemini, ChatGPT o Copilot; sus límites
   no están comprobados). OpenArt, conectado a la sesión de Claude, tiene 5 créditos y la imagen
   más barata cuesta 10.
-- **Requisitos de la imagen para pasarla a 3D:** una sola criatura, entera, en vista de tres
+- **Requisitos de la imagen para pasarla a 3D:** una sola criatura (con varias, Meshy las
+  funde en una malla con triángulos estirados entre ellas), entera, en vista de tres
   cuartos, centrada y sobre fondo blanco liso, sin sombra en el suelo y sin texto.
 - **Meshy** (comprobado en su documentación, docs.meshy.ai, 2026-11-07):
   1. «Model», pestaña «Image to 3D», tipo **Smart Topology** y modelo **Meshy T2** (5

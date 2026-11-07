@@ -36,6 +36,26 @@ Se abrió `docs.meshy.ai` en la red de la sesión. Fuentes:
 - **Inferencia:** una criatura con Smart Topology T2 y textura cuesta 15 créditos, así que el
   plan gratis da para unas 6 al mes.
 
+## Planes de pago de Meshy (2026-11-07)
+
+- **Sin confirmar** (terceros; `meshy.ai/pricing` está bloqueado en la sesión):
+  - Pro: ~20 $ al mes y 1.000 créditos.
+  - Premium: ~40 $ y 3.000.
+  - Ultra: ~100 $ y entre 8.000 y 10.000.
+  - Fuentes: [costbench](https://costbench.com/software/ai-3d-generation/meshy/) y
+    [Tom's Hardware](https://www.tomshardware.com/coupons/meshy-ai).
+- **Hecho (docs):** los créditos del plan se reinician cada mes y no se acumulan; los comprados
+  aparte no caducan.
+- **Hecho, visto por el autor en su cuenta:** con el plan gratis no deja descargar el modelo.
+  Ofrece un 50 % en el primer mes.
+- **Cuenta (inferencia):** 15 créditos por criatura como mínimo y ~30 con repeticiones, así que
+  las 200 piden entre 3.000 y 6.000 créditos.
+  - El cuello de botella es el tiempo del autor: ~15 min por criatura y unas 28 h al mes.
+  - Recomendación: Pro el primer mes (~10 $) para validar y hacer la isla 1 (~23 criaturas);
+    después, Premium o Pro por tandas.
+- **Primera prueba del autor:** pasó a 3D una imagen con tres criaturas juntas y salieron
+  fundidas en una malla, unidas por triángulos estirados. Regla: una criatura por imagen.
+
 ## Inferencias
 
 - **Las 200 criaturas con el plan gratis de Meshy** son unas 6 al mes: casi 3 años. Con un
