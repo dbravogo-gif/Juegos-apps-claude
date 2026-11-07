@@ -57,6 +57,9 @@ Es el resumen de lo investigado; las fuentes están en `investigacion/06-juego-3
   construyó.
 - **Rendimiento:** contadores (`renderer.info`) frente a `referencias/rendimiento.md`. Aquí no
   hay GPU: los FPS solo valen en el móvil del autor.
+- **Animaciones cortas** (golpes, destellos): aquí el juego va más lento que el reloj, así que
+  no se cazan con esperas. Se revisan en cámara lenta (`?lento=0.1` o similar) con
+  `capturar.mjs --consulta`.
 
 ## Trabajo en paralelo
 

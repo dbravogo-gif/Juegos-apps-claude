@@ -4,6 +4,22 @@ Errores ya pagados y la barrera que evita repetirlos (regla R6). Formato: fecha 
 causa · barrera. Lo más reciente va arriba. Si un error vuelve a pasar, su barrera sube de
 nivel: de nota a regla, y de regla a prueba o hook.
 
+- **2026-11-07 · Las animaciones cortas no salían en las capturas** (prueba de arte de
+  Six-seven islands): el destello del golpe parecía no funcionar.
+  - Causa: aquí el render va a ~9 FPS por software y el motor limita el paso a 5 fotogramas
+    fijos, así que el juego avanza más despacio que el reloj. Una espera de 280 ms son ~0,1 s
+    de animación, y la captura tarda varios fotogramas. No era un fallo del juego.
+  - Barrera:
+    - cámara lenta en el juego (`?lento=0.1`) y la opción `--consulta` de `capturar.mjs` para
+      pasarla también a una carpeta;
+    - está en la skill `juego-3d`, en «Verificación».
+    - En escritorio, el clic de Playwright se agota con el hilo saturado: usar teclas.
+- **2026-11-07 · Aclarar los colores de tipo «para el sol de tarde» fundía las criaturas con la
+  hierba** en escala de grises (prueba de arte de Six-seven islands).
+  - Causa: se ajustó la luminosidad por intuición y no por contraste con el suelo.
+  - Barrera: el criterio está en `ARTE.md` (contraste de valor con la hierba) y la captura en
+    gris de la vista de explorar forma parte de la comprobación.
+
 - **2026-11-07 · El `probador` encontró 8 fallos que 54 pruebas en verde no veían** (combate de
   Six-seven islands).
   - Causa:

@@ -15,8 +15,11 @@ agentes. El patrón viene de *Claude of Duty* (Matt Shumer, MIT).
 
 - **Instalar:** `npm ci`. El `npm install` desde cero falla con un error interno de npm 10.9
   (`edgesOut`). Para añadir un paquete, se parte de este `package-lock.json`.
-- **El paquete pesa 822 KB (223 KB comprimido),** casi todo de Three.js con WebGPU. Se vigila en
-  cada build.
+- **El paquete pesa 900 KB (248 KB comprimido),** casi todo de Three.js con WebGPU. Se vigila en
+  cada build. En F04 subió desde 822 KB (223 KB): el generador de criaturas y lo que trae de
+  Three.js (geometrías de torno, tubo y extrusión, `BufferGeometryUtils` y el ruido celular de
+  TSL). El reparto exacto no está medido.
+- `three/addons/utils/BufferGeometryUtils.js` es parte de `three`: no es una dependencia nueva.
 
 - Sin motor de física: el mundo es una rejilla de casillas con alturas.
 - El sonido, más adelante, con Web Audio o ZzFX (MIT, menos de 1 KB).
@@ -43,7 +46,8 @@ De Leyendas de Iberia, obra del autor, solo se toman **reglas de juego**, nunca 
 1. **Cada subsistema es dueño de su carpeta.** Nadie edita carpetas ajenas.
 2. **Ningún subsistema importa a otro.** Se piden en tiempo de ejecución con `ctx.get('id')`.
    `src/core/` y `src/data/` son bibliotecas puras: cualquiera las importa, pero ellas no
-   importan nada de fuera.
+   importan nada de fuera. `src/arte/` es la biblioteca visual compartida: puede usar Three.js,
+   `src/core/` y `src/data/`, pero ningún subsistema.
 3. **Ninguna dependencia nueva** sin justificarla en este archivo.
 4. **Nada de `Math.random` ni de reloj en la lógica.** Se usa `ctx.rng`, o un `fork()` propio.
    `src/core/` no conoce el DOM, ni Three.js, ni el tiempo real.
@@ -86,20 +90,21 @@ export class Sistema implements Subsistema {
 | id | Carpeta | Es dueño de |
 | --- | --- | --- |
 | (biblioteca) | `src/core/` | Las reglas puras: generador con semilla, tipos, estadísticas, daño, combate N contra N, captura, encuentros, progreso, economía, mundo lógico (posición, colisión por casillas y zonas) y serialización del guardado |
-| (biblioteca) | `src/data/` | Solo datos: especies, movimientos, tipos, objetos, zonas, entrenadores y guion |
+| (biblioteca) | `src/data/` | Solo datos: especies, movimientos, tipos, objetos, zonas, entrenadores, guion y fichas de aspecto |
+| (biblioteca) | `src/arte/` | La paleta y el material base compartido (`MaterialDiorama`, la receta de la skill `juego-3d`) |
 | `motor` | `src/motor/` | El bucle, `ctx`, el registro de subsistemas, el paso fijo, los eventos y los niveles de calidad |
 | `render` | `src/sistemas/render/` | El renderizador, la escena, las luces, las sombras y el postproceso |
 | `camara` | `src/sistemas/camara/` | La cámara de diorama y la de combate |
 | `entrada` | `src/sistemas/entrada/` | El joystick flotante, el teclado y el gesto de lanzar |
 | `mundo` | `src/sistemas/mundo/` | La malla de cada zona (terreno, hierba, agua y kit de piezas), y su carga y descarga |
-| `criaturas` | `src/sistemas/criaturas/` | El generador de criaturas por piezas y su animación procedural |
+| `criaturas` | `src/sistemas/criaturas/` | El generador de criaturas por piezas y su animación procedural. Se pide con `crear(aspecto)` y se anima con `accion(criatura, accion)` |
 | `personaje` | `src/sistemas/personaje/` | El jugador y los personajes generados, y la personalización |
 | `combate` | `src/sistemas/combate/` | La escena de combate: presenta los eventos del núcleo, con sus efectos |
 | `captura` | `src/sistemas/captura/` | El gesto, el vuelo del objeto y el resultado en pantalla |
 | `interfaz` | `src/sistemas/interfaz/` | La interfaz en DOM: menús, diálogos, marcador, tienda y equipo |
 | `partida` | `src/sistemas/partida/` | El estado del núcleo, los modos (explorar, combate, diálogo y menú) y el guardado automático |
 | `depuracion` | `src/sistemas/depuracion/` | El panel de ajustes (solo en desarrollo) y los ganchos de `window.__JUEGO__` |
-| `prueba` | `src/sistemas/prueba/` | **Temporal:** una isla de formas simples para comprobar el andamiaje. Se borra en `F05` |
+| `prueba` | `src/sistemas/prueba/` | **Temporal:** la vitrina de la prueba de arte (`F04`): una isla de diorama con las criaturas, sus vistas y sus botones. Se borra en `F05` |
 | `audio` | `src/sistemas/audio/` | El sonido generado por código. Llegará después |
 | `red` | `src/sistemas/red/` | Presencia, retos y cooperativo. Llegará en la fase online |
 
@@ -135,7 +140,8 @@ Los bots juegan con el estado, no con los píxeles (skill `juego-3d`).
 **Panel de depuración:** sale en desarrollo y, en la web publicada, añadiendo `?depurar` a la
 dirección. Muestra el backend, los FPS, los contadores y el selector de calidad. Sirve para que
 el autor mida en su iPhone, que es donde los FPS valen. Otros parámetros: `?calidad=bajo|medio|alto`
-y `?semilla=n`.
+y `?semilla=n`. Mientras exista la vitrina de F04: `?vista=combate|todas|explorar|tipos`,
+`?criatura=0..3`, `?gris` y `?lento=0.1` (cámara lenta, para revisar las animaciones).
 
 ## Guardado
 
@@ -164,10 +170,14 @@ y `?semilla=n`.
 | Parte | Llamadas de dibujo | Notas |
 | --- | --- | --- |
 | `mundo` | ≤ 80 | Hierba y kit instanciados, troceados por zona |
-| `criaturas` y `personaje` | ≤ 40 | Piezas fusionadas por criatura cuando no se animan por separado |
+| `criaturas` y `personaje` | ≤ 40 | Piezas fusionadas por hueso (ver abajo). Medido en F04: 36 para las 4 criaturas de la prueba |
 | `combate` y `captura` | ≤ 20 | Efectos instanciados |
 | Postproceso | 1 pasada | *Bloom* a media resolución. Sin desenfoque de profundidad en móvil |
 
 - **Sombras:** una luz con sombra, de 1024 en móvil y 2048 en escritorio.
+- **El pase de sombras cuenta:** cada malla que proyecta sombra es una llamada más en
+  `llamadas`. Una criatura es una malla por hueso (cuerpo, cabeza, ojos, copete, cola y dos
+  apéndices, como mucho 7); los ojos y la cara pintada no proyectan sombra. Coste medido: de 6 a
+  11 llamadas por criatura. Una prueba comprueba que 4 criaturas caben en 40.
 
 Ningún subsistema supera su parte sin documentarlo aquí.

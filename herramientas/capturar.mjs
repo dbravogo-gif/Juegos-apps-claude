@@ -6,6 +6,7 @@
 // Uso:
 //   node herramientas/capturar.mjs <carpeta|url> [--salida dir] [--pasos "..."]
 //        [--dispositivo iphone16 | iphone16-app | escritorio] [--ancho 390 --alto 844]
+//        [--consulta "?vista=todas&lento=0.1"]   parámetros de la dirección (también con carpeta)
 //
 // Dispositivos (el autor juega en un iPhone 16):
 //   iphone16       393 × 659: lo que se ve en Safari con sus barras
@@ -211,10 +212,14 @@ pagina.on('response', (r) => {
   if (r.status() >= 400) errores.push(`red: ${r.url()} respondió ${r.status()}`);
 });
 
+// Parámetros de la dirección, también cuando se sirve una carpeta.
+const consulta = opcion('consulta', '').replace(/^[?&]/, '');
+const destino = consulta ? `${url}${url.includes('?') ? '&' : '?'}${consulta}` : url;
+
 const capturas = [];
 const estados = [];
 try {
-  await pagina.goto(url, { waitUntil: 'load', timeout: 30000 });
+  await pagina.goto(destino, { waitUntil: 'load', timeout: 30000 });
   for (const paso of pasos) {
     const i = paso.indexOf(':');
     const tipo = i < 0 ? paso : paso.slice(0, i);
@@ -248,7 +253,7 @@ try {
 await navegador.close();
 servidor?.close();
 
-console.log(`URL: ${url}`);
+console.log(`URL: ${destino}`);
 console.log(`Pantalla: ${ancho} × ${alto}${dispositivo.tactil ? ', táctil' : ''}${nombreDispositivo ? ` (${nombreDispositivo})` : ''}`);
 console.log(`Capturas (${capturas.length}):`);
 for (const c of capturas) console.log(`  ${c}`);

@@ -74,6 +74,16 @@ describe('generador por piezas', () => {
     liberarCriatura(c);
   });
 
+  it('cuatro criaturas (un 2 contra 2) caben en 40 llamadas, contando el pase de sombras', () => {
+    // ARCHITECTURE.md: «criaturas» y «personaje» ≤ 40 llamadas en móvil. Cada malla es una llamada
+    // y otra más si proyecta sombra: el contador del render las suma (medido en F04).
+    const llamadas = ASPECTOS_PRUEBA.map(crearCriatura).reduce(
+      (s, c) => s + Object.values(c.huesos).reduce((t, m) => t + 1 + (m!.castShadow ? 1 : 0), 0),
+      0,
+    );
+    expect(llamadas).toBeLessThanOrEqual(40);
+  });
+
   it('es determinista: la misma ficha da la misma geometría', () => {
     for (const a of ASPECTOS_PRUEBA) {
       const x = crearCriatura(a);

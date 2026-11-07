@@ -23,9 +23,26 @@ No se improvisan colores.
 | Cielo melocotón | `#FFD8B0` | Niebla y cielo cerca del horizonte |
 | Agua turquesa | `#3CC8D8` | Mar, ríos y espuma |
 
-- **Criaturas:** el color principal de cada una es el de su tipo. Se parte de los 15 colores de
-  `leyendas-de-iberia/src/data/tipos.ts` y se ajusta su luminosidad en la prueba de arte, para
-  que encajen con el sol de tarde. Una vez ajustados, se apuntan aquí.
+- **Derivados** (en `src/arte/paleta.ts`, mezclas de los de arriba): hierba honda `#5BBF8A`,
+  madera tostada `#B98A5A`, piedra lavanda `#A9AFD6`, espuma `#E9FBF7`, crema `#FFF4E0`, ojo
+  `#2B2340` y el relleno del cielo `#C4C6F2`.
+- **Criaturas:** el color principal de cada una es el de su tipo. Se partió de los 15 colores de
+  `leyendas-de-iberia/src/data/tipos.ts` y se ajustó su luminosidad en la prueba de arte (F04),
+  en OKLCH, conservando el tono.
+  - **Criterio:** contraste de valor con la hierba menta (L ≈ 0,81), para que se lean en gris
+    al explorar. Los tipos de tono medio, a L 0,54–0,66; los claros, a 0,86–0,94.
+  - **Lo aprendido:** aclararlos «para el sol de tarde» (L 0,68–0,72) los fundía con la hierba
+    en gris. Los de Leyendas ya estaban casi en su sitio.
+  - Común, acero y oscuridad son casi grises: se distinguen poco entre sí. Decisión pendiente
+    del autor si molesta (por ejemplo, Común hacia un beige cálido).
+
+| Tipo | Color | Tipo | Color | Tipo | Color |
+| --- | --- | --- | --- | --- | --- |
+| Común | `#A9A39F` | Eléctrico | `#FFC83E` | Luz | `#FFEB9E` |
+| Agua | `#3A81F5` | Hielo | `#8BF1FF` | Oscuridad | `#504C47` |
+| Tierra | `#A96A17` | Infernal | `#E4312E` | Espectral | `#7C39ED` |
+| Planta | `#1FA74E` | Plasma | `#C933DF` | Acero | `#91A0B5` |
+| Aire | `#96DCFF` | Mental | `#ED499A` | Ancestral | `#BC5B18` |
 - **Interfaz:** fondos crema, texto oscuro cálido y el acento coral solo en la acción
   principal.
 
@@ -66,14 +83,28 @@ de arte, antes de construir contenido.
   - ataque,
   - recibir un golpe,
   - debilitarse.
+- **Hecho en F04** (`src/sistemas/criaturas/`):
+  - Kit: cuerpo (esfera, cápsula, pera o gota), cabeza, ojos con dos brillos fijos, boca
+    (sonrisa o colmillos), mejillas, tripa, orejas, cuernos, copete (hoja, llama, aleta o
+    cristal), aletas, brazos, patas, cola (punta, aleta u hoja) y cresta en el lomo. Patrones:
+    liso, manchas, rayas y degradado, pintados por fragmento (nítidos de cerca, sin texturas).
+  - Falta: alas. Se añaden cuando una especie las pida.
+  - Las piezas se fusionan por «hueso» (cuerpo, cabeza, ojos, copete, cola y dos apéndices):
+    como mucho 7 mallas por criatura.
+  - La evolución se deriva con `evolucionar(base, cambio)`: crece, gana angulosidad y piezas, y
+    hereda forma, colores y patrón. En la prueba, la forma 2 de Planta añade hojas a los lados,
+    una corona de tres hojas, cresta y brazos.
+  - Para revisar las animaciones: `?lento=0.1`.
 - **Plan B:** paquetes CC0 de monstruos animados, con la licencia comprobada y apuntada en
   `CREDITS.md`.
 - **Plan C:** criaturas ilustradas en 2D dentro del mundo 3D.
 
 ## Luz
 
-- **Luz principal:** un sol bajo de tarde, cálido (`#FFE2B8`), que entra de lado a unos 35°.
-  - El relleno es la luz azulada del cielo.
+- **Luz principal:** un sol bajo de tarde, cálido (`#FFE2B8`, intensidad 2,3), que entra de
+  lado a unos 35°.
+  - El relleno es la luz del cielo, azul lavanda (`#C4C6F2`, intensidad 1,5). Es lo único que
+    queda en la sombra, así que es lo que la tiñe.
   - Un contraluz cálido separa al jugador y a las criaturas del fondo.
 - **Mapeo tonal y exposición:**
   - Mapeo tonal neutro (`NeutralToneMapping`), que respeta los colores de la paleta mejor que el
@@ -90,6 +121,10 @@ de arte, antes de construir contenido.
 - Rebote del color del suelo.
 - Niebla hacia el melocotón del cielo.
 - Las criaturas tienen además un brillo especular suave, y los ojos un punto de luz fijo.
+- **Valores de la prueba de arte** (`src/arte/material.ts`):
+  - Mundo: sombra propia con `smoothstep(-0,02, 0,32)` sobre N·L, casi una banda.
+  - Criaturas: `smoothstep(-0,3, 0,55)`, especular 0,14 con dureza 14 y contraluz 0,25. Con
+    más especular y contraluz parecían de gelatina.
 
 ## Escala y cámara
 
