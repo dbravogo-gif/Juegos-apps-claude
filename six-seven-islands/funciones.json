@@ -12,9 +12,9 @@
     {
       "id": "F02-nucleo-portado",
       "tanda": 1,
-      "descripcion": "Copiar y adaptar el núcleo de Leyendas de Iberia: generador con semilla, los 15 tipos y su tabla, estadísticas con Valía y temperamento, daño, estados, pasivas, objetos y captura. Con el commit de origen apuntado en src/core/ORIGEN.md.",
+      "descripcion": "Núcleo con las reglas de Leyendas de Iberia y código propio (replanteada el 2026-11-07 por indicación del autor: solo reglas, nada de contenido): generador con semilla, los 15 tipos y su tabla, estadísticas con Valía y temperamento, daño, captura con la calidad del lanzamiento, progreso, evoluciones ramificadas y objetos fuera de combate. Los estados se aplican en el combate (F03). Las pasivas, más adelante. El origen de cada archivo va en src/core/ORIGEN.md.",
       "como_se_comprueba": "Pasan las pruebas portadas. Una prueba recorre la tabla de tipos y la compara con la de Leyendas. No hay Math.random, Date ni DOM en src/core (lo comprueba una prueba).",
-      "hecha": false
+      "hecha": true
     },
     {
       "id": "F03-combate-n-contra-n",

@@ -21,16 +21,18 @@ agentes. El patrón viene de *Claude of Duty* (Matt Shumer, MIT).
 - Sin motor de física: el mundo es una rejilla de casillas con alturas.
 - El sonido, más adelante, con Web Audio o ZzFX (MIT, menos de 1 KB).
 
-## El núcleo viene de Leyendas de Iberia
+## El núcleo: reglas de Leyendas de Iberia, código propio
 
-Se **copia y se adapta** `leyendas-de-iberia/src/core/`, que es obra del autor: generador con
-semilla, tipos, estadísticas con Valía, daño, combate, captura, IA, pasivas y objetos.
+De Leyendas de Iberia, obra del autor, solo se toman **reglas de juego**, nunca contenido
+(indicación del autor, 2026-11-07). El detalle, archivo por archivo, está en
+`src/core/ORIGEN.md`.
 
-- **No se importa entre proyectos.** Cada proyecto se construye y se publica por separado, y
-  Leyendas de Iberia no se toca.
-- El commit de origen se apunta en `src/core/ORIGEN.md`.
-- **El cambio principal: el combate pasa a N contra N.** Cada lado tiene 1 o 2 criaturas activas,
-  y cada acción lleva su objetivo. Hay que hacerlo antes de construir nada encima (R6).
+- **No se importa entre proyectos.** La única excepción es una prueba, que compara la tabla de
+  tipos con la de Leyendas.
+- **El combate es nuevo y N contra N:**
+  - cada lado tiene 1 o 2 huecos activos;
+  - cada acción lleva su objetivo;
+  - cada lado lo controla un jugador o la IA.
 
 ## Reglas duras
 

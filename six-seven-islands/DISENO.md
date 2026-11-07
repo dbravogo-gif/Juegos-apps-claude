@@ -103,9 +103,13 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
   (solo contra salvajes).
 - **El motor admite 1 contra 1 y 2 contra 2 desde el principio.** El cooperativo online lo
   necesitará.
-- **Reglas:** las del núcleo de Leyendas de Iberia, obra del autor:
-  - estadísticas con Valía (de 1 a 14) y temperamento,
-  - PP, estados alterados y pasivas.
+- **Reglas:** de Leyendas de Iberia, obra del autor, solo se toman reglas, nunca contenido
+  (indicación del autor, 2026-11-07):
+  - estadísticas con Valía (de 1 a 14) y temperamento;
+  - las fórmulas de daño y captura;
+  - PP, etapas, proteger y retroceso;
+  - los estados quemado, dormido, paralizado, envenenado e intoxicado.
+- **Las pasivas** quedan para más adelante, como contenido propio de este juego.
 - **Captura:**
   - Tras debilitar a la criatura, se lanza el objeto deslizando el dedo o arrastrando el ratón.
   - La puntería y el momento suben la probabilidad. La base depende de la Vida que le quede, de
