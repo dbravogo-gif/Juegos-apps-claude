@@ -11,13 +11,8 @@ Fase 3 de `/nuevo-proyecto`, el andamiaje: hecha, a falta de la revisión del `p
 - Entrevista (fase 1). Las decisiones están en `DISENO.md`.
 - Documentos (fase 2), aprobados por el autor el 2026-11-07: `DISENO.md`, `ARTE.md`,
   `ARCHITECTURE.md` y `funciones.json`.
-- `F01`, el andamiaje:
-  - el motor de subsistemas, con paso fijo, eventos y calidad;
-  - el render en WebGPU, con vuelta a WebGL2;
-  - una isla de prueba temporal;
-  - el panel de depuración (`?depurar`) y `window.__JUEGO__`;
-  - la web instalable y la publicación.
-
+- `F01`, el andamiaje: motor de subsistemas, render WebGPU o WebGL2, isla de prueba temporal,
+  panel `?depurar`, `window.__JUEGO__`, web instalable y publicación.
 - `F02`, el núcleo: reglas de Leyendas con código propio y sin su contenido
   (`src/core/ORIGEN.md`).
 - `F03`, el combate N contra N, de 1 contra 1 y de 2 contra 2:
