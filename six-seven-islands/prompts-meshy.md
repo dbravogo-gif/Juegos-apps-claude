@@ -27,8 +27,14 @@ las 200 comparten estilo y las imágenes sirven de retrato en los menús.
   más barata cuesta 10.
 - **Requisitos de la imagen para pasarla a 3D:** una sola criatura, entera, en vista de tres
   cuartos, centrada y sobre fondo blanco liso, sin sombra en el suelo y sin texto.
-- **Meshy:** «Image to 3D» con Meshy 6 Lite, sin «alto detalle». Si queda pobre, se repite solo
-  la épica con el modelo completo, para saber si Lite basta.
+- **Meshy:** «Image to 3D» con Meshy 6 Lite y **Smart Topology** (no «alto detalle» ni
+  «relieve», que son para figuras). Si queda pobre, se repite solo la épica con el modelo
+  completo, para saber si Lite basta.
+- **Polígonos:** unos 10.000 triángulos para la cría y el toro, y 15.000–20.000 para la
+  serpiente (larga y con piezas finas). En cuadriláteros, la mitad. Triángulos si se puede
+  elegir. Nunca menos de unos 8.000. Si hay duda, mejor de más: Claude reduce sin coste y no
+  puede añadir detalle. Presupuesto: 4 criaturas en un 2 contra 2 son ~40.000 de los 300.000 del
+  móvil.
 - **Si sale demasiado detallado**, cambia «moderate detail» por «low detail»; si sale pobre, por
   «rich but clean detail».
 
