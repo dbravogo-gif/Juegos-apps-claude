@@ -6,33 +6,32 @@ Actualizado: 2026-11-07. Solo el presente; el historial está en git. Máximo 40
 
 ## Foco
 
-Un juego 3D original para navegador, hecho desde cero: buenos gráficos, interesante y sin
-invertir dinero. Para móvil y PC: se controla con el dedo, o con ratón y teclado, nunca con
-mando. Los proyectos antiguos del repositorio no sirven de referencia.
+Un juego de criaturas en 3D, original y para jugar con amigos: explorar, capturar y combatir
+por turnos. Para móvil y PC: se controla con el dedo, o con ratón y teclado, nunca con mando. Sin
+invertir dinero. Concepto y decisiones en `investigacion/11-conceptos-criaturas.md`.
 
 ## Datos del autor
 
-- **iPhone 16 con Safari y siempre la última versión de iOS,** así que hay WebGPU.
-- **Plan Pro de Claude:** límites de uso justos, así que pasos pequeños y un modelo barato para
-  lo rutinario. Los flujos de trabajo están apagados por defecto (`/config`) y son pequeños.
-- **Unas 7 horas a la semana** para probar y decidir.
+- **iPhone 16 con Safari y siempre la última versión de iOS** (hay WebGPU).
+- **Plan Pro:** pasos pequeños y un modelo barato para lo rutinario.
+- **Unas 7 horas a la semana** para probar.
+- **Le encantan** Pokémon y los *hack and slash*. Quiere un juego que se parezca en mecánicas,
+  nunca en obra (R8), con mejor aspecto que Leyendas de Iberia.
 
-## Hecho
+## Decidido
 
-- **Investigación** (`investigacion/`), la **constitución** (`CONSTITUCION.md`) y el **método**,
-  fusionados en `main` (PR #41).
-- **3 conceptos propuestos** (Brasa, Rebaño y Faro): el autor los descartó. Quedan como
-  referencia en `investigacion/10-conceptos.md`.
+- **Concepto A**, por fases.
+- **Con amigos:** verlos en la misma zona, retarlos 1 contra 1 y unirse en combates
+  cooperativos 2 contra 2. El motor admite 2 contra 2 desde el principio.
 
-## Siguiente paso
+## Siguiente paso (en una sesión nueva)
 
-1. Encontrar el concepto a partir de los gustos del autor (paso 0 de `/nuevo-proyecto`):
-   - los juegos que le encantan y por qué,
-   - uno que no soporta,
-   - la sensación que busca,
-   - sus propias ideas.
-2. `/nuevo-proyecto` con el concepto elegido.
+1. `/nuevo-proyecto`: entrevista (nombre, tono, estilo visual, número de criaturas y tipos).
+2. Prueba de arte: 3 criaturas hechas por código en una escena estilizada. Si no convencen,
+   paquetes gratuitos o criaturas en 2D dentro del mundo 3D.
+3. Los documentos (diseño, arte, arquitectura, funciones) y la primera zona para un jugador.
 
 ## Pendiente del autor
 
-- Pensar en ideas o gustos para el juego, cuando quiera.
+- Más adelante, en la fase online, crear una cuenta gratuita en el servicio de tiempo real que
+  se elija.
