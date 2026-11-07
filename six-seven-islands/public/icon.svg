@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Icono original: una isla de diorama en el mar al atardecer, con una criatura coral. -->
+  <rect width="512" height="512" rx="112" fill="#FFD8B0"/>
+  <ellipse cx="256" cy="330" rx="210" ry="92" fill="#3CC8D8"/>
+  <ellipse cx="256" cy="318" rx="150" ry="58" fill="#E8B878"/>
+  <ellipse cx="256" cy="296" rx="150" ry="58" fill="#7ED6A5"/>
+  <path d="M190 292 l26 -88 l26 88 z" fill="#5DBB8A"/>
+  <path d="M300 286 l20 -66 l20 66 z" fill="#5DBB8A"/>
+  <circle cx="262" cy="280" r="30" fill="#FF6B6B"/>
+  <circle cx="252" cy="274" r="6" fill="#3B2A20"/>
+  <circle cx="274" cy="274" r="6" fill="#3B2A20"/>
+  <text x="256" y="150" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="800" font-size="104" fill="#3B2A20">6·7</text>
+</svg>

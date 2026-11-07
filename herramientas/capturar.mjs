@@ -27,7 +27,15 @@
 //   toque:<x>x<y>        toca en esas coordenadas CSS
 //   clic:<selector>      hace clic en el primer elemento que coincide con el selector CSS
 //   texto:<texto>        escribe ese texto
+//   estado               escribe lo que devuelve window.__JUEGO__.estado(), si el juego lo tiene
 // Sin --pasos: espera 1500 ms y hace una captura llamada «inicio».
+//
+// De cada captura se dan métricas de imagen, para la rúbrica visual (skill juego-3d):
+//   entropía de color   bits del histograma RGB a 4 bits por canal (0 a 12). Baja = plana o vacía
+//   densidad de bordes  % de píxeles con gradiente de luminancia (Sobel) marcado. Baja = sin forma
+//   contraste           desviación típica de la luminancia (0 a 0,5). Baja = deslavada
+// y, si el juego expone window.__JUEGO__.contadores(), los contadores del render en ese momento
+// (llamadas de dibujo, triángulos, geometrías, texturas), para el presupuesto de rendimiento.
 //
 // Playwright no es una dependencia del repositorio: en las sesiones de Claude en la nube ya
 // viene instalado. En otro equipo: `npm i -g playwright && npx playwright install chromium`.
@@ -146,6 +154,50 @@ const contexto = await navegador.newContext({
   serviceWorkers: 'block', // un service worker con caché vieja falsea la comprobación
 });
 const pagina = await contexto.newPage();
+// Una segunda página en blanco decodifica las capturas para medirlas, sin tocar la del juego.
+const analizador = await contexto.newPage();
+
+async function medir(png) {
+  return analizador.evaluate(async (b64) => {
+    const img = new Image();
+    img.src = `data:image/png;base64,${b64}`;
+    await img.decode();
+    const w = img.naturalWidth;
+    const h = img.naturalHeight;
+    const lienzo = new OffscreenCanvas(w, h);
+    const g = lienzo.getContext('2d');
+    g.drawImage(img, 0, 0);
+    const d = g.getImageData(0, 0, w, h).data;
+    const lum = new Float32Array(w * h);
+    const hist = new Uint32Array(4096);
+    let suma = 0;
+    for (let i = 0, p = 0; p < lum.length; i += 4, p++) {
+      const r = d[i], v = d[i + 1], a = d[i + 2];
+      lum[p] = (0.2126 * r + 0.7152 * v + 0.0722 * a) / 255;
+      suma += lum[p];
+      hist[((r >> 4) << 8) | ((v >> 4) << 4) | (a >> 4)]++;
+    }
+    let entropia = 0;
+    for (const n of hist) if (n) entropia -= (n / lum.length) * Math.log2(n / lum.length);
+    const media = suma / lum.length;
+    let varianza = 0;
+    for (const l of lum) varianza += (l - media) ** 2;
+    let bordes = 0;
+    for (let y = 1; y < h - 1; y++) {
+      for (let x = 1; x < w - 1; x++) {
+        const k = y * w + x;
+        const gx = lum[k - w + 1] + 2 * lum[k + 1] + lum[k + w + 1] - lum[k - w - 1] - 2 * lum[k - 1] - lum[k + w - 1];
+        const gy = lum[k + w - 1] + 2 * lum[k + w] + lum[k + w + 1] - lum[k - w - 1] - 2 * lum[k - w] - lum[k - w + 1];
+        if (gx * gx + gy * gy > 0.0625) bordes++;
+      }
+    }
+    return {
+      entropia: entropia.toFixed(1),
+      bordes: ((100 * bordes) / ((w - 2) * (h - 2))).toFixed(1),
+      contraste: Math.sqrt(varianza / lum.length).toFixed(2),
+    };
+  }, png.toString('base64'));
+}
 
 const errores = [];
 const avisos = [];
@@ -160,6 +212,7 @@ pagina.on('response', (r) => {
 });
 
 const capturas = [];
+const estados = [];
 try {
   await pagina.goto(url, { waitUntil: 'load', timeout: 30000 });
   for (const paso of pasos) {
@@ -169,14 +222,23 @@ try {
     if (tipo === 'espera') await pagina.waitForTimeout(Number(valor) || 500);
     else if (tipo === 'captura') {
       const archivo = join(salida, `${valor || `captura-${capturas.length + 1}`}.png`);
-      await pagina.screenshot({ path: archivo });
-      capturas.push(archivo);
+      const png = await pagina.screenshot({ path: archivo });
+      const m = await medir(png);
+      const contadores = await pagina.evaluate(() => window.__JUEGO__?.contadores?.() ?? null);
+      capturas.push(
+        `${archivo}\n    entropía ${m.entropia} bits · bordes ${m.bordes} % · contraste ${m.contraste}` +
+          (contadores ? `\n    render: ${JSON.stringify(contadores)}` : ''),
+      );
     } else if (tipo === 'tecla') await pagina.keyboard.press(valor);
     else if (tipo === 'toque') {
       const [x, y] = valor.split('x').map(Number);
       await pagina.touchscreen.tap(x, y);
     } else if (tipo === 'clic') await pagina.click(valor, { timeout: 5000 });
     else if (tipo === 'texto') await pagina.keyboard.type(valor);
+    else if (tipo === 'estado') {
+      const estado = await pagina.evaluate(() => window.__JUEGO__?.estado?.() ?? null);
+      estados.push(estado ? JSON.stringify(estado) : 'el juego no expone window.__JUEGO__.estado()');
+    }
     else errores.push(`paso desconocido: «${paso}»`);
   }
 } catch (e) {
@@ -190,6 +252,10 @@ console.log(`URL: ${url}`);
 console.log(`Pantalla: ${ancho} × ${alto}${dispositivo.tactil ? ', táctil' : ''}${nombreDispositivo ? ` (${nombreDispositivo})` : ''}`);
 console.log(`Capturas (${capturas.length}):`);
 for (const c of capturas) console.log(`  ${c}`);
+if (estados.length) {
+  console.log(`Estados (${estados.length}):`);
+  for (const e of estados) console.log(`  ${e}`);
+}
 if (avisos.length) {
   console.log(`Avisos (${avisos.length}):`);
   for (const a of avisos.slice(0, 20)) console.log(`  ${a}`);

@@ -3,6 +3,7 @@
 #   aerolinea/           en /aerolinea/:            https://dbravogo-gif.github.io/Juegos-apps-claude/aerolinea/
 #   leyendas-de-iberia/  en /leyendas-de-iberia/:   https://dbravogo-gif.github.io/Juegos-apps-claude/leyendas-de-iberia/
 #   gymlog-fase1/        en /gymlog-fase1/:         https://dbravogo-gif.github.io/Juegos-apps-claude/gymlog-fase1/
+#   six-seven-islands/   en /six-seven-islands/:    https://dbravogo-gif.github.io/Juegos-apps-claude/six-seven-islands/
 # Un repositorio solo tiene un sitio de Pages, así que se publican juntos. Antes pasan los
 # tests de todos: si fallan, no se despliega.
 name: Publicar juegos
@@ -10,7 +11,7 @@ name: Publicar juegos
 on:
   push:
     branches: [main]
-    paths: ['game/**', 'aerolinea/**', 'leyendas-de-iberia/**', 'gymlog-fase1/**', '.github/workflows/publicar-juego.yml']
+    paths: ['game/**', 'aerolinea/**', 'leyendas-de-iberia/**', 'gymlog-fase1/**', 'six-seven-islands/**', '.github/workflows/publicar-juego.yml']
   workflow_dispatch:
 
 permissions:
@@ -45,6 +46,12 @@ jobs:
           npm ci
           npm test
           npm run build
+      - name: Tests y build de Six-seven islands
+        working-directory: six-seven-islands
+        run: |
+          npm ci
+          npm test
+          npm run build
       - name: Montar el sitio
         run: |
           mkdir web
@@ -58,6 +65,8 @@ jobs:
           # App estática (sin build): se copia tal cual.
           mkdir web/gymlog-fase1
           cp -r gymlog-fase1/. web/gymlog-fase1/
+          mkdir web/six-seven-islands
+          cp -r six-seven-islands/dist/. web/six-seven-islands/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

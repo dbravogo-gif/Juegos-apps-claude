@@ -1,0 +1,62 @@
+/* Colores de ARTE.md. La interfaz va en DOM encima del lienzo. */
+:root {
+  --cielo: #ffd8b0;
+  --crema: #fff6ea;
+  --texto: #3b2a20;
+  --coral: #ff6b6b;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--cielo);
+  color: var(--texto);
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  overscroll-behavior: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#lienzo {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100dvh;
+  display: block;
+  touch-action: none;
+}
+
+.panel-depuracion {
+  position: fixed;
+  top: max(8px, env(safe-area-inset-top));
+  right: max(8px, env(safe-area-inset-right));
+  z-index: 10;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: rgb(59 42 32 / 0.78);
+  color: var(--crema);
+  font: 11px/1.35 ui-monospace, Menlo, monospace;
+}
+
+.panel-depuracion select {
+  font: inherit;
+  margin-bottom: 4px;
+}
+
+.panel-depuracion pre {
+  margin: 0;
+  font: inherit;
+  white-space: pre;
+}
+
+.fallo {
+  position: fixed;
+  inset: auto 16px 50% 16px;
+  padding: 16px;
+  border-radius: 12px;
+  background: var(--crema);
+  text-align: center;
+}
