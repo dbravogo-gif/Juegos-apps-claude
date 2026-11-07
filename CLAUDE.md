@@ -22,7 +22,12 @@ constitución. No toques un proyecto distinto del que te han pedido.
 
 - Código, comentarios y textos en español.
 - Móvil primero: todo se usa con el dedo en 390 × 844 y también con teclado.
+- **Plataformas: móvil y PC.** La jugabilidad se diseña para el tacto (uno o dos dedos) y
+  funciona también con ratón y teclado. **Nada que necesite un mando.** En iPhone no hay
+  vibración web: la respuesta no puede depender de ella.
 - **Dispositivo del autor: iPhone 16.**
+  - Se da por hecho que tiene siempre la última versión de iOS, así que hay WebGPU. Aun así se
+    mantiene la vuelta a WebGL2.
   - En Safari se ven 393 × 659 px, con las barras del navegador. Instalado como app, 393 × 852
     con zonas seguras. Densidad de píxeles 3: limitar el render a 2.
   - Aquí solo hay Chromium: lo propio de Safari (WebKit) se comprueba en su iPhone.
@@ -44,6 +49,12 @@ constitución. No toques un proyecto distinto del que te han pedido.
 
 `.github/workflows/publicar-juego.yml` publica al hacer push a `main` si pasan las pruebas. Un
 proyecto nuevo necesita su ruta en `paths`, sus pruebas y su copia en «Montar el sitio».
+
+**Autorización del autor (2026-11-07):**
+
+- Claude abre y fusiona en `main`, sin preguntar, los PR que no tocan carpetas de proyectos ni
+  `.github/`: método, documentación, investigación, `.claude/` y `herramientas/`.
+- Los que tocan juegos, apps o la publicación se le consultan antes de fusionar.
 
 ## Dónde está cada cosa
 

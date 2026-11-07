@@ -34,6 +34,8 @@ Es el resumen de lo investigado; las fuentes están en `investigacion/06-juego-3
     caídas de FPS.
 - **Estilo:** ver `referencias/estilo.md`. Paleta compartida, sombras de color, rebote falso,
   niebla y brillo solo en lo emisivo.
+- **Controles:** el tacto primero, y ratón y teclado en PC. Nunca un mando (ver
+  `referencias/sensacion.md`).
 - **Física:** solo si el juego la necesita, con Rapier.
 - **Sonido:** Web Audio o ZzFX (licencia MIT, menos de 1 KB). Claude no oye: lo valida el autor.
 - **Recursos:**
