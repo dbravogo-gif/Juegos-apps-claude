@@ -6,13 +6,13 @@ Actualizado: 2026-11-07. Solo el presente; el historial está en git. Máximo 40
 
 ## Foco
 
-Un juego 3D original para navegador, hecho desde cero: buenos gráficos, interesante, móvil
-primero y sin invertir dinero. Los proyectos antiguos del repositorio no sirven de referencia.
+Un juego 3D original para navegador, hecho desde cero: buenos gráficos, interesante y sin
+invertir dinero. Para móvil y PC: se controla con el dedo, o con ratón y teclado, nunca con
+mando. Los proyectos antiguos del repositorio no sirven de referencia.
 
 ## Datos del autor
 
-- **iPhone 16 con Safari.** Falta confirmar la versión de iOS: con iOS 26 o posterior, hay
-  WebGPU.
+- **iPhone 16 con Safari y siempre la última versión de iOS,** así que hay WebGPU.
 - **Plan Pro de Claude:** límites de uso justos, así que pasos pequeños y un modelo barato para
   lo rutinario. Los flujos de trabajo están apagados por defecto (`/config`) y son pequeños.
 - **Unas 7 horas a la semana** para probar y decidir.
@@ -36,4 +36,3 @@ primero y sin invertir dinero. Los proyectos antiguos del repositorio no sirven 
 ## Pendiente del autor
 
 - Pensar en ideas o gustos para el juego, cuando quiera.
-- Confirmar la versión de iOS (Ajustes → General → Información).

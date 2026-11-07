@@ -20,8 +20,8 @@ Cada capa depende de la anterior.
 1. **Latencia:** el verbo principal responde en menos de 100 ms. Si no, se arregla esto primero.
 2. **Curvas:** aceleración, frenada, *easing* (por ejemplo `easeOutBack`) y rebote.
 3. **Contacto, según el tamaño de la acción:**
-   - **Pequeña:** cambio visual en menos de 100 ms, un clic suave y `navigator.vibrate(10)`
-     donde exista.
+   - **Pequeña:** cambio visual en menos de 100 ms y un clic suave. `navigator.vibrate(10)` solo
+     como extra donde exista: en iPhone no hay vibración web.
    - **Mediana:** animación corta con rebote, el número o el icono salta, y un tono que sube.
    - **Grande:** un momento orquestado de 1 a 2 s, con pausa breve, partículas, sacudida y un
      sonido de varias notas. Solo uno por pantalla.
