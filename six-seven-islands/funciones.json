@@ -1,0 +1,174 @@
+{
+  "proyecto": "six-seven-islands",
+  "nota": "Ordenadas. Durante la construcción solo se cambia «hecha»; replantear una función se consulta al autor. Tanda 1: versión jugable mínima con formas simples. Tanda 2: escena representativa con el arte definitivo. Tanda 3: el contenido de la isla 1.",
+  "funciones": [
+    {
+      "id": "F01-andamiaje",
+      "tanda": 1,
+      "descripcion": "Proyecto Vite + TypeScript + Three.js con WebGPURenderer y vuelta a WebGL2, el motor de subsistemas (ctx, eventos, paso fijo), los niveles de calidad, el panel de depuración solo en desarrollo, los ganchos de window.__JUEGO__, la web instalable y la publicación en /six-seven-islands/.",
+      "como_se_comprueba": "npm test y npm run build en verde. capturar.mjs muestra una escena vacía sin errores en 390 × 844 y en escritorio. __JUEGO__.estado() devuelve el fotograma. El workflow incluye el proyecto.",
+      "hecha": false
+    },
+    {
+      "id": "F02-nucleo-portado",
+      "tanda": 1,
+      "descripcion": "Copiar y adaptar el núcleo de Leyendas de Iberia: generador con semilla, los 15 tipos y su tabla, estadísticas con Valía y temperamento, daño, estados, pasivas, objetos y captura. Con el commit de origen apuntado en src/core/ORIGEN.md.",
+      "como_se_comprueba": "Pasan las pruebas portadas. Una prueba recorre la tabla de tipos y la compara con la de Leyendas. No hay Math.random, Date ni DOM en src/core (lo comprueba una prueba).",
+      "hecha": false
+    },
+    {
+      "id": "F03-combate-n-contra-n",
+      "tanda": 1,
+      "descripcion": "El motor de combate admite 1 contra 1 y 2 contra 2: activos por lado, objetivo de cada acción, orden por velocidad y prioridad, cambios y fin del combate.",
+      "como_se_comprueba": "Pruebas de 1 contra 1 y de 2 contra 2. Dos bots juegan 1.000 combates con semillas distintas sin bloqueos. La misma semilla con las mismas decisiones da un resultado idéntico.",
+      "hecha": false
+    },
+    {
+      "id": "F04-prueba-de-arte",
+      "tanda": 1,
+      "descripcion": "Generador de criaturas por piezas y 3 criaturas de tipos distintos (una con su segunda forma) en una escena de diorama, con la luz y el material de ARTE.md. Es la decisión de riesgo: si no convence, plan B o C.",
+      "como_se_comprueba": "Capturas en 390 × 844 y en escritorio, en color y en escala de grises. El probador puntúa con la rúbrica visual. El autor las puntúa de 1 a 5 en su iPhone. Se apunta la decisión en DISENO.md.",
+      "hecha": false
+    },
+    {
+      "id": "F05-explorar",
+      "tanda": 1,
+      "descripcion": "Una zona con formas simples: suelo por casillas con alturas, hierba alta, colisiones, joystick flotante con el dedo, WASD y flechas, y la cámara de diorama siguiendo al jugador.",
+      "como_se_comprueba": "Un bot se mueve por la zona con __JUEGO__ sin atravesar paredes ni quedarse atascado. Capturas con el jugador en tres puntos. La entrada táctil se simula en capturar.mjs.",
+      "hecha": false
+    },
+    {
+      "id": "F06-encuentros",
+      "tanda": 1,
+      "descripcion": "Los pasos por la hierba alta generan encuentros por sorpresa, según la tabla de aparición de la zona y de forma determinista.",
+      "como_se_comprueba": "Pruebas del núcleo: con la misma semilla y el mismo recorrido salen los mismos encuentros, y la frecuencia media queda dentro del rango fijado. En partida, el bot entra en un combate al cruzar la hierba.",
+      "hecha": false
+    },
+    {
+      "id": "F07-combate-jugable",
+      "tanda": 1,
+      "descripcion": "La escena de combate con formas simples: 4 movimientos, cambiar, objeto y huir, con botones grandes. Presenta los eventos del núcleo y da experiencia y niveles al terminar.",
+      "como_se_comprueba": "Un bot gana un combate salvaje solo con la interfaz (clics en los botones). Capturas de cada menú en 390 × 844. Los botones miden al menos 44 px.",
+      "hecha": false
+    },
+    {
+      "id": "F08-captura-con-gesto",
+      "tanda": 1,
+      "descripcion": "Lanzar el objeto de captura deslizando el dedo o arrastrando el ratón. La puntería y el momento dan una calidad de 0 a 1, que entra en la fórmula del núcleo.",
+      "como_se_comprueba": "Prueba del núcleo: más calidad da más probabilidad, siempre dentro de los límites. El bot captura una criatura simulando el gesto, y la criatura entra en el equipo.",
+      "hecha": false
+    },
+    {
+      "id": "F09-derrota-y-refugio",
+      "tanda": 1,
+      "descripcion": "Si caen todas las criaturas, el jugador vuelve al último refugio con el equipo curado y pierde parte del dinero. El refugio cura gratis.",
+      "como_se_comprueba": "Un bot que no se defiende pierde y aparece en el refugio, con el equipo curado y el dinero descontado según DISENO.md. Dos bots, uno rápido y otro con 300 ms de retraso, obtienen resultados distintos.",
+      "hecha": false
+    },
+    {
+      "id": "F10-guardado",
+      "tanda": 1,
+      "descripcion": "Guardado automático continuo en localStorage, con versión de formato, navigator.storage.persist() y exportar e importar la partida como código.",
+      "como_se_comprueba": "Prueba: guardar y cargar da el mismo estado. En el navegador, recargar la página a mitad de una zona devuelve al mismo sitio. El código exportado se importa en una pestaña nueva.",
+      "hecha": false
+    },
+    {
+      "id": "F11-escena-representativa",
+      "tanda": 2,
+      "descripcion": "La ruta 1 con el arte definitivo: terreno de diorama con canto al mar, hierba instanciada con viento, agua estilizada, luz de tarde, sombras lavanda e islas al fondo, a la escala de cámara real.",
+      "como_se_comprueba": "El probador, en modo completo, da al menos 2,3 de media en la rúbrica visual y ninguna categoría por debajo de 2. Los contadores cumplen el presupuesto móvil. El autor la juega y la puntúa de 1 a 5.",
+      "hecha": false
+    },
+    {
+      "id": "F12-personaje",
+      "tanda": 2,
+      "descripcion": "Personaje del jugador generado por código, con personalización básica (cuerpo, piel, pelo y colores de la ropa) al empezar. Los personajes de la isla, con el mismo generador.",
+      "como_se_comprueba": "Capturas de 4 combinaciones distintas que se distinguen a la distancia de juego. La elección se guarda y se recupera.",
+      "hecha": false
+    },
+    {
+      "id": "F13-casi-perfectas-visibles",
+      "tanda": 2,
+      "descripcion": "Las criaturas salvajes con Valía 13 o 14 se ven caminando sobre la hierba con un destello sutil, y al tocarlas empieza el combate.",
+      "como_se_comprueba": "Prueba del núcleo: solo aparecen visibles las de Valía 13 o 14, con la frecuencia fijada en DISENO.md. Una captura muestra una visible en la ruta 1.",
+      "hecha": false
+    },
+    {
+      "id": "F14-tres-historias",
+      "tanda": 2,
+      "descripcion": "Al empezar se cuentan las historias de las tres iniciales y el jugador elige una. La elección fija la variante de la partida y le da su inicial.",
+      "como_se_comprueba": "Un bot recorre las tres elecciones y comprueba con __JUEGO__ la variante y la inicial. Capturas de la presentación en 390 × 844.",
+      "hecha": false
+    },
+    {
+      "id": "F15-dialogos-e-historia",
+      "tanda": 2,
+      "descripcion": "Sistema de guion por datos: diálogos, condiciones, variables de historia y cambios según la variante.",
+      "como_se_comprueba": "Pruebas de datos: todo guion referenciado existe y toda condición usa variables declaradas. Un bot completa la introducción.",
+      "hecha": false
+    },
+    {
+      "id": "F16-entrenadores",
+      "tanda": 2,
+      "descripcion": "Entrenadores rivales con línea de visión visible, una exclamación al verte, combate y recompensa en dinero.",
+      "como_se_comprueba": "Un bot cruza la línea de visión y entra en combate. Vencido, el entrenador no vuelve a retar. Captura de la línea de visión.",
+      "hecha": false
+    },
+    {
+      "id": "F17-tienda-y-objetos",
+      "tanda": 3,
+      "descripcion": "Dinero, tienda y objetos básicos de la isla 1. Economía ajustada: al principio no hay nada muy valioso.",
+      "como_se_comprueba": "Prueba de datos: ningún objeto de la isla 1 supera el valor fijado en DISENO.md. Un bot compra, usa un objeto y el dinero cuadra.",
+      "hecha": false
+    },
+    {
+      "id": "F18-recados",
+      "tanda": 3,
+      "descripcion": "Objetos clave y misiones de recado del tipo «lleva esto a esta persona».",
+      "como_se_comprueba": "Un bot completa un recado de principio a fin. El objeto clave no se puede vender ni usar en combate.",
+      "hecha": false
+    },
+    {
+      "id": "F19-combate-2-contra-2",
+      "tanda": 3,
+      "descripcion": "Una pareja de entrenadores que reta al jugador a un 2 contra 2. El jugador saca dos criaturas a la vez y elige el objetivo de cada acción.",
+      "como_se_comprueba": "Un bot gana y pierde un 2 contra 2 desde la interfaz. Capturas de la elección de objetivo en 390 × 844.",
+      "hecha": false
+    },
+    {
+      "id": "F20-evolucion",
+      "tanda": 3,
+      "descripcion": "Evolución por nivel, con su escena: la criatura cambia de forma, de estadísticas y de nombre.",
+      "como_se_comprueba": "Prueba del núcleo: la evolución sucede al nivel indicado en los datos. Captura del antes y el después.",
+      "hecha": false
+    },
+    {
+      "id": "F21-criaturas-isla-1",
+      "tanda": 3,
+      "descripcion": "Las fichas y los modelos de las criaturas de la isla 1: 11 especies y las 3 iniciales, hasta 23 criaturas, con nombres comprobados contra otras obras.",
+      "como_se_comprueba": "Pruebas de datos: estadísticas, movimientos y evoluciones válidas, y nombres únicos. Una hoja de capturas con todas. El autor la puntúa de 1 a 5.",
+      "hecha": false
+    },
+    {
+      "id": "F22-zonas-isla-1",
+      "tanda": 3,
+      "descripcion": "Las zonas de la isla 1: pueblo inicial, ruta 1, bosque, pueblo 2 con tienda y refugio, ruta costera, la sala del equipo enemigo de cada variante y la ciudad del campeón.",
+      "como_se_comprueba": "Un bot recorre todas las zonas en orden sin bloqueos. Contadores dentro del presupuesto en la peor vista de cada zona.",
+      "hecha": false
+    },
+    {
+      "id": "F23-campeon-isla-1",
+      "tanda": 3,
+      "descripcion": "El combate contra el campeón de la isla 1 y el final de la versión, con el gancho hacia la isla 2.",
+      "como_se_comprueba": "Un bot completa la isla 1 de principio a fin. El probador la juega en modo completo. El autor la juega y la puntúa con la lista de COMO-TRABAJAMOS.md.",
+      "hecha": false
+    },
+    {
+      "id": "F24-sonido",
+      "tanda": 3,
+      "descripcion": "Sonido generado por código: pasos, hierba, golpes, captura y música sencilla.",
+      "como_se_comprueba": "Sin errores de audio en la consola. El autor lo escucha y lo puntúa de 1 a 5.",
+      "hecha": false
+    }
+  ]
+}
