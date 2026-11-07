@@ -50,6 +50,12 @@ constitución. No toques un proyecto distinto del que te han pedido.
 `.github/workflows/publicar-juego.yml` publica al hacer push a `main` si pasan las pruebas. Un
 proyecto nuevo necesita su ruta en `paths`, sus pruebas y su copia en «Montar el sitio».
 
+**Autorización del autor (2026-11-07):**
+
+- Claude abre y fusiona en `main`, sin preguntar, los PR que no tocan carpetas de proyectos ni
+  `.github/`: método, documentación, investigación, `.claude/` y `herramientas/`.
+- Los que tocan juegos, apps o la publicación se le consultan antes de fusionar.
+
 ## Dónde está cada cosa
 
 - `CONSTITUCION.md`: los 12 mandamientos y los modos de gasto. Se cargan arriba.
