@@ -83,6 +83,39 @@ Detalle en `05-escaparate-opus-5-5.md`.
   - y un inventario concreto del mundo.
 - **«Un prompt» suele significar horas de trabajo autónomo.**
 
+## Ronda 3: juego 3D desde cero
+
+Detalle en `06-juego-3d.md`.
+
+- **Diseño antes que escena:** brief, contrato del bucle y plan de nivel, cada parte demostrada
+  con entrada real.
+- **Gráficos en orden:** forma, material, luz, efectos. El brillo no arregla los primitivos.
+  Se puntúan con una hoja de 10 categorías y anclas visuales.
+- **Sensación en orden:** latencia, curvas de respuesta, contacto, cámara y sonido.
+- **Verificación:** bot con entrada real, capturas en partida, métricas de imagen y contadores
+  de render.
+- **Esta sesión** solo tiene WebGL2 por software. Los FPS de aquí no sirven como prueba.
+
+## Candidatas a reglas
+
+Para el documento de reglas que se escribirá al terminar de estudiar.
+
+1. Nada se construye sin especificación escrita. En juegos: brief, contrato del bucle y plan de
+   nivel.
+2. Cada tarea tiene su comprobación con resultado sí o no. «Hecho» exige mostrar la prueba: el
+   comando y su salida, o la captura.
+3. Quien construye no se puntúa a sí mismo: revisa otro, con rúbrica y anclas.
+4. Primero lo jugable y feo; después la belleza. Primero una escena representativa completa;
+   después multiplicar el contenido.
+5. Gráficos en orden: forma, material, luz, efectos.
+6. Núcleo determinista: generador con semilla, sin `Math.random` ni reloj en la lógica.
+   Ganchos de prueba en `window`.
+7. El estado vive en archivos: progreso, decisiones y lo aprendido. Cada sesión empieza
+   leyéndolos y termina actualizándolos.
+8. Cada error repetido se convierte en una barrera (prueba, hook o regla) en la misma sesión.
+9. Nada de copiar marcas, personajes ni arte de otros: solo mecánicas.
+10. Cuando una regla no se vaya a seguir, se avisa *antes*, diciendo cuál y por qué.
+
 ## Huecos para las próximas rondas
 
 1. **Diseño de juegos con Claude:** qué hace divertido un juego (bucle, progresión, *juice*) y
