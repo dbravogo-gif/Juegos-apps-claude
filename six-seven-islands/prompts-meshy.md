@@ -27,14 +27,23 @@ las 200 comparten estilo y las imágenes sirven de retrato en los menús.
   más barata cuesta 10.
 - **Requisitos de la imagen para pasarla a 3D:** una sola criatura, entera, en vista de tres
   cuartos, centrada y sobre fondo blanco liso, sin sombra en el suelo y sin texto.
-- **Meshy:** «Image to 3D» con Meshy 6 Lite y **Smart Topology** (no «alto detalle» ni
-  «relieve», que son para figuras). Si queda pobre, se repite solo la épica con el modelo
-  completo, para saber si Lite basta.
-- **Polígonos:** unos 10.000 triángulos para la cría y el toro, y 15.000–20.000 para la
-  serpiente (larga y con piezas finas). En cuadriláteros, la mitad. Triángulos si se puede
-  elegir. Nunca menos de unos 8.000. Si hay duda, mejor de más: Claude reduce sin coste y no
-  puede añadir detalle. Presupuesto: 4 criaturas en un 2 contra 2 son ~40.000 de los 300.000 del
-  móvil.
+- **Meshy** (comprobado en su documentación, docs.meshy.ai, 2026-11-07):
+  1. «Model», pestaña «Image to 3D», tipo **Smart Topology** y modelo **Meshy T2** (5
+     créditos). Ni «High Detail» ni el modo de relieve, que es para grabado.
+  2. Sube la imagen (PNG o JPG, de 512 × 512 o más, fondo liso).
+  3. **Poly Count:** 10.000 para la cría y el toro; 15.000 (el máximo) para la serpiente.
+  4. **Texture:** si aparece en el panel, actívala (+10). Si no, al terminar, en la barra del
+     visor, «Texture» (AI Texturing, 10 créditos), con **Image Input** = la misma imagen,
+     **2K**, **Remove Lighting** activado y **Generate PBR Maps** desactivado (el juego solo usa
+     el color).
+  5. Ni pose ni Rigging ni Animate: la pose fija es solo para humanoides y la animación la
+     pone el juego. Smart Topology entrega la criatura separada en partes, y eso ayuda a
+     animar cola, cabeza y aletas por separado.
+  6. Descarga en **GLB**.
+- **Coste:** 5 + 10 = 15 créditos por criatura: las 3 cuestan 45 de los 100 gratis y quedan 55
+  para repetir. Si la forma sale tosca, se prueba «High Detail» con Meshy 6 Lite (10) y
+  después Remesh a 10.000, que es gratis.
+- **Licencia del plan gratis:** CC BY 4.0, uso comercial con atribución; el resultado es tuyo.
 - **Si sale demasiado detallado**, cambia «moderate detail» por «low detail»; si sale pobre, por
   «rich but clean detail».
 
