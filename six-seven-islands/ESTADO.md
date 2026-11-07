@@ -28,7 +28,6 @@ combate, todos corregidos y con su prueba (62 pruebas).
 
 ## Pendiente del autor
 
-- Confirmar la regla del empate (`DISENO.md`, decisiones abiertas).
 - Decidir si las pasivas entran en el juego, como contenido propio. Propuesta de Claude: sí,
   después de la isla 1.
 - Antes de la tanda 3, elegir los nombres que proponga Claude.
@@ -37,4 +36,5 @@ combate, todos corregidos y con su prueba (62 pruebas).
 
 - La isla de prueba no se ve entera en vertical: es provisional y la cámara de verdad llega en
   `F05`.
-- Sin comprobar en un iPhone: el arranque con WebGPU y la instalación en la pantalla de inicio.
+- Sin comprobar en el iPhone: la instalación en la pantalla de inicio. WebGPU sí: el autor vio
+  WebGPU a 60 FPS con `?depurar` (2026-11-07).

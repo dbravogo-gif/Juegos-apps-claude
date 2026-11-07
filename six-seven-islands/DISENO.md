@@ -232,14 +232,13 @@ turno. El servicio de tiempo real gratuito se elige al llegar a esa fase.
   2 horas de juego.
 - 2026-11-07 · Más largo que Leyendas de Iberia: más contenido entre campeones.
 - 2026-11-07 · Sesiones abiertas con guardado automático.
+- 2026-11-07 · Empate en combate (caen a la vez las últimas de los dos lados): gana el lado
+  cuya última criatura cayó después, como con el daño de retroceso en el género.
 
 ## Decisiones abiertas
 
 No se diseñan sin el autor. Cada una lleva la propuesta de Claude.
 
-- **Empate en combate:** si caen a la vez las últimas criaturas de los dos lados. Regla
-  provisional de Claude: gana el lado cuya última criatura cayó después, como con el daño de
-  retroceso en el género. Así el lado 0 ya no gana todos los empates.
 - **Nombres:** del equipo enemigo (uno por variante), de las islas, de los personajes y de las
   criaturas. Claude los propone antes de la tanda 3.
 - **Formato de la Liga.**
