@@ -16,6 +16,43 @@ género. Se prueba la IA 3D de Meshy con su plan gratis antes de decidir el mét
   vinilo»: es el aspecto que el autor descartó en la primera prueba.
 - En inglés, porque los generadores responden mejor así.
 
+## Camino recomendado: primero el dibujo, después el 3D
+
+Decidido con el autor (2026-11-07): se diseña cada criatura en 2D y Meshy solo la pasa a 3D
+(«Image to 3D»). Así el diseño se aprueba antes de gastar créditos de 3D, el 3D se ciñe a él,
+las 200 comparten estilo y las imágenes sirven de retrato en los menús.
+
+- **Imagen:** con un generador gratuito desde el móvil (Gemini, ChatGPT o Copilot; sus límites
+  no están comprobados). OpenArt, conectado a la sesión de Claude, tiene 5 créditos y la imagen
+  más barata cuesta 10.
+- **Requisitos de la imagen para pasarla a 3D:** una sola criatura, entera, en vista de tres
+  cuartos, centrada y sobre fondo blanco liso, sin sombra en el suelo y sin texto.
+- **Meshy:** «Image to 3D» con Meshy 6 Lite, sin «alto detalle». Si queda pobre, se repite solo
+  la épica con el modelo completo, para saber si Lite basta.
+- **Si sale demasiado detallado**, cambia «moderate detail» por «low detail»; si sale pobre, por
+  «rich but clean detail».
+
+### Prompts de imagen
+
+1. Épica (Aire):
+
+```text
+A legendary sky serpent dragon, long graceful serpentine body coiled in an elegant S-shape, floating, sky-blue body with a pearl-white belly, golden crescent horns, cloud-like fins along its spine, small feathered wing-fins behind the head, glowing aquamarine eyes, ribbon tail ending in a cloud tuft, majestic. Official-quality 2D character concept art in the clean anime style of modern monster-collecting RPGs: crisp clean linework, cel shading with soft highlights, flat saturated colors, moderate detail, big expressive eyes, appealing silhouette. Single creature, full body, three-quarter front view, centered, plain white background, no shadow, no text.
+```
+
+2. Débil (Agua):
+
+```text
+A small chubby baby water creature like a sea otter pup, round body standing on four short legs, big glossy eyes, a translucent water-droplet crest on its head, webbed paws, flat paddle tail, cobalt-blue body with cream muzzle and belly, light-blue wave markings on its back, cheerful. Official-quality 2D character concept art in the clean anime style of modern monster-collecting RPGs: crisp clean linework, cel shading with soft highlights, flat saturated colors, moderate detail, big expressive eyes, appealing silhouette. Single creature, full body, three-quarter front view, centered, plain white background, no shadow, no text.
+```
+
+3. Neutra (Común):
+
+```text
+A sturdy young bull creature, compact strong body standing on four legs, cream-beige body, fluffy chocolate-brown mane on neck and shoulders, two short ivory horns curving forward, single tufted tail, dark hooves, friendly determined eyes. Official-quality 2D character concept art in the clean anime style of modern monster-collecting RPGs: crisp clean linework, cel shading with soft highlights, flat saturated colors, moderate detail, big expressive eyes, appealing silhouette. Single creature, full body, three-quarter front view, centered, plain white background, no shadow, no text.
+```
+
+
 ## Las tres criaturas
 
 | # | Papel | Arquetipo | Tipo | Archivo |
@@ -24,19 +61,21 @@ género. Se prueba la IA 3D de Meshy con su plan gratis antes de decidir el mét
 | 2 | Débil, inicial | Cría de agua, tipo nutria | Agua | `cria-agua.glb` |
 | 3 | Neutra, media | Toro joven | Común | `toro.glb` |
 
-### 1. Épica: dragón serpiente del cielo (Aire)
+### Texto a 3D (alternativa, menos control)
+
+#### 1. Épica: dragón serpiente del cielo (Aire)
 
 ```text
 A legendary sky serpent dragon, long graceful serpentine body coiled in an elegant S-shape, floating, sky-blue body with a pearl-white belly, golden crescent horns, cloud-like fins along its spine, small feathered wing-fins behind the head, glowing aquamarine eyes, ribbon tail ending in a cloud tuft, majestic. Stylized 3D creature in the style of modern Japanese monster-collecting RPGs: clean smooth shapes, moderate detail, solid color areas with soft shading, no realistic fur or scale texture, big expressive anime eyes, appealing readable silhouette, single creature, full body, no base.
 ```
 
-### 2. Débil: cría de agua (Agua, inicial)
+#### 2. Débil: cría de agua (Agua, inicial)
 
 ```text
 A small chubby baby water creature like a sea otter pup, round body standing on four short legs, big glossy eyes, a translucent water-droplet crest on its head, webbed paws, flat paddle tail, cobalt-blue body with cream muzzle and belly, light-blue wave markings on its back, cheerful. Stylized 3D creature in the style of modern Japanese monster-collecting RPGs: clean smooth shapes, moderate detail, solid color areas with soft shading, no realistic fur or scale texture, big expressive anime eyes, appealing readable silhouette, single creature, full body, no base.
 ```
 
-### 3. Neutra: toro joven (Común)
+#### 3. Neutra: toro joven (Común)
 
 ```text
 A sturdy young bull creature, compact strong body standing on four legs, cream-beige body, fluffy chocolate-brown mane on neck and shoulders, two short ivory horns curving forward, single tufted tail, dark hooves, friendly determined eyes. Stylized 3D creature in the style of modern Japanese monster-collecting RPGs: clean smooth shapes, moderate detail, solid color areas with soft shading, no realistic fur or scale texture, big expressive anime eyes, appealing readable silhouette, single creature, full body, no base.
@@ -68,6 +107,10 @@ Pasos:
 Sube los `.glb` a GitHub, en la rama `claude/f04-creature-generator-art-test-54e7th`, carpeta
 `six-seven-islands/public/modelos/prueba-meshy/`, con los nombres de la tabla. Se puede desde
 el iPhone: en github.com, «Add file», «Upload files». El límite es de 25 MB por archivo.
+
+Sube también las imágenes 2D que hayas usado (`.png`), con el mismo nombre que su modelo
+(`serpiente-cielo.png`, etc.): Claude comprueba que el diseño es original y las guarda como
+retratos.
 
 Claude los coloca en la vitrina, con la misma luz que las criaturas del generador, para
 comparar en el iPhone.
