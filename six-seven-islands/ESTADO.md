@@ -28,8 +28,6 @@ combate, todos corregidos y con su prueba (62 pruebas).
 
 ## Pendiente del autor
 
-- Decidir si las pasivas entran en el juego, como contenido propio. Propuesta de Claude: sí,
-  después de la isla 1.
 - Antes de la tanda 3, elegir los nombres que proponga Claude.
 
 ## Defectos conocidos

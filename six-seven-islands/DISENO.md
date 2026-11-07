@@ -109,7 +109,8 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
   - las fórmulas de daño y captura;
   - PP, etapas, proteger y retroceso;
   - los estados quemado, dormido, paralizado, envenenado e intoxicado.
-- **Las pasivas** quedan para más adelante, como contenido propio de este juego.
+- **Pasivas:** una habilidad fija por especie que actúa sola en combate, sin gastar turno. Se
+  añaden después de la isla 1, diseñadas para este juego, cuando el combate básico esté probado.
 - **Captura:**
   - Tras debilitar a la criatura, se lanza el objeto deslizando el dedo o arrastrando el ratón.
   - La puntería y el momento suben la probabilidad. La base depende de la Vida que le quede, de
@@ -179,6 +180,7 @@ turno. El servicio de tiempo real gratuito se elige al llegar a esa fase.
 - Las salas exclusivas de cada variante.
 - El regalo de la inicial al rejugar: hace falta completar el juego.
 - La personalización amplia del personaje.
+- Las pasivas.
 
 ## Plan de nivel de la isla 1
 
@@ -232,6 +234,7 @@ turno. El servicio de tiempo real gratuito se elige al llegar a esa fase.
   2 horas de juego.
 - 2026-11-07 · Más largo que Leyendas de Iberia: más contenido entre campeones.
 - 2026-11-07 · Sesiones abiertas con guardado automático.
+- 2026-11-07 · Pasivas propias, una por especie, después de la isla 1.
 - 2026-11-07 · Empate en combate (caen a la vez las últimas de los dos lados): gana el lado
   cuya última criatura cayó después, como con el daño de retroceso en el género.
 
