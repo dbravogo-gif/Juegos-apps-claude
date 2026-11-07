@@ -39,4 +39,6 @@ vista de partida activa, y cada exceso deliberado se documenta.
 ## Medir
 
 - **Aquí:** contadores (`renderer.info`) y capturas. Los FPS no valen, porque no hay GPU.
+  - Con `WebGPURenderer`, `renderer.info` se pone a cero al empezar cada fotograma: los
+    contadores se copian justo después de `render()`.
 - **En el móvil del autor:** FPS y temperatura durante una partida de 5 minutos.

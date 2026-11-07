@@ -4,6 +4,18 @@ Errores ya pagados y la barrera que evita repetirlos (regla R6). Formato: fecha 
 causa · barrera. Lo más reciente va arriba. Si un error vuelve a pasar, su barrera sube de
 nivel: de nota a regla, y de regla a prueba o hook.
 
+- **2026-11-07 · Los contadores del render salían a 0 en el panel** (Three.js r187,
+  `WebGPURenderer`).
+  - Causa: el bucle interno de Three.js (`Animation.js`) pone `renderer.info` a cero al empezar
+    cada fotograma, antes que nuestro bucle.
+  - Barrera: los contadores se fotografían justo después de `render()`. Está en
+    `juego-3d/referencias/rendimiento.md` y en el render de `six-seven-islands`.
+- **2026-11-07 · `npm install` desde cero fallaba** con «Cannot read properties of null
+  (reading 'edgesOut')» (npm 10.9).
+  - Causa: un fallo de npm al resolver dependencias *peer* sin lockfile.
+  - Barrera: partir de un `package-lock.json` que ya funcione (el de otro proyecto con las
+    mismas herramientas) y usar `npm ci`.
+
 - **2026-11-07 · El autor descartó los 3 conceptos de juego propuestos.**
   - Causa: se propusieron solo a partir de criterios técnicos, sin preguntar antes qué juegos le
     gustan ni qué sensación busca.
