@@ -170,7 +170,7 @@ El prompt importa menos que eso. Todo lo demás de esta guía son formas de cons
 
 | Archivo | Para qué | Cómo se usa |
 | --- | --- | --- |
-| `CLAUDE.md` (raíz) | Mapa de proyectos, convenciones comunes y cómo publicar uno nuevo | Se carga solo; 40 líneas |
+| `CLAUDE.md` (raíz) | Mapa de proyectos, convenciones comunes y cómo publicar uno nuevo | Se carga solo; 35 líneas |
 | `herramientas/capturar.mjs` | Capturas en un móvil simulado y errores de consola o red | `node herramientas/capturar.mjs aerolinea` |
 | `.claude/agents/probador.md` | Revisión independiente como jugador, con notas y pruebas | «Pide al probador que revise el combate» |
 | `.claude/skills/nuevo-proyecto/` | De la idea a la primera versión publicada, con entrevista y lista de funciones | `/nuevo-proyecto` |
