@@ -7,6 +7,20 @@ disable-model-invocation: true
 Las fases van en orden. No pases a la siguiente sin cerrar la anterior. Al cerrar cada una,
 actualiza el `ESTADO.md` del proyecto y el de la raíz.
 
+## 0. Si aún no hay concepto: primero los gustos del autor
+
+Los conceptos propuestos sin conocer sus gustos se descartaron (ver `APRENDIDO.md`). Antes de
+proponer nada, pregunta:
+
+- 3 juegos que le encanten y qué le engancha de cada uno: la sensación, no el título.
+- Uno que no soporte y por qué.
+- Qué quiere sentir al jugar, y con quién: solo o con amigos.
+- Si tiene ideas propias, aunque sean a medias.
+
+Después propón 2 o 3 conceptos que salgan de esas respuestas, cada uno con el pitch, el verbo, la
+presión y el riesgo principal. Recomienda uno. Solo se toman mecánicas de sus juegos favoritos,
+nunca la obra (regla R8).
+
 ## 1. Entrevista
 
 Son decisiones del autor (regla R10). Usa la herramienta de preguntas, con opciones cerradas y

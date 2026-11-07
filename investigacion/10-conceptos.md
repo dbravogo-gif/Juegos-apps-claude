@@ -1,5 +1,9 @@
 # 10 · Tres conceptos para el juego 3D
 
+> **Decisión del autor (2026-11-07): ninguno de los tres.** Quedan como referencia. Se
+> propusieron sin preguntar antes por sus gustos; ver `APRENDIDO.md` y el paso 0 de
+> `/nuevo-proyecto`.
+
 Propuestos el 2026-11-07 con los 8 criterios de `07-arte-y-concepto.md`. Las restricciones de
 partida:
 

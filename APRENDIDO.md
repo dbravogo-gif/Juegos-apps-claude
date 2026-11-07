@@ -4,6 +4,11 @@ Errores ya pagados y la barrera que evita repetirlos (regla R6). Formato: fecha 
 causa · barrera. Lo más reciente va arriba. Si un error vuelve a pasar, su barrera sube de
 nivel: de nota a regla, y de regla a prueba o hook.
 
+- **2026-11-07 · El autor descartó los 3 conceptos de juego propuestos.**
+  - Causa: se propusieron solo a partir de criterios técnicos, sin preguntar antes qué juegos le
+    gustan ni qué sensación busca.
+  - Barrera: el paso 0 de `/nuevo-proyecto`. Primero sus gustos y sus ideas; después, conceptos
+    que partan de ellos.
 - **2026-11-07 · WebFetch falla en dominios nuevos** (Medium, dev.to, Slate, InfoQ, blogs
   personales).
   - Causa: la red de la sesión solo deja pasar algunos hosts.

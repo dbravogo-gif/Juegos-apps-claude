@@ -24,15 +24,21 @@ sirven de referencia.
 - **Investigación:** `investigacion/00-sintesis.md` y los archivos 01 a 09.
 - **Constitución** (`CONSTITUCION.md`) y **método:** la guía, las skills, el agente `probador` y
   el hook de pruebas.
-- **3 conceptos de juego** con su comparación: `investigacion/10-conceptos.md` (recomendado:
-  Brasa).
+- **Método fusionado en `main`** (PR #41).
+- **3 conceptos propuestos** (Brasa, Rebaño, Faro): el autor los ha descartado todos. Quedan como
+  referencia en `investigacion/10-conceptos.md`.
 
 ## Siguiente paso
 
-1. El autor elige un concepto, o pide otros.
-2. `/nuevo-proyecto` con el concepto elegido: entrevista, documentos y escena representativa.
+1. **Encontrar el concepto, empezando por los gustos del autor** (paso 0 de
+   `/nuevo-proyecto`):
+   - Juegos que le encantan y por qué.
+   - Uno que no soporta.
+   - La sensación que busca.
+   - Sus propias ideas.
+2. `/nuevo-proyecto` con el concepto elegido.
 
 ## Pendiente del autor
 
-- Fusionar en `main` el PR del método.
+- Pensar en ideas o gustos para el juego, cuando quiera.
 - Confirmar la versión de iOS (Ajustes → General → Información).
