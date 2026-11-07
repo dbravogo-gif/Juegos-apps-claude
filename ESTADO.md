@@ -30,7 +30,8 @@ invertir dinero. Concepto y decisiones en `investigacion/11-conceptos-criaturas.
 ## Siguiente paso
 
 1. Andamiaje, núcleo y combate 2 contra 2 hechos (`F01` a `F03`). De Leyendas, solo reglas.
-2. Prueba de arte del generador de criaturas (`F04`). Si no convence, plan B o C de `ARTE.md`.
+2. Prueba de arte (`F04`) hecha; el autor la juzga insuficiente. Falta elegir el método de arte
+   de las criaturas (`six-seven-islands/DISENO.md`, decisiones abiertas).
 
 ## Pendiente del autor
 

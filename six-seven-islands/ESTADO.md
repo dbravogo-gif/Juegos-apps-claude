@@ -4,8 +4,8 @@ Actualizado: 2026-11-07. Solo el presente; el historial está en git. Máximo 40
 
 ## Fase actual
 
-Fase 3 de `/nuevo-proyecto`, el andamiaje: cerrada. El `probador` encontró 8 fallos en el
-combate, todos corregidos y con su prueba (62 pruebas).
+Fase 3 de `/nuevo-proyecto`, el andamiaje: cerrada. Ahora, la prueba de arte (`F04`): hecha y
+sin aprobar.
 
 ## Hecho
 
@@ -16,25 +16,25 @@ combate, todos corregidos y con su prueba (62 pruebas).
   panel `?depurar`, `window.__JUEGO__`, web instalable y publicación.
 - `F02`, el núcleo: reglas de Leyendas con código propio y sin su contenido
   (`src/core/ORIGEN.md`).
-- `F03`, el combate N contra N, de 1 contra 1 y de 2 contra 2:
-  - es puro y determinista, y cada lado lo controla un jugador o la IA;
-  - 54 pruebas, entre ellas 1.000 combates de bots y la repetición idéntica con las mismas
-    decisiones.
+- `F03`, el combate N contra N (1 contra 1 y 2 contra 2), puro y determinista, con 1.000
+  combates de bots en las pruebas.
+- `F04`, la prueba de arte: generador por piezas, material compartido, animaciones y vitrina
+  (79 pruebas). **El autor lo juzga insuficiente** (2026-11-07): quiere criaturas mucho más
+  trabajadas. La decisión está abierta en `DISENO.md`.
 
 ## Siguiente
 
-1. `F04`, la prueba de arte del generador de criaturas, antes de invertir en contenido.
-2. Después, el bucle con formas simples: de `F05` a `F10`.
+1. Decidir el método de arte de las criaturas (`DISENO.md`, decisiones abiertas).
+2. Después, el bucle con formas simples: de `F05` a `F10`. No depende del arte.
 
 ## Pendiente del autor
 
 - Decidir si las pasivas entran en el juego, como contenido propio. Propuesta de Claude: sí,
   después de la isla 1.
 - Antes de la tanda 3, elegir los nombres que proponga Claude.
+- Elegir el método de arte de las criaturas (`DISENO.md`).
 
 ## Defectos conocidos
 
-- La isla de prueba no se ve entera en vertical: es provisional y la cámara de verdad llega en
-  `F05`.
 - Sin comprobar en el iPhone: la instalación en la pantalla de inicio. WebGPU sí: el autor vio
   WebGPU a 60 FPS con `?depurar` (2026-11-07).

@@ -243,6 +243,13 @@ No se diseñan sin el autor. Cada una lleva la propuesta de Claude.
   criaturas. Claude los propone antes de la tanda 3.
 - **Formato de la Liga.**
 - **Servicio de tiempo real** para la fase online.
+- **Método de arte de las criaturas (prueba F04).** El autor vio la primera versión del
+  generador por piezas (2026-11-07) y la juzga insuficiente: quiere criaturas «mucho más
+  curradas», al nivel de Pokémon. El estilo de `ARTE.md` («redondas y blandas», cuerpos de
+  revolución) se queda corto frente a lo que imagina. Opciones y datos en
+  `investigacion/12-arte-criaturas.md`. Propuesta de Claude: comparar en la misma vitrina una
+  criatura del generador esculpido (0 €) con 2 o 3 hechas con IA 3D en el plan gratis de
+  Meshy, y decidir en el iPhone del autor.
 
 ## Criterios de calidad
 

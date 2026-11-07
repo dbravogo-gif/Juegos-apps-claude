@@ -4,6 +4,14 @@ Errores ya pagados y la barrera que evita repetirlos (regla R6). Formato: fecha 
 causa · barrera. Lo más reciente va arriba. Si un error vuelve a pasar, su barrera sube de
 nivel: de nota a regla, y de regla a prueba o hook.
 
+- **2026-11-07 · La prueba de arte F04 cumplía `ARTE.md`, pero el autor quería otra cosa:**
+  criaturas mucho más trabajadas, al nivel de Pokémon, no «gotas» de vinilo.
+  - Causa: la guía describía el estilo con palabras («redondas y blandas») y se aprobó sin
+    imágenes de referencia del nivel de acabado que el autor tenía en mente.
+  - Barrera: antes de construir una prueba de arte, pedir al autor 2 o 3 imágenes (o nombres
+    concretos) del acabado que espera, y enseñarle un boceto rápido antes de construirlo
+    entero. Está en esta nota; si se repite, pasa a la skill `/nuevo-proyecto`.
+
 - **2026-11-07 · Las animaciones cortas no salían en las capturas** (prueba de arte de
   Six-seven islands): el destello del golpe parecía no funcionar.
   - Causa: aquí el render va a ~9 FPS por software y el motor limita el paso a 5 fotogramas
