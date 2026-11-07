@@ -111,6 +111,17 @@ Detalle en `07-arte-y-concepto.md`.
 - **Arte:** silueta, lenguaje de formas, prueba en grises y paleta limitada escrita.
 - **Concepto:** pitch en una frase, restricciones, un verbo con profundidad y presión real.
 
+## Ronda 5: reglas que se cumplen y contexto
+
+Detalle en `08-reglas-y-contexto.md`.
+
+- **CLAUDE.md es contexto, no una obligación.** Menos de 200 líneas, comprobable y sin
+  contradicciones.
+- **Lo que no admite excepción** se convierte en pruebas, hooks (`command`, `prompt` o
+  `agent`) o CI.
+- **Las reglas crecen por fallos observados.**
+- **Safari en iPhone** tiene WebGPU desde iOS 26, con vuelta a WebGL2.
+
 ## Candidatas a reglas
 
 Para el documento de reglas que se escribirá al terminar de estudiar.
