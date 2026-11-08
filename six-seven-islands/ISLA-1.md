@@ -45,21 +45,19 @@ Del sur al este rodeando las cumbres: 1 → 2 → 3 → 4 → 5.
 
 ### 3. Pueblo (valle del oeste)
 
-- **Decidido:** pequeño, con refugio, dos casas, tienda y el anciano.
-- **Propuesta:**
-  - Plaza con laureles y plataneras alrededor.
+- **Decidido:**
+  - Pequeño, con refugio, dos casas, tienda y el anciano.
   - El paso al bosque se cierra hasta hablar con el anciano: «tu criatura aún no te escucha;
     en el bosque os perderíais».
+- **Propuesta:** plaza con laureles y plataneras alrededor.
 
 ### 4. Bosque (norte)
 
 - **Decidido:**
   - La típica zona de bosque del inicio del género, con criaturas flojas.
   - Laurisilva con niebla.
-  - Pocas criaturas de Planta, o ninguna: es tipo de inicial y no debe regalarse pronto.
-  - Aquí va la pareja de entrenadores del 2 contra 2.
-- **Pendiente:** sus tipos dependen de la revisión de tipos (`DISENO.md`, decisiones abiertas).
-  Si entran Bicho y Veneno, el bosque es de Bicho y Aire, con alguna de Veneno.
+  - Criaturas de Bicho y Aire, con alguna de Veneno.
+  - Pocas de Planta, o ninguna: es tipo de inicial y no debe regalarse pronto.
 - **Propuesta:** un entrenador obligatorio a la salida.
 
 ### 5. Capital (costa este)
@@ -92,8 +90,7 @@ vigilan pruebas automáticas que recorren el mapa:
   anciano del pueblo te cuenta más de su historia y te ayuda a conectar con ella.
 - **Decidido:** desobedece en un 45 % de los turnos (el autor pidió del 40 al 50 %). Dura poco
   y tiene que notarse y molestar.
-- **Propuesta (ajustable):**
-  - El paso al bosque se cierra hasta hablar con el anciano.
+- **Decidido:** el paso al bosque se cierra hasta hablar con el anciano.
   - Cuando no obedece, la mitad de las veces usa otro de sus movimientos y la otra mitad se
     distrae y pierde el turno.
   - Sale un aviso: «No te hace caso…».
@@ -174,7 +171,7 @@ pantalla.
 **Decidido** (el autor aceptó la propuesta, 2026-11-08):
 
 - En la isla 1, los rivales solo hablan. Los combates contra ellos se colocan más adelante.
-- El 2 contra 2 es una pareja de entrenadores en el bosque, sin zona nueva.
+- El 2 contra 2 no va en esta isla: llegará más adelante.
 - Un recado pequeño en el pueblo.
 - La ruta costera se queda fuera.
 

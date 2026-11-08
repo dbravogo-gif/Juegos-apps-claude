@@ -274,7 +274,7 @@ export class Prueba implements Subsistema {
     });
     TIPOS.forEach((t, i) => {
       const c = this.sistema.crear(muestra(t.id));
-      c.raiz.position.set(-4.6 + (i % 5) * 1.25, 0, -1.1 + Math.floor(i / 5) * 1.25);
+      c.raiz.position.set(-4.6 + (i % 6) * 1.25, 0, -1.1 + Math.floor(i / 6) * 1.25);
       c.raiz.visible = false;
       ctx.escena.add(c.raiz);
       this.muestrario.push(c);
@@ -287,7 +287,7 @@ export class Prueba implements Subsistema {
     const tipos = this.vista === 'tipos';
     for (const c of this.muestrario) c.raiz.visible = tipos;
     for (const c of this.criaturas) c.raiz.visible = !tipos;
-    if (this.etiqueta) this.etiqueta.textContent = tipos ? 'Los 15 colores de tipo' : ETIQUETAS[this.elegida];
+    if (this.etiqueta) this.etiqueta.textContent = tipos ? 'Los 16 colores de tipo' : ETIQUETAS[this.elegida];
     for (const [v, b] of this.botonesVista) b.setAttribute('aria-pressed', String(v === this.vista));
     this.actualizarBotonDebil();
   }
@@ -319,8 +319,8 @@ export class Prueba implements Subsistema {
       dist = 22;
       elevacion = 50;
     } else {
-      this.objMira.set(-2.1, 0.35, 0.15);
-      dist = this.distanciaPara(ctx, 6.4, 3.6);
+      this.objMira.set(-1.5, 0.35, 0.15);
+      dist = this.distanciaPara(ctx, 7.8, 3.6);
       elevacion = 32;
     }
     const e = (elevacion * Math.PI) / 180;

@@ -73,8 +73,9 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
   - Líneas de 2 y de 3 formas, algunas ramificadas (una base que evoluciona de varias maneras),
     y especies sin evolución.
   - Las terceras formas, más fuertes, aparecen tarde.
-- **Tipos:** los 15 de Leyendas de Iberia con su tabla de eficacias, tal cual. Son obra del
-  autor (`leyendas-de-iberia/src/data/tipos.ts`).
+- **Tipos:** 16. Son los 15 de Leyendas de Iberia, obra del autor, con un cambio pequeño
+  decidido por él (2026-11-08): Plasma se funde en Eléctrico y entran Bicho y Veneno. La tabla
+  conserva las reglas de equilibrio de Leyendas (`src/data/tipos.ts`).
 - **Más largo que Leyendas de Iberia.** Entre un campeón y el siguiente hay mucho más: rutas,
   entrenadores, recados, tramos de historia y salas del equipo enemigo.
 - **Sesiones abiertas:** se juega todo el tiempo que se quiera, con guardado automático
@@ -239,12 +240,15 @@ una propuesta en `ISLA-1.md`.
   inicial con museo, zona de combates, pueblo con el anciano, bosque y capital con gimnasio y
   puerto. La inicial es rebelde hasta hablar con el anciano. La hierba y los entrenadores
   obligatorios se rigen por las reglas de Leyendas de Iberia, para todo el juego.
+- 2026-11-08 · Tipos: Plasma se funde en Eléctrico y entran Bicho y Veneno, con cambios
+  mínimos en la tabla de Leyendas (opción C del autor). 16 tipos.
 - 2026-11-08 · Isla 1, segunda vuelta con el autor:
   - el malpaís y las dunas también son zona de encuentros, y deben reconocerse como tal;
   - la inicial desobedece en un 45 % de los turnos hasta el anciano;
   - el gimnasio es de Luz;
   - los rivales solo hablan en la isla 1;
-  - el 2 contra 2 va en el bosque.
+  - el 2 contra 2 no va en esta isla; llegará más adelante;
+  - el paso al bosque se cierra hasta hablar con el anciano.
 - 2026-11-08 · Línea de la inicial de Planta: una bestia del bosque, ciervo-león con astas de
   madera, collar de hojas y cola de hoja. Tres formas: cría, joven (forma 2) y majestuosa
   (forma 3). Las imágenes de las formas 2 y 3 las generó el autor; prompts y notas en
@@ -258,10 +262,6 @@ No se diseñan sin el autor. Cada una lleva la propuesta de Claude.
   criaturas. Claude los propone antes de la tanda 3.
 - **Formato de la Liga.**
 - **Servicio de tiempo real** para la fase online.
-- **Revisión de los tipos** (la pide el autor, 2026-11-08): añadir Bicho y Veneno para los
-  bosques, y quizá fusionar tipos para que no haya demasiados para 200 criaturas. Opciones y
-  propuesta en el mensaje del 2026-11-08; la tabla nueva se escribe cuando el autor elija.
-  Mientras tanto vale la tabla de Leyendas.
 - **Método de arte de las criaturas (prueba F04).** El autor vio la primera versión del
   generador por piezas (2026-11-07) y la juzga insuficiente: quiere criaturas «mucho más
   curradas», al nivel de Pokémon. El estilo de `ARTE.md` («redondas y blandas», cuerpos de

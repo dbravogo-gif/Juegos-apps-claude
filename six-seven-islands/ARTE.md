@@ -41,8 +41,12 @@ No se improvisan colores.
 | Común | `#A9A39F` | Eléctrico | `#FFC83E` | Luz | `#FFEB9E` |
 | Agua | `#3A81F5` | Hielo | `#8BF1FF` | Oscuridad | `#504C47` |
 | Tierra | `#A96A17` | Infernal | `#E4312E` | Espectral | `#7C39ED` |
-| Planta | `#1FA74E` | Plasma | `#C933DF` | Acero | `#91A0B5` |
-| Aire | `#96DCFF` | Mental | `#ED499A` | Ancestral | `#BC5B18` |
+| Planta | `#1FA74E` | Mental | `#ED499A` | Acero | `#91A0B5` |
+| Aire | `#96DCFF` | Bicho | `#6AA706` | Ancestral | `#BC5B18` |
+| Veneno | `#A31DB0` | | | | |
+
+Plasma se fundió en Eléctrico y entraron Bicho y Veneno (2026-11-08), con el mismo criterio
+de luminosidad.
 - **Interfaz:** fondos crema, texto oscuro cálido y el acento coral solo en la acción
   principal.
 
