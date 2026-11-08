@@ -102,9 +102,9 @@ export class Sistema implements Subsistema {
 | `render` | `src/sistemas/render/` | El renderizador, la escena, las luces, las sombras y el postproceso |
 | `camara` | `src/sistemas/camara/` | La cámara de diorama y la de combate |
 | `entrada` | `src/sistemas/entrada/` | El teclado (no hay ratón): direcciones, confirmar y cancelar. Un toque corto cuenta como un paso |
-| `mundo` | `src/sistemas/mundo/` | La isla en 3D: terreno en terrazas por alturas, cumbres, mar, edificios y naturaleza de KayKit, decoración propia por trozos de 12 × 12, pasos cerrados y objetos. Lee «partida»; no la cambia |
+| `mundo` | `src/sistemas/mundo/` | La isla en 3D: terreno en terrazas por alturas, cumbres, mar, casas canarias y laureles por código (`canario.ts`), edificios y naturaleza de KayKit, decoración propia por trozos de 12 × 12, pasos cerrados y objetos. Publica `tapas`, la altura de lo más alto de cada casilla. Lee «partida»; no la cambia |
 | `criaturas` | `src/sistemas/criaturas/` | El generador de criaturas por piezas y su animación procedural. Se pide con `crear(aspecto)` y se anima con `accion(criatura, accion)` |
-| `personaje` | `src/sistemas/personaje/` | El jugador y los personajes (KayKit, animados), la silueta cuando algo tapa al jugador y las líneas de visión; más adelante, el generador y la personalización (F12) |
+| `personaje` | `src/sistemas/personaje/` | El jugador y los personajes (KayKit, animados), la silueta cuando algo tapa al jugador (con las `tapas` de «mundo») y las líneas de visión; más adelante, el generador y la personalización (F12) |
 | `combate` | `src/sistemas/combate/` | La escena de combate: presenta los eventos del núcleo, con sus efectos |
 | `captura` | `src/sistemas/captura/` | El gesto, el vuelo del objeto y el resultado en pantalla |
 | `interfaz` | `src/sistemas/interfaz/` | La interfaz en DOM: menús, diálogos, marcador, tienda y equipo |
@@ -194,10 +194,12 @@ y `?semilla=n`. Mientras exista la vitrina de F04: `?vista=combate|todas|explora
   11 llamadas por criatura. Una prueba comprueba que 4 criaturas del generador caben en 40,
   la mitad de su reparto.
 
-- **Medido en el pase de arte** (2026-11-08, todo el juego en calidad media):
-  - el peor punto es el claro del bosque, con 245 llamadas y 396.000 triángulos;
-  - el pueblo, 175 llamadas y 225.000 triángulos;
+- **Medido tras las casas canarias y los laureles** (2026-11-08, todo el juego en calidad media):
+  - el peor punto es el claro del bosque, con 240 llamadas y 569.000 triángulos;
+  - el pueblo, 200 llamadas y 368.000 triángulos;
   - la zona inicial, 78 llamadas y 63.000 triángulos.
+  - Los laureles (300 triángulos cada uno) son lo que más pesa: si hiciera falta, la primera
+    rebaja es una variante más ligera para el interior del bosque, que solo enseña la copa.
   - No está medido por subsistema.
 
 Ningún subsistema supera su parte sin documentarlo aquí.

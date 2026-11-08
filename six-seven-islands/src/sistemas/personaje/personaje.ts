@@ -1,7 +1,8 @@
 // Subsistema «personaje»: el jugador y los personajes de la isla, con los personajes de KayKit
 // (CC0) sin armas y animados (parado y andando). Dibuja al jugador donde dice «partida»,
-// interpolado entre pasos fijos. Si algo lo tapa, se ve su silueta. Los entrenadores enseñan su
-// línea de visión en el suelo (ARTE.md, «Peligros»). El generador de personajes llega en F12.
+// interpolado entre pasos fijos. Si algo lo tapa (según las alturas de «mundo»), se ve su
+// silueta. Los entrenadores enseñan su línea de visión en el suelo (ARTE.md, «Peligros»). El
+// generador de personajes llega en F12.
 
 import {
   AnimationMixer,
@@ -31,10 +32,16 @@ import { alturaSuelo } from '../../arte/escala';
 import { aMaterialDelJuego, cargarModelo, rutaModelo } from '../../arte/modelos';
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Partida } from '../partida/partida';
+import type { Mundo } from '../mundo/mundo';
 
 const GIRO: Record<Direccion, number> = { s: 0, e: Math.PI / 2, n: Math.PI, o: -Math.PI / 2 };
 /** Alto de las figuritas en el mundo (la casilla mide 1). */
 const ALTO = 1.25;
+/** Lo que sube la línea de vista hacia la cámara por cada casilla hacia el sur (cámara a 50°). */
+const PENDIENTE = Math.tan((50 * Math.PI) / 180);
+/** Altura del pecho del jugador: si algo la tapa, se enseña la silueta. */
+const PECHO = 0.7;
+const OPACIDAD_SILUETA = 0.7;
 
 interface Figura {
   raiz: Group;
@@ -52,11 +59,15 @@ function modeloDe(p: DefPersonaje): string {
 
 export class Personaje implements Subsistema {
   static readonly id = 'personaje';
-  static readonly deps: readonly string[] = ['render', 'partida'];
+  static readonly deps: readonly string[] = ['render', 'partida', 'mundo'];
 
   /** Posición del jugador en el mundo, para la cámara. */
   readonly posicion = new Vector3();
   private partida!: Partida;
+  private mundo!: Mundo;
+  private silueta!: MeshBasicNodeMaterial;
+  private mallasSilueta: Mesh[] = [];
+  private opacidad = 0;
   private jugador!: Figura;
   private figuras: Figura[] = [];
   private giro = 0;
@@ -66,6 +77,7 @@ export class Personaje implements Subsistema {
 
   async init(ctx: Ctx): Promise<void> {
     this.partida = ctx.get<Partida>('partida');
+    this.mundo = ctx.get<Mundo>('mundo');
     const m = this.partida.mundo;
     const modelos = new Map<string, GLTF>();
     const cargar = async (nombre: string) => {
@@ -73,10 +85,13 @@ export class Personaje implements Subsistema {
       return modelos.get(nombre)!;
     };
 
-    // Jugador, con su silueta: solo se dibuja la parte que algo tapa (prueba de profundidad al revés).
+    // Jugador, con su silueta: solo se dibuja la parte que algo tapa (prueba de profundidad al
+    // revés). Como también se pintaría sobre el propio jugador, solo se enciende cuando algo lo
+    // tapa. Es clara (espuma), para que se vea sobre tejados, copas y el tejado azul del museo.
     this.jugador = this.figura(await cargar('Rogue'), 'Rogue');
-    const silueta = new MeshBasicNodeMaterial({ color: '#3A6EA5', transparent: true, opacity: 0.5, depthWrite: false });
+    const silueta = new MeshBasicNodeMaterial({ color: COLORES.espuma, transparent: true, opacity: 0, depthWrite: false });
     silueta.depthFunc = GreaterDepth;
+    this.silueta = silueta;
     const cuerpo = new CapsuleGeometry(0.3, 0.45, 4, 10).translate(0, 0.52, 0);
     const cabeza = new SphereGeometry(0.33, 14, 10).translate(0, 1.0, 0);
     this.geometrias.push(cuerpo, cabeza);
@@ -84,7 +99,9 @@ export class Personaje implements Subsistema {
     for (const g of [cuerpo, cabeza]) {
       const malla = new Mesh(g, silueta);
       malla.renderOrder = 10;
+      malla.visible = false;
       this.jugador.raiz.add(malla);
+      this.mallasSilueta.push(malla);
     }
     ctx.escena.add(this.jugador.raiz);
     this.objetos.push(this.jugador.raiz);
@@ -174,6 +191,20 @@ export class Personaje implements Subsistema {
     while (objetivo - this.giro < -Math.PI) objetivo += Math.PI * 2;
     this.giro += (objetivo - this.giro) * Math.min(1, dt * 18 || 1);
     this.jugador.raiz.rotation.y = this.giro;
+
+    const tapado = this.tapado(Math.round(p.x), Math.round(p.y), this.posicion.y);
+    this.opacidad += ((tapado ? OPACIDAD_SILUETA : 0) - this.opacidad) * Math.min(1, dt * 10 || 1);
+    this.silueta.opacity = this.opacidad;
+    for (const malla of this.mallasSilueta) malla.visible = this.opacidad > 0.02;
+  }
+
+  /** ¿Tapa algo el pecho del jugador? Mira las casillas al sur, entre él y la cámara. */
+  private tapado(x: number, y: number, suelo: number): boolean {
+    for (let d = 1; d <= 6; d++) {
+      const alto = this.mundo.tapas.get(clave(x, y + d));
+      if (alto !== undefined && alto > suelo + PECHO + PENDIENTE * (d - 0.5)) return true;
+    }
+    return false;
   }
 
   actualizar(dt: number, ctx: Ctx): void {

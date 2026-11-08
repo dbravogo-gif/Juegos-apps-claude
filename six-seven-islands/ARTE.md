@@ -71,39 +71,43 @@ Cada una se distingue por la silueta a la distancia de juego.
   - Bloques biselados con los bordes redondeados, como piezas de juguete.
   - La isla tiene un canto visible que cae al mar: eso es lo que la hace diorama.
 
-## Modelos del mundo (KayKit)
+## Modelos del mundo
 
-Desde el pase de arte del 2026-11-08, casas, árboles, rocas, vallas, montañas, nubes y personas
-son modelos de KayKit (CC0, Kay Lousberg; `CREDITS.md`). Quaternius no se puede descargar desde
-la red de trabajo.
+Pase de arte del 2026-11-08. Lo canario se hace por código; lo genérico es de KayKit (CC0, Kay
+Lousberg; `CREDITS.md`), y lo orgánico y único irá con Meshy. Quaternius no se puede descargar
+desde la red de trabajo.
 
-- **Paquetes:** *Medieval Hexagon Pack* 1.0 (33 modelos en un solo `medieval.glb`) y
-  *Adventurers Character Pack* 1.0 (5 personajes, con 7 animaciones cada uno). Los prepara
-  `herramientas/recursos-kaykit.mjs`.
-- **Material:** se cambia el suyo por `MaterialDiorama` con su textura, para que tengan la
-  misma luz. La textura es una paleta de 8 × 4 degradados.
-  - La hierba de sus montañas usa el amarillo oliva, que con el sol cálido sale amarillo
-    chillón: se lleva al verde de la paleta al cargarlas.
-- **Qué hace de qué:**
-  - Casas: `building_home_A/B` de colores.
-  - Museo-fuerte: el cuartel azul.
-  - Refugio (donde se curan las criaturas): la taberna roja.
-  - Tienda: el mercado azul.
-  - Gimnasio: el castillo amarillo.
-  - Faro: la torre amarilla.
-- **Altos máximos:** de 3,1 a 3,6 casillas las casas y de 5,5 a 6,2 el faro y el gimnasio.
-  - Si algo tapa al jugador, se ve su silueta azul.
-- **Personas:**
+- **Por código** (`src/sistemas/mundo/canario.ts`), con color por vértice y un solo material.
+  - **Casa canaria rural** (zona inicial y pueblo): blanca, de una planta, con zócalo, cantería
+    en las esquinas, carpintería verde, azul o de madera, contraventanas, macetas con geranios
+    y tejado a dos aguas de teja curva, a veces con chimenea.
+  - **Casa de balcones** (capital): fachada de color, dos plantas y balcón de madera corrido con
+    tejadillo. La mitad lleva teja y la otra mitad azotea con pretil, cuarto y depósito.
+  - El refugio lleva puerta y letrero coral. La tienda, toldo a rayas azules y cajas.
+  - **Laurel:** tronco algo torcido y copa de cinco bolas abolladas en tres verdes. Los que
+    tienen un camino justo al norte son bajos, para no tapar la última fila del camino.
+  - **Malpaís:** lajas de lava negras, pardas y rojizas que cubren la casilla, con una punta y
+    algo de liquen.
+  - También son propias las plataneras, el drago, las matas de hierba alta, las flores y un
+    ligero cambio de tono por casilla.
+- **De KayKit:** el museo-fuerte (el cuartel azul), el gimnasio (el castillo amarillo), el faro
+  (la torre amarilla), las rocas, las vallas, las montañas, las nubes y las personas.
+  - *Medieval Hexagon Pack* 1.0, en un solo `medieval.glb`, y *Adventurers Character Pack* 1.0.
+    Los prepara `herramientas/recursos-kaykit.mjs`.
+  - Su material se cambia por `MaterialDiorama` con su textura, que es una paleta de 8 × 4
+    degradados. La hierba de sus montañas usa el amarillo oliva, que con el sol cálido sale
+    chillón: se lleva al verde al cargarlas.
+  - **Altos máximos:** 3,6 casillas el museo, 5,5 el faro y 6,2 el gimnasio.
+- **Personas** (KayKit), sin armas, a 1,25 casillas de alto y animadas (parado y andando):
   - jugador: `Rogue`;
   - anciano: `Mage`;
   - entrenador obligatorio: `Knight`;
   - entrenador opcional: `Barbarian`;
   - el resto: `Rogue_Hooded`.
-  - Todos sin armas, a 1,25 casillas de alto y animados (parado y andando).
-- **Propio, por código:** plataneras, el drago, matas de hierba alta, piedras del malpaís,
-  flores y un ligero cambio de tono por casilla.
-- **Límite conocido:** los árboles de KayKit son coníferas, y la laurisilva real es de hoja
-  ancha. Un laurel propio puede salir de Meshy.
+- **Silueta del jugador:** clara (espuma, al 70 %), y solo cuando algo le tapa el pecho. Lo
+  calcula «personaje» con la altura de lo que hay en las casillas al sur, entre él y la cámara.
+  Encendida siempre, se pintaba sobre el propio jugador.
+- **Con Meshy:** el drago, las tres estatuas del museo y las criaturas.
 
 ## Generador de criaturas
 

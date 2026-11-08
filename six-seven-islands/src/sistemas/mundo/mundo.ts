@@ -1,12 +1,12 @@
-// Subsistema «mundo»: la isla en 3D. Terreno en terrazas por alturas (propio), mar, y los modelos
-// de KayKit (CC0): edificios, árboles, rocas, vallas, montañas y nubes. Lo que KayKit no tiene
-// (plataneras, drago, matas de hierba alta y piedras del malpaís) sigue siendo procedural. Lee el
-// estado de «partida» para abrir los pasos y quitar los objetos recogidos; no lo cambia.
+// Subsistema «mundo»: la isla en 3D. Lo propio, por código: el terreno en terrazas por alturas,
+// las casas canarias, los laureles, el malpaís, las plataneras, el drago, la hierba alta y las
+// flores. De KayKit (CC0): museo, gimnasio, faro, rocas, vallas, montañas y nubes. Lee el estado
+// de «partida» para abrir los pasos y quitar los objetos recogidos; no lo cambia.
 
 import { BoxGeometry, InstancedMesh, Matrix4, Mesh, PlaneGeometry, Quaternion, SphereGeometry, Vector3, type BufferGeometry, type Material } from 'three/webgpu';
 import { attribute } from 'three/tsl';
 import type { GLTF } from 'three/addons/loaders/GLTFLoader.js';
-import { clave, deClave, edificios, type Casilla } from '../../core/mundo';
+import { TRANSITABLES, clave, deClave, edificios, type Casilla } from '../../core/mundo';
 import { MaterialDiorama, sueloY } from '../../arte/material';
 import { COLORES } from '../../arte/paleta';
 import { NIVEL_MAR, alturaSuelo } from '../../arte/escala';
@@ -14,30 +14,23 @@ import { cargarModelo, escalaPara, materialConTextura, nodo, pieza, rutaModelo, 
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Partida } from '../partida/partida';
 import { alturaCara, cumbres, decoracion, geometriaTerreno, pseudo } from './terreno';
+import { casaCanaria, laurel, type UsoCasa } from './canario';
 
 const OCULTA = new Matrix4().makeScale(0, 0, 0);
 const TROZO = 12;
 
-/** Qué modelo hace de cada edificio, por zona y en orden de aparición. */
-const MODELO_EDIFICIO: Record<string, Partial<Record<Casilla, string[]>>> = {
-  inicial: { C: ['building_home_A_red', 'building_home_A_red'], M: ['building_barracks_blue'] },
-  pueblo: { C: ['building_home_A_yellow', 'building_home_B_blue'], R: ['building_tavern_red'], S: ['building_market_blue'] },
-  capital: {
-    C: ['building_home_A_blue', 'building_home_B_red', 'building_home_A_green', 'building_home_B_yellow'],
-    R: ['building_tavern_red'],
-    G: ['building_castle_yellow'],
-    F: ['building_tower_A_yellow'],
-  },
+/** Los edificios que siguen siendo de KayKit. Casas, refugios y tiendas son casas canarias. */
+const MODELO_EDIFICIO: Partial<Record<Casilla, string>> = {
+  M: 'building_barracks_blue',
+  G: 'building_castle_yellow',
+  F: 'building_tower_A_yellow',
 };
-/** Alto máximo de cada edificio, para que no tape media pantalla con la cámara a 50°. */
-// Con la silueta del jugador ya no se le pierde de vista detrás de una casa.
-const ALTO_MAX: Partial<Record<Casilla, number>> = { C: 3.3, M: 3.6, R: 3.4, S: 3.1, G: 6.2, F: 5.5 };
-// Reparto del bosque por peso: sobre todo pinos sueltos (50 y 220 triángulos) y algunos grupos
-// (430 y 480) para dar volumen. Los grupos grandes (660 a 1.100) disparaban los triángulos.
-const ARBOLES = [
-  'tree_single_A', 'tree_single_A', 'tree_single_A', 'tree_single_A', 'tree_single_A',
-  'tree_single_B', 'tree_single_B', 'tree_single_B', 'trees_A_small', 'trees_A_medium',
-];
+/** Alto máximo de los de KayKit, para que no tapen media pantalla con la cámara a 50°. */
+const ALTO_MAX: Partial<Record<Casilla, number>> = { M: 3.6, G: 6.2, F: 5.5 };
+/** Uso de cada casa canaria según su casilla. */
+const USO_CASA: Partial<Record<Casilla, UsoCasa>> = { C: 'casa', R: 'refugio', S: 'tienda' };
+/** Variantes del laurel, instanciadas en el bosque y el pueblo. */
+const LAURELES = 4;
 const ROCAS = ['rock_single_A', 'rock_single_C', 'rock_single_E'];
 const MONTANAS = ['mountain_A_grass_trees', 'mountain_B_grass', 'mountain_C_grass_trees', 'hills_A_trees'];
 
@@ -60,6 +53,11 @@ export class Mundo implements Subsistema {
   static readonly id = 'mundo';
   static readonly deps: readonly string[] = ['render', 'partida'];
 
+  /**
+   * Altura (y del mundo) de lo más alto de cada casilla: suelo, cumbre, edificio o árbol. La usa
+   * «personaje» para saber si algo tapa al jugador y mostrar su silueta.
+   */
+  readonly tapas = new Map<number, number>();
   private partida!: Partida;
   private ctx!: Ctx;
   private geometrias: BufferGeometry[] = [];
@@ -68,6 +66,8 @@ export class Mundo implements Subsistema {
   private piezas = new Map<string, Pieza>();
   private kaykit!: GLTF;
   private materialKaykit!: MaterialDiorama;
+  /** Material de lo hecho por código con color por vértice: casas, laureles y malpaís. */
+  private materialColores!: MaterialDiorama;
   private pasos: { malla: InstancedMesh; zonas: string[]; matrices: Matrix4[] } | null = null;
   private objetos: { malla: InstancedMesh; ids: string[]; matrices: Matrix4[] } | null = null;
   private vistoCondiciones = -1;
@@ -79,14 +79,17 @@ export class Mundo implements Subsistema {
     const m = this.partida.mundo;
     sueloY.value = alturaSuelo(0);
     this.kaykit = await cargarModelo(rutaModelo('kaykit/medieval.glb'));
-    this.materialKaykit = materialConTextura(this.pieza('tree_single_A').mapa, { bordes: [-0.1, 0.4], especular: 0.06, rebote: 0.12 });
-    this.materiales.push(this.materialKaykit);
+    this.materialKaykit = materialConTextura(this.pieza(ROCAS[0]).mapa, { bordes: [-0.1, 0.4], especular: 0.06, rebote: 0.12 });
+    this.materialColores = new MaterialDiorama({ bordes: [-0.1, 0.4], especular: 0.06, rebote: 0.12 }, attribute('color', 'vec3'));
+    this.materiales.push(this.materialKaykit, this.materialColores);
 
     // Terreno y cumbres en una sola malla.
     const terreno = new MaterialDiorama({ bordes: [-0.02, 0.32], rebote: 0.1 }, attribute('color', 'vec3'));
     this.materiales.push(terreno);
     const cumbre = cumbres(m);
     this.anadir(new Mesh(geometriaTerreno(m, cumbre), terreno));
+    for (const [k, cm] of m.casillas) this.tapas.set(k, alturaCara(cm, undefined));
+    for (const [k, h] of cumbre) this.tapas.set(k, alturaSuelo(h));
 
     // El mar, bajo toda la isla y alrededor.
     const mar = new Mesh(new PlaneGeometry(m.ancho + 160, m.alto + 160), this.liso(COLORES.aguaTurquesa, { rebote: 0 }));
@@ -100,6 +103,10 @@ export class Mundo implements Subsistema {
     // Decoración procedural (lo que KayKit no tiene).
     const materialesDeco = new Map<string, MaterialDiorama>();
     for (const d of decoracion(m)) {
+      if (d.color === null) {
+        this.instanciar(d.geometria, this.materialColores, d.matrices);
+        continue;
+      }
       if (!materialesDeco.has(d.color)) materialesDeco.set(d.color, this.liso(d.color));
       this.instanciar(d.geometria, materialesDeco.get(d.color)!, d.matrices);
     }
@@ -130,6 +137,12 @@ export class Mundo implements Subsistema {
 
   private pieza(nombre: string): Pieza {
     let p = this.piezas.get(nombre);
+    if (!p && nombre.startsWith('laurel_')) {
+      const geometria = laurel(Number(nombre.slice(7)) * 131 + 7);
+      p = { geometria, mapa: null, caja: geometria.boundingBox!.clone() };
+      this.piezas.set(nombre, p);
+      this.geometrias.push(geometria);
+    }
     if (!p) {
       p = pieza(nodo(this.kaykit, nombre));
       if (MONTANAS.includes(nombre)) hierbaVerde(p.geometria);
@@ -143,6 +156,10 @@ export class Mundo implements Subsistema {
     const mat = new MaterialDiorama({ color, bordes: [-0.02, 0.32], rebote: 0.1, ...op });
     this.materiales.push(mat);
     return mat;
+  }
+
+  private subirTapa(k: number, y: number): void {
+    this.tapas.set(k, Math.max(this.tapas.get(k) ?? -Infinity, y));
   }
 
   private anadir(malla: Mesh, sombra = true): Mesh {
@@ -162,29 +179,40 @@ export class Mundo implements Subsistema {
     return im;
   }
 
-  /** Cada edificio, con su modelo a la medida del solar y apoyado en el suelo. */
+  /**
+   * Cada edificio a la medida de su solar y apoyado en el suelo. Las casas, refugios y tiendas
+   * son casas canarias: rurales en el campo y de balcones en la capital. Todas las puertas dan
+   * al sur, hacia la cámara (lo comprueba una prueba del mapa).
+   */
   private colocarEdificios(): void {
     const m = this.partida.mundo;
     for (const zona of m.zonas.keys()) {
-      const usados: Partial<Record<Casilla, number>> = {};
       for (const e of edificios(m, zona)) {
-        const lista = MODELO_EDIFICIO[zona]?.[e.tipo];
-        const i = usados[e.tipo] ?? 0;
-        usados[e.tipo] = i + 1;
-        const nombre = lista?.[i % lista.length];
-        if (!nombre) continue;
-        const p = this.pieza(nombre);
         const xs = e.casillas.map((k) => deClave(k)[0]);
         const ys = e.casillas.map((k) => deClave(k)[1]);
         const cx = (Math.min(...xs) + Math.max(...xs)) / 2;
         const cz = (Math.min(...ys) + Math.max(...ys)) / 2;
-        const s = escalaPara(p.caja, e.ancho * 1.05, e.fondo * 1.05, ALTO_MAX[e.tipo]);
         const base = alturaSuelo(m.casillas.get(e.casillas[0])!.h);
+        const uso = USO_CASA[e.tipo];
+        if (uso) {
+          const puerta = e.puertas.length ? deClave(e.puertas[0])[0] - cx : 0;
+          const geometria = casaCanaria({ estilo: zona === 'capital' ? 'balcones' : 'rural', uso, ancho: e.ancho, fondo: e.fondo, puerta, semilla: pseudo(e.casillas[0]) });
+          const casa = new Mesh(geometria, this.materialColores);
+          casa.position.set(cx, base, cz);
+          this.anadir(casa);
+          for (const k of e.casillas) this.subirTapa(k, base + geometria.boundingBox!.max.y);
+          continue;
+        }
+        const nombre = MODELO_EDIFICIO[e.tipo];
+        if (!nombre) continue;
+        const p = this.pieza(nombre);
+        const s = escalaPara(p.caja, e.ancho * 1.05, e.fondo * 1.05, ALTO_MAX[e.tipo]);
         const malla = new Mesh(p.geometria, this.materialKaykit);
         malla.scale.setScalar(s);
         const centro = p.caja.getCenter(new Vector3());
         malla.position.set(cx - centro.x * s, base - p.caja.min.y * s, cz - centro.z * s);
         this.anadir(malla);
+        for (const k of e.casillas) this.subirTapa(k, base + (p.caja.max.y - p.caja.min.y) * s);
       }
     }
   }
@@ -195,7 +223,8 @@ export class Mundo implements Subsistema {
     const grupos = new Map<string, { nombre: string; matrices: Matrix4[] }>();
     const q = new Quaternion();
     const eje = new Vector3(0, 1, 0);
-    const colocarEn = (nombre: string, x: number, y: number, altura: number, ancho: number, giro: number) => {
+    /** Coloca una pieza apoyada en `altura` y devuelve la altura de su punto más alto. */
+    const colocarEn = (nombre: string, x: number, y: number, altura: number, ancho: number, giro: number): number => {
       const p = this.pieza(nombre);
       const s = escalaPara(p.caja, ancho, ancho);
       const c = p.caja.getCenter(new Vector3());
@@ -206,6 +235,7 @@ export class Mundo implements Subsistema {
       const g = grupos.get(id) ?? { nombre, matrices: [] };
       g.matrices.push(mt);
       grupos.set(id, g);
+      return altura + (p.caja.max.y - p.caja.min.y) * s;
     };
 
     for (const [k, cm] of m.casillas) {
@@ -213,11 +243,13 @@ export class Mundo implements Subsistema {
       const r = pseudo(k);
       const suelo = alturaSuelo(cm.h);
       if (cm.c === 'T') {
-        // En el pueblo, laureles sueltos; en el bosque, grupos variados.
-        const nombre = cm.zona === 'bosque' ? ARBOLES[r % ARBOLES.length] : 'tree_single_B';
+        // Laureles de la laurisilva, más grandes en el bosque que en el pueblo. Los que tienen un
+        // camino justo al norte son bajos: si no, con la cámara a 50° tapan la última fila.
         const dx = ((r >>> 8) % 5) * 0.04 - 0.08;
         const dz = ((r >>> 12) % 5) * 0.04 - 0.08;
-        colocarEn(nombre, x + dx, y + dz, suelo, 1.15 + ((r >>> 4) & 3) * 0.1, ((r >>> 16) % 6) * (Math.PI / 3));
+        const orilla = TRANSITABLES.has(m.casillas.get(clave(x, y - 1))?.c ?? '');
+        const ancho = orilla ? 0.8 : (cm.zona === 'bosque' ? 1.3 : 1.1) + ((r >>> 4) & 3) * 0.1;
+        this.subirTapa(k, colocarEn(`laurel_${r % LAURELES}`, x + dx, y + dz, suelo, ancho, ((r >>> 16) % 6) * (Math.PI / 3)));
       } else if (cm.c === '#' && r % 3 === 0) {
         colocarEn(ROCAS[(r >>> 4) % ROCAS.length], x, y, alturaCara(cm, undefined), 0.7 + ((r >>> 8) & 3) * 0.12, (r % 7) * 0.9);
       } else if (cm.c === '=') {
@@ -236,7 +268,10 @@ export class Mundo implements Subsistema {
       const r = pseudo(i * 7919 + 13);
       colocarEn(i % 2 ? 'cloud_big' : 'cloud_small', -12 + (r % (m.ancho + 24)), -10 + ((r >>> 9) % (m.alto + 20)), 9 + (r % 4), 5 + (r % 3), 0);
     }
-    for (const g of grupos.values()) this.instanciar(this.pieza(g.nombre).geometria, this.materialKaykit, g.matrices);
+    for (const g of grupos.values()) {
+      const p = this.pieza(g.nombre);
+      this.instanciar(p.geometria, p.geometria.getAttribute('color') ? this.materialColores : this.materialKaykit, g.matrices);
+    }
   }
 
   /** Abre los pasos cumplidos y quita los objetos recogidos. Solo trabaja cuando algo cambia. */

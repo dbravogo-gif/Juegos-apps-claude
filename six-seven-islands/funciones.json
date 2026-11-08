@@ -34,8 +34,8 @@
       "id": "F05-explorar",
       "tanda": 1,
       "descripcion": "Una zona con formas simples: suelo por casillas con alturas, hierba alta, colisiones, WASD y flechas, y la cámara de diorama siguiendo al jugador.",
-      "como_se_comprueba": "Un bot se mueve por la zona con __JUEGO__ sin atravesar paredes ni quedarse atascado. Capturas con el jugador en tres puntos. La entrada táctil se simula en capturar.mjs.",
-      "hecha": false
+      "como_se_comprueba": "Un bot cruza la isla en las pruebas (tests/explorar.test.ts) y el probador la recorre con teclas reales, sin atravesar paredes ni quedarse atascado. Capturas de escritorio con el jugador en cada zona.",
+      "hecha": true
     },
     {
       "id": "F06-encuentros",

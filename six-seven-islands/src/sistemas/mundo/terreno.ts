@@ -8,7 +8,6 @@ import {
   Color,
   ConeGeometry,
   CylinderGeometry,
-  DodecahedronGeometry,
   Matrix4,
   Quaternion,
   SphereGeometry,
@@ -18,6 +17,7 @@ import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { clave, deClave, type Casilla, type CasillaMundo, type Mundo } from '../../core/mundo';
 import { FONDO, alturaSuelo } from '../../arte/escala';
 import { COLORES } from '../../arte/paleta';
+import { lajasMalpais } from './canario';
 
 /** Casillas que no son de ninguna zona pero quedan dentro de la isla: las cumbres del centro. */
 export function cumbres(m: Mundo): Map<number, number> {
@@ -152,14 +152,15 @@ export interface Decoracion {
   /** Trozo de la isla: cada trozo lleva sus propias mallas, para descartar las que no se ven. */
   zona: string;
   geometria: BufferGeometry;
-  color: string;
+  /** Color liso, o null si la geometría trae su color por vértice. */
+  color: string | null;
   matrices: Matrix4[];
 }
 
 /** Lado de los trozos de decoración, en casillas: lo que no se ve se descarta trozo a trozo. */
 const TROZO = 12;
 
-/** La decoración propia, por trozos: plataneras, el drago, matas de hierba alta, piedras del malpaís y flores. */
+/** La decoración propia, por trozos: plataneras, el drago, matas de hierba alta, lajas del malpaís y flores. */
 export function decoracion(m: Mundo): Decoracion[] {
   const res: Decoracion[] = [];
   const geos = geometriasDecoracion();
@@ -181,8 +182,11 @@ export function decoracion(m: Mundo): Decoracion[] {
   return res;
 }
 
+/** Variantes de las lajas del malpaís: cada casilla toma una, girada de 90 en 90 grados. */
+const LAJAS = 4;
+
 /** Geometrías de la decoración, compartidas por todas las zonas. */
-export function geometriasDecoracion() {
+export function geometriasDecoracion(): Record<NombreDeco, { geometria: BufferGeometry; color: string | null }> {
   const mata = mergeGeometries(
     [-0.25, 0, 0.25].map((a, i) => new ConeGeometry(0.08, 0.5, 4).translate(0, 0.25, 0).rotateZ(a).rotateY(i * 1.2).translate((i - 1) * 0.1, 0, 0)),
     false,
@@ -210,19 +214,26 @@ export function geometriasDecoracion() {
     plataneras: { geometria: platanera, color: '#8CC152' },
     drago: { geometria: dragoGeo, color: '#6E8F45' },
     matas: { geometria: mata, color: '#2F8A5B' },
-    piedras: { geometria: new DodecahedronGeometry(1, 0) as BufferGeometry, color: '#5E3A33' },
+    lajas0: { geometria: lajasMalpais(11), color: null },
+    lajas1: { geometria: lajasMalpais(23), color: null },
+    lajas2: { geometria: lajasMalpais(37), color: null },
+    lajas3: { geometria: lajasMalpais(41), color: null },
     floresBlancas: { geometria: flores, color: '#FFF8EC' },
     floresAmarillas: { geometria: flores, color: '#FFD84A' },
   };
 }
 
-function decoracionDe(m: Mundo, claves: number[]): Record<'plataneras' | 'drago' | 'matas' | 'piedras' | 'floresBlancas' | 'floresAmarillas', Matrix4[]> {
+type NombreDeco = 'plataneras' | 'drago' | 'matas' | 'lajas0' | 'lajas1' | 'lajas2' | 'lajas3' | 'floresBlancas' | 'floresAmarillas';
+
+function decoracionDe(m: Mundo, claves: number[]): Record<NombreDeco, Matrix4[]> {
   const floresBlancas: Matrix4[] = [];
   const floresAmarillas: Matrix4[] = [];
   const plataneras: Matrix4[] = [];
   const matas: Matrix4[] = [];
-  const piedras: Matrix4[] = [];
+  const lajas: Matrix4[][] = Array.from({ length: LAJAS }, () => []);
   const drago: Matrix4[] = [];
+  const giro = new Quaternion();
+  const arriba = new Vector3(0, 1, 0);
   const v = new Vector3();
   for (const k of claves) {
     const cm = m.casillas.get(k)!;
@@ -243,12 +254,11 @@ function decoracionDe(m: Mundo, claves: number[]): Record<'plataneras' | 'drago'
         matas.push(new Matrix4().compose(v.set(x + j(i * 5) * 2, base + 0.12, y + j(i * 5 + 3) * 2), IDENT, new Vector3(1, 0.8 + ((r >>> i) & 3) * 0.15, 1)));
       }
     } else if (cm.c === ';') {
-      for (let i = 0; i < 2; i++) {
-        const s = 0.18 + ((r >>> (i * 3)) & 7) / 40;
-        piedras.push(new Matrix4().compose(v.set(x + j(i * 6) * 2, base + 0.12 + s * 0.4, y + j(i * 6 + 2) * 2), IDENT, new Vector3(s, s * 0.7, s)));
-      }
+      giro.setFromAxisAngle(arriba, ((r >>> 4) % 4) * (Math.PI / 2));
+      lajas[r % LAJAS].push(new Matrix4().compose(v.set(x, base + SUBIDA_ENCUENTRO, y), giro, new Vector3(1, 0.9 + ((r >>> 7) & 3) * 0.1, 1)));
     }
   }
-  return { plataneras, drago, matas, piedras, floresBlancas, floresAmarillas };
+  const [lajas0, lajas1, lajas2, lajas3] = lajas;
+  return { plataneras, drago, matas, lajas0, lajas1, lajas2, lajas3, floresBlancas, floresAmarillas };
 }
 

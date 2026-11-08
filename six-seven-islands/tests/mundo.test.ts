@@ -197,6 +197,15 @@ describe('isla 1: recorrido y pasos cerrados', () => {
     for (const z of orden) for (const e of edificios(m, z)) if (e.tipo !== 'F') expect(e.puertas.length, `${e.tipo} de ${z}`).toBeGreaterThan(0);
   });
 
+  it('todas las puertas dan al sur, hacia la cámara (las fachadas se dibujan mirando al sur)', () => {
+    for (const z of orden) {
+      for (const e of edificios(m, z)) {
+        const fondo = Math.max(...e.casillas.map((k) => deClave(k)[1]));
+        for (const p of e.puertas) expect(deClave(p)[1], `${e.tipo} de ${z}`).toBe(fondo + 1);
+      }
+    }
+  });
+
   it('todos los objetos se alcanzan, y el del bosque no hace falta para cruzarlo', () => {
     const r = llega(TODAS_LAS_CONDICIONES);
     for (const [k, { objeto }] of m.objetos) expect(r.has(k), objeto.id).toBe(true);
