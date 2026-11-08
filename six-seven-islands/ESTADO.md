@@ -24,9 +24,9 @@ sin aprobar.
 
 ## Siguiente
 
-1. Prueba de Meshy con la línea de la inicial de Planta (`prompts-meshy.md`): falta la cría y
-   una captura con textura. Si convence, Pro un mes y Claude la pone en la vitrina.
-2. El bucle con formas simples (`F05` a `F10`) no depende del arte.
+1. Mundo de la isla 1 (`ISLA-1.md` y `isla-1-mapa.svg`): especificación esperando el sí del
+   autor. Después, el mapa en texto con sus pruebas y la maqueta jugable (F05).
+2. En paralelo, arte con Meshy (`prompts-meshy.md`): la cría de Planta y `planta-2.glb`.
 
 ## Pendiente del autor
 

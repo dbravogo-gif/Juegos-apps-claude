@@ -54,7 +54,7 @@
     {
       "id": "F08-captura-con-gesto",
       "tanda": 1,
-      "descripcion": "Lanzar el objeto de captura con el teclado: dos pulsaciones, puntería y momento (DISENO.md). La puntería y el momento dan una calidad de 0 a 1, que entra en la fórmula del núcleo.",
+      "descripcion": "Lanzar el objeto de captura con el teclado: una flecha que va y viene sobre una barra con zonas gris, blanca y verde pequeña; se para con Espacio. La zona multiplica la probabilidad base de la fórmula del núcleo y ninguna asegura la captura.",
       "como_se_comprueba": "Prueba del núcleo: más calidad da más probabilidad, siempre dentro de los límites. El bot captura una criatura simulando el gesto, y la criatura entra en el equipo.",
       "hecha": false
     },

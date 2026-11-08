@@ -31,8 +31,8 @@ Gasto pequeño aprobado por el autor para Meshy (arte de criaturas). Concepto y 
 ## Siguiente paso
 
 1. Andamiaje, núcleo y combate 2 contra 2 hechos (`F01` a `F03`). De Leyendas, solo reglas.
-2. Prueba de arte (`F04`) hecha; el autor la juzga insuficiente. Falta elegir el método de arte
-   de las criaturas (`six-seven-islands/DISENO.md`, decisiones abiertas).
+2. Arte de criaturas con Meshy (imagen 2D y después 3D). Mundo de la isla 1, inspirada en La
+   Palma: especificación en `six-seven-islands/ISLA-1.md`, esperando el sí del autor.
 
 ## Pendiente del autor
 

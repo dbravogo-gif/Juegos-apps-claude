@@ -51,7 +51,7 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
   - Para moverse, WASD o las flechas.
   - En los menús y en combate: flechas para elegir, Enter o Espacio para confirmar y Escape
     para volver. Atajos del 1 al 4 para los movimientos.
-  - Para capturar, dos pulsaciones (ver «Captura»).
+  - Para capturar, una pulsación en el momento justo (ver «Captura»).
 - **Objetivo visible:** la cámara de diorama deja ver el camino y, a lo lejos, el faro de la
   ciudad del campeón.
 - **Presión en el primer minuto:** el primer combate, contra el amigo rival nada más elegir la
@@ -113,11 +113,11 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
   - los estados quemado, dormido, paralizado, envenenado e intoxicado.
 - **Las pasivas** quedan para más adelante, como contenido propio de este juego.
 - **Captura:**
-  - Tras debilitar a la criatura, se lanza el objeto con dos pulsaciones de Espacio:
-    - la primera fija la puntería (una mira oscila sobre la criatura);
-    - la segunda fija el momento (un aro se cierra sobre ella).
-  - Cuanto más centrada y más justa, más calidad (de 0 a 1). Propuesta de Claude, pendiente del
-    autor.
+  - Tras debilitar a la criatura, se lanza el objeto parando con Espacio una flecha que va y
+    viene sobre una barra con tres zonas: gris, blanca y una verde pequeña (decidido por el
+    autor, 2026-11-08).
+  - Ninguna zona asegura la captura: solo la hacen más o menos fácil. Propuesta: gris ×1,
+    blanca ×1,5 y verde ×2,5 sobre la probabilidad base.
   - La puntería y el momento suben la probabilidad. La base depende de la Vida que le quede, de
     su estado y del objeto.
 
@@ -188,29 +188,18 @@ turno. El servicio de tiempo real gratuito se elige al llegar a esa fase.
 
 ## Plan de nivel de la isla 1
 
-- **Formato espacial:**
-  - La isla en miniatura se divide en zonas conectadas: el pueblo inicial, la ruta 1, el
-    bosque, el pueblo 2, la ruta costera, la base del equipo enemigo y la ciudad del campeón.
-  - La cámara, alta e inclinada, sigue al jugador. Se ve su zona y, al fondo, el mar con las
-    otras islas.
-- **Inicio:** la casa del jugador, las tres historias, la elección de la inicial y el primer
-  combate contra el amigo rival.
-- **Primera amenaza:** la hierba alta de la ruta 1.
-- **Primera recompensa:** la primera captura. Se reciben unos pocos objetos de captura.
-- **Puntos de referencia:** el faro de la ciudad del campeón, el volcán de la isla vecina y el
-  remolino donde estaba la séptima isla.
-- **Escalada:**
-  - Los niveles de las salvajes suben por zona.
-  - Los entrenadores llevan equipos cada vez más variados.
-  - Después vienen la sala del equipo enemigo, el combate 2 contra 2 y, por último, el campeón.
-- **Respiro:** los refugios, con curación gratuita, los pueblos y los recados.
-- **Aviso de peligro:**
-  - La hierba alta se distingue por su color y su altura.
-  - Los entrenadores muestran su línea de visión, y una exclamación cuando te ven.
-- **Piezas modulares:**
-  - Un terreno por casillas con alturas.
-  - Hierba instanciada.
-  - Casas, árboles y rocas hechos con un kit parametrizado.
+Está en `ISLA-1.md`, con el mapa en `isla-1-mapa.svg`: inspirada en La Palma, con la vuelta a la
+isla rodeando las cumbres. Son cinco zonas:
+
+1. Zona inicial con el museo y la elección.
+2. Zona de combates.
+3. Pueblo con el anciano.
+4. Bosque.
+5. Capital con el gimnasio y el puerto.
+
+Sustituye al plan anterior (2026-11-08). Lo que de aquel plan no está en la idea del autor (la
+base del equipo enemigo, el 2 contra 2, la ruta costera y los recados) está pendiente de él, con
+una propuesta en `ISLA-1.md`.
 
 ## Decisiones cerradas
 
@@ -244,6 +233,12 @@ turno. El servicio de tiempo real gratuito se elige al llegar a esa fase.
 - 2026-11-08 · **Solo para ordenador y solo con teclado.** El autor y sus amigos juegan en
   portátiles, algunos Mac, que mueven juegos ligeros. El ratón no hace falta y la cámara no
   gira. Pantalla apaisada, presupuesto de escritorio y desenfoque de miniatura real.
+- 2026-11-08 · Captura con una barra: flecha que va y viene y zonas gris, blanca y verde
+  pequeña. Ninguna asegura la captura.
+- 2026-11-08 · La isla 1, inspirada en La Palma, con la idea del autor (`ISLA-1.md`): zona
+  inicial con museo, zona de combates, pueblo con el anciano, bosque y capital con gimnasio y
+  puerto. La inicial es rebelde hasta hablar con el anciano. La hierba y los entrenadores
+  obligatorios se rigen por las reglas de Leyendas de Iberia, para todo el juego.
 - 2026-11-08 · Línea de la inicial de Planta: una bestia del bosque, ciervo-león con astas de
   madera, collar de hojas y cola de hoja. Tres formas: cría, joven (forma 2) y majestuosa
   (forma 3). Las imágenes de las formas 2 y 3 las generó el autor; prompts y notas en
