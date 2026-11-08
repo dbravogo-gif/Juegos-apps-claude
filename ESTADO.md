@@ -1,6 +1,6 @@
 # Estado
 
-Actualizado: 2026-11-07. Solo el presente; el historial está en git. Máximo 40 líneas.
+Actualizado: 2026-11-08. Solo el presente; el historial está en git. Máximo 40 líneas.
 
 **Modo de gasto vigente: normal.**
 
