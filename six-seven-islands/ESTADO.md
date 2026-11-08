@@ -24,8 +24,8 @@ sin aprobar.
 
 ## Siguiente
 
-1. Mundo de la isla 1 (`ISLA-1.md` y `isla-1-mapa.svg`): especificación esperando el sí del
-   autor. Después, el mapa en texto con sus pruebas y la maqueta jugable (F05).
+1. Mundo de la isla 1 (`ISLA-1.md`). Hecho: el mapa por casillas con sus reglas probadas (`node
+   herramientas/mapa.ts` lo dibuja). Siguiente: la maqueta jugable con formas simples (F05).
 2. En paralelo, arte con Meshy (`prompts-meshy.md`): la cría de Planta y `planta-2.glb`.
 
 ## Pendiente del autor

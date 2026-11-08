@@ -96,7 +96,7 @@
     {
       "id": "F14-tres-historias",
       "tanda": 2,
-      "descripcion": "Al empezar se cuentan las historias de las tres iniciales (Agua, Planta e Infernal) y el jugador elige una. La elección fija la variante de la partida, le da su inicial y decide la historia y los uniformes del equipo enemigo.",
+      "descripcion": "En el museo de la zona inicial, tres estatuas de las iniciales en su tercera forma cuentan la historia de cada leyenda y contra quién luchaba. El doctor da la inicial elegida. La elección fija la variante de la partida y abre el paso de la zona inicial.",
       "como_se_comprueba": "Un bot recorre las tres elecciones y comprueba con __JUEGO__ la variante y la inicial. Capturas de la presentación en escritorio (1280 × 800).",
       "hecha": false
     },
@@ -131,7 +131,7 @@
     {
       "id": "F19-combate-2-contra-2",
       "tanda": 3,
-      "descripcion": "Una pareja de entrenadores que reta al jugador a un 2 contra 2. El jugador saca dos criaturas a la vez y elige el objetivo de cada acción.",
+      "descripcion": "Una pareja de entrenadores que reta al jugador a un 2 contra 2. El jugador saca dos criaturas a la vez y elige el objetivo de cada acción. Fuera de la isla 1 por decisión del autor (2026-11-08): se coloca más adelante.",
       "como_se_comprueba": "Un bot gana y pierde un 2 contra 2 desde la interfaz. Capturas de la elección de objetivo en escritorio (1280 × 800).",
       "hecha": false
     },
@@ -152,7 +152,7 @@
     {
       "id": "F22-zonas-isla-1",
       "tanda": 3,
-      "descripcion": "Las zonas de la isla 1: pueblo inicial, ruta 1, bosque, pueblo 2 con tienda y refugio, ruta costera, la base del equipo enemigo (común, con los uniformes y los diálogos de cada variante) y la ciudad del campeón.",
+      "descripcion": "Las zonas de la isla 1, inspirada en La Palma (ISLA-1.md): zona inicial con museo, zona de combates, pueblo con el anciano, bosque de laurisilva y capital con gimnasio de Luz y puerto. Mapa por casillas en src/data/isla1.ts.",
       "como_se_comprueba": "Un bot recorre todas las zonas en orden sin bloqueos. Contadores dentro del presupuesto en la peor vista de cada zona.",
       "hecha": false
     },
@@ -168,6 +168,13 @@
       "tanda": 3,
       "descripcion": "Sonido generado por código: pasos, hierba, golpes, captura y música sencilla.",
       "como_se_comprueba": "Sin errores de audio en la consola. El autor lo escucha y lo puntúa de 1 a 5.",
+      "hecha": false
+    },
+    {
+      "id": "F25-inicial-rebelde",
+      "tanda": 3,
+      "descripcion": "La inicial desobedece en el 45 % de los turnos (usa otro movimiento o se distrae) hasta que el anciano del pueblo cuenta su historia; desde entonces obedece. Lo decide el generador del combate, así que es reproducible. El paso al bosque se abre al hablar con él.",
+      "como_se_comprueba": "Pruebas del núcleo: proporción de desobediencia cercana al 45 % en miles de turnos con semilla, 0 % tras el anciano y el mismo resultado con la misma semilla. Un bot no entra en el bosque sin hablar con el anciano.",
       "hecha": false
     }
   ]

@@ -17,6 +17,8 @@ Vitest.
 - `npm test`
 - `npm run build`
 - `node ../herramientas/capturar.mjs <carpeta o url> --dispositivo escritorio --pasos "..."`
+- `node herramientas/mapa.ts`: dibuja el mapa por casillas de la isla (`isla-1-casillas.svg`)
+  para revisar el diseño de nivel.
 
 ## Reglas propias
 

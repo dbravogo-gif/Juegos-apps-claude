@@ -181,6 +181,9 @@ Cada paso deja algo jugable y con pruebas.
 
 1. **El mapa de la isla en texto**, con las pruebas de las reglas: hierba obligatoria,
    entrenadores ineludibles, pasos cerrados y que todo se conecta.
+   - **Hecho (2026-11-08):** `src/data/isla1.ts`, la lógica en `src/core/mundo.ts` y 23 pruebas
+     en `tests/mundo.test.ts`.
+   - Dibujo para revisar: `node herramientas/mapa.ts` escribe `isla-1-casillas.svg`.
 2. **Maqueta jugable con formas simples (F05):** recorrer la isla entera con el teclado, con
    colisiones, la cámara de diorama, el cambio de zona y los pasos cerrados.
 3. **Interiores y diálogos (F15):** museo, estatuas, elección de la inicial (F14) y anciano.
