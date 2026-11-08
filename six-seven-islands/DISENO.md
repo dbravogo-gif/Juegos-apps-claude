@@ -17,7 +17,7 @@ Entrevista del 2026-11-07. Se queda en el qué y el porqué; el cómo está en `
 - **Verbo principal:** capturar y combatir por turnos.
 - **Verbos secundarios:** explorar, formar equipo, evolucionar y, online, intercambiar.
 - **Cada 5 a 30 segundos, el jugador:** anda por la isla, cruza hierba alta, le salta un
-  encuentro, elige un movimiento o lanza la captura con el dedo.
+  encuentro, elige un movimiento o lanza la captura con el ratón.
 - **Cada 1 a 5 minutos, cambia:** acaba un combate (experiencia, nivel, una captura), aparece un
   entrenador, se abre una zona, se cumple un recado o evoluciona una criatura.
 - **Cómo pierde, aprende y lo vuelve a intentar:**
@@ -47,9 +47,9 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
 **Cómo se demuestra cada parte en el juego:**
 
 - **Entrada real:**
-  - Para moverse, un joystick flotante con el dedo, o WASD y las flechas.
+  - Para moverse, WASD o las flechas.
   - En combate, botones grandes.
-  - Para capturar, deslizar el dedo o arrastrar el ratón.
+  - Para capturar, arrastrar el ratón.
 - **Objetivo visible:** la cámara de diorama deja ver el camino y, a lo lejos, el faro de la
   ciudad del campeón.
 - **Presión en el primer minuto:** el primer combate, contra el amigo rival nada más elegir la
@@ -76,7 +76,7 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
 - **Más largo que Leyendas de Iberia.** Entre un campeón y el siguiente hay mucho más: rutas,
   entrenadores, recados, tramos de historia y salas del equipo enemigo.
 - **Sesiones abiertas:** se juega todo el tiempo que se quiera, con guardado automático
-  continuo. Safari puede cerrar la pestaña en cualquier momento.
+  continuo. El navegador puede cerrarse en cualquier momento.
 
 ### Las tres historias
 
@@ -111,7 +111,7 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
   - los estados quemado, dormido, paralizado, envenenado e intoxicado.
 - **Las pasivas** quedan para más adelante, como contenido propio de este juego.
 - **Captura:**
-  - Tras debilitar a la criatura, se lanza el objeto deslizando el dedo o arrastrando el ratón.
+  - Tras debilitar a la criatura, se lanza el objeto arrastrando el ratón.
   - La puntería y el momento suben la probabilidad. La base depende de la Vida que le quede, de
     su estado y del objeto.
 
@@ -217,7 +217,8 @@ turno. El servicio de tiempo real gratuito se elige al llegar a esa fase.
   sin evolución.
 - 2026-11-07 · Los 15 tipos y la tabla de Leyendas de Iberia.
 - 2026-11-07 · Combate por turnos clásico. El motor admite 2 contra 2.
-- 2026-11-07 · Captura: lanzar deslizando el dedo o arrastrando el ratón.
+- 2026-11-07 · Captura: lanzar arrastrando el ratón (con el dedo, hasta que se decidió que el
+  juego es solo para ordenador).
 - 2026-11-07 · Derrota: vuelta al refugio, con el 10 % menos de dinero.
 - 2026-11-07 · Equipo de 6 criaturas.
 - 2026-11-07 · Encuentros por sorpresa en la hierba. Las únicas que se ven aparecen en 1 de
@@ -234,6 +235,9 @@ turno. El servicio de tiempo real gratuito se elige al llegar a esa fase.
 - 2026-11-07 · Sesiones abiertas con guardado automático.
 - 2026-11-07 · Empate en combate (caen a la vez las últimas de los dos lados): gana el lado
   cuya última criatura cayó después, como con el daño de retroceso en el género.
+- 2026-11-08 · **Solo para ordenador, con ratón y teclado.** El autor y sus amigos juegan en
+  PC. Pantalla apaisada, presupuesto de escritorio y desenfoque de miniatura real. Se deja de
+  diseñar para el tacto y el móvil.
 - 2026-11-08 · Línea de la inicial de Planta: una bestia del bosque, ciervo-león con astas de
   madera, collar de hojas y cola de hoja. Tres formas: cría, joven (forma 2) y majestuosa
   (forma 3). Las imágenes de las formas 2 y 3 las generó el autor; prompts y notas en
@@ -253,7 +257,7 @@ No se diseñan sin el autor. Cada una lleva la propuesta de Claude.
   revolución) se queda corto frente a lo que imagina. Opciones y datos en
   `investigacion/12-arte-criaturas.md`. Propuesta de Claude: comparar en la misma vitrina una
   criatura del generador esculpido (0 €) con 2 o 3 hechas con IA 3D en el plan gratis de
-  Meshy, y decidir en el iPhone del autor.
+  Meshy, y decidir en el ordenador del autor.
   - Revisión del `probador` (2026-11-07): media de la rúbrica 1,5 sobre 3 (no premium).
     Recomienda seguir con el generador; el riesgo que ve es la variedad entre 200 (misma cara,
     tripa y patas; «anguloso» no cambia el cuerpo). Condición: una hoja de 10 a 12 criaturas
@@ -271,7 +275,7 @@ No se diseñan sin el autor. Cada una lleva la propuesta de Claude.
 - **Jugabilidad:** funciona, se entiende y se siente bien. La puntúa el agente `probador`.
 - **Visual:** la rúbrica de la skill `juego-3d`. Premium: ninguna categoría por debajo de 2 y
   media de al menos 2,3.
-- **Rendimiento:** el presupuesto de la skill `juego-3d`, medido con contadores y en el móvil
-  del autor.
+- **Rendimiento:** el presupuesto de la skill `juego-3d`, medido con contadores y en el ordenador
+  del autor y de sus amigos.
 - **Online:** un combate repetido con la misma semilla y las mismas decisiones da exactamente el
   mismo resultado. Lo comprueba una prueba.

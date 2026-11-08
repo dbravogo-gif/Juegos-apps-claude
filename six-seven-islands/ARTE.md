@@ -131,14 +131,13 @@ de arte, antes de construir contenido.
 - **Explorar:**
   - Cámara alta, a unos 50°, con un campo de visión estrecho (unos 30°). Ángulo alto con lente
     larga: así se ve una miniatura.
-  - El jugador mide alrededor del 9 % del alto de la pantalla, unos 60 px en 393 × 659.
+  - El jugador mide alrededor del 9 % del alto de la pantalla, unos 70 px en 1280 × 800
+    (pantalla apaisada; el juego es solo para ordenador).
 - **Combate:** cámara más cerca, sobre el mismo terreno. Las criaturas ocupan entre un tercio y
   la mitad del alto.
-- **Efecto *tilt-shift*:**
-  - En escritorio, desenfoque de profundidad real arriba y abajo.
-  - En móvil, el presupuesto no lo permite (`referencias/rendimiento.md` de la skill
-    `juego-3d`). Se simula con niebla por distancia y un degradado de color en los bordes, que
-    cuesta casi nada.
+- **Efecto *tilt-shift*:** desenfoque de profundidad real arriba y abajo. En la calidad baja,
+  para ordenadores flojos, se simula con niebla por distancia y un degradado de color en los
+  bordes, que cuesta casi nada.
 - **Qué detalle se ve a esa distancia:**
   - Explorando, solo siluetas y grandes manchas de color.
   - Las caras y los patrones de las criaturas solo cuentan en combate.

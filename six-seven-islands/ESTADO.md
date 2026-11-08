@@ -37,4 +37,4 @@ sin aprobar.
 
 ## Defectos conocidos
 
-- Sin comprobar en el iPhone: la instalación como app. WebGPU sí: 60 FPS (2026-11-07).
+- Solo ordenador desde 2026-11-08: falta medir los FPS en los PC del autor y sus amigos.

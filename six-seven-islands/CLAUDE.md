@@ -16,8 +16,17 @@ Vitest.
 
 - `npm test`
 - `npm run build`
-- `node ../herramientas/capturar.mjs <carpeta o url> --pasos "..."`
+- `node ../herramientas/capturar.mjs <carpeta o url> --dispositivo escritorio --pasos "..."`
 
 ## Reglas propias
 
-Las que surjan de errores observados (regla R6), cada una con la fecha y el porqué.
+Las que surjan de errores observados (regla R6) o de decisiones del autor, cada una con la fecha
+y el porqué.
+
+- **2026-11-08 · Solo para ordenador, con ratón y teclado.** Lo decide el autor: él y sus
+  amigos juegan en PC. Dentro de esta carpeta manda sobre la convención «móvil primero» de la
+  raíz:
+  - pantalla apaisada;
+  - nada de diseño táctil ni vertical;
+  - capturas con `--dispositivo escritorio`.
+  - Sigue sin hacer falta un mando.

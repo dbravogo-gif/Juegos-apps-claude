@@ -6,7 +6,7 @@
       "id": "F01-andamiaje",
       "tanda": 1,
       "descripcion": "Proyecto Vite + TypeScript + Three.js con WebGPURenderer y vuelta a WebGL2, el motor de subsistemas (ctx, eventos, paso fijo), los niveles de calidad, el panel de depuración solo en desarrollo, los ganchos de window.__JUEGO__, la web instalable y la publicación en /six-seven-islands/.",
-      "como_se_comprueba": "npm test y npm run build en verde. capturar.mjs muestra una escena vacía sin errores en 390 × 844 y en escritorio. __JUEGO__.estado() devuelve el fotograma. El workflow incluye el proyecto.",
+      "como_se_comprueba": "npm test y npm run build en verde. capturar.mjs muestra una escena vacía sin errores en 390 × 844 y en escritorio (antes de decidir solo ordenador). __JUEGO__.estado() devuelve el fotograma. El workflow incluye el proyecto.",
       "hecha": true
     },
     {
@@ -27,13 +27,13 @@
       "id": "F04-prueba-de-arte",
       "tanda": 1,
       "descripcion": "Generador de criaturas por piezas y 3 criaturas de tipos distintos (una con su segunda forma) en una escena de diorama, con la luz y el material de ARTE.md. Es la decisión de riesgo: si no convence, plan B o C.",
-      "como_se_comprueba": "Capturas en 390 × 844 y en escritorio, en color y en escala de grises. El probador puntúa con la rúbrica visual. El autor las puntúa de 1 a 5 en su iPhone. Se apunta la decisión en DISENO.md.",
+      "como_se_comprueba": "Capturas en escritorio (1280 × 800), en color y en escala de grises. El probador puntúa con la rúbrica visual. El autor las puntúa de 1 a 5 en su ordenador. Se apunta la decisión en DISENO.md.",
       "hecha": false
     },
     {
       "id": "F05-explorar",
       "tanda": 1,
-      "descripcion": "Una zona con formas simples: suelo por casillas con alturas, hierba alta, colisiones, joystick flotante con el dedo, WASD y flechas, y la cámara de diorama siguiendo al jugador.",
+      "descripcion": "Una zona con formas simples: suelo por casillas con alturas, hierba alta, colisiones, WASD y flechas, y la cámara de diorama siguiendo al jugador.",
       "como_se_comprueba": "Un bot se mueve por la zona con __JUEGO__ sin atravesar paredes ni quedarse atascado. Capturas con el jugador en tres puntos. La entrada táctil se simula en capturar.mjs.",
       "hecha": false
     },
@@ -48,13 +48,13 @@
       "id": "F07-combate-jugable",
       "tanda": 1,
       "descripcion": "La escena de combate con formas simples: 4 movimientos, cambiar, objeto y huir, con botones grandes. Presenta los eventos del núcleo y da experiencia y niveles al terminar.",
-      "como_se_comprueba": "Un bot gana un combate salvaje solo con la interfaz (clics en los botones). Capturas de cada menú en 390 × 844. Los botones miden al menos 44 px.",
+      "como_se_comprueba": "Un bot gana un combate salvaje solo con la interfaz (clics en los botones). Capturas de cada menú en escritorio (1280 × 800). Todo se usa con ratón y con teclado.",
       "hecha": false
     },
     {
       "id": "F08-captura-con-gesto",
       "tanda": 1,
-      "descripcion": "Lanzar el objeto de captura deslizando el dedo o arrastrando el ratón. La puntería y el momento dan una calidad de 0 a 1, que entra en la fórmula del núcleo.",
+      "descripcion": "Lanzar el objeto de captura arrastrando el ratón. La puntería y el momento dan una calidad de 0 a 1, que entra en la fórmula del núcleo.",
       "como_se_comprueba": "Prueba del núcleo: más calidad da más probabilidad, siempre dentro de los límites. El bot captura una criatura simulando el gesto, y la criatura entra en el equipo.",
       "hecha": false
     },
@@ -76,7 +76,7 @@
       "id": "F11-escena-representativa",
       "tanda": 2,
       "descripcion": "La ruta 1 con el arte definitivo: terreno de diorama con canto al mar, hierba instanciada con viento, agua estilizada, luz de tarde, sombras lavanda e islas al fondo, a la escala de cámara real.",
-      "como_se_comprueba": "El probador, en modo completo, da al menos 2,3 de media en la rúbrica visual y ninguna categoría por debajo de 2. Los contadores cumplen el presupuesto móvil. El autor la juega y la puntúa de 1 a 5.",
+      "como_se_comprueba": "El probador, en modo completo, da al menos 2,3 de media en la rúbrica visual y ninguna categoría por debajo de 2. Los contadores cumplen el presupuesto de escritorio. El autor la juega y la puntúa de 1 a 5.",
       "hecha": false
     },
     {
@@ -97,7 +97,7 @@
       "id": "F14-tres-historias",
       "tanda": 2,
       "descripcion": "Al empezar se cuentan las historias de las tres iniciales (Agua, Planta e Infernal) y el jugador elige una. La elección fija la variante de la partida, le da su inicial y decide la historia y los uniformes del equipo enemigo.",
-      "como_se_comprueba": "Un bot recorre las tres elecciones y comprueba con __JUEGO__ la variante y la inicial. Capturas de la presentación en 390 × 844.",
+      "como_se_comprueba": "Un bot recorre las tres elecciones y comprueba con __JUEGO__ la variante y la inicial. Capturas de la presentación en escritorio (1280 × 800).",
       "hecha": false
     },
     {
@@ -132,7 +132,7 @@
       "id": "F19-combate-2-contra-2",
       "tanda": 3,
       "descripcion": "Una pareja de entrenadores que reta al jugador a un 2 contra 2. El jugador saca dos criaturas a la vez y elige el objetivo de cada acción.",
-      "como_se_comprueba": "Un bot gana y pierde un 2 contra 2 desde la interfaz. Capturas de la elección de objetivo en 390 × 844.",
+      "como_se_comprueba": "Un bot gana y pierde un 2 contra 2 desde la interfaz. Capturas de la elección de objetivo en escritorio (1280 × 800).",
       "hecha": false
     },
     {

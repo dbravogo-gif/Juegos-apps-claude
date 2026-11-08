@@ -7,8 +7,8 @@ Actualizado: 2026-11-07. Solo el presente; el historial está en git. Máximo 40
 ## Foco
 
 Un juego de criaturas en 3D, original y para jugar con amigos: explorar, capturar y combatir
-por turnos. Para móvil y PC: se controla con el dedo, o con ratón y teclado, nunca con mando. Sin
-invertir dinero. Concepto y decisiones en `investigacion/11-conceptos-criaturas.md`.
+por turnos. Solo para ordenador, con ratón y teclado y nunca con mando (decidido el 2026-11-08).
+Gasto pequeño aprobado por el autor para Meshy (arte de criaturas). Concepto y decisiones en `investigacion/11-conceptos-criaturas.md`.
 
 ## Datos del autor
 

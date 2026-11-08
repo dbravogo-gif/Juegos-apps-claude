@@ -95,7 +95,7 @@ export class Sistema implements Subsistema {
 | `motor` | `src/motor/` | El bucle, `ctx`, el registro de subsistemas, el paso fijo, los eventos y los niveles de calidad |
 | `render` | `src/sistemas/render/` | El renderizador, la escena, las luces, las sombras y el postproceso |
 | `camara` | `src/sistemas/camara/` | La cámara de diorama y la de combate |
-| `entrada` | `src/sistemas/entrada/` | El joystick flotante, el teclado y el gesto de lanzar |
+| `entrada` | `src/sistemas/entrada/` | El teclado, el ratón y el gesto de lanzar |
 | `mundo` | `src/sistemas/mundo/` | La malla de cada zona (terreno, hierba, agua y kit de piezas), y su carga y descarga |
 | `criaturas` | `src/sistemas/criaturas/` | El generador de criaturas por piezas y su animación procedural. Se pide con `crear(aspecto)` y se anima con `accion(criatura, accion)` |
 | `personaje` | `src/sistemas/personaje/` | El jugador y los personajes generados, y la personalización |
@@ -139,7 +139,7 @@ Los bots juegan con el estado, no con los píxeles (skill `juego-3d`).
 
 **Panel de depuración:** sale en desarrollo y, en la web publicada, añadiendo `?depurar` a la
 dirección. Muestra el backend, los FPS, los contadores y el selector de calidad. Sirve para que
-el autor mida en su iPhone, que es donde los FPS valen. Otros parámetros: `?calidad=bajo|medio|alto`
+el autor mida en su ordenador, que es donde los FPS valen. Otros parámetros: `?calidad=bajo|medio|alto`
 y `?semilla=n`. Mientras exista la vitrina de F04: `?vista=combate|todas|explorar|tipos`,
 `?criatura=0..3`, `?gris` y `?lento=0.1` (cámara lenta, para revisar las animaciones).
 
@@ -150,34 +150,36 @@ y `?semilla=n`. Mientras exista la vitrina de F04: `?vista=combate|todas|explora
 - **Registro de partidas completadas:** con qué iniciales se ha terminado el juego. Va en una
   clave aparte, que sobrevive al empezar una partida nueva, porque lo necesita el regalo por
   rejugar (`DISENO.md`).
-- **Riesgo en Safari:**
-  - WebKit borra el almacenamiento de las webs que llevan 7 días sin visitarse; las instaladas
-    en la pantalla de inicio quedan fuera de esa regla. Fuente: el blog de WebKit, «Full
-    Third-Party Cookie Blocking and More», marzo de 2020. Confianza media sobre cómo se aplica
-    hoy.
-  - Mitigación:
-    - pedir `navigator.storage.persist()`,
-    - recomendar instalar el juego como app,
-    - y ofrecer exportar e importar la partida como código.
-  - Hay que comprobarlo en el iPhone del autor.
+- **Riesgo si se juega en Safari (Mac):**
+  - WebKit borra el almacenamiento de las webs que llevan 7 días sin visitarse. Fuente: el blog
+    de WebKit, «Full Third-Party Cookie Blocking and More», marzo de 2020. Confianza media
+    sobre cómo se aplica hoy.
+  - Mitigación: pedir `navigator.storage.persist()` y ofrecer exportar e importar la partida
+    como código. En Chrome y Edge no aplica.
 
 ## Calidad y presupuesto
 
-- **Niveles de calidad:** móvil (empieza en bajo) y escritorio.
+- **Solo ordenador** (2026-11-08). Se usa el presupuesto de escritorio de la skill.
+- **Niveles de calidad:**
+  - alto por defecto;
+  - medio y bajo para ordenadores flojos, por ejemplo un portátil con gráfica integrada.
+  - Se ajustan cuando se midan los ordenadores del autor y de sus amigos.
 - **Densidad de píxeles:** como mucho 2.
-- **Presupuesto:** `.claude/skills/juego-3d/referencias/rendimiento.md`. Reparto en móvil:
+- **Presupuesto:** `.claude/skills/juego-3d/referencias/rendimiento.md`, columna de escritorio
+  (≤ 300 llamadas y ≤ 750.000 triángulos). Reparto:
 
 | Parte | Llamadas de dibujo | Notas |
 | --- | --- | --- |
-| `mundo` | ≤ 80 | Hierba y kit instanciados, troceados por zona |
-| `criaturas` y `personaje` | ≤ 40 | Piezas fusionadas por hueso (ver abajo). Medido en F04: 36 para las 4 criaturas de la prueba |
-| `combate` y `captura` | ≤ 20 | Efectos instanciados |
-| Postproceso | 1 pasada | *Bloom* a media resolución. Sin desenfoque de profundidad en móvil |
+| `mundo` | ≤ 160 | Hierba y kit instanciados, troceados por zona |
+| `criaturas` y `personaje` | ≤ 80 | Piezas fusionadas por hueso (ver abajo). Medido en F04: 36 para las 4 criaturas de la prueba |
+| `combate` y `captura` | ≤ 40 | Efectos instanciados |
+| Postproceso | 2 pasadas | *Bloom* y desenfoque de profundidad (*tilt-shift*). En calidad baja, solo *bloom* a media resolución |
 
-- **Sombras:** una luz con sombra, de 1024 en móvil y 2048 en escritorio.
+- **Sombras:** una luz con sombra, de 2048 (1024 en calidad baja).
 - **El pase de sombras cuenta:** cada malla que proyecta sombra es una llamada más en
   `llamadas`. Una criatura es una malla por hueso (cuerpo, cabeza, ojos, copete, cola y dos
   apéndices, como mucho 7); los ojos y la cara pintada no proyectan sombra. Coste medido: de 6 a
-  11 llamadas por criatura. Una prueba comprueba que 4 criaturas caben en 40.
+  11 llamadas por criatura. Una prueba comprueba que 4 criaturas del generador caben en 40,
+  la mitad de su reparto.
 
 Ningún subsistema supera su parte sin documentarlo aquí.
