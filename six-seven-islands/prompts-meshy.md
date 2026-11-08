@@ -185,3 +185,8 @@ esbelta, y otra majestuosa, con melena de hojas y patas de madera.
 The baby first evolution of this same creature: a tiny chubby forest fawn-lion cub, big head, oversized round green eyes, two tiny wooden antler nubs with one sprouting leaf, a small collar of three large leaves, leaf-shaped tail tip, same leaf-green body, cream chest and brown paws, playful and curious. Same clean anime style of modern monster-collecting RPGs: crisp clean linework, cel shading, flat saturated colors, moderate detail. Single creature, full body, three-quarter front view, centered, plain white background, no shadow, no text.
 ```
 
+- **3D de la forma joven (Meshy, sin textura):**
+  - Malla fiel a la imagen y limpia.
+  - Astas, hojas del collar y cola salen como partes separadas: se podrán mecer por separado.
+  - Pegas: las puntas de las astas salen dentadas y las flores del pecho quedan en un bulto.
+  - Falta verla con textura para juzgarla.
