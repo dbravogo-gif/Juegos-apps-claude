@@ -8,6 +8,7 @@
 export const LEYENDA = {
   '.': 'hierba corta',
   ',': 'camino',
+  ':': 'tierra',
   _: 'picón',
   '"': 'hierba alta',
   ';': 'malpaís',
@@ -32,7 +33,7 @@ export const LEYENDA = {
 export type Casilla = keyof typeof LEYENDA;
 
 /** Se pueden pisar. Las X también, cuando su condición se cumple. */
-export const TRANSITABLES: ReadonlySet<string> = new Set(['.', ',', '_', '"', ';', 'd', 'P']);
+export const TRANSITABLES: ReadonlySet<string> = new Set(['.', ',', ':', '_', '"', ';', 'd', 'P']);
 /** Terreno de encuentros: la hierba alta y el malpaís (y, más adelante, las dunas). */
 export const DE_ENCUENTROS: ReadonlySet<string> = new Set(['"', ';']);
 /** Las letras de los edificios. Cada grupo de casillas iguales y contiguas es un edificio. */
@@ -51,12 +52,26 @@ export interface Personaje {
   entrenador?: { vision: number; obligatorio: boolean };
 }
 
+/** Un objeto en el suelo, que se recoge al pisarlo. */
+export interface ObjetoEnSuelo {
+  id: string;
+  /** En coordenadas de su zona. */
+  x: number;
+  y: number;
+  objeto: string;
+}
+
 export interface DefZona {
   id: string;
   nombre: string;
   /** Dónde empieza la zona en la isla, en casillas. */
   origen: { x: number; y: number };
   mapa: readonly string[];
+  /** Altura de toda la zona (0 = nivel del mar), si no lleva `alturas`. */
+  altura?: number;
+  /** Altura de cada casilla, un dígito por casilla, con la forma de `mapa`. */
+  alturas?: readonly string[];
+  objetos?: readonly ObjetoEnSuelo[];
   /** Una zona con hierba obligatoria no se cruza sin pisar terreno de encuentros. */
   hierbaObligatoria: boolean;
   /** Las casillas X de la zona se abren con esta condición. */
@@ -74,6 +89,8 @@ export interface DefIsla {
 export interface CasillaMundo {
   c: Casilla;
   zona: string;
+  /** Altura, en escalones (0 = nivel del mar). */
+  h: number;
 }
 
 export interface Mundo {
@@ -82,6 +99,8 @@ export interface Mundo {
   zonas: ReadonlyMap<string, DefZona>;
   /** Casillas ocupadas por personajes (no se pisan). */
   ocupadas: ReadonlyMap<number, { zona: string; personaje: Personaje }>;
+  /** Objetos en el suelo (se pisan y se recogen). */
+  objetos: ReadonlyMap<number, { zona: string; objeto: ObjetoEnSuelo }>;
   ancho: number;
   alto: number;
 }
@@ -103,12 +122,16 @@ export function construirMundo(isla: DefIsla): Mundo {
   const casillas = new Map<number, CasillaMundo>();
   const zonas = new Map<string, DefZona>();
   const ocupadas = new Map<number, { zona: string; personaje: Personaje }>();
+  const objetos = new Map<number, { zona: string; objeto: ObjetoEnSuelo }>();
   let ancho = 0;
   let alto = 0;
   for (const z of isla.zonas) {
     if (zonas.has(z.id)) throw new Error(`Zona repetida: «${z.id}»`);
     zonas.set(z.id, z);
     const w = z.mapa[0]?.length ?? 0;
+    if (z.alturas && (z.alturas.length !== z.mapa.length || z.alturas.some((f) => f.length !== w || !/^[0-9]+$/.test(f)))) {
+      throw new Error(`Zona «${z.id}»: las alturas no tienen la forma del mapa o no son dígitos`);
+    }
     z.mapa.forEach((fila, y) => {
       if (fila.length !== w) throw new Error(`Zona «${z.id}», fila ${y}: mide ${fila.length} y debería medir ${w}`);
       for (let x = 0; x < w; x++) {
@@ -119,7 +142,8 @@ export function construirMundo(isla: DefIsla): Mundo {
         const k = clave(gx, gy);
         const otra = casillas.get(k);
         if (otra) throw new Error(`Las zonas «${otra.zona}» y «${z.id}» se pisan en ${gx},${gy}`);
-        casillas.set(k, { c, zona: z.id });
+        const h = z.alturas ? Number(z.alturas[y][x]) : (z.altura ?? 0);
+        casillas.set(k, { c, zona: z.id, h });
         ancho = Math.max(ancho, gx + 1);
         alto = Math.max(alto, gy + 1);
       }
@@ -134,8 +158,16 @@ export function construirMundo(isla: DefIsla): Mundo {
       if (ocupadas.has(k)) throw new Error(`Dos personajes en la misma casilla: «${p.id}»`);
       ocupadas.set(k, { zona: z.id, personaje: p });
     }
+    for (const o of z.objetos ?? []) {
+      const k = clave(z.origen.x + o.x, z.origen.y + o.y);
+      const debajo = casillas.get(k);
+      if (!debajo || debajo.zona !== z.id || !TRANSITABLES.has(debajo.c) || ocupadas.has(k) || objetos.has(k)) {
+        throw new Error(`Objeto «${o.id}» de «${z.id}» no está sobre suelo libre de su zona (${o.x},${o.y})`);
+      }
+      objetos.set(k, { zona: z.id, objeto: o });
+    }
   }
-  return { isla, casillas, zonas, ocupadas, ancho, alto };
+  return { isla, casillas, zonas, ocupadas, objetos, ancho, alto };
 }
 
 export interface OpcionesPaso {
@@ -145,6 +177,8 @@ export interface OpcionesPaso {
   prohibidas?: ReadonlySet<number>;
   /** No pisar terreno de encuentros (para comprobar la hierba obligatoria). */
   sinEncuentros?: boolean;
+  /** No pisar estas letras (para comprobar cada mancha obligatoria por separado). */
+  evitar?: ReadonlySet<string>;
 }
 
 /** ¿Se puede pisar la casilla x,y de la isla? */
@@ -158,6 +192,7 @@ export function transitable(m: Mundo, x: number, y: number, op: OpcionesPaso = {
     return Boolean(cierre && op.condiciones?.has(cierre.condicion));
   }
   if (op.sinEncuentros && DE_ENCUENTROS.has(cm.c)) return false;
+  if (op.evitar?.has(cm.c)) return false;
   return TRANSITABLES.has(cm.c);
 }
 

@@ -36,12 +36,17 @@ Del sur al este rodeando las cumbres: 1 → 2 → 3 → 4 → 5.
 
 ### 2. Zona de combates (oeste)
 
-- **Decidido:** pequeña, con 2 entrenadores y unas 3 zonas de hierba.
+- **Decidido:** estrecha y algo más larga, con 2 entrenadores y 3 manchas de encuentros. De sur
+  a norte (autor, 2026-11-08):
+  1. playa de arena negra junto al mar;
+  2. la barrera gris, con un hueco y el entrenador obligatorio justo detrás;
+  3. subida por una ladera de tierra con dos manchas de malpaís, una obligatoria y otra
+     opcional;
+  4. ya en llano, tierra con la hierba obligatoria.
   - Alguna hierba obligatoria y algún combate obligatorio, como en Leyendas de Iberia.
-- **Decidido:** el malpaís volcánico (piedra y arena negra con arbustos bajos) hace de hierba
-  en algunas zonas. Valdrá también para las playas. Tiene que quedar claro que es zona de
-  encuentros (ver «Terreno de encuentros»).
-- **Propuesta:** el segundo entrenador, opcional.
+- **Decidido:** el malpaís volcánico hace de hierba en algunas zonas. Valdrá también para las
+  playas. Tiene que quedar claro que es zona de encuentros (ver «Terreno de encuentros»).
+- El segundo entrenador es opcional, en el llano.
 
 ### 3. Pueblo (valle del oeste)
 
@@ -57,6 +62,8 @@ Del sur al este rodeando las cumbres: 1 → 2 → 3 → 4 → 5.
   - La típica zona de bosque del inicio del género, con criaturas flojas.
   - Laurisilva con niebla.
   - Criaturas de Bicho y Aire, con alguna de Veneno.
+  - Algo más largo, con un entrenador más en el camino y una bifurcación a un claro sin salida
+    con otro entrenador y un objeto (autor, 2026-11-08).
   - Pocas de Planta, o ninguna: es tipo de inicial y no debe regalarse pronto.
 - **Propuesta:** un entrenador obligatorio a la salida.
 
@@ -146,15 +153,19 @@ pantalla.
   entra por la puerta con un fundido.
 - **Los mapas se escriben como texto**, una letra por casilla, como en Leyendas. Así se leen y
   se prueban fácilmente.
+- **Alturas por casilla,** en escalones. Entre dos casillas que se pisan nunca hay más de un
+  escalón: las laderas son suaves y los cortados solo están donde no se anda. La playa y la
+  zona inicial están a 0, el pueblo a 4, el bosque baja de 4 a 1 hacia el este y la capital
+  está a 1.
 
 ## Tamaños orientativos
 
 | Zona | Casillas (ancho × fondo) |
 | --- | --- |
 | 1. Zona inicial | 24 × 18 |
-| 2. Zona de combates | 20 × 34 |
+| 2. Zona de combates | 15 × 44 |
 | 3. Pueblo | 28 × 22 |
-| 4. Bosque | 40 × 24 |
+| 4. Bosque | 48 × 26 |
 | 5. Capital | 34 × 28 |
 
 ## Qué del plan aprobado no está en esta idea

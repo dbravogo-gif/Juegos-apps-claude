@@ -249,6 +249,10 @@ una propuesta en `ISLA-1.md`.
   - los rivales solo hablan en la isla 1;
   - el 2 contra 2 no va en esta isla; llegará más adelante;
   - el paso al bosque se cierra hasta hablar con el anciano.
+- 2026-11-08 · Zona de combates estrecha y más larga, de sur a norte: arena negra, barrera con
+  su entrenador, subida con dos manchas de malpaís (una obligatoria) y hierba obligatoria en
+  llano. El bosque, más largo, con otro entrenador y una bifurcación a un claro con otro
+  entrenador y un objeto.
 - 2026-11-08 · Línea de la inicial de Planta: una bestia del bosque, ciervo-león con astas de
   madera, collar de hojas y cola de hoja. Tres formas: cría, joven (forma 2) y majestuosa
   (forma 3). Las imágenes de las formas 2 y 3 las generó el autor; prompts y notas en

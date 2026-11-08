@@ -43,7 +43,7 @@ describe('isla 1: mapa bien escrito', () => {
 
   it('tiene los tamaños de ISLA-1.md', () => {
     const tam = Object.fromEntries(ISLA_1.zonas.map((z) => [z.id, [z.mapa[0].length, z.mapa.length]]));
-    expect(tam).toEqual({ inicial: [24, 18], combates: [20, 34], pueblo: [28, 22], bosque: [40, 24], capital: [34, 28] });
+    expect(tam).toEqual({ inicial: [24, 18], combates: [15, 44], pueblo: [28, 22], bosque: [48, 26], capital: [34, 28] });
   });
 
   it('cada zona solo toca la anterior y la siguiente del recorrido: no hay atajos', () => {
@@ -76,6 +76,30 @@ describe('isla 1: lo que pide el autor en cada zona', () => {
     const z = m.zonas.get('combates')!;
     expect(z.personajes.filter((p) => p.entrenador)).toHaveLength(2);
     expect(manchasDeEncuentros('combates')).toBe(3);
+  });
+
+  it('zona de combates, de sur a norte: arena negra, barrera con su entrenador, malpaís en subida y hierba en llano', () => {
+    const z = m.zonas.get('combates')!;
+    const filas = (letra: string) => z.mapa.flatMap((f, y) => (f.includes(letra) ? [y] : []));
+    const barrera = filas('=');
+    expect(barrera).toHaveLength(1);
+    const yb = barrera[0];
+    const obligatorio = z.personajes.find((p) => p.entrenador?.obligatorio)!;
+    expect(Math.min(...filas('_'))).toBeGreaterThanOrEqual(yb); // la arena negra, al sur de la barrera
+    expect(Math.max(...filas(':'))).toBeLessThan(yb); // la tierra, al norte
+    expect(obligatorio.y).toBe(yb - 1); // el entrenador, justo detrás de la barrera
+    expect(Math.max(...filas(';'))).toBeLessThan(obligatorio.y); // después, el malpaís
+    expect(Math.max(...filas('"'))).toBeLessThan(Math.min(...filas(';'))); // y por último, la hierba
+    const h = (y: number) => Number(z.alturas![y][1]);
+    expect(new Set(filas(';').map(h)).size).toBeGreaterThan(1); // el malpaís, en subida
+    expect(new Set(filas('"').map(h)).size).toBe(1); // la hierba, en llano
+    expect(h(z.mapa.length - 2)).toBe(0); // la playa, a nivel del mar
+  });
+
+  it('bosque: 4 entrenadores y un objeto en el claro de la bifurcación', () => {
+    const z = m.zonas.get('bosque')!;
+    expect(z.personajes.filter((p) => p.entrenador)).toHaveLength(4);
+    expect(z.objetos?.map((o) => o.objeto)).toEqual(['pocion']);
   });
 
   it('pueblo: refugio, dos casas, tienda y el anciano', () => {
@@ -173,6 +197,27 @@ describe('isla 1: recorrido y pasos cerrados', () => {
     for (const z of orden) for (const e of edificios(m, z)) if (e.tipo !== 'F') expect(e.puertas.length, `${e.tipo} de ${z}`).toBeGreaterThan(0);
   });
 
+  it('todos los objetos se alcanzan, y el del bosque no hace falta para cruzarlo', () => {
+    const r = llega(TODAS_LAS_CONDICIONES);
+    for (const [k, { objeto }] of m.objetos) expect(r.has(k), objeto.id).toBe(true);
+    const [entrada, salida] = [conexiones(m, 'bosque', 'pueblo'), conexiones(m, 'bosque', 'capital')];
+    const prohibidas = new Set([...m.objetos.keys()]);
+    const sin = alcanzables(m, entrada, { condiciones: TODAS_LAS_CONDICIONES, prohibidas });
+    expect(salida.some((k) => sin.has(k))).toBe(true);
+  });
+
+  it('las laderas son suaves: entre dos casillas pisables vecinas nunca hay más de un escalón', () => {
+    const pisable = (c: string) => c !== '#' && c !== '~' && c !== 'T' && c !== 'b' && c !== '=' && c !== 'Y' && !'CMRSGFB'.includes(c);
+    for (const [k, a] of m.casillas) {
+      if (!pisable(a.c)) continue;
+      const [x, y] = deClave(k);
+      for (const v of [clave(x + 1, y), clave(x, y + 1)]) {
+        const b = m.casillas.get(v);
+        if (b && pisable(b.c)) expect(Math.abs(a.h - b.h), `${deClave(k)} → ${deClave(v)}`).toBeLessThanOrEqual(1);
+      }
+    }
+  });
+
   it('con todos los personajes se puede hablar: tienen al lado una casilla alcanzable', () => {
     const r = llega(TODAS_LAS_CONDICIONES);
     for (const [k, { personaje }] of m.ocupadas) {
@@ -186,6 +231,14 @@ describe('isla 1: reglas de Leyendas de Iberia para todo el juego', () => {
 
   it('hay zonas con hierba obligatoria (la de combates y el bosque)', () => {
     expect(zonasConHierba).toEqual(['combates', 'bosque']);
+  });
+
+  it('combates: el malpaís y la hierba son obligatorios, cada uno por separado', () => {
+    const [entrada, salida] = entradaYSalida('combates');
+    for (const letra of [';', '"']) {
+      const r = alcanzables(m, entrada, { condiciones: TODAS_LAS_CONDICIONES, evitar: new Set([letra]) });
+      expect(salida.some((k) => r.has(k)), letra).toBe(false);
+    }
   });
 
   for (const zona of ['combates', 'bosque']) {
