@@ -206,3 +206,26 @@ The baby first evolution of this same creature: a tiny chubby forest fawn-lion c
 - Prueba barata para confirmarlo: la misma imagen a 8.000 y a 12.000 con T2 (5 créditos cada
   una).
 
+## Forma 2 de la inicial de Planta con textura (2026-11-08)
+
+- **Bien:** estilo limpio, colores del tipo, silueta clara y astas sin dientes. Es la primera
+  criatura con calidad de juego; supera con mucho al generador por piezas.
+- **Mal:**
+  - Meshy perdió los ojos grandes del dibujo: de tres cuartos parecen un antifaz oscuro y de
+    frente se ven pequeños y serios.
+  - Hay restos en el pecho: dos bultos grises y una gota roja bajo una flor.
+- **Propuesta para los ojos:**
+  - retocarlos con «Texture Edit» en Meshy;
+  - o, mejor, poner encima de la cara del modelo los ojos propios del juego (mallas
+    brillantes del generador por piezas). Así son igual de expresivos en todas, parpadean y se
+    cierran al debilitarse. Coste: colocarlos una vez por criatura.
+- **Pendiente del autor:** pagar Pro el primer mes (~10 $), descargar `planta-2.glb` y subirlo
+  a `public/modelos/prueba-meshy/`.
+- **Al integrarlo, Claude vigila:**
+  - Material: nuestro `MaterialDiorama` con la textura como color, para que encaje con la luz
+    del mundo.
+  - Llamadas de dibujo: fusionar las partes que no se animan; si cada parte llega como malla
+    propia, serían decenas.
+  - Textura: reducirla a 1K.
+  - Animación: por partes (collar, cola) y respiración del cuerpo.
+
