@@ -138,3 +138,78 @@ body {
   padding: 0 10px;
   font-size: 14px;
 }
+
+/* Interfaz del juego (solo teclado). Fondos crema, texto oscuro cálido; el coral, solo para lo
+   principal (ARTE.md). */
+.interfaz {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.zona-cartel {
+  position: absolute;
+  top: 28px;
+  left: 50%;
+  transform: translate(-50%, -12px);
+  padding: 10px 28px;
+  border-radius: 999px;
+  background: rgb(255 246 234 / 0.92);
+  color: var(--texto);
+  font: 700 22px/1.2 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  letter-spacing: 0.02em;
+  box-shadow: 0 6px 18px rgb(107 123 184 / 0.25);
+  opacity: 0;
+  transition:
+    opacity 0.35s,
+    transform 0.35s;
+}
+
+.zona-cartel.visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.aviso {
+  position: absolute;
+  left: 50%;
+  bottom: 36px;
+  width: min(720px, calc(100% - 48px));
+  box-sizing: border-box;
+  transform: translateX(-50%);
+  padding: 18px 22px 16px;
+  border-radius: 16px;
+  background: rgb(255 246 234 / 0.96);
+  color: var(--texto);
+  box-shadow: 0 8px 24px rgb(107 123 184 / 0.3);
+}
+
+.aviso[hidden] {
+  display: none;
+}
+
+.aviso-texto {
+  margin: 0;
+  font: 500 19px/1.45 system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+.aviso-seguir {
+  display: block;
+  margin-top: 8px;
+  text-align: right;
+  color: var(--coral);
+  font: 700 14px/1 system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+.ayuda {
+  position: absolute;
+  left: 16px;
+  bottom: 10px;
+  margin: 0;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgb(59 42 32 / 0.55);
+  color: var(--crema);
+  font: 500 13px/1.2 system-ui, -apple-system, 'Segoe UI', sans-serif;
+}

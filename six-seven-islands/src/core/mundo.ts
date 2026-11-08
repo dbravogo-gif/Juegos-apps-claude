@@ -50,6 +50,8 @@ export interface Personaje {
   y: number;
   mira: Direccion;
   entrenador?: { vision: number; obligatorio: boolean };
+  /** Lo que dice al hablarle, mientras no lleguen los diálogos de verdad (F15). */
+  frase?: string;
 }
 
 /** Un objeto en el suelo, que se recoge al pisarlo. */

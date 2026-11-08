@@ -15,7 +15,7 @@ export const ISLA_1: DefIsla = {
       origen: { x: 38, y: 92 },
       hierbaObligatoria: false,
       cierre: { condicion: 'inicial-elegida', aviso: 'Antes de salir, pasa por el museo y elige a tu compañero.' },
-      personajes: [{ id: 'vecino-salida', x: 5, y: 1, mira: 'o' }],
+      personajes: [{ id: 'vecino-salida', x: 5, y: 1, mira: 'o', frase: '¡Eh! Sin compañero no se sale de aquí. El doctor te espera en el museo.' }],
       altura: 0,
       mapa: [
         '##,,,###################',
@@ -44,8 +44,8 @@ export const ISLA_1: DefIsla = {
       origen: { x: 29, y: 48 },
       hierbaObligatoria: true,
       personajes: [
-        { id: 'entrenador-barrera', x: 4, y: 28, mira: 'e', entrenador: { vision: 4, obligatorio: true } },
-        { id: 'entrenador-llano', x: 2, y: 13, mira: 'e', entrenador: { vision: 3, obligatorio: false } },
+        { id: 'entrenador-barrera', x: 4, y: 28, mira: 'e', entrenador: { vision: 4, obligatorio: true }, frase: '¡Nadie sube la ladera sin pasar antes por mí!' },
+        { id: 'entrenador-llano', x: 2, y: 13, mira: 'e', entrenador: { vision: 3, obligatorio: false }, frase: 'En el llano, la hierba esconde criaturas... y entrenadores.' },
       ],
       alturas: [
         '444444444444444',
@@ -150,8 +150,8 @@ export const ISLA_1: DefIsla = {
         aviso: 'Tu criatura aún no te escucha. En el bosque os perderíais: habla antes con el anciano de la plaza.',
       },
       personajes: [
-        { id: 'anciano', x: 15, y: 12, mira: 's' },
-        { id: 'guarda-bosque', x: 7, y: 2, mira: 'e' },
+        { id: 'anciano', x: 15, y: 12, mira: 's', frase: 'Esa criatura no te hace caso, ¿verdad? Siéntate, que te cuento su historia.' },
+        { id: 'guarda-bosque', x: 7, y: 2, mira: 'e', frase: 'La laurisilva confunde a quien no va bien acompañado.' },
       ],
       altura: 4,
       mapa: [
@@ -185,10 +185,10 @@ export const ISLA_1: DefIsla = {
       origen: { x: 20, y: 0 },
       hierbaObligatoria: true,
       personajes: [
-        { id: 'entrenador-salida-bosque', x: 41, y: 18, mira: 's', entrenador: { vision: 3, obligatorio: true } },
-        { id: 'excursionista', x: 11, y: 9, mira: 'o', entrenador: { vision: 2, obligatorio: false } },
-        { id: 'entrenador-centro', x: 26, y: 14, mira: 'n', entrenador: { vision: 2, obligatorio: false } },
-        { id: 'entrenador-claro', x: 19, y: 20, mira: 'e', entrenador: { vision: 3, obligatorio: false } },
+        { id: 'entrenador-salida-bosque', x: 41, y: 18, mira: 's', entrenador: { vision: 3, obligatorio: true }, frase: 'Si quieres llegar a la capital, antes tendrás que vencerme.' },
+        { id: 'excursionista', x: 11, y: 9, mira: 'o', entrenador: { vision: 2, obligatorio: false }, frase: '¡Qué niebla! Gracias a ella los laureles están siempre verdes.' },
+        { id: 'entrenador-centro', x: 26, y: 14, mira: 'n', entrenador: { vision: 2, obligatorio: false }, frase: 'Entreno entre la niebla. Así nadie me ve venir.' },
+        { id: 'entrenador-claro', x: 19, y: 20, mira: 'e', entrenador: { vision: 3, obligatorio: false }, frase: 'Este claro es mi escondite. ¿Cómo lo has encontrado?' },
       ],
       objetos: [{ id: 'pocion-claro', x: 25, y: 22, objeto: 'pocion' }],
       alturas: [
@@ -255,8 +255,8 @@ export const ISLA_1: DefIsla = {
       hierbaObligatoria: false,
       cierre: { condicion: 'gimnasio-vencido', aviso: 'El barco solo lleva a quien ha vencido al gimnasio.' },
       personajes: [
-        { id: 'vecina-rivales', x: 12, y: 1, mira: 's' },
-        { id: 'marinero', x: 25, y: 13, mira: 'n' },
+        { id: 'vecina-rivales', x: 12, y: 1, mira: 's', frase: 'Unos tipos raros preguntaban en el puerto por la isla que desapareció...' },
+        { id: 'marinero', x: 25, y: 13, mira: 'n', frase: 'El barco va a la isla siguiente, pero solo con quien ha vencido al gimnasio.' },
       ],
       altura: 1,
       mapa: [

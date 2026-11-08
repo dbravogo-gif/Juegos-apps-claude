@@ -16,6 +16,10 @@ export interface MapaEventos {
   'dialogo:cerrar': { guionId: string; eleccion?: number };
   'guardado:hecho': Record<string, never>;
   'calidad:cambio': { nivel: NivelCalidad };
+  /** Un texto para el jugador (aviso de paso cerrado, frase, objeto); se cierra con confirmar. */
+  'aviso:mostrar': { texto: string };
+  'aviso:cerrar': Record<string, never>;
+  'objeto:recogido': { id: string; objeto: string };
 }
 
 export type NombreEvento = keyof MapaEventos;

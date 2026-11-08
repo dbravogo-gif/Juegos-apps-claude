@@ -18,4 +18,13 @@ export const COLORES = {
   espuma: '#E9FBF7',
   crema: '#FFF4E0',
   ojo: '#2B2340',
+  // Suelos y piezas de la isla 1 (La Palma): tierra, picón (arena negra), malpaís y cumbres.
+  tierra: '#B07F57',
+  picon: '#6E676B',
+  malpais: '#7A4A40',
+  hierbaAlta: '#4FA877',
+  muro: '#A39A93',
+  cumbre: '#B4B6DA',
+  tejaCanaria: '#C8684A',
+  balcon: '#7A5236',
 } as const;

@@ -4,13 +4,21 @@
 import { PerspectiveCamera, Scene } from 'three/webgpu';
 import { nivelInicial, CALIDADES, type NivelCalidad } from './motor/calidad';
 import { Motor, type ClaseSubsistema } from './motor/motor';
+import { Camara } from './sistemas/camara/camara';
 import { Criaturas } from './sistemas/criaturas/criaturas';
 import { Depuracion } from './sistemas/depuracion/depuracion';
+import { Entrada } from './sistemas/entrada/entrada';
+import { Interfaz } from './sistemas/interfaz/interfaz';
+import { Mundo } from './sistemas/mundo/mundo';
+import { Partida } from './sistemas/partida/partida';
+import { Personaje } from './sistemas/personaje/personaje';
 import { Prueba } from './sistemas/prueba/prueba';
 import { Render } from './sistemas/render/render';
 import './estilo.css';
 
-const SUBSISTEMAS: ClaseSubsistema[] = [Render, Criaturas, Prueba, Depuracion];
+// El juego: la isla 1 para explorar. Con ?vitrina, la vitrina de criaturas de la prueba de arte.
+const JUEGO: ClaseSubsistema[] = [Render, Entrada, Partida, Mundo, Personaje, Camara, Interfaz, Depuracion];
+const VITRINA: ClaseSubsistema[] = [Render, Criaturas, Prueba, Depuracion];
 
 function mostrarFallo(e: unknown): void {
   const aviso = document.createElement('p');
@@ -28,7 +36,7 @@ async function arrancar(): Promise<void> {
 
   const camara = new PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.5, 200);
   const motor = new Motor(new Scene(), camara, nivel, semilla);
-  await motor.iniciar(SUBSISTEMAS);
+  await motor.iniciar(parametros.has('vitrina') ? VITRINA : JUEGO);
 
   window.addEventListener('resize', () => motor.redimensionar(window.innerWidth, window.innerHeight));
 

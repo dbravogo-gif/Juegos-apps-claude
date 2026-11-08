@@ -71,8 +71,16 @@ export class Render implements Subsistema {
     this.sol.shadow.mapSize.set(calidad.sombras, calidad.sombras);
     this.sol.shadow.bias = -0.0005;
     escena.add(this.sol);
+    escena.add(this.sol.target);
 
     this.quitarOyente = ctx.eventos.on('calidad:cambio', () => this.aplicarCalidad(ctx));
+  }
+
+  /** Centra el sol y su sombra en un punto de la isla (lo llama la cámara al moverse). */
+  enfocar(x: number, y: number, z: number): void {
+    this.sol.position.set(x - 22, y + 17, z + 12);
+    this.sol.target.position.set(x, y, z);
+    this.sol.target.updateMatrixWorld();
   }
 
   private aplicarCalidad(ctx: Ctx): void {
