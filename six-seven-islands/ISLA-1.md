@@ -38,7 +38,10 @@ Del sur al este rodeando las cumbres: 1 → 2 → 3 → 4 → 5.
 
 - **Decidido:** pequeña, con 2 entrenadores y unas 3 zonas de hierba.
   - Alguna hierba obligatoria y algún combate obligatorio, como en Leyendas de Iberia.
-- **Propuesta:** un malpaís volcánico con arbustos bajos, y el segundo entrenador opcional.
+- **Decidido:** el malpaís volcánico (piedra y arena negra con arbustos bajos) hace de hierba
+  en algunas zonas. Valdrá también para las playas. Tiene que quedar claro que es zona de
+  encuentros (ver «Terreno de encuentros»).
+- **Propuesta:** el segundo entrenador, opcional.
 
 ### 3. Pueblo (valle del oeste)
 
@@ -50,16 +53,22 @@ Del sur al este rodeando las cumbres: 1 → 2 → 3 → 4 → 5.
 
 ### 4. Bosque (norte)
 
-- **Decidido:** la típica zona de bosque del inicio del género, con criaturas flojas. No
-  existen los tipos bicho ni veneno: se adapta a un tipo que encaje.
-- **Propuesta:**
-  - Laurisilva con niebla, de tipo **Planta y Aire**: plantas y aves pequeñas entre la niebla.
-  - Un entrenador obligatorio a la salida.
+- **Decidido:**
+  - La típica zona de bosque del inicio del género, con criaturas flojas.
+  - Laurisilva con niebla.
+  - Pocas criaturas de Planta, o ninguna: es tipo de inicial y no debe regalarse pronto.
+  - Aquí va la pareja de entrenadores del 2 contra 2.
+- **Pendiente:** sus tipos dependen de la revisión de tipos (`DISENO.md`, decisiones abiertas).
+  Si entran Bicho y Veneno, el bosque es de Bicho y Aire, con alguna de Veneno.
+- **Propuesta:** un entrenador obligatorio a la salida.
 
 ### 5. Capital (costa este)
 
 - **Decidido:**
-  - Un poco de historia de los rivales: alguien te habla, sin combate.
+  - Un poco de historia de los rivales: alguien te habla, sin combate. Dónde se combate contra
+    ellos se decide más adelante.
+  - El gimnasio es de tipo **Luz**: la isla de las estrellas, por el observatorio. Es neutro
+    contra las tres iniciales.
   - Refugio, gimnasio (que se vea claramente que lo es), varias casas y el puerto.
   - El puerto lleva a la isla 2 cuando se vence al gimnasio.
 - **Propuesta:**
@@ -81,12 +90,46 @@ vigilan pruebas automáticas que recorren el mapa:
 
 - **Decidido:** al principio no hace mucho caso en los ataques. Deja de ser rebelde cuando un
   anciano del pueblo te cuenta más de su historia y te ayuda a conectar con ella.
-- **Propuesta (números ajustables):**
-  - Hasta hablar con el anciano, en cada turno hay un 25 % de que no obedezca.
+- **Decidido:** desobedece en un 45 % de los turnos (el autor pidió del 40 al 50 %). Dura poco
+  y tiene que notarse y molestar.
+- **Propuesta (ajustable):**
+  - El paso al bosque se cierra hasta hablar con el anciano.
   - Cuando no obedece, la mitad de las veces usa otro de sus movimientos y la otra mitad se
     distrae y pierde el turno.
   - Sale un aviso: «No te hace caso…».
   - Lo decide el generador del combate, así que es reproducible y vale para el online.
+
+## Terreno de encuentros
+
+**Decidido:** además de la hierba alta, hacen de «hierba» el malpaís volcánico y, más adelante,
+las dunas de playa.
+
+**Propuesta:** todos comparten las mismas señales, para que se reconozcan sin aprenderlos uno a
+uno:
+
+- más altos y más oscuros que el suelo de alrededor;
+- con un borde marcado;
+- y se mueven al pisarlos (la hierba se mece; el malpaís suelta polvo o arenilla).
+
+El suelo por el que se camina tranquilo es siempre más claro y liso.
+
+## Cámara y paisaje
+
+La cámara de explorar sigue alta (unos 50°), para ver bien por dónde se camina: así se ve
+sobre todo el suelo, como en los juegos del género. Corrección: con esa cámara, el
+observatorio y el volcán **no** se ven desde casi toda la isla, como se dijo antes. El paisaje
+se enseña de tres formas:
+
+1. **En combate:** la cámara es baja y se combate sobre el terreno real, así que al fondo sale
+   el paisaje de la zona. Se orienta para que salga su referencia: el volcán en el sur, el
+   observatorio en el norte, el mar y el faro en la capital.
+2. **Miradores**, como los de La Palma: en algunos puntos del camino la cámara baja despacio y
+   enseña la vista. Al seguir andando, vuelve a su sitio.
+3. **Al entrar en una zona por primera vez,** un plano corto de presentación de unos dos
+   segundos.
+
+Los acantilados de las cumbres bordean el camino y se ven en el borde de arriba de la
+pantalla.
 
 ## Captura
 
@@ -128,9 +171,10 @@ vigilan pruebas automáticas que recorren el mapa:
 
 **Propuesta:**
 
-- La base del equipo enemigo pasa a la isla 2. En la isla 1 los rivales solo hablan, como pide
-  el autor.
-- El 2 contra 2, una pareja de entrenadores en el bosque, sin zona nueva.
+**Decidido** (el autor aceptó la propuesta, 2026-11-08):
+
+- En la isla 1, los rivales solo hablan. Los combates contra ellos se colocan más adelante.
+- El 2 contra 2 es una pareja de entrenadores en el bosque, sin zona nueva.
 - Un recado pequeño en el pueblo.
 - La ruta costera se queda fuera.
 
