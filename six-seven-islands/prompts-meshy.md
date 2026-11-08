@@ -53,19 +53,19 @@ las 200 comparten estilo y las imágenes sirven de retrato en los menús.
 1. Épica (Aire):
 
 ```text
-A legendary sky serpent dragon, long graceful serpentine body coiled in an elegant S-shape, floating, sky-blue body with a pearl-white belly, golden crescent horns, cloud-like fins along its spine, small feathered wing-fins behind the head, glowing aquamarine eyes, ribbon tail ending in a cloud tuft, majestic. Official-quality 2D character concept art in the clean anime style of modern monster-collecting RPGs: crisp clean linework, cel shading with soft highlights, flat saturated colors, moderate detail, big expressive eyes, appealing silhouette. Cute animal face with big round eyes and a small muzzle, never a human face. Bold simple shapes: a few large leaves, feathers or scales instead of many small ones. Single creature, full body, three-quarter front view, centered, plain white background, no shadow, no text.
+A legendary sky serpent dragon, long graceful serpentine body coiled in an elegant S-shape, floating, sky-blue body with a pearl-white belly, golden crescent horns, cloud-like fins along its spine, small feathered wing-fins behind the head, glowing aquamarine eyes, ribbon tail ending in a cloud tuft, majestic. Official-quality 2D character concept art in the clean anime style of modern monster-collecting RPGs: crisp clean linework, cel shading with soft highlights, flat saturated colors, moderate detail, big expressive eyes, appealing silhouette. Cute animal face with big round eyes and a small muzzle, never a human face. Bold simple shapes: a few large leaves, feathers or scales instead of many small ones; thick parts with rounded tips, no thin spikes, branches, strands or floating particles. Single creature, full body, three-quarter front view, centered, plain white background, no shadow, no text.
 ```
 
 2. Débil (Agua):
 
 ```text
-A small chubby baby water creature like a sea otter pup, round body standing on four short legs, big glossy eyes, a translucent water-droplet crest on its head, webbed paws, flat paddle tail, cobalt-blue body with cream muzzle and belly, light-blue wave markings on its back, cheerful. Official-quality 2D character concept art in the clean anime style of modern monster-collecting RPGs: crisp clean linework, cel shading with soft highlights, flat saturated colors, moderate detail, big expressive eyes, appealing silhouette. Cute animal face with big round eyes and a small muzzle, never a human face. Bold simple shapes: a few large leaves, feathers or scales instead of many small ones. Single creature, full body, three-quarter front view, centered, plain white background, no shadow, no text.
+A small chubby baby water creature like a sea otter pup, round body standing on four short legs, big glossy eyes, a translucent water-droplet crest on its head, webbed paws, flat paddle tail, cobalt-blue body with cream muzzle and belly, light-blue wave markings on its back, cheerful. Official-quality 2D character concept art in the clean anime style of modern monster-collecting RPGs: crisp clean linework, cel shading with soft highlights, flat saturated colors, moderate detail, big expressive eyes, appealing silhouette. Cute animal face with big round eyes and a small muzzle, never a human face. Bold simple shapes: a few large leaves, feathers or scales instead of many small ones; thick parts with rounded tips, no thin spikes, branches, strands or floating particles. Single creature, full body, three-quarter front view, centered, plain white background, no shadow, no text.
 ```
 
 3. Neutra (Común):
 
 ```text
-A sturdy young bull creature, compact strong body standing on four legs, cream-beige body, fluffy chocolate-brown mane on neck and shoulders, two short ivory horns curving forward, single tufted tail, dark hooves, friendly determined eyes. Official-quality 2D character concept art in the clean anime style of modern monster-collecting RPGs: crisp clean linework, cel shading with soft highlights, flat saturated colors, moderate detail, big expressive eyes, appealing silhouette. Cute animal face with big round eyes and a small muzzle, never a human face. Bold simple shapes: a few large leaves, feathers or scales instead of many small ones. Single creature, full body, three-quarter front view, centered, plain white background, no shadow, no text.
+A sturdy young bull creature, compact strong body standing on four legs, cream-beige body, fluffy chocolate-brown mane on neck and shoulders, two short ivory horns curving forward, single tufted tail, dark hooves, friendly determined eyes. Official-quality 2D character concept art in the clean anime style of modern monster-collecting RPGs: crisp clean linework, cel shading with soft highlights, flat saturated colors, moderate detail, big expressive eyes, appealing silhouette. Cute animal face with big round eyes and a small muzzle, never a human face. Bold simple shapes: a few large leaves, feathers or scales instead of many small ones; thick parts with rounded tips, no thin spikes, branches, strands or floating particles. Single creature, full body, three-quarter front view, centered, plain white background, no shadow, no text.
 ```
 
 
@@ -183,7 +183,7 @@ esbelta, y otra majestuosa, con melena de hojas y patas de madera.
 - **Prompt de la cría** (con la imagen joven como referencia en el generador):
 
 ```text
-The baby first evolution of this same creature: a tiny chubby forest fawn-lion cub, big head, oversized round green eyes, two tiny wooden antler nubs with one sprouting leaf, a small collar of three large leaves, leaf-shaped tail tip, same leaf-green body, cream chest and brown paws, playful and curious. Same clean anime style of modern monster-collecting RPGs: crisp clean linework, cel shading, flat saturated colors, moderate detail. Single creature, full body, three-quarter front view, centered, plain white background, no shadow, no text.
+The baby first evolution of this same creature: a tiny chubby forest fawn-lion cub, big head, oversized round green eyes, two tiny wooden antler nubs with one sprouting leaf, a small collar of three large leaves, leaf-shaped tail tip, same leaf-green body, cream chest and brown paws, playful and curious. Same clean anime style of modern monster-collecting RPGs: crisp clean linework, cel shading, flat saturated colors, moderate detail, thick parts with rounded tips, no thin spikes or floating particles. Single creature, full body, three-quarter front view, centered, plain white background, no shadow, no text.
 ```
 
 - **3D de la forma joven (Meshy, sin textura):**
@@ -191,3 +191,18 @@ The baby first evolution of this same creature: a tiny chubby forest fawn-lion c
   - Astas, hojas del collar y cola salen como partes separadas: se podrán mecer por separado.
   - Pegas: las puntas de las astas salen dentadas y las flores del pecho quedan en un bulto.
   - Falta verla con textura para juzgarla.
+
+## Presupuesto de polígonos (decidido con el autor, 2026-11-08)
+
+| Criaturas | Polígonos (Smart Topology T2) |
+| --- | --- |
+| Legendarias y épicas | 12.000 |
+| Normales | 8.000 |
+
+- Un 2 contra 2 con cuatro normales suma unos 32.000, de los 300.000 del móvil.
+- **Las puntas dentadas no se arreglan bajando polígonos** (inferencia: con menos presupuesto,
+  lo fino recibe aún menos triángulos). Se arreglan con la forma: partes gruesas, pocas puntas
+  y acabadas en redondo. El bloque de estilo lo pide en todos los prompts.
+- Prueba barata para confirmarlo: la misma imagen a 8.000 y a 12.000 con T2 (5 créditos cada
+  una).
+
