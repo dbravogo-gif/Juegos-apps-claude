@@ -91,20 +91,20 @@ export class Sistema implements Subsistema {
 | --- | --- | --- |
 | (biblioteca) | `src/core/` | Las reglas puras: generador con semilla, tipos, estadísticas, daño, combate N contra N, captura, encuentros, progreso, economía, mundo lógico (posición, colisión por casillas y zonas) y serialización del guardado |
 | (biblioteca) | `src/data/` | Solo datos: especies, movimientos, tipos, objetos, zonas, entrenadores, guion y fichas de aspecto |
-| (biblioteca) | `src/arte/` | La paleta y el material base compartido (`MaterialDiorama`, la receta de la skill `juego-3d`) |
+| (biblioteca) | `src/arte/` | La paleta, el material base compartido (`MaterialDiorama`, la receta de la skill `juego-3d`) y la escala del mundo (`escala.ts`: casilla de 1 unidad y escalón de 0,5) |
 | `motor` | `src/motor/` | El bucle, `ctx`, el registro de subsistemas, el paso fijo, los eventos y los niveles de calidad |
 | `render` | `src/sistemas/render/` | El renderizador, la escena, las luces, las sombras y el postproceso |
 | `camara` | `src/sistemas/camara/` | La cámara de diorama y la de combate |
-| `entrada` | `src/sistemas/entrada/` | El teclado (no hay ratón) y las dos pulsaciones de lanzar |
-| `mundo` | `src/sistemas/mundo/` | La malla de cada zona (terreno, hierba, agua y kit de piezas), y su carga y descarga |
+| `entrada` | `src/sistemas/entrada/` | El teclado (no hay ratón): direcciones, confirmar y cancelar. Un toque corto cuenta como un paso |
+| `mundo` | `src/sistemas/mundo/` | La isla en 3D: terreno en terrazas por alturas, cumbres, mar, edificios, decoración por trozos de 12 × 12, pasos cerrados y objetos. Lee «partida»; no la cambia |
 | `criaturas` | `src/sistemas/criaturas/` | El generador de criaturas por piezas y su animación procedural. Se pide con `crear(aspecto)` y se anima con `accion(criatura, accion)` |
-| `personaje` | `src/sistemas/personaje/` | El jugador y los personajes generados, y la personalización |
+| `personaje` | `src/sistemas/personaje/` | El jugador (con silueta cuando algo lo tapa), los personajes y las líneas de visión; más adelante, el generador y la personalización (F12) |
 | `combate` | `src/sistemas/combate/` | La escena de combate: presenta los eventos del núcleo, con sus efectos |
 | `captura` | `src/sistemas/captura/` | El gesto, el vuelo del objeto y el resultado en pantalla |
 | `interfaz` | `src/sistemas/interfaz/` | La interfaz en DOM: menús, diálogos, marcador, tienda y equipo |
-| `partida` | `src/sistemas/partida/` | El estado del núcleo, los modos (explorar, combate, diálogo y menú) y el guardado automático |
+| `partida` | `src/sistemas/partida/` | El estado del núcleo, los modos (explorar y aviso; después combate, diálogo y menú) y el guardado automático. Avanza a paso fijo con la entrada |
 | `depuracion` | `src/sistemas/depuracion/` | El panel de ajustes (solo en desarrollo) y los ganchos de `window.__JUEGO__` |
-| `prueba` | `src/sistemas/prueba/` | **Temporal:** la vitrina de la prueba de arte (`F04`): una isla de diorama con las criaturas, sus vistas y sus botones. Se borra en `F05` |
+| `prueba` | `src/sistemas/prueba/` | **Temporal:** la vitrina de la prueba de arte (`F04`), con `?vitrina`. Se queda para probar los modelos de Meshy; se borra cuando las criaturas entren en el juego |
 | `audio` | `src/sistemas/audio/` | El sonido generado por código. Llegará después |
 | `red` | `src/sistemas/red/` | Presencia, retos y cooperativo. Llegará en la fase online |
 
@@ -123,6 +123,9 @@ export class Sistema implements Subsistema {
 | `dialogo:cerrar` | `{ guionId, eleccion? }` | `interfaz` |
 | `guardado:hecho` | `{}` | `partida` |
 | `calidad:cambio` | `{ nivel }` | `depuracion` |
+| `aviso:mostrar` | `{ texto }` | `partida` |
+| `aviso:cerrar` | `{}` | `partida` |
+| `objeto:recogido` | `{ id, objeto }` | `partida` |
 
 Un evento nuevo se añade a esta tabla en el mismo commit.
 
@@ -141,7 +144,9 @@ Los bots juegan con el estado, no con los píxeles (skill `juego-3d`).
 dirección. Muestra el backend, los FPS, los contadores y el selector de calidad. Sirve para que
 el autor mida en su ordenador, que es donde los FPS valen. Otros parámetros: `?calidad=bajo|medio|alto`
 y `?semilla=n`. Mientras exista la vitrina de F04: `?vista=combate|todas|explorar|tipos`,
-`?criatura=0..3`, `?gris` y `?lento=0.1` (cámara lenta, para revisar las animaciones).
+`?criatura=0..3`, `?gris` y `?lento=0.1` (cámara lenta, para revisar las animaciones). En el juego,
+`?abrir=todo` abre los pasos cerrados para recorrer la isla entera.
+- **Dos arranques:** el juego por defecto y la vitrina con `?vitrina` (`src/main.ts`).
 
 ## Guardado
 

@@ -197,6 +197,8 @@ Cada paso deja algo jugable y con pruebas.
    - Dibujo para revisar: `node herramientas/mapa.ts` escribe `isla-1-casillas.svg`.
 2. **Maqueta jugable con formas simples (F05):** recorrer la isla entera con el teclado, con
    colisiones, la cámara de diorama, el cambio de zona y los pasos cerrados.
+   - **Hecho (2026-11-08):** subsistemas `entrada`, `partida`, `mundo`, `personaje`, `camara` e
+     `interfaz`; un bot cruza la isla con la lógica del juego. `?abrir=todo` abre los pasos.
 3. **Interiores y diálogos (F15):** museo, estatuas, elección de la inicial (F14) y anciano.
 4. **Encuentros, combate y captura (F06–F08)**, con criaturas provisionales, y la rebeldía.
 5. **Entrenadores (F16), refugio (F09), tienda (F17) y guardado (F10).**

@@ -4,8 +4,7 @@ Actualizado: 2026-11-07. Solo el presente; el historial está en git. Máximo 40
 
 ## Fase actual
 
-Fase 3 de `/nuevo-proyecto`, el andamiaje: cerrada. Ahora, la prueba de arte (`F04`): hecha y
-sin aprobar.
+Tanda 1 (bucle con formas simples): F05 hecha. La prueba de arte (F04) sigue con Meshy.
 
 ## Hecho
 
@@ -24,8 +23,9 @@ sin aprobar.
 
 ## Siguiente
 
-1. Mundo de la isla 1 (`ISLA-1.md`). Hecho: el mapa por casillas con sus reglas probadas (`node
-   herramientas/mapa.ts` lo dibuja). Siguiente: la maqueta jugable con formas simples (F05).
+1. Isla 1 (`ISLA-1.md`): mapa por casillas y maqueta jugable (F05) hechos; se recorre con el
+   teclado (`?abrir=todo` abre los pasos). Siguiente: interiores y diálogos (museo, elección de
+   la inicial y anciano) y después encuentros, combate y captura.
 2. En paralelo, arte con Meshy (`prompts-meshy.md`): la cría de Planta y `planta-2.glb`.
 
 ## Pendiente del autor
