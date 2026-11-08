@@ -229,3 +229,18 @@ The baby first evolution of this same creature: a tiny chubby forest fawn-lion c
   - Textura: reducirla a 1K.
   - Animación: por partes (collar, cola) y respiración del cuerpo.
 
+## Escenario (propuesta de Claude, 2026-11-08)
+
+- **El grueso,** con kits CC0 (Quaternius, KayKit, Kenney):
+  - árboles, rocas, vallas y casas;
+  - repintados con la paleta y el material del juego, para que encajen entre sí y con la luz;
+  - la licencia de cada paquete se comprueba y se apunta en `CREDITS.md`.
+- **Meshy, solo para unas pocas piezas protagonistas** (el faro, el refugio, el estadio del
+  campeón). Los créditos y el tiempo del autor van sobre todo a las criaturas.
+- **Modelos de la comunidad de Meshy:** los del plan gratis son CC BY 4.0 (hay que citarlos).
+  Se usan solo si encajan con el estilo.
+- **Cuándo:** en la escena representativa, después del bucle con formas simples (F05–F10),
+  según el orden de la skill `juego-3d`. Hará falta abrir en la red los dominios de descarga
+  de esos kits.
+- **Encaja con `ARTE.md`:** el mundo es tranquilo y sencillo, y la audacia va en las criaturas.
+

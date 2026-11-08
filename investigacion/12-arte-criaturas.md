@@ -56,6 +56,14 @@ Se abrió `docs.meshy.ai` en la red de la sesión. Fuentes:
 - **Primera prueba del autor:** pasó a 3D una imagen con tres criaturas juntas y salieron
   fundidas en una malla, unidas por triángulos estirados. Regla: una criatura por imagen.
 
+## API de Meshy (2026-11-08)
+
+- **Hecho:** la API usa créditos prepago propios, que se compran aparte en la configuración de
+  la suscripción. No comparte los créditos mensuales del plan web. Fuente:
+  [precios de la API](https://docs.meshy.ai/en/api/pricing).
+- **Consecuencia:** con el Pro del autor, Claude no puede generar por su cuenta. Genera el autor
+  en la web; Claude prepara los prompts y revisa.
+
 ## Inferencias
 
 - **Las 200 criaturas con el plan gratis de Meshy** son unas 6 al mes: casi 3 años. Con un
