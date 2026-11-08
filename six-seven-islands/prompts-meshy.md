@@ -163,3 +163,25 @@ El autor pasó a 3D una bestia del bosque (cuadrúpedo con astas, melena de hoja
   animaciones. Fuente: docs.meshy.ai, rigging.
 - **Cuenta para la isla 1:** ~23 criaturas, 3 difíciles a 30 y 20 normales a 15, son 390
   créditos; con repeticiones, unos 800. Cabe en un mes de Pro (1.000).
+
+## Segunda tanda de imágenes (2026-11-08)
+
+El autor generó dos imágenes de la bestia del bosque con el prompt corregido: una joven y
+esbelta, y otra majestuosa, con melena de hojas y patas de madera.
+
+- **Bien:** el estilo es el buscado (trazo limpio, colores planos, tres cuartos, fondo blanco y
+  cara de animal) y sirven para pasar a 3D.
+- **Antes del 3D:** astas más gruesas, con solo tres puntas, y sin chispas sueltas. Lo fino se
+  rompe en Meshy y es ruido en el móvil. Edición para el generador: «same creature, thicker
+  antlers with only three tines each, no floating sparkles».
+- **R8:** sin flores en las astas, que es el rasgo de un ciervo conocido del género.
+- **Propuesta de Claude (pendiente del autor):**
+  - Que sean la 2.ª y la 3.ª forma de la línea de la inicial de Planta, con una cría como 1.ª.
+  - Las diferencias entre hembra y macho, solo en unas pocas especies emblemáticas: duplican
+    el coste y, si la hembra final parece una forma intermedia, confunden la evolución.
+- **Prompt de la cría** (con la imagen joven como referencia en el generador):
+
+```text
+The baby first evolution of this same creature: a tiny chubby forest fawn-lion cub, big head, oversized round green eyes, two tiny wooden antler nubs with one sprouting leaf, a small collar of three large leaves, leaf-shaped tail tip, same leaf-green body, cream chest and brown paws, playful and curious. Same clean anime style of modern monster-collecting RPGs: crisp clean linework, cel shading, flat saturated colors, moderate detail. Single creature, full body, three-quarter front view, centered, plain white background, no shadow, no text.
+```
+
