@@ -1,5 +1,6 @@
-// Niveles de calidad. El móvil empieza en «bajo» y el escritorio en «alto»; el panel de
-// depuración permite cambiarlo en vivo. Presupuesto: .claude/skills/juego-3d/referencias/rendimiento.md
+// Niveles de calidad. El juego es solo para ordenador (portátiles, algunos Mac con pantalla de
+// densidad 2): empieza en «medio» hasta medir en sus equipos; el panel de depuración y ?calidad
+// permiten cambiarlo. Presupuesto: .claude/skills/juego-3d/referencias/rendimiento.md
 
 export type NivelCalidad = 'bajo' | 'medio' | 'alto';
 
@@ -21,7 +22,10 @@ export const CALIDADES: Record<NivelCalidad, Calidad> = {
   alto: { nivel: 'alto', densidadMax: 2, sombras: 2048, bloom: 'completo', desenfoque: true },
 };
 
-/** Nivel inicial: «bajo» si el puntero principal es un dedo, «alto» si es un ratón. */
-export function nivelInicial(punteroGrueso: boolean): NivelCalidad {
-  return punteroGrueso ? 'bajo' : 'alto';
+/**
+ * Nivel inicial: «medio». Son portátiles que mueven juegos ligeros, a menudo con gráfica integrada
+ * y pantalla de densidad 2. Se revisa cuando se midan los FPS en sus equipos.
+ */
+export function nivelInicial(): NivelCalidad {
+  return 'medio';
 }

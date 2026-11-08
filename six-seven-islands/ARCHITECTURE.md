@@ -95,7 +95,7 @@ export class Sistema implements Subsistema {
 | `motor` | `src/motor/` | El bucle, `ctx`, el registro de subsistemas, el paso fijo, los eventos y los niveles de calidad |
 | `render` | `src/sistemas/render/` | El renderizador, la escena, las luces, las sombras y el postproceso |
 | `camara` | `src/sistemas/camara/` | La cámara de diorama y la de combate |
-| `entrada` | `src/sistemas/entrada/` | El teclado, el ratón y el gesto de lanzar |
+| `entrada` | `src/sistemas/entrada/` | El teclado (no hay ratón) y las dos pulsaciones de lanzar |
 | `mundo` | `src/sistemas/mundo/` | La malla de cada zona (terreno, hierba, agua y kit de piezas), y su carga y descarga |
 | `criaturas` | `src/sistemas/criaturas/` | El generador de criaturas por piezas y su animación procedural. Se pide con `crear(aspecto)` y se anima con `accion(criatura, accion)` |
 | `personaje` | `src/sistemas/personaje/` | El jugador y los personajes generados, y la personalización |
@@ -161,9 +161,10 @@ y `?semilla=n`. Mientras exista la vitrina de F04: `?vista=combate|todas|explora
 
 - **Solo ordenador** (2026-11-08). Se usa el presupuesto de escritorio de la skill.
 - **Niveles de calidad:**
-  - alto por defecto;
-  - medio y bajo para ordenadores flojos, por ejemplo un portátil con gráfica integrada.
-  - Se ajustan cuando se midan los ordenadores del autor y de sus amigos.
+  - **medio por defecto:** son portátiles que mueven juegos ligeros, a menudo con gráfica
+    integrada y, en los Mac, pantalla de densidad 2;
+  - alto si van holgados; bajo para los flojos.
+  - Se ajustan cuando se midan los FPS en sus equipos con `?depurar`.
 - **Densidad de píxeles:** como mucho 2.
 - **Presupuesto:** `.claude/skills/juego-3d/referencias/rendimiento.md`, columna de escritorio
   (≤ 300 llamadas y ≤ 750.000 triángulos). Reparto:

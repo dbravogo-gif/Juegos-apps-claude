@@ -23,7 +23,7 @@ function mostrarFallo(e: unknown): void {
 async function arrancar(): Promise<void> {
   const parametros = new URLSearchParams(location.search);
   const pedido = parametros.get('calidad') as NivelCalidad | null;
-  const nivel = pedido && CALIDADES[pedido] ? pedido : nivelInicial(matchMedia('(pointer: coarse)').matches);
+  const nivel = pedido && CALIDADES[pedido] ? pedido : nivelInicial();
   const semilla = parametros.get('semilla') ?? 67;
 
   const camara = new PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.5, 200);

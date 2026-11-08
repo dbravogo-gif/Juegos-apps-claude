@@ -48,13 +48,13 @@
       "id": "F07-combate-jugable",
       "tanda": 1,
       "descripcion": "La escena de combate con formas simples: 4 movimientos, cambiar, objeto y huir, con botones grandes. Presenta los eventos del núcleo y da experiencia y niveles al terminar.",
-      "como_se_comprueba": "Un bot gana un combate salvaje solo con la interfaz (clics en los botones). Capturas de cada menú en escritorio (1280 × 800). Todo se usa con ratón y con teclado.",
+      "como_se_comprueba": "Un bot gana un combate salvaje solo con la interfaz y el teclado. Capturas de cada menú en escritorio (1280 × 800). Todo se usa solo con teclado.",
       "hecha": false
     },
     {
       "id": "F08-captura-con-gesto",
       "tanda": 1,
-      "descripcion": "Lanzar el objeto de captura arrastrando el ratón. La puntería y el momento dan una calidad de 0 a 1, que entra en la fórmula del núcleo.",
+      "descripcion": "Lanzar el objeto de captura con el teclado: dos pulsaciones, puntería y momento (DISENO.md). La puntería y el momento dan una calidad de 0 a 1, que entra en la fórmula del núcleo.",
       "como_se_comprueba": "Prueba del núcleo: más calidad da más probabilidad, siempre dentro de los límites. El bot captura una criatura simulando el gesto, y la criatura entra en el equipo.",
       "hecha": false
     },

@@ -23,10 +23,11 @@ Vitest.
 Las que surjan de errores observados (regla R6) o de decisiones del autor, cada una con la fecha
 y el porqué.
 
-- **2026-11-08 · Solo para ordenador, con ratón y teclado.** Lo decide el autor: él y sus
-  amigos juegan en PC. Dentro de esta carpeta manda sobre la convención «móvil primero» de la
-  raíz:
+- **2026-11-08 · Solo para ordenador y solo con teclado.** Lo decide el autor: él y sus amigos
+  juegan en portátiles, algunos Mac. Dentro de esta carpeta manda sobre la convención «móvil
+  primero» de la raíz:
   - pantalla apaisada;
   - nada de diseño táctil ni vertical;
-  - capturas con `--dispositivo escritorio`.
+  - **ninguna función necesita el ratón**, y la cámara no gira;
+  - capturas con `--dispositivo escritorio` y pasos con `tecla:`.
   - Sigue sin hacer falta un mando.

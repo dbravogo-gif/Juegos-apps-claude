@@ -17,7 +17,7 @@ Entrevista del 2026-11-07. Se queda en el qué y el porqué; el cómo está en `
 - **Verbo principal:** capturar y combatir por turnos.
 - **Verbos secundarios:** explorar, formar equipo, evolucionar y, online, intercambiar.
 - **Cada 5 a 30 segundos, el jugador:** anda por la isla, cruza hierba alta, le salta un
-  encuentro, elige un movimiento o lanza la captura con el ratón.
+  encuentro, elige un movimiento o lanza la captura con el teclado.
 - **Cada 1 a 5 minutos, cambia:** acaba un combate (experiencia, nivel, una captura), aparece un
   entrenador, se abre una zona, se cumple un recado o evoluciona una criatura.
 - **Cómo pierde, aprende y lo vuelve a intentar:**
@@ -47,9 +47,11 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
 **Cómo se demuestra cada parte en el juego:**
 
 - **Entrada real:**
+  - Solo teclado; el ratón no hace falta y la cámara no gira.
   - Para moverse, WASD o las flechas.
-  - En combate, botones grandes.
-  - Para capturar, arrastrar el ratón.
+  - En los menús y en combate: flechas para elegir, Enter o Espacio para confirmar y Escape
+    para volver. Atajos del 1 al 4 para los movimientos.
+  - Para capturar, dos pulsaciones (ver «Captura»).
 - **Objetivo visible:** la cámara de diorama deja ver el camino y, a lo lejos, el faro de la
   ciudad del campeón.
 - **Presión en el primer minuto:** el primer combate, contra el amigo rival nada más elegir la
@@ -111,7 +113,11 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
   - los estados quemado, dormido, paralizado, envenenado e intoxicado.
 - **Las pasivas** quedan para más adelante, como contenido propio de este juego.
 - **Captura:**
-  - Tras debilitar a la criatura, se lanza el objeto arrastrando el ratón.
+  - Tras debilitar a la criatura, se lanza el objeto con dos pulsaciones de Espacio:
+    - la primera fija la puntería (una mira oscila sobre la criatura);
+    - la segunda fija el momento (un aro se cierra sobre ella).
+  - Cuanto más centrada y más justa, más calidad (de 0 a 1). Propuesta de Claude, pendiente del
+    autor.
   - La puntería y el momento suben la probabilidad. La base depende de la Vida que le quede, de
     su estado y del objeto.
 
@@ -217,8 +223,8 @@ turno. El servicio de tiempo real gratuito se elige al llegar a esa fase.
   sin evolución.
 - 2026-11-07 · Los 15 tipos y la tabla de Leyendas de Iberia.
 - 2026-11-07 · Combate por turnos clásico. El motor admite 2 contra 2.
-- 2026-11-07 · Captura: lanzar arrastrando el ratón (con el dedo, hasta que se decidió que el
-  juego es solo para ordenador).
+- 2026-11-07 · Captura con habilidad: la puntería y el momento dan la calidad del lanzamiento.
+  Desde el 2026-11-08 se hace con el teclado.
 - 2026-11-07 · Derrota: vuelta al refugio, con el 10 % menos de dinero.
 - 2026-11-07 · Equipo de 6 criaturas.
 - 2026-11-07 · Encuentros por sorpresa en la hierba. Las únicas que se ven aparecen en 1 de
@@ -235,9 +241,9 @@ turno. El servicio de tiempo real gratuito se elige al llegar a esa fase.
 - 2026-11-07 · Sesiones abiertas con guardado automático.
 - 2026-11-07 · Empate en combate (caen a la vez las últimas de los dos lados): gana el lado
   cuya última criatura cayó después, como con el daño de retroceso en el género.
-- 2026-11-08 · **Solo para ordenador, con ratón y teclado.** El autor y sus amigos juegan en
-  PC. Pantalla apaisada, presupuesto de escritorio y desenfoque de miniatura real. Se deja de
-  diseñar para el tacto y el móvil.
+- 2026-11-08 · **Solo para ordenador y solo con teclado.** El autor y sus amigos juegan en
+  portátiles, algunos Mac, que mueven juegos ligeros. El ratón no hace falta y la cámara no
+  gira. Pantalla apaisada, presupuesto de escritorio y desenfoque de miniatura real.
 - 2026-11-08 · Línea de la inicial de Planta: una bestia del bosque, ciervo-león con astas de
   madera, collar de hojas y cola de hoja. Tres formas: cría, joven (forma 2) y majestuosa
   (forma 3). Las imágenes de las formas 2 y 3 las generó el autor; prompts y notas en
