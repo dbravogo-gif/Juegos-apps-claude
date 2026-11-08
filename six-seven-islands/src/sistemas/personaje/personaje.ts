@@ -1,31 +1,54 @@
-// Subsistema «personaje»: el jugador y los personajes de la isla, con formas simples (maqueta de
-// F05; el generador de personajes llega en F12). Dibuja al jugador donde dice «partida»,
-// interpolado entre pasos fijos, con un pequeño bote al andar. Los entrenadores enseñan su línea
-// de visión en el suelo (ARTE.md, «Peligros»).
+// Subsistema «personaje»: el jugador y los personajes de la isla, con los personajes de KayKit
+// (CC0) sin armas y animados (parado y andando). Dibuja al jugador donde dice «partida»,
+// interpolado entre pasos fijos. Si algo lo tapa, se ve su silueta. Los entrenadores enseñan su
+// línea de visión en el suelo (ARTE.md, «Peligros»). El generador de personajes llega en F12.
 
 import {
+  AnimationMixer,
+  Box3,
   CapsuleGeometry,
   GreaterDepth,
   Group,
   InstancedMesh,
+  LoopRepeat,
   Matrix4,
   Mesh,
   MeshBasicNodeMaterial,
   PlaneGeometry,
   SphereGeometry,
   Vector3,
+  type AnimationAction,
   type BufferGeometry,
   type Material,
+  type Object3D,
 } from 'three/webgpu';
+import { clone as clonarConEsqueleto } from 'three/addons/utils/SkeletonUtils.js';
+import type { GLTF } from 'three/addons/loaders/GLTFLoader.js';
 import { PASOS_POR_CASILLA, posicionVisual } from '../../core/explorar';
-import { clave, deClave, enIsla, vision, type Direccion } from '../../core/mundo';
-import { MaterialDiorama } from '../../arte/material';
+import { clave, deClave, enIsla, vision, type Direccion, type Personaje as DefPersonaje } from '../../core/mundo';
 import { COLORES } from '../../arte/paleta';
 import { alturaSuelo } from '../../arte/escala';
+import { aMaterialDelJuego, cargarModelo, rutaModelo } from '../../arte/modelos';
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Partida } from '../partida/partida';
 
 const GIRO: Record<Direccion, number> = { s: 0, e: Math.PI / 2, n: Math.PI, o: -Math.PI / 2 };
+/** Alto de las figuritas en el mundo (la casilla mide 1). */
+const ALTO = 1.25;
+
+interface Figura {
+  raiz: Group;
+  mezclador: AnimationMixer;
+  acciones: Map<string, AnimationAction>;
+  actual: string;
+}
+
+/** Qué modelo de KayKit hace de cada personaje. */
+function modeloDe(p: DefPersonaje): string {
+  if (p.id === 'anciano') return 'Mage';
+  if (p.entrenador) return p.entrenador.obligatorio ? 'Knight' : 'Barbarian';
+  return 'Rogue_Hooded';
+}
 
 export class Personaje implements Subsistema {
   static readonly id = 'personaje';
@@ -34,73 +57,50 @@ export class Personaje implements Subsistema {
   /** Posición del jugador en el mundo, para la cámara. */
   readonly posicion = new Vector3();
   private partida!: Partida;
-  private jugador = new Group();
+  private jugador!: Figura;
+  private figuras: Figura[] = [];
   private giro = 0;
-  private reloj = 0;
   private geometrias: BufferGeometry[] = [];
   private materiales: Material[] = [];
-  private objetos: (Mesh | Group)[] = [];
+  private objetos: Object3D[] = [];
 
-  init(ctx: Ctx): void {
+  async init(ctx: Ctx): Promise<void> {
     this.partida = ctx.get<Partida>('partida');
     const m = this.partida.mundo;
-    const mat = (color: string, contraluz = 0.35) => {
-      const x = new MaterialDiorama({ color, bordes: [-0.25, 0.5], especular: 0.12, dureza: 16, contraluz });
-      this.materiales.push(x);
-      return x;
+    const modelos = new Map<string, GLTF>();
+    const cargar = async (nombre: string) => {
+      if (!modelos.has(nombre)) modelos.set(nombre, await cargarModelo(rutaModelo(`kaykit/${nombre}.glb`)));
+      return modelos.get(nombre)!;
     };
-    const cuerpo = new CapsuleGeometry(0.26, 0.42, 4, 10).translate(0, 0.47, 0);
-    const cabeza = new SphereGeometry(0.27, 16, 12).translate(0, 1.0, 0);
-    const nariz = new SphereGeometry(0.07, 8, 6).translate(0, 0.98, 0.26);
-    this.geometrias.push(cuerpo, cabeza, nariz);
 
-    // Jugador: figurita de cabeza grande con la ropa de su color (ARTE.md).
-    const piel = mat('#F2C9A0');
-    for (const [g, mt] of [
-      [cuerpo, mat('#3A6EA5', 0.45)],
-      [cabeza, piel],
-      [nariz, piel],
-    ] as const) {
-      const malla = new Mesh(g, mt);
-      malla.castShadow = true;
-      this.jugador.add(malla);
-    }
-    // Silueta: solo se dibuja la parte del jugador que queda tapada (prueba de profundidad al
-    // revés), para que siempre se vea por dónde se camina aunque haya una casa delante.
-    const silueta = new MeshBasicNodeMaterial({ color: '#3A6EA5', transparent: true, opacity: 0.55, depthWrite: false });
+    // Jugador, con su silueta: solo se dibuja la parte que algo tapa (prueba de profundidad al revés).
+    this.jugador = this.figura(await cargar('Rogue'), 'Rogue');
+    const silueta = new MeshBasicNodeMaterial({ color: '#3A6EA5', transparent: true, opacity: 0.5, depthWrite: false });
     silueta.depthFunc = GreaterDepth;
+    const cuerpo = new CapsuleGeometry(0.3, 0.45, 4, 10).translate(0, 0.52, 0);
+    const cabeza = new SphereGeometry(0.33, 14, 10).translate(0, 1.0, 0);
+    this.geometrias.push(cuerpo, cabeza);
     this.materiales.push(silueta);
     for (const g of [cuerpo, cabeza]) {
-      // Un poco más grande que el jugador: así queda por delante de su propia superficie y solo
-      // aparece donde algo lo tapa de verdad.
       const malla = new Mesh(g, silueta);
-      malla.scale.setScalar(1.04);
       malla.renderOrder = 10;
-      this.jugador.add(malla);
+      this.jugador.raiz.add(malla);
     }
-    ctx.escena.add(this.jugador);
-    this.objetos.push(this.jugador);
+    ctx.escena.add(this.jugador.raiz);
+    this.objetos.push(this.jugador.raiz);
 
-    // Personajes: lavanda los que solo hablan; rojo los entrenadores obligatorios, naranja los demás.
+    // Personajes de la isla y lo que ven los entrenadores.
     const visiones: Matrix4[] = [];
     for (const z of m.zonas.values()) {
       for (const p of z.personajes) {
-        const g = new Group();
-        const color = p.entrenador ? (p.entrenador.obligatorio ? '#C0392B' : '#E67E22') : '#8E7CC3';
-        for (const [geo, mt] of [
-          [cuerpo, mat(color)],
-          [cabeza, piel],
-          [nariz, piel],
-        ] as const) {
-          const malla = new Mesh(geo, mt);
-          malla.castShadow = true;
-          g.add(malla);
-        }
-        const [x, y] = deClave(enIsla(m, z.id, p.x, p.y));
-        g.position.set(x, alturaSuelo(m.casillas.get(enIsla(m, z.id, p.x, p.y))!.h), y);
-        g.rotation.y = GIRO[p.mira];
-        ctx.escena.add(g);
-        this.objetos.push(g);
+        const nombre = modeloDe(p);
+        const f = this.figura(await cargar(nombre), nombre);
+        const k = enIsla(m, z.id, p.x, p.y);
+        const [x, y] = deClave(k);
+        f.raiz.position.set(x, alturaSuelo(m.casillas.get(k)!.h), y);
+        f.raiz.rotation.y = GIRO[p.mira];
+        ctx.escena.add(f.raiz);
+        this.objetos.push(f.raiz);
         for (const v of vision(m, z.id, p)) {
           const [vx, vy] = deClave(v);
           visiones.push(new Matrix4().makeTranslation(vx, alturaSuelo(m.casillas.get(v)!.h) + 0.14, vy));
@@ -116,9 +116,47 @@ export class Personaje implements Subsistema {
       visiones.forEach((mt, i) => im.setMatrixAt(i, mt));
       im.computeBoundingSphere();
       ctx.escena.add(im);
-      this.objetos.push(im as unknown as Mesh);
+      this.objetos.push(im);
     }
     this.colocar(0, 0);
+  }
+
+  /** Una figurita: copia del modelo con su esqueleto, sin armas, a escala y con sus animaciones. */
+  private figura(gltf: GLTF, nombre: string): Figura {
+    const base = nombre.split('_')[0];
+    const copia = clonarConEsqueleto(gltf.scene);
+    copia.traverse((o) => {
+      if (!(o as Mesh).isMesh) return;
+      // Solo las piezas del cuerpo («Rogue_Body», «Mage_Hat»…); fuera armas, escudos y libros.
+      o.visible = o.name.startsWith(`${base}_`) && !o.name.includes('Shield');
+    });
+    this.materiales.push(...aMaterialDelJuego(copia, { bordes: [-0.25, 0.5], especular: 0.1, dureza: 16, contraluz: 0.35 }));
+    const caja = new Box3();
+    copia.updateWorldMatrix(true, true);
+    copia.traverse((o) => {
+      if ((o as Mesh).isMesh && o.visible) caja.expandByObject(o);
+    });
+    const alto = caja.max.y - caja.min.y || 1;
+    copia.scale.setScalar(ALTO / alto);
+    const raiz = new Group();
+    raiz.add(copia);
+    const mezclador = new AnimationMixer(copia);
+    const acciones = new Map<string, AnimationAction>();
+    for (const clip of gltf.animations) acciones.set(clip.name, mezclador.clipAction(clip).setLoop(LoopRepeat, Infinity));
+    const f: Figura = { raiz, mezclador, acciones, actual: '' };
+    this.animar(f, 'Idle');
+    this.figuras.push(f);
+    return f;
+  }
+
+  private animar(f: Figura, nombre: string): void {
+    if (f.actual === nombre) return;
+    const nueva = f.acciones.get(nombre);
+    if (!nueva) return;
+    const vieja = f.acciones.get(f.actual);
+    nueva.reset().play();
+    if (vieja) nueva.crossFadeFrom(vieja, 0.15, false);
+    f.actual = nombre;
   }
 
   private colocar(dt: number, alfa: number): void {
@@ -128,24 +166,23 @@ export class Personaje implements Subsistema {
     const h0 = alturaSuelo(m.casillas.get(clave(e.desdeX, e.desdeY))?.h ?? 0);
     const h1 = alturaSuelo(m.casillas.get(clave(e.x, e.y))?.h ?? 0);
     const t = e.paso === 0 ? 1 : Math.min(1, (e.paso + alfa) / PASOS_POR_CASILLA);
-    const andando = e.paso > 0;
-    this.reloj += dt;
-    const bote = andando ? Math.abs(Math.sin(this.reloj * 18)) * 0.08 : 0;
     this.posicion.set(p.x, h0 + (h1 - h0) * t, p.y);
-    this.jugador.position.set(p.x, this.posicion.y + bote, p.y);
-    // Giro suave hacia donde mira.
+    this.jugador.raiz.position.copy(this.posicion);
+    this.animar(this.jugador, e.paso > 0 ? 'Walking_A' : 'Idle');
     let objetivo = GIRO[e.mira];
     while (objetivo - this.giro > Math.PI) objetivo -= Math.PI * 2;
     while (objetivo - this.giro < -Math.PI) objetivo += Math.PI * 2;
     this.giro += (objetivo - this.giro) * Math.min(1, dt * 18 || 1);
-    this.jugador.rotation.y = this.giro;
+    this.jugador.raiz.rotation.y = this.giro;
   }
 
   actualizar(dt: number, ctx: Ctx): void {
     this.colocar(dt, ctx.tiempo.alfa);
+    for (const f of this.figuras) f.mezclador.update(dt);
   }
 
   dispose(): void {
+    for (const f of this.figuras) f.mezclador.stopAllAction();
     for (const o of this.objetos) o.removeFromParent();
     for (const g of this.geometrias) g.dispose();
     for (const m of this.materiales) m.dispose();

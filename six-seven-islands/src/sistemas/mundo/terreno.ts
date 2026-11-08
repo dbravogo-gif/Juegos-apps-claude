@@ -15,7 +15,7 @@ import {
   Vector3,
 } from 'three/webgpu';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
-import { clave, deClave, edificios, type Casilla, type CasillaMundo, type Mundo } from '../../core/mundo';
+import { clave, deClave, type Casilla, type CasillaMundo, type Mundo } from '../../core/mundo';
 import { FONDO, alturaSuelo } from '../../arte/escala';
 import { COLORES } from '../../arte/paleta';
 
@@ -59,9 +59,7 @@ export function alturaCara(cm: CasillaMundo | undefined, cumbre: number | undefi
     case 'B':
       return -0.7;
     case '#':
-      return alturaSuelo(cm.h) + 1.4;
-    case '=':
-      return alturaSuelo(cm.h) + 0.45;
+      return alturaSuelo(cm.h) + 0.9;
     case '"':
     case ';':
       return alturaSuelo(cm.h) + SUBIDA_ENCUENTRO;
@@ -77,7 +75,7 @@ const COLOR_ARRIBA: Partial<Record<Casilla, string>> = {
   _: COLORES.picon,
   '"': COLORES.hierbaAlta,
   ';': COLORES.malpais,
-  '#': COLORES.cumbre,
+  '#': '#9C928C',
   '~': COLORES.aguaTurquesa,
   T: COLORES.hierbaHonda,
   Y: COLORES.hierbaMenta,
@@ -96,7 +94,8 @@ function colorArriba(cm: CasillaMundo | undefined, esCumbre: boolean): string {
 }
 
 function colorLado(cm: CasillaMundo | undefined, esCumbre: boolean): string {
-  if (esCumbre || cm?.c === '#') return '#9196C6';
+  if (esCumbre) return '#9196C6';
+  if (cm?.c === '#') return '#7E746F';
   if (cm?.c === '_' || cm?.c === ';') return '#4A4247';
   return '#8E6A4D';
 }
@@ -107,8 +106,9 @@ export function geometriaTerreno(m: Mundo, cumbre: Map<number, number>): BufferG
   const nor: number[] = [];
   const col: number[] = [];
   const c = new Color();
-  const quad = (a: number[], b: number[], cc: number[], d: number[], n: number[], hex: string) => {
-    c.set(hex);
+  // `tono` varía un poco el color de cada casilla, para que el suelo no sean losas lisas.
+  const quad = (a: number[], b: number[], cc: number[], d: number[], n: number[], hex: string, tono = 1) => {
+    c.set(hex).multiplyScalar(tono);
     for (const v of [a, b, cc, a, cc, d]) {
       pos.push(v[0], v[1], v[2]);
       nor.push(n[0], n[1], n[2]);
@@ -125,7 +125,7 @@ export function geometriaTerreno(m: Mundo, cumbre: Map<number, number>): BufferG
     const x1 = x + 0.5;
     const z0 = y - 0.5;
     const z1 = y + 0.5;
-    quad([x0, top, z1], [x1, top, z1], [x1, top, z0], [x0, top, z0], [0, 1, 0], colorArriba(cm, esCumbre));
+    quad([x0, top, z1], [x1, top, z1], [x1, top, z0], [x0, top, z0], [0, 1, 0], colorArriba(cm, esCumbre), 0.95 + (pseudo(k) % 11) * 0.01);
     const lado = colorLado(cm, esCumbre);
     const vecinos: [number, number, number[], number[][]][] = [
       [x, y + 1, [0, 0, 1], [[x0, z1], [x1, z1]]],
@@ -148,118 +148,6 @@ export function geometriaTerreno(m: Mundo, cumbre: Map<number, number>): BufferG
   return g;
 }
 
-/** Colorea una geometría entera de un color, como atributo de vértice. */
-function teñir(g: BufferGeometry, hex: string): BufferGeometry {
-  g.deleteAttribute('uv');
-  const c = new Color(hex);
-  const n = g.attributes.position.count;
-  const col = new Float32Array(n * 3);
-  for (let i = 0; i < n; i++) col.set([c.r, c.g, c.b], i * 3);
-  g.setAttribute('color', new BufferAttribute(col, 3));
-  if (g.index) return g.toNonIndexed();
-  return g;
-}
-
-// Bajos a propósito: con la cámara a 50°, un edificio alto tapa lo que hay detrás.
-const ALTO_EDIFICIO: Partial<Record<Casilla, number>> = { C: 1.3, M: 1.6, R: 1.6, S: 1.3, G: 2.6, F: 4.2 };
-const ALTO_TEJADO: Partial<Record<Casilla, number>> = { C: 0.9, M: 1.0, R: 1.0, S: 0.9, G: 1.4 };
-const PARED: Partial<Record<Casilla, string>> = {
-  C: COLORES.crema,
-  M: '#F2E2C4',
-  R: '#FFF6EA',
-  S: '#FFF6EA',
-  G: '#FFF3C2',
-  F: '#FFFFFF',
-};
-const TEJADO: Partial<Record<Casilla, string>> = {
-  C: COLORES.tejaCanaria,
-  M: COLORES.sombraLavanda,
-  R: COLORES.acentoCoral,
-  S: '#5E8FD6',
-  G: '#F2C230',
-  F: COLORES.acentoCoral,
-};
-
-/** Los edificios de la isla en dos mallas: paredes y tejados (y las puertas en las paredes). */
-export function geometriaEdificios(m: Mundo): BufferGeometry {
-  const partes: BufferGeometry[] = [];
-  for (const zona of m.zonas.keys()) {
-    for (const e of edificios(m, zona)) {
-      const xs = e.casillas.map((k) => deClave(k)[0]);
-      const ys = e.casillas.map((k) => deClave(k)[1]);
-      const cx = (Math.min(...xs) + Math.max(...xs)) / 2;
-      const cz = (Math.min(...ys) + Math.max(...ys)) / 2;
-      const base = alturaSuelo(m.casillas.get(e.casillas[0])!.h);
-      const alto = ALTO_EDIFICIO[e.tipo] ?? 2;
-      const w = e.ancho - 0.15;
-      const d = e.fondo - 0.15;
-      if (e.tipo === 'F') {
-        const torre = new CylinderGeometry(0.55, 0.8, alto, 16).translate(cx, base + alto / 2, cz);
-        partes.push(teñir(torre, PARED.F!));
-        partes.push(teñir(new CylinderGeometry(0.45, 0.45, 0.6, 12).translate(cx, base + alto + 0.3, cz), '#FFE9A8'));
-        partes.push(teñir(new ConeGeometry(0.7, 0.7, 12).translate(cx, base + alto + 0.95, cz), TEJADO.F!));
-        continue;
-      }
-      const cuerpo = new BoxGeometryLigera(w, alto, d).translate(cx, base + alto / 2, cz);
-      partes.push(teñir(cuerpo, PARED[e.tipo] ?? COLORES.crema));
-      // Tejado a cuatro aguas con alero: una pirámide de base cuadrada escalada a la planta.
-      const ht = ALTO_TEJADO[e.tipo] ?? 0.9;
-      const tejado = new ConeGeometry(Math.SQRT1_2, 1, 4, 1)
-        .rotateY(Math.PI / 4)
-        .scale(w + 0.35, ht, d + 0.35)
-        .translate(cx, base + alto + ht / 2, cz);
-      partes.push(teñir(tejado, TEJADO[e.tipo] ?? COLORES.tejaCanaria));
-      // Puertas: un rectángulo oscuro en la pared que da a cada puerta.
-      for (const p of e.puertas) {
-        const [px, pz] = deClave(p);
-        const dx = Math.sign(px - cx) * (Math.abs(px - cx) > w / 2 ? 1 : 0);
-        const dz = Math.sign(pz - cz) * (Math.abs(pz - cz) > d / 2 ? 1 : 0);
-        const hueco = new BoxGeometryLigera(dz !== 0 ? 0.7 : 0.08, 1.1, dx !== 0 ? 0.7 : 0.08);
-        const ex = dx !== 0 ? cx + dx * (w / 2 + 0.02) : px;
-        const ez = dz !== 0 ? cz + dz * (d / 2 + 0.02) : pz;
-        partes.push(teñir(hueco.translate(ex, base + 0.55, ez), COLORES.balcon));
-      }
-      // El gimnasio lleva su emblema de Luz sobre la puerta: que se vea que es el gimnasio.
-      if (e.tipo === 'G') {
-        const emblema = new SphereGeometry(0.55, 16, 10).scale(1, 1, 0.35).translate(cx, base + alto - 0.4, cz + d / 2 + 0.1);
-        partes.push(teñir(emblema, '#FFD84A'));
-      }
-    }
-  }
-  const g = mergeGeometries(partes, false)!;
-  for (const p of partes) p.dispose();
-  g.computeBoundingSphere();
-  return g;
-}
-
-/** Caja sin índice, para fusionar con lo demás. */
-class BoxGeometryLigera extends BufferGeometry {
-  constructor(w: number, h: number, d: number) {
-    super();
-    const x = w / 2;
-    const y = h / 2;
-    const z = d / 2;
-    const caras: [number[], number[][]][] = [
-      [[1, 0, 0], [[x, -y, z], [x, -y, -z], [x, y, -z], [x, y, z]]],
-      [[-1, 0, 0], [[-x, -y, -z], [-x, -y, z], [-x, y, z], [-x, y, -z]]],
-      [[0, 1, 0], [[-x, y, z], [x, y, z], [x, y, -z], [-x, y, -z]]],
-      [[0, -1, 0], [[-x, -y, -z], [x, -y, -z], [x, -y, z], [-x, -y, z]]],
-      [[0, 0, 1], [[-x, -y, z], [x, -y, z], [x, y, z], [-x, y, z]]],
-      [[0, 0, -1], [[x, -y, -z], [-x, -y, -z], [-x, y, -z], [x, y, -z]]],
-    ];
-    const pos: number[] = [];
-    const nor: number[] = [];
-    for (const [n, [a, b, c, d2]] of caras) {
-      for (const v of [a, b, c, a, c, d2]) {
-        pos.push(...v);
-        nor.push(...n);
-      }
-    }
-    this.setAttribute('position', new BufferAttribute(new Float32Array(pos), 3));
-    this.setAttribute('normal', new BufferAttribute(new Float32Array(nor), 3));
-  }
-}
-
 export interface Decoracion {
   /** Trozo de la isla: cada trozo lleva sus propias mallas, para descartar las que no se ven. */
   zona: string;
@@ -271,7 +159,7 @@ export interface Decoracion {
 /** Lado de los trozos de decoración, en casillas: lo que no se ve se descarta trozo a trozo. */
 const TROZO = 12;
 
-/** La decoración repetida, por trozos: árboles, plataneras, el drago, matas de hierba alta y piedras del malpaís. */
+/** La decoración propia, por trozos: plataneras, el drago, matas de hierba alta, piedras del malpaís y flores. */
 export function decoracion(m: Mundo): Decoracion[] {
   const res: Decoracion[] = [];
   const geos = geometriasDecoracion();
@@ -306,23 +194,31 @@ export function geometriasDecoracion() {
     ],
     false,
   )!;
+  const flores = mergeGeometries(
+    [
+      [0, 0],
+      [0.14, 0.08],
+      [-0.1, 0.12],
+    ].map(([a, b]) => new SphereGeometry(0.05, 6, 4).translate(a, 0.05, b)),
+    false,
+  )!;
   const dragoGeo = mergeGeometries(
     [new CylinderGeometry(0.25, 0.35, 1.4, 8).translate(0, 0.7, 0), new SphereGeometry(1.2, 12, 6, 0, Math.PI * 2, 0, Math.PI / 2).scale(1, 0.45, 1).translate(0, 1.45, 0)],
     false,
   )!;
   return {
-    troncos: { geometria: new CylinderGeometry(0.1, 0.16, 0.8, 5) as BufferGeometry, color: COLORES.maderaTostada },
-    copas: { geometria: new SphereGeometry(0.62, 8, 6) as BufferGeometry, color: '#2E7D57' },
     plataneras: { geometria: platanera, color: '#8CC152' },
     drago: { geometria: dragoGeo, color: '#6E8F45' },
     matas: { geometria: mata, color: '#2F8A5B' },
     piedras: { geometria: new DodecahedronGeometry(1, 0) as BufferGeometry, color: '#5E3A33' },
+    floresBlancas: { geometria: flores, color: '#FFF8EC' },
+    floresAmarillas: { geometria: flores, color: '#FFD84A' },
   };
 }
 
-function decoracionDe(m: Mundo, claves: number[]): Record<'troncos' | 'copas' | 'plataneras' | 'drago' | 'matas' | 'piedras', Matrix4[]> {
-  const troncos: Matrix4[] = [];
-  const copas: Matrix4[] = [];
+function decoracionDe(m: Mundo, claves: number[]): Record<'plataneras' | 'drago' | 'matas' | 'piedras' | 'floresBlancas' | 'floresAmarillas', Matrix4[]> {
+  const floresBlancas: Matrix4[] = [];
+  const floresAmarillas: Matrix4[] = [];
   const plataneras: Matrix4[] = [];
   const matas: Matrix4[] = [];
   const piedras: Matrix4[] = [];
@@ -334,10 +230,10 @@ function decoracionDe(m: Mundo, claves: number[]): Record<'troncos' | 'copas' | 
     const base = alturaSuelo(cm.h);
     const r = pseudo(k);
     const j = (n: number) => (((r >>> n) & 255) / 255 - 0.5) * 0.3;
-    if (cm.c === 'T') {
-      const s = 0.85 + ((r & 15) / 15) * 0.35;
-      troncos.push(new Matrix4().compose(v.set(x, base + 0.4 * s, y), IDENT, new Vector3(s, s, s)));
-      copas.push(new Matrix4().compose(v.set(x + j(4), base + 1.25 * s, y + j(12)), IDENT, new Vector3(s, s * 1.1, s)));
+    if (cm.c === '.' && r % 5 === 0) {
+      // Florecillas sueltas en la hierba corta: puntos de color, no matas (las matas avisan de
+      // zona de encuentros).
+      (r & 32 ? floresBlancas : floresAmarillas).push(new Matrix4().compose(v.set(x + j(2) * 2, base + 0.02, y + j(9) * 2), IDENT, new Vector3(1, 1, 1)));
     } else if (cm.c === 'b') {
       plataneras.push(new Matrix4().compose(v.set(x + j(4), base, y + j(12)), IDENT, new Vector3(1, 0.9 + (r & 7) / 20, 1)));
     } else if (cm.c === 'Y') {
@@ -353,6 +249,6 @@ function decoracionDe(m: Mundo, claves: number[]): Record<'troncos' | 'copas' | 
       }
     }
   }
-  return { troncos, copas, plataneras, drago, matas, piedras };
+  return { plataneras, drago, matas, piedras, floresBlancas, floresAmarillas };
 }
 

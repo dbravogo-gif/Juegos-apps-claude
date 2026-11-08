@@ -4,22 +4,21 @@ Actualizado: 2026-11-08. Solo el presente; el historial está en git. Máximo 40
 
 ## Fase actual
 
-Tanda 1 (bucle con formas simples): F05 hecha. La prueba de arte (F04) sigue con Meshy.
+Tanda 1 (bucle con formas simples): F05 hecha, con un pase de arte de KayKit (CC0) en casas,
+árboles, rocas y personas (2026-11-08). La prueba de arte de criaturas (F04) sigue con Meshy.
 
 ## Hecho
 
 - Entrevista (fase 1). Las decisiones están en `DISENO.md`.
-- Documentos (fase 2), aprobados por el autor el 2026-11-07: `DISENO.md`, `ARTE.md`,
-  `ARCHITECTURE.md` y `funciones.json`.
+- Documentos (fase 2), aprobados el 2026-11-07: `DISENO.md`, `ARTE.md`, `ARCHITECTURE.md` y
+  `funciones.json`.
 - `F01`, el andamiaje: motor de subsistemas, render WebGPU o WebGL2, isla de prueba temporal,
   panel `?depurar`, `window.__JUEGO__`, web instalable y publicación.
-- `F02`, el núcleo: reglas de Leyendas con código propio y sin su contenido
-  (`src/core/ORIGEN.md`).
+- `F02`, el núcleo: reglas de Leyendas, con código propio y sin su contenido (`core/ORIGEN.md`).
 - `F03`, el combate N contra N (1 contra 1 y 2 contra 2), puro y determinista, con 1.000
   combates de bots en las pruebas.
-- `F04`, la prueba de arte: generador por piezas, material compartido, animaciones y vitrina
-  (79 pruebas). **El autor lo juzga insuficiente** (2026-11-07): quiere criaturas mucho más
-  trabajadas. La decisión está abierta en `DISENO.md`.
+- `F04`, generador de criaturas por piezas y vitrina. **El autor lo juzga insuficiente**
+  (2026-11-07): las criaturas saldrán de Meshy (`DISENO.md`).
 
 ## Siguiente
 
@@ -38,3 +37,4 @@ Tanda 1 (bucle con formas simples): F05 hecha. La prueba de arte (F04) sigue con
 ## Defectos conocidos
 
 - Solo ordenador desde 2026-11-08: falta medir los FPS en los PC del autor y sus amigos.
+- El bosque es de coníferas de KayKit; la laurisilva real es de hoja ancha (`ARTE.md`).

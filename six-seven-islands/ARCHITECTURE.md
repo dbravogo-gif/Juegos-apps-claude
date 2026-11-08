@@ -19,7 +19,13 @@ agentes. El patrón viene de *Claude of Duty* (Matt Shumer, MIT).
   cada build. En F04 subió desde 822 KB (223 KB): el generador de criaturas y lo que trae de
   Three.js (geometrías de torno, tubo y extrusión, `BufferGeometryUtils` y el ruido celular de
   TSL). El reparto exacto no está medido.
-- `three/addons/utils/BufferGeometryUtils.js` es parte de `three`: no es una dependencia nueva.
+- En F05 y el pase de arte con KayKit subió a 1.018 KB (283 KB comprimido): el mapa de la isla,
+  el cargador glTF, `SkeletonUtils` y las animaciones. El reparto tampoco está medido.
+- `BufferGeometryUtils`, `GLTFLoader` y `SkeletonUtils` (`three/addons/`) son parte de `three`:
+  no son dependencias nuevas.
+- **Modelos:** KayKit (CC0, `CREDITS.md`), 4,2 MB en `public/modelos/kaykit/`. Se cargan una
+  vez con `src/arte/modelos.ts`. Los prepara `herramientas/recursos-kaykit.mjs`, que se ejecuta
+  a mano con `@gltf-transform` instalado aparte: no es una dependencia del juego.
 
 - Sin motor de física: el mundo es una rejilla de casillas con alturas.
 - El sonido, más adelante, con Web Audio o ZzFX (MIT, menos de 1 KB).
@@ -91,14 +97,14 @@ export class Sistema implements Subsistema {
 | --- | --- | --- |
 | (biblioteca) | `src/core/` | Las reglas puras: generador con semilla, tipos, estadísticas, daño, combate N contra N, captura, encuentros, progreso, economía, mundo lógico (posición, colisión por casillas y zonas) y serialización del guardado |
 | (biblioteca) | `src/data/` | Solo datos: especies, movimientos, tipos, objetos, zonas, entrenadores, guion y fichas de aspecto |
-| (biblioteca) | `src/arte/` | La paleta, el material base compartido (`MaterialDiorama`, la receta de la skill `juego-3d`) y la escala del mundo (`escala.ts`: casilla de 1 unidad y escalón de 0,5) |
+| (biblioteca) | `src/arte/` | La paleta, el material base compartido (`MaterialDiorama`, la receta de la skill `juego-3d`) y la escala del mundo (`escala.ts`: casilla de 1 unidad y escalón de 0,5). `modelos.ts` carga los glTF y los pasa al material del juego |
 | `motor` | `src/motor/` | El bucle, `ctx`, el registro de subsistemas, el paso fijo, los eventos y los niveles de calidad |
 | `render` | `src/sistemas/render/` | El renderizador, la escena, las luces, las sombras y el postproceso |
 | `camara` | `src/sistemas/camara/` | La cámara de diorama y la de combate |
 | `entrada` | `src/sistemas/entrada/` | El teclado (no hay ratón): direcciones, confirmar y cancelar. Un toque corto cuenta como un paso |
-| `mundo` | `src/sistemas/mundo/` | La isla en 3D: terreno en terrazas por alturas, cumbres, mar, edificios, decoración por trozos de 12 × 12, pasos cerrados y objetos. Lee «partida»; no la cambia |
+| `mundo` | `src/sistemas/mundo/` | La isla en 3D: terreno en terrazas por alturas, cumbres, mar, edificios y naturaleza de KayKit, decoración propia por trozos de 12 × 12, pasos cerrados y objetos. Lee «partida»; no la cambia |
 | `criaturas` | `src/sistemas/criaturas/` | El generador de criaturas por piezas y su animación procedural. Se pide con `crear(aspecto)` y se anima con `accion(criatura, accion)` |
-| `personaje` | `src/sistemas/personaje/` | El jugador (con silueta cuando algo lo tapa), los personajes y las líneas de visión; más adelante, el generador y la personalización (F12) |
+| `personaje` | `src/sistemas/personaje/` | El jugador y los personajes (KayKit, animados), la silueta cuando algo tapa al jugador y las líneas de visión; más adelante, el generador y la personalización (F12) |
 | `combate` | `src/sistemas/combate/` | La escena de combate: presenta los eventos del núcleo, con sus efectos |
 | `captura` | `src/sistemas/captura/` | El gesto, el vuelo del objeto y el resultado en pantalla |
 | `interfaz` | `src/sistemas/interfaz/` | La interfaz en DOM: menús, diálogos, marcador, tienda y equipo |
@@ -187,5 +193,11 @@ y `?semilla=n`. Mientras exista la vitrina de F04: `?vista=combate|todas|explora
   apéndices, como mucho 7); los ojos y la cara pintada no proyectan sombra. Coste medido: de 6 a
   11 llamadas por criatura. Una prueba comprueba que 4 criaturas del generador caben en 40,
   la mitad de su reparto.
+
+- **Medido en el pase de arte** (2026-11-08, todo el juego en calidad media):
+  - el peor punto es el claro del bosque, con 245 llamadas y 396.000 triángulos;
+  - el pueblo, 175 llamadas y 225.000 triángulos;
+  - la zona inicial, 78 llamadas y 63.000 triángulos.
+  - No está medido por subsistema.
 
 Ningún subsistema supera su parte sin documentarlo aquí.

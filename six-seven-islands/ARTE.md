@@ -71,6 +71,40 @@ Cada una se distingue por la silueta a la distancia de juego.
   - Bloques biselados con los bordes redondeados, como piezas de juguete.
   - La isla tiene un canto visible que cae al mar: eso es lo que la hace diorama.
 
+## Modelos del mundo (KayKit)
+
+Desde el pase de arte del 2026-11-08, casas, árboles, rocas, vallas, montañas, nubes y personas
+son modelos de KayKit (CC0, Kay Lousberg; `CREDITS.md`). Quaternius no se puede descargar desde
+la red de trabajo.
+
+- **Paquetes:** *Medieval Hexagon Pack* 1.0 (33 modelos en un solo `medieval.glb`) y
+  *Adventurers Character Pack* 1.0 (5 personajes, con 7 animaciones cada uno). Los prepara
+  `herramientas/recursos-kaykit.mjs`.
+- **Material:** se cambia el suyo por `MaterialDiorama` con su textura, para que tengan la
+  misma luz. La textura es una paleta de 8 × 4 degradados.
+  - La hierba de sus montañas usa el amarillo oliva, que con el sol cálido sale amarillo
+    chillón: se lleva al verde de la paleta al cargarlas.
+- **Qué hace de qué:**
+  - Casas: `building_home_A/B` de colores.
+  - Museo-fuerte: el cuartel azul.
+  - Refugio (donde se curan las criaturas): la taberna roja.
+  - Tienda: el mercado azul.
+  - Gimnasio: el castillo amarillo.
+  - Faro: la torre amarilla.
+- **Altos máximos:** de 3,1 a 3,6 casillas las casas y de 5,5 a 6,2 el faro y el gimnasio.
+  - Si algo tapa al jugador, se ve su silueta azul.
+- **Personas:**
+  - jugador: `Rogue`;
+  - anciano: `Mage`;
+  - entrenador obligatorio: `Knight`;
+  - entrenador opcional: `Barbarian`;
+  - el resto: `Rogue_Hooded`.
+  - Todos sin armas, a 1,25 casillas de alto y animados (parado y andando).
+- **Propio, por código:** plataneras, el drago, matas de hierba alta, piedras del malpaís,
+  flores y un ligero cambio de tono por casilla.
+- **Límite conocido:** los árboles de KayKit son coníferas, y la laurisilva real es de hoja
+  ancha. Un laurel propio puede salir de Meshy.
+
 ## Generador de criaturas
 
 Es el mayor riesgo del proyecto: 200 criaturas sin artistas. Su calidad se decide en la prueba
@@ -105,8 +139,8 @@ de arte, antes de construir contenido.
 
 ## Luz
 
-- **Luz principal:** un sol bajo de tarde, cálido (`#FFE2B8`, intensidad 2,3), que entra de
-  lado a unos 35°.
+- **Luz principal:** un sol de tarde, cálido (`#FFE2B8`, intensidad 2,3), que entra de lado a
+  unos 48°. A 35°, las casas de KayKit tapaban media calle con su sombra.
   - El relleno es la luz del cielo, azul lavanda (`#C4C6F2`, intensidad 1,5). Es lo único que
     queda en la sombra, así que es lo que la tiñe.
   - Un contraluz cálido separa al jugador y a las criaturas del fondo.
