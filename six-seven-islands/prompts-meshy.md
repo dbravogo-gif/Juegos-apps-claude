@@ -175,7 +175,8 @@ esbelta, y otra majestuosa, con melena de hojas y patas de madera.
   rompe en Meshy y es ruido en el móvil. Edición para el generador: «same creature, thicker
   antlers with only three tines each, no floating sparkles».
 - **R8:** sin flores en las astas, que es el rasgo de un ciervo conocido del género.
-- **Propuesta de Claude (pendiente del autor):**
+- **Decidido por el autor (2026-11-08):** son la 2.ª y la 3.ª forma de la inicial de Planta.
+- **Propuesta de Claude:**
   - Que sean la 2.ª y la 3.ª forma de la línea de la inicial de Planta, con una cría como 1.ª.
   - Las diferencias entre hembra y macho, solo en unas pocas especies emblemáticas: duplican
     el coste y, si la hembra final parece una forma intermedia, confunden la evolución.

@@ -24,8 +24,8 @@ sin aprobar.
 
 ## Siguiente
 
-1. Prueba de Meshy: 3 criaturas que genera el autor (`prompts-meshy.md`); Claude las pone en
-   la vitrina para comparar. Después, decidir el método de arte (`DISENO.md`).
+1. Prueba de Meshy con la línea de la inicial de Planta (`prompts-meshy.md`): falta la cría y
+   una captura con textura. Si convence, Pro un mes y Claude la pone en la vitrina.
 2. El bucle con formas simples (`F05` a `F10`) no depende del arte.
 
 ## Pendiente del autor
@@ -33,7 +33,7 @@ sin aprobar.
 - Decidir si las pasivas entran en el juego, como contenido propio. Propuesta de Claude: sí,
   después de la isla 1.
 - Antes de la tanda 3, elegir los nombres que proponga Claude.
-- Generar en Meshy las 3 criaturas y subir los `.glb` (`prompts-meshy.md`).
+- La imagen de la cría y la captura con textura de la forma 2 (`prompts-meshy.md`).
 
 ## Defectos conocidos
 

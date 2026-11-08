@@ -235,6 +235,11 @@ turno. El servicio de tiempo real gratuito se elige al llegar a esa fase.
 - 2026-11-07 · Empate en combate (caen a la vez las últimas de los dos lados): gana el lado
   cuya última criatura cayó después, como con el daño de retroceso en el género.
 
+- 2026-11-08 · Línea de la inicial de Planta: una bestia del bosque, ciervo-león con astas de
+  madera, collar de hojas y cola de hoja. Tres formas: cría, joven (forma 2) y majestuosa
+  (forma 3). Las imágenes de las formas 2 y 3 las generó el autor; prompts y notas en
+  `prompts-meshy.md`. En esta especie no hay diferencias entre hembra y macho.
+
 ## Decisiones abiertas
 
 No se diseñan sin el autor. Cada una lleva la propuesta de Claude.
