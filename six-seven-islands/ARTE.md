@@ -123,6 +123,19 @@ Se revisan de cerca en `?catalogo` (plantas, rocas y muro) y `?catalogo=edificio
   Encendida siempre, se pintaba sobre el propio jugador.
 - **Con Meshy (el autor):** los edificios singulares que quiera, las tres estatuas del museo y
   las criaturas.
+- **Cambiar una pieza del kit por un modelo de Meshy:**
+  - El modelo se pasa por un normalizador:
+    - lo pone a la escala de la pieza y con la base a ras de suelo;
+    - le quita la luz pintada de su textura y le pone nuestro material;
+    - ajusta sus colores a la paleta.
+  - **Una pieza que sale pocas veces** (el drago, un edificio) es casi cambiar una por otra. Basta
+    con unos 5.000 a 8.000 polígonos.
+  - **Una que se repite en cada casilla** (el malpaís, unas 150 a la vista) tiene que ser ligera,
+    unos 300 triángulos. Hay dos caminos:
+    - reducir el modelo de Meshy;
+    - mejor: usarlo como 2 o 3 rocas grandes de lava sueltas, de 1.000 a 1.500 polígonos, y dejar
+      las lajas por código como suelo.
+  - Con Meshy gratis, la licencia es CC BY: se cita en `CREDITS.md`.
 
 ## Generador de criaturas
 
