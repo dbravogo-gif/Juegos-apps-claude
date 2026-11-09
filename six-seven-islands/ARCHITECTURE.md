@@ -52,6 +52,11 @@ De Leyendas de Iberia, obra del autor, solo se toman **reglas de juego**, nunca 
   lado, nunca hueco a hueco, antes de emitir `combate:decision`.
 - **La IA solo la llama el combate.** Consume el generador, así que llamarla sobre el estado en
   vivo desincroniza a los jugadores online.
+- **Propios de este juego, sin equivalente en Leyendas:**
+  - `mundo.ts`: el mapa por casillas, con los interiores como mapas aparte;
+  - `explorar.ts`: andar, puertas que se cruzan andando hacia ellas, entrar y salir;
+  - `guion.ts`: diálogos por datos, con variantes según las condiciones y la inicial, pregunta
+    de sí o no y efectos.
 
 ## Reglas duras
 
@@ -107,14 +112,15 @@ export class Sistema implements Subsistema {
 | `motor` | `src/motor/` | El bucle, `ctx`, el registro de subsistemas, el paso fijo, los eventos y los niveles de calidad |
 | `render` | `src/sistemas/render/` | El renderizador, la escena, las luces, las sombras y el postproceso |
 | `camara` | `src/sistemas/camara/` | La cámara de diorama y la de combate |
-| `entrada` | `src/sistemas/entrada/` | El teclado (no hay ratón): direcciones, confirmar y cancelar. Un toque corto cuenta como un paso |
+| `entrada` | `src/sistemas/entrada/` | El teclado (no hay ratón): direcciones, interactuar (E, Enter o Espacio) y cancelar. Un toque corto cuenta como un paso, también si llega mientras se termina el anterior |
 | `mundo` | `src/sistemas/mundo/` | La isla en 3D: terreno en terrazas por alturas, cumbres, mar, casas canarias (`canario.ts`) y kit de naturaleza (`kit.ts`) por código, montañas y nubes de KayKit, todo instanciado por trozos de 12 × 12, pasos cerrados y objetos. Publica `tapas`, la altura de lo más alto de cada casilla. Lee «partida»; no la cambia |
 | `criaturas` | `src/sistemas/criaturas/` | El generador de criaturas por piezas y su animación procedural. Se pide con `crear(aspecto)` y se anima con `accion(criatura, accion)` |
-| `personaje` | `src/sistemas/personaje/` | El jugador y los personajes (KayKit, animados), la silueta cuando algo tapa al jugador (con las `tapas` de «mundo») y las líneas de visión; más adelante, el generador y la personalización (F12) |
+| `personaje` | `src/sistemas/personaje/` | El jugador y los personajes de la isla y de los interiores (KayKit, animados), que se giran hacia el jugador al hablar; la silueta cuando algo tapa al jugador (con las `tapas` de «mundo») y las líneas de visión; más adelante, el generador y la personalización (F12) |
+| `salas` | `src/sistemas/salas/` | Los interiores en 3D, por código: dioramas pequeños lejos de la isla, con la pared de delante baja, muebles según las letras del mapa y las estatuas provisionales del museo. Una malla por sala |
 | `combate` | `src/sistemas/combate/` | La escena de combate: presenta los eventos del núcleo, con sus efectos |
 | `captura` | `src/sistemas/captura/` | El gesto, el vuelo del objeto y el resultado en pantalla |
-| `interfaz` | `src/sistemas/interfaz/` | La interfaz en DOM: menús, diálogos, marcador, tienda y equipo |
-| `partida` | `src/sistemas/partida/` | El estado del núcleo, los modos (explorar y aviso; después combate, diálogo y menú) y el guardado automático. Avanza a paso fijo con la entrada |
+| `interfaz` | `src/sistemas/interfaz/` | La interfaz en DOM: el cartel de zona, la caja de diálogo (quién habla, texto letra a letra y sí o no), el fundido al cruzar puertas y la ayuda; después, menús, marcador, tienda y equipo |
+| `partida` | `src/sistemas/partida/` | El estado del núcleo (la isla y sus interiores), los modos (explorar, diálogo y fundido; después combate y menú) y el guardado automático. Avanza a paso fijo con la entrada |
 | `depuracion` | `src/sistemas/depuracion/` | El panel de ajustes (solo en desarrollo) y los ganchos de `window.__JUEGO__` |
 | `catalogo` | `src/sistemas/catalogo/` | Herramienta, no juego: con `?catalogo` o `?catalogo=edificios`, las piezas propias del mundo en fila, con la luz y la cámara del juego; ← → acercan la cámara a cada una |
 | `prueba` | `src/sistemas/prueba/` | **Temporal:** la vitrina de la prueba de arte (`F04`), con `?vitrina`. Se queda para probar los modelos de Meshy; se borra cuando las criaturas entren en el juego |
@@ -132,12 +138,10 @@ export class Sistema implements Subsistema {
 | `combate:fin` | `{ resultado }` | `partida` |
 | `captura:lanzar` | `{ calidad }`, de 0 a 1 | `captura` |
 | `captura:resultado` | `{ exito, sacudidas }` | `partida` |
-| `dialogo:abrir` | `{ guionId }` | `partida` |
-| `dialogo:cerrar` | `{ guionId, eleccion? }` | `interfaz` |
+| `dialogo:abrir` | `{ guionId }`: el id del personaje, o `aviso`, `objeto` o `puerta` | `partida` |
+| `dialogo:cerrar` | `{ guionId, eleccion? }` | `partida` |
 | `guardado:hecho` | `{}` | `partida` |
 | `calidad:cambio` | `{ nivel }` | `depuracion` |
-| `aviso:mostrar` | `{ texto }` | `partida` |
-| `aviso:cerrar` | `{}` | `partida` |
 | `objeto:recogido` | `{ id, objeto }` | `partida` |
 
 Un evento nuevo se añade a esta tabla en el mismo commit.

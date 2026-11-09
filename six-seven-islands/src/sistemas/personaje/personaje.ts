@@ -1,8 +1,9 @@
-// Subsistema «personaje»: el jugador y los personajes de la isla, con los personajes de KayKit
-// (CC0) sin armas y animados (parado y andando). Dibuja al jugador donde dice «partida»,
-// interpolado entre pasos fijos. Si algo lo tapa (según las alturas de «mundo»), se ve su
-// silueta. Los entrenadores enseñan su línea de visión en el suelo (ARTE.md, «Peligros»). El
-// generador de personajes llega en F12.
+// Subsistema «personaje»: el jugador y los personajes de la isla y de sus interiores, con los
+// personajes de KayKit (CC0) sin armas y animados (parado y andando). Dibuja al jugador donde dice
+// «partida», interpolado entre pasos fijos. Si algo lo tapa (según las alturas de «mundo»), se ve
+// su silueta. Quien habla con el jugador se gira hacia él. Los entrenadores enseñan su línea de
+// visión en el suelo (ARTE.md, «Peligros»). Las estatuas las dibuja «salas». El generador de
+// personajes llega en F12.
 
 import {
   AnimationMixer,
@@ -50,9 +51,10 @@ interface Figura {
   actual: string;
 }
 
-/** Qué modelo de KayKit hace de cada personaje. */
+/** Qué modelo de KayKit hace de cada personaje, hasta que lleguen las personas de F12. */
 function modeloDe(p: DefPersonaje): string {
-  if (p.id === 'anciano') return 'Mage';
+  if (p.id === 'anciano' || p.id === 'doctora') return 'Mage';
+  if (p.id === 'lider-gimnasio') return 'Knight';
   if (p.entrenador) return p.entrenador.obligatorio ? 'Knight' : 'Barbarian';
   return 'Rogue_Hooded';
 }
@@ -70,10 +72,13 @@ export class Personaje implements Subsistema {
   private opacidad = 0;
   private jugador!: Figura;
   private figuras: Figura[] = [];
+  /** Los personajes por id, con hacia dónde miran normalmente, para girarlos al hablar. */
+  private porId = new Map<string, { figura: Figura; giro: number }>();
   private giro = 0;
   private geometrias: BufferGeometry[] = [];
   private materiales: Material[] = [];
   private objetos: Object3D[] = [];
+  private quitar: (() => void)[] = [];
 
   async init(ctx: Ctx): Promise<void> {
     this.partida = ctx.get<Partida>('partida');
@@ -106,24 +111,41 @@ export class Personaje implements Subsistema {
     ctx.escena.add(this.jugador.raiz);
     this.objetos.push(this.jugador.raiz);
 
-    // Personajes de la isla y lo que ven los entrenadores.
+    // Personajes de la isla y de los interiores, y lo que ven los entrenadores.
     const visiones: Matrix4[] = [];
-    for (const z of m.zonas.values()) {
-      for (const p of z.personajes) {
-        const nombre = modeloDe(p);
-        const f = this.figura(await cargar(nombre), nombre);
-        const k = enIsla(m, z.id, p.x, p.y);
-        const [x, y] = deClave(k);
-        f.raiz.position.set(x, alturaSuelo(m.casillas.get(k)!.h), y);
-        f.raiz.rotation.y = GIRO[p.mira];
-        ctx.escena.add(f.raiz);
-        this.objetos.push(f.raiz);
-        for (const v of vision(m, z.id, p)) {
-          const [vx, vy] = deClave(v);
-          visiones.push(new Matrix4().makeTranslation(vx, alturaSuelo(m.casillas.get(v)!.h) + 0.14, vy));
+    for (const mapa of [m, ...this.partida.interiores.values()]) {
+      for (const z of mapa.zonas.values()) {
+        for (const p of z.personajes) {
+          if (p.id.startsWith('estatua-')) continue;
+          const nombre = modeloDe(p);
+          const f = this.figura(await cargar(nombre), nombre);
+          const k = enIsla(mapa, z.id, p.x, p.y);
+          const [x, y] = deClave(k);
+          f.raiz.position.set(x, alturaSuelo(mapa.casillas.get(k)!.h), y);
+          f.raiz.rotation.y = GIRO[p.mira];
+          ctx.escena.add(f.raiz);
+          this.objetos.push(f.raiz);
+          this.porId.set(p.id, { figura: f, giro: GIRO[p.mira] });
+          for (const v of vision(mapa, z.id, p)) {
+            const [vx, vy] = deClave(v);
+            visiones.push(new Matrix4().makeTranslation(vx, alturaSuelo(mapa.casillas.get(v)!.h) + 0.14, vy));
+          }
         }
       }
     }
+    // Quien habla con el jugador se gira hacia él, y al acabar vuelve a mirar donde miraba.
+    this.quitar.push(
+      ctx.eventos.on('dialogo:abrir', ({ guionId }) => {
+        const q = this.porId.get(guionId);
+        if (!q) return;
+        const r = q.figura.raiz.position;
+        q.figura.raiz.rotation.y = Math.atan2(this.posicion.x - r.x, this.posicion.z - r.z);
+      }),
+      ctx.eventos.on('dialogo:cerrar', ({ guionId }) => {
+        const q = this.porId.get(guionId);
+        if (q) q.figura.raiz.rotation.y = q.giro;
+      }),
+    );
     if (visiones.length) {
       const plano = new PlaneGeometry(0.8, 0.8).rotateX(-Math.PI / 2);
       const mv = new MeshBasicNodeMaterial({ color: COLORES.acentoCoral, transparent: true, opacity: 0.35, depthWrite: false });
@@ -177,7 +199,7 @@ export class Personaje implements Subsistema {
   }
 
   private colocar(dt: number, alfa: number): void {
-    const m = this.partida.mundo;
+    const m = this.partida.activo();
     const e = this.partida.estado;
     const p = posicionVisual(e, alfa);
     const h0 = alturaSuelo(m.casillas.get(clave(e.desdeX, e.desdeY))?.h ?? 0);
@@ -192,7 +214,7 @@ export class Personaje implements Subsistema {
     this.giro += (objetivo - this.giro) * Math.min(1, dt * 18 || 1);
     this.jugador.raiz.rotation.y = this.giro;
 
-    const tapado = this.tapado(Math.round(p.x), Math.round(p.y), this.posicion.y);
+    const tapado = !e.dentro && this.tapado(Math.round(p.x), Math.round(p.y), this.posicion.y);
     this.opacidad += ((tapado ? OPACIDAD_SILUETA : 0) - this.opacidad) * Math.min(1, dt * 10 || 1);
     this.silueta.opacity = this.opacidad;
     for (const malla of this.mallasSilueta) malla.visible = this.opacidad > 0.02;
@@ -213,6 +235,7 @@ export class Personaje implements Subsistema {
   }
 
   dispose(): void {
+    for (const q of this.quitar) q();
     for (const f of this.figuras) f.mezclador.stopAllAction();
     for (const o of this.objetos) o.removeFromParent();
     for (const g of this.geometrias) g.dispose();

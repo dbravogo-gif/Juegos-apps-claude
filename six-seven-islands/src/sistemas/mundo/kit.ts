@@ -5,7 +5,7 @@
 
 import { ConeGeometry, CylinderGeometry, SphereGeometry, Vector3, type BufferGeometry } from 'three/webgpu';
 import { COLORES } from '../../arte/paleta';
-import { Montaje, abollar, acanalar, apuntar, azar, doblar, elegir, ruido } from './montaje';
+import { Montaje, abollar, acanalar, apuntar, azar, doblar, elegir, ruido } from '../../arte/montaje';
 
 /** Una hoja de juguete tumbada a lo largo de +z desde el origen: un huso aplastado con la punta caída. */
 function hoja(largo: number, ancho: number, grueso: number, caida: number, lados = 6, anillos = 4): BufferGeometry {

@@ -1,7 +1,8 @@
 // Subsistema «entrada»: el teclado, que es el único control del juego (sin ratón ni mando).
-// Flechas o WASD para andar; Enter o Espacio para confirmar; Escape para volver.
-// Un toque corto cuenta como un paso aunque se suelte antes de que el juego lo lea: así no se
-// pierde en un equipo lento ni en las capturas automáticas.
+// Flechas o WASD para andar; E, Enter o Espacio para interactuar (hablar, pasar los diálogos y
+// confirmar); Escape para volver.
+// Un toque corto cuenta como un paso aunque se suelte antes de que el juego lo lea, y aunque
+// llegue mientras el jugador termina el paso anterior: así no se pierde ninguno.
 
 import type { Direccion } from '../../core/mundo';
 import type { Ctx, Subsistema } from '../../motor/motor';
@@ -19,6 +20,7 @@ const DIRECCIONES: Record<string, Direccion> = {
   KeyA: 'o',
 };
 const ACCIONES: Record<string, Accion> = {
+  KeyE: 'confirmar',
   Enter: 'confirmar',
   NumpadEnter: 'confirmar',
   Space: 'confirmar',
@@ -68,9 +70,19 @@ export class Entrada implements Subsistema {
     };
   }
 
-  /** La dirección que manda ahora: la última pulsada que sigue apretada, o un toque sin leer. */
-  direccion(): Direccion | null {
+  /**
+   * La dirección que manda ahora: la última pulsada que sigue apretada, o un toque sin usar.
+   * Con `usarToque` a false (el jugador aún termina un paso), el toque se guarda para después.
+   */
+  direccion(usarToque = true): Direccion | null {
     const d = this.pulsadas[this.pulsadas.length - 1] ?? this.toque;
+    if (usarToque) this.toque = null;
+    return d;
+  }
+
+  /** Una pulsación nueva de dirección (no las que se mantienen), para elegir en los menús. */
+  pulsacion(): Direccion | null {
+    const d = this.toque;
     this.toque = null;
     return d;
   }

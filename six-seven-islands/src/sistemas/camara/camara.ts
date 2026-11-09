@@ -9,6 +9,8 @@ import type { Personaje } from '../personaje/personaje';
 import type { Render } from '../render/render';
 
 const ELEVACION = (50 * Math.PI) / 180;
+/** Distancia a partir de la cual la cámara corta en vez de seguir al jugador. */
+const SALTO = 12;
 const DISTANCIA = 20;
 const CAMPO = 30;
 
@@ -42,7 +44,9 @@ export class Camara implements Subsistema {
 
   actualizar(dt: number, ctx: Ctx): void {
     this.objetivo.copy(this.personaje.posicion);
-    this.mira.lerp(this.objetivo, 1 - Math.exp(-dt * 8));
+    // Un salto largo (entrar en un interior, que está lejos de la isla) no se recorre: se corta.
+    if (this.mira.distanceTo(this.objetivo) > SALTO) this.mira.copy(this.objetivo);
+    else this.mira.lerp(this.objetivo, 1 - Math.exp(-dt * 8));
     this.colocar(ctx);
   }
 

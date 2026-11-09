@@ -5,7 +5,7 @@
 
 import { BoxGeometry, type BufferGeometry, CylinderGeometry, SphereGeometry } from 'three/webgpu';
 import { COLORES } from '../../arte/paleta';
-import { Montaje, abollar, azar, elegir, triangulo } from './montaje';
+import { Montaje, abollar, azar, elegir, triangulo } from '../../arte/montaje';
 
 export type EstiloCasa = 'rural' | 'balcones';
 export type UsoCasa = 'casa' | 'refugio' | 'tienda' | 'museo' | 'gimnasio';

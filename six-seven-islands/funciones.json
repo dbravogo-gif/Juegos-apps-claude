@@ -105,7 +105,7 @@
       "tanda": 2,
       "descripcion": "Sistema de guion por datos: diálogos, condiciones, variables de historia y cambios según la variante.",
       "como_se_comprueba": "Pruebas de datos: todo guion referenciado existe y toda condición usa variables declaradas. Un bot completa la introducción.",
-      "hecha": false
+      "hecha": true
     },
     {
       "id": "F16-entrenadores",

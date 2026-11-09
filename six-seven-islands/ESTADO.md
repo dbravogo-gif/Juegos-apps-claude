@@ -22,8 +22,8 @@ Tanda 1: F05 hecha. Kit canario por código (2026-11-08): casas, casonas y faro 
 
 ## Siguiente
 
-1. Isla 1 (`ISLA-1.md`): interiores y diálogos (museo, elección de la inicial y anciano), que
-   resuelven el callejón sin salida; después, encuentros, combate y captura.
+1. Isla 1 (`ISLA-1.md`): interiores y diálogos hechos (museo con la elección de la inicial,
+   anciano, casas, refugio, tienda y gimnasio). Siguen encuentros, combate y captura.
 2. En paralelo, arte con Meshy (`prompts-meshy.md`): criaturas y edificios singulares.
 
 ## Pendiente del autor
@@ -35,6 +35,5 @@ Tanda 1: F05 hecha. Kit canario por código (2026-11-08): casas, casonas y faro 
 ## Defectos conocidos
 
 - Solo ordenador desde 2026-11-08: falta medir los FPS en los PC del autor y sus amigos.
-- Del probador (F05): el camino de la capital pasa detrás del gimnasio; sin `?abrir=todo` no
-  se sale de la zona inicial; las puertas saltan al pasar por delante; los toques rápidos se
-  pierden.
+- Del probador (F05): el camino de la capital pasa detrás del gimnasio.
+- Las estatuas del museo y los personajes son provisionales (Meshy y F12).

@@ -10,7 +10,7 @@ import { COLORES } from '../../arte/paleta';
 import type { Ctx, Subsistema } from '../../motor/motor';
 import { casaCanaria, faro } from '../mundo/canario';
 import { piezaKit } from '../mundo/kit';
-import { Montaje } from '../mundo/montaje';
+import { Montaje } from '../../arte/montaje';
 import type { Render } from '../render/render';
 
 interface Muestra {

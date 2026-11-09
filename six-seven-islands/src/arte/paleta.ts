@@ -82,4 +82,10 @@ export const COLORES = {
   escoria: '#8B4A36',
   escoriaHonda: '#5E3329',
   piedraParda: '#8A7A6A',
+  // Interiores (2026-11-08): suelo de tablas, alfombras, estatuas y pantallas.
+  maderaSuelo: '#C69A6B',
+  maderaSueloOscura: '#B0845A',
+  alfombra: '#B8483E',
+  piedraEstatua: '#C9C1B4',
+  pantalla: '#8FD3E8',
 } as const;

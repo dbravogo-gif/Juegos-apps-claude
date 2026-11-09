@@ -28,12 +28,23 @@ export const LEYENDA = {
   X: 'paso cerrado',
   P: 'muelle',
   B: 'barco',
+  // Interiores: salas pequeñas aparte (ISLA-1.md, «Decisiones técnicas»).
+  m: 'suelo',
+  '|': 'pared',
+  o: 'mesa',
+  h: 'estantería',
+  c: 'mostrador',
+  k: 'ordenador',
+  l: 'cama',
+  v: 'maceta',
 } as const;
 
 export type Casilla = keyof typeof LEYENDA;
 
 /** Se pueden pisar. Las X también, cuando su condición se cumple. */
-export const TRANSITABLES: ReadonlySet<string> = new Set(['.', ',', ':', '_', '"', ';', 'd', 'P']);
+export const TRANSITABLES: ReadonlySet<string> = new Set(['.', ',', ':', '_', '"', ';', 'd', 'P', 'm']);
+/** Muebles de los interiores: no se pisan y se dibujan como piezas. */
+export const MUEBLES: ReadonlySet<string> = new Set(['o', 'h', 'c', 'k', 'l', 'v']);
 /** Terreno de encuentros: la hierba alta y el malpaís (y, más adelante, las dunas). */
 export const DE_ENCUENTROS: ReadonlySet<string> = new Set(['"', ';']);
 /** Las letras de los edificios. Cada grupo de casillas iguales y contiguas es un edificio. */
@@ -170,6 +181,26 @@ export function construirMundo(isla: DefIsla): Mundo {
     }
   }
   return { isla, casillas, zonas, ocupadas, objetos, ancho, alto };
+}
+
+/** Un interior: una sala pequeña aparte, con su propio mapa (ISLA-1.md, «Decisiones técnicas»). */
+export interface DefInterior {
+  id: string;
+  nombre: string;
+  /** La salida es una `d` en el borde de abajo: se sale andando hacia el sur. */
+  mapa: readonly string[];
+  personajes: readonly Personaje[];
+  /** Dónde aparece el jugador al entrar, en coordenadas de la sala. */
+  entrada: { x: number; y: number };
+}
+
+/**
+ * Monta un interior como un mundo de una sola zona. Se coloca lejos de la isla (`origen`), así
+ * que sus casillas tienen claves propias y se dibuja aparte sin estorbar.
+ */
+export function construirInterior(def: DefInterior, origen: { x: number; y: number }): Mundo {
+  const zona: DefZona = { id: def.id, nombre: def.nombre, origen, mapa: def.mapa, altura: 0, hierbaObligatoria: false, personajes: def.personajes };
+  return construirMundo({ id: def.id, zonas: [zona], inicio: { zona: def.id, ...def.entrada } });
 }
 
 export interface OpcionesPaso {

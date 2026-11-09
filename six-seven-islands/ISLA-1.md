@@ -151,6 +151,15 @@ pantalla.
   tabla de aparición y su música. La cámara sigue al jugador sin cortes entre zonas.
 - **Los interiores** (museo, casas, refugio, tienda, gimnasio) son dioramas pequeños aparte. Se
   entra por la puerta con un fundido.
+  - **Hechos el 2026-11-08** (`src/data/interiores-isla1.ts` y `guion-isla1.ts`).
+  - Se entra andando hacia el edificio desde su puerta, no al pasar por delante, y se sale
+    andando hacia el sur por la alfombra.
+  - Las casas comparten una sala, y los dos refugios otra; la del jugador es la primera casa de
+    la zona inicial.
+  - Los diálogos se pasan con E, Enter o Espacio.
+  - Elegir una estatua del museo fija la inicial y abre la zona inicial; hablar con el anciano
+    abre el bosque.
+  - Las estatuas son provisionales hasta que lleguen las de Meshy.
 - **Los mapas se escriben como texto**, una letra por casilla, como en Leyendas. Así se leen y
   se prueban fácilmente.
 - **Alturas por casilla,** en escalones. Entre dos casillas que se pisan nunca hay más de un

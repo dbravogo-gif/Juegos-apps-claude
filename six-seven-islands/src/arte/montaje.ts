@@ -1,6 +1,7 @@
 // Utilidades para modelar piezas por código en el estilo de juguete de ARTE.md: juntar piezas con
 // color por vértice, azar determinista y deformaciones (abollar, doblar, acanalar). Las usan las
-// casas canarias (`canario.ts`) y el kit de naturaleza (`kit.ts`).
+// casas canarias y el kit de naturaleza (`sistemas/mundo/`), las salas de los interiores y el
+// catálogo.
 
 import { BoxGeometry, BufferAttribute, BufferGeometry, Color, Matrix4, Quaternion, Vector3 } from 'three/webgpu';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';

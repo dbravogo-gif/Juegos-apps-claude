@@ -16,6 +16,8 @@ export interface EstadoVisible {
   condiciones: string[];
   calidad: NivelCalidad;
   backend: string;
+  /** Todo lo que resume «partida» (sala, inicial, diálogo abierto…), o null en la vitrina. */
+  partida: unknown;
 }
 
 export interface GanchosJuego {
@@ -70,6 +72,7 @@ export class Depuracion implements Subsistema {
           condiciones: p?.condiciones ?? [],
           calidad: ctx.config.calidad.nivel,
           backend: this.render.backend,
+          partida: p,
         };
       },
       semilla: (n) => {
