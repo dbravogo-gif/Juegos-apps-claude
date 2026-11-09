@@ -160,6 +160,11 @@ export class Personaje implements Subsistema {
     this.colocar(0, 0);
   }
 
+  /** Dónde está un personaje (no el jugador), o null si no tiene figura. */
+  posicionDe(id: string): Vector3 | null {
+    return this.porId.get(id)?.figura.raiz.position ?? null;
+  }
+
   /** Una figurita: copia del modelo con su esqueleto, sin armas, a escala y con sus animaciones. */
   private figura(gltf: GLTF, nombre: string): Figura {
     const base = nombre.split('_')[0];

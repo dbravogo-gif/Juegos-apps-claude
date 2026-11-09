@@ -18,6 +18,8 @@ export interface MapaEventos {
   'guardado:hecho': Record<string, never>;
   'calidad:cambio': { nivel: NivelCalidad };
   'objeto:recogido': { id: string; objeto: string };
+  /** Se acaba de elegir la inicial en el museo. */
+  'inicial:elegida': { tipo: string };
 }
 
 export type NombreEvento = keyof MapaEventos;

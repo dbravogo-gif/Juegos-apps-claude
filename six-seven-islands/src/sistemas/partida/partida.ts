@@ -9,9 +9,9 @@ import { avanzar, crearExploracion, cumplir, entrar, interactuar, salir, type Es
 import { abrirDialogo, elegirDialogo, lineaActual, pasoDialogo, pulsar, type Dialogo, type Efecto, type EstadoDialogo, type Tecla } from '../../core/guion';
 import { TODAS_LAS_CONDICIONES, clave, construirInterior, construirMundo, deClave, enIsla, type Condicion, type Mundo } from '../../core/mundo';
 import { GUION_ISLA1 } from '../../data/guion-isla1';
-import { INTERIORES_ISLA1, PUERTAS_ISLA1 } from '../../data/interiores-isla1';
+import { INTERIORES_ISLA1, PUERTAS_ISLA1, SALA_INICIAL } from '../../data/interiores-isla1';
 import { ISLA_1 } from '../../data/isla1';
-import { NOMBRE_OBJETO } from '../../data/textos-isla1';
+import { NOMBRE_OBJETO, OBJETIVOS } from '../../data/textos-isla1';
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Entrada } from '../entrada/entrada';
 
@@ -19,6 +19,8 @@ export type Modo = 'explorar' | 'dialogo' | 'fundido';
 
 /** Pasos fijos de cada mitad del fundido al cruzar una puerta: 0,2 s a negro y 0,2 s de vuelta. */
 export const PASOS_FUNDIDO = 12;
+/** Tras cerrar un diálogo, unos pasos sin interactuar: la última pulsación no lo vuelve a abrir. */
+const ESPERA_TRAS_DIALOGO = 12;
 /** Los interiores se colocan lejos de la isla, uno al lado de otro. */
 const ORIGEN_INTERIORES = { x: 200, y: 0 };
 const SEPARACION_INTERIORES = 20;
@@ -53,6 +55,7 @@ export class Partida implements Subsistema {
   private puertas = new Map<number, string>();
   private cruce: { paso: number; destino: string | null } | null = null;
   private hablando = '';
+  private espera = 0;
 
   init(ctx: Ctx): void {
     this.ctx = ctx;
@@ -69,6 +72,18 @@ export class Partida implements Subsistema {
     }
     const abrirTodo = new URLSearchParams(location.search).get('abrir') === 'todo';
     this.estado = crearExploracion(this.mundo, abrirTodo ? [...TODAS_LAS_CONDICIONES] : []);
+    // Se empieza dentro de casa, como si se acabara de entrar por su puerta.
+    const puerta = [...this.puertas].find(([, id]) => id === SALA_INICIAL)?.[0];
+    if (puerta !== undefined) {
+      [this.estado.x, this.estado.y] = deClave(puerta);
+      this.estado.zona = this.mundo.casillas.get(puerta)!.zona;
+      entrar(this.estado, SALA_INICIAL, this.interiores.get(SALA_INICIAL)!);
+    }
+  }
+
+  /** El objetivo que se enseña en pantalla, o null si no queda ninguno. */
+  objetivo(): string | null {
+    return OBJETIVOS.find((o) => !this.estado.condiciones.includes(o.hasta))?.texto ?? null;
   }
 
   /** El mapa donde está el jugador: la isla o el interior. */
@@ -84,6 +99,10 @@ export class Partida implements Subsistema {
   pasoFijo(): void {
     if (this.modo === 'fundido') return this.pasoFundido();
     if (this.modo === 'dialogo') return this.pasoDialogo();
+    if (this.espera > 0) {
+      this.espera--;
+      this.entrada.consumir('confirmar');
+    }
     const parado = this.estado.paso === 0;
     const eventos = avanzar(this.activo(), this.estado, this.entrada.direccion(parado));
     // Interactuar mientras se anda espera a que termine el paso, en vez de perderse.
@@ -111,6 +130,7 @@ export class Partida implements Subsistema {
     if (r.fin) {
       this.dialogo = null;
       this.modo = 'explorar';
+      this.espera = ESPERA_TRAS_DIALOGO;
       this.entrada.olvidar();
       this.ctx.eventos.emit('dialogo:cerrar', { guionId: this.hablando });
     }
@@ -180,7 +200,10 @@ export class Partida implements Subsistema {
 
   private aplicar(e: Efecto): void {
     if (e.condicion) cumplir(this.estado, e.condicion);
-    if (e.inicial) this.estado.inicial = e.inicial;
+    if (e.inicial) {
+      this.estado.inicial = e.inicial;
+      this.ctx.eventos.emit('inicial:elegida', { tipo: e.inicial });
+    }
   }
 
   /** Carga un estado parcial: condiciones, inicial y posición (en coordenadas de la zona o de la sala). */

@@ -210,7 +210,8 @@ export class Mundo implements Subsistema {
         const uso = USO_CASA[e.tipo];
         if (uso) {
           const puerta = e.puertas.length ? deClave(e.puertas[0])[0] - cx : 0;
-          const estilo = zona === 'capital' || uso === 'museo' || uso === 'gimnasio' ? 'balcones' : 'rural';
+          // El museo, de una planta: de dos tapaba al jugador al empezar (probador, 2026-11-08).
+          const estilo = zona === 'capital' || uso === 'gimnasio' ? 'balcones' : 'rural';
           // El gimnasio, con azotea: más bajo, para no tapar tanto el camino de detrás.
           const techo = uso === 'gimnasio' ? 'azotea' : uso === 'museo' ? 'teja' : undefined;
           const geometria = casaCanaria({ estilo, uso, techo, ancho: e.ancho, fondo: e.fondo, puerta, semilla: pseudo(e.casillas[0]) });

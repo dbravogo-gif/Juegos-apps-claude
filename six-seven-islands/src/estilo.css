@@ -252,6 +252,25 @@ body {
   opacity: 0;
 }
 
+/* El objetivo actual, arriba a la izquierda: discreto, pero siempre a la vista. */
+.objetivo {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  margin: 0;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgb(255 246 234 / 0.88);
+  color: var(--texto);
+  font: 600 14px/1.2 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  box-shadow: 0 4px 12px rgb(107 123 184 / 0.2);
+}
+
+.objetivo[hidden],
+.ayuda[hidden] {
+  display: none;
+}
+
 .ayuda {
   position: absolute;
   left: 16px;

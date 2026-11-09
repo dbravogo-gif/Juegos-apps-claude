@@ -14,8 +14,8 @@ export const ISLA_1: DefIsla = {
       nombre: 'Zona inicial',
       origen: { x: 38, y: 92 },
       hierbaObligatoria: false,
-      cierre: { condicion: 'inicial-elegida', aviso: 'Antes de salir, pasa por el museo y elige a tu compañero.' },
-      personajes: [{ id: 'vecino-salida', x: 5, y: 1, mira: 'o', frase: '¡Eh! Sin compañero no se sale de aquí. El doctor te espera en el museo.' }],
+      cierre: { condicion: 'inicial-elegida', aviso: 'Antes de salir, pasa por el museo y elige a tu compañera.' },
+      personajes: [{ id: 'vecino-salida', x: 5, y: 1, mira: 'o', frase: '¡Eh! Sin una criatura que te acompañe no se sale de aquí. La doctora te espera en el museo.' }],
       altura: 0,
       mapa: [
         '##,,,###################',

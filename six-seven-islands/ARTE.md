@@ -203,6 +203,9 @@ de arte, antes de construir contenido.
     larga: así se ve una miniatura.
   - El jugador mide alrededor del 9 % del alto de la pantalla, unos 70 px en 1280 × 800
     (pantalla apaisada; el juego es solo para ordenador).
+- **Interiores:** la cámara encuadra la sala entera, quieta.
+- **Diálogos:** la cámara se acerca y sube a 72°, entre el jugador y quien habla. A 50°, el
+  jugador, que habla desde el sur, le tapaba.
 - **Combate:** cámara más cerca, sobre el mismo terreno. Las criaturas ocupan entre un tercio y
   la mitad del alto.
 - **Efecto *tilt-shift*:** desenfoque de profundidad real arriba y abajo. En la calidad baja,

@@ -55,7 +55,7 @@ function anciano(tipo: string | undefined): Dialogo {
       { quien: 'Anciano', texto: 'Esa criatura no te hace caso, ¿verdad? Siéntate, que te cuento su historia.' },
       { quien: 'Anciano', texto: tipo ? ABUELA[tipo] : 'Las tres leyendas eran orgullosas. Ninguna obedecía a quien no la conocía.' },
       { quien: 'Anciano', texto: 'Háblale de lo que te importa. Verás como poco a poco te escucha.' },
-      { texto: 'Tu compañero te mira de otra manera. Ahora sí te hace caso.' },
+      { texto: 'Tu compañera te mira de otra manera. Ahora sí te hace caso.' },
     ],
     efecto: { condicion: 'anciano' },
   };
@@ -119,8 +119,8 @@ export const GUION_ISLA1: Guion = {
     {
       dialogo: {
         lineas: [
-          { quien: 'Enfermera', texto: 'Bienvenido al refugio. Aquí cuidamos de tu equipo sin cobrar nada.' },
-          { quien: 'Enfermera', texto: 'Ahora mismo tus criaturas están perfectamente. (Curar llegará con los combates).' },
+          { quien: 'Enfermera', texto: 'Te damos la bienvenida al refugio. Aquí cuidamos de tu equipo sin cobrar nada.' },
+          { quien: 'Enfermera', texto: 'Ahora mismo tus criaturas están perfectamente. Vuelve cuando estén cansadas.' },
         ],
       },
     },
@@ -128,7 +128,7 @@ export const GUION_ISLA1: Guion = {
   tendero: [
     {
       dialogo: {
-        lineas: [{ quien: 'Tendero', texto: '¡Buenas! Estoy esperando el barco con la mercancía. (La tienda abrirá cuando haya objetos que vender).' }],
+        lineas: [{ quien: 'Tendero', texto: '¡Buenas! Estoy esperando el barco con la mercancía. Pásate más adelante.' }],
       },
     },
   ],
@@ -138,7 +138,7 @@ export const GUION_ISLA1: Guion = {
       dialogo: {
         lineas: [
           { quien: 'Líder', texto: 'Soy la líder de este gimnasio. Mis criaturas brillan como el sol de la tarde.' },
-          { quien: 'Líder', texto: 'Cuando estés preparado, combatiremos. (Los combates llegan pronto).' },
+          { quien: 'Líder', texto: 'Cuando quieras, combatiremos. Antes, entrena a tu equipo en la hierba alta del bosque.' },
         ],
       },
     },
@@ -149,7 +149,7 @@ export const GUION_ISLA1: Guion = {
   'vecino-salida': [
     {
       sin: 'inicial-elegida',
-      dialogo: { lineas: [{ quien: 'Vecino', texto: '¡Eh! Sin compañero no se sale de aquí. La doctora te espera en el museo.' }] },
+      dialogo: { lineas: [{ quien: 'Vecino', texto: '¡Eh! Sin una criatura que te acompañe no se sale de aquí. La doctora te espera en el museo.' }] },
     },
     {
       dialogo: { lineas: [{ quien: 'Vecino', texto: '¡Ya tienes compañera! Sigue el camino hacia la playa de arena negra.' }] },

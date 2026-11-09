@@ -160,6 +160,10 @@ pantalla.
   - Elegir una estatua del museo fija la inicial y abre la zona inicial; hablar con el anciano
     abre el bosque.
   - Las estatuas son provisionales hasta que lleguen las de Meshy.
+  - La partida empieza dentro de casa, y arriba a la izquierda siempre se ve el objetivo: el
+    museo, después el anciano y después la capital.
+  - Las preguntas empiezan en «No», para no elegir la inicial sin querer machacando la tecla.
+  - Al hablar, la cámara se acerca y sube a 72° para que el jugador no tape a quien le habla.
 - **Los mapas se escriben como texto**, una letra por casilla, como en Leyendas. Así se leen y
   se prueban fácilmente.
 - **Alturas por casilla,** en escalones. Entre dos casillas que se pisan nunca hay más de un

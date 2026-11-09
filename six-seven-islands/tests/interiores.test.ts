@@ -51,7 +51,8 @@ function leer(s: EstadoDialogo, si: boolean): { efectos: Efecto[]; textos: strin
   for (let i = 0; i < 200; i++) {
     while (!completa(s)) pasoDialogo(s);
     textos.push(lineaActual(s).texto);
-    if (s.tramo === 'pregunta' && !si) pulsar(s, 'derecha');
+    // La pregunta empieza en «No»: para decir que sí hay que elegirlo.
+    if (s.tramo === 'pregunta' && si) pulsar(s, 'izquierda');
     const r = pulsar(s, 'confirmar');
     if (r.efecto) efectos.push(r.efecto);
     if (r.fin) return { efectos, textos };
@@ -174,7 +175,27 @@ describe('diálogos', () => {
       s.revelado = 999;
       pulsar(s, 'confirmar');
     }
+    // Cancelar con la pregunta a medio escribir solo la completa: así siempre se lee.
+    expect(pulsar(s, 'cancelar')).toEqual({ fin: false });
     expect(pulsar(s, 'cancelar')).toEqual({ fin: true });
+  });
+
+  it('machacar la tecla de interactuar ante una estatua no elige nada sin querer', () => {
+    const s = abrirDialogo(elegirDialogo(GUION_ISLA1, 'estatua-planta', [], null)!);
+    const efectos: Efecto[] = [];
+    for (let i = 0; i < 60; i++) {
+      pasoDialogo(s);
+      const r = pulsar(s, 'confirmar');
+      if (r.efecto) efectos.push(r.efecto);
+      if (r.fin) break;
+    }
+    expect(efectos).toEqual([]);
+  });
+
+  it('cancelar salta hasta el final sin perder lo que el diálogo hace', () => {
+    const s = abrirDialogo(elegirDialogo(GUION_ISLA1, 'anciano', ['inicial-elegida'], 'agua')!);
+    expect(pulsar(s, 'cancelar')).toEqual({ fin: false });
+    expect(pulsar(s, 'cancelar')).toEqual({ fin: true, efecto: { condicion: 'anciano' } });
   });
 
   it('elegir una estatua elige la inicial y abre el paso; después solo cuenta su historia', () => {

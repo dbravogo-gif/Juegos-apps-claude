@@ -5,6 +5,9 @@
 
 import type { DefInterior } from '../core/mundo';
 
+/** La partida empieza dentro de casa: mamá te manda al museo (probador, 2026-11-08). */
+export const SALA_INICIAL = 'casa-jugador';
+
 export const INTERIORES_ISLA1: readonly DefInterior[] = [
   {
     id: 'museo',
@@ -64,7 +67,7 @@ export const INTERIORES_ISLA1: readonly DefInterior[] = [
     mapa: [
       '|||||||||||',
       '|hmmmmmmmh|',
-      '|mmcccccmm|',
+      '|ccccccccc|',
       '|mmmmmmmmm|',
       '|lmmmmmmmv|',
       '|mmmmmmmmm|',
