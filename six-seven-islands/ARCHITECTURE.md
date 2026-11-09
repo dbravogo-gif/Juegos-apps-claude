@@ -23,9 +23,15 @@ agentes. El patrón viene de *Claude of Duty* (Matt Shumer, MIT).
   el cargador glTF, `SkeletonUtils` y las animaciones. El reparto tampoco está medido.
 - `BufferGeometryUtils`, `GLTFLoader` y `SkeletonUtils` (`three/addons/`) son parte de `three`:
   no son dependencias nuevas.
-- **Modelos:** KayKit (CC0, `CREDITS.md`), 4,2 MB en `public/modelos/kaykit/`. Se cargan una
-  vez con `src/arte/modelos.ts`. Los prepara `herramientas/recursos-kaykit.mjs`, que se ejecuta
-  a mano con `@gltf-transform` instalado aparte: no es una dependencia del juego.
+- **Modelos:** KayKit (CC0, `CREDITS.md`), 2,9 MB en `public/modelos/kaykit/`: las montañas y
+  las nubes (157 KB) y los 5 personajes. Se cargan una vez con `src/arte/modelos.ts`. Los prepara
+  `herramientas/recursos-kaykit.mjs`, que se ejecuta a mano con `@gltf-transform` instalado
+  aparte: no es una dependencia del juego.
+- **Lo demás del mundo se hace por código,** sin descargas:
+  - `mundo/montaje.ts`: juntar piezas con color por vértice, azar determinista y
+    deformaciones;
+  - `mundo/canario.ts`: casas y faro;
+  - `mundo/kit.ts`: plantas, rocas y muro.
 
 - Sin motor de física: el mundo es una rejilla de casillas con alturas.
 - El sonido, más adelante, con Web Audio o ZzFX (MIT, menos de 1 KB).
@@ -102,7 +108,7 @@ export class Sistema implements Subsistema {
 | `render` | `src/sistemas/render/` | El renderizador, la escena, las luces, las sombras y el postproceso |
 | `camara` | `src/sistemas/camara/` | La cámara de diorama y la de combate |
 | `entrada` | `src/sistemas/entrada/` | El teclado (no hay ratón): direcciones, confirmar y cancelar. Un toque corto cuenta como un paso |
-| `mundo` | `src/sistemas/mundo/` | La isla en 3D: terreno en terrazas por alturas, cumbres, mar, casas canarias y laureles por código (`canario.ts`), edificios y naturaleza de KayKit, decoración propia por trozos de 12 × 12, pasos cerrados y objetos. Publica `tapas`, la altura de lo más alto de cada casilla. Lee «partida»; no la cambia |
+| `mundo` | `src/sistemas/mundo/` | La isla en 3D: terreno en terrazas por alturas, cumbres, mar, casas canarias (`canario.ts`) y kit de naturaleza (`kit.ts`) por código, montañas y nubes de KayKit, todo instanciado por trozos de 12 × 12, pasos cerrados y objetos. Publica `tapas`, la altura de lo más alto de cada casilla. Lee «partida»; no la cambia |
 | `criaturas` | `src/sistemas/criaturas/` | El generador de criaturas por piezas y su animación procedural. Se pide con `crear(aspecto)` y se anima con `accion(criatura, accion)` |
 | `personaje` | `src/sistemas/personaje/` | El jugador y los personajes (KayKit, animados), la silueta cuando algo tapa al jugador (con las `tapas` de «mundo») y las líneas de visión; más adelante, el generador y la personalización (F12) |
 | `combate` | `src/sistemas/combate/` | La escena de combate: presenta los eventos del núcleo, con sus efectos |
@@ -110,6 +116,7 @@ export class Sistema implements Subsistema {
 | `interfaz` | `src/sistemas/interfaz/` | La interfaz en DOM: menús, diálogos, marcador, tienda y equipo |
 | `partida` | `src/sistemas/partida/` | El estado del núcleo, los modos (explorar y aviso; después combate, diálogo y menú) y el guardado automático. Avanza a paso fijo con la entrada |
 | `depuracion` | `src/sistemas/depuracion/` | El panel de ajustes (solo en desarrollo) y los ganchos de `window.__JUEGO__` |
+| `catalogo` | `src/sistemas/catalogo/` | Herramienta, no juego: con `?catalogo` o `?catalogo=edificios`, las piezas propias del mundo en fila, con la luz y la cámara del juego; ← → acercan la cámara a cada una |
 | `prueba` | `src/sistemas/prueba/` | **Temporal:** la vitrina de la prueba de arte (`F04`), con `?vitrina`. Se queda para probar los modelos de Meshy; se borra cuando las criaturas entren en el juego |
 | `audio` | `src/sistemas/audio/` | El sonido generado por código. Llegará después |
 | `red` | `src/sistemas/red/` | Presencia, retos y cooperativo. Llegará en la fase online |
@@ -194,12 +201,14 @@ y `?semilla=n`. Mientras exista la vitrina de F04: `?vista=combate|todas|explora
   11 llamadas por criatura. Una prueba comprueba que 4 criaturas del generador caben en 40,
   la mitad de su reparto.
 
-- **Medido tras las casas canarias y los laureles** (2026-11-08, todo el juego en calidad media):
-  - el peor punto es el claro del bosque, con 240 llamadas y 569.000 triángulos;
-  - el pueblo, 200 llamadas y 368.000 triángulos;
-  - la zona inicial, 78 llamadas y 63.000 triángulos.
-  - Los laureles (300 triángulos cada uno) son lo que más pesa: si hiciera falta, la primera
-    rebaja es una variante más ligera para el interior del bosque, que solo enseña la copa.
+- **Medido con el kit canario** (2026-11-08, todo el juego en calidad media):
+  - el peor punto es el claro del bosque, con 211 llamadas y 623.000 triángulos;
+  - el pueblo, 197 llamadas y 473.000 triángulos;
+  - la zona inicial, 92 llamadas y 100.000 triángulos.
+  - Para bajar llamadas, las piezas del kit tienen 1 a 3 variantes y la decoración del suelo
+    (flores, matas y lajas) no proyecta sombra. Con el kit entero llegaban a 268.
+  - Lo que más pesa en triángulos son los laureles (300 cada uno) y las plataneras: la primera
+    rebaja sería una variante ligera para el interior del bosque, que solo enseña la copa.
   - No está medido por subsistema.
 
 Ningún subsistema supera su parte sin documentarlo aquí.

@@ -73,41 +73,56 @@ Cada una se distingue por la silueta a la distancia de juego.
 
 ## Modelos del mundo
 
-Pase de arte del 2026-11-08. Lo canario se hace por código; lo genérico es de KayKit (CC0, Kay
-Lousberg; `CREDITS.md`), y lo orgánico y único irá con Meshy. Quaternius no se puede descargar
-desde la red de trabajo.
+Kit canario del 2026-11-08, aprobado por el autor:
+- estilo de juguete redondeado;
+- unas pocas piezas que se repiten por toda la isla;
+- todo por código, y lo que no le guste lo rehace él con Meshy.
 
-- **Por código** (`src/sistemas/mundo/canario.ts`), con color por vértice y un solo material.
-  - **Casa canaria rural** (zona inicial y pueblo): blanca, de una planta, con zócalo, cantería
-    en las esquinas, carpintería verde, azul o de madera, contraventanas, macetas con geranios
-    y tejado a dos aguas de teja curva, a veces con chimenea.
-  - **Casa de balcones** (capital): fachada de color, dos plantas y balcón de madera corrido con
+Se revisan de cerca en `?catalogo` (plantas, rocas y muro) y `?catalogo=edificios`; con
+← →, la cámara se acerca a cada pieza.
+
+- **Cómo se hacen:** geometrías con color por vértice y un solo material, con variantes por
+  semilla (`montaje.ts`). Cada variante es una llamada de dibujo más por trozo de la isla, así
+  que hay pocas.
+- **Casas** (`canario.ts`):
+  - **Rural** (zona inicial y pueblo): blanca, de una planta, con muros redondeados, zócalo,
+    cantería en las esquinas, carpintería verde, azul o de madera, contraventanas, macetas con
+    geranios y tejado de teja curva, a veces con chimenea.
+  - **De balcones** (capital): fachada de color, dos plantas y balcón de madera corrido con
     tejadillo. La mitad lleva teja y la otra mitad azotea con pretil, cuarto y depósito.
   - El refugio lleva puerta y letrero coral. La tienda, toldo a rayas azules y cajas.
-  - **Laurel:** tronco algo torcido y copa de cinco bolas abolladas en tres verdes. Los que
-    tienen un camino justo al norte son bajos, para no tapar la última fila del camino.
-  - **Malpaís:** lajas de lava negras, pardas y rojizas que cubren la casilla, con una punta y
-    algo de liquen.
-  - También son propias las plataneras, el drago, las matas de hierba alta, las flores y un
-    ligero cambio de tono por casilla.
-- **De KayKit:** el museo-fuerte (el cuartel azul), el gimnasio (el castillo amarillo), el faro
-  (la torre amarilla), las rocas, las vallas, las montañas, las nubes y las personas.
-  - *Medieval Hexagon Pack* 1.0, en un solo `medieval.glb`, y *Adventurers Character Pack* 1.0.
-    Los prepara `herramientas/recursos-kaykit.mjs`.
-  - Su material se cambia por `MaterialDiorama` con su textura, que es una paleta de 8 × 4
-    degradados. La hierba de sus montañas usa el amarillo oliva, que con el sol cálido sale
-    chillón: se lleva al verde al cargarlas.
-  - **Altos máximos:** 3,6 casillas el museo, 5,5 el faro y 6,2 el gimnasio.
-- **Personas** (KayKit), sin armas, a 1,25 casillas de alto y animadas (parado y andando):
-  - jugador: `Rogue`;
-  - anciano: `Mage`;
-  - entrenador obligatorio: `Knight`;
-  - entrenador opcional: `Barbarian`;
-  - el resto: `Rogue_Hooded`.
+  - **Provisionales hasta que el autor los haga con Meshy:**
+    - el museo, una casona blanca con teja;
+    - el gimnasio, una casona amarilla con un sol ámbar pintado en la azotea, que se reconoce
+      desde arriba como el de tipo Luz;
+    - el faro, una torre blanca con dos bandas rojas.
+- **Plantas** (`kit.ts`):
+  - **Laurel**, en el bosque. Los que tienen un camino justo al norte son bajos, para no tapar
+    la última fila.
+  - **Palmera canaria**, en las plazas.
+  - **Platanera**, en las plantaciones.
+  - **Drago.**
+  - **En las rocas (`#`), según la zona:**
+    - en el secano (sur y capital), cardón y tabaiba;
+    - en el norte húmedo, tajinaste azul gigante, endémico de La Palma.
+- **Rocas y muros:** roca basáltica, órganos de basalto, escoria roja, lajas del malpaís y muro
+  de piedra seca.
+- **Luz sobre lo horizontal:** arriba les da el sol y el relleno, y los colores claros se queman
+  hasta casi blanco. Azoteas y suelos llevan colores medios (`azotea`, `solPintado`).
+- **De KayKit** (CC0, Kay Lousberg; `CREDITS.md`):
+  - quedan las montañas de las cumbres y las nubes, en `medieval.glb`;
+  - la hierba de sus montañas, amarillo oliva en su paleta de degradados, se lleva al verde al
+    cargarlas;
+  - también son suyas las personas, sin armas, a 1,25 casillas de alto y animadas: jugador
+    `Rogue`, anciano `Mage`, entrenadores `Knight` y `Barbarian`, y el resto `Rogue_Hooded`.
+  - Quaternius no se puede descargar desde la red de trabajo.
+- **Personas, más adelante (F12):** gente normal y personalizable, sin pícaros ni magos
+  (decisión del autor, 2026-11-08).
 - **Silueta del jugador:** clara (espuma, al 70 %), y solo cuando algo le tapa el pecho. Lo
   calcula «personaje» con la altura de lo que hay en las casillas al sur, entre él y la cámara.
   Encendida siempre, se pintaba sobre el propio jugador.
-- **Con Meshy:** el drago, las tres estatuas del museo y las criaturas.
+- **Con Meshy (el autor):** los edificios singulares que quiera, las tres estatuas del museo y
+  las criaturas.
 
 ## Generador de criaturas
 

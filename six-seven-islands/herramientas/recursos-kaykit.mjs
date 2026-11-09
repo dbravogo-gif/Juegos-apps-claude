@@ -1,6 +1,6 @@
 // Prepara los modelos de KayKit (CC0, Kay Lousberg, www.kaylousberg.com) para el juego:
-//   - junta en un solo GLB los modelos elegidos del paquete medieval, cada uno como un nodo con
-//     su nombre (comparten una textura de 16 KB);
+//   - junta en un solo GLB los modelos elegidos del paquete medieval (montañas y nubes), cada uno
+//     como un nodo con su nombre (comparten una textura de 16 KB);
 //   - deja a cada personaje solo las animaciones que usa el juego (de 76 a 7).
 // No es una dependencia del juego: se ejecuta a mano con @gltf-transform instalado aparte.
 //
@@ -18,17 +18,11 @@ const [medieval, personajes, salida] = process.argv.slice(2);
 if (!salida) throw new Error('Uso: node recursos-kaykit.mjs <medieval> <personajes> <salida>');
 mkdirSync(salida, { recursive: true });
 
-/** Los modelos del paquete medieval que usa la isla 1. */
-export const MODELOS = [
-  'building_home_A_red', 'building_home_A_yellow', 'building_home_A_blue', 'building_home_A_green',
-  'building_home_B_red', 'building_home_B_yellow', 'building_home_B_blue',
-  'building_tavern_red', 'building_market_blue', 'building_castle_yellow', 'building_barracks_blue',
-  'building_tower_A_yellow', 'building_well_blue',
-  'tree_single_A', 'tree_single_B', 'trees_A_small', 'trees_A_medium', 'trees_B_small', 'trees_B_medium',
-  'rock_single_A', 'rock_single_C', 'rock_single_E',
-  'mountain_A_grass_trees', 'mountain_B_grass', 'mountain_C_grass_trees', 'hills_A_trees',
-  'fence_stone_straight', 'fence_wood_straight', 'cloud_big', 'cloud_small', 'barrel', 'crate_A_small', 'sack',
-];
+/**
+ * Los modelos del paquete medieval que usa la isla 1. Desde el kit canario (2026-11-08), solo
+ * montañas y nubes: casas, árboles, rocas y vallas se hacen por código.
+ */
+export const MODELOS = ['mountain_A_grass_trees', 'mountain_B_grass', 'mountain_C_grass_trees', 'hills_A_trees', 'cloud_big', 'cloud_small'];
 const PERSONAJES = ['Rogue', 'Rogue_Hooded', 'Mage', 'Knight', 'Barbarian'];
 const ANIMACIONES = new Set(['Idle', 'Walking_A', 'Running_A', 'Cheer', 'Interact', 'Hit_A', 'Death_A']);
 

@@ -1,7 +1,7 @@
-// Subsistema «mundo»: la isla en 3D. Lo propio, por código: el terreno en terrazas por alturas,
-// las casas canarias, los laureles, el malpaís, las plataneras, el drago, la hierba alta y las
-// flores. De KayKit (CC0): museo, gimnasio, faro, rocas, vallas, montañas y nubes. Lee el estado
-// de «partida» para abrir los pasos y quitar los objetos recogidos; no lo cambia.
+// Subsistema «mundo»: la isla en 3D. Casi todo es propio, por código: el terreno en terrazas por
+// alturas, las casas canarias (`canario.ts`) y el kit de naturaleza (`kit.ts`: plantas, rocas y
+// muros de La Palma). De KayKit (CC0) quedan las montañas de las cumbres y las nubes. Lee el
+// estado de «partida» para abrir los pasos y quitar los objetos recogidos; no lo cambia.
 
 import { BoxGeometry, InstancedMesh, Matrix4, Mesh, PlaneGeometry, Quaternion, SphereGeometry, Vector3, type BufferGeometry, type Material } from 'three/webgpu';
 import { attribute } from 'three/tsl';
@@ -14,24 +14,39 @@ import { cargarModelo, escalaPara, materialConTextura, nodo, pieza, rutaModelo, 
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Partida } from '../partida/partida';
 import { alturaCara, cumbres, decoracion, geometriaTerreno, pseudo } from './terreno';
-import { casaCanaria, laurel, type UsoCasa } from './canario';
+import { casaCanaria, faro, type UsoCasa } from './canario';
+import { VARIANTES, piezaKit, type PiezaKit } from './kit';
 
 const OCULTA = new Matrix4().makeScale(0, 0, 0);
 const TROZO = 12;
 
-/** Los edificios que siguen siendo de KayKit. Casas, refugios y tiendas son casas canarias. */
-const MODELO_EDIFICIO: Partial<Record<Casilla, string>> = {
-  M: 'building_barracks_blue',
-  G: 'building_castle_yellow',
-  F: 'building_tower_A_yellow',
+/** Uso de cada casa canaria según su casilla. El museo y el gimnasio son casonas provisionales. */
+const USO_CASA: Partial<Record<Casilla, UsoCasa>> = { C: 'casa', R: 'refugio', S: 'tienda', M: 'museo', G: 'gimnasio' };
+
+/** Qué crece en las casillas de roca (`#`), con su peso sobre 100: secano en el sur, humedad en el norte. */
+type Reparto = [PiezaKit | null, number][];
+const RISCO_SECO: Reparto = [['roca', 30], ['organos', 6], ['escoria', 8], ['cardon', 14], ['tabaiba', 16], [null, 26]];
+const RISCO_HUMEDO: Reparto = [['roca', 30], ['escoria', 5], ['tajinaste', 14], ['tabaiba', 8], [null, 43]];
+const ZONAS_HUMEDAS = new Set(['pueblo', 'bosque']);
+/** Escala mínima y máxima de cada pieza del kit en las rocas. */
+const ESCALA_RISCO: Partial<Record<PiezaKit, [number, number]>> = {
+  roca: [0.8, 1.3],
+  organos: [0.9, 1.2],
+  escoria: [0.9, 1.3],
+  cardon: [0.85, 1.15],
+  tabaiba: [1, 1.4],
+  tajinaste: [0.85, 1.15],
 };
-/** Alto máximo de los de KayKit, para que no tapen media pantalla con la cámara a 50°. */
-const ALTO_MAX: Partial<Record<Casilla, number>> = { M: 3.6, G: 6.2, F: 5.5 };
-/** Uso de cada casa canaria según su casilla. */
-const USO_CASA: Partial<Record<Casilla, UsoCasa>> = { C: 'casa', R: 'refugio', S: 'tienda' };
-/** Variantes del laurel, instanciadas en el bosque y el pueblo. */
-const LAURELES = 4;
-const ROCAS = ['rock_single_A', 'rock_single_C', 'rock_single_E'];
+
+function repartir(lista: Reparto, n: number): PiezaKit | null {
+  let a = n % 100;
+  for (const [pieza, peso] of lista) {
+    if (a < peso) return pieza;
+    a -= peso;
+  }
+  return null;
+}
+
 const MONTANAS = ['mountain_A_grass_trees', 'mountain_B_grass', 'mountain_C_grass_trees', 'hills_A_trees'];
 
 /**
@@ -79,7 +94,7 @@ export class Mundo implements Subsistema {
     const m = this.partida.mundo;
     sueloY.value = alturaSuelo(0);
     this.kaykit = await cargarModelo(rutaModelo('kaykit/medieval.glb'));
-    this.materialKaykit = materialConTextura(this.pieza(ROCAS[0]).mapa, { bordes: [-0.1, 0.4], especular: 0.06, rebote: 0.12 });
+    this.materialKaykit = materialConTextura(this.pieza(MONTANAS[0]).mapa, { bordes: [-0.1, 0.4], especular: 0.06, rebote: 0.12 });
     this.materialColores = new MaterialDiorama({ bordes: [-0.1, 0.4], especular: 0.06, rebote: 0.12 }, attribute('color', 'vec3'));
     this.materiales.push(this.materialKaykit, this.materialColores);
 
@@ -100,15 +115,12 @@ export class Mundo implements Subsistema {
     this.colocarEdificios();
     this.colocarNaturaleza(cumbre);
 
-    // Decoración procedural (lo que KayKit no tiene).
+    // Decoración del suelo: hierba alta, malpaís y flores. Sin sombra propia: es tan baja que
+    // apenas se ve, y cada malla con sombra es otra llamada de dibujo.
     const materialesDeco = new Map<string, MaterialDiorama>();
     for (const d of decoracion(m)) {
-      if (d.color === null) {
-        this.instanciar(d.geometria, this.materialColores, d.matrices);
-        continue;
-      }
-      if (!materialesDeco.has(d.color)) materialesDeco.set(d.color, this.liso(d.color));
-      this.instanciar(d.geometria, materialesDeco.get(d.color)!, d.matrices);
+      if (d.color !== null && !materialesDeco.has(d.color)) materialesDeco.set(d.color, this.liso(d.color));
+      this.instanciar(d.geometria, d.color === null ? this.materialColores : materialesDeco.get(d.color)!, d.matrices, false);
     }
 
     // Pasos cerrados: una barrera por casilla X, que desaparece al cumplir su condición.
@@ -129,7 +141,7 @@ export class Mundo implements Subsistema {
         const [x, y] = deClave(k);
         return new Matrix4().makeTranslation(x, alturaSuelo(m.casillas.get(k)!.h) + 0.25, y);
       });
-      const im = this.instanciar(new SphereGeometry(0.22, 14, 10), this.liso('#FFE45C', { especular: 0.3, contraluz: 0.3 }), matrices);
+      const im = this.instanciar(new SphereGeometry(0.22, 14, 10), this.liso(COLORES.amarilloLuz, { especular: 0.3, contraluz: 0.3 }), matrices);
       this.objetos = { malla: im, ids: objs.map(([, o]) => o.objeto.id), matrices };
     }
     this.sincronizar();
@@ -137,8 +149,9 @@ export class Mundo implements Subsistema {
 
   private pieza(nombre: string): Pieza {
     let p = this.piezas.get(nombre);
-    if (!p && nombre.startsWith('laurel_')) {
-      const geometria = laurel(Number(nombre.slice(7)) * 131 + 7);
+    if (!p && nombre.startsWith('kit:')) {
+      const [tipo, variante] = nombre.slice(4).split('_');
+      const geometria = piezaKit(tipo as PiezaKit, Number(variante));
       p = { geometria, mapa: null, caja: geometria.boundingBox!.clone() };
       this.piezas.set(nombre, p);
       this.geometrias.push(geometria);
@@ -171,17 +184,18 @@ export class Mundo implements Subsistema {
     return malla;
   }
 
-  private instanciar(g: BufferGeometry, mat: Material, matrices: Matrix4[]): InstancedMesh {
+  private instanciar(g: BufferGeometry, mat: Material, matrices: Matrix4[], sombra = true): InstancedMesh {
     const im = new InstancedMesh(g, mat, matrices.length);
     matrices.forEach((mt, i) => im.setMatrixAt(i, mt));
     im.computeBoundingSphere();
-    this.anadir(im);
+    this.anadir(im, sombra);
     return im;
   }
 
   /**
    * Cada edificio a la medida de su solar y apoyado en el suelo. Las casas, refugios y tiendas
-   * son casas canarias: rurales en el campo y de balcones en la capital. Todas las puertas dan
+   * son casas canarias: rurales en el campo y de balcones en la capital. El museo y el gimnasio
+   * son casonas de balcones, y el faro, una torre blanca con bandas rojas. Todas las puertas dan
    * al sur, hacia la cámara (lo comprueba una prueba del mapa).
    */
   private colocarEdificios(): void {
@@ -196,28 +210,27 @@ export class Mundo implements Subsistema {
         const uso = USO_CASA[e.tipo];
         if (uso) {
           const puerta = e.puertas.length ? deClave(e.puertas[0])[0] - cx : 0;
-          const geometria = casaCanaria({ estilo: zona === 'capital' ? 'balcones' : 'rural', uso, ancho: e.ancho, fondo: e.fondo, puerta, semilla: pseudo(e.casillas[0]) });
+          const estilo = zona === 'capital' || uso === 'museo' || uso === 'gimnasio' ? 'balcones' : 'rural';
+          // El gimnasio, con azotea: más bajo, para no tapar tanto el camino de detrás.
+          const techo = uso === 'gimnasio' ? 'azotea' : uso === 'museo' ? 'teja' : undefined;
+          const geometria = casaCanaria({ estilo, uso, techo, ancho: e.ancho, fondo: e.fondo, puerta, semilla: pseudo(e.casillas[0]) });
           const casa = new Mesh(geometria, this.materialColores);
           casa.position.set(cx, base, cz);
           this.anadir(casa);
           for (const k of e.casillas) this.subirTapa(k, base + geometria.boundingBox!.max.y);
           continue;
         }
-        const nombre = MODELO_EDIFICIO[e.tipo];
-        if (!nombre) continue;
-        const p = this.pieza(nombre);
-        const s = escalaPara(p.caja, e.ancho * 1.05, e.fondo * 1.05, ALTO_MAX[e.tipo]);
-        const malla = new Mesh(p.geometria, this.materialKaykit);
-        malla.scale.setScalar(s);
-        const centro = p.caja.getCenter(new Vector3());
-        malla.position.set(cx - centro.x * s, base - p.caja.min.y * s, cz - centro.z * s);
-        this.anadir(malla);
-        for (const k of e.casillas) this.subirTapa(k, base + (p.caja.max.y - p.caja.min.y) * s);
+        if (e.tipo !== 'F') continue;
+        const geometria = faro();
+        const torre = new Mesh(geometria, this.materialColores);
+        torre.position.set(cx, base, cz);
+        this.anadir(torre);
+        for (const k of e.casillas) this.subirTapa(k, base + geometria.boundingBox!.max.y);
       }
     }
   }
 
-  /** Árboles, rocas, vallas, montañas y nubes de KayKit, instanciados por trozos de la isla. */
+  /** Plantas, rocas y muros del kit, y montañas y nubes de KayKit, instanciados por trozos de la isla. */
   private colocarNaturaleza(cumbre: Map<number, number>): void {
     const m = this.partida.mundo;
     const grupos = new Map<string, { nombre: string; matrices: Matrix4[] }>();
@@ -237,24 +250,48 @@ export class Mundo implements Subsistema {
       grupos.set(id, g);
       return altura + (p.caja.max.y - p.caja.min.y) * s;
     };
+    /** Coloca una variante del kit (con la base en el origen) a su escala; devuelve su altura máxima. */
+    const colocarKit = (tipo: PiezaKit, r: number, x: number, y: number, altura: number, escala: number, giro: number): number => {
+      const nombre = `kit:${tipo}_${r % VARIANTES[tipo]}`;
+      const p = this.pieza(nombre);
+      q.setFromAxisAngle(eje, giro);
+      const mt = new Matrix4().compose(new Vector3(x, altura, y), q, new Vector3(escala, escala, escala));
+      const id = `${nombre}:${Math.floor(x / TROZO)},${Math.floor(y / TROZO)}`;
+      const g = grupos.get(id) ?? { nombre, matrices: [] };
+      g.matrices.push(mt);
+      grupos.set(id, g);
+      return altura + p.caja.max.y * escala;
+    };
 
     for (const [k, cm] of m.casillas) {
       const [x, y] = deClave(k);
       const r = pseudo(k);
       const suelo = alturaSuelo(cm.h);
-      if (cm.c === 'T') {
-        // Laureles de la laurisilva, más grandes en el bosque que en el pueblo. Los que tienen un
-        // camino justo al norte son bajos: si no, con la cámara a 50° tapan la última fila.
-        const dx = ((r >>> 8) % 5) * 0.04 - 0.08;
-        const dz = ((r >>> 12) % 5) * 0.04 - 0.08;
+      const dx = ((r >>> 8) % 5) * 0.04 - 0.08;
+      const dz = ((r >>> 12) % 5) * 0.04 - 0.08;
+      const giro = ((r >>> 16) % 6) * (Math.PI / 3);
+      if (cm.c === 'T' && cm.zona === 'bosque') {
+        // Laureles de la laurisilva. Los que tienen un camino justo al norte son bajos: si no,
+        // con la cámara a 50° tapan la última fila del camino.
         const orilla = TRANSITABLES.has(m.casillas.get(clave(x, y - 1))?.c ?? '');
-        const ancho = orilla ? 0.8 : (cm.zona === 'bosque' ? 1.3 : 1.1) + ((r >>> 4) & 3) * 0.1;
-        this.subirTapa(k, colocarEn(`laurel_${r % LAURELES}`, x + dx, y + dz, suelo, ancho, ((r >>> 16) % 6) * (Math.PI / 3)));
-      } else if (cm.c === '#' && r % 3 === 0) {
-        colocarEn(ROCAS[(r >>> 4) % ROCAS.length], x, y, alturaCara(cm, undefined), 0.7 + ((r >>> 8) & 3) * 0.12, (r % 7) * 0.9);
+        const escala = orilla ? 0.5 : 0.85 + ((r >>> 4) & 3) * 0.07;
+        this.subirTapa(k, colocarKit('laurel', r, x + dx, y + dz, suelo, escala, giro));
+      } else if (cm.c === 'T') {
+        // Fuera del bosque, palmeras canarias.
+        this.subirTapa(k, colocarKit('palmera', r, x + dx, y + dz, suelo, 0.9 + ((r >>> 4) & 3) * 0.07, giro));
+      } else if (cm.c === 'b') {
+        this.subirTapa(k, colocarKit('platanera', r, x + dx, y + dz, suelo, 0.9 + ((r >>> 4) & 7) * 0.04, giro));
+      } else if (cm.c === 'Y') {
+        this.subirTapa(k, colocarKit('drago', r, x, y, suelo, 1, giro));
+      } else if (cm.c === '#') {
+        const tipo = repartir(ZONAS_HUMEDAS.has(cm.zona) ? RISCO_HUMEDO : RISCO_SECO, r >>> 3);
+        if (!tipo) continue;
+        const [min, max] = ESCALA_RISCO[tipo] ?? [1, 1];
+        const escala = min + (((r >>> 20) & 15) / 15) * (max - min);
+        this.subirTapa(k, colocarKit(tipo, r >>> 5, x + dx, y + dz, alturaCara(cm, undefined), escala, giro));
       } else if (cm.c === '=') {
         const horizontal = m.casillas.get(clave(x - 1, y))?.c === '=' || m.casillas.get(clave(x + 1, y))?.c === '=';
-        colocarEn('fence_stone_straight', x, y, suelo, 1.02, horizontal ? 0 : Math.PI / 2);
+        this.subirTapa(k, colocarKit('muro', r, x, y, suelo, 1, horizontal ? 0 : Math.PI / 2));
       }
     }
     // Montañas sobre las cumbres, espaciadas, y algunas nubes sobre el mar.

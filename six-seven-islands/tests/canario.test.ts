@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import type { BufferGeometry } from 'three';
-import { casaCanaria, lajasMalpais, laurel, type OpcionesCasa } from '../src/sistemas/mundo/canario';
+import { casaCanaria, faro, type OpcionesCasa } from '../src/sistemas/mundo/canario';
 
 const triangulos = (g: BufferGeometry) => g.getAttribute('position').count / 3;
 
-describe('piezas canarias hechas por código', () => {
+describe('casas canarias hechas por código', () => {
   const casas: OpcionesCasa[] = [
     { estilo: 'rural', ancho: 4, fondo: 3, puerta: -0.5, semilla: 3 },
     { estilo: 'rural', uso: 'refugio', ancho: 5, fondo: 4, puerta: 0, semilla: 5 },
@@ -12,6 +12,8 @@ describe('piezas canarias hechas por código', () => {
     { estilo: 'balcones', ancho: 4, fondo: 3, puerta: -0.5, semilla: 1 },
     { estilo: 'balcones', ancho: 3, fondo: 3, puerta: 0, semilla: 2 },
     { estilo: 'balcones', uso: 'refugio', ancho: 5, fondo: 4, puerta: 0, semilla: 13 },
+    { estilo: 'balcones', uso: 'museo', techo: 'teja', ancho: 8, fondo: 4, puerta: 0.5, semilla: 21 },
+    { estilo: 'balcones', uso: 'gimnasio', techo: 'azotea', ancho: 8, fondo: 6, puerta: 0.5, semilla: 34 },
   ];
 
   it('las casas caben en su solar, se apoyan en el suelo y no gastan de más', () => {
@@ -26,7 +28,7 @@ describe('piezas canarias hechas por código', () => {
       expect(c.min.z, nombre).toBeGreaterThanOrEqual(-op.fondo / 2 - 0.15);
       expect(c.max.z, nombre).toBeLessThanOrEqual(op.fondo / 2 + 0.35);
       expect(c.max.y, nombre).toBeLessThan(op.estilo === 'rural' ? 3 : 4.2);
-      expect(triangulos(g), nombre).toBeLessThan(3500);
+      expect(triangulos(g), nombre).toBeLessThan(op.ancho > 6 ? 6000 : 3500);
       expect(g.getAttribute('color'), nombre).toBeDefined();
     }
   });
@@ -39,16 +41,10 @@ describe('piezas canarias hechas por código', () => {
     expect(colores.size).toBeGreaterThan(1);
   });
 
-  it('el laurel y las lajas del malpaís son ligeros, porque se repiten cientos de veces', () => {
-    for (let s = 1; s <= 4; s++) {
-      const l = laurel(s);
-      expect(triangulos(l)).toBeLessThanOrEqual(320);
-      expect(l.boundingBox!.max.y).toBeGreaterThan(1.3);
-      const lajas = lajasMalpais(s * 11);
-      expect(triangulos(lajas)).toBeLessThanOrEqual(260);
-      const c = lajas.boundingBox!;
-      expect(Math.max(-c.min.x, c.max.x, -c.min.z, c.max.z)).toBeLessThanOrEqual(0.55);
-      expect(c.max.y).toBeLessThan(0.5);
-    }
+  it('el faro es una torre de un solar de 2 × 2', () => {
+    const c = faro().boundingBox!;
+    expect(c.min.y).toBeCloseTo(0, 5);
+    expect(Math.max(-c.min.x, c.max.x, -c.min.z, c.max.z)).toBeLessThanOrEqual(1);
+    expect(c.max.y).toBeGreaterThan(4);
   });
 });

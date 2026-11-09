@@ -41,7 +41,8 @@ export const COLORES = {
   fachadaSalmon: '#EDB79F',
   fachadaVerde: '#A3D3AE',
   fachadaAmarilla: '#F2D57E',
-  azotea: '#D9D2C5',
+  // Más oscura que la cal: arriba le da todo el sol y los claros se queman hasta el blanco.
+  azotea: '#BDB3A4',
   toldoAzul: '#4E8FCF',
   // Laurisilva y malpaís.
   laurelHondo: '#2A6E47',
@@ -52,4 +53,33 @@ export const COLORES = {
   lavaParda: '#4E3B36',
   lavaRojiza: '#6A3B2F',
   liquen: '#A9B38F',
+  // Amarillo de luz: objetos en el suelo, el letrero del gimnasio (tipo Luz) y la linterna del faro.
+  amarilloLuz: '#FFE45C',
+  // El sol pintado en la azotea del gimnasio: ámbar, porque el amarillo de luz se quema arriba.
+  solPintado: '#E8A030',
+  // Kit canario de naturaleza (2026-11-08): plantas y rocas de La Palma.
+  verdePalmera: '#5FAF4E',
+  verdePalmeraHondo: '#3F8A3E',
+  troncoPalmera: '#9C7650',
+  datil: '#E39A3B',
+  hojaPlatanera: '#79C24B',
+  hojaPlataneraHonda: '#55A03E',
+  troncoPlatanera: '#8E9C58',
+  racimo: '#A9C65A',
+  bellota: '#7A2E4F',
+  troncoDrago: '#BDAE90',
+  verdeDrago: '#5C8E58',
+  verdeDragoHondo: '#467A4A',
+  verdeCardon: '#86B466',
+  verdeCardonHondo: '#5E8F4C',
+  ramaTabaiba: '#8E8478',
+  verdeTabaiba: '#B9CC5C',
+  hojaTajinaste: '#90AE80',
+  florTajinaste: '#5674D4',
+  florTajinasteClaro: '#9FB4F2',
+  basalto: '#4D4B54',
+  basaltoClaro: '#7A7681',
+  escoria: '#8B4A36',
+  escoriaHonda: '#5E3329',
+  piedraParda: '#8A7A6A',
 } as const;

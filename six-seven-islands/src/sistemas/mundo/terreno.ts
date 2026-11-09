@@ -1,13 +1,12 @@
-// Geometría de la isla con formas simples (maqueta de F05): el terreno en terrazas por alturas,
-// el relleno de las cumbres entre zonas, los edificios y la decoración repetida. Funciones puras
-// de Three.js sin estado: el subsistema «mundo» las monta en la escena.
+// Geometría del suelo de la isla: el terreno en terrazas por alturas, el relleno de las cumbres
+// entre zonas y la decoración del suelo (hierba alta, malpaís y flores). Funciones puras de
+// Three.js sin estado: el subsistema «mundo» las monta en la escena.
 
 import {
   BufferAttribute,
   BufferGeometry,
   Color,
   ConeGeometry,
-  CylinderGeometry,
   Matrix4,
   Quaternion,
   SphereGeometry,
@@ -17,7 +16,7 @@ import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { clave, deClave, type Casilla, type CasillaMundo, type Mundo } from '../../core/mundo';
 import { FONDO, alturaSuelo } from '../../arte/escala';
 import { COLORES } from '../../arte/paleta';
-import { lajasMalpais } from './canario';
+import { piezaKit } from './kit';
 
 /** Casillas que no son de ninguna zona pero quedan dentro de la isla: las cumbres del centro. */
 export function cumbres(m: Mundo): Map<number, number> {
@@ -160,7 +159,7 @@ export interface Decoracion {
 /** Lado de los trozos de decoración, en casillas: lo que no se ve se descarta trozo a trozo. */
 const TROZO = 12;
 
-/** La decoración propia, por trozos: plataneras, el drago, matas de hierba alta, lajas del malpaís y flores. */
+/** La decoración del suelo, por trozos: matas de hierba alta, lajas del malpaís y flores. */
 export function decoracion(m: Mundo): Decoracion[] {
   const res: Decoracion[] = [];
   const geos = geometriasDecoracion();
@@ -183,19 +182,12 @@ export function decoracion(m: Mundo): Decoracion[] {
 }
 
 /** Variantes de las lajas del malpaís: cada casilla toma una, girada de 90 en 90 grados. */
-const LAJAS = 4;
+const LAJAS = 3;
 
 /** Geometrías de la decoración, compartidas por todas las zonas. */
 export function geometriasDecoracion(): Record<NombreDeco, { geometria: BufferGeometry; color: string | null }> {
   const mata = mergeGeometries(
     [-0.25, 0, 0.25].map((a, i) => new ConeGeometry(0.08, 0.5, 4).translate(0, 0.25, 0).rotateZ(a).rotateY(i * 1.2).translate((i - 1) * 0.1, 0, 0)),
-    false,
-  )!;
-  const platanera = mergeGeometries(
-    [
-      ...[0, 1.3, 2.6, 3.9, 5.2].map((a): BufferGeometry => new SphereGeometry(0.5, 5, 3).scale(0.12, 0.08, 0.5).translate(0, 1.1, 0.35).rotateY(a)),
-      new CylinderGeometry(0.08, 0.1, 1.1, 5).translate(0, 0.55, 0),
-    ],
     false,
   )!;
   const flores = mergeGeometries(
@@ -206,32 +198,23 @@ export function geometriasDecoracion(): Record<NombreDeco, { geometria: BufferGe
     ].map(([a, b]) => new SphereGeometry(0.05, 6, 4).translate(a, 0.05, b)),
     false,
   )!;
-  const dragoGeo = mergeGeometries(
-    [new CylinderGeometry(0.25, 0.35, 1.4, 8).translate(0, 0.7, 0), new SphereGeometry(1.2, 12, 6, 0, Math.PI * 2, 0, Math.PI / 2).scale(1, 0.45, 1).translate(0, 1.45, 0)],
-    false,
-  )!;
   return {
-    plataneras: { geometria: platanera, color: '#8CC152' },
-    drago: { geometria: dragoGeo, color: '#6E8F45' },
     matas: { geometria: mata, color: '#2F8A5B' },
-    lajas0: { geometria: lajasMalpais(11), color: null },
-    lajas1: { geometria: lajasMalpais(23), color: null },
-    lajas2: { geometria: lajasMalpais(37), color: null },
-    lajas3: { geometria: lajasMalpais(41), color: null },
+    lajas0: { geometria: piezaKit('lajas', 0), color: null },
+    lajas1: { geometria: piezaKit('lajas', 1), color: null },
+    lajas2: { geometria: piezaKit('lajas', 2), color: null },
     floresBlancas: { geometria: flores, color: '#FFF8EC' },
     floresAmarillas: { geometria: flores, color: '#FFD84A' },
   };
 }
 
-type NombreDeco = 'plataneras' | 'drago' | 'matas' | 'lajas0' | 'lajas1' | 'lajas2' | 'lajas3' | 'floresBlancas' | 'floresAmarillas';
+type NombreDeco = 'matas' | 'lajas0' | 'lajas1' | 'lajas2' | 'floresBlancas' | 'floresAmarillas';
 
 function decoracionDe(m: Mundo, claves: number[]): Record<NombreDeco, Matrix4[]> {
   const floresBlancas: Matrix4[] = [];
   const floresAmarillas: Matrix4[] = [];
-  const plataneras: Matrix4[] = [];
   const matas: Matrix4[] = [];
   const lajas: Matrix4[][] = Array.from({ length: LAJAS }, () => []);
-  const drago: Matrix4[] = [];
   const giro = new Quaternion();
   const arriba = new Vector3(0, 1, 0);
   const v = new Vector3();
@@ -245,10 +228,6 @@ function decoracionDe(m: Mundo, claves: number[]): Record<NombreDeco, Matrix4[]>
       // Florecillas sueltas en la hierba corta: puntos de color, no matas (las matas avisan de
       // zona de encuentros).
       (r & 32 ? floresBlancas : floresAmarillas).push(new Matrix4().compose(v.set(x + j(2) * 2, base + 0.02, y + j(9) * 2), IDENT, new Vector3(1, 1, 1)));
-    } else if (cm.c === 'b') {
-      plataneras.push(new Matrix4().compose(v.set(x + j(4), base, y + j(12)), IDENT, new Vector3(1, 0.9 + (r & 7) / 20, 1)));
-    } else if (cm.c === 'Y') {
-      drago.push(new Matrix4().compose(v.set(x, base, y), IDENT, new Vector3(1, 1, 1)));
     } else if (cm.c === '"') {
       for (let i = 0; i < 3; i++) {
         matas.push(new Matrix4().compose(v.set(x + j(i * 5) * 2, base + 0.12, y + j(i * 5 + 3) * 2), IDENT, new Vector3(1, 0.8 + ((r >>> i) & 3) * 0.15, 1)));
@@ -258,7 +237,7 @@ function decoracionDe(m: Mundo, claves: number[]): Record<NombreDeco, Matrix4[]>
       lajas[r % LAJAS].push(new Matrix4().compose(v.set(x, base + SUBIDA_ENCUENTRO, y), giro, new Vector3(1, 0.9 + ((r >>> 7) & 3) * 0.1, 1)));
     }
   }
-  const [lajas0, lajas1, lajas2, lajas3] = lajas;
-  return { plataneras, drago, matas, lajas0, lajas1, lajas2, lajas3, floresBlancas, floresAmarillas };
+  const [lajas0, lajas1, lajas2] = lajas;
+  return { matas, lajas0, lajas1, lajas2, floresBlancas, floresAmarillas };
 }
 

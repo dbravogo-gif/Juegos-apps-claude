@@ -4,6 +4,17 @@ Errores ya pagados y la barrera que evita repetirlos (regla R6). Formato: fecha 
 causa · barrera. Lo más reciente va arriba. Si un error vuelve a pasar, su barrera sube de
 nivel: de nota a regla, y de regla a prueba o hook.
 
+- **2026-11-08 · La azotea del gimnasio salía casi blanca y sin su sol pintado** (kit canario
+  de Six-seven islands).
+  - Causa: dos a la vez.
+    - Arriba les da el sol y el relleno del cielo, y el mapeo tonal lleva los colores claros
+      casi a blanco.
+    - La cornisa era una caja maciza más alta que el suelo de la azotea y la tapaba entera.
+  - Barrera:
+    - en `ARTE.md`, las superficies horizontales llevan colores medios;
+    - nada se apoya sobre una caja maciza sin comprobarlo en `?catalogo`, que enseña cada pieza
+      de cerca con la luz del juego.
+
 - **2026-11-07 · La prueba de arte F04 cumplía `ARTE.md`, pero el autor quería otra cosa:**
   criaturas mucho más trabajadas, al nivel de Pokémon, no «gotas» de vinilo.
   - Causa: la guía describía el estilo con palabras («redondas y blandas») y se aprobó sin

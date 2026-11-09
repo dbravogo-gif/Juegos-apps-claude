@@ -4,8 +4,8 @@ Actualizado: 2026-11-08. Solo el presente; el historial está en git. Máximo 40
 
 ## Fase actual
 
-Tanda 1: F05 hecha. Pase de arte (2026-11-08): casas canarias, laureles y malpaís por código;
-museo, gimnasio, faro, rocas y personas de KayKit (CC0). Las criaturas (F04) siguen con Meshy.
+Tanda 1: F05 hecha. Kit canario por código (2026-11-08): casas, casonas y faro provisionales,
+7 plantas, 4 rocas y muro, en `?catalogo`. De KayKit quedan montañas, nubes y personas.
 
 ## Hecho
 
@@ -24,13 +24,13 @@ museo, gimnasio, faro, rocas y personas de KayKit (CC0). Las criaturas (F04) sig
 
 1. Isla 1 (`ISLA-1.md`): interiores y diálogos (museo, elección de la inicial y anciano), que
    resuelven el callejón sin salida; después, encuentros, combate y captura.
-2. En paralelo, arte con Meshy (`prompts-meshy.md`): la cría de Planta y `planta-2.glb`.
+2. En paralelo, arte con Meshy (`prompts-meshy.md`): criaturas y edificios singulares.
 
 ## Pendiente del autor
 
 - Decidir si entran las pasivas, como contenido propio. Propuesta de Claude: tras la isla 1.
 - Antes de la tanda 3, elegir los nombres que proponga Claude.
-- La imagen de la cría y la captura con textura de la forma 2 (`prompts-meshy.md`).
+- Puntuar el kit en `?catalogo` y en la isla; rehacer con Meshy lo que no llegue a 4.
 
 ## Defectos conocidos
 

@@ -32,7 +32,7 @@ Gasto pequeño aprobado por el autor para Meshy (arte de criaturas). Concepto y 
 
 1. Andamiaje, núcleo y combate 2 contra 2 hechos (`F01` a `F03`). De Leyendas, solo reglas.
 2. Arte de criaturas con Meshy (imagen 2D y después 3D). Isla 1, inspirada en La Palma
-   (`six-seven-islands/ISLA-1.md`): mapa, maqueta y pase de arte (KayKit) hechos; siguen interiores.
+   (`six-seven-islands/ISLA-1.md`): mapa, maqueta y kit canario por código hechos; siguen interiores.
 
 ## Pendiente del autor
 

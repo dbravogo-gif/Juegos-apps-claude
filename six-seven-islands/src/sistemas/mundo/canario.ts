@@ -1,91 +1,14 @@
-// Piezas propias de La Palma, hechas por código: la casa canaria (rural o de balcones), el laurel
-// de la laurisilva y las lajas del malpaís. Son geometrías con color por vértice, para dibujarlas
-// todas con un solo material (ARTE.md, «Modelos del mundo»). Funciones puras y deterministas:
-// la misma semilla da siempre la misma pieza.
+// Las casas canarias, hechas por código en el estilo de juguete de ARTE.md: rural o de balcones,
+// con variantes para el refugio, la tienda, el museo y el gimnasio, y el faro. Geometrías con color
+// por vértice, para dibujarlas con un solo material. Funciones puras y deterministas: la misma
+// semilla da siempre la misma pieza.
 
-import { BoxGeometry, BufferAttribute, BufferGeometry, Color, ConeGeometry, CylinderGeometry, SphereGeometry } from 'three/webgpu';
-import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+import { BoxGeometry, type BufferGeometry, CylinderGeometry, SphereGeometry } from 'three/webgpu';
 import { COLORES } from '../../arte/paleta';
-
-/** Junta piezas de colores en una sola geometría con color por vértice. */
-class Montaje {
-  private partes: BufferGeometry[] = [];
-  private readonly c = new Color();
-
-  pon(g: BufferGeometry, color: string, tono = 1): void {
-    const p = g.index ? g.toNonIndexed() : g;
-    if (p !== g) g.dispose();
-    for (const n of Object.keys(p.attributes)) if (n !== 'position' && n !== 'normal') p.deleteAttribute(n);
-    this.c.set(color).multiplyScalar(tono);
-    const col = new Float32Array(p.getAttribute('position').count * 3);
-    for (let i = 0; i < col.length; i += 3) col.set([this.c.r, this.c.g, this.c.b], i);
-    p.setAttribute('color', new BufferAttribute(col, 3));
-    this.partes.push(p);
-  }
-
-  /** Una caja apoyada: `y` es la altura de su base. */
-  caja(an: number, al: number, fo: number, x: number, y: number, z: number, color: string, tono = 1): void {
-    this.pon(new BoxGeometry(an, al, fo).translate(x, y + al / 2, z), color, tono);
-  }
-
-  fusionar(): BufferGeometry {
-    const g = mergeGeometries(this.partes, false)!;
-    for (const p of this.partes) p.dispose();
-    this.partes = [];
-    g.computeBoundingBox();
-    g.computeBoundingSphere();
-    return g;
-  }
-}
-
-/** Azar determinista: la semilla se mezcla primero (las semillas pequeñas darían casi 0) y luego xorshift de 32 bits. */
-function azar(semilla: number): () => number {
-  let s = (semilla + 0x9e3779b9) >>> 0;
-  s = Math.imul(s ^ (s >>> 16), 0x85ebca6b);
-  s = Math.imul(s ^ (s >>> 13), 0xc2b2ae35);
-  s = (s ^ (s >>> 16)) >>> 0 || 1;
-  return () => {
-    s ^= s << 13;
-    s ^= s >>> 17;
-    s ^= s << 5;
-    s >>>= 0;
-    return s / 4294967296;
-  };
-}
-
-const elegir = <T>(r: () => number, lista: readonly T[]): T => lista[Math.floor(r() * lista.length)];
-
-/** Ruido estable por posición, de -1 a 1: los vértices repetidos de una costura se mueven igual. */
-function ruido(x: number, y: number, z: number, s: number): number {
-  let h = Math.imul(Math.round(x * 100) + 7919 * s, 73856093) ^ Math.imul(Math.round(y * 100), 19349663) ^ Math.imul(Math.round(z * 100), 83492791);
-  h = Math.imul(h ^ (h >>> 13), 1274126177);
-  return ((h ^ (h >>> 16)) >>> 0) / 2147483648 - 1;
-}
-
-/** Abolla una geometría hacia fuera desde su centro, para que no parezca una esfera perfecta. */
-function abollar(g: BufferGeometry, fuerza: number, s: number): BufferGeometry {
-  const pos = g.getAttribute('position');
-  for (let i = 0; i < pos.count; i++) {
-    const x = pos.getX(i);
-    const y = pos.getY(i);
-    const z = pos.getZ(i);
-    const f = 1 + ruido(x, y, z, s) * fuerza;
-    pos.setXYZ(i, x * f, y * f, z * f);
-  }
-  g.computeVertexNormals();
-  return g;
-}
-
-/** Triángulo de dos caras en el plano x = constante; los puntos son (z, y). */
-function triangulo(x: number, a: [number, number], b: [number, number], c: [number, number]): BufferGeometry {
-  const g = new BufferGeometry();
-  g.setAttribute('position', new BufferAttribute(new Float32Array([a, b, c, a, c, b].flatMap(([z, y]) => [x, y, z])), 3));
-  g.computeVertexNormals();
-  return g;
-}
+import { Montaje, abollar, azar, elegir, triangulo } from './montaje';
 
 export type EstiloCasa = 'rural' | 'balcones';
-export type UsoCasa = 'casa' | 'refugio' | 'tienda';
+export type UsoCasa = 'casa' | 'refugio' | 'tienda' | 'museo' | 'gimnasio';
 
 export interface OpcionesCasa {
   /** Rural: blanca, de una planta, con teja. De balcones: fachada de color y dos plantas. */
@@ -96,6 +19,8 @@ export interface OpcionesCasa {
   fondo: number;
   /** Dónde está la puerta a lo largo de la fachada, desde el centro del solar. */
   puerta?: number;
+  /** Tejado a dos aguas de teja o azotea. Si no se dice, lo decide la semilla en las de balcones. */
+  techo?: 'teja' | 'azotea';
   semilla?: number;
 }
 
@@ -107,7 +32,9 @@ const TEJA = 0.15;
 /**
  * Una casa canaria con el origen en el centro del solar, a ras de suelo, y la fachada al sur.
  * Lleva zócalo, cantería en las esquinas, puerta con escalón, ventanas con contraventanas,
- * macetas y tejado de teja curva o azotea. La de balcones añade un balcón de madera corrido.
+ * macetas y tejado de teja curva o azotea. La de balcones añade un balcón de madera corrido. El
+ * museo y el gimnasio son casonas de balcones con puerta grande y letrero (provisionales, hasta
+ * que el autor los haga con Meshy).
  */
 export function casaCanaria(op: OpcionesCasa): BufferGeometry {
   const r = azar(op.semilla ?? 1);
@@ -119,13 +46,15 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
   const H = rural ? 1.65 : 2.95;
   const frente = D / 2;
 
-  const pared = rural ? COLORES.cal : elegir(r, [COLORES.fachadaOcre, COLORES.fachadaAzul, COLORES.fachadaSalmon, COLORES.fachadaVerde, COLORES.fachadaAmarilla]);
+  const fachadas = [COLORES.fachadaOcre, COLORES.fachadaAzul, COLORES.fachadaSalmon, COLORES.fachadaVerde, COLORES.fachadaAmarilla];
+  const pared = uso === 'museo' || rural ? COLORES.cal : uso === 'gimnasio' ? COLORES.fachadaAmarilla : elegir(r, fachadas);
   const madera = rural ? elegir(r, [COLORES.carpinteriaVerde, COLORES.carpinteriaVerde, COLORES.carpinteriaAzul, COLORES.balcon]) : elegir(r, [COLORES.balcon, COLORES.carpinteriaVerde]);
   const zocalo = rural ? elegir(r, [COLORES.zocaloOcre, COLORES.canteria, COLORES.carpinteriaVerde]) : COLORES.canteria;
+  const singular = uso === 'museo' || uso === 'gimnasio';
 
-  // Muros, zócalo y cantería en las esquinas, a soga y tizón.
-  M.caja(W, H, D, 0, 0, 0, pared);
-  M.caja(W + 0.04, 0.24, D + 0.04, 0, 0, 0, zocalo);
+  // Muros y zócalo redondeados, como de juguete, y cantería en las esquinas, a soga y tizón.
+  M.cajaRedonda(W, H, D, 0, 0, 0, pared, 0.07);
+  M.cajaRedonda(W + 0.04, 0.24, D + 0.04, 0, 0, 0, zocalo, 0.05);
   const hiladas = Math.floor((H - 0.3) / 0.22);
   for (const sx of [-1, 1]) {
     for (const sz of [-1, 1]) {
@@ -137,7 +66,7 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
       }
     }
   }
-  const azotea = !rural && r() < 0.5;
+  const azotea = op.techo ? op.techo === 'azotea' : !rural && r() < 0.5;
   if (!rural) M.caja(W + 0.06, 0.08, D + 0.06, 0, 1.38, 0, COLORES.cal); // imposta entre plantas
   if (azotea) M.caja(W + 0.14, 0.14, D + 0.14, 0, H - 0.06, 0, COLORES.cal); // cornisa
 
@@ -150,7 +79,7 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
     for (const s of [-1, 1]) M.caja(an / 2, al, 0.04, x + s * (an / 2 + 0.06 + an / 4), y, frente + 0.01, madera, 0.95);
     M.caja(an + 0.2, 0.06, 0.16, x, y - 0.1, frente, COLORES.canteria, 1.06);
   };
-  const anPuerta = uso === 'refugio' ? 0.72 : 0.5;
+  const anPuerta = uso === 'refugio' || singular ? 0.72 : 0.5;
   const alPuerta = 1.05;
   const px = Math.max(-(W / 2 - 0.6), Math.min(W / 2 - 0.6, op.puerta ?? 0));
   const colorPuerta = uso === 'refugio' ? COLORES.acentoCoral : madera;
@@ -178,10 +107,12 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
     M.pon(new SphereGeometry(0.045, 5, 3).translate(x - 0.05, 0.29, frente + 0.2), COLORES.geranio, 0.88);
   }
 
-  if (uso === 'refugio') {
-    // Letrero coral sobre la puerta, con un disco blanco: se ve desde lejos.
+  if (uso === 'refugio' || singular) {
+    // Letrero sobre la puerta, con un disco blanco: se ve desde lejos. Coral en el refugio,
+    // amarillo de luz en el gimnasio (su tipo es Luz) y madera en el museo.
     const y = 0.12 + alPuerta + 0.1;
-    M.caja(0.8, 0.28, 0.06, px, y, frente + 0.03, COLORES.acentoCoral);
+    const letrero = uso === 'refugio' ? COLORES.acentoCoral : uso === 'gimnasio' ? COLORES.amarilloLuz : COLORES.balcon;
+    M.caja(0.8, 0.28, 0.06, px, y, frente + 0.03, letrero);
     M.pon(new CylinderGeometry(0.09, 0.09, 0.03, 12).rotateX(Math.PI / 2).translate(px, y + 0.14, frente + 0.07), COLORES.crema);
   }
   if (uso === 'tienda') {
@@ -251,11 +182,20 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
       M.caja(0.34, 0.06, 0.34, x, y + sube * 0.45 + 0.38, z, COLORES.tejaCanaria, 0.8);
     }
   } else {
-    // Azotea con pretil, el cuarto de la azotea y un depósito de agua.
-    M.caja(W - 0.02, 0.04, D - 0.02, 0, H, 0, COLORES.azotea);
+    // Azotea con pretil, el cuarto de la azotea y un depósito de agua. El suelo de la azotea va
+    // por encima de la cornisa, que es una caja maciza y la taparía.
+    M.caja(W - 0.02, 0.04, D - 0.02, 0, H + 0.08, 0, COLORES.azotea);
     for (const s of [-1, 1]) {
       M.caja(W + 0.1, 0.24, 0.08, 0, H + 0.08, s * (D / 2 + 0.03), pared);
       M.caja(0.08, 0.24, D + 0.1, s * (W / 2 + 0.03), H + 0.08, 0, pared);
+    }
+    if (uso === 'gimnasio') {
+      // Un sol pintado en la azotea: el gimnasio de tipo Luz se reconoce desde arriba.
+      M.pon(new CylinderGeometry(0.75, 0.75, 0.03, 20).translate(0, H + 0.135, 0.2), COLORES.solPintado);
+      for (let i = 0; i < 8; i++) {
+        const a = (i / 8) * Math.PI * 2;
+        M.pon(new BoxGeometry(0.16, 0.03, 0.45).translate(0, H + 0.135, 1.05).rotateY(a).translate(0, 0, 0.2), COLORES.solPintado);
+      }
     }
     const lado = r() < 0.5 ? -1 : 1;
     const cx = lado * (W / 2 - 0.6);
@@ -268,59 +208,18 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
   return M.fusionar();
 }
 
-/** Un laurel de la laurisilva: tronco algo torcido y una copa redonda de varias bolas abolladas. */
-export function laurel(semilla: number): BufferGeometry {
-  const r = azar(semilla);
+/** El faro: torre redonda blanca con dos bandas rojas, galería, linterna y cúpula, sobre un zócalo. */
+export function faro(): BufferGeometry {
   const M = new Montaje();
-  const alto = 0.75 + r() * 0.35;
-  const inclina = (r() - 0.5) * 0.25;
-  M.pon(new CylinderGeometry(0.06, 0.1, alto, 5).translate(0, alto / 2, 0).rotateZ(inclina), COLORES.troncoLaurel);
-  const cx = -Math.sin(inclina) * alto;
-  const cy = Math.cos(inclina) * alto;
-  const verdes = [COLORES.laurelHondo, COLORES.laurel, COLORES.laurelClaro];
-  const bolas = 5;
-  for (let i = 0; i < bolas; i++) {
-    const centro = i === 0;
-    const a = (i / bolas) * Math.PI * 2 + r();
-    const rad = centro ? 0.44 + r() * 0.08 : 0.28 + r() * 0.1;
-    const d = centro ? 0 : 0.3 + r() * 0.08;
-    const y = cy + (centro ? 0.34 : 0.04 + r() * 0.2);
-    const bola = abollar(new SphereGeometry(rad, 7, 5).scale(1, 0.82, 1), 0.12, semilla * 7 + i);
-    M.pon(bola.translate(cx + Math.cos(a) * d, y, Math.sin(a) * d), centro ? COLORES.laurel : verdes[i % 3], 0.94 + r() * 0.12);
-  }
-  return M.fusionar();
-}
-
-/**
- * Lajas de lava del malpaís para una casilla: piedras dentadas negras, pardas y rojizas, una
- * punta y alguna mancha de liquen. Caben en la casilla (de -0,5 a 0,5) y salen del suelo (y = 0).
- */
-export function lajasMalpais(semilla: number): BufferGeometry {
-  const r = azar(semilla);
-  const M = new Montaje();
-  const colores = [COLORES.lavaNegra, COLORES.lavaNegra, COLORES.lavaParda, COLORES.lavaRojiza];
-  // Una laja por celda de una rejilla de 3 × 3 desordenada, para que cubran el suelo.
-  for (let i = 0; i < 9; i++) {
-    if (r() < 0.2) continue;
-    const rad = 0.12 + r() * 0.06;
-    const alto = 0.06 + r() * 0.14;
-    const g = new CylinderGeometry(rad * (0.45 + r() * 0.3), rad, alto, 5 + Math.floor(r() * 2), 1);
-    const pos = g.getAttribute('position');
-    for (let v = 0; v < pos.count; v++) {
-      if (pos.getY(v) <= 0) continue;
-      pos.setY(v, pos.getY(v) + ruido(pos.getX(v), 1, pos.getZ(v), semilla + i) * alto * 0.45);
-    }
-    g.computeVertexNormals();
-    const x = ((i % 3) - 1) * 0.27 + (r() - 0.5) * 0.08;
-    const z = (Math.floor(i / 3) - 1) * 0.27 + (r() - 0.5) * 0.08;
-    g.rotateY(r() * Math.PI)
-      .rotateX((r() - 0.5) * 0.4)
-      .rotateZ((r() - 0.5) * 0.4)
-      .translate(x, alto / 2 - 0.03, z);
-    M.pon(g, elegir(r, colores), 0.88 + r() * 0.24);
-  }
-  const punta = 0.24 + r() * 0.14;
-  M.pon(new ConeGeometry(0.07, punta, 4).rotateY(r()).translate((r() - 0.5) * 0.6, punta / 2 - 0.02, (r() - 0.5) * 0.6), COLORES.lavaNegra, 0.85);
-  if (r() < 0.7) M.pon(new SphereGeometry(0.06, 5, 3).scale(1, 0.35, 1).translate((r() - 0.5) * 0.6, 0.01, (r() - 0.5) * 0.6), COLORES.liquen);
+  M.cajaRedonda(1.6, 0.3, 1.6, 0, 0, 0, COLORES.canteria, 0.06);
+  M.pon(new CylinderGeometry(0.42, 0.6, 3.7, 14).translate(0, 0.3 + 1.85, 0), COLORES.cal);
+  // Las bandas, un poco por fuera de la torre, que se estrecha hacia arriba.
+  const radio = (y: number) => 0.6 - 0.18 * (y / 3.7) + 0.02;
+  for (const y of [1.3, 2.6]) M.pon(new CylinderGeometry(radio(y + 0.2), radio(y - 0.2), 0.4, 14).translate(0, 0.3 + y, 0), COLORES.tejaCanaria);
+  M.caja(0.36, 0.7, 0.1, 0, 0.3, 0.56, COLORES.carpinteriaVerde);
+  M.pon(new CylinderGeometry(0.64, 0.6, 0.1, 14).translate(0, 4.05, 0), COLORES.crema);
+  M.pon(new CylinderGeometry(0.3, 0.3, 0.46, 10).translate(0, 4.33, 0), COLORES.amarilloLuz);
+  M.pon(new SphereGeometry(0.34, 12, 5, 0, Math.PI * 2, 0, Math.PI / 2).translate(0, 4.56, 0), COLORES.tejaCanaria, 0.9);
+  M.pon(new SphereGeometry(0.06, 6, 4).translate(0, 4.94, 0), COLORES.tejaCanaria, 0.8);
   return M.fusionar();
 }

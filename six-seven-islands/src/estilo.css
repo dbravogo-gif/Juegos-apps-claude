@@ -213,3 +213,17 @@ body {
   color: var(--crema);
   font: 500 13px/1.2 system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
+
+/* ?catalogo: el nombre de cada pieza, debajo de ella. */
+.catalogo span {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgb(59 42 32 / 0.6);
+  color: var(--crema);
+  font: 600 12px/1.2 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  white-space: nowrap;
+  pointer-events: none;
+}
