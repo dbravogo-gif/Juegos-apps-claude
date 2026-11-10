@@ -4,6 +4,24 @@ Errores ya pagados y la barrera que evita repetirlos (regla R6). Formato: fecha 
 causa · barrera. Lo más reciente va arriba. Si un error vuelve a pasar, su barrera sube de
 nivel: de nota a regla, y de regla a prueba o hook.
 
+- **2026-11-10 · Al hablar, paredes y suelos de los interiores se llenaban de líneas que se
+  movían** (Six-seven islands; lo vio el autor en su portátil).
+  - Causa: caras que coincidían.
+    - Las paredes eran una caja por casilla, así que había caras pegadas entre vecinas.
+    - Los zócalos medían 1,02 y se solapaban 2 cm con el de al lado, con las caras en el mismo
+      plano.
+    - El remate tenía la cara de arriba a la misma altura que la pared.
+    - Entre las tablas del suelo se veía el fondo.
+    - Al mover la cámara, la GPU alterna qué cara gana en cada píxel y salen rayas que se
+      desplazan.
+  - Barrera:
+    - lo que es una pieza seguida se hace de una pieza (`tramosDe` en `salas.ts`, con su prueba
+      en `tests/juntas.test.ts`);
+    - dos cajas nunca comparten una cara en el mismo plano: una sobresale al menos 1 cm;
+    - lo que tiene juntas lleva debajo un fondo oscuro.
+  - Aparte, la sombra se mueve de texel en texel (`ajustarATexel` en `render.ts`), para que no
+    «nade» cuando la cámara se desliza.
+
 - **2026-11-08 · La azotea del gimnasio salía casi blanca y sin su sol pintado** (kit canario
   de Six-seven islands).
   - Causa: dos a la vez.

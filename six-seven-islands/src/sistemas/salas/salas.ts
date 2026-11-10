@@ -6,7 +6,7 @@
 
 import { CylinderGeometry, Mesh, SphereGeometry, type BufferGeometry } from 'three/webgpu';
 import { attribute } from 'three/tsl';
-import { deClave, type Mundo } from '../../core/mundo';
+import { clave, deClave, type Mundo } from '../../core/mundo';
 import { MaterialDiorama } from '../../arte/material';
 import { COLORES } from '../../arte/paleta';
 import { alturaSuelo } from '../../arte/escala';
@@ -40,10 +40,7 @@ function mueble(M: Montaje, c: string, x: number, z: number, n: number): void {
       }
       break;
     }
-    case 'c': // mostrador de madera con tablero claro
-      M.caja(1, 0.8, 0.6, x, y, z, COLORES.balcon);
-      M.caja(1.02, 0.06, 0.66, x, y + 0.8, z, COLORES.crema);
-      break;
+    // 'c', el mostrador, va por tramos en geometriaSala.
     case 'k': // mesa con ordenador
       M.caja(0.85, 0.06, 0.6, x, y + 0.6, z, COLORES.balcon);
       M.caja(0.08, 0.6, 0.5, x - 0.35, y, z, COLORES.balcon, 0.85);
@@ -85,6 +82,60 @@ function estatua(M: Montaje, tipo: string, x: number, z: number): void {
   }
 }
 
+/** Un tramo recto de casillas iguales, de la (x0, y0) a la (x1, y1), ambas incluidas. */
+interface Tramo {
+  x0: number;
+  y0: number;
+  x1: number;
+  y1: number;
+}
+
+/**
+ * Las paredes en tramos rectos: primero las filas (de 2 casillas o más) y después las columnas
+ * con lo que queda. Una caja por casilla dejaba caras pegadas y zócalos solapados en cada junta,
+ * que parpadeaban como líneas al moverse la cámara (autor, 2026-11-10).
+ */
+export function tramosDePared(sala: Mundo): Tramo[] {
+  return tramosDe(sala, '|');
+}
+
+/** Tramos de una letra: filas de 2 casillas o más y, con lo que queda, columnas. */
+export function tramosDe(sala: Mundo, letra: string): Tramo[] {
+  const pared = (x: number, y: number) => sala.casillas.get(clave(x, y))?.c === letra;
+  const usadas = new Set<number>();
+  const tramos: Tramo[] = [];
+  let minX = Infinity;
+  let maxX = -Infinity;
+  let minY = Infinity;
+  let maxY = -Infinity;
+  for (const k of sala.casillas.keys()) {
+    const [x, y] = deClave(k);
+    [minX, maxX, minY, maxY] = [Math.min(minX, x), Math.max(maxX, x), Math.min(minY, y), Math.max(maxY, y)];
+  }
+  for (let y = minY; y <= maxY; y++) {
+    for (let x = minX; x <= maxX; x++) {
+      if (!pared(x, y)) continue;
+      let x1 = x;
+      while (pared(x1 + 1, y)) x1++;
+      if (x1 > x) {
+        tramos.push({ x0: x, y0: y, x1, y1: y });
+        for (let i = x; i <= x1; i++) usadas.add(clave(i, y));
+      }
+      x = x1;
+    }
+  }
+  for (let x = minX; x <= maxX; x++) {
+    for (let y = minY; y <= maxY; y++) {
+      if (!pared(x, y) || usadas.has(clave(x, y))) continue;
+      let y1 = y;
+      while (pared(x, y1 + 1) && !usadas.has(clave(x, y1 + 1))) y1++;
+      tramos.push({ x0: x, y0: y, x1: x, y1 });
+      y = y1;
+    }
+  }
+  return tramos;
+}
+
 /** La sala entera, en sus casillas de mundo: suelo, paredes, muebles, alfombra y estatuas. */
 export function geometriaSala(sala: Mundo, id: string): BufferGeometry {
   const M = new Montaje();
@@ -100,6 +151,32 @@ export function geometriaSala(sala: Mundo, id: string): BufferGeometry {
     maxY = Math.max(maxY, y);
   }
   const centroX = (minX + maxX) / 2;
+  const centroY = (minY + maxY) / 2;
+  // Una losa oscura bajo las tablas: por sus juntas se veía el fondo, que parpadeaba en líneas.
+  M.caja(maxX - minX + 1, 0.1, maxY - minY + 1, centroX, SUELO - 0.12, centroY, COLORES.maderaSueloOscura, 0.6);
+  // Paredes por tramos, lisas: un solo color, sin juntas entre casillas.
+  for (const t of tramosDePared(sala)) {
+    const alto = t.y0 === minY ? ALTO_PARED : t.y1 === maxY ? ALTO_DELANTE : ALTO_LADO;
+    const an = t.x1 - t.x0 + 1;
+    const fo = t.y1 - t.y0 + 1;
+    const cx = (t.x0 + t.x1) / 2;
+    const cz = (t.y0 + t.y1) / 2;
+    const fila = t.y0 === t.y1;
+    M.caja(an, alto, fo, cx, SUELO, cz, COLORES.cal);
+    // El zócalo sobresale solo hacia los lados de la pared; en las columnas se queda 1 cm corto
+    // por cada punta para no solaparse con el de la fila en la esquina.
+    if (alto > ALTO_DELANTE) M.caja(fila ? an : 1.02, 0.45, fila ? 1.02 : fo - 0.02, cx, SUELO, cz, COLORES.zocaloOcre);
+    // El remate, 1 cm más alto que la pared: con la cara de arriba a la misma altura, las dos
+    // se peleaban por cada píxel.
+    if (t.y0 === minY && fila) M.caja(an + 0.02, 0.13, 1.02, cx, SUELO + alto - 0.12, cz, COLORES.balcon);
+  }
+  // Mostradores: cada tramo seguido, de una pieza, por lo mismo que las paredes.
+  for (const t of tramosDe(sala, 'c')) {
+    const an = t.x1 - t.x0 + 1;
+    const cx = (t.x0 + t.x1) / 2;
+    M.caja(an, 0.8, 0.6, cx, SUELO, t.y0, COLORES.balcon);
+    M.caja(an + 0.02, 0.06, 0.66, cx, SUELO + 0.8, t.y0, COLORES.crema);
+  }
   for (const [k, cm] of sala.casillas) {
     const [x, y] = deClave(k);
     const n = (x * 7 + y * 13) % 5;
@@ -108,11 +185,7 @@ export function geometriaSala(sala: Mundo, id: string): BufferGeometry {
       M.caja(0.49, 0.1, 0.98, x + s * 0.25, SUELO - 0.1, y, (x + y + (s > 0 ? 1 : 0)) % 2 ? COLORES.maderaSuelo : COLORES.maderaSueloOscura, 0.96 + (n % 3) * 0.03);
     }
     if (cm.c === '|') {
-      const alto = y === minY ? ALTO_PARED : y === maxY ? ALTO_DELANTE : ALTO_LADO;
-      M.caja(1, alto, 1, x, SUELO, y, COLORES.cal, 0.97 + (n % 2) * 0.03);
-      if (alto > ALTO_DELANTE) M.caja(1.02, 0.45, 1.02, x, SUELO, y, COLORES.zocaloOcre);
       if (y === minY) {
-        M.caja(1.02, 0.12, 1.02, x, SUELO + alto - 0.12, y, COLORES.balcon);
         // Ventanas en la pared del fondo, una de cada tres casillas.
         if ((x - minX) % 3 === 2 && x < maxX) {
           M.caja(0.62, 0.72, 0.06, x, SUELO + 0.95, y + 0.5, COLORES.canteria);
@@ -129,7 +202,8 @@ export function geometriaSala(sala: Mundo, id: string): BufferGeometry {
   }
   // Alfombra del museo, de la puerta a las estatuas, y un volcán en el suelo del gimnasio de Roca.
   if (id === 'museo') {
-    for (let y = minY + 3; y < maxY; y++) M.caja(0.8, 0.015, 1, centroX, SUELO, y, COLORES.alfombra, 0.95);
+    const largo = maxY - (minY + 3);
+    M.caja(0.8, 0.015, largo, centroX, SUELO, minY + 3 + (largo - 1) / 2, COLORES.alfombra, 0.95);
   }
   if (id === 'gimnasio') {
     const cy = (minY + maxY) / 2;

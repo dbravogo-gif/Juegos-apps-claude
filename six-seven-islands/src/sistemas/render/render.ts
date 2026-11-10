@@ -8,11 +8,30 @@ import {
   HemisphereLight,
   NeutralToneMapping,
   PCFShadowMap,
+  Vector3,
   WebGPURenderer,
 } from 'three/webgpu';
 import type { Ctx, Subsistema } from '../../motor/motor';
 import { COLORES } from '../../arte/paleta';
 
+
+/** Del punto enfocado al sol: la luz entra siempre igual, de lado y desde arriba. */
+const HACIA_SOL = new Vector3(-22, 28, 12);
+// Ejes de la cámara de la sombra, como los pone Matrix4.lookAt: z hacia el sol, x = arriba × z.
+const EJE_Z = HACIA_SOL.clone().normalize();
+const EJE_X = new Vector3(0, 1, 0).cross(EJE_Z).normalize();
+const EJE_Y = EJE_Z.clone().cross(EJE_X);
+
+/**
+ * Lleva un punto a la rejilla de texeles de la sombra, en el plano de la luz. Si la sombra se
+ * mueve de medio texel en medio texel cuando la cámara se desliza (al hablar o al andar), sus
+ * bordes y las rayas de las paredes «nadan»; moviéndose de texel en texel, se quedan quietas.
+ */
+export function ajustarATexel(p: Vector3, texel: number, res = new Vector3()): Vector3 {
+  const u = Math.round(p.dot(EJE_X) / texel) * texel;
+  const v = Math.round(p.dot(EJE_Y) / texel) * texel;
+  return res.copy(EJE_X).multiplyScalar(u).addScaledVector(EJE_Y, v).addScaledVector(EJE_Z, p.dot(EJE_Z));
+}
 
 export interface Contadores {
   backend: string;
@@ -60,7 +79,7 @@ export class Render implements Subsistema {
     this.relleno = new HemisphereLight(COLORES.rellenoCielo, COLORES.hierbaMenta, 1.5);
     escena.add(this.relleno);
     this.sol = new DirectionalLight(COLORES.sol, 2.3);
-    this.sol.position.set(-22, 28, 12);
+    this.sol.position.copy(HACIA_SOL);
     this.sol.castShadow = true;
     const camSombra = this.sol.shadow.camera;
     camSombra.left = -16;
@@ -77,10 +96,14 @@ export class Render implements Subsistema {
     this.quitarOyente = ctx.eventos.on('calidad:cambio', () => this.aplicarCalidad(ctx));
   }
 
+  private readonly foco = new Vector3();
+
   /** Centra el sol y su sombra en un punto de la isla (lo llama la cámara al moverse). */
   enfocar(x: number, y: number, z: number): void {
-    this.sol.position.set(x - 22, y + 28, z + 12);
-    this.sol.target.position.set(x, y, z);
+    const cam = this.sol.shadow.camera;
+    const texel = (cam.right - cam.left) / this.sol.shadow.mapSize.x;
+    ajustarATexel(this.foco.set(x, y, z), texel, this.sol.target.position);
+    this.sol.position.copy(this.sol.target.position).add(HACIA_SOL);
     this.sol.target.updateMatrixWorld();
   }
 
