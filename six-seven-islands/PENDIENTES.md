@@ -45,6 +45,13 @@ propuesta de Claude y qué frena mientras siga abierto.
 
 ## Islas y mundo
 
+- **Pedido por el autor el 2026-11-10, con plan de Claude a la espera de su visto bueno:**
+  - zonas de encuentros y de combates más grandes (no más entrenadores);
+  - el interior de cada casa según su exterior: grandes por dentro las grandes, y dos pisos en
+    las de dos plantas, con juguetes que cortan la escalera;
+  - personajes nuevos de Meshy, con su andar, y la personalización del protagonista (colores,
+    peinados, ojos, sudadera o capa).
+
 11. **Tipo de cada gimnasio.**
     - Lanzarote es de Roca. Faltan Fuerteventura, Gran Canaria, Tenerife, La Gomera y La Palma.
     - El emblema del gimnasio de La Palma era un sol, del tipo Luz, que ya no existe.
