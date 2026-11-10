@@ -13,8 +13,7 @@ código y la tabla de tipos C. La Palma, guardada para la 6. Las criaturas, con 
   `ARCHITECTURE.md` y `funciones.json`.
 - `F01` andamiaje, `F02` núcleo con las reglas de Leyendas (`core/ORIGEN.md`) y `F03` combate
   N contra N, puro y determinista, con 1.000 combates de bots en las pruebas.
-- `F04`, generador de criaturas por piezas: **el autor lo juzga insuficiente** (2026-11-07); las
-  criaturas saldrán de Meshy.
+- `F04`, generador de criaturas por piezas, descartado: las criaturas salen de Meshy.
 
 ## Siguiente
 
@@ -26,6 +25,9 @@ código y la tabla de tipos C. La Palma, guardada para la 6. Las criaturas, con 
    autor y sus amigos; dónde aparece cada una se decide al final.
 
 ## Pendiente del autor
+
+**Recordatorio en cada mensaje** (lo pidió el autor, 2026-11-10): que suba la prueba de personajes
+de Meshy (`public/modelos/personas/LEEME.md`), hasta que llegue.
 
 Todo lo abierto está en `PENDIENTES.md`. Lo primero: las estadísticas de las 4 iniciales, el
 cuadrado de tipos (aparcado) y puntuar el kit.

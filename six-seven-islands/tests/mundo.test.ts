@@ -34,7 +34,7 @@ const ISLAS: Isla[] = [
     nombre: 'isla 1 (Lanzarote)',
     isla: ISLA_1,
     dura: 'fuego',
-    tam: { inicial: [24, 18], combates: [15, 44], pueblo: [28, 22], fuego: [48, 26], capital: [34, 28] },
+    tam: { inicial: [24, 18], combates: [24, 60], pueblo: [28, 22], fuego: [56, 32], capital: [34, 28] },
     arbol: 'T',
   },
   {

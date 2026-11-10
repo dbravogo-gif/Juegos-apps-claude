@@ -32,6 +32,19 @@ Del sur al este, como en La Palma: 1 → 2 → 3 → 4 → 5. Lo decidido por el
    - un charco de agua de mar con su paseo de palmeras;
    - el muelle, el faro y el barco, que solo lleva a quien vence al gimnasio.
 
+## Tamaños
+
+Ampliados el 2026-11-10: el autor pidió zonas de encuentros y de combates más grandes, con los
+mismos entrenadores.
+
+| Zona | Casillas |
+| --- | --- |
+| 1. Zona inicial | 24 × 18 |
+| 2. El Golfo | 24 × 60 (antes, 15 × 44) |
+| 3. La Geria | 28 × 22 |
+| 4. Montañas del Fuego | 56 × 32 (antes, 48 × 26) |
+| 5. Capital | 34 × 28 |
+
 ## Las islas, en orden
 
 De este a oeste y sin saltos (autor, 2026-11-10): 1 Lanzarote, 2 Fuerteventura, 3 Gran Canaria,
