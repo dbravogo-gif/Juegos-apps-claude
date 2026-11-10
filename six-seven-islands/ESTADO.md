@@ -18,8 +18,9 @@ código y la tabla de tipos C. La Palma, guardada para la 6. Las criaturas, con 
 
 ## Siguiente
 
-1. Isla 1, Lanzarote (`ISLA-1.md`): mapa, interiores y diálogos hechos, con los arreglos del
-   probador (2026-11-10). Siguen encuentros, combate y captura.
+1. Isla 1, Lanzarote (`ISLA-1.md`): mapa, interiores y diálogos hechos. Con las 4 iniciales
+   de Meshy: compañera que te sigue, estatuas en piedra y combate de prueba en diagonal con el
+   primer entrenador (2026-11-10). Siguen el combate de verdad, encuentros y captura.
 2. En paralelo, arte con Meshy (`prompts-meshy.md`): criaturas y edificios singulares.
 3. Criaturas: reparto y lista de referencia en `CRIATURAS.md` (2026-11-10). Se diseñan con el
    autor y sus amigos; dónde aparece cada una se decide al final.

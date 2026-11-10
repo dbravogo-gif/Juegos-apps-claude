@@ -87,6 +87,8 @@ export class Camara implements Subsistema {
   }
 
   actualizar(dt: number, ctx: Ctx): void {
+    // En combate, la cámara la coloca «combate», quieta ante la arena.
+    if (this.partida.modo === 'combate') return;
     this.apuntar();
     const k = 1 - Math.exp(-dt * 8);
     // Un salto largo (entrar en un interior, que está lejos de la isla) no se recorre: se corta.

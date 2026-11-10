@@ -8,32 +8,21 @@ propuesta de Claude y qué frena mientras siga abierto.
 
 ## Criaturas
 
-1. **Cuadrado de tipos de las iniciales** (aparcado por el autor, 2026-11-10).
-   - Con Planta/Mental y Planta/Veneno a la vez no sale ningún ciclo limpio, con ningún
-     segundo tipo para Agua e Infernal: Claude probó todas las combinaciones. El Agua no será
-     Hielo.
-   - **Opción 1, recomendada:** Agua/Mental › Infernal › Planta/Veneno › Planta/Ancestral (el
-     chamán) › Agua/Mental. Conserva Planta/Veneno; el chamán gana Ancestral y el Agua, Mental.
-   - **Opción 2:** Agua/Acero › Infernal › Planta/Bicho › Planta/Mental › Agua/Acero. Conserva
-     el chamán Planta/Mental; la cuarta pasa a ser Planta/Bicho.
-   - **Opción 3:** sin cuadrado. Las dos Planta como están y el Agua, Agua/Oscuridad o
-     Agua/Espectral. Planta/Mental empata con las otras tres.
-   - Las cifras de cada enfrentamiento están en `CRIATURAS.md`.
-   - **Frena:** los segundos tipos de las iniciales en el Excel y en el diseño.
-2. **Segundo tipo de las iniciales desde la primera forma** (Claude, 2026-11-10).
-   - Si el segundo tipo llega al evolucionar, las primeras formas de las dos Planta son
-     iguales y ningún cuadrado funciona al principio del juego.
-   - **Propuesta:** que lo tengan desde la primera forma.
-   - Va con el punto 1.
-3. **Estadísticas de las 4 iniciales** (autor, 2026-11-10). Las pasa el autor; no salen de la
-   lista de referencia.
-4. **La cuarta inicial en la historia** (2026-11-10).
-   - El diseño cuenta tres historias de inicio y en el museo hay tres estatuas. Su historia se
-     hace con el autor.
-   - **A, recomendada:** se elige entre las cuatro al empezar, con cuarta estatua y cuarta
-     variante del equipo enemigo.
-   - **B:** se eligen tres al empezar y la cuarta se consigue más tarde, por ejemplo de regalo.
-   - **Frena:** la historia de la cuarta y la cuarta estatua del museo.
+1. **Equilibrio de las 4 iniciales** (2026-11-10).
+   - El autor cerró el ciclo: Agua, Planta (Planta/Mental), Infernal y Roca (Roca/Veneno desde
+     la segunda forma). El agua gana a la roca, la roca al fuego, el fuego a la planta y la
+     planta al agua.
+   - Queda por equilibrar, con los segundos tipos:
+     - en las primeras formas, Agua y Planta ganan también a la pareja de enfrente;
+     - en las finales, Infernal no gana a ninguna.
+   - Lo hace el autor (`CRIATURAS.md`).
+2. **Estadísticas de las 4 iniciales** (autor, 2026-11-10). Las pasa el autor; ahora el
+   combate de prueba usa unas provisionales (`src/data/combate-prueba.ts`).
+3. **Historias de las iniciales** (2026-11-10).
+   - La de la leyenda de roca, en el museo y en boca del anciano, es provisional.
+   - También queda por escribir con el autor la cuarta variante del equipo enemigo.
+4. **Esculturas para los pedestales** (autor, 2026-11-10). Las pasará el autor. Hasta
+   entonces, las estatuas son el modelo de cada inicial en piedra; si gustan, se quedan.
 5. **El ciervo-león de la prueba de Meshy** (2026-11-10).
    - El 2026-11-08 se decidió que fuera la línea de la inicial de Planta: formas 2 y 3 de
      Meshy, con sus prompts en `prompts-meshy.md`.
@@ -75,6 +64,9 @@ propuesta de Claude y qué frena mientras siga abierto.
     que se elija, en la fase online.
 
 ## Tareas del autor que no son decisiones
+
+- Subir los dos fondos de combate (Nano Banana) a `public/fondos/`: `combate-exterior.jpg` y
+  `combate-gimnasio.jpg`. Mientras no estén, el combate usa uno provisional hecho por código.
 
 - Medir los FPS en los ordenadores del autor y de sus amigos.
 - Prueba de Meshy: pagar Pro el primer mes (~10 $), y descargar y subir `planta-2.glb`

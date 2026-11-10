@@ -134,6 +134,23 @@ Se revisan de cerca en `?catalogo` (plantas, rocas y muro) y `?catalogo=edificio
   en Timanfaya. Bajo una planta, el suelo es el de alrededor.
 - **Objetos del suelo:** un frasco que flota y gira hasta que se recoge.
 - **Silueta del jugador** cuando algo lo tapa: coral, que se ve sobre la cal y sobre el picón.
+- **La compañera:** la inicial elegida va detrás del jugador, a 0,6 de alto (las personas, 1,25),
+  con saltitos al andar.
+- **Las estatuas del museo:** el modelo de cada inicial en piedra, con la luz del juego, sobre su
+  pedestal, hasta que lleguen las esculturas del autor.
+
+## Combate
+
+- **En diagonal, como en los juegos del género** (autor, 2026-11-10): tu criatura delante a la
+  izquierda, de tres cuartos de espaldas, y la rival al fondo a la derecha, casi de frente.
+- **Arena aparte** con la cámara quieta: un fondo pintado detrás (`public/fondos/`), dos
+  plataformas de jable y las criaturas sin la luz del juego, que sí proyectan sombra.
+- **Dos fondos para todo el juego:** exterior y gimnasio, generados por el autor.
+- **Animaciones:** la criatura sale con un rebote, embiste al atacar, parpadea y tiembla al
+  recibir, suelta chispas del color del tipo del ataque y se hunde al debilitarse. La vida baja
+  con animación: verde, amarilla y roja.
+- **Interfaz:** ficha de la rival arriba a la izquierda, la tuya a la derecha y abajo la caja
+  de mensajes con los 4 ataques en 2 × 2, cada uno con su tipo y sus PP.
 - **Charco verde** de El Golfo: agua verde, más alta que el mar.
 - **Volcanes** en las cumbres (pequeños, juntos y a más de tres casillas de las zonas) y
   **nubes** solo sobre el mar del norte, para que no tapen: el paisaje ya no usa KayKit.

@@ -100,9 +100,11 @@ export class Interfaz implements Subsistema {
     const objetivo = this.partida.objetivo();
     const texto = objetivo ? `Objetivo: ${objetivo}` : '';
     if (this.objetivo.textContent !== texto) this.objetivo.textContent = texto;
-    this.objetivo.hidden = !objetivo;
+    const combate = this.partida.modo === 'combate';
+    this.objetivo.hidden = !objetivo || combate;
     this.pintarDialogo();
-    this.ayuda.hidden = this.partida.dialogo !== null;
+    this.ayuda.hidden = this.partida.dialogo !== null || combate;
+    if (combate) this.cartel.classList.remove('visible');
   }
 
   private pintarDialogo(): void {
