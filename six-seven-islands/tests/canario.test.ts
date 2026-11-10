@@ -14,6 +14,9 @@ describe('casas canarias hechas por código', () => {
     { estilo: 'balcones', uso: 'refugio', ancho: 5, fondo: 4, puerta: 0, semilla: 13 },
     { estilo: 'balcones', uso: 'museo', techo: 'teja', ancho: 8, fondo: 4, puerta: 0.5, semilla: 21 },
     { estilo: 'balcones', uso: 'gimnasio', techo: 'azotea', ancho: 8, fondo: 6, puerta: 0.5, semilla: 34 },
+    { estilo: 'lanzarote', ancho: 4, fondo: 3, puerta: -0.5, semilla: 4 },
+    { estilo: 'lanzarote', uso: 'museo', ancho: 8, fondo: 4, puerta: -0.5, semilla: 9 },
+    { estilo: 'balcones', blanca: true, emblema: 'volcan', uso: 'gimnasio', techo: 'azotea', ancho: 8, fondo: 6, puerta: 0.5, semilla: 34 },
   ];
 
   it('las casas caben en su solar, se apoyan en el suelo y no gastan de más', () => {
@@ -27,7 +30,7 @@ describe('casas canarias hechas por código', () => {
       expect(c.min.x, nombre).toBeGreaterThanOrEqual(-op.ancho / 2 - 0.15);
       expect(c.min.z, nombre).toBeGreaterThanOrEqual(-op.fondo / 2 - 0.15);
       expect(c.max.z, nombre).toBeLessThanOrEqual(op.fondo / 2 + 0.35);
-      expect(c.max.y, nombre).toBeLessThan(op.estilo === 'rural' ? 3 : 4.2);
+      expect(c.max.y, nombre).toBeLessThan(op.estilo === 'balcones' ? 4.2 : 3);
       expect(triangulos(g), nombre).toBeLessThan(op.ancho > 6 ? 6000 : 3500);
       expect(g.getAttribute('color'), nombre).toBeDefined();
     }

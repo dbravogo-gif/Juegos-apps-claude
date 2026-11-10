@@ -1,6 +1,6 @@
-// Diálogos de la isla 1, por id de personaje (src/core/guion.ts). Contenido propio. Las tres
-// leyendas forman un triángulo: el agua apaga el fuego, el fuego quema el bosque y el bosque le
-// roba el agua a los nacientes. Los personajes sin diálogo aquí dicen su `frase` del mapa.
+// Diálogos de la isla 1, Lanzarote, por id de personaje (src/core/guion.ts). Contenido propio.
+// Las tres leyendas forman un triángulo: el agua apaga el fuego, el fuego quema lo verde y lo
+// verde le roba el agua a la isla. Los personajes sin diálogo aquí dicen su `frase` del mapa.
 
 import type { Dialogo, Guion, Linea } from '../core/guion';
 
@@ -9,18 +9,18 @@ const DOCTORA = 'Doctora';
 /** La historia de cada leyenda, la que cuenta su estatua. */
 const HISTORIA: Record<string, readonly Linea[]> = {
   planta: [
-    { texto: 'Una placa dice: «La leyenda verde dormía bajo la niebla de la cumbre, donde los laureles nunca se secan».' },
-    { texto: '«Cuando la lava bajaba del volcán, hacía crecer el bosque para frenarla».' },
-    { texto: '«Su eterna rival fue la leyenda infernal, que quemó sus bosques mil veces».' },
+    { texto: 'Una placa dice: «La leyenda verde vivía en los hoyos de picón, donde la vid crece sin apenas lluvia».' },
+    { texto: '«Cuando el volcán cubrió la isla de ceniza, hizo brotar la vida otra vez entre la lava».' },
+    { texto: '«Su eterna rival fue la leyenda infernal, que sepultó sus campos bajo el fuego».' },
   ],
   agua: [
-    { texto: 'Una placa dice: «La leyenda del agua vivía en los nacientes del norte, donde el agua brota de la roca».' },
-    { texto: '«Guardaba las fuentes de la isla y apagaba los incendios con la lluvia».' },
-    { texto: '«Luchó contra el bosque, que le robaba el agua de los nacientes con sus raíces».' },
+    { texto: 'Una placa dice: «La leyenda del agua dormía en los jameos, las cuevas de lava donde entra el mar».' },
+    { texto: '«Traía la humedad del océano a una isla casi sin lluvia, y apagaba las coladas al llegar a la costa».' },
+    { texto: '«Luchó contra la vida verde, que le robaba con sus raíces la poca agua de la isla».' },
   ],
   infernal: [
-    { texto: 'Una placa dice: «La leyenda infernal nació dentro del volcán del sur, entre el picón y el malpaís».' },
-    { texto: '«Cada erupción hacía crecer la isla un poco más hacia el mar».' },
+    { texto: 'Una placa dice: «La leyenda infernal nació bajo las Montañas del Fuego, donde la tierra aún quema».' },
+    { texto: '«Durante seis años hizo arder la isla y la hizo crecer hacia el mar».' },
     { texto: '«Su enemiga fue la leyenda del agua, que enfriaba su lava antes de llegar a la costa».' },
   ],
 };
@@ -44,8 +44,8 @@ function estatua(tipo: string): Guion[string] {
 
 /** Lo que el anciano cuenta de la abuela de cada inicial. */
 const ABUELA: Record<string, string> = {
-  planta: 'Su abuela, la leyenda verde, tardó siglos en confiar en la gente. Solo respetaba a quien plantaba árboles después de cada erupción.',
-  agua: 'Su abuela, la leyenda del agua, solo bebía de las fuentes que la gente cuidaba. A quien ensuciaba un naciente, no le volvía a hablar.',
+  planta: 'Su abuela, la leyenda verde, tardó siglos en confiar en la gente. Solo respetaba a quien cavaba un hoyo en el picón y plantaba una vid.',
+  agua: 'Su abuela, la leyenda del agua, solo visitaba a quien cuidaba cada gota. A quien la malgastaba, no le volvía a hablar.',
   infernal: 'Su abuela, la leyenda infernal, era orgullosa como el volcán. Solo respetaba a quien no huía cuando la tierra temblaba.',
 };
 
@@ -110,7 +110,7 @@ export const GUION_ISLA1: Guion = {
       dialogo: {
         lineas: [
           { quien: 'Vecina', texto: '¡Hola! Pasa, pasa. En esta isla siempre hay sitio para uno más.' },
-          { quien: 'Vecina', texto: 'Dicen que en la niebla del bosque se esconden criaturas que no se ven en ningún otro sitio.' },
+          { quien: 'Vecina', texto: 'Dicen que entre la lava de las Montañas del Fuego viven criaturas que no se ven en ningún otro sitio.' },
         ],
       },
     },
@@ -137,8 +137,8 @@ export const GUION_ISLA1: Guion = {
       sin: 'gimnasio-vencido',
       dialogo: {
         lineas: [
-          { quien: 'Líder', texto: 'Soy la líder de este gimnasio. Mis criaturas brillan como el sol de la tarde.' },
-          { quien: 'Líder', texto: 'Cuando quieras, combatiremos. Antes, entrena a tu equipo en la hierba alta del bosque.' },
+          { quien: 'Líder', texto: 'Soy la líder de este gimnasio. Mis criaturas son duras como la lava cuando se enfría.' },
+          { quien: 'Líder', texto: 'Cuando quieras, combatiremos. Antes, entrena a tu equipo en el malpaís de las Montañas del Fuego.' },
         ],
       },
     },
@@ -156,7 +156,7 @@ export const GUION_ISLA1: Guion = {
     },
   ],
   anciano: [
-    { con: 'anciano', dialogo: { lineas: [{ quien: 'Anciano', texto: 'Ya te escucha, ¿ves? Ahora el bosque no os confundirá.' }] } },
+    { con: 'anciano', dialogo: { lineas: [{ quien: 'Anciano', texto: 'Ya te escucha, ¿ves? Ahora las Montañas del Fuego no os confundirán.' }] } },
     { inicial: 'planta', dialogo: anciano('planta') },
     { inicial: 'agua', dialogo: anciano('agua') },
     { inicial: 'infernal', dialogo: anciano('infernal') },

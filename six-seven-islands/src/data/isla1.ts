@@ -9,6 +9,8 @@ export const ISLA_1: DefIsla = {
   id: 'lanzarote',
   inicio: { zona: 'inicial', x: 5, y: 13 },
   // Lanzarote es seca: el suelo corto es jable, arena clara, y las cumbres son volcanes.
+  // El gimnasio es de Roca: la isla de los volcanes.
+  gimnasio: 'roca',
   colores: { suelo: { '.': '#D9C59A' }, cumbre: '#9A6B55', ladoCumbre: '#7C5444' },
   zonas: [
     {
@@ -130,8 +132,8 @@ export const ISLA_1: DefIsla = {
         '~~____,_______#',
         '~~____,_______#',
         '~~____,_______#',
-        '~~~___,__~~~__#',
-        '~~~___,__~~~__#',
+        '~~~___,__www__#',
+        '~~~___,__www__#',
         '~~~___,_______#',
         '~~~_#_,_______#',
         '~~~___,_______#',

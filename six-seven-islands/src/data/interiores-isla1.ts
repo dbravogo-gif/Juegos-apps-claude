@@ -92,7 +92,7 @@ export const INTERIORES_ISLA1: readonly DefInterior[] = [
   },
   {
     id: 'gimnasio',
-    nombre: 'Gimnasio de Luz',
+    nombre: 'Gimnasio de Roca',
     mapa: [
       '|||||||||||',
       '|vmmmmmmmv|',

@@ -27,6 +27,8 @@ const NATURALEZA = (): Muestra[][] => [
     { nombre: 'Platanera', geometria: piezaKit('platanera', 0) },
     { nombre: 'Cardón', geometria: piezaKit('cardon', 0) },
     { nombre: 'Tabaiba', geometria: piezaKit('tabaiba', 0) },
+    { nombre: 'Tunera', geometria: piezaKit('tunera', 0) },
+    { nombre: 'Viña en su hoyo', geometria: piezaKit('vid', 0) },
   ],
   [
     { nombre: 'Roca basáltica', geometria: piezaKit('roca', 0) },
@@ -34,11 +36,13 @@ const NATURALEZA = (): Muestra[][] => [
     { nombre: 'Escoria', geometria: piezaKit('escoria', 0) },
     { nombre: 'Malpaís', geometria: piezaKit('lajas', 0) },
     { nombre: 'Muro de piedra seca', geometria: muroLargo() },
+    { nombre: 'Volcán', geometria: piezaKit('volcan', 0).scale(1.6, 1.6, 1.6) },
   ],
 ];
 
 const EDIFICIOS = (): Muestra[][] => [
   [
+    { nombre: 'Casa lanzaroteña', geometria: casaCanaria({ estilo: 'lanzarote', ancho: 4, fondo: 3, puerta: -0.5, semilla: 4 }) },
     { nombre: 'Casa rural', geometria: casaCanaria({ estilo: 'rural', ancho: 4, fondo: 3, puerta: -0.5, semilla: 3 }) },
     { nombre: 'Tienda', geometria: casaCanaria({ estilo: 'rural', uso: 'tienda', ancho: 4, fondo: 3, puerta: -0.5, semilla: 8 }) },
     { nombre: 'Refugio', geometria: casaCanaria({ estilo: 'rural', uso: 'refugio', ancho: 5, fondo: 4, semilla: 5 }) },
@@ -48,7 +52,7 @@ const EDIFICIOS = (): Muestra[][] => [
     { nombre: 'Casa de balcones con teja', geometria: casaCanaria({ estilo: 'balcones', techo: 'teja', ancho: 4, fondo: 3, puerta: -0.5, semilla: 1 }) },
     { nombre: 'Casa de balcones con azotea', geometria: casaCanaria({ estilo: 'balcones', techo: 'azotea', ancho: 4, fondo: 3, puerta: 0.5, semilla: 2 }) },
     { nombre: 'Museo (provisional)', geometria: casaCanaria({ estilo: 'balcones', uso: 'museo', techo: 'teja', ancho: 8, fondo: 4, puerta: 0.5, semilla: 21 }) },
-    { nombre: 'Gimnasio (provisional)', geometria: casaCanaria({ estilo: 'balcones', uso: 'gimnasio', techo: 'azotea', ancho: 8, fondo: 6, puerta: 0.5, semilla: 34 }) },
+    { nombre: 'Gimnasio de Roca (provisional)', geometria: casaCanaria({ estilo: 'balcones', blanca: true, emblema: 'volcan', uso: 'gimnasio', techo: 'azotea', ancho: 8, fondo: 6, puerta: 0.5, semilla: 34 }) },
   ],
 ];
 

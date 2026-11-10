@@ -1,71 +1,25 @@
-// Prepara los modelos de KayKit (CC0, Kay Lousberg, www.kaylousberg.com) para el juego:
-//   - junta en un solo GLB los modelos elegidos del paquete medieval (montañas y nubes), cada uno
-//     como un nodo con su nombre (comparten una textura de 16 KB);
-//   - deja a cada personaje solo las animaciones que usa el juego (de 76 a 7).
+// Prepara los personajes de KayKit (CC0, Kay Lousberg, www.kaylousberg.com) para el juego: deja a
+// cada uno solo las animaciones que usa el juego (de 76 a 7). El paisaje ya no usa KayKit: casas,
+// plantas, rocas, volcanes y nubes se hacen por código (2026-11-10).
 // No es una dependencia del juego: se ejecuta a mano con @gltf-transform instalado aparte.
 //
 // Uso:
-//   git clone --depth 1 https://github.com/KayKit-Game-Assets/KayKit-Medieval-Hexagon-Pack-1.0 <medieval>
 //   git clone --depth 1 https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0 <personajes>
 //   (en una carpeta aparte) npm i @gltf-transform/core@4 @gltf-transform/functions@4
-//   node recursos-kaykit.mjs <medieval> <personajes> <six-seven-islands/public/modelos/kaykit>
+//   node recursos-kaykit.mjs <personajes> <six-seven-islands/public/modelos/kaykit>
 import { NodeIO } from '@gltf-transform/core';
-import { dedup, mergeDocuments, prune, unpartition } from '@gltf-transform/functions';
-import { mkdirSync, readdirSync, statSync } from 'node:fs';
+import { dedup, prune, unpartition } from '@gltf-transform/functions';
+import { mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 
-const [medieval, personajes, salida] = process.argv.slice(2);
-if (!salida) throw new Error('Uso: node recursos-kaykit.mjs <medieval> <personajes> <salida>');
+const [personajes, salida] = process.argv.slice(2);
+if (!salida) throw new Error('Uso: node recursos-kaykit.mjs <personajes> <salida>');
 mkdirSync(salida, { recursive: true });
 
-/**
- * Los modelos del paquete medieval que usa la isla 1. Desde el kit canario (2026-11-08), solo
- * montañas y nubes: casas, árboles, rocas y vallas se hacen por código.
- */
-export const MODELOS = ['mountain_A_grass_trees', 'mountain_B_grass', 'mountain_C_grass_trees', 'hills_A_trees', 'cloud_big', 'cloud_small'];
 const PERSONAJES = ['Rogue', 'Rogue_Hooded', 'Mage', 'Knight', 'Barbarian'];
 const ANIMACIONES = new Set(['Idle', 'Walking_A', 'Running_A', 'Cheer', 'Interact', 'Hit_A', 'Death_A']);
 
-function buscar(dir, nombre) {
-  for (const e of readdirSync(dir)) {
-    const ruta = join(dir, e);
-    if (statSync(ruta).isDirectory()) {
-      const r = buscar(ruta, nombre);
-      if (r) return r;
-    } else if (e === nombre) return ruta;
-  }
-  return null;
-}
-
 const io = new NodeIO();
-
-// Paquete medieval: un documento con una escena y un nodo por modelo.
-const raiz = join(medieval, 'addons/kaykit_medieval_hexagon_pack/Assets/gltf');
-const doc = (await io.read(buscar(raiz, `${MODELOS[0]}.gltf`)));
-const escena = doc.getRoot().listScenes()[0];
-const renombrar = (d, nombre) => {
-  const s = d.getRoot().listScenes().at(-1);
-  const hijos = s.listChildren();
-  if (hijos.length !== 1) throw new Error(`${nombre}: se esperaba un nodo raíz y hay ${hijos.length}`);
-  hijos[0].setName(nombre);
-  return hijos[0];
-};
-renombrar(doc, MODELOS[0]);
-for (const nombre of MODELOS.slice(1)) {
-  const ruta = buscar(raiz, `${nombre}.gltf`);
-  if (!ruta) throw new Error(`No encuentro ${nombre}`);
-  const otro = await io.read(ruta);
-  const mapa = mergeDocuments(doc, otro);
-  const s = mapa.get(otro.getRoot().listScenes()[0]);
-  for (const n of s.listChildren()) {
-    n.setName(nombre);
-    escena.addChild(n);
-  }
-  s.dispose();
-}
-await doc.transform(unpartition(), dedup(), prune());
-await io.write(join(salida, 'medieval.glb'), doc);
-console.log('medieval.glb:', MODELOS.length, 'modelos');
 
 // Personajes: solo las animaciones que se usan.
 const dirPersonajes = join(personajes, 'addons/kaykit_character_pack_adventures/Characters/gltf');

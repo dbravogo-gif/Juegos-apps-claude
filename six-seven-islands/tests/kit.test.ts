@@ -17,7 +17,12 @@ const PRESUPUESTO: Record<PiezaKit, number> = {
   organos: 400,
   escoria: 300,
   lajas: 260,
+  colada: 260,
   muro: 600,
+  vid: 500,
+  tunera: 800,
+  volcan: 400,
+  nube: 700,
 };
 /** Lo que puede salirse de su casilla cada pieza, desde el centro: las copas grandes se salen. */
 const RADIO: Record<PiezaKit, number> = {
@@ -32,7 +37,12 @@ const RADIO: Record<PiezaKit, number> = {
   organos: 0.5,
   escoria: 0.6,
   lajas: 0.55,
+  colada: 0.55,
   muro: 0.62,
+  vid: 0.55,
+  tunera: 0.6,
+  volcan: 1.1,
+  nube: 1.3,
 };
 
 describe('kit canario de naturaleza', () => {
@@ -44,8 +54,11 @@ describe('kit canario de naturaleza', () => {
         const g = piezaKit(tipo, v);
         const c = g.boundingBox!;
         const nombre = `${tipo} ${v}`;
-        expect(c.min.y, nombre).toBeGreaterThan(-0.12);
-        expect(c.min.y, nombre).toBeLessThan(0.1);
+        // Todas salen del suelo, salvo la nube, que flota.
+        if (tipo !== 'nube') {
+          expect(c.min.y, nombre).toBeGreaterThan(-0.12);
+          expect(c.min.y, nombre).toBeLessThan(0.1);
+        }
         expect(Math.max(-c.min.x, c.max.x, -c.min.z, c.max.z), nombre).toBeLessThanOrEqual(RADIO[tipo]);
         expect(triangulos(g), nombre).toBeLessThanOrEqual(PRESUPUESTO[tipo]);
         expect(g.getAttribute('color'), nombre).toBeDefined();

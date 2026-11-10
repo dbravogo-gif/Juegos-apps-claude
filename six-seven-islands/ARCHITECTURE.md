@@ -23,15 +23,18 @@ agentes. El patrón viene de *Claude of Duty* (Matt Shumer, MIT).
   el cargador glTF, `SkeletonUtils` y las animaciones. El reparto tampoco está medido.
 - `BufferGeometryUtils`, `GLTFLoader` y `SkeletonUtils` (`three/addons/`) son parte de `three`:
   no son dependencias nuevas.
-- **Modelos:** KayKit (CC0, `CREDITS.md`), 2,9 MB en `public/modelos/kaykit/`: las montañas y
-  las nubes (157 KB) y los 5 personajes. Se cargan una vez con `src/arte/modelos.ts`. Los prepara
+- **Modelos:** solo los 5 personajes de KayKit (CC0, `CREDITS.md`), 2,7 MB en
+  `public/modelos/kaykit/`. Se cargan una vez con `src/arte/modelos.ts`. Los prepara
   `herramientas/recursos-kaykit.mjs`, que se ejecuta a mano con `@gltf-transform` instalado
   aparte: no es una dependencia del juego.
-- **Lo demás del mundo se hace por código,** sin descargas:
-  - `mundo/montaje.ts`: juntar piezas con color por vértice, azar determinista y
-    deformaciones;
+- **El mundo entero se hace por código,** sin descargas:
+  - `arte/montaje.ts`: juntar piezas con color por vértice, azar determinista y deformaciones;
   - `mundo/canario.ts`: casas y faro;
-  - `mundo/kit.ts`: plantas, rocas y muro.
+  - `mundo/kit.ts`: plantas, rocas, muro, volcanes y nubes;
+  - `salas/salas.ts`: los interiores.
+- **Las islas son datos:** `data/isla1.ts` (Lanzarote) y `data/la-palma.ts` (guardada para la
+  6). Se generan con un borrador en Python a partir de rectángulos y caminos; el mapa manda y las
+  mismas pruebas de reglas vigilan las dos.
 
 - Sin motor de física: el mundo es una rejilla de casillas con alturas.
 - El sonido, más adelante, con Web Audio o ZzFX (MIT, menos de 1 KB).
@@ -113,7 +116,7 @@ export class Sistema implements Subsistema {
 | `render` | `src/sistemas/render/` | El renderizador, la escena, las luces, las sombras y el postproceso |
 | `camara` | `src/sistemas/camara/` | La cámara de diorama: sigue al jugador en la isla, encuadra la sala entera en los interiores y, al hablar, se acerca y sube a 72° entre los dos. Después, la de combate |
 | `entrada` | `src/sistemas/entrada/` | El teclado (no hay ratón): direcciones, interactuar (E, Enter o Espacio) y cancelar. Un toque corto cuenta como un paso, también si llega mientras se termina el anterior |
-| `mundo` | `src/sistemas/mundo/` | La isla en 3D: terreno en terrazas por alturas, cumbres, mar, casas canarias (`canario.ts`) y kit de naturaleza (`kit.ts`) por código, montañas y nubes de KayKit, todo instanciado por trozos de 12 × 12, pasos cerrados y objetos. Publica `tapas`, la altura de lo más alto de cada casilla. Lee «partida»; no la cambia |
+| `mundo` | `src/sistemas/mundo/` | La isla en 3D, toda por código: terreno en terrazas por alturas, cumbres, mar, casas canarias (`canario.ts`) y kit de naturaleza (`kit.ts`), con los estilos y colores de cada isla, instanciado por trozos de 12 × 12, pasos cerrados y objetos. Publica `tapas`, la altura de lo más alto de cada casilla. Lee «partida»; no la cambia |
 | `criaturas` | `src/sistemas/criaturas/` | El generador de criaturas por piezas y su animación procedural. Se pide con `crear(aspecto)` y se anima con `accion(criatura, accion)` |
 | `personaje` | `src/sistemas/personaje/` | El jugador y los personajes de la isla y de los interiores (KayKit, animados), que se giran hacia el jugador al hablar; la silueta cuando algo tapa al jugador (con las `tapas` de «mundo») y las líneas de visión; más adelante, el generador y la personalización (F12) |
 | `salas` | `src/sistemas/salas/` | Los interiores en 3D, por código: dioramas pequeños lejos de la isla, con la pared de delante baja, muebles según las letras del mapa y las estatuas provisionales del museo. Una malla por sala |

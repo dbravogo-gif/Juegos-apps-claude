@@ -4,8 +4,8 @@ Actualizado: 2026-11-08. Solo el presente; el historial está en git. Máximo 40
 
 ## Fase actual
 
-Tanda 1: F05 hecha. Kit canario por código (2026-11-08): casas, casonas y faro provisionales,
-7 plantas, 4 rocas y muro, en `?catalogo`. De KayKit quedan montañas, nubes y personas.
+Tanda 1. La isla 1 es Lanzarote desde el 2026-11-10 (`ISLA-1.md`), con mapa nuevo, kit por
+código y la tabla de tipos C. La Palma, guardada para la 6. Las criaturas, con Meshy.
 
 ## Hecho
 
@@ -22,8 +22,8 @@ Tanda 1: F05 hecha. Kit canario por código (2026-11-08): casas, casonas y faro 
 
 ## Siguiente
 
-1. Isla 1 (`ISLA-1.md`): interiores y diálogos hechos (museo con la elección de la inicial,
-   anciano, casas, refugio, tienda y gimnasio). Siguen encuentros, combate y captura.
+1. Isla 1, Lanzarote (`ISLA-1.md`): mapa, interiores y diálogos hechos. Siguen encuentros,
+   combate y captura.
 2. En paralelo, arte con Meshy (`prompts-meshy.md`): criaturas y edificios singulares.
 
 ## Pendiente del autor

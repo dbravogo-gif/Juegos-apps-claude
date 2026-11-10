@@ -84,37 +84,47 @@ Se revisan de cerca en `?catalogo` (plantas, rocas y muro) y `?catalogo=edificio
 - **Cómo se hacen:** geometrías con color por vértice y un solo material, con variantes por
   semilla (`montaje.ts`). Cada variante es una llamada de dibujo más por trozo de la isla, así
   que hay pocas.
+- **Cada isla elige** por zona el estilo de sus casas, sus árboles y la flora de sus rocas, y
+  por isla los colores del suelo y de las cumbres (`DefZona` y `DefIsla` en `core/mundo.ts`).
 - **Casas** (`canario.ts`):
-  - **Rural** (zona inicial y pueblo): blanca, de una planta, con muros redondeados, zócalo,
+  - **Lanzarote** (zona inicial y La Geria de la isla 1): blanca, de una planta, lisa, con zócalo
+    y carpintería verde o azul, azotea con pretil y la chimenea redonda con su sombrerete.
+  - **De balcones blanca** (capital de la isla 1): como la de balcones, con la fachada de cal.
+  - **Rural** (La Palma: zona inicial y pueblo): blanca, de una planta, con muros redondeados, zócalo,
     cantería en las esquinas, carpintería verde, azul o de madera, contraventanas, macetas con
     geranios y tejado de teja curva, a veces con chimenea.
   - **De balcones** (capital): fachada de color, dos plantas y balcón de madera corrido con
     tejadillo. La mitad lleva teja y la otra mitad azotea con pretil, cuarto y depósito.
   - El refugio lleva puerta y letrero coral. La tienda, toldo a rayas azules y cajas.
   - **Provisionales hasta que el autor los haga con Meshy:**
-    - el museo, una casona blanca con teja;
-    - el gimnasio, una casona amarilla con un sol ámbar pintado en la azotea, que se reconoce
-      desde arriba como el de tipo Luz;
+    - el museo, una casa de una planta del estilo de su zona, con letrero;
+    - el gimnasio, una casona de balcones con azotea y el emblema de su tipo pintado arriba: un
+      volcán en el de Roca de Lanzarote (un sol en el de La Palma, por decidir);
     - el faro, una torre blanca con dos bandas rojas.
 - **Plantas** (`kit.ts`):
   - **Laurel**, en el bosque. Los que tienen un camino justo al norte son bajos, para no tapar
     la última fila.
-  - **Palmera canaria**, en las plazas.
-  - **Platanera**, en las plantaciones.
+  - **Palmera canaria**, en las plazas y paseos.
+  - **Platanera**, en las plantaciones (La Palma).
+  - **Viña en su hoyo** de picón, con su muro en media luna (La Geria).
+  - **Tunera**, la chumbera.
   - **Drago.**
-  - **En las rocas (`#`), según la zona:**
-    - en el secano (sur y capital), cardón y tabaiba;
-    - en el norte húmedo, tajinaste azul gigante, endémico de La Palma.
+  - **En las rocas (`#`), según la flora de la zona:**
+    - en el secano, cardón, tabaiba y tunera;
+    - en lo húmedo, tajinaste azul gigante, endémico de La Palma;
+    - en el volcán, escorias, basalto y órganos.
+  - **De aquí en adelante, como mucho 4 plantas nuevas** (autor, 2026-11-10).
 - **Rocas y muros:** roca basáltica, órganos de basalto, escoria roja, lajas del malpaís y muro
   de piedra seca.
+- **Coladas de lava** (no se pisan): lajas altas en negros y grises. El malpaís, que sí se pisa,
+  es rojizo: así no se confunden.
+- **Charco verde** de El Golfo: agua verde, más alta que el mar.
+- **Volcanes** en las cumbres y **nubes**, por código: el paisaje ya no usa KayKit.
 - **Luz sobre lo horizontal:** arriba les da el sol y el relleno, y los colores claros se queman
   hasta casi blanco. Azoteas y suelos llevan colores medios (`azotea`, `solPintado`).
-- **De KayKit** (CC0, Kay Lousberg; `CREDITS.md`):
-  - quedan las montañas de las cumbres y las nubes, en `medieval.glb`;
-  - la hierba de sus montañas, amarillo oliva en su paleta de degradados, se lleva al verde al
-    cargarlas;
-  - también son suyas las personas, sin armas, a 1,25 casillas de alto y animadas: jugador
-    `Rogue`, anciano `Mage`, entrenadores `Knight` y `Barbarian`, y el resto `Rogue_Hooded`.
+- **De KayKit** (CC0, Kay Lousberg; `CREDITS.md`) solo quedan las personas, sin armas, a 1,25
+  casillas de alto y animadas: jugador `Rogue`, anciano y doctora `Mage`, entrenadores y líder
+  `Knight` y `Barbarian`, y el resto `Rogue_Hooded`.
   - Quaternius no se puede descargar desde la red de trabajo.
 - **Personas, más adelante (F12):** gente normal y personalizable, sin pícaros ni magos
   (decisión del autor, 2026-11-08).

@@ -1,18 +1,26 @@
-// Las casas canarias, hechas por código en el estilo de juguete de ARTE.md: rural o de balcones,
+// Las casas canarias, hechas por código en el estilo de juguete de ARTE.md: rural, de balcones o
+// la blanca de azotea de Lanzarote,
 // con variantes para el refugio, la tienda, el museo y el gimnasio, y el faro. Geometrías con color
 // por vértice, para dibujarlas con un solo material. Funciones puras y deterministas: la misma
 // semilla da siempre la misma pieza.
 
-import { BoxGeometry, type BufferGeometry, CylinderGeometry, SphereGeometry } from 'three/webgpu';
+import { BoxGeometry, BufferAttribute, BufferGeometry, CylinderGeometry, SphereGeometry } from 'three/webgpu';
 import { COLORES } from '../../arte/paleta';
 import { Montaje, abollar, azar, elegir, triangulo } from '../../arte/montaje';
 
-export type EstiloCasa = 'rural' | 'balcones';
+export type EstiloCasa = 'rural' | 'balcones' | 'lanzarote';
 export type UsoCasa = 'casa' | 'refugio' | 'tienda' | 'museo' | 'gimnasio';
 
 export interface OpcionesCasa {
-  /** Rural: blanca, de una planta, con teja. De balcones: fachada de color y dos plantas. */
+  /**
+   * Rural: blanca, de una planta, con teja. De balcones: fachada de color y dos plantas.
+   * Lanzarote: blanca, de una planta, con azotea, chimenea redonda y carpintería verde o azul.
+   */
   estilo: EstiloCasa;
+  /** Las de balcones, con la fachada blanca (las de la capital de Lanzarote). */
+  blanca?: boolean;
+  /** Lo que lleva pintado en la azotea el gimnasio: el sol (Luz) o un volcán (Roca). */
+  emblema?: 'sol' | 'volcan';
   uso?: UsoCasa;
   /** Ancho de la fachada y fondo del solar, en casillas. La fachada mira al sur (+z). */
   ancho: number;
@@ -40,22 +48,30 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
   const r = azar(op.semilla ?? 1);
   const M = new Montaje();
   const rural = op.estilo === 'rural';
+  const lanzarote = op.estilo === 'lanzarote';
+  const unaPlanta = rural || lanzarote;
   const uso = op.uso ?? 'casa';
   const W = op.ancho - 2 * MARGEN;
   const D = op.fondo - 2 * MARGEN;
-  const H = rural ? 1.65 : 2.95;
+  const H = lanzarote ? 1.55 : rural ? 1.65 : 2.95;
   const frente = D / 2;
 
   const fachadas = [COLORES.fachadaOcre, COLORES.fachadaAzul, COLORES.fachadaSalmon, COLORES.fachadaVerde, COLORES.fachadaAmarilla];
-  const pared = uso === 'museo' || rural ? COLORES.cal : uso === 'gimnasio' ? COLORES.fachadaAmarilla : elegir(r, fachadas);
-  const madera = rural ? elegir(r, [COLORES.carpinteriaVerde, COLORES.carpinteriaVerde, COLORES.carpinteriaAzul, COLORES.balcon]) : elegir(r, [COLORES.balcon, COLORES.carpinteriaVerde]);
-  const zocalo = rural ? elegir(r, [COLORES.zocaloOcre, COLORES.canteria, COLORES.carpinteriaVerde]) : COLORES.canteria;
+  const pared = uso === 'museo' || unaPlanta || op.blanca ? COLORES.cal : uso === 'gimnasio' ? COLORES.fachadaAmarilla : elegir(r, fachadas);
+  const madera = lanzarote
+    ? elegir(r, [COLORES.carpinteriaVerde, COLORES.carpinteriaVerde, COLORES.carpinteriaAzul])
+    : rural
+      ? elegir(r, [COLORES.carpinteriaVerde, COLORES.carpinteriaVerde, COLORES.carpinteriaAzul, COLORES.balcon])
+      : elegir(r, op.blanca ? [COLORES.carpinteriaVerde, COLORES.carpinteriaAzul, COLORES.balcon] : [COLORES.balcon, COLORES.carpinteriaVerde]);
+  // En Lanzarote, el zócalo va pintado del color de la carpintería.
+  const zocalo = lanzarote ? madera : rural ? elegir(r, [COLORES.zocaloOcre, COLORES.canteria, COLORES.carpinteriaVerde]) : COLORES.canteria;
   const singular = uso === 'museo' || uso === 'gimnasio';
 
-  // Muros y zócalo redondeados, como de juguete, y cantería en las esquinas, a soga y tizón.
+  // Muros y zócalo redondeados, como de juguete, y cantería en las esquinas, a soga y tizón
+  // (las de Lanzarote, lisas y blancas).
   M.cajaRedonda(W, H, D, 0, 0, 0, pared, 0.07);
-  M.cajaRedonda(W + 0.04, 0.24, D + 0.04, 0, 0, 0, zocalo, 0.05);
-  const hiladas = Math.floor((H - 0.3) / 0.22);
+  M.cajaRedonda(W + 0.04, lanzarote ? 0.18 : 0.24, D + 0.04, 0, 0, 0, zocalo, 0.05);
+  const hiladas = lanzarote ? 0 : Math.floor((H - 0.3) / 0.22);
   for (const sx of [-1, 1]) {
     for (const sz of [-1, 1]) {
       for (let i = 0; i < hiladas; i++) {
@@ -66,8 +82,8 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
       }
     }
   }
-  const azotea = op.techo ? op.techo === 'azotea' : !rural && r() < 0.5;
-  if (!rural) M.caja(W + 0.06, 0.08, D + 0.06, 0, 1.38, 0, COLORES.cal); // imposta entre plantas
+  const azotea = lanzarote || (op.techo ? op.techo === 'azotea' : !rural && r() < 0.5);
+  if (!unaPlanta) M.caja(W + 0.06, 0.08, D + 0.06, 0, 1.38, 0, COLORES.cal); // imposta entre plantas
   if (azotea) M.caja(W + 0.14, 0.14, D + 0.14, 0, H - 0.06, 0, COLORES.cal); // cornisa
 
   // Fachada: puerta con escalón, ventanas a los lados y macetas.
@@ -111,7 +127,8 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
     // Letrero sobre la puerta, con un disco blanco: se ve desde lejos. Coral en el refugio,
     // amarillo de luz en el gimnasio (su tipo es Luz) y madera en el museo.
     const y = 0.12 + alPuerta + 0.1;
-    const letrero = uso === 'refugio' ? COLORES.acentoCoral : uso === 'gimnasio' ? COLORES.amarilloLuz : COLORES.balcon;
+    const letreroGimnasio = op.emblema === 'volcan' ? COLORES.rocaGimnasio : COLORES.amarilloLuz;
+    const letrero = uso === 'refugio' ? COLORES.acentoCoral : uso === 'gimnasio' ? letreroGimnasio : COLORES.balcon;
     M.caja(0.8, 0.28, 0.06, px, y, frente + 0.03, letrero);
     M.pon(new CylinderGeometry(0.09, 0.09, 0.03, 12).rotateX(Math.PI / 2).translate(px, y + 0.14, frente + 0.07), COLORES.crema);
   }
@@ -129,7 +146,7 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
   }
 
   // Balcón corrido de madera, con su tejadillo, en la planta alta.
-  if (!rural) {
+  if (!unaPlanta) {
     const y0 = 1.46;
     const bw = W - 0.7;
     const vuelo = 0.34;
@@ -189,7 +206,13 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
       M.caja(W + 0.1, 0.24, 0.08, 0, H + 0.08, s * (D / 2 + 0.03), pared);
       M.caja(0.08, 0.24, D + 0.1, s * (W / 2 + 0.03), H + 0.08, 0, pared);
     }
-    if (uso === 'gimnasio') {
+    if (uso === 'gimnasio' && op.emblema === 'volcan') {
+      // Un volcán pintado en la azotea: el gimnasio de Roca se reconoce desde arriba.
+      const y = H + 0.135;
+      M.pon(plano([[-1.3, 0.9], [1.3, 0.9], [0.35, -0.7], [-0.35, -0.7]], y), COLORES.rocaGimnasio);
+      M.pon(plano([[-0.35, -0.7], [0.35, -0.7], [0.2, -0.95], [-0.2, -0.95]], y + 0.005), COLORES.lava);
+      M.pon(plano([[-0.1, -0.7], [0.1, -0.7], [0.25, 0.2], [-0.05, 0.4]], y + 0.006), COLORES.lava, 0.9);
+    } else if (uso === 'gimnasio') {
       // Un sol pintado en la azotea: el gimnasio de tipo Luz se reconoce desde arriba.
       M.pon(new CylinderGeometry(0.75, 0.75, 0.03, 20).translate(0, H + 0.135, 0.2), COLORES.solPintado);
       for (let i = 0; i < 8; i++) {
@@ -198,6 +221,15 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
       }
     }
     const lado = r() < 0.5 ? -1 : 1;
+    if (lanzarote) {
+      // La chimenea redonda de Lanzarote, con su sombrerete, en vez del cuarto de la azotea.
+      const x = lado * (W / 2 - 0.45);
+      const z = -D / 2 + 0.45;
+      M.pon(new CylinderGeometry(0.15, 0.17, 0.6, 12).translate(x, H + 0.4, z), COLORES.cal);
+      M.pon(new SphereGeometry(0.17, 12, 6, 0, Math.PI * 2, 0, Math.PI / 2).translate(x, H + 0.7, z), COLORES.cal, 0.96);
+      M.pon(new CylinderGeometry(0.155, 0.155, 0.06, 12).translate(x, H + 0.6, z), COLORES.ojo, 1.3);
+      return M.fusionar();
+    }
     const cx = lado * (W / 2 - 0.6);
     const cz = -D / 2 + 0.55;
     M.caja(0.9, 0.7, 0.8, cx, H, cz, COLORES.cal);
@@ -206,6 +238,18 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
     M.pon(new CylinderGeometry(0.22, 0.22, 0.4, 8).translate(-cx * 0.6, H + 0.24, cz + 0.1), COLORES.crema, 0.9);
   }
   return M.fusionar();
+}
+
+/** Una figura plana pintada: un polígono convexo en el plano horizontal, a la altura `y`, de dos caras. */
+function plano(puntos: [number, number][], y: number): BufferGeometry {
+  const g = new BufferGeometry();
+  const tri: number[] = [];
+  for (let i = 1; i + 1 < puntos.length; i++) {
+    for (const [x, z] of [puntos[0], puntos[i], puntos[i + 1], puntos[0], puntos[i + 1], puntos[i]]) tri.push(x, y, z);
+  }
+  g.setAttribute('position', new BufferAttribute(new Float32Array(tri), 3));
+  g.computeVertexNormals();
+  return g;
 }
 
 /** El faro: torre redonda blanca con dos bandas rojas, galería, linterna y cúpula, sobre un zócalo. */

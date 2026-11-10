@@ -88,4 +88,18 @@ export const COLORES = {
   alfombra: '#B8483E',
   piedraEstatua: '#C9C1B4',
   pantalla: '#8FD3E8',
+  // Lanzarote (2026-11-10): viñas, tuneras, volcanes y el gimnasio de Roca.
+  verdeVid: '#74B04A',
+  uva: '#6B3A6E',
+  verdeTunera: '#7FA65A',
+  verdeTuneraHondo: '#5E8545',
+  higoPico: '#D9503E',
+  conoOcre: '#B0704A',
+  conoRojo: '#8E4A3A',
+  crater: '#4A3634',
+  nube: '#FFFFFF',
+  rocaGimnasio: '#94775C',
+  lava: '#E4572E',
+  // El charco verde de El Golfo: agua teñida de verde por las algas.
+  charcoVerde: '#3FA672',
 } as const;

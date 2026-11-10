@@ -127,13 +127,14 @@ export function geometriaSala(sala: Mundo, id: string): BufferGeometry {
       mueble(M, cm.c, x, y, n);
     }
   }
-  // Alfombra del museo, de la puerta a las estatuas, y sol de Luz en el suelo del gimnasio.
+  // Alfombra del museo, de la puerta a las estatuas, y un volcán en el suelo del gimnasio de Roca.
   if (id === 'museo') {
     for (let y = minY + 3; y < maxY; y++) M.caja(0.8, 0.015, 1, centroX, SUELO, y, COLORES.alfombra, 0.95);
   }
   if (id === 'gimnasio') {
     const cy = (minY + maxY) / 2;
-    M.pon(new CylinderGeometry(1.1, 1.1, 0.02, 24).translate(centroX, SUELO + 0.01, cy), COLORES.solPintado);
+    M.pon(new CylinderGeometry(1.1, 1.1, 0.02, 24).translate(centroX, SUELO + 0.01, cy), COLORES.rocaGimnasio);
+    M.pon(new CylinderGeometry(0.4, 0.4, 0.025, 18).translate(centroX, SUELO + 0.015, cy), COLORES.lava);
   }
   for (const [k, { personaje }] of sala.ocupadas) {
     if (!personaje.id.startsWith('estatua-')) continue;

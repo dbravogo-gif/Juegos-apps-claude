@@ -47,6 +47,8 @@ export function pseudo(k: number): number {
 }
 
 const SUBIDA_ENCUENTRO = 0.12;
+/** Las coladas de lava, que no se pisan, van algo más altas que el camino, pero bajas para no tapar. */
+const SUBIDA_COLADA = 0.2;
 const IDENT = new Quaternion();
 
 /** Altura de la cara de arriba de una casilla. */
@@ -57,11 +59,15 @@ export function alturaCara(cm: CasillaMundo | undefined, cumbre: number | undefi
     case '~':
     case 'B':
       return -0.7;
+    case 'w':
+      return alturaSuelo(cm.h) - 0.25;
     case '#':
       return alturaSuelo(cm.h) + 0.9;
     case '"':
     case ';':
       return alturaSuelo(cm.h) + SUBIDA_ENCUENTRO;
+    case 'L':
+      return alturaSuelo(cm.h) + SUBIDA_COLADA;
     default:
       return alturaSuelo(cm.h);
   }
@@ -84,18 +90,25 @@ const COLOR_ARRIBA: Partial<Record<Casilla, string>> = {
   X: COLORES.arenaCaramelo,
   P: COLORES.maderaTostada,
   B: COLORES.aguaTurquesa,
+  V: COLORES.picon,
+  U: COLORES.tierra,
+  // Las coladas, negras y con lajas altas: se distinguen del malpaís rojizo, que sí se pisa.
+  L: COLORES.lavaNegra,
+  w: COLORES.charcoVerde,
 };
 
-function colorArriba(cm: CasillaMundo | undefined, esCumbre: boolean): string {
-  if (esCumbre) return COLORES.cumbre;
+type ColoresIsla = Mundo['isla']['colores'];
+
+function colorArriba(cm: CasillaMundo | undefined, esCumbre: boolean, isla: ColoresIsla): string {
+  if (esCumbre) return isla?.cumbre ?? COLORES.cumbre;
   if (!cm) return COLORES.tierra;
-  return COLOR_ARRIBA[cm.c] ?? COLORES.arenaCaramelo; // bajo los edificios, como el camino
+  return isla?.suelo?.[cm.c] ?? COLOR_ARRIBA[cm.c] ?? COLORES.arenaCaramelo; // bajo los edificios, como el camino
 }
 
-function colorLado(cm: CasillaMundo | undefined, esCumbre: boolean): string {
-  if (esCumbre) return '#9196C6';
+function colorLado(cm: CasillaMundo | undefined, esCumbre: boolean, isla: ColoresIsla): string {
+  if (esCumbre) return isla?.ladoCumbre ?? '#9196C6';
   if (cm?.c === '#') return '#7E746F';
-  if (cm?.c === '_' || cm?.c === ';') return '#4A4247';
+  if (cm?.c === '_' || cm?.c === ';' || cm?.c === 'L') return '#4A4247';
   return '#8E6A4D';
 }
 
@@ -124,8 +137,8 @@ export function geometriaTerreno(m: Mundo, cumbre: Map<number, number>): BufferG
     const x1 = x + 0.5;
     const z0 = y - 0.5;
     const z1 = y + 0.5;
-    quad([x0, top, z1], [x1, top, z1], [x1, top, z0], [x0, top, z0], [0, 1, 0], colorArriba(cm, esCumbre), 0.95 + (pseudo(k) % 11) * 0.01);
-    const lado = colorLado(cm, esCumbre);
+    quad([x0, top, z1], [x1, top, z1], [x1, top, z0], [x0, top, z0], [0, 1, 0], colorArriba(cm, esCumbre, m.isla.colores), 0.95 + (pseudo(k) % 11) * 0.01);
+    const lado = colorLado(cm, esCumbre, m.isla.colores);
     const vecinos: [number, number, number[], number[][]][] = [
       [x, y + 1, [0, 0, 1], [[x0, z1], [x1, z1]]],
       [x, y - 1, [0, 0, -1], [[x1, z0], [x0, z0]]],
@@ -203,18 +216,22 @@ export function geometriasDecoracion(): Record<NombreDeco, { geometria: BufferGe
     lajas0: { geometria: piezaKit('lajas', 0), color: null },
     lajas1: { geometria: piezaKit('lajas', 1), color: null },
     lajas2: { geometria: piezaKit('lajas', 2), color: null },
+    colada0: { geometria: piezaKit('colada', 0), color: null },
+    colada1: { geometria: piezaKit('colada', 1), color: null },
+    colada2: { geometria: piezaKit('colada', 2), color: null },
     floresBlancas: { geometria: flores, color: '#FFF8EC' },
     floresAmarillas: { geometria: flores, color: '#FFD84A' },
   };
 }
 
-type NombreDeco = 'matas' | 'lajas0' | 'lajas1' | 'lajas2' | 'floresBlancas' | 'floresAmarillas';
+type NombreDeco = 'matas' | 'lajas0' | 'lajas1' | 'lajas2' | 'colada0' | 'colada1' | 'colada2' | 'floresBlancas' | 'floresAmarillas';
 
 function decoracionDe(m: Mundo, claves: number[]): Record<NombreDeco, Matrix4[]> {
   const floresBlancas: Matrix4[] = [];
   const floresAmarillas: Matrix4[] = [];
   const matas: Matrix4[] = [];
   const lajas: Matrix4[][] = Array.from({ length: LAJAS }, () => []);
+  const coladas: Matrix4[][] = Array.from({ length: LAJAS }, () => []);
   const giro = new Quaternion();
   const arriba = new Vector3(0, 1, 0);
   const v = new Vector3();
@@ -232,12 +249,16 @@ function decoracionDe(m: Mundo, claves: number[]): Record<NombreDeco, Matrix4[]>
       for (let i = 0; i < 3; i++) {
         matas.push(new Matrix4().compose(v.set(x + j(i * 5) * 2, base + 0.12, y + j(i * 5 + 3) * 2), IDENT, new Vector3(1, 0.8 + ((r >>> i) & 3) * 0.15, 1)));
       }
-    } else if (cm.c === ';') {
+    } else if (cm.c === ';' || cm.c === 'L') {
+      // El malpaís (se pisa) y las coladas (no) llevan las mismas lajas de lava.
       giro.setFromAxisAngle(arriba, ((r >>> 4) % 4) * (Math.PI / 2));
-      lajas[r % LAJAS].push(new Matrix4().compose(v.set(x, base + SUBIDA_ENCUENTRO, y), giro, new Vector3(1, 0.9 + ((r >>> 7) & 3) * 0.1, 1)));
+      const sube = cm.c === 'L' ? SUBIDA_COLADA : SUBIDA_ENCUENTRO;
+      const alto = cm.c === 'L' ? 1.5 + ((r >>> 7) & 3) * 0.12 : 0.9 + ((r >>> 7) & 3) * 0.1;
+      (cm.c === 'L' ? coladas : lajas)[r % LAJAS].push(new Matrix4().compose(v.set(x, base + sube, y), giro, new Vector3(1, alto, 1)));
     }
   }
   const [lajas0, lajas1, lajas2] = lajas;
-  return { matas, lajas0, lajas1, lajas2, floresBlancas, floresAmarillas };
+  const [colada0, colada1, colada2] = coladas;
+  return { matas, lajas0, lajas1, lajas2, colada0, colada1, colada2, floresBlancas, floresAmarillas };
 }
 

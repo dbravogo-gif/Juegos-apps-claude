@@ -7,7 +7,7 @@ import type { Condicion } from '../core/mundo';
 export const OBJETIVOS: readonly { hasta: Condicion; texto: string }[] = [
   { hasta: 'inicial-elegida', texto: 'Ve al museo y elige a tu compañera' },
   { hasta: 'anciano', texto: 'Habla con el anciano en la plaza del pueblo' },
-  { hasta: 'gimnasio-vencido', texto: 'Cruza el bosque hasta la capital' },
+  { hasta: 'gimnasio-vencido', texto: 'Cruza las Montañas del Fuego hasta la capital' },
 ];
 
 /** Nombre con artículo de cada objeto, para «Has encontrado…». */

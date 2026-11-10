@@ -32,6 +32,7 @@ export const LEYENDA = {
   V: 'viña en su hoyo',
   U: 'tunera',
   L: 'colada de lava',
+  w: 'charco verde',
   // Interiores: salas pequeñas aparte (ISLA-1.md, «Decisiones técnicas»).
   m: 'suelo',
   '|': 'pared',
@@ -110,6 +111,8 @@ export interface DefIsla {
   /** Las zonas en el orden del recorrido. */
   zonas: readonly DefZona[];
   inicio: { zona: string; x: number; y: number };
+  /** El tipo de su gimnasio (decide el emblema pintado en la azotea). */
+  gimnasio?: string;
   /** Colores propios de la isla: suelo por letra y las cumbres del centro. */
   colores?: { suelo?: Partial<Record<string, string>>; cumbre?: string; ladoCumbre?: string };
 }

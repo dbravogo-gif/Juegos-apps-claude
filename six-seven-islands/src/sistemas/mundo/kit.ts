@@ -294,10 +294,9 @@ export function laurel(semilla: number): BufferGeometry {
  * Lajas de lava del malpaís para una casilla: piedras dentadas negras, pardas y rojizas, una
  * punta y alguna mancha de liquen. Caben en la casilla (de -0,5 a 0,5) y salen del suelo (y = 0).
  */
-export function lajasMalpais(semilla: number): BufferGeometry {
+export function lajasMalpais(semilla: number, colores: readonly string[] = [COLORES.lavaNegra, COLORES.lavaNegra, COLORES.lavaParda, COLORES.lavaRojiza]): BufferGeometry {
   const r = azar(semilla);
   const M = new Montaje();
-  const colores = [COLORES.lavaNegra, COLORES.lavaNegra, COLORES.lavaParda, COLORES.lavaRojiza];
   // Una laja por celda de una rejilla de 3 × 3 desordenada, para que cubran el suelo.
   for (let i = 0; i < 9; i++) {
     if (r() < 0.2) continue;
@@ -324,6 +323,80 @@ export function lajasMalpais(semilla: number): BufferGeometry {
   return M.fusionar();
 }
 
+/**
+ * Viña de La Geria (Lanzarote): la vid baja en su hoyo de picón negro, con el muro de piedra en
+ * media luna que la protege del viento, al norte (de espaldas a la cámara).
+ */
+export function vid(semilla: number): BufferGeometry {
+  const r = azar(semilla);
+  const M = new Montaje();
+  M.pon(new CylinderGeometry(0.4, 0.3, 0.04, 14).translate(0, 0.01, 0), COLORES.picon, 0.7);
+  const piedras = 7;
+  for (let i = 0; i < piedras; i++) {
+    const a = Math.PI + (i / (piedras - 1) - 0.5) * Math.PI * 1.1;
+    const g = abollar(new SphereGeometry(0.5, 6, 4), 0.12, semilla + i)
+      .scale(0.17, 0.14 + r() * 0.06, 0.12)
+      .rotateY(a)
+      .translate(Math.sin(a) * 0.4, 0.07, Math.cos(a) * 0.4);
+    M.pon(g, elegir(r, [COLORES.basalto, COLORES.basaltoClaro, COLORES.piedraParda]), 0.9 + r() * 0.2);
+  }
+  M.pon(rama(new Vector3(), new Vector3(0.15, 1, 0.05), 0.24, 0.04, 0.03, 5), COLORES.troncoLaurel);
+  M.pon(abollar(new SphereGeometry(0.2, 8, 6), 0.18, semilla).scale(1.25, 0.6, 1.1).translate(0.04, 0.3, 0.02), COLORES.verdeVid, 0.95 + r() * 0.1);
+  for (const s of [-1, 1]) M.pon(abollar(new SphereGeometry(0.05, 6, 4), 0.3, semilla + s).scale(1, 1.4, 1).translate(s * 0.12, 0.2, 0.12), COLORES.uva);
+  return M.fusionar();
+}
+
+/** Tunera (chumbera): palas planas y redondas que salen unas de otras, con higos picos en el borde. */
+export function tunera(semilla: number): BufferGeometry {
+  const r = azar(semilla);
+  const M = new Montaje();
+  const pala = (c: Vector3, giro: number, inclina: number, tam: number) => {
+    const g = abollar(new SphereGeometry(0.5, 8, 6), 0.05, semilla).scale(tam * 0.75, tam, 0.11).rotateZ(inclina).rotateY(giro).translate(c.x, c.y, c.z);
+    M.ponDegradado(g, COLORES.verdeTuneraHondo, COLORES.verdeTunera, 0.94 + r() * 0.1);
+  };
+  const base = 0.42;
+  pala(new Vector3(0, base / 2 + 0.02, 0), r() * Math.PI, 0, base);
+  pala(new Vector3(0.05, base / 2, 0.02), r() * Math.PI + 1.4, 0.1, base * 0.9);
+  const arriba = 3 + Math.floor(r() * 3);
+  for (let i = 0; i < arriba; i++) {
+    const a = (i / arriba) * Math.PI * 2 + r();
+    const t = 0.3 + r() * 0.06;
+    const c = new Vector3(Math.cos(a) * 0.14, base + t * 0.35, Math.sin(a) * 0.14);
+    pala(c, a + Math.PI / 2, (r() - 0.5) * 0.9, t);
+    if (r() < 0.6) M.pon(new SphereGeometry(0.035, 6, 4).scale(1, 1.3, 1).translate(c.x, c.y + t * 0.5, c.z), COLORES.higoPico);
+  }
+  return M.fusionar();
+}
+
+/** Volcán de las cumbres: un cono de escorias con su cráter, ocre abajo y rojizo arriba. Mide 2 de ancho. */
+export function volcan(semilla: number): BufferGeometry {
+  const r = azar(semilla);
+  const M = new Montaje();
+  const alto = 0.75 + r() * 0.25;
+  M.ponDegradado(abollar(new CylinderGeometry(0.32, 1, alto, 18, 4, true).translate(0, alto / 2, 0), 0.05, semilla), COLORES.conoOcre, COLORES.conoRojo);
+  M.pon(new CylinderGeometry(0.3, 0.33, 0.06, 18, 1, true).translate(0, alto, 0), COLORES.conoRojo, 0.85);
+  M.pon(new CylinderGeometry(0.3, 0.3, 0.02, 18).translate(0, alto - 0.08, 0), COLORES.crater);
+  return M.fusionar();
+}
+
+/** Nube: unas bolas blancas aplastadas, juntas. Flota: su centro está en el origen. */
+export function nube(semilla: number): BufferGeometry {
+  const r = azar(semilla);
+  const M = new Montaje();
+  const n = 4 + Math.floor(r() * 2);
+  for (let i = 0; i < n; i++) {
+    const rad = 0.28 + r() * 0.18;
+    M.pon(new SphereGeometry(rad, 9, 6).scale(1, 0.62, 0.85).translate((i - (n - 1) / 2) * 0.32, r() * 0.08, (r() - 0.5) * 0.25), COLORES.nube, 0.97 + r() * 0.03);
+  }
+  return M.fusionar();
+}
+
+/**
+ * Colada de lava (no se pisa): las lajas del malpaís en negros y grises de basalto, sin el rojizo,
+ * para que no se confunda con el malpaís, que sí se pisa.
+ */
+export const colada = (semilla: number): BufferGeometry => lajasMalpais(semilla, [COLORES.lavaNegra, COLORES.lavaNegra, COLORES.basalto, COLORES.crater]);
+
 /** Todas las piezas del kit, por nombre. */
 export const KIT = {
   laurel,
@@ -336,8 +409,13 @@ export const KIT = {
   roca: rocaBasaltica,
   organos,
   escoria,
-  lajas: lajasMalpais,
+  lajas: (s: number) => lajasMalpais(s),
+  colada,
   muro: muroPiedra,
+  vid,
+  tunera,
+  volcan,
+  nube,
 } satisfies Record<string, (semilla: number) => BufferGeometry>;
 
 export type PiezaKit = keyof typeof KIT;
@@ -357,7 +435,12 @@ export const VARIANTES: Record<PiezaKit, number> = {
   organos: 1,
   escoria: 2,
   lajas: 3,
+  colada: 3,
   muro: 2,
+  vid: 2,
+  tunera: 2,
+  volcan: 3,
+  nube: 2,
 };
 
 /** La geometría de una variante de una pieza del kit. */
