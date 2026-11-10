@@ -35,6 +35,10 @@ agentes. El patrón viene de *Claude of Duty* (Matt Shumer, MIT).
 - **Las islas son datos:** `data/isla1.ts` (Lanzarote) y `data/la-palma.ts` (guardada para la
   6). Se generan con un borrador en Python a partir de rectángulos y caminos; el mapa manda y las
   mismas pruebas de reglas vigilan las dos.
+- **Los interiores salen de los edificios:** `data/interiores-isla1.ts` recorre los edificios
+  del mapa y, para cada puerta, genera su sala con `data/generar-interior.ts`, del tamaño de su
+  fachada y con dos plantas en las casas de balcones. Solo el nombre de la sala y quién vive en
+  ella se escriben a mano.
 
 - Sin motor de física: el mundo es una rejilla de casillas con alturas.
 - El sonido, más adelante, con Web Audio o ZzFX (MIT, menos de 1 KB).

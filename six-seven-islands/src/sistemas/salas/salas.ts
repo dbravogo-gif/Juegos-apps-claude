@@ -43,6 +43,36 @@ function mueble(M: Montaje, c: string, x: number, z: number, n: number): void {
       break;
     }
     // 'c', el mostrador, va por tramos en geometriaSala.
+    case 'e': { // escalera hacia el piso de arriba, contra la pared del fondo, con barandilla
+      for (let i = 0; i < 5; i++) M.caja(0.86, 0.2 * (i + 1), 0.2, x, y, z + 0.4 - i * 0.2, i % 2 ? COLORES.maderaSuelo : COLORES.maderaSueloOscura);
+      M.caja(0.05, 0.08, 1.04, x + 0.45, y + 1.0, z - 0.02, COLORES.balcon, 0.85);
+      for (let i = 0; i < 3; i++) M.caja(0.04, 0.95 - i * 0.05, 0.04, x + 0.45, y + 0.2 * (i * 2 + 1), z + 0.4 - i * 0.4, COLORES.balcon, 0.9);
+      break;
+    }
+    case 'j': { // juguetes delante de la escalera: no dejan subir
+      const colores = [COLORES.geranio, COLORES.toldoAzul, COLORES.fachadaAmarilla, COLORES.verdePalmera];
+      M.cajaRedonda(0.24, 0.24, 0.24, x - 0.2, y, z + 0.1, colores[n % 4], 0.04);
+      M.cajaRedonda(0.2, 0.2, 0.2, x - 0.18, y + 0.24, z + 0.12, colores[(n + 1) % 4], 0.04);
+      M.cajaRedonda(0.22, 0.22, 0.22, x + 0.12, y, z - 0.18, colores[(n + 2) % 4], 0.04);
+      M.pon(new SphereGeometry(0.15, 12, 8).translate(x + 0.22, y + 0.15, z + 0.22), colores[(n + 3) % 4]);
+      // Un osito: cuerpo, cabeza y orejas.
+      M.pon(new SphereGeometry(0.13, 10, 8).scale(1, 1.1, 0.9).translate(x + 0.2, y + 0.14, z - 0.05), COLORES.balcon, 1.2);
+      M.pon(new SphereGeometry(0.1, 10, 8).translate(x + 0.2, y + 0.36, z - 0.03), COLORES.balcon, 1.25);
+      for (const s of [-1, 1]) M.pon(new SphereGeometry(0.04, 6, 4).translate(x + 0.2 + s * 0.07, y + 0.45, z - 0.04), COLORES.balcon, 1.1);
+      break;
+    }
+    case 'n': // cocina: encimera con fogones y la puerta del horno
+      M.caja(0.88, 0.8, 0.55, x, y, z - 0.2, COLORES.cal, 0.95);
+      M.caja(0.94, 0.05, 0.61, x, y + 0.8, z - 0.2, COLORES.canteria);
+      M.caja(0.56, 0.36, 0.02, x, y + 0.18, z + 0.085, COLORES.ojo, 1.3);
+      for (const [dx, dz] of [[-0.2, -0.3], [0.2, -0.3], [-0.2, -0.1], [0.2, -0.1]]) M.pon(new CylinderGeometry(0.08, 0.08, 0.02, 12).translate(x + dx, y + 0.86, z + dz), COLORES.ojo, 1.4);
+      break;
+    case 'q': // sofá con brazos y cojín
+      M.cajaRedonda(0.86, 0.3, 0.6, x, y, z - 0.05, COLORES.toldoAzul, 0.06);
+      M.cajaRedonda(0.86, 0.45, 0.15, x, y + 0.3, z - 0.29, COLORES.toldoAzul, 0.05, 0.92);
+      for (const s of [-1, 1]) M.cajaRedonda(0.12, 0.45, 0.62, x + s * 0.47, y, z - 0.05, COLORES.toldoAzul, 0.05, 0.85);
+      M.cajaRedonda(0.3, 0.2, 0.08, x + 0.15, y + 0.34, z - 0.18, COLORES.crema, 0.04);
+      break;
     case 'k': // mesa con ordenador
       M.caja(0.85, 0.06, 0.6, x, y + 0.6, z, COLORES.balcon);
       M.caja(0.08, 0.6, 0.5, x - 0.35, y, z, COLORES.balcon, 0.85);
@@ -212,8 +242,11 @@ export function geometriaSala(sala: Mundo, id: string): BufferGeometry {
   }
   // Alfombra del museo, de la puerta a las estatuas, y un volcán en el suelo del gimnasio de Roca.
   if (id === 'museo') {
+    // La alfombra, de la puerta a las estatuas, alineada con la puerta.
+    const puerta = [...sala.casillas].find(([, c]) => c.c === 'd');
+    const px = puerta ? deClave(puerta[0])[0] : centroX;
     const largo = maxY - (minY + 3);
-    M.caja(0.8, 0.015, largo, centroX, SUELO, minY + 3 + (largo - 1) / 2, COLORES.alfombra, 0.95);
+    M.caja(0.8, 0.015, largo, px, SUELO, minY + 3 + (largo - 1) / 2, COLORES.alfombra, 0.95);
   }
   if (id === 'gimnasio') {
     const cy = (minY + maxY) / 2;

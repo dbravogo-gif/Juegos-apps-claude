@@ -37,7 +37,7 @@ z.r(2, 1, 3, 1, 'X')                                            # paso cerrado h
 z.camino([(3,2),(3,7)]); z.camino([(3,7),(21,7)]); z.camino([(9,7),(9,13)]); z.camino([(3,13),(18,13)])
 z.edificio(13, 2, 8, 4, 'M', 16, 'museo')                       # museo, arriba a la derecha
 z.edificio(4, 9, 4, 3, 'C', 5, 'casa-jugador')                  # casa del jugador
-z.edificio(11, 9, 4, 3, 'C', 12, 'casa')                        # casa vecina, igual
+z.edificio(11, 9, 4, 3, 'C', 12, 'casa-vecina')                 # casa vecina, igual
 z.p(19, 10, 'T')                                                # la palmera
 z.r(18, 12, 3, 1, 'U')                                          # tuneras
 z.r(1, 4, 1, 2, 'U'); z.r(7, 3, 4, 2, 'V')                      # unas viñas en hoyos
@@ -78,10 +78,10 @@ z.camino([(14,10),(14,20)], ancho=3)
 z.r(8, 1, 3, 1, 'X')                                            # paso a las Montañas del Fuego
 z.r(1, 1, 6, 2, 'V'); z.r(12, 1, 15, 2, 'V')                    # viñas al norte
 z.r(1, 15, 9, 6, 'V'); z.r(19, 17, 8, 4, 'V')                   # viñas al sur
-z.edificio(2, 5, 4, 3, 'C', 3, 'casa')                          # casa 1
-z.edificio(15, 4, 5, 4, 'R', 17, 'refugio')                     # refugio
-z.edificio(22, 5, 4, 3, 'S', 23, 'tienda')                      # tienda
-z.edificio(20, 12, 4, 3, 'C', 21, 'casa')                       # casa 2
+z.edificio(2, 5, 4, 3, 'C', 3, 'casa-geria-1')                  # casa 1
+z.edificio(15, 4, 5, 4, 'R', 17, 'refugio-geria')               # refugio
+z.edificio(22, 5, 4, 3, 'S', 23, 'tienda-geria')                # tienda
+z.edificio(20, 12, 4, 3, 'C', 21, 'casa-geria-2')                # casa 2
 z.camino([(17,16),(21,16)])
 z.r(10, 11, 3, 4, '.'); z.r(17, 11, 2, 4, '.')                  # la plaza
 for (x,y) in [(10,11),(12,11),(17,11),(18,11)]: z.p(x, y, 'T')  # palmeras al norte de la plaza
@@ -127,13 +127,13 @@ z.r(1, 1, 2, 3, ','); z.camino([(1,3),(1,11)], ancho=2); z.camino([(5,9),(5,11)]
 z.camino([(14,10),(14,11)]); z.camino([(15,10),(15,11)]); z.camino([(21,7),(21,11)])
 z.camino([(4,16),(4,18)]); z.camino([(10,16),(10,18)]); z.camino([(16,16),(16,18)]); z.camino([(1,18),(24,18)], ancho=2)
 z.camino([(23,11),(23,19)], ancho=2)
-z.edificio(3, 5, 5, 4, 'R', 5, 'refugio')                       # refugio
+z.edificio(3, 5, 5, 4, 'R', 5, 'refugio-capital')               # refugio
 z.r(11, 4, 8, 6, 'G'); z.p(14, 10, 'd'); z.p(15, 10, 'd')       # gimnasio, el más grande
 z.puertas += [(14, 10, 'gimnasio'), (15, 10, 'gimnasio')]
-z.edificio(3, 13, 4, 3, 'C', 4, 'casa')
-z.edificio(9, 13, 4, 3, 'C', 10, 'casa')
-z.edificio(15, 13, 4, 3, 'C', 16, 'casa')
-z.edificio(20, 4, 3, 3, 'C', 21, 'casa')
+z.edificio(3, 13, 4, 3, 'C', 4, 'casa-capital-1')
+z.edificio(9, 13, 4, 3, 'C', 10, 'casa-capital-2')
+z.edificio(15, 13, 4, 3, 'C', 16, 'casa-capital-3')
+z.edificio(20, 4, 3, 3, 'C', 21, 'casa-capital-4')
 z.r(25, 11, 6, 2, 'P'); z.r(31, 9, 2, 2, 'F'); z.r(29, 13, 2, 2, 'B')    # muelle, faro y barco
 z.r(25, 11, 1, 2, 'X')                                                  # paso al muelle, cerrado
 z.r(1, 20, 6, 1, '~')                                                    # el charco, junto a la playa

@@ -134,6 +134,10 @@ export const GUION_ISLA1: Guion = {
       },
     },
   ],
+  // La enfermera del refugio de la capital dice lo mismo que la de La Geria.
+  get 'enfermera-capital'() {
+    return GUION_ISLA1.enfermera;
+  },
   tendero: [
     {
       dialogo: {

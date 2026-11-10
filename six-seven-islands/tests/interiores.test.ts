@@ -128,9 +128,9 @@ describe('interiores de la isla 1', () => {
     const puerta = enIsla(isla, 'capital', 21, 7);
     const [px, py] = deClave(puerta);
     const e = { ...crearExploracion(isla), x: px, y: py, desdeX: px, desdeY: py, zona: 'capital' };
-    const casa = salas.get('casa')!;
-    entrar(e, 'casa', casa);
-    expect(e.dentro).toBe('casa');
+    const casa = salas.get('casa-capital-4')!;
+    entrar(e, 'casa-capital-4', casa);
+    expect(e.dentro).toBe('casa-capital-4');
     // Hacia el sur hasta la alfombra, y un paso más: se sale.
     const eventos: EventoExplorar[] = [];
     for (let i = 0; i < 4 && !eventos.some((ev) => ev.tipo === 'salida'); i++) eventos.push(...andar(casa, e, 's'));
@@ -141,8 +141,9 @@ describe('interiores de la isla 1', () => {
 
   it('en el refugio y la tienda se habla por encima del mostrador', () => {
     for (const [id, quien] of [
-      ['refugio', 'enfermera'],
-      ['tienda', 'tendero'],
+      ['refugio-geria', 'enfermera'],
+      ['refugio-capital', 'enfermera-capital'],
+      ['tienda-geria', 'tendero'],
     ]) {
       const m = salas.get(id)!;
       const k = [...m.ocupadas].find(([, o]) => o.personaje.id === quien)![0];

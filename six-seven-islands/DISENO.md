@@ -266,6 +266,10 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
 - 2026-11-10 · Combate en diagonal, como en los juegos del género: tu criatura delante a la
   izquierda, de espaldas, y la rival al fondo a la derecha. Arena aparte con dos fondos pintados
   (exterior y gimnasio) para todo el juego.
+- 2026-11-10 · Zonas de encuentros y de combates más grandes, con los mismos entrenadores
+  (`ISLA-1.md`).
+- 2026-11-10 · Un interior por edificio, generado a partir de su exterior: del tamaño de la
+  casa y, en las de dos plantas, escalera con juguetes delante que no dejan subir.
 - 2026-11-10 · Cubos de captura: la figura de Metatrón con los cinco sólidos platónicos, en
   cinco niveles por color (blanco, verde, azul, rojo y morado). Al combatir, el cubo cae, rebota
   y la criatura sale en un destello (`ARTE.md`).
