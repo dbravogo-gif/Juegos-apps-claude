@@ -4,7 +4,7 @@
 // dentro. Los muebles salen de las letras del mapa (LEYENDA) y las estatuas del museo, de sus
 // personajes. Una malla por sala. Lee «partida»; no la cambia.
 
-import { CylinderGeometry, Mesh, SphereGeometry, type BufferGeometry } from 'three/webgpu';
+import { CylinderGeometry, Mesh, PlaneGeometry, SphereGeometry, type BufferGeometry } from 'three/webgpu';
 import { attribute } from 'three/tsl';
 import { clave, deClave, type Mundo } from '../../core/mundo';
 import { MaterialDiorama } from '../../arte/material';
@@ -152,8 +152,10 @@ export function geometriaSala(sala: Mundo, id: string): BufferGeometry {
   }
   const centroX = (minX + maxX) / 2;
   const centroY = (minY + maxY) / 2;
-  // Una losa oscura bajo las tablas: por sus juntas se veía el fondo, que parpadeaba en líneas.
-  M.caja(maxX - minX + 1, 0.1, maxY - minY + 1, centroX, SUELO - 0.12, centroY, COLORES.maderaSueloOscura, 0.6);
+  // Suelo: una losa para toda la sala y, encima, un cuadrado de madera por casilla en dos tonos,
+  // sin juntas. Las tablas con rendija dejaban ver el fondo, y con fondo oscuro, rayas negras a
+  // través de cada casilla (autor, 2026-11-10).
+  M.caja(maxX - minX + 1, 0.1, maxY - minY + 1, centroX, SUELO - 0.1, centroY, COLORES.maderaSueloOscura, 0.8);
   // Paredes por tramos, lisas: un solo color, sin juntas entre casillas.
   for (const t of tramosDePared(sala)) {
     const alto = t.y0 === minY ? ALTO_PARED : t.y1 === maxY ? ALTO_DELANTE : ALTO_LADO;
@@ -180,10 +182,8 @@ export function geometriaSala(sala: Mundo, id: string): BufferGeometry {
   for (const [k, cm] of sala.casillas) {
     const [x, y] = deClave(k);
     const n = (x * 7 + y * 13) % 5;
-    // Suelo de tablas, dos por casilla, en dos tonos.
-    for (const s of [-1, 1]) {
-      M.caja(0.49, 0.1, 0.98, x + s * 0.25, SUELO - 0.1, y, (x + y + (s > 0 ? 1 : 0)) % 2 ? COLORES.maderaSuelo : COLORES.maderaSueloOscura, 0.96 + (n % 3) * 0.03);
-    }
+    // 2 mm por encima de la losa: con la misma altura, las dos caras se pelearían por el píxel.
+    M.pon(new PlaneGeometry(1, 1).rotateX(-Math.PI / 2).translate(x, SUELO + 0.002, y), (x + y) % 2 ? COLORES.maderaSuelo : COLORES.maderaSueloOscura, 0.96 + (n % 3) * 0.03);
     if (cm.c === '|') {
       if (y === minY) {
         // Ventanas en la pared del fondo, una de cada tres casillas.

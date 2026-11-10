@@ -11,14 +11,15 @@ nivel: de nota a regla, y de regla a prueba o hook.
     - Los zócalos medían 1,02 y se solapaban 2 cm con el de al lado, con las caras en el mismo
       plano.
     - El remate tenía la cara de arriba a la misma altura que la pared.
-    - Entre las tablas del suelo se veía el fondo.
+    - Entre las tablas del suelo se veía el fondo; con un fondo oscuro, salían rayas negras a
+      través de cada casilla.
     - Al mover la cámara, la GPU alterna qué cara gana en cada píxel y salen rayas que se
       desplazan.
   - Barrera:
     - lo que es una pieza seguida se hace de una pieza (`tramosDe` en `salas.ts`, con su prueba
       en `tests/juntas.test.ts`);
     - dos cajas nunca comparten una cara en el mismo plano: una sobresale al menos 1 cm;
-    - lo que tiene juntas lleva debajo un fondo oscuro.
+    - el suelo no lleva juntas: un cuadrado por casilla sobre una losa, 2 mm por encima.
   - Aparte, la sombra se mueve de texel en texel (`ajustarATexel` en `render.ts`), para que no
     «nade» cuando la cámara se desliza.
 
