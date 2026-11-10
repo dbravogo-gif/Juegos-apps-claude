@@ -24,15 +24,14 @@ Del autor, 2026-11-10. Es la «lista de reglas» a la que nos referimos al dise�
 ## Cuántas hay
 
 - **200 criaturas en 102 especies:**
-  - 28 especies de 3 formas;
+  - las 4 iniciales, de 3 formas: 12 criaturas, con estadísticas propias que pasa el autor;
+  - 24 especies de 3 formas de la lista;
   - 42 de 2 formas;
   - 20 sin evolución;
   - 12 legendarias.
-- **Las 4 iniciales** son 4 líneas de 3 formas: 12 criaturas, con estadísticas propias que
-  pasa el autor (no salen de esta lista). Las otras 188 siguen el reparto por tipos de abajo,
-  con las legendarias incluidas.
-  - **Por resolver:** la lista tiene 200 formas, no 188. Las 12 de más son las líneas 21 a 24
-    (las de las iniciales de los juegos de referencia).
+- Las 188 de la lista siguen el reparto por tipos de abajo, con las legendarias incluidas. Las
+  líneas 21 a 24 del PDF del autor (Torchic, Turtwig, Piplup y Aron) se quitaron: su sitio lo
+  ocupan las iniciales (autor, 2026-11-10).
 
 **Por tipo principal** (las 188 que no son iniciales; criaturas, no especies):
 
@@ -62,23 +61,24 @@ Planta/Veneno) e Infernal 3.
 Con Agua sin segundo tipo, Agua solo vence a Infernal y pierde contra las dos Planta;
 Planta/Mental no pierde contra ninguna (2026-11-10).
 
-**Por quintil de fuerza** (sobre las 200): Q1 42 · Q2 50 · Q3 48 · Q4 44 · Q5 16. Las 16 del
-Q5 son las 12 legendarias y las 4 formas finales más fuertes (líneas 25 a 28).
+**Por quintil de fuerza** (las 188 de la lista): Q1 42 · Q2 46 · Q3 44 · Q4 40 · Q5 16. Las 16
+del Q5 son las 12 legendarias y las 4 formas finales más fuertes (líneas 25 a 28).
 
-**Por papel:**
+**Por papel** (las 188 de la lista):
 
-- AF, atacante físico: 64;
-- AE, atacante especial: 48;
-- EN, estadísticas niveladas: 36;
-- TF, tanque físico: 32;
+- AF, atacante físico: 63;
+- AE, atacante especial: 44;
+- EN, estadísticas niveladas: 35;
+- TF, tanque físico: 26;
 - TE, tanque especial: 20.
 
 ## Lista de referencia
 
-Cada especie con sus formas en orden de evolución. La última columna se rellena al diseñar la
-especie nuestra que se enlaza con ella.
+Cada especie con sus formas en orden de evolución, con la numeración del PDF del autor (sin las
+líneas 21 a 24). La última columna se rellena al diseñar la especie nuestra que se enlaza con
+ella. El seguimiento del diseño lo lleva el autor en su Excel.
 
-### De 3 formas (28 especies, 84 criaturas)
+### De 3 formas (24 especies, 72 criaturas)
 
 | Nº | Referencia: forma (quintil, papel) | Especie nuestra |
 | --- | --- | --- |
@@ -102,10 +102,6 @@ especie nuestra que se enlaza con ella.
 | 18 | Spheal (Q1, EN) → Sealeo (Q3, EN) → Walrein (Q4, TE) |  |
 | 19 | Budew (Q1, AE) → Roselia (Q3, AE) → Roserade (Q4, AE) |  |
 | 20 | Tynamo (Q1, EN) → Eelektrik (Q3, EN) → Eelektross (Q4, EN) |  |
-| 21 | Torchic (Q2, AE) → Combusken (Q3, EN) → Blaziken (Q4, AF) | Inicial (por asignar) |
-| 22 | Turtwig (Q2, TF) → Grotle (Q3, TF) → Torterra (Q4, TF) | Inicial (por asignar) |
-| 23 | Piplup (Q2, AE) → Prinplup (Q3, AE) → Empoleon (Q4, AE) | Inicial (por asignar) |
-| 24 | Aron (Q2, TF) → Lairon (Q3, TF) → Aggron (Q4, TF) | Inicial (por asignar) |
 | 25 | Slakoth (Q1, AF) → Vigoroth (Q3, AF) → Slaking (Q5, AF) |  |
 | 26 | Bagon (Q2, AF) → Shelgon (Q3, TF) → Salamence (Q5, AF) |  |
 | 27 | Gible (Q2, AF) → Gabite (Q3, AF) → Garchomp (Q5, AF) |  |
