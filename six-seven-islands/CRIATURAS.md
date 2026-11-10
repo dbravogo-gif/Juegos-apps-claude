@@ -76,7 +76,8 @@ del Q5 son las 12 legendarias y las 4 formas finales más fuertes (líneas 25 a 
 
 Cada especie con sus formas en orden de evolución, con la numeración del PDF del autor (sin las
 líneas 21 a 24). La última columna se rellena al diseñar la especie nuestra que se enlaza con
-ella. El seguimiento del diseño lo lleva el autor en su Excel.
+ella. El seguimiento del diseño lo lleva el autor en su Excel; la plantilla vacía es
+`criaturas-plantilla.xlsx` y se rehace con `python3 herramientas/criaturas/excel.py`.
 
 ### De 3 formas (24 especies, 72 criaturas)
 
