@@ -28,9 +28,11 @@ Del autor, 2026-11-10. Es la «lista de reglas» a la que nos referimos al dise�
   - 42 de 2 formas;
   - 20 sin evolución;
   - 12 legendarias.
-- **Las 4 iniciales** son 4 líneas de 3 formas: 12 criaturas. Inferencia de Claude: son las
-  líneas 21 a 24, las únicas que van del quintil 2 al 3 y al 4. Las otras 188 siguen el
-  reparto por tipos de abajo, con las legendarias incluidas.
+- **Las 4 iniciales** son 4 líneas de 3 formas: 12 criaturas, con estadísticas propias que
+  pasa el autor (no salen de esta lista). Las otras 188 siguen el reparto por tipos de abajo,
+  con las legendarias incluidas.
+  - **Por resolver:** la lista tiene 200 formas, no 188. Las 12 de más son las líneas 21 a 24
+    (las de las iniciales de los juegos de referencia).
 
 **Por tipo principal** (las 188 que no son iniciales; criaturas, no especies):
 
@@ -45,8 +47,20 @@ Del autor, 2026-11-10. Es la «lista de reglas» a la que nos referimos al dise�
 | Hielo | 8 | Bicho | 16 |
 | Infernal | 16 | Veneno | 12 |
 
-Las iniciales suman aparte: Agua, Planta e Infernal, 3 criaturas cada una, y la cuarta, de
-tipo por decidir.
+Las iniciales suman aparte, por tipo principal: Agua 3, Planta 6 (Planta/Mental y
+Planta/Veneno) e Infernal 3.
+
+**Enfrentamientos de las iniciales** (mejor ataque de su tipo; formas con los dos tipos):
+
+| Ataca ↓ a → | Agua | Planta/Mental | Infernal | Planta/Veneno |
+| --- | --- | --- | --- | --- |
+| Agua | — | ×½ | ×2 | ×½ |
+| Planta/Mental | ×2 | — | ×2 | ×2 |
+| Infernal | ×½ | ×2 | — | ×2 |
+| Planta/Veneno | ×2 | ×2 | ×1 | — |
+
+Con Agua sin segundo tipo, Agua solo vence a Infernal y pierde contra las dos Planta;
+Planta/Mental no pierde contra ninguna (2026-11-10).
 
 **Por quintil de fuerza** (sobre las 200): Q1 42 · Q2 50 · Q3 48 · Q4 44 · Q5 16. Las 16 del
 Q5 son las 12 legendarias y las 4 formas finales más fuertes (líneas 25 a 28).

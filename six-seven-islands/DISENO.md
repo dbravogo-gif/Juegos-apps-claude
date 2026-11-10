@@ -107,11 +107,15 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
   - y, más adelante, 2 salas pequeñas exclusivas.
 
   Todo lo demás es común.
-- **Las iniciales:** serán 4 (autor, 2026-11-10): Agua, Planta e Infernal, todas con líneas de
-  3 formas, y una cuarta por decidir. Las tres primeras forman en la tabla un triángulo perfecto:
-  cada una vence a otra y resiste a la tercera. La historia de la cuarta se hace con el autor.
-  - Conceptos del autor en `conceptos/`: Agua, un cocodrilo excursionista que acaba en hielo;
-    Planta, un lagarto con setas que acaba en chamán; Infernal, un elefante de orejas de fuego
+- **Las iniciales:** serán 4, todas con líneas de 3 formas (autor, 2026-11-10):
+  - Agua, que no acaba en Hielo;
+  - Planta/Mental;
+  - Infernal;
+  - la cuarta, Planta/Veneno. Su historia se hace con el autor.
+  - Sus estadísticas son propias: las pasa el autor, no salen de la lista de `CRIATURAS.md`.
+  - Enfrentamientos con la tabla real, en `CRIATURAS.md`.
+  - Conceptos del autor en `conceptos/`: Agua, un cocodrilo excursionista; Planta, un lagarto
+    con setas que acaba en chamán; Infernal, un elefante de orejas de fuego
     que acaba en mamut acorazado.
   - Los segundos tipos los elige el autor, cuidando que no rompan el equilibrio (2026-11-10).
 - **Las otras iniciales se consiguen intercambiando con amigos.**
