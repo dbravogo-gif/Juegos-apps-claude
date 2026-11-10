@@ -37,7 +37,8 @@ function mueble(M: Montaje, c: string, x: number, z: number, n: number): void {
       M.cajaRedonda(0.9, 1.5, 0.4, x, y, z - 0.25, COLORES.balcon, 0.03);
       const libros = [COLORES.toldoAzul, COLORES.geranio, COLORES.verdePalmera, COLORES.fachadaOcre, COLORES.crema];
       for (let fila = 0; fila < 3; fila++) {
-        for (let i = 0; i < 5; i++) M.caja(0.13, 0.28, 0.3, x - 0.32 + i * 0.16, y + 0.12 + fila * 0.46, z - 0.2, libros[(i + fila + n) % libros.length]);
+        // Los libros asoman 3 cm: con el lomo a ras del mueble, titilaban (autor, 2026-11-10).
+        for (let i = 0; i < 5; i++) M.caja(0.13, 0.28, 0.3, x - 0.32 + i * 0.16, y + 0.12 + fila * 0.46, z - 0.17, libros[(i + fila + n) % libros.length]);
       }
       break;
     }
@@ -176,7 +177,7 @@ export function geometriaSala(sala: Mundo, id: string): BufferGeometry {
     M.caja(an, alto, fo, cx, SUELO, cz, COLORES.cal);
     // El zócalo sobresale solo hacia los lados de la pared; en las columnas se queda 1 cm corto
     // por cada punta para no solaparse con el de la fila en la esquina.
-    if (alto > ALTO_DELANTE) M.caja(fila ? an : 1.02, 0.45, fila ? 1.02 : fo - 0.02, cx, SUELO, cz, COLORES.zocaloOcre);
+    if (alto > ALTO_DELANTE) M.caja(fila ? an - 0.02 : 1.02, 0.45, fila ? 1.02 : fo - 0.02, cx, SUELO, cz, COLORES.zocaloOcre);
     // El remate, 1 cm más alto que la pared: con la cara de arriba a la misma altura, las dos
     // se peleaban por cada píxel.
     if (t.y0 === minY && fila) M.caja(an + 0.02, 0.13, 1.02, cx, SUELO + alto - 0.12, cz, COLORES.balcon);
@@ -199,7 +200,7 @@ export function geometriaSala(sala: Mundo, id: string): BufferGeometry {
         if ((x - minX) % 3 === 2 && x < maxX) {
           M.caja(0.62, 0.72, 0.06, x, SUELO + 0.95, y + 0.5, COLORES.canteria);
           M.caja(0.5, 0.6, 0.08, x, SUELO + 1.01, y + 0.5, COLORES.cristal);
-          M.caja(0.035, 0.6, 0.1, x, SUELO + 1.01, y + 0.5, COLORES.carpinteriaVerde);
+          M.caja(0.035, 0.58, 0.1, x, SUELO + 1.02, y + 0.5, COLORES.carpinteriaVerde);
         }
       }
     } else if (cm.c === 'd') {

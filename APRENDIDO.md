@@ -22,6 +22,14 @@ nivel: de nota a regla, y de regla a prueba o hook.
     - el suelo no lleva juntas: un cuadrado por casilla sobre una losa, 2 mm por encima.
   - Aparte, la sombra se mueve de texel en texel (`ajustarATexel` en `render.ts`), para que no
     «nade» cuando la cámara se desliza.
+  - **Se repitió el mismo día:**
+    - el charco verde, a la altura del mar, se veía azul;
+    - los libros de las estanterías titilaban;
+    - en las ventanas, las caras de los barrotes coincidían con las del cristal;
+    - en las azoteas, las esquinas de los pretiles se solapaban.
+  - **La barrera sube a prueba:** `tests/coplanares.test.ts` busca caras solapadas en el mismo
+    plano en todas las salas, las casas y el faro (`tests/utiles/coplanares.ts`). Una pieza nueva
+    hecha con cajas entra en esa prueba.
 
 - **2026-11-08 · La azotea del gimnasio salía casi blanca y sin su sol pintado** (kit canario
   de Six-seven islands).

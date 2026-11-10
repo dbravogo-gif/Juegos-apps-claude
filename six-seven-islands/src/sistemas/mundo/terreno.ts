@@ -63,7 +63,9 @@ export function alturaCara(cm: CasillaMundo | undefined, cumbre: number | undefi
     case 'B':
       return -0.7;
     case 'w':
-      return alturaSuelo(cm.h) - 0.25;
+      // 10 cm por encima del mar, que va bajo toda la isla: a la misma altura, el azul del mar y el
+      // verde del charco se peleaban por cada píxel (autor, 2026-11-10).
+      return alturaSuelo(cm.h) - 0.15;
     case '#':
       return alturaSuelo(cm.h) + 0.9;
     case '"':

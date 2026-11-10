@@ -1,8 +1,8 @@
 // Diálogos de la isla 1, Lanzarote, por id de personaje (src/core/guion.ts). Contenido propio.
-// Las cuatro leyendas forman un ciclo (autor, 2026-11-10): el agua desgasta la roca, la roca
-// sepulta el fuego, el fuego quema lo verde y lo verde le roba el agua a la isla. La historia de
-// la leyenda de roca es provisional: se escribe con el autor. Los personajes sin diálogo aquí
-// dicen su `frase` del mapa.
+// Las cuatro leyendas tienen su rival (autor, 2026-11-10): la verde, la infernal; la del agua, la
+// verde; la infernal, la del agua; y la de roca, la verde, cuyas raíces parten la piedra. La
+// historia de la leyenda de roca es provisional: se escribe con el autor. Los personajes sin
+// diálogo aquí dicen su `frase` del mapa.
 
 import type { Dialogo, Guion, Linea } from '../core/guion';
 
@@ -28,7 +28,7 @@ const HISTORIA: Record<string, readonly Linea[]> = {
   roca: [
     { texto: 'Una placa dice: «La leyenda de roca dormía en el risco del norte, el acantilado más alto de la isla».' },
     { texto: '«Cuando una colada bajaba hacia los pueblos, se ponía delante y la sepultaba bajo su caparazón de piedra».' },
-    { texto: '«Su rival fue la leyenda del agua, que con siglos de olas le fue robando la piedra grano a grano».' },
+    { texto: '«Su rival fue la leyenda verde, que metía sus raíces en las grietas de la roca hasta partirla».' },
   ],
 };
 
