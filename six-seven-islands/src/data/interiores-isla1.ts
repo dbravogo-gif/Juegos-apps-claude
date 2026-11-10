@@ -11,7 +11,7 @@ export const SALA_INICIAL = 'casa-jugador';
 export const INTERIORES_ISLA1: readonly DefInterior[] = [
   {
     id: 'museo',
-    nombre: 'Museo de las tres leyendas',
+    nombre: 'Museo de las cuatro leyendas',
     mapa: [
       '|||||||||||',
       '|mmmmmmmmm|',
@@ -23,9 +23,11 @@ export const INTERIORES_ISLA1: readonly DefInterior[] = [
       '|||||d|||||',
     ],
     personajes: [
+      // Cuatro pedestales, uno por inicial (autor, 2026-11-10).
       { id: 'estatua-planta', x: 2, y: 2, mira: 's' },
-      { id: 'estatua-agua', x: 5, y: 2, mira: 's' },
-      { id: 'estatua-infernal', x: 8, y: 2, mira: 's' },
+      { id: 'estatua-agua', x: 4, y: 2, mira: 's' },
+      { id: 'estatua-infernal', x: 6, y: 2, mira: 's' },
+      { id: 'estatua-roca', x: 8, y: 2, mira: 's' },
       { id: 'doctora', x: 5, y: 4, mira: 's' },
       { id: 'informatica', x: 2, y: 4, mira: 'o' },
     ],

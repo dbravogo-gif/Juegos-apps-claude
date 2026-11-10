@@ -15,7 +15,7 @@ import { NOMBRE_OBJETO, OBJETIVOS } from '../../data/textos-isla1';
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Entrada } from '../entrada/entrada';
 
-export type Modo = 'explorar' | 'dialogo' | 'fundido';
+export type Modo = 'explorar' | 'dialogo' | 'fundido' | 'combate';
 
 /** Pasos fijos de cada mitad del fundido al cruzar una puerta: 0,2 s a negro y 0,2 s de vuelta. */
 export const PASOS_FUNDIDO = 12;

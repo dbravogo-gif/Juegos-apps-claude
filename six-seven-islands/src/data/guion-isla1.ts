@@ -1,6 +1,8 @@
 // Diálogos de la isla 1, Lanzarote, por id de personaje (src/core/guion.ts). Contenido propio.
-// Las tres leyendas forman un triángulo: el agua apaga el fuego, el fuego quema lo verde y lo
-// verde le roba el agua a la isla. Los personajes sin diálogo aquí dicen su `frase` del mapa.
+// Las cuatro leyendas forman un ciclo (autor, 2026-11-10): el agua desgasta la roca, la roca
+// sepulta el fuego, el fuego quema lo verde y lo verde le roba el agua a la isla. La historia de
+// la leyenda de roca es provisional: se escribe con el autor. Los personajes sin diálogo aquí
+// dicen su `frase` del mapa.
 
 import type { Dialogo, Guion, Linea } from '../core/guion';
 
@@ -23,9 +25,14 @@ const HISTORIA: Record<string, readonly Linea[]> = {
     { texto: '«Durante seis años hizo arder la isla y la hizo crecer hacia el mar».' },
     { texto: '«Su enemiga fue la leyenda del agua, que enfriaba su lava antes de llegar a la costa».' },
   ],
+  roca: [
+    { texto: 'Una placa dice: «La leyenda de roca dormía en el risco del norte, el acantilado más alto de la isla».' },
+    { texto: '«Cuando una colada bajaba hacia los pueblos, se ponía delante y la sepultaba bajo su caparazón de piedra».' },
+    { texto: '«Su rival fue la leyenda del agua, que con siglos de olas le fue robando la piedra grano a grano».' },
+  ],
 };
 
-const NOMBRE_TIPO: Record<string, string> = { planta: 'Planta', agua: 'Agua', infernal: 'Infernal' };
+const NOMBRE_TIPO: Record<string, string> = { planta: 'Planta', agua: 'Agua', infernal: 'Infernal', roca: 'Roca' };
 
 /** La estatua: su historia y, mientras no se haya elegido, la pregunta para elegirla. */
 function estatua(tipo: string): Guion[string] {
@@ -47,13 +54,14 @@ const ABUELA: Record<string, string> = {
   planta: 'Su abuela, la leyenda verde, tardó siglos en confiar en la gente. Solo respetaba a quien cavaba un hoyo en el picón y plantaba una vid.',
   agua: 'Su abuela, la leyenda del agua, solo visitaba a quien cuidaba cada gota. A quien la malgastaba, no le volvía a hablar.',
   infernal: 'Su abuela, la leyenda infernal, era orgullosa como el volcán. Solo respetaba a quien no huía cuando la tierra temblaba.',
+  roca: 'Su abuela, la leyenda de roca, era terca como el risco. Solo se movía por quien tenía paciencia para esperarla.',
 };
 
 function anciano(tipo: string | undefined): Dialogo {
   return {
     lineas: [
       { quien: 'Anciano', texto: 'Esa criatura no te hace caso, ¿verdad? Siéntate, que te cuento su historia.' },
-      { quien: 'Anciano', texto: tipo ? ABUELA[tipo] : 'Las tres leyendas eran orgullosas. Ninguna obedecía a quien no la conocía.' },
+      { quien: 'Anciano', texto: tipo ? ABUELA[tipo] : 'Las cuatro leyendas eran orgullosas. Ninguna obedecía a quien no la conocía.' },
       { quien: 'Anciano', texto: 'Háblale de lo que te importa. Verás como poco a poco te escucha.' },
       { texto: 'Tu compañera te mira de otra manera. Ahora sí te hace caso.' },
     ],
@@ -67,8 +75,8 @@ export const GUION_ISLA1: Guion = {
       sin: 'inicial-elegida',
       dialogo: {
         lineas: [
-          { quien: DOCTORA, texto: '¡Por fin llegas! Soy la doctora del museo de las tres leyendas.' },
-          { quien: DOCTORA, texto: 'Hace siglos, tres criaturas protegieron esta isla. Hoy sus descendientes esperan a alguien que las acompañe.' },
+          { quien: DOCTORA, texto: '¡Por fin llegas! Soy la doctora del museo de las cuatro leyendas.' },
+          { quien: DOCTORA, texto: 'Hace siglos, cuatro criaturas protegieron esta isla. Hoy sus descendientes esperan a alguien que las acompañe.' },
           { quien: DOCTORA, texto: 'Acércate a las estatuas, lee su historia y elige con cuál quieres empezar. Tómate tu tiempo.' },
         ],
       },
@@ -82,6 +90,7 @@ export const GUION_ISLA1: Guion = {
   'estatua-planta': estatua('planta'),
   'estatua-agua': estatua('agua'),
   'estatua-infernal': estatua('infernal'),
+  'estatua-roca': estatua('roca'),
   informatica: [
     {
       sin: 'inicial-elegida',
@@ -160,6 +169,7 @@ export const GUION_ISLA1: Guion = {
     { inicial: 'planta', dialogo: anciano('planta') },
     { inicial: 'agua', dialogo: anciano('agua') },
     { inicial: 'infernal', dialogo: anciano('infernal') },
+    { inicial: 'roca', dialogo: anciano('roca') },
     { dialogo: anciano(undefined) },
   ],
 };

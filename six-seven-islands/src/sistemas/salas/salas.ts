@@ -4,7 +4,8 @@
 // dentro. Los muebles salen de las letras del mapa (LEYENDA) y las estatuas del museo, de sus
 // personajes. Una malla por sala. Lee «partida»; no la cambia.
 
-import { CylinderGeometry, Mesh, PlaneGeometry, SphereGeometry, type BufferGeometry } from 'three/webgpu';
+import { CylinderGeometry, Mesh, PlaneGeometry, SphereGeometry, type BufferGeometry, type Object3D } from 'three/webgpu';
+import { MODELO_INICIAL, figuraCriatura } from '../../arte/criaturas3d';
 import { attribute } from 'three/tsl';
 import { clave, deClave, type Mundo } from '../../core/mundo';
 import { MaterialDiorama } from '../../arte/material';
@@ -62,13 +63,21 @@ function mueble(M: Montaje, c: string, x: number, z: number, n: number): void {
   }
 }
 
-/** Estatua provisional de una inicial: pedestal de cantería, figura de piedra y adornos de su tipo. */
+/** Alto del pedestal de las estatuas del museo. */
+const PEDESTAL = 0.55;
+
+/**
+ * Estatua de una inicial: pedestal de cantería con una placa de su color. Encima va su modelo en
+ * piedra (`Salas`); si su inicial aún no tiene modelo, una figura provisional con los adornos de
+ * su tipo.
+ */
 function estatua(M: Montaje, tipo: string, x: number, z: number): void {
   const y = SUELO;
   const color = hex(COLOR_CRIATURA[tipo as keyof typeof COLOR_CRIATURA] ?? 0x888888);
-  M.cajaRedonda(0.84, 0.55, 0.84, x, y, z, COLORES.canteria, 0.06);
+  M.cajaRedonda(0.84, PEDESTAL, 0.84, x, y, z, COLORES.canteria, 0.06);
   M.caja(0.42, 0.16, 0.04, x, y + 0.2, z + 0.43, color);
-  const base = y + 0.55;
+  if (MODELO_INICIAL[tipo]) return;
+  const base = y + PEDESTAL;
   M.pon(abollar(new SphereGeometry(0.32, 12, 9), 0.06, 3).scale(1, 1.05, 0.9).translate(x, base + 0.32, z), COLORES.piedraEstatua);
   M.pon(abollar(new SphereGeometry(0.24, 12, 9), 0.05, 4).translate(x, base + 0.78, z + 0.04), COLORES.piedraEstatua, 1.04);
   if (tipo === 'planta') {
@@ -223,18 +232,34 @@ export class Salas implements Subsistema {
   static readonly deps: readonly string[] = ['render', 'partida'];
 
   private mallas: Mesh[] = [];
+  private estatuas: Object3D[] = [];
   private material!: MaterialDiorama;
 
-  init(ctx: Ctx): void {
+  async init(ctx: Ctx): Promise<void> {
     const partida = ctx.get<Partida>('partida');
     this.material = new MaterialDiorama({ bordes: [-0.1, 0.4], especular: 0.06, rebote: 0.12 }, attribute('color', 'vec3'));
+    const cargas: Promise<void>[] = [];
     for (const [id, sala] of partida.interiores) {
       const malla = new Mesh(geometriaSala(sala, id), this.material);
       malla.castShadow = true;
       malla.receiveShadow = true;
       ctx.escena.add(malla);
       this.mallas.push(malla);
+      // Las estatuas: el modelo de cada inicial, en piedra, sobre su pedestal.
+      for (const [k, { personaje }] of sala.ocupadas) {
+        const modelo = personaje.id.startsWith('estatua-') ? MODELO_INICIAL[personaje.id.slice(8)] : undefined;
+        if (!modelo) continue;
+        const [x, y] = deClave(k);
+        cargas.push(
+          figuraCriatura(modelo, 'piedra', 0.8).then((f) => {
+            f.position.set(x, SUELO + PEDESTAL, y);
+            ctx.escena.add(f);
+            this.estatuas.push(f);
+          }),
+        );
+      }
     }
+    await Promise.all(cargas);
   }
 
   dispose(): void {
@@ -242,6 +267,7 @@ export class Salas implements Subsistema {
       m.removeFromParent();
       m.geometry.dispose();
     }
+    for (const e of this.estatuas) e.removeFromParent();
     this.material.dispose();
   }
 }
