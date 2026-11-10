@@ -1,6 +1,7 @@
 // Subsistema «catalogo»: enseña las piezas propias en fila, con la luz y la cámara del juego, para
 // revisarlas de cerca y compararlas (ARTE.md, «Modelos del mundo»). No forma parte del juego.
-// Se abre con ?catalogo (plantas, rocas y muro) o ?catalogo=edificios (casas, casonas y faro).
+// Se abre con ?catalogo (plantas, rocas y muro) o ?catalogo=edificios (casas, casonas y faro;
+// primero los de Lanzarote, después los de La Palma).
 // Teclas: ← → acercan la cámara a cada pieza; Esc vuelve a verlas todas. ?pieza=N empieza en la N.
 
 import { Box3, Mesh, Vector3, type BufferGeometry } from 'three/webgpu';
@@ -43,16 +44,20 @@ const NATURALEZA = (): Muestra[][] => [
 const EDIFICIOS = (): Muestra[][] => [
   [
     { nombre: 'Casa lanzaroteña', geometria: casaCanaria({ estilo: 'lanzarote', ancho: 4, fondo: 3, puerta: -0.5, semilla: 4 }) },
-    { nombre: 'Casa rural', geometria: casaCanaria({ estilo: 'rural', ancho: 4, fondo: 3, puerta: -0.5, semilla: 3 }) },
-    { nombre: 'Tienda', geometria: casaCanaria({ estilo: 'rural', uso: 'tienda', ancho: 4, fondo: 3, puerta: -0.5, semilla: 8 }) },
-    { nombre: 'Refugio', geometria: casaCanaria({ estilo: 'rural', uso: 'refugio', ancho: 5, fondo: 4, semilla: 5 }) },
+    { nombre: 'Tienda (Lanzarote)', geometria: casaCanaria({ estilo: 'lanzarote', uso: 'tienda', ancho: 4, fondo: 3, puerta: -0.5, semilla: 8 }) },
+    { nombre: 'Refugio (Lanzarote)', geometria: casaCanaria({ estilo: 'lanzarote', uso: 'refugio', ancho: 5, fondo: 4, semilla: 5 }) },
+    { nombre: 'Casa blanca de balcones', geometria: casaCanaria({ estilo: 'balcones', blanca: true, ancho: 4, fondo: 3, puerta: -0.5, semilla: 2 }) },
     { nombre: 'Faro', geometria: faro() },
   ],
   [
-    { nombre: 'Casa de balcones con teja', geometria: casaCanaria({ estilo: 'balcones', techo: 'teja', ancho: 4, fondo: 3, puerta: -0.5, semilla: 1 }) },
-    { nombre: 'Casa de balcones con azotea', geometria: casaCanaria({ estilo: 'balcones', techo: 'azotea', ancho: 4, fondo: 3, puerta: 0.5, semilla: 2 }) },
-    { nombre: 'Museo (provisional)', geometria: casaCanaria({ estilo: 'balcones', uso: 'museo', techo: 'teja', ancho: 8, fondo: 4, puerta: 0.5, semilla: 21 }) },
+    { nombre: 'Museo (provisional)', geometria: casaCanaria({ estilo: 'lanzarote', uso: 'museo', techo: 'teja', ancho: 8, fondo: 4, puerta: 0.5, semilla: 21 }) },
     { nombre: 'Gimnasio de Roca (provisional)', geometria: casaCanaria({ estilo: 'balcones', blanca: true, emblema: 'volcan', uso: 'gimnasio', techo: 'azotea', ancho: 8, fondo: 6, puerta: 0.5, semilla: 34 }) },
+  ],
+  [
+    { nombre: 'Casa rural (La Palma)', geometria: casaCanaria({ estilo: 'rural', ancho: 4, fondo: 3, puerta: -0.5, semilla: 3 }) },
+    { nombre: 'Balcones con teja (La Palma)', geometria: casaCanaria({ estilo: 'balcones', techo: 'teja', ancho: 4, fondo: 3, puerta: -0.5, semilla: 1 }) },
+    { nombre: 'Balcones con azotea (La Palma)', geometria: casaCanaria({ estilo: 'balcones', techo: 'azotea', ancho: 4, fondo: 3, puerta: 0.5, semilla: 2 }) },
+    { nombre: 'Museo rural (La Palma)', geometria: casaCanaria({ estilo: 'rural', uso: 'museo', techo: 'teja', ancho: 8, fondo: 4, puerta: 0.5, semilla: 21 }) },
   ],
 ];
 

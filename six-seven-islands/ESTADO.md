@@ -1,6 +1,6 @@
 # Estado de Six-seven islands
 
-Actualizado: 2026-11-08. Solo el presente; el historial está en git. Máximo 40 líneas.
+Actualizado: 2026-11-10. Solo el presente; el historial está en git. Máximo 40 líneas.
 
 ## Fase actual
 
@@ -22,8 +22,8 @@ código y la tabla de tipos C. La Palma, guardada para la 6. Las criaturas, con 
 
 ## Siguiente
 
-1. Isla 1, Lanzarote (`ISLA-1.md`): mapa, interiores y diálogos hechos. Siguen encuentros,
-   combate y captura.
+1. Isla 1, Lanzarote (`ISLA-1.md`): mapa, interiores y diálogos hechos, con los arreglos del
+   probador (2026-11-10). Siguen encuentros, combate y captura.
 2. En paralelo, arte con Meshy (`prompts-meshy.md`): criaturas y edificios singulares.
 
 ## Pendiente del autor
@@ -35,5 +35,7 @@ código y la tabla de tipos C. La Palma, guardada para la 6. Las criaturas, con 
 ## Defectos conocidos
 
 - Solo ordenador desde 2026-11-08: falta medir los FPS en los PC del autor y sus amigos.
-- Del probador (F05): el camino de la capital pasa detrás del gimnasio.
+- La Palma: el camino de su capital pasa detrás del gimnasio (en Lanzarote ya va por delante).
+- En la caldera de las Montañas del Fuego, `mundo` gasta más de su reparto de llamadas
+  (`ARCHITECTURE.md`).
 - Las estatuas del museo y los personajes son provisionales (Meshy y F12).

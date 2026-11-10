@@ -33,6 +33,8 @@ export const LEYENDA = {
   U: 'tunera',
   L: 'colada de lava',
   w: 'charco verde',
+  a: 'arena de playa',
+  Q: 'cono volcánico',
   // Interiores: salas pequeñas aparte (ISLA-1.md, «Decisiones técnicas»).
   m: 'suelo',
   '|': 'pared',
@@ -47,7 +49,7 @@ export const LEYENDA = {
 export type Casilla = keyof typeof LEYENDA;
 
 /** Se pueden pisar. Las X también, cuando su condición se cumple. */
-export const TRANSITABLES: ReadonlySet<string> = new Set(['.', ',', ':', '_', '"', ';', 'd', 'P', 'm']);
+export const TRANSITABLES: ReadonlySet<string> = new Set(['.', ',', ':', '_', '"', ';', 'a', 'd', 'P', 'm']);
 /** Muebles de los interiores: no se pisan y se dibujan como piezas. */
 export const MUEBLES: ReadonlySet<string> = new Set(['o', 'h', 'c', 'k', 'l', 'v']);
 /** Terreno de encuentros: la hierba alta y el malpaís (y, más adelante, las dunas). */
@@ -101,6 +103,8 @@ export interface DefZona {
   arboles?: 'palmera' | 'laurel';
   /** Qué crece entre sus rocas: secano (por defecto), humedad o volcán. */
   flora?: 'seca' | 'humeda' | 'volcan';
+  /** Colores propios del suelo de la zona, por letra; mandan sobre los de la isla. */
+  suelo?: Partial<Record<string, string>>;
 }
 
 /** Estilos de casa canaria: rural de teja, de balcones, o la blanca de azotea de Lanzarote. */
@@ -113,8 +117,8 @@ export interface DefIsla {
   inicio: { zona: string; x: number; y: number };
   /** El tipo de su gimnasio (decide el emblema pintado en la azotea). */
   gimnasio?: string;
-  /** Colores propios de la isla: suelo por letra y las cumbres del centro. */
-  colores?: { suelo?: Partial<Record<string, string>>; cumbre?: string; ladoCumbre?: string };
+  /** Colores propios de la isla: suelo por letra, las cumbres del centro y las matas de la hierba alta. */
+  colores?: { suelo?: Partial<Record<string, string>>; cumbre?: string; ladoCumbre?: string; matas?: string };
 }
 
 export interface CasillaMundo {

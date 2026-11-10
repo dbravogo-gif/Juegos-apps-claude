@@ -89,7 +89,10 @@ Se revisan de cerca en `?catalogo` (plantas, rocas y muro) y `?catalogo=edificio
 - **Casas** (`canario.ts`):
   - **Lanzarote** (zona inicial y La Geria de la isla 1): blanca, de una planta, lisa, con zócalo
     y carpintería verde o azul, azotea con pretil y la chimenea redonda con su sombrerete.
-  - **De balcones blanca** (capital de la isla 1): como la de balcones, con la fachada de cal.
+  - **De balcones blanca** (capital de la isla 1): como la de balcones, con la fachada de cal,
+    sin cantería en las esquinas y siempre con azotea. En Lanzarote no hay teja.
+  - Las azoteas de Lanzarote son blancas (`azoteaBlanca`), algo más grises que el pretil para
+    que se lea su forma.
   - **Rural** (La Palma: zona inicial y pueblo): blanca, de una planta, con muros redondeados, zócalo,
     cantería en las esquinas, carpintería verde, azul o de madera, contraventanas, macetas con
     geranios y tejado de teja curva, a veces con chimenea.
@@ -97,7 +100,8 @@ Se revisan de cerca en `?catalogo` (plantas, rocas y muro) y `?catalogo=edificio
     tejadillo. La mitad lleva teja y la otra mitad azotea con pretil, cuarto y depósito.
   - El refugio lleva puerta y letrero coral. La tienda, toldo a rayas azules y cajas.
   - **Provisionales hasta que el autor los haga con Meshy:**
-    - el museo, una casa de una planta del estilo de su zona, con letrero;
+    - el museo, una casa de una planta del estilo de su zona, con un pórtico de cuatro
+      columnas de cantería y frontón delante de la puerta;
     - el gimnasio, una casona de balcones con azotea y el emblema de su tipo pintado arriba: un
       volcán en el de Roca de Lanzarote (un sol en el de La Palma, por decidir);
     - el faro, una torre blanca con dos bandas rojas.
@@ -116,10 +120,19 @@ Se revisan de cerca en `?catalogo` (plantas, rocas y muro) y `?catalogo=edificio
   - **De aquí en adelante, como mucho 4 plantas nuevas** (autor, 2026-11-10).
 - **Rocas y muros:** roca basáltica, órganos de basalto, escoria roja, lajas del malpaís y muro
   de piedra seca.
-- **Coladas de lava** (no se pisan): lajas altas en negros y grises. El malpaís, que sí se pisa,
-  es rojizo: así no se confunden.
+- **Coladas de lava** (no se pisan): lajas altas en negros y grises, sobre un escalón alto. El
+  malpaís, que sí se pisa, es rojizo y de lajas bajas: así no se confunden (probador,
+  2026-11-10).
+- **Conos volcánicos** (`Q` en el mapa): cada grupo de casillas es un volcán a su medida, que
+  sale de entre las coladas de las Montañas del Fuego.
+- **Suelos de Lanzarote:** jable gris claro; playa dorada (`a`) con guijarros; picón negro en La
+  Geria; en las Montañas del Fuego, el picón y la tierra con manchas negras, óxido y ocre, como
+  en Timanfaya. Bajo una planta, el suelo es el de alrededor.
+- **Objetos del suelo:** un frasco que flota y gira hasta que se recoge.
+- **Silueta del jugador** cuando algo lo tapa: coral, que se ve sobre la cal y sobre el picón.
 - **Charco verde** de El Golfo: agua verde, más alta que el mar.
-- **Volcanes** en las cumbres y **nubes**, por código: el paisaje ya no usa KayKit.
+- **Volcanes** en las cumbres (pequeños, juntos y a más de tres casillas de las zonas) y
+  **nubes** solo sobre el mar del norte, para que no tapen: el paisaje ya no usa KayKit.
 - **Luz sobre lo horizontal:** arriba les da el sol y el relleno, y los colores claros se queman
   hasta casi blanco. Azoteas y suelos llevan colores medios (`azotea`, `solPintado`).
 - **De KayKit** (CC0, Kay Lousberg; `CREDITS.md`) solo quedan las personas, sin armas, a 1,25

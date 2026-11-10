@@ -218,5 +218,14 @@ y `?semilla=n`. Mientras exista la vitrina de F04: `?vista=combate|todas|explora
   - Lo que más pesa en triángulos son los laureles (300 cada uno) y las plataneras: la primera
     rebaja sería una variante ligera para el interior del bosque, que solo enseña la copa.
   - No está medido por subsistema.
+- **Medido en Lanzarote** (2026-11-10, calidad media, con conos, coladas altas y guijarros):
+  - el peor punto es la caldera de las Montañas del Fuego, con 250 llamadas y 295.000
+    triángulos: es lo que más lajas de colada ve a la vez;
+  - La Geria, 191 llamadas y 283.000 triángulos (las viñas);
+  - la zona inicial, 92 llamadas y 82.000 triángulos.
+  - Los volcanes de las cumbres y las nubes van en trozos de 48 casillas, no de 12: están
+    lejos y dispersos, y así cuestan pocas llamadas.
+  - Queda por debajo del tope de 300, pero el reparto de `mundo` (≤ 160) se supera en la
+    caldera. La primera rebaja sería una colada más ligera (menos lajas por casilla).
 
 Ningún subsistema supera su parte sin documentarlo aquí.

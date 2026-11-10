@@ -3,12 +3,13 @@
 // y nubes). Cada isla elige sus estilos por zona (casas, árboles y flora) y sus colores. Lee el
 // estado de «partida» para abrir los pasos y quitar los objetos recogidos; no lo cambia.
 
-import { BoxGeometry, InstancedMesh, Matrix4, Mesh, PlaneGeometry, Quaternion, SphereGeometry, Vector3, type BufferGeometry, type Material } from 'three/webgpu';
+import { BoxGeometry, CylinderGeometry, InstancedMesh, Matrix4, Mesh, PlaneGeometry, Quaternion, SphereGeometry, Vector3, type BufferGeometry, type Material } from 'three/webgpu';
 import { attribute } from 'three/tsl';
-import { TRANSITABLES, clave, deClave, edificios, type Casilla, type DefZona } from '../../core/mundo';
+import { TRANSITABLES, clave, deClave, edificios, type Casilla, type DefZona, type Mundo as MundoLogico } from '../../core/mundo';
 import { MaterialDiorama, sueloY } from '../../arte/material';
 import { COLORES } from '../../arte/paleta';
 import { NIVEL_MAR, alturaSuelo } from '../../arte/escala';
+import { Montaje } from '../../arte/montaje';
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Partida } from '../partida/partida';
 import { alturaCara, cumbres, decoracion, geometriaTerreno, pseudo } from './terreno';
@@ -17,6 +18,45 @@ import { VARIANTES, piezaKit, type PiezaKit } from './kit';
 
 const OCULTA = new Matrix4().makeScale(0, 0, 0);
 const TROZO = 12;
+/** Trozo de lo que está lejos y disperso (volcanes de las cumbres y nubes): menos llamadas de dibujo. */
+const TROZO_GRANDE = 48;
+/** Radio de arriba del cono del volcán del kit, sobre 1 de abajo (kit.ts). */
+const BOCA_VOLCAN = 0.32;
+
+/** Grupos de casillas contiguas con la misma letra (por ejemplo, cada cono volcánico). */
+function gruposDe(m: MundoLogico, letra: Casilla): number[][] {
+  const vistos = new Set<number>();
+  const res: number[][] = [];
+  for (const [k, cm] of m.casillas) {
+    if (cm.c !== letra || vistos.has(k)) continue;
+    const grupo: number[] = [];
+    const pila = [k];
+    vistos.add(k);
+    while (pila.length) {
+      const a = pila.pop()!;
+      grupo.push(a);
+      const [x, y] = deClave(a);
+      for (const b of [clave(x + 1, y), clave(x - 1, y), clave(x, y + 1), clave(x, y - 1)]) {
+        if (!vistos.has(b) && m.casillas.get(b)?.c === letra) {
+          vistos.add(b);
+          pila.push(b);
+        }
+      }
+    }
+    res.push(grupo);
+  }
+  return res;
+}
+
+/** Un frasco de poción con su tapón, para los objetos del suelo. La base está en el origen. */
+function frasco(): BufferGeometry {
+  const M = new Montaje();
+  M.pon(new SphereGeometry(0.15, 14, 10).scale(1, 0.95, 1).translate(0, 0.15, 0), COLORES.geranio);
+  M.pon(new CylinderGeometry(0.06, 0.07, 0.12, 10).translate(0, 0.33, 0), COLORES.cristal);
+  M.pon(new CylinderGeometry(0.055, 0.05, 0.07, 8).translate(0, 0.42, 0), COLORES.balcon);
+  M.pon(new SphereGeometry(0.04, 6, 4).translate(-0.05, 0.21, 0.11), COLORES.cal);
+  return M.fusionar();
+}
 
 /** Uso de cada casa canaria según su casilla. El museo y el gimnasio son casonas provisionales. */
 const USO_CASA: Partial<Record<Casilla, UsoCasa>> = { C: 'casa', R: 'refugio', S: 'tienda', M: 'museo', G: 'gimnasio' };
@@ -83,6 +123,10 @@ export class Mundo implements Subsistema {
   private objetos: { malla: InstancedMesh; ids: string[]; matrices: Matrix4[] } | null = null;
   private vistoCondiciones = -1;
   private vistoRecogidos = -1;
+  /** Segundos de reloj, solo para el vaivén de los objetos (no toca la lógica). */
+  private reloj = 0;
+  private readonly flota = new Matrix4();
+  private readonly giroObjeto = new Matrix4();
 
   init(ctx: Ctx): void {
     this.ctx = ctx;
@@ -128,14 +172,15 @@ export class Mundo implements Subsistema {
       this.pasos = { malla: im, zonas: xs.map(([, v]) => v.zona), matrices };
     }
 
-    // Objetos en el suelo: una bola amarilla hasta que se recogen.
+    // Objetos en el suelo: un frasco que flota y gira despacio hasta que se recoge (de momento,
+    // el único objeto es la poción). Se ve como algo que se coge, no como una bola sin forma.
     const objs = [...m.objetos];
     if (objs.length) {
       const matrices = objs.map(([k]) => {
         const [x, y] = deClave(k);
-        return new Matrix4().makeTranslation(x, alturaSuelo(m.casillas.get(k)!.h) + 0.25, y);
+        return new Matrix4().makeTranslation(x, alturaSuelo(m.casillas.get(k)!.h) + 0.12, y);
       });
-      const im = this.instanciar(new SphereGeometry(0.22, 14, 10), this.liso(COLORES.amarilloLuz, { especular: 0.3, contraluz: 0.3 }), matrices);
+      const im = this.instanciar(frasco(), this.materialColores, matrices);
       this.objetos = { malla: im, ids: objs.map(([, o]) => o.objeto.id), matrices };
     }
     this.sincronizar();
@@ -231,17 +276,21 @@ export class Mundo implements Subsistema {
     const grupos = new Map<string, { nombre: string; matrices: Matrix4[] }>();
     const q = new Quaternion();
     const eje = new Vector3(0, 1, 0);
-    /** Coloca una variante del kit (con la base en el origen) a su escala; devuelve su altura máxima. */
-    const colocarKit = (tipo: PiezaKit, r: number, x: number, y: number, altura: number, escala: number, giro: number): number => {
+    /**
+     * Coloca una variante del kit (con la base en el origen) a su escala, igual en los tres ejes o
+     * una por eje; devuelve su altura máxima.
+     */
+    const colocarKit = (tipo: PiezaKit, r: number, x: number, y: number, altura: number, escala: number | Vector3, giro: number, trozo = TROZO): number => {
       const nombre = `${tipo}_${r % VARIANTES[tipo]}`;
       const g = this.pieza(nombre);
       q.setFromAxisAngle(eje, giro);
-      const mt = new Matrix4().compose(new Vector3(x, altura, y), q, new Vector3(escala, escala, escala));
-      const id = `${nombre}:${Math.floor(x / TROZO)},${Math.floor(y / TROZO)}`;
+      const e = typeof escala === 'number' ? new Vector3(escala, escala, escala) : escala;
+      const mt = new Matrix4().compose(new Vector3(x, altura, y), q, e);
+      const id = `${nombre}:${Math.floor(x / trozo)},${Math.floor(y / trozo)}:${trozo}`;
       const grupo = grupos.get(id) ?? { nombre, matrices: [] };
       grupo.matrices.push(mt);
       grupos.set(id, grupo);
-      return altura + g.boundingBox!.max.y * escala;
+      return altura + g.boundingBox!.max.y * e.y;
     };
 
     for (const [k, cm] of m.casillas) {
@@ -283,16 +332,52 @@ export class Mundo implements Subsistema {
         this.subirTapa(k, colocarKit('muro', r, x, y, suelo, 1, horizontal ? 0 : Math.PI / 2));
       }
     }
-    // Volcanes sobre las cumbres, espaciados, y algunas nubes sobre el mar.
+    // Conos volcánicos dentro de las zonas (Q): cada grupo de casillas es un volcán a su medida,
+    // para que las Montañas del Fuego tengan montañas que se ven desde el camino (probador,
+    // 2026-11-10). Más alto cuanto más grande; la silueta del jugador sabe hasta dónde tapa.
+    for (const grupo of gruposDe(m, 'Q')) {
+      const xs = grupo.map((k) => deClave(k)[0]);
+      const ys = grupo.map((k) => deClave(k)[1]);
+      const [x0, x1, y0, y1] = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)];
+      const ancho = x1 - x0 + 1;
+      const fondo = y1 - y0 + 1;
+      const cx = (x0 + x1) / 2;
+      const cz = (y0 + y1) / 2;
+      const base = Math.min(...grupo.map((k) => alturaSuelo(m.casillas.get(k)!.h)));
+      const r = pseudo(grupo[0]);
+      // Algo más ancho que su solar, para que la falda tape las esquinas y no quede un cuadro.
+      const [rx, rz] = [(ancho / 2) * 1.15, (fondo / 2) * 1.15];
+      const escala = new Vector3(rx, ((ancho + fondo) / 2) * 0.42, rz);
+      const cima = colocarKit('volcan', r, cx, cz, base, escala, 0) - base;
+      for (const k of grupo) {
+        const [x, y] = deClave(k);
+        const d = Math.hypot((x - cx) / rx, (y - cz) / rz);
+        this.subirTapa(k, base + cima * Math.min(1, Math.max(0, (1 - d) / (1 - BOCA_VOLCAN))));
+      }
+    }
+    // Volcanes sobre las cumbres: pequeños, juntos y a más de tres casillas de las zonas, para que
+    // no se monten sobre los caminos ni tapen al jugador.
+    const cercaDeZona = (x: number, y: number, radio: number): boolean => {
+      for (let dy = -radio; dy <= radio; dy++) {
+        for (let dx = -radio; dx <= radio; dx++) if (m.casillas.has(clave(x + dx, y + dy))) return true;
+      }
+      return false;
+    };
     for (const [k, h] of cumbre) {
       const [x, y] = deClave(k);
-      if (x % 6 !== 0 || y % 6 !== 0) continue;
+      if (x % 4 !== 0 || y % 4 !== 0) continue;
       const r = pseudo(k);
-      colocarKit('volcan', r, x, y, alturaSuelo(h) - 0.3, (6 + (r % 3)) / 2, (r % 6) * (Math.PI / 3));
+      const px = x + ((r >>> 4) % 3) - 1;
+      const py = y + ((r >>> 6) % 3) - 1;
+      const escala = 1.3 + ((r >>> 8) % 4) * 0.25;
+      if (!cumbre.has(clave(px, py)) || cercaDeZona(px, py, Math.ceil(escala) + 3)) continue;
+      colocarKit('volcan', r, px, py, alturaSuelo(h) - 0.2, escala, (r % 6) * (Math.PI / 3), TROZO_GRANDE);
     }
+    // Algunas nubes sobre el mar del norte. Solo allí: con la cámara mirando al norte, una nube
+    // a 10 de altura tapa lo que hay unas 8 casillas al norte de ella (tapaban la zona inicial).
     for (let i = 0; i < 8; i++) {
       const r = pseudo(i * 7919 + 13);
-      colocarKit('nube', r, -12 + (r % (m.ancho + 24)), -10 + ((r >>> 9) % (m.alto + 20)), 9 + (r % 4), 2.3 + (r % 3) * 0.4, 0);
+      colocarKit('nube', r, -12 + (r % (m.ancho + 24)), -6 - ((r >>> 9) % 10), 9 + (r % 4), 2.3 + (r % 3) * 0.4, 0, TROZO_GRANDE);
     }
     for (const g of grupos.values()) this.instanciar(this.pieza(g.nombre), this.materialColores, g.matrices);
   }
@@ -317,8 +402,19 @@ export class Mundo implements Subsistema {
     }
   }
 
-  actualizar(): void {
+  actualizar(dt: number): void {
     this.sincronizar();
+    if (!this.objetos) return;
+    this.reloj += dt;
+    const recogidos = this.partida.estado.recogidos;
+    this.objetos.ids.forEach((id, i) => {
+      if (recogidos.includes(id)) return;
+      const sube = 0.07 + Math.sin(this.reloj * 2.4 + i) * 0.07;
+      this.giroObjeto.makeRotationY(this.reloj * 1.2 + i);
+      this.flota.makeTranslation(0, sube, 0).multiply(this.objetos!.matrices[i]).multiply(this.giroObjeto);
+      this.objetos!.malla.setMatrixAt(i, this.flota);
+    });
+    this.objetos.malla.instanceMatrix.needsUpdate = true;
   }
 
   dispose(): void {

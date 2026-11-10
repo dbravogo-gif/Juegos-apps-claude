@@ -92,9 +92,10 @@ export class Personaje implements Subsistema {
 
     // Jugador, con su silueta: solo se dibuja la parte que algo tapa (prueba de profundidad al
     // revés). Como también se pintaría sobre el propio jugador, solo se enciende cuando algo lo
-    // tapa. Es clara (espuma), para que se vea sobre tejados, copas y el tejado azul del museo.
+    // tapa. Es coral: la clara (espuma) desaparecía contra las casas blancas de Lanzarote, y el
+    // coral se ve sobre la cal, las copas, el picón negro y el tejado azul del museo.
     this.jugador = this.figura(await cargar('Rogue'), 'Rogue');
-    const silueta = new MeshBasicNodeMaterial({ color: COLORES.espuma, transparent: true, opacity: 0, depthWrite: false });
+    const silueta = new MeshBasicNodeMaterial({ color: COLORES.acentoCoral, transparent: true, opacity: 0, depthWrite: false });
     silueta.depthFunc = GreaterDepth;
     this.silueta = silueta;
     const cuerpo = new CapsuleGeometry(0.3, 0.45, 4, 10).translate(0, 0.52, 0);

@@ -19,6 +19,8 @@ Vitest.
 - `node ../herramientas/capturar.mjs <carpeta o url> --dispositivo escritorio --pasos "..."`
 - `node herramientas/mapa.ts`: dibuja el mapa por casillas de la isla 1 (`isla-1-casillas.svg`)
   para revisar el diseño de nivel; con `la-palma-casillas.svg la-palma`, el de La Palma.
+- `python3 herramientas/isla1.py src/data/isla1.ts`: regenera el mapa de Lanzarote desde sus
+  rectángulos y caminos.
 
 ## Reglas propias
 

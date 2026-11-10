@@ -17,7 +17,7 @@ export interface OpcionesCasa {
    * Lanzarote: blanca, de una planta, con azotea, chimenea redonda y carpintería verde o azul.
    */
   estilo: EstiloCasa;
-  /** Las de balcones, con la fachada blanca (las de la capital de Lanzarote). */
+  /** Las de balcones, blancas, de azotea y sin cantería en las esquinas (la capital de Lanzarote). */
   blanca?: boolean;
   /** Lo que lleva pintado en la azotea el gimnasio: el sol (Luz) o un volcán (Roca). */
   emblema?: 'sol' | 'volcan';
@@ -68,10 +68,11 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
   const singular = uso === 'museo' || uso === 'gimnasio';
 
   // Muros y zócalo redondeados, como de juguete, y cantería en las esquinas, a soga y tizón
-  // (las de Lanzarote, lisas y blancas).
+  // (las de Lanzarote, también las de balcones de su capital, lisas y blancas).
+  const lisa = lanzarote || op.blanca === true;
   M.cajaRedonda(W, H, D, 0, 0, 0, pared, 0.07);
   M.cajaRedonda(W + 0.04, lanzarote ? 0.18 : 0.24, D + 0.04, 0, 0, 0, zocalo, 0.05);
-  const hiladas = lanzarote ? 0 : Math.floor((H - 0.3) / 0.22);
+  const hiladas = lisa ? 0 : Math.floor((H - 0.3) / 0.22);
   for (const sx of [-1, 1]) {
     for (const sz of [-1, 1]) {
       for (let i = 0; i < hiladas; i++) {
@@ -82,7 +83,9 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
       }
     }
   }
-  const azotea = lanzarote || (op.techo ? op.techo === 'azotea' : !rural && r() < 0.5);
+  // En Lanzarote no hay teja: todo es azotea (probador, 2026-11-10). El museo pide teja, pero en
+  // Lanzarote también la lleva plana.
+  const azotea = lisa || (op.techo ? op.techo === 'azotea' : !rural && r() < 0.5);
   if (!unaPlanta) M.caja(W + 0.06, 0.08, D + 0.06, 0, 1.38, 0, COLORES.cal); // imposta entre plantas
   if (azotea) M.caja(W + 0.14, 0.14, D + 0.14, 0, H - 0.06, 0, COLORES.cal); // cornisa
 
@@ -123,12 +126,27 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
     M.pon(new SphereGeometry(0.045, 5, 3).translate(x - 0.05, 0.29, frente + 0.2), COLORES.geranio, 0.88);
   }
 
-  if (uso === 'refugio' || singular) {
-    // Letrero sobre la puerta, con un disco blanco: se ve desde lejos. Coral en el refugio,
-    // amarillo de luz en el gimnasio (su tipo es Luz) y madera en el museo.
+  if (uso === 'museo') {
+    // Pórtico de cantería delante de la puerta, con cuatro columnas y frontón: el museo se
+    // distingue de las casas. El disco del letrero va en el frontón, que si no lo taparía.
+    const fondoP = 0.38;
+    const z = frente + fondoP - 0.08;
+    const alto = H - 0.12;
+    for (const dx of [-0.95, -0.5, 0.5, 0.95]) {
+      M.pon(new CylinderGeometry(0.075, 0.09, alto - 0.12, 10).translate(px + dx, 0.12 + (alto - 0.12) / 2, z), COLORES.canteria, 1.06);
+      M.caja(0.24, 0.12, 0.24, px + dx, 0, z, COLORES.canteria, 0.92);
+    }
+    M.caja(2.3, 0.14, fondoP + 0.08, px, alto, frente + fondoP / 2, COLORES.canteria);
+    const fronton = new CylinderGeometry(1, 1, 0.12, 3).rotateX(-Math.PI / 2).scale(1.4, 0.3, 1);
+    M.pon(fronton.translate(px, alto + 0.14 + 0.15, z), COLORES.cal);
+    M.pon(new CylinderGeometry(0.1, 0.1, 0.03, 12).rotateX(Math.PI / 2).translate(px, alto + 0.33, z + 0.07), COLORES.balcon);
+  }
+  if (uso === 'refugio' || uso === 'gimnasio') {
+    // Letrero sobre la puerta, con un disco blanco: se ve desde lejos. Coral en el refugio y, en el
+    // gimnasio, del color de su tipo (Roca o Luz).
     const y = 0.12 + alPuerta + 0.1;
     const letreroGimnasio = op.emblema === 'volcan' ? COLORES.rocaGimnasio : COLORES.amarilloLuz;
-    const letrero = uso === 'refugio' ? COLORES.acentoCoral : uso === 'gimnasio' ? letreroGimnasio : COLORES.balcon;
+    const letrero = uso === 'refugio' ? COLORES.acentoCoral : letreroGimnasio;
     M.caja(0.8, 0.28, 0.06, px, y, frente + 0.03, letrero);
     M.pon(new CylinderGeometry(0.09, 0.09, 0.03, 12).rotateX(Math.PI / 2).translate(px, y + 0.14, frente + 0.07), COLORES.crema);
   }
@@ -201,7 +219,8 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
   } else {
     // Azotea con pretil, el cuarto de la azotea y un depósito de agua. El suelo de la azotea va
     // por encima de la cornisa, que es una caja maciza y la taparía.
-    M.caja(W - 0.02, 0.04, D - 0.02, 0, H + 0.08, 0, COLORES.azotea);
+    // En Lanzarote, la azotea es blanca, pero no tanto como el pretil, para que se lea su forma.
+    M.caja(W - 0.02, 0.04, D - 0.02, 0, H + 0.08, 0, lisa ? COLORES.azoteaBlanca : COLORES.azotea);
     for (const s of [-1, 1]) {
       M.caja(W + 0.1, 0.24, 0.08, 0, H + 0.08, s * (D / 2 + 0.03), pared);
       M.caja(0.08, 0.24, D + 0.1, s * (W / 2 + 0.03), H + 0.08, 0, pared);

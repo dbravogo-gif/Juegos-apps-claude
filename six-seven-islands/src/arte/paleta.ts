@@ -43,6 +43,8 @@ export const COLORES = {
   fachadaAmarilla: '#F2D57E',
   // Más oscura que la cal: arriba le da todo el sol y los claros se queman hasta el blanco.
   azotea: '#BDB3A4',
+  // La azotea encalada de Lanzarote: algo más gris que la cal del pretil.
+  azoteaBlanca: '#DDD5C8',
   toldoAzul: '#4E8FCF',
   // Laurisilva y malpaís.
   laurelHondo: '#2A6E47',
@@ -102,4 +104,12 @@ export const COLORES = {
   lava: '#E4572E',
   // El charco verde de El Golfo: agua teñida de verde por las algas.
   charcoVerde: '#3FA672',
+  // La playa dorada, más viva que el jable gris del suelo de Lanzarote, para que se distinga.
+  arenaDorada: '#F2D08A',
+  ladoArena: '#C9A266',
+  // Los colores de Timanfaya: el picón no es solo negro, tiene manchas óxido y ocre.
+  piconOxido: '#8A5546',
+  piconOcre: '#A97A50',
+  guijarroClaro: '#D8CBB5',
+  guijarroOscuro: '#3A3537',
 } as const;
