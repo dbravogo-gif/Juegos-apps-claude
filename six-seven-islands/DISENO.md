@@ -17,7 +17,7 @@ Entrevista del 2026-11-07. Se queda en el qué y el porqué; el cómo está en `
 - **Verbo principal:** capturar y combatir por turnos.
 - **Verbos secundarios:** explorar, formar equipo, evolucionar y, online, intercambiar.
 - **Cada 5 a 30 segundos, el jugador:** anda por la isla, cruza hierba alta, le salta un
-  encuentro, elige un movimiento o lanza la captura con el dedo.
+  encuentro, elige un movimiento o lanza la captura con el teclado.
 - **Cada 1 a 5 minutos, cambia:** acaba un combate (experiencia, nivel, una captura), aparece un
   entrenador, se abre una zona, se cumple un recado o evoluciona una criatura.
 - **Cómo pierde, aprende y lo vuelve a intentar:**
@@ -47,9 +47,11 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
 **Cómo se demuestra cada parte en el juego:**
 
 - **Entrada real:**
-  - Para moverse, un joystick flotante con el dedo, o WASD y las flechas.
-  - En combate, botones grandes.
-  - Para capturar, deslizar el dedo o arrastrar el ratón.
+  - Solo teclado; el ratón no hace falta y la cámara no gira.
+  - Para moverse, WASD o las flechas.
+  - En los menús y en combate: flechas para elegir, Enter o Espacio para confirmar y Escape
+    para volver. Atajos del 1 al 4 para los movimientos.
+  - Para capturar, una pulsación en el momento justo (ver «Captura»).
 - **Objetivo visible:** la cámara de diorama deja ver el camino y, a lo lejos, el faro de la
   ciudad del campeón.
 - **Presión en el primer minuto:** el primer combate, contra el amigo rival nada más elegir la
@@ -61,22 +63,40 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
 ## El juego completo
 
 - **Mundo:**
-  - Un archipiélago de 6 islas, cada una con su clima y su campeón.
-  - Una séptima isla secreta, desaparecida, que se descubre siguiendo el hilo del misterio.
-    Reaparece al final y en ella está la Liga.
+  - Un archipiélago de 6 islas, cada una con su clima y su campeón, inspiradas en Canarias y
+    recorridas de este a oeste, sin saltos (autor, 2026-11-10): 1 Lanzarote, 2 Fuerteventura,
+    3 Gran Canaria, 4 Tenerife, 5 La Gomera y 6 La Palma.
+  - Una séptima isla secreta, desaparecida, que se descubre siguiendo el hilo del misterio:
+    El Hierro. Reaparece al final y en ella está la Liga.
 - **Tono de la historia:** ligero y con humor. Se vence al campeón de cada isla para avanzar,
   mientras se investiga por qué desapareció la séptima.
 - **Contenido:**
-  - 200 criaturas.
-  - Líneas de 2 y de 3 formas, algunas ramificadas (una base que evoluciona de varias maneras),
-    y especies sin evolución.
+  - 200 criaturas en 102 especies, con el reparto por tipos, quintiles de fuerza y papeles
+    de `CRIATURAS.md` (autor, 2026-11-10). Cada criatura toma las estadísticas base de un
+    Pokémon de referencia; el aspecto, el nombre, el tipo, algunos ataques y las habilidades
+    son nuestros.
+  - Líneas de 2 y de 3 formas y especies sin evolución. Las ramificadas (una base que
+    evoluciona de varias maneras), más adelante.
   - Las terceras formas, más fuertes, aparecen tarde.
-- **Tipos:** los 15 de Leyendas de Iberia con su tabla de eficacias, tal cual. Son obra del
-  autor (`leyendas-de-iberia/src/data/tipos.ts`).
+- **Tipos:** 16 (`src/data/tipos.ts`). Parten de los 15 de Leyendas de Iberia, obra del autor:
+  Plasma se funde en Eléctrico, entran Bicho y Veneno (2026-11-08) y Roca sustituye a Luz con la
+  tabla revisada «C» (2026-11-10).
+  - Equilibrio: nadie tiene más de 4 debilidades ni más de 4 resistencias, como mucho 3 tipos
+    llegan a 4, y todo ataque tiene quien le resista. Lo vigilan las pruebas.
+  - La tabla es fija: no cambia con el nivel ni con la evolución.
+- **Ancestral, tipo especial** (autor, 2026-11-10): criaturas primordiales, guardianes antiguos y
+  legendarias.
+  - No es mejor que los demás: tiene 4 debilidades (Agua, Hielo, Espectral y Veneno).
+  - Su fuerza viene de las estadísticas, los movimientos exclusivos, la evolución y lo difícil
+    que es conseguirlas.
+  - Hay pocas no legendarias, con progresión controlada: primera forma modesta, segunda con buen
+    salto y la final de nivel pseudolegendario. Algunas ganan Ancestral al evolucionar.
+  - Antes de cerrar el reparto de especies, auditar las combinaciones de dos tipos con
+    Ancestral, Acero y Roca.
 - **Más largo que Leyendas de Iberia.** Entre un campeón y el siguiente hay mucho más: rutas,
   entrenadores, recados, tramos de historia y salas del equipo enemigo.
 - **Sesiones abiertas:** se juega todo el tiempo que se quiera, con guardado automático
-  continuo. Safari puede cerrar la pestaña en cualquier momento.
+  continuo. El navegador puede cerrarse en cualquier momento.
 
 ### Las tres historias
 
@@ -87,9 +107,18 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
   - y, más adelante, 2 salas pequeñas exclusivas.
 
   Todo lo demás es común.
-- **Las iniciales:** Agua, Planta e Infernal, todas con líneas de 3 formas. En la tabla forman
-  un triángulo perfecto: cada una vence a otra y resiste a la tercera.
-- **Las otras dos iniciales se consiguen intercambiando con amigos.**
+- **Las iniciales:** serán 4, todas con líneas de 3 formas (autor, 2026-11-10):
+  - Agua, que no acaba en Hielo;
+  - Planta/Mental;
+  - Infernal;
+  - la cuarta, Planta/Veneno. Su historia se hace con el autor.
+  - Sus estadísticas son propias: las pasa el autor, no salen de la lista de `CRIATURAS.md`.
+  - Enfrentamientos con la tabla real, en `CRIATURAS.md`.
+  - Conceptos del autor en `conceptos/`: Agua, un cocodrilo excursionista; Planta, un lagarto
+    con setas que acaba en chamán; Infernal, un elefante de orejas de fuego
+    que acaba en mamut acorazado.
+  - Los segundos tipos los elige el autor, cuidando que no rompan el equilibrio (2026-11-10).
+- **Las otras iniciales se consiguen intercambiando con amigos.**
 - **Regalo por rejugar:** si ya has completado el juego con una inicial y empiezas otra partida
   con otra, al vencer al campeón de la isla 4 te regalan la inicial con la que lo completaste.
   - El registro de partidas completadas se guarda aparte de la partida, para que sobreviva al
@@ -111,7 +140,11 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
   - los estados quemado, dormido, paralizado, envenenado e intoxicado.
 - **Las pasivas** quedan para más adelante, como contenido propio de este juego.
 - **Captura:**
-  - Tras debilitar a la criatura, se lanza el objeto deslizando el dedo o arrastrando el ratón.
+  - Tras debilitar a la criatura, se lanza el objeto parando con Espacio una flecha que va y
+    viene sobre una barra con tres zonas: gris, blanca y una verde pequeña (decidido por el
+    autor, 2026-11-08).
+  - Ninguna zona asegura la captura: solo la hacen más o menos fácil. Propuesta: gris ×1,
+    blanca ×1,5 y verde ×2,5 sobre la probabilidad base.
   - La puntería y el momento suben la probabilidad. La base depende de la Vida que le quede, de
     su estado y del objeto.
 
@@ -163,7 +196,8 @@ turno. El servicio de tiempo real gratuito se elige al llegar a esa fase.
 - **Recados con objetos clave,** del tipo «lleva esto a esta persona».
 - **Un combate 2 contra 2** contra una pareja de entrenadores.
 - **Tienda y objetos.** La economía, con cuidado: al principio no se consigue nada muy valioso.
-- **Criaturas:** 11 especies de la isla y las 3 iniciales, hasta 23 criaturas.
+- **Criaturas** (provisional: se rehace con `CRIATURAS.md` cuando estén todas generadas): 11
+  especies de la isla y las 3 iniciales, hasta 23 criaturas.
   - 5 especies sin evolución: 5 criaturas.
   - 4 especies de 2 formas: 8 criaturas.
   - 2 especies de 3 formas, solo con las dos primeras: 4 criaturas.
@@ -182,29 +216,18 @@ turno. El servicio de tiempo real gratuito se elige al llegar a esa fase.
 
 ## Plan de nivel de la isla 1
 
-- **Formato espacial:**
-  - La isla en miniatura se divide en zonas conectadas: el pueblo inicial, la ruta 1, el
-    bosque, el pueblo 2, la ruta costera, la base del equipo enemigo y la ciudad del campeón.
-  - La cámara, alta e inclinada, sigue al jugador. Se ve su zona y, al fondo, el mar con las
-    otras islas.
-- **Inicio:** la casa del jugador, las tres historias, la elección de la inicial y el primer
-  combate contra el amigo rival.
-- **Primera amenaza:** la hierba alta de la ruta 1.
-- **Primera recompensa:** la primera captura. Se reciben unos pocos objetos de captura.
-- **Puntos de referencia:** el faro de la ciudad del campeón, el volcán de la isla vecina y el
-  remolino donde estaba la séptima isla.
-- **Escalada:**
-  - Los niveles de las salvajes suben por zona.
-  - Los entrenadores llevan equipos cada vez más variados.
-  - Después vienen la sala del equipo enemigo, el combate 2 contra 2 y, por último, el campeón.
-- **Respiro:** los refugios, con curación gratuita, los pueblos y los recados.
-- **Aviso de peligro:**
-  - La hierba alta se distingue por su color y su altura.
-  - Los entrenadores muestran su línea de visión, y una exclamación cuando te ven.
-- **Piezas modulares:**
-  - Un terreno por casillas con alturas.
-  - Hierba instanciada.
-  - Casas, árboles y rocas hechos con un kit parametrizado.
+Está en `ISLA-1.md`: inspirada en Lanzarote desde el 2026-11-10. La versión de La Palma se
+guarda para la isla 6 (`LA-PALMA.md`). Son cinco zonas:
+
+1. Zona inicial con el museo y la elección.
+2. Zona de combates (El Golfo).
+3. Pueblo con el anciano (La Geria).
+4. Zona larga (las Montañas del Fuego; en La Palma, el bosque).
+5. Capital con el gimnasio y el puerto.
+
+Sustituye al plan anterior (2026-11-08). De lo que aquel plan tenía y esta idea no, el autor
+decidió el 2026-11-08: los rivales solo hablan, el 2 contra 2 llega más adelante, hay un recado
+pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
 
 ## Decisiones cerradas
 
@@ -217,7 +240,8 @@ turno. El servicio de tiempo real gratuito se elige al llegar a esa fase.
   sin evolución.
 - 2026-11-07 · Los 15 tipos y la tabla de Leyendas de Iberia.
 - 2026-11-07 · Combate por turnos clásico. El motor admite 2 contra 2.
-- 2026-11-07 · Captura: lanzar deslizando el dedo o arrastrando el ratón.
+- 2026-11-07 · Captura con habilidad: la puntería y el momento dan la calidad del lanzamiento.
+  Desde el 2026-11-08 se hace con el teclado.
 - 2026-11-07 · Derrota: vuelta al refugio, con el 10 % menos de dinero.
 - 2026-11-07 · Equipo de 6 criaturas.
 - 2026-11-07 · Encuentros por sorpresa en la hierba. Las únicas que se ven aparecen en 1 de
@@ -231,25 +255,58 @@ turno. El servicio de tiempo real gratuito se elige al llegar a esa fase.
 - 2026-11-07 · Primera versión: la isla 1 para un jugador, con el contenido de arriba. Unas
   2 horas de juego.
 - 2026-11-07 · Más largo que Leyendas de Iberia: más contenido entre campeones.
+- 2026-11-07 · Las criaturas, con Meshy: el generador por piezas de la prueba F04 no convenció
+  al autor (`prompts-meshy.md`, `investigacion/12-arte-criaturas.md`).
+- 2026-11-10 · Reparto de las 200 criaturas por tipo principal, quintil y papel, con un
+  Pokémon de referencia por criatura para copiar sus estadísticas base (`CRIATURAS.md`).
 - 2026-11-07 · Sesiones abiertas con guardado automático.
 - 2026-11-07 · Empate en combate (caen a la vez las últimas de los dos lados): gana el lado
   cuya última criatura cayó después, como con el daño de retroceso en el género.
+- 2026-11-08 · **Solo para ordenador y solo con teclado.** El autor y sus amigos juegan en
+  portátiles, algunos Mac, que mueven juegos ligeros. El ratón no hace falta y la cámara no
+  gira. Pantalla apaisada, presupuesto de escritorio y desenfoque de miniatura real.
+- 2026-11-08 · Captura con una barra: flecha que va y viene y zonas gris, blanca y verde
+  pequeña. Ninguna asegura la captura.
+- 2026-11-08 · La isla 1, inspirada en La Palma, con la idea del autor (`ISLA-1.md`): zona
+  inicial con museo, zona de combates, pueblo con el anciano, bosque y capital con gimnasio y
+  puerto. La inicial es rebelde hasta hablar con el anciano. La hierba y los entrenadores
+  obligatorios se rigen por las reglas de Leyendas de Iberia, para todo el juego.
+- 2026-11-08 · Tipos: Plasma se funde en Eléctrico y entran Bicho y Veneno, con cambios
+  mínimos en la tabla de Leyendas (opción C del autor). 16 tipos.
+- 2026-11-10 · Islas de este a oeste: la isla 1 es Lanzarote, hecha desde cero con la misma
+  idea; La Palma se guarda para la 6 y El Hierro es la séptima. El gimnasio 1 es de Roca. De
+  aquí en adelante, como mucho 4 plantas nuevas.
+- 2026-11-10 · Tabla de tipos «C» revisada: Roca sustituye a Luz. Claude corrige sus
+  contradicciones y los extremos (5 debilidades o resistencias). Reglas de Ancestral.
+- 2026-11-08 · Isla 1, segunda vuelta con el autor:
+  - el malpaís y las dunas también son zona de encuentros, y deben reconocerse como tal;
+  - la inicial desobedece en un 45 % de los turnos hasta el anciano;
+  - el gimnasio es de Luz (cambiado el 2026-11-10: la isla 1 es Lanzarote, con gimnasio de Roca);
+  - los rivales solo hablan en la isla 1;
+  - el 2 contra 2 no va en esta isla; llegará más adelante;
+  - el paso al bosque se cierra hasta hablar con el anciano.
+- 2026-11-08 · Zona de combates estrecha y más larga, de sur a norte: arena negra, barrera con
+  su entrenador, subida con dos manchas de malpaís (una obligatoria) y hierba obligatoria en
+  llano. El bosque, más largo, con otro entrenador y una bifurcación a un claro con otro
+  entrenador y un objeto.
+- 2026-11-08 · Línea de la inicial de Planta: una bestia del bosque, ciervo-león con astas de
+  madera, collar de hojas y cola de hoja. Tres formas: cría, joven (forma 2) y majestuosa
+  (forma 3). Las imágenes de las formas 2 y 3 las generó el autor; prompts y notas en
+  `prompts-meshy.md`. En esta especie no hay diferencias entre hembra y macho. **Sustituida**
+  el 2026-11-10: la inicial de Planta es el lagarto chamán; qué hacer con el ciervo-león, en
+  `PENDIENTES.md`.
 
 ## Decisiones abiertas
 
-No se diseñan sin el autor. Cada una lleva la propuesta de Claude.
-
-- **Nombres:** del equipo enemigo (uno por variante), de las islas, de los personajes y de las
-  criaturas. Claude los propone antes de la tanda 3.
-- **Formato de la Liga.**
-- **Servicio de tiempo real** para la fase online.
+Están todas en `PENDIENTES.md`, con la propuesta de Claude para cada una. No se diseñan sin el
+autor.
 
 ## Criterios de calidad
 
 - **Jugabilidad:** funciona, se entiende y se siente bien. La puntúa el agente `probador`.
 - **Visual:** la rúbrica de la skill `juego-3d`. Premium: ninguna categoría por debajo de 2 y
   media de al menos 2,3.
-- **Rendimiento:** el presupuesto de la skill `juego-3d`, medido con contadores y en el móvil
-  del autor.
+- **Rendimiento:** el presupuesto de la skill `juego-3d`, medido con contadores y en el ordenador
+  del autor y de sus amigos.
 - **Online:** un combate repetido con la misma semilla y las mismas decisiones da exactamente el
   mismo resultado. Lo comprueba una prueba.

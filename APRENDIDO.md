@@ -4,6 +4,41 @@ Errores ya pagados y la barrera que evita repetirlos (regla R6). Formato: fecha 
 causa · barrera. Lo más reciente va arriba. Si un error vuelve a pasar, su barrera sube de
 nivel: de nota a regla, y de regla a prueba o hook.
 
+- **2026-11-08 · La azotea del gimnasio salía casi blanca y sin su sol pintado** (kit canario
+  de Six-seven islands).
+  - Causa: dos a la vez.
+    - Arriba les da el sol y el relleno del cielo, y el mapeo tonal lleva los colores claros
+      casi a blanco.
+    - La cornisa era una caja maciza más alta que el suelo de la azotea y la tapaba entera.
+  - Barrera:
+    - en `ARTE.md`, las superficies horizontales llevan colores medios;
+    - nada se apoya sobre una caja maciza sin comprobarlo en `?catalogo`, que enseña cada pieza
+      de cerca con la luz del juego.
+
+- **2026-11-07 · La prueba de arte F04 cumplía `ARTE.md`, pero el autor quería otra cosa:**
+  criaturas mucho más trabajadas, al nivel de Pokémon, no «gotas» de vinilo.
+  - Causa: la guía describía el estilo con palabras («redondas y blandas») y se aprobó sin
+    imágenes de referencia del nivel de acabado que el autor tenía en mente.
+  - Barrera: antes de construir una prueba de arte, pedir al autor 2 o 3 imágenes (o nombres
+    concretos) del acabado que espera, y enseñarle un boceto rápido antes de construirlo
+    entero. Está en esta nota; si se repite, pasa a la skill `/nuevo-proyecto`.
+
+- **2026-11-07 · Las animaciones cortas no salían en las capturas** (prueba de arte de
+  Six-seven islands): el destello del golpe parecía no funcionar.
+  - Causa: aquí el render va a ~9 FPS por software y el motor limita el paso a 5 fotogramas
+    fijos, así que el juego avanza más despacio que el reloj. Una espera de 280 ms son ~0,1 s
+    de animación, y la captura tarda varios fotogramas. No era un fallo del juego.
+  - Barrera:
+    - cámara lenta en el juego (`?lento=0.1`) y la opción `--consulta` de `capturar.mjs` para
+      pasarla también a una carpeta;
+    - está en la skill `juego-3d`, en «Verificación».
+    - En escritorio, el clic de Playwright se agota con el hilo saturado: usar teclas.
+- **2026-11-07 · Aclarar los colores de tipo «para el sol de tarde» fundía las criaturas con la
+  hierba** en escala de grises (prueba de arte de Six-seven islands).
+  - Causa: se ajustó la luminosidad por intuición y no por contraste con el suelo.
+  - Barrera: el criterio está en `ARTE.md` (contraste de valor con la hierba) y la captura en
+    gris de la vista de explorar forma parte de la comprobación.
+
 - **2026-11-07 · El `probador` encontró 8 fallos que 54 pruebas en verde no veían** (combate de
   Six-seven islands).
   - Causa:

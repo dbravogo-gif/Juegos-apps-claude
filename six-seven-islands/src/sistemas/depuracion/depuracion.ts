@@ -12,9 +12,12 @@ export interface EstadoVisible {
   pasos: number;
   modo: string;
   zona: string | null;
-  posicion: { x: number; z: number } | null;
+  posicion: { x: number; y: number } | null;
+  condiciones: string[];
   calidad: NivelCalidad;
   backend: string;
+  /** Todo lo que resume «partida» (sala, inicial, diálogo abierto…), o null en la vitrina. */
+  partida: unknown;
 }
 
 export interface GanchosJuego {
@@ -31,9 +34,12 @@ declare global {
   }
 }
 
-/** Un subsistema que sabe cargar un estado completo (llegará con «partida»). */
+/** Un subsistema que sabe cargar un estado y resumir el suyo («partida»). */
 interface ConPoner {
   poner(estado: unknown): void;
+}
+interface ConVisible {
+  visible(): { modo: string; zona: string; posicion: { x: number; y: number }; condiciones: string[] };
 }
 
 export class Depuracion implements Subsistema {
@@ -55,20 +61,25 @@ export class Depuracion implements Subsistema {
     };
 
     window.__JUEGO__ = {
-      estado: () => ({
-        fotograma: ctx.tiempo.fotograma,
-        pasos: ctx.tiempo.pasos,
-        modo: 'arranque',
-        zona: null,
-        posicion: null,
-        calidad: ctx.config.calidad.nivel,
-        backend: this.render.backend,
-      }),
+      estado: () => {
+        const p = ctx.tiene('partida') ? ctx.get<Subsistema & ConVisible>('partida').visible() : null;
+        return {
+          fotograma: ctx.tiempo.fotograma,
+          pasos: ctx.tiempo.pasos,
+          modo: p?.modo ?? 'vitrina',
+          zona: p?.zona ?? null,
+          posicion: p?.posicion ?? null,
+          condiciones: p?.condiciones ?? [],
+          calidad: ctx.config.calidad.nivel,
+          backend: this.render.backend,
+          partida: p,
+        };
+      },
       semilla: (n) => {
         ctx.rng.s = crearRng(n).s;
       },
       poner: (estado) => {
-        if (!ctx.tiene('partida')) throw new Error('Aún no hay partida: llega con F05');
+        if (!ctx.tiene('partida')) throw new Error('En la vitrina no hay partida');
         ctx.get<Subsistema & ConPoner>('partida').poner(estado);
       },
       contadores: () => this.render.contadores(),

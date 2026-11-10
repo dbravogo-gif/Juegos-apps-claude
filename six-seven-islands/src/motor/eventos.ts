@@ -12,10 +12,14 @@ export interface MapaEventos {
   'combate:fin': { resultado: string };
   'captura:lanzar': { calidad: number };
   'captura:resultado': { exito: boolean; sacudidas: number };
+  /** Se abre un diálogo: `guionId` es el id del personaje, o «aviso», «objeto» o «puerta». */
   'dialogo:abrir': { guionId: string };
   'dialogo:cerrar': { guionId: string; eleccion?: number };
   'guardado:hecho': Record<string, never>;
   'calidad:cambio': { nivel: NivelCalidad };
+  'objeto:recogido': { id: string; objeto: string };
+  /** Se acaba de elegir la inicial en el museo. */
+  'inicial:elegida': { tipo: string };
 }
 
 export type NombreEvento = keyof MapaEventos;

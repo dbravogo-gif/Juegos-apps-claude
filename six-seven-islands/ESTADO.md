@@ -1,40 +1,38 @@
 # Estado de Six-seven islands
 
-Actualizado: 2026-11-07. Solo el presente; el historial está en git. Máximo 40 líneas.
+Actualizado: 2026-11-10. Solo el presente; el historial está en git. Máximo 40 líneas.
 
 ## Fase actual
 
-Fase 3 de `/nuevo-proyecto`, el andamiaje: cerrada. El `probador` encontró 8 fallos en el
-combate, todos corregidos y con su prueba (62 pruebas).
+Tanda 1. La isla 1 es Lanzarote desde el 2026-11-10 (`ISLA-1.md`), con mapa nuevo, kit por
+código y la tabla de tipos C. La Palma, guardada para la 6. Las criaturas, con Meshy.
 
 ## Hecho
 
-- Entrevista (fase 1). Las decisiones están en `DISENO.md`.
-- Documentos (fase 2), aprobados por el autor el 2026-11-07: `DISENO.md`, `ARTE.md`,
+- Entrevista y documentos (fases 1 y 2), aprobados el 2026-11-07: `DISENO.md`, `ARTE.md`,
   `ARCHITECTURE.md` y `funciones.json`.
-- `F01`, el andamiaje: motor de subsistemas, render WebGPU o WebGL2, isla de prueba temporal,
-  panel `?depurar`, `window.__JUEGO__`, web instalable y publicación.
-- `F02`, el núcleo: reglas de Leyendas con código propio y sin su contenido
-  (`src/core/ORIGEN.md`).
-- `F03`, el combate N contra N, de 1 contra 1 y de 2 contra 2:
-  - es puro y determinista, y cada lado lo controla un jugador o la IA;
-  - 54 pruebas, entre ellas 1.000 combates de bots y la repetición idéntica con las mismas
-    decisiones.
+- `F01` andamiaje, `F02` núcleo con las reglas de Leyendas (`core/ORIGEN.md`) y `F03` combate
+  N contra N, puro y determinista, con 1.000 combates de bots en las pruebas.
+- `F04`, generador de criaturas por piezas: **el autor lo juzga insuficiente** (2026-11-07); las
+  criaturas saldrán de Meshy.
 
 ## Siguiente
 
-1. `F04`, la prueba de arte del generador de criaturas, antes de invertir en contenido.
-2. Después, el bucle con formas simples: de `F05` a `F10`.
+1. Isla 1, Lanzarote (`ISLA-1.md`): mapa, interiores y diálogos hechos, con los arreglos del
+   probador (2026-11-10). Siguen encuentros, combate y captura.
+2. En paralelo, arte con Meshy (`prompts-meshy.md`): criaturas y edificios singulares.
+3. Criaturas: reparto y lista de referencia en `CRIATURAS.md` (2026-11-10). Se diseñan con el
+   autor y sus amigos; dónde aparece cada una se decide al final.
 
 ## Pendiente del autor
 
-- Decidir si las pasivas entran en el juego, como contenido propio. Propuesta de Claude: sí,
-  después de la isla 1.
-- Antes de la tanda 3, elegir los nombres que proponga Claude.
+Todo lo abierto está en `PENDIENTES.md`. Lo primero: las estadísticas de las 4 iniciales, el
+cuadrado de tipos (aparcado) y puntuar el kit.
 
 ## Defectos conocidos
 
-- La isla de prueba no se ve entera en vertical: es provisional y la cámara de verdad llega en
-  `F05`.
-- Sin comprobar en el iPhone: la instalación en la pantalla de inicio. WebGPU sí: el autor vio
-  WebGPU a 60 FPS con `?depurar` (2026-11-07).
+- Solo ordenador desde 2026-11-08: falta medir los FPS en los PC del autor y sus amigos.
+- La Palma: el camino de su capital pasa detrás del gimnasio (en Lanzarote ya va por delante).
+- En la caldera de las Montañas del Fuego, `mundo` gasta más de su reparto de llamadas
+  (`ARCHITECTURE.md`).
+- Las estatuas del museo y los personajes son provisionales (Meshy y F12).

@@ -157,3 +157,9 @@ en `CONSTITUCION.md` (de la R1 a la R12), para que no haya dos versiones que se 
 6. **Fuentes que no pude leer porque la red las bloquea:** los blogs de Simon Willison,
    Hashimoto y Ronacher, Medium, dev.to, InfoQ y *The Pragmatic Engineer*. Habría que
    permitirlas en los ajustes de red del entorno.
+
+## Arte de criaturas (2026-11-07, `12-arte-criaturas.md`)
+
+- Tras la prueba F04, el autor pide criaturas más trabajadas. Opciones: generador esculpido
+  (0 €, techo limitado), IA 3D (Meshy: 3 modelos al mes gratis, CC BY), paquetes CC0
+  (Quaternius: 20–50, sin evoluciones) y TRELLIS.2 (MIT, pero necesita una GPU de 24 GB).

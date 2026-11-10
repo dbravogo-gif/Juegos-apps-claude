@@ -1,14 +1,15 @@
 # Estado
 
-Actualizado: 2026-11-07. Solo el presente; el historial está en git. Máximo 40 líneas.
+Actualizado: 2026-11-08. Solo el presente; el historial está en git. Máximo 40 líneas.
 
 **Modo de gasto vigente: normal.**
 
 ## Foco
 
 Un juego de criaturas en 3D, original y para jugar con amigos: explorar, capturar y combatir
-por turnos. Para móvil y PC: se controla con el dedo, o con ratón y teclado, nunca con mando. Sin
-invertir dinero. Concepto y decisiones en `investigacion/11-conceptos-criaturas.md`.
+por turnos. Solo ordenador y solo teclado, sin ratón ni mando (portátiles, algunos Mac; 2026-11-08).
+Gasto pequeño aprobado por el autor para Meshy (arte de criaturas). Concepto y decisiones en
+`investigacion/11-conceptos-criaturas.md`.
 
 ## Datos del autor
 
@@ -30,7 +31,8 @@ invertir dinero. Concepto y decisiones en `investigacion/11-conceptos-criaturas.
 ## Siguiente paso
 
 1. Andamiaje, núcleo y combate 2 contra 2 hechos (`F01` a `F03`). De Leyendas, solo reglas.
-2. Prueba de arte del generador de criaturas (`F04`). Si no convence, plan B o C de `ARTE.md`.
+2. Arte de criaturas con Meshy (imagen 2D y después 3D). Islas de este a oeste: la 1, Lanzarote
+   (`six-seven-islands/ISLA-1.md`), con mapa, interiores y diálogos; siguen los combates.
 
 ## Pendiente del autor
 

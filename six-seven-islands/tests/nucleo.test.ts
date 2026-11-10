@@ -27,10 +27,48 @@ const cr = (especie: string, nivel = 20, extra: Partial<Criatura> = {}): Criatur
 const comb = (c: Criatura): Combatiente => ({ criatura: c, etapas: etapas0() });
 
 describe('tipos', () => {
-  it('son los mismos 15 tipos y la misma tabla que Leyendas de Iberia (decisión del autor)', () => {
-    // Si esto falla, Leyendas ha cambiado su tabla: decidir con el autor si se sigue o se separa.
-    expect(TABLA_TIPOS.tipos.map((t) => t.id)).toEqual(TABLA_LEYENDAS.tipos.map((t) => t.id));
-    expect(TABLA_TIPOS.relaciones).toEqual(TABLA_LEYENDAS.relaciones);
+  type Rel = { eficaz: string[]; pocoEficaz: string[]; sinEfecto: string[] };
+  const R = TABLA_TIPOS.relaciones as unknown as Record<string, Rel>;
+  const ids = TABLA_TIPOS.tipos.map((t) => t.id as string);
+
+  it('son 16: los de Leyendas sin Plasma ni Luz, más Bicho, Veneno y Roca (autor, 2026-11-08 y 11-10)', () => {
+    const deLeyendas = TABLA_LEYENDAS.tipos.map((t) => t.id as string).filter((id) => id !== 'plasma' && id !== 'luz');
+    expect([...ids].sort()).toEqual([...deLeyendas, 'bicho', 'veneno', 'roca'].sort());
+    expect(Object.keys(R).sort()).toEqual([...ids].sort());
+  });
+
+  it('cada relación nombra tipos que existen y ninguna se contradice', () => {
+    for (const id of ids) {
+      const { eficaz, pocoEficaz, sinEfecto } = R[id];
+      const todos = [...eficaz, ...pocoEficaz, ...sinEfecto];
+      for (const d of todos) expect(ids, `${id} → ${d}`).toContain(d);
+      expect(new Set(todos).size, id).toBe(todos.length);
+    }
+  });
+
+  it('todo ataque tiene quien le resista, y ninguno está muy descompensado (salvo Común, que es neutro)', () => {
+    for (const id of ids) {
+      const contra = R[id].pocoEficaz.length + R[id].sinEfecto.length;
+      expect(contra, `${id}: nadie le resiste`).toBeGreaterThanOrEqual(1);
+      if (id !== 'comun') expect(Math.abs(R[id].eficaz.length - contra), id).toBeLessThanOrEqual(2);
+    }
+  });
+
+  it('nadie tiene más de 4 debilidades ni más de 4 resistencias, y pocos llegan a 4 (autor, 2026-11-10)', () => {
+    const debil = (d: string) => ids.filter((a) => R[a].eficaz.includes(d)).length;
+    const resiste = (d: string) => ids.filter((a) => R[a].pocoEficaz.includes(d)).length;
+    for (const d of ids) {
+      expect(debil(d), `${d} débil`).toBeGreaterThanOrEqual(1);
+      expect(debil(d), `${d} débil`).toBeLessThanOrEqual(4);
+      expect(resiste(d), `${d} resiste`).toBeLessThanOrEqual(4);
+    }
+    expect(ids.filter((d) => debil(d) === 4).length, 'tipos con 4 debilidades').toBeLessThanOrEqual(3);
+    expect(ids.filter((d) => resiste(d) === 4).length, 'tipos con 4 resistencias').toBeLessThanOrEqual(3);
+  });
+
+  it('las inmunidades son las decididas: las cuatro de la tabla C y la de Espectral a Común', () => {
+    const inmunes = ids.flatMap((a) => R[a].sinEfecto.map((d) => `${a}→${d}`)).sort();
+    expect(inmunes).toEqual(['comun→espectral', 'electrico→tierra', 'espectral→comun', 'tierra→aire', 'veneno→acero'].sort());
   });
 
   it('las iniciales Agua, Planta e Infernal forman un triángulo perfecto', () => {

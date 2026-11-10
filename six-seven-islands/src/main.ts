@@ -4,12 +4,25 @@
 import { PerspectiveCamera, Scene } from 'three/webgpu';
 import { nivelInicial, CALIDADES, type NivelCalidad } from './motor/calidad';
 import { Motor, type ClaseSubsistema } from './motor/motor';
+import { Camara } from './sistemas/camara/camara';
+import { Catalogo } from './sistemas/catalogo/catalogo';
+import { Criaturas } from './sistemas/criaturas/criaturas';
 import { Depuracion } from './sistemas/depuracion/depuracion';
+import { Entrada } from './sistemas/entrada/entrada';
+import { Interfaz } from './sistemas/interfaz/interfaz';
+import { Mundo } from './sistemas/mundo/mundo';
+import { Partida } from './sistemas/partida/partida';
+import { Personaje } from './sistemas/personaje/personaje';
 import { Prueba } from './sistemas/prueba/prueba';
 import { Render } from './sistemas/render/render';
+import { Salas } from './sistemas/salas/salas';
 import './estilo.css';
 
-const SUBSISTEMAS: ClaseSubsistema[] = [Render, Prueba, Depuracion];
+// El juego: la isla 1 para explorar. Con ?vitrina, la vitrina de criaturas de la prueba de arte;
+// con ?catalogo, las piezas propias del mundo en fila para revisarlas.
+const JUEGO: ClaseSubsistema[] = [Render, Entrada, Partida, Mundo, Salas, Personaje, Camara, Interfaz, Depuracion];
+const VITRINA: ClaseSubsistema[] = [Render, Criaturas, Prueba, Depuracion];
+const CATALOGO: ClaseSubsistema[] = [Render, Catalogo, Depuracion];
 
 function mostrarFallo(e: unknown): void {
   const aviso = document.createElement('p');
@@ -22,12 +35,12 @@ function mostrarFallo(e: unknown): void {
 async function arrancar(): Promise<void> {
   const parametros = new URLSearchParams(location.search);
   const pedido = parametros.get('calidad') as NivelCalidad | null;
-  const nivel = pedido && CALIDADES[pedido] ? pedido : nivelInicial(matchMedia('(pointer: coarse)').matches);
+  const nivel = pedido && CALIDADES[pedido] ? pedido : nivelInicial();
   const semilla = parametros.get('semilla') ?? 67;
 
   const camara = new PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.5, 200);
   const motor = new Motor(new Scene(), camara, nivel, semilla);
-  await motor.iniciar(SUBSISTEMAS);
+  await motor.iniciar(parametros.has('vitrina') ? VITRINA : parametros.has('catalogo') ? CATALOGO : JUEGO);
 
   window.addEventListener('resize', () => motor.redimensionar(window.innerWidth, window.innerHeight));
 
