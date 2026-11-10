@@ -26,11 +26,8 @@ código y la tabla de tipos C. La Palma, guardada para la 6. Las criaturas, con 
 
 ## Pendiente del autor
 
-- Decidir si entran las pasivas, como contenido propio. Propuesta de Claude: tras la isla 1.
-- Antes de la tanda 3, elegir los nombres que proponga Claude.
-- Puntuar el kit en `?catalogo` y en la isla; rehacer con Meshy lo que no llegue a 4.
-- Estadísticas de las 4 iniciales (Agua, Planta/Mental, Infernal y Planta/Veneno) y el tipo
-  de cada gimnasio.
+Todo lo abierto está en `PENDIENTES.md`. Lo primero: las estadísticas de las 4 iniciales, el
+cuadrado de tipos (aparcado) y puntuar el kit.
 
 ## Defectos conocidos
 

@@ -225,9 +225,9 @@ guarda para la isla 6 (`LA-PALMA.md`). Son cinco zonas:
 4. Zona larga (las Montañas del Fuego; en La Palma, el bosque).
 5. Capital con el gimnasio y el puerto.
 
-Sustituye al plan anterior (2026-11-08). Lo que de aquel plan no está en la idea del autor (la
-base del equipo enemigo, el 2 contra 2, la ruta costera y los recados) está pendiente de él, con
-una propuesta en `ISLA-1.md`.
+Sustituye al plan anterior (2026-11-08). De lo que aquel plan tenía y esta idea no, el autor
+decidió el 2026-11-08: los rivales solo hablan, el 2 contra 2 llega más adelante, hay un recado
+pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
 
 ## Decisiones cerradas
 
@@ -255,6 +255,8 @@ una propuesta en `ISLA-1.md`.
 - 2026-11-07 · Primera versión: la isla 1 para un jugador, con el contenido de arriba. Unas
   2 horas de juego.
 - 2026-11-07 · Más largo que Leyendas de Iberia: más contenido entre campeones.
+- 2026-11-07 · Las criaturas, con Meshy: el generador por piezas de la prueba F04 no convenció
+  al autor (`prompts-meshy.md`, `investigacion/12-arte-criaturas.md`).
 - 2026-11-10 · Reparto de las 200 criaturas por tipo principal, quintil y papel, con un
   Pokémon de referencia por criatura para copiar sus estadísticas base (`CRIATURAS.md`).
 - 2026-11-07 · Sesiones abiertas con guardado automático.
@@ -290,34 +292,14 @@ una propuesta en `ISLA-1.md`.
 - 2026-11-08 · Línea de la inicial de Planta: una bestia del bosque, ciervo-león con astas de
   madera, collar de hojas y cola de hoja. Tres formas: cría, joven (forma 2) y majestuosa
   (forma 3). Las imágenes de las formas 2 y 3 las generó el autor; prompts y notas en
-  `prompts-meshy.md`. En esta especie no hay diferencias entre hembra y macho.
+  `prompts-meshy.md`. En esta especie no hay diferencias entre hembra y macho. **Sustituida**
+  el 2026-11-10: la inicial de Planta es el lagarto chamán; qué hacer con el ciervo-león, en
+  `PENDIENTES.md`.
 
 ## Decisiones abiertas
 
-No se diseñan sin el autor. Cada una lleva la propuesta de Claude.
-
-- **Nombres:** del equipo enemigo (uno por variante), de las islas, de los personajes y de las
-  criaturas. Claude los propone antes de la tanda 3.
-- **Formato de la Liga.**
-- **Servicio de tiempo real** para la fase online.
-- **Método de arte de las criaturas (prueba F04).** El autor vio la primera versión del
-  generador por piezas (2026-11-07) y la juzga insuficiente: quiere criaturas «mucho más
-  curradas», al nivel de Pokémon. El estilo de `ARTE.md` («redondas y blandas», cuerpos de
-  revolución) se queda corto frente a lo que imagina. Opciones y datos en
-  `investigacion/12-arte-criaturas.md`. Propuesta de Claude: comparar en la misma vitrina una
-  criatura del generador esculpido (0 €) con 2 o 3 hechas con IA 3D en el plan gratis de
-  Meshy, y decidir en el ordenador del autor.
-  - Revisión del `probador` (2026-11-07): media de la rúbrica 1,5 sobre 3 (no premium).
-    Recomienda seguir con el generador; el riesgo que ve es la variedad entre 200 (misma cara,
-    tripa y patas; «anguloso» no cambia el cuerpo). Condición: una hoja de 10 a 12 criaturas
-    variadas, con una tercera forma, antes de hacer contenido.
-  - **El autor elige probar Meshy** (2026-11-07): quiere criaturas bonitas y algunas épicas;
-    acepta un gasto pequeño si hace falta. Tres criaturas de prueba (épica, débil y neutra);
-    prompts y pasos en `prompts-meshy.md`. También mira los paquetes de Quaternius.
-  - Fallos locales que solo importan si el generador sigue: al debilitarse se hunde en el
-    suelo, los ojos cerrados parecen tajos, las mejillas salen caqui en los tipos verdes,
-    faltan el bloom y el tilt-shift, tres parejas de tipos se confunden por color y «luz» se ve
-    oliva, y un 2 contra 2 de segundas formas pasaría de 40 llamadas.
+Están todas en `PENDIENTES.md`, con la propuesta de Claude para cada una. No se diseñan sin el
+autor.
 
 ## Criterios de calidad
 

@@ -2,7 +2,7 @@
 
 2026-11-07. El autor quiere criaturas bonitas, y algunas épicas, al nivel de los juegos del
 género. Se prueba la IA 3D de Meshy con su plan gratis antes de decidir el método de arte
-(`DISENO.md`, decisiones abiertas).
+(`PENDIENTES.md`).
 
 ## Reglas de los prompts (R8)
 
