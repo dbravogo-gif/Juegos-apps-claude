@@ -104,9 +104,15 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
   - y, más adelante, 2 salas pequeñas exclusivas.
 
   Todo lo demás es común.
-- **Las iniciales:** Agua, Planta e Infernal, todas con líneas de 3 formas. En la tabla forman
-  un triángulo perfecto: cada una vence a otra y resiste a la tercera.
-- **Las otras dos iniciales se consiguen intercambiando con amigos.**
+- **Las iniciales:** serán 4 (autor, 2026-11-10): Agua, Planta e Infernal, todas con líneas de
+  3 formas, y una cuarta por decidir. Las tres primeras forman en la tabla un triángulo perfecto:
+  cada una vence a otra y resiste a la tercera. La historia de la cuarta se hace con el autor.
+  - Conceptos del autor en `conceptos/`: Agua, un cocodrilo excursionista que acaba en hielo;
+    Planta, un lagarto con setas que acaba en chamán; Infernal, un elefante de orejas de fuego
+    que acaba en mamut acorazado.
+  - Con los segundos tipos de las formas finales, el triángulo puede romperse: se elige con el
+    cálculo de enfrentamientos de la tabla real (propuesta en el chat del 2026-11-10).
+- **Las otras iniciales se consiguen intercambiando con amigos.**
 - **Regalo por rejugar:** si ya has completado el juego con una inicial y empiezas otra partida
   con otra, al vencer al campeón de la isla 4 te regalan la inicial con la que lo completaste.
   - El registro de partidas completadas se guarda aparte de la partida, para que sobreviva al
