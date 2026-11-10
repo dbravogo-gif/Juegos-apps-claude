@@ -257,6 +257,8 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
 - 2026-11-07 · Más largo que Leyendas de Iberia: más contenido entre campeones.
 - 2026-11-07 · Las criaturas, con Meshy: el generador por piezas de la prueba F04 no convenció
   al autor (`prompts-meshy.md`, `investigacion/12-arte-criaturas.md`).
+- 2026-11-10 · Las criaturas de Meshy, con la luz pintada en la textura y sin la luz del juego:
+  iguales en cualquier sitio (`ARTE.md`).
 - 2026-11-10 · Reparto de las 200 criaturas por tipo principal, quintil y papel, con un
   Pokémon de referencia por criatura para copiar sus estadísticas base (`CRIATURAS.md`).
 - 2026-11-07 · Sesiones abiertas con guardado automático.

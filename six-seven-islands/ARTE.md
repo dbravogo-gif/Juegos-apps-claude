@@ -61,6 +61,10 @@ Cada una se distingue por la silueta a la distancia de juego.
   - El tipo se lee por el color y por una pieza característica: llama, hoja, aleta, cristal…
   - La evolución se lee por el tamaño y por las piezas: la segunda forma añade crestas o
     cuernos, y la tercera es más grande y más angulosa.
+  - **Las de Meshy llevan su luz pintada en la textura** y se dibujan sin la luz del juego:
+    se ven igual en cualquier sitio, como en el visor de Meshy, sin ajustar luces por escena
+    (autor, 2026-11-10). Proyectan sombra en el suelo. Si alguna parece una pegatina sobre el
+    diorama, se le añade un contorno o un brillo de borde; no antes.
 - **Peligros:**
   - La hierba alta es más alta, más oscura y se mece de otra manera.
   - El equipo enemigo viste formas angulosas.

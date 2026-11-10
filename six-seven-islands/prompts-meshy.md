@@ -35,8 +35,9 @@ las 200 comparten estilo y las imágenes sirven de retrato en los menús.
   3. **Poly Count:** 10.000 para la cría y el toro; 15.000 (el máximo) para la serpiente.
   4. **Texture:** si aparece en el panel, actívala (+10). Si no, al terminar, en la barra del
      visor, «Texture» (AI Texturing, 10 créditos), con **Image Input** = la misma imagen,
-     **2K**, **Remove Lighting** activado y **Generate PBR Maps** desactivado (el juego solo usa
-     el color).
+     **2K**, **Remove Lighting** desactivado y **Generate PBR Maps** desactivado (el juego solo
+     usa el color). La luz se queda pintada en la textura: quitarla estropeaba mucho la criatura,
+     y el juego la dibuja sin su propia luz (autor, 2026-11-10).
   5. Ni pose ni Rigging ni Animate: la pose fija es solo para humanoides y la animación la
      pone el juego. Smart Topology entrega la criatura separada en partes, y eso ayuda a
      animar cola, cabeza y aletas por separado.
