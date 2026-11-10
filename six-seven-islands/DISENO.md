@@ -73,9 +73,21 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
   - Líneas de 2 y de 3 formas, algunas ramificadas (una base que evoluciona de varias maneras),
     y especies sin evolución.
   - Las terceras formas, más fuertes, aparecen tarde.
-- **Tipos:** 16. Son los 15 de Leyendas de Iberia, obra del autor, con un cambio pequeño
-  decidido por él (2026-11-08): Plasma se funde en Eléctrico y entran Bicho y Veneno. La tabla
-  conserva las reglas de equilibrio de Leyendas (`src/data/tipos.ts`).
+- **Tipos:** 16 (`src/data/tipos.ts`). Parten de los 15 de Leyendas de Iberia, obra del autor:
+  Plasma se funde en Eléctrico, entran Bicho y Veneno (2026-11-08) y Roca sustituye a Luz con la
+  tabla revisada «C» (2026-11-10).
+  - Equilibrio: nadie tiene más de 4 debilidades ni más de 4 resistencias, como mucho 3 tipos
+    llegan a 4, y todo ataque tiene quien le resista. Lo vigilan las pruebas.
+  - La tabla es fija: no cambia con el nivel ni con la evolución.
+- **Ancestral, tipo especial** (autor, 2026-11-10): criaturas primordiales, guardianes antiguos y
+  legendarias.
+  - No es mejor que los demás: tiene 4 debilidades (Agua, Hielo, Espectral y Veneno).
+  - Su fuerza viene de las estadísticas, los movimientos exclusivos, la evolución y lo difícil
+    que es conseguirlas.
+  - Hay pocas no legendarias, con progresión controlada: primera forma modesta, segunda con buen
+    salto y la final de nivel pseudolegendario. Algunas ganan Ancestral al evolucionar.
+  - Antes de cerrar el reparto de especies, auditar las combinaciones de dos tipos con
+    Ancestral, Acero y Roca.
 - **Más largo que Leyendas de Iberia.** Entre un campeón y el siguiente hay mucho más: rutas,
   entrenadores, recados, tramos de historia y salas del equipo enemigo.
 - **Sesiones abiertas:** se juega todo el tiempo que se quiera, con guardado automático
@@ -242,10 +254,12 @@ una propuesta en `ISLA-1.md`.
   obligatorios se rigen por las reglas de Leyendas de Iberia, para todo el juego.
 - 2026-11-08 · Tipos: Plasma se funde en Eléctrico y entran Bicho y Veneno, con cambios
   mínimos en la tabla de Leyendas (opción C del autor). 16 tipos.
+- 2026-11-10 · Tabla de tipos «C» revisada: Roca sustituye a Luz. Claude corrige sus
+  contradicciones y los extremos (5 debilidades o resistencias). Reglas de Ancestral.
 - 2026-11-08 · Isla 1, segunda vuelta con el autor:
   - el malpaís y las dunas también son zona de encuentros, y deben reconocerse como tal;
   - la inicial desobedece en un 45 % de los turnos hasta el anciano;
-  - el gimnasio es de Luz;
+  - el gimnasio es de Luz (cambiado el 2026-11-10: la isla 1 es Lanzarote, con gimnasio de Roca);
   - los rivales solo hablan en la isla 1;
   - el 2 contra 2 no va en esta isla; llegará más adelante;
   - el paso al bosque se cierra hasta hablar con el anciano.

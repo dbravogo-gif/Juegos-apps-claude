@@ -42,7 +42,7 @@ De Leyendas de Iberia, obra del autor, solo se toman **reglas de juego**, nunca 
 (indicación del autor, 2026-11-07). El detalle, archivo por archivo, está en
 `src/core/ORIGEN.md`.
 
-- **No se importa entre proyectos.** La única excepción es una prueba, que compara la tabla de
+- **No se importa entre proyectos.** La única excepción es una prueba, que compara la lista de
   tipos con la de Leyendas.
 - **El combate es nuevo y N contra N:**
   - cada lado tiene 1 o 2 huecos activos;

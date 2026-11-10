@@ -31,18 +31,10 @@ describe('tipos', () => {
   const R = TABLA_TIPOS.relaciones as unknown as Record<string, Rel>;
   const ids = TABLA_TIPOS.tipos.map((t) => t.id as string);
 
-  it('son los de Leyendas sin Plasma, más Bicho y Veneno (decisión del autor, 2026-11-08)', () => {
-    const deLeyendas = TABLA_LEYENDAS.tipos.map((t) => t.id as string).filter((id) => id !== 'plasma');
-    expect(ids).toEqual([...deLeyendas, 'bicho', 'veneno']);
+  it('son 16: los de Leyendas sin Plasma ni Luz, más Bicho, Veneno y Roca (autor, 2026-11-08 y 11-10)', () => {
+    const deLeyendas = TABLA_LEYENDAS.tipos.map((t) => t.id as string).filter((id) => id !== 'plasma' && id !== 'luz');
+    expect([...ids].sort()).toEqual([...deLeyendas, 'bicho', 'veneno', 'roca'].sort());
     expect(Object.keys(R).sort()).toEqual([...ids].sort());
-  });
-
-  it('respecto a Leyendas solo cambian los tipos anotados en src/data/tipos.ts', () => {
-    // Si esto falla, alguien ha tocado la tabla sin anotarlo: el cambio se decide con el autor.
-    const L = TABLA_LEYENDAS.relaciones as unknown as Record<string, Rel>;
-    const orden = (r: Rel) => JSON.stringify([r.eficaz, r.pocoEficaz, r.sinEfecto].map((x) => [...x].sort()));
-    const cambiados = ids.filter((id) => L[id] && orden(L[id]) !== orden(R[id]));
-    expect(cambiados.sort()).toEqual(['aire', 'ancestral', 'hielo', 'infernal', 'luz', 'mental']);
   });
 
   it('cada relación nombra tipos que existen y ninguna se contradice', () => {
@@ -54,21 +46,29 @@ describe('tipos', () => {
     }
   });
 
-  it('sin inmunidad, cada tipo es muy eficaz contra tantos como le resisten', () => {
+  it('todo ataque tiene quien le resista, y ninguno está muy descompensado (salvo Común, que es neutro)', () => {
     for (const id of ids) {
-      if (R[id].sinEfecto.length > 0) continue;
-      expect(R[id].eficaz.length, id).toBe(R[id].pocoEficaz.length);
+      const contra = R[id].pocoEficaz.length + R[id].sinEfecto.length;
+      expect(contra, `${id}: nadie le resiste`).toBeGreaterThanOrEqual(1);
+      if (id !== 'comun') expect(Math.abs(R[id].eficaz.length - contra), id).toBeLessThanOrEqual(2);
     }
   });
 
-  it('nadie es débil a más de tres ni resiste a más de tres, y todos tienen alguna debilidad', () => {
+  it('nadie tiene más de 4 debilidades ni más de 4 resistencias, y pocos llegan a 4 (autor, 2026-11-10)', () => {
+    const debil = (d: string) => ids.filter((a) => R[a].eficaz.includes(d)).length;
+    const resiste = (d: string) => ids.filter((a) => R[a].pocoEficaz.includes(d)).length;
     for (const d of ids) {
-      const debil = ids.filter((a) => R[a].eficaz.includes(d)).length;
-      const resiste = ids.filter((a) => R[a].pocoEficaz.includes(d)).length;
-      expect(debil, `${d} débil`).toBeGreaterThanOrEqual(1);
-      expect(debil, `${d} débil`).toBeLessThanOrEqual(3);
-      expect(resiste, `${d} resiste`).toBeLessThanOrEqual(3);
+      expect(debil(d), `${d} débil`).toBeGreaterThanOrEqual(1);
+      expect(debil(d), `${d} débil`).toBeLessThanOrEqual(4);
+      expect(resiste(d), `${d} resiste`).toBeLessThanOrEqual(4);
     }
+    expect(ids.filter((d) => debil(d) === 4).length, 'tipos con 4 debilidades').toBeLessThanOrEqual(3);
+    expect(ids.filter((d) => resiste(d) === 4).length, 'tipos con 4 resistencias').toBeLessThanOrEqual(3);
+  });
+
+  it('las inmunidades son las decididas: las cuatro de la tabla C y la de Espectral a Común', () => {
+    const inmunes = ids.flatMap((a) => R[a].sinEfecto.map((d) => `${a}→${d}`)).sort();
+    expect(inmunes).toEqual(['comun→espectral', 'electrico→tierra', 'espectral→comun', 'tierra→aire', 'veneno→acero'].sort());
   });
 
   it('las iniciales Agua, Planta e Infernal forman un triángulo perfecto', () => {

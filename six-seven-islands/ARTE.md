@@ -38,7 +38,7 @@ No se improvisan colores.
 
 | Tipo | Color | Tipo | Color | Tipo | Color |
 | --- | --- | --- | --- | --- | --- |
-| Común | `#A9A39F` | Eléctrico | `#FFC83E` | Luz | `#FFEB9E` |
+| Común | `#A9A39F` | Eléctrico | `#FFC83E` | Roca | `#94775C` |
 | Agua | `#3A81F5` | Hielo | `#8BF1FF` | Oscuridad | `#504C47` |
 | Tierra | `#A96A17` | Infernal | `#E4312E` | Espectral | `#7C39ED` |
 | Planta | `#1FA74E` | Mental | `#ED499A` | Acero | `#91A0B5` |
