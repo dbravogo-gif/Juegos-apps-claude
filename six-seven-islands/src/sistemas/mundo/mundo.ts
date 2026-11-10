@@ -15,6 +15,7 @@ import type { Partida } from '../partida/partida';
 import { alturaCara, cumbres, decoracion, geometriaTerreno, pseudo } from './terreno';
 import { casaCanaria, faro, type OpcionesCasa, type UsoCasa } from './canario';
 import { VARIANTES, piezaKit, type PiezaKit } from './kit';
+import { geometriaEspuma, geometriaPiezasMar, planMar } from './mar';
 
 const OCULTA = new Matrix4().makeScale(0, 0, 0);
 const TROZO = 12;
@@ -149,9 +150,16 @@ export class Mundo implements Subsistema {
     mar.rotation.x = -Math.PI / 2;
     mar.position.set(m.ancho / 2, NIVEL_MAR, m.alto / 2);
     this.anadir(mar, false);
+    // Lo que hay en el mar: espuma en las orillas y olas (una sola malla), y rocas, boyas y
+    // barcas del kit (mar.ts). Sin nada, el mar junto al camino parecía que se podía pisar.
+    const planDelMar = planMar(m, cumbre);
+    const espuma = geometriaEspuma(planDelMar.espuma);
+    if (espuma) this.anadir(new Mesh(espuma, this.liso(COLORES.espuma, { rebote: 0 })), false);
 
     this.colocarEdificios();
     this.colocarNaturaleza(cumbre);
+    const enElMar = geometriaPiezasMar(planDelMar.piezas, (nombre) => this.pieza(nombre));
+    if (enElMar) this.anadir(new Mesh(enElMar, this.materialColores));
 
     // Decoración del suelo: hierba alta, malpaís y flores. Sin sombra propia: es tan baja que
     // apenas se ve, y cada malla con sombra es otra llamada de dibujo.

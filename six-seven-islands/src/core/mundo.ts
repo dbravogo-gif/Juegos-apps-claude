@@ -44,6 +44,10 @@ export const LEYENDA = {
   k: 'ordenador',
   l: 'cama',
   v: 'maceta',
+  e: 'escalera',
+  j: 'juguetes',
+  n: 'cocina',
+  q: 'sofá',
 } as const;
 
 export type Casilla = keyof typeof LEYENDA;
@@ -51,7 +55,7 @@ export type Casilla = keyof typeof LEYENDA;
 /** Se pueden pisar. Las X también, cuando su condición se cumple. */
 export const TRANSITABLES: ReadonlySet<string> = new Set(['.', ',', ':', '_', '"', ';', 'a', 'd', 'P', 'm']);
 /** Muebles de los interiores: no se pisan y se dibujan como piezas. */
-export const MUEBLES: ReadonlySet<string> = new Set(['o', 'h', 'c', 'k', 'l', 'v']);
+export const MUEBLES: ReadonlySet<string> = new Set(['o', 'h', 'c', 'k', 'l', 'v', 'e', 'j', 'n', 'q']);
 /** Terreno de encuentros: la hierba alta y el malpaís (y, más adelante, las dunas). */
 export const DE_ENCUENTROS: ReadonlySet<string> = new Set(['"', ';']);
 /** Las letras de los edificios. Cada grupo de casillas iguales y contiguas es un edificio. */

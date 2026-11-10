@@ -23,7 +23,8 @@ export const PASOS_FUNDIDO = 12;
 const ESPERA_TRAS_DIALOGO = 12;
 /** Los interiores se colocan lejos de la isla, uno al lado de otro. */
 const ORIGEN_INTERIORES = { x: 200, y: 0 };
-const SEPARACION_INTERIORES = 20;
+/** Entre sala y sala: la más ancha (el gimnasio) mide 16 casillas. */
+const SEPARACION_INTERIORES = 24;
 
 /** Lo que se puede cargar con poner(): para pruebas y para el guardado (F10). */
 export interface EstadoParcial {

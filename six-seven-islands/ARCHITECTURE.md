@@ -30,11 +30,16 @@ agentes. El patrón viene de *Claude of Duty* (Matt Shumer, MIT).
 - **El mundo entero se hace por código,** sin descargas:
   - `arte/montaje.ts`: juntar piezas con color por vértice, azar determinista y deformaciones;
   - `mundo/canario.ts`: casas y faro;
-  - `mundo/kit.ts`: plantas, rocas, muro, volcanes y nubes;
+  - `mundo/kit.ts`: plantas, rocas, muro, volcanes, nubes, boya y barca;
+  - `mundo/mar.ts`: qué hay en el mar (plan puro) y su espuma, en una sola malla;
   - `salas/salas.ts`: los interiores.
 - **Las islas son datos:** `data/isla1.ts` (Lanzarote) y `data/la-palma.ts` (guardada para la
   6). Se generan con un borrador en Python a partir de rectángulos y caminos; el mapa manda y las
   mismas pruebas de reglas vigilan las dos.
+- **Los interiores salen de los edificios:** `data/interiores-isla1.ts` recorre los edificios
+  del mapa y, para cada puerta, genera su sala con `data/generar-interior.ts`, del tamaño de su
+  fachada y con dos plantas en las casas de balcones. Solo el nombre de la sala y quién vive en
+  ella se escriben a mano.
 
 - Sin motor de física: el mundo es una rejilla de casillas con alturas.
 - El sonido, más adelante, con Web Audio o ZzFX (MIT, menos de 1 KB).

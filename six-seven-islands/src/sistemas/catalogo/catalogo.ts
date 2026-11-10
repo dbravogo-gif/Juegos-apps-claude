@@ -1,6 +1,6 @@
 // Subsistema «catalogo»: enseña las piezas propias en fila, con la luz y la cámara del juego, para
 // revisarlas de cerca y compararlas (ARTE.md, «Modelos del mundo»). No forma parte del juego.
-// Se abre con ?catalogo (plantas, rocas y muro), ?catalogo=edificios (casas, casonas y faro;
+// Se abre con ?catalogo (plantas, rocas, muro y lo del mar), ?catalogo=edificios (casas, casonas y faro;
 // primero los de Lanzarote, después los de La Palma) o ?catalogo=cubos (los cubos de captura:
 // arriba, la figura completa de cada nivel; abajo, la que se lanza en combate).
 // Teclas: ← → acercan la cámara a cada pieza; Esc vuelve a verlas todas. ?pieza=N empieza en la N.
@@ -45,6 +45,11 @@ const NATURALEZA = (): Muestra[][] => [
     { nombre: 'Malpaís', geometria: piezaKit('lajas', 0) },
     { nombre: 'Muro de piedra seca', geometria: muroLargo() },
     { nombre: 'Volcán', geometria: piezaKit('volcan', 0).scale(1.6, 1.6, 1.6) },
+  ],
+  [
+    { nombre: 'Boya', geometria: piezaKit('boya', 0) },
+    { nombre: 'Barca', geometria: piezaKit('barca', 0) },
+    { nombre: 'Barca', geometria: piezaKit('barca', 1) },
   ],
 ];
 

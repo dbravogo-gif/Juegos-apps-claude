@@ -38,8 +38,9 @@ export class Camara implements Subsistema {
   private distancia = DISTANCIA;
   /** Con quién se habla ahora, si tiene figura. */
   private hablante: string | null = null;
-  /** El centro de cada sala, para encuadrarla. */
+  /** El centro de cada sala y a qué distancia cabe entera, para encuadrarla. */
   private centros = new Map<string, Vector3>();
+  private distancias = new Map<string, number>();
   private quitar: (() => void)[] = [];
 
   init(ctx: Ctx): void {
@@ -48,14 +49,22 @@ export class Camara implements Subsistema {
     this.render = ctx.get<Render>('render');
     for (const [id, sala] of this.partida.interiores) {
       const c = new Vector3();
+      let [x0, x1, y0, y1] = [Infinity, -Infinity, Infinity, -Infinity];
       for (const k of sala.casillas.keys()) {
         const [x, y] = deClave(k);
         c.x += x;
         c.z += y;
+        [x0, x1, y0, y1] = [Math.min(x0, x), Math.max(x1, x), Math.min(y0, y), Math.max(y1, y)];
       }
       c.divideScalar(sala.casillas.size);
       c.y = alturaSuelo(0);
       this.centros.set(id, c);
+      // Las salas grandes (el gimnasio, el museo) se ven de más lejos, para que quepan enteras:
+      // de ancho, con el campo horizontal de una pantalla apaisada; de fondo, con el suelo
+      // inclinado a 50° y las paredes.
+      const ancho = x1 - x0 + 2;
+      const fondo = y1 - y0 + 1;
+      this.distancias.set(id, Math.max(DISTANCIA, ancho * 1.2, (fondo * Math.sin(ELEVACION) + 2.5) / (2 * Math.tan((CAMPO / 2) * GRADO))));
     }
     const c = ctx.camara;
     c.fov = CAMPO;
@@ -95,8 +104,10 @@ export class Camara implements Subsistema {
     if (this.mira.distanceTo(this.objetivo) > SALTO) this.mira.copy(this.objetivo);
     else this.mira.lerp(this.objetivo, k);
     const hablando = this.hablante !== null;
+    const dentro = this.partida.estado.dentro;
+    const lejos = dentro ? (this.distancias.get(dentro) ?? DISTANCIA) : DISTANCIA;
     this.elevacion += ((hablando ? ELEVACION_DIALOGO : ELEVACION) - this.elevacion) * k;
-    this.distancia += ((hablando ? DISTANCIA_DIALOGO : DISTANCIA) - this.distancia) * k;
+    this.distancia += ((hablando ? DISTANCIA_DIALOGO : lejos) - this.distancia) * k;
     this.colocar(ctx);
   }
 

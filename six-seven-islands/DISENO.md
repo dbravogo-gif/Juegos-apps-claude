@@ -219,13 +219,14 @@ turno. El servicio de tiempo real gratuito se elige al llegar a esa fase.
 ## Plan de nivel de la isla 1
 
 Está en `ISLA-1.md`: inspirada en Lanzarote desde el 2026-11-10. La versión de La Palma se
-guarda para la isla 6 (`LA-PALMA.md`). Son cinco zonas:
+guarda para la isla 6 (`LA-PALMA.md`). Son seis zonas:
 
 1. Zona inicial con el museo y la elección.
 2. Zona de combates (El Golfo).
 3. Pueblo con el anciano (La Geria).
 4. Zona larga (las Montañas del Fuego; en La Palma, el bosque).
-5. Capital con el gimnasio y el puerto.
+5. Zona opcional de encuentros (El Jable), añadida el 2026-11-10.
+6. Capital con el gimnasio y el puerto.
 
 Sustituye al plan anterior (2026-11-08). De lo que aquel plan tenía y esta idea no, el autor
 decidió el 2026-11-08: los rivales solo hablan, el 2 contra 2 llega más adelante, hay un recado
@@ -266,6 +267,10 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
 - 2026-11-10 · Combate en diagonal, como en los juegos del género: tu criatura delante a la
   izquierda, de espaldas, y la rival al fondo a la derecha. Arena aparte con dos fondos pintados
   (exterior y gimnasio) para todo el juego.
+- 2026-11-10 · Zonas de encuentros y de combates más grandes, con los mismos entrenadores
+  (`ISLA-1.md`).
+- 2026-11-10 · Un interior por edificio, generado a partir de su exterior: del tamaño de la
+  casa y, en las de dos plantas, escalera con juguetes delante que no dejan subir.
 - 2026-11-10 · Cubos de captura: la figura de Metatrón con los cinco sólidos platónicos, en
   cinco niveles por color (blanco, verde, azul, rojo y morado). Al combatir, el cubo cae, rebota
   y la criatura sale en un destello (`ARTE.md`).
@@ -290,6 +295,13 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
 - 2026-11-10 · Islas de este a oeste: la isla 1 es Lanzarote, hecha desde cero con la misma
   idea; La Palma se guarda para la 6 y El Hierro es la séptima. El gimnasio 1 es de Roca. De
   aquí en adelante, como mucho 4 plantas nuevas.
+- 2026-11-10 · **Ampliar es alargar, no ensanchar** (autor): más contenido y más tiempo para
+  completar cada isla. En Lanzarote, El Golfo pasa a 15 × 52, con el charco verde más grande, y
+  se añade El Jable, de 24 × 22, entre el Fuego y la capital: muros que obligan a zigzaguear,
+  hierba opcional, un entrenador opcional y una poción. El ensanche anterior se deshace. El autor
+  juzga los tamaños al probarlo.
+- 2026-11-10 · El mar nunca queda liso junto a donde se camina (autor): espuma en la orilla,
+  olas, rocas, boyas frente a las playas y barcas en el puerto (`mar.ts`).
 - 2026-11-10 · Tabla de tipos «C» revisada: Roca sustituye a Luz. Claude corrige sus
   contradicciones y los extremos (5 debilidades o resistencias). Reglas de Ancestral.
 - 2026-11-08 · Isla 1, segunda vuelta con el autor:

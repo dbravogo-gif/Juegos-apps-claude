@@ -133,6 +133,10 @@ Se revisan de cerca en `?catalogo` (plantas, rocas y muro) y `?catalogo=edificio
   Geria; en las Montañas del Fuego, el picón y la tierra con manchas negras, óxido y ocre, como
   en Timanfaya. Bajo una planta, el suelo es el de alrededor.
 - **Objetos del suelo:** un frasco que flota y gira hasta que se recoge.
+- **Interiores** (`data/generar-interior.ts`): uno por edificio, del tamaño de su fachada, con
+  muebles según el tipo (casa, refugio, tienda, gimnasio o museo): camas, cocina, mesa, sofá,
+  estanterías y plantas. En las casas de dos plantas, una escalera de madera con juguetes delante
+  (cubos, pelota y un osito) que no dejan subir.
 - **Silueta del jugador** cuando algo lo tapa: coral, que se ve sobre la cal y sobre el picón.
 - **La compañera:** la inicial elegida va detrás del jugador, a 0,6 de alto (las personas, 1,25),
   con saltitos al andar.

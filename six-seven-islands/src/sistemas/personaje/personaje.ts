@@ -75,6 +75,8 @@ export class Personaje implements Subsistema {
   /** Los personajes por id, con hacia dónde miran normalmente, para girarlos al hablar. */
   private porId = new Map<string, { figura: Figura; giro: number }>();
   private giro = 0;
+  /** Segundos que lleva el jugador sin moverse: entre casilla y casilla hay un instante parado. */
+  private quieto = 0;
   private geometrias: BufferGeometry[] = [];
   private materiales: Material[] = [];
   private objetos: Object3D[] = [];
@@ -188,6 +190,8 @@ export class Personaje implements Subsistema {
     const mezclador = new AnimationMixer(copia);
     const acciones = new Map<string, AnimationAction>();
     for (const clip of gltf.animations) acciones.set(clip.name, mezclador.clipAction(clip).setLoop(LoopRepeat, Infinity));
+    // El jugador anda a unas 5,5 casillas por segundo: a su ritmo normal, los pies patinaban.
+    acciones.get('Walking_A')?.setEffectiveTimeScale(1.6);
     const f: Figura = { raiz, mezclador, acciones, actual: '' };
     this.animar(f, 'Idle');
     this.figuras.push(f);
@@ -213,7 +217,10 @@ export class Personaje implements Subsistema {
     const t = e.paso === 0 ? 1 : Math.min(1, (e.paso + alfa) / PASOS_POR_CASILLA);
     this.posicion.set(p.x, h0 + (h1 - h0) * t, p.y);
     this.jugador.raiz.position.copy(this.posicion);
-    this.animar(this.jugador, e.paso > 0 ? 'Walking_A' : 'Idle');
+    // Andando se pasa un instante por paso 0 entre casilla y casilla: cambiar a «parado» ahí hacía
+    // que la animación tropezara en cada casilla (el autor veía el andar raro, 2026-11-10).
+    this.quieto = e.paso > 0 ? 0 : this.quieto + dt;
+    this.animar(this.jugador, this.quieto < 0.12 ? 'Walking_A' : 'Idle');
     let objetivo = GIRO[e.mira];
     while (objetivo - this.giro > Math.PI) objetivo -= Math.PI * 2;
     while (objetivo - this.giro < -Math.PI) objetivo += Math.PI * 2;

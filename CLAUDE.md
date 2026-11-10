@@ -58,7 +58,9 @@ proyecto nuevo necesita su ruta en `paths`, sus pruebas y su copia en «Montar e
 
 - Claude abre y fusiona en `main`, sin preguntar, los PR que no tocan carpetas de proyectos ni
   `.github/`: método, documentación, investigación, `.claude/` y `herramientas/`.
-- Los que tocan juegos, apps o la publicación se le consultan antes de fusionar.
+- Los que tocan juegos, apps o la publicación se le consultan antes de fusionar. Excepción
+  (autor, 2026-11-10): los de `six-seven-islands/` se fusionan y publican en cuanto pasan las
+  pruebas; él los prueba después.
 
 ## Dónde está cada cosa
 

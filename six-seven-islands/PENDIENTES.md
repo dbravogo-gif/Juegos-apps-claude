@@ -45,6 +45,10 @@ propuesta de Claude y qué frena mientras siga abierto.
 
 ## Islas y mundo
 
+- **Personajes nuevos de Meshy** (pedido del autor, 2026-11-10), con su andar, y la
+  personalización del protagonista: colores, peinados, ojos y sudadera o capa. Primero, una
+  prueba (`public/modelos/personas/LEEME.md`).
+
 11. **Tipo de cada gimnasio.**
     - Lanzarote es de Roca. Faltan Fuerteventura, Gran Canaria, Tenerife, La Gomera y La Palma.
     - El emblema del gimnasio de La Palma era un sol, del tipo Luz, que ya no existe.
