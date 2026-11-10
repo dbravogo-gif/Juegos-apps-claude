@@ -266,6 +266,9 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
 - 2026-11-10 · Combate en diagonal, como en los juegos del género: tu criatura delante a la
   izquierda, de espaldas, y la rival al fondo a la derecha. Arena aparte con dos fondos pintados
   (exterior y gimnasio) para todo el juego.
+- 2026-11-10 · Cubos de captura: la figura de Metatrón con los cinco sólidos platónicos, en
+  cinco niveles por color (blanco, verde, azul, rojo y morado). Al combatir, el cubo cae, rebota
+  y la criatura sale en un destello (`ARTE.md`).
 - 2026-11-10 · Las criaturas de Meshy, con la luz pintada en la textura y sin la luz del juego:
   iguales en cualquier sitio (`ARTE.md`).
 - 2026-11-10 · Reparto de las 200 criaturas por tipo principal, quintil y papel, con un

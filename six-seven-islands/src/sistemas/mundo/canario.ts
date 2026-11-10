@@ -93,8 +93,10 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
   const ventana = (x: number, y: number, an: number, al: number) => {
     M.caja(an + 0.12, al + 0.12, 0.06, x, y - 0.06, frente, COLORES.canteria);
     M.caja(an, al, 0.08, x, y, frente, COLORES.cristal);
-    M.caja(0.035, al, 0.1, x, y, frente, madera);
-    M.caja(an, 0.035, 0.1, x, y + al * 0.55, frente, madera);
+    // Los barrotes, 1 cm más cortos que el cristal y el de en medio menos hondo: así ninguna cara
+    // coincide con otra y no titilan (APRENDIDO.md, 2026-11-10).
+    M.caja(0.035, al - 0.02, 0.1, x, y + 0.01, frente, madera);
+    M.caja(an - 0.02, 0.035, 0.09, x, y + al * 0.55, frente, madera);
     for (const s of [-1, 1]) M.caja(an / 2, al, 0.04, x + s * (an / 2 + 0.06 + an / 4), y, frente + 0.01, madera, 0.95);
     M.caja(an + 0.2, 0.06, 0.16, x, y - 0.1, frente, COLORES.canteria, 1.06);
   };
@@ -134,7 +136,7 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
     const alto = H - 0.12;
     for (const dx of [-0.95, -0.5, 0.5, 0.95]) {
       M.pon(new CylinderGeometry(0.075, 0.09, alto - 0.12, 10).translate(px + dx, 0.12 + (alto - 0.12) / 2, z), COLORES.canteria, 1.06);
-      M.caja(0.24, 0.12, 0.24, px + dx, 0, z, COLORES.canteria, 0.92);
+      M.caja(0.24, 0.13, 0.24, px + dx, 0, z, COLORES.canteria, 0.92); // 1 cm sobre el escalón
     }
     M.caja(2.3, 0.14, fondoP + 0.08, px, alto, frente + fondoP / 2, COLORES.canteria);
     const fronton = new CylinderGeometry(1, 1, 0.12, 3).rotateX(-Math.PI / 2).scale(1.4, 0.3, 1);
@@ -184,7 +186,7 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
     for (let i = 0; i < postes; i++) {
       const x = -bw / 2 + (i * bw) / (postes - 1);
       M.caja(0.06, 0.98, 0.06, x, y0 + 0.07, zb, COLORES.balcon, 0.8);
-      M.caja(0.06, 0.08, vuelo, x, y0 - 0.08, frente + vuelo / 2, COLORES.balcon, 0.7); // canes
+      M.caja(0.06, 0.07, vuelo, x, y0 - 0.08, frente + vuelo / 2, COLORES.balcon, 0.7); // canes, 1 cm por debajo de la imposta
     }
     M.pon(new BoxGeometry(bw + 0.16, 0.05, vuelo + 0.18).rotateX(0.2).translate(0, y0 + 1.1, frente + vuelo / 2), COLORES.tejaCanaria, 0.85);
   }
@@ -200,14 +202,16 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
     const base = H - 0.05;
     for (const s of [1, -1]) {
       const enFaldon = (g: BufferGeometry) => g.rotateX(s * ang).translate(0, base + sube / 2, (s * mitad) / 2);
-      M.pon(enFaldon(new BoxGeometry(anchoT, 0.06, largo)), COLORES.tejaCanaria, 0.78);
+      // El faldón de atrás, 2 cm más estrecho: los dos se cruzan en la cumbrera y sus costados
+      // coincidían.
+      M.pon(enFaldon(new BoxGeometry(anchoT - (s < 0 ? 0.02 : 0), 0.06, largo)), COLORES.tejaCanaria, 0.78);
       const filas = Math.floor(anchoT / TEJA);
       for (let i = 0; i < filas; i++) {
         const x = -anchoT / 2 + TEJA * (i + 0.5);
         M.pon(enFaldon(new CylinderGeometry(0.06, 0.06, largo, 4, 1, true, Math.PI / 2, Math.PI).rotateX(Math.PI / 2).translate(x, 0.03, 0)), COLORES.tejaCanaria, 0.88 + r() * 0.16);
       }
     }
-    M.pon(new CylinderGeometry(0.075, 0.075, anchoT, 5).rotateZ(Math.PI / 2).translate(0, base + sube + 0.03, 0), COLORES.tejaCanaria, 0.72);
+    M.pon(new CylinderGeometry(0.075, 0.075, anchoT + 0.02, 5).rotateZ(Math.PI / 2).translate(0, base + sube + 0.03, 0), COLORES.tejaCanaria, 0.72);
     for (const s of [-1, 1]) M.pon(triangulo((s * W) / 2, [-D / 2, H], [D / 2, H], [0, base + sube - 0.02]), pared);
     if (rural && r() < 0.6) {
       const x = (r() < 0.5 ? -1 : 1) * W * 0.25;
@@ -222,8 +226,10 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
     // En Lanzarote, la azotea es blanca, pero no tanto como el pretil, para que se lea su forma.
     M.caja(W - 0.02, 0.04, D - 0.02, 0, H + 0.08, 0, lisa ? COLORES.azoteaBlanca : COLORES.azotea);
     for (const s of [-1, 1]) {
-      M.caja(W + 0.1, 0.24, 0.08, 0, H + 0.08, s * (D / 2 + 0.03), pared);
-      M.caja(0.08, 0.24, D + 0.1, s * (W / 2 + 0.03), H + 0.08, 0, pared);
+      // El pretil de delante y el de detrás cubren las esquinas; los de los lados caben entre
+      // ellos, sin solaparse (las caras de arriba titilaban).
+      M.caja(W + 0.14, 0.24, 0.08, 0, H + 0.08, s * (D / 2 + 0.03), pared);
+      M.caja(0.08, 0.24, D - 0.02, s * (W / 2 + 0.03), H + 0.08, 0, pared);
     }
     if (uso === 'gimnasio' && op.emblema === 'volcan') {
       // Un volcán pintado en la azotea: el gimnasio de Roca se reconoce desde arriba.

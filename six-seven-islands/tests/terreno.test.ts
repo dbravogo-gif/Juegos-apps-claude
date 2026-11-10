@@ -6,6 +6,7 @@ import { Color } from 'three/webgpu';
 import { clave, construirMundo, type Casilla } from '../src/core/mundo';
 import { ISLA_1 } from '../src/data/isla1';
 import { alturaCara, colorDeCasilla, manchas } from '../src/sistemas/mundo/terreno';
+import { NIVEL_MAR } from '../src/arte/escala';
 
 const m = construirMundo(ISLA_1);
 const cara = (c: Casilla, h = 0) => alturaCara({ c, zona: 'x', h }, undefined);
@@ -15,6 +16,10 @@ describe('terreno de Lanzarote', () => {
     expect(cara('L') - cara(';')).toBeGreaterThanOrEqual(0.3);
     expect(cara(';')).toBeGreaterThan(cara('_'));
     expect(cara('Q')).toBe(cara('L'));
+  });
+
+  it('el charco verde queda por encima del mar, también en la playa (si no, titila en azul)', () => {
+    for (const h of [0, 1, 2]) expect(cara('w', h)).toBeGreaterThan(NIVEL_MAR + 0.05);
   });
 
   it('bajo una planta, el suelo es del color del de alrededor', () => {

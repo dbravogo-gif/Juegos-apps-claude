@@ -50,8 +50,9 @@ propuesta de Claude y qué frena mientras siga abierto.
     - El emblema del gimnasio de La Palma era un sol, del tipo Luz, que ya no existe.
     - **Frena:** dónde dar las criaturas que les hacen frente (punto 6).
 12. **Formato de la Liga** (en El Hierro, la isla que reaparece).
-13. **Nombres:** del equipo enemigo (uno por variante), de las islas y sus lugares, de los
-    personajes y de las criaturas. Claude los propone antes de la tanda 3.
+13. **Nombres:** de los cubos de captura (ahora, por su color), del equipo enemigo (uno por
+    variante), de las islas y sus lugares, de los personajes y de las criaturas. Claude los
+    propone antes de la tanda 3.
 14. **Kit por código.** El autor puntúa de 1 a 5 las piezas en `?catalogo` y en la isla; lo que
     no llegue a 4 lo rehace con Meshy. Están por llegar del autor las estatuas, las iniciales,
     el drago y las rocas del malpaís.
