@@ -46,20 +46,23 @@ Del autor, 2026-11-10. Es la «lista de reglas» a la que nos referimos al dise�
 | Hielo | 8 | Bicho | 16 |
 | Infernal | 16 | Veneno | 12 |
 
-Las iniciales suman aparte, por tipo principal: Agua 3, Planta 6 (Planta/Mental y
-Planta/Veneno) e Infernal 3.
+Las iniciales suman aparte, por tipo principal: Agua 3, Planta 3, Infernal 3 y Roca 3
+(autor, 2026-11-10).
 
-**Enfrentamientos de las iniciales** (mejor ataque de su tipo; formas con los dos tipos):
+**Enfrentamientos de las iniciales** (mejor ataque de su tipo). El ciclo del autor: el agua
+gana a la roca, la roca al fuego, el fuego a la planta y la planta al agua.
 
-| Ataca ↓ a → | Agua | Planta/Mental | Infernal | Planta/Veneno |
+| Ataca ↓ a → | Agua | Planta | Infernal | Roca |
 | --- | --- | --- | --- | --- |
-| Agua | — | ×½ | ×2 | ×½ |
-| Planta/Mental | ×2 | — | ×2 | ×2 |
-| Infernal | ×½ | ×2 | — | ×2 |
-| Planta/Veneno | ×2 | ×2 | ×1 | — |
+| Agua | — | ×½ | ×2 | ×2 |
+| Planta | ×2 | — | ×½ | ×2 |
+| Infernal | ×½ | ×2 | — | ×½ |
+| Roca | ×1 | ×1 | ×2 | — |
 
-Con Agua sin segundo tipo, Agua solo vence a Infernal y pierde contra las dos Planta;
-Planta/Mental no pierde contra ninguna (2026-11-10).
+- En las primeras formas, el ciclo se cumple, pero Agua y Planta ganan también a la pareja de
+  enfrente: ganan 2 duelos, e Infernal y Roca, 1.
+- En las finales, con Planta/Mental y Roca/Veneno, Infernal no gana a ninguna. Lo equilibra el
+  autor con los segundos tipos.
 
 **Por quintil de fuerza** (las 188 de la lista): Q1 42 · Q2 46 · Q3 44 · Q4 40 · Q5 16. Las 16
 del Q5 son las 12 legendarias y las 4 formas finales más fuertes (líneas 25 a 28).

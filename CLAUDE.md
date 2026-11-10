@@ -32,6 +32,9 @@ constitución. No toques un proyecto distinto del que te han pedido.
   - En Safari se ven 393 × 659 px, con las barras del navegador. Instalado como app, 393 × 852
     con zonas seguras. Densidad de píxeles 3: limitar el render a 2.
   - Aquí solo hay Chromium: lo propio de Safari (WebKit) se comprueba en su iPhone.
+- **Si el autor tiene que subir archivos a GitHub, se le pasa siempre el enlace directo de
+  subida** (`…/upload/<rama>/<carpeta>`), con la carpeta ya creada. No maneja bien GitHub
+  (autor, 2026-11-10).
 - La lógica va en un núcleo puro y determinista (semilla, sin DOM, sin `Math.random` ni reloj),
   con pruebas. El contenido son datos.
 

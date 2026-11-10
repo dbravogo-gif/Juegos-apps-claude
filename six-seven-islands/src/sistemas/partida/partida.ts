@@ -15,7 +15,7 @@ import { NOMBRE_OBJETO, OBJETIVOS } from '../../data/textos-isla1';
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Entrada } from '../entrada/entrada';
 
-export type Modo = 'explorar' | 'dialogo' | 'fundido';
+export type Modo = 'explorar' | 'dialogo' | 'fundido' | 'combate';
 
 /** Pasos fijos de cada mitad del fundido al cruzar una puerta: 0,2 s a negro y 0,2 s de vuelta. */
 export const PASOS_FUNDIDO = 12;
@@ -97,6 +97,8 @@ export class Partida implements Subsistema {
   }
 
   pasoFijo(): void {
+    // En combate manda el subsistema «combate»: aquí no se anda ni se habla.
+    if (this.modo === 'combate') return;
     if (this.modo === 'fundido') return this.pasoFundido();
     if (this.modo === 'dialogo') return this.pasoDialogo();
     if (this.espera > 0) {
@@ -190,6 +192,18 @@ export class Partida implements Subsistema {
     this.modo = 'dialogo';
     this.entrada.olvidar();
     this.ctx.eventos.emit('dialogo:abrir', { guionId });
+  }
+
+  /** Lo llama «combate» al empezar (ya en negro) y al terminar. */
+  empezarCombate(): void {
+    this.modo = 'combate';
+    this.entrada.olvidar();
+  }
+
+  terminarCombate(): void {
+    this.modo = 'explorar';
+    this.espera = ESPERA_TRAS_DIALOGO;
+    this.entrada.olvidar();
   }
 
   /** Empieza el fundido para entrar en un interior (o salir, con null). */

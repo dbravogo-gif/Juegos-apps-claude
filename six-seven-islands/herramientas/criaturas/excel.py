@@ -14,7 +14,7 @@ TIPOS = [('Común', 16, 0xa8a29e), ('Agua', 21, 0x3b82f6), ('Tierra', 13, 0xa162
          ('Aire', 13, 0x7dd3fc), ('Eléctrico', 11, 0xeab308), ('Hielo', 8, 0x67e8f9), ('Infernal', 16, 0xdc2626),
          ('Mental', 8, 0xec4899), ('Oscuridad', 8, 0x57534e), ('Espectral', 7, 0x7c3aed), ('Acero', 6, 0x94a3b8),
          ('Roca', 11, 0x9a7e64), ('Ancestral', 4, 0xb45309), ('Bicho', 16, 0x84cc16), ('Veneno', 12, 0xa21caf)]
-INICIALES = {'Agua': 3, 'Planta': 6, 'Infernal': 3}
+INICIALES = {'Agua': 3, 'Planta': 3, 'Infernal': 3, 'Roca': 3}
 LINEAS_INICIALES = {'Torchic', 'Turtwig', 'Piplup', 'Aron'}
 
 def hexc(n): return '%06X' % n
@@ -35,7 +35,7 @@ for e in especies:
     if e[0][0] not in LINEAS_INICIALES: quintiles[e[0][1]].append(e)
 quintiles[5] += legendarias
 assert sum(len(f) for q in quintiles.values() for f in q) == 188
-INI = [('Inicial Agua', 'Agua'), ('Inicial Planta (lagarto chamán)', 'Planta'), ('Inicial Infernal', 'Infernal'), ('Cuarta inicial', 'Planta')]
+INI = [('Inicial Agua (caimán)', 'Agua'), ('Inicial Planta (lagarto chamán)', 'Planta'), ('Inicial Infernal (elefante)', 'Infernal'), ('Inicial Roca (armadillo)', 'Roca')]
 
 wb = Workbook()
 ws = wb.active
@@ -184,7 +184,7 @@ for r in (rt + 1, rt + 2):
 notas = [
     'Notas',
     '· Objetivo (foto del autor): cuántas criaturas de cada tipo principal debe haber, sin contar las 4 líneas de iniciales. Suma 188. Es aproximado.',
-    '· Iniciales: sus 12 criaturas, por tipo principal (Agua 3, Planta 6 e Infernal 3). Con ellas, el total es 200.',
+    '· Iniciales: sus 12 criaturas, por tipo principal (Agua, Planta, Infernal y Roca, 3 cada una). Con ellas, el total es 200.',
     '· Diferencia = hay − objetivo total. Verde: justo. Rojo: sobran. Negativo: faltan.',
     '· Las cifras en azul son datos del autor; el resto se calcula solo.',
 ]

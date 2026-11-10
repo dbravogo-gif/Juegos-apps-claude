@@ -296,3 +296,140 @@ body {
   white-space: nowrap;
   pointer-events: none;
 }
+
+/* Combate: fichas de vida, caja de mensajes y ataques (src/sistemas/combate). */
+.combate {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+.combate[hidden],
+.combate [hidden] {
+  display: none;
+}
+
+.combate-ficha {
+  position: absolute;
+  width: 270px;
+  padding: 10px 16px 12px;
+  border-radius: 14px;
+  background: rgb(255 246 234 / 0.95);
+  color: var(--texto);
+  box-shadow: 0 6px 18px rgb(59 42 32 / 0.25);
+}
+
+.combate-ficha.rival {
+  top: 28px;
+  left: 32px;
+}
+
+.combate-ficha.propia {
+  right: 32px;
+  bottom: 196px;
+}
+
+.combate-nombre {
+  display: inline-block;
+  margin: 0 0 6px;
+  font: 700 18px/1.2 system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+.combate-nivel {
+  float: right;
+  margin: 2px 0 0;
+  font: 600 15px/1.2 system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+.combate-vida {
+  clear: both;
+  height: 10px;
+  border-radius: 6px;
+  background: #5b4a40;
+  overflow: hidden;
+}
+
+.combate-relleno {
+  height: 100%;
+  width: 100%;
+  border-radius: 6px;
+  background: #4cc26e;
+  transition: width 0.5s ease, background 0.3s;
+}
+
+.combate-numeros {
+  margin: 6px 0 0;
+  text-align: right;
+  font: 600 14px/1.2 system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+.combate-caja {
+  position: absolute;
+  left: 50%;
+  bottom: 28px;
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  width: min(880px, calc(100% - 48px));
+  min-height: 118px;
+  box-sizing: border-box;
+  padding: 16px 22px;
+  transform: translateX(-50%);
+  border-radius: 16px;
+  background: rgb(255 246 234 / 0.97);
+  color: var(--texto);
+  box-shadow: 0 8px 24px rgb(59 42 32 / 0.28);
+}
+
+.combate-texto {
+  flex: 1;
+  margin: 0;
+  font: 500 20px/1.4 system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+.combate-menu {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 54%;
+}
+
+.combate-ataque {
+  display: block;
+  padding: 8px 12px;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.combate-ataque b {
+  display: block;
+  font: 700 16px/1.25 system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+.combate-ataque small {
+  font: 500 13px/1.3 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color: #6b5a4f;
+}
+
+.combate-ataque small i {
+  margin-right: 6px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  color: #fff;
+  font-style: normal;
+}
+
+.combate-ataque.elegido {
+  border-color: var(--coral);
+  box-shadow: 0 0 0 3px rgb(255 107 107 / 0.25);
+}
+
+.combate-velo {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: #1d1720;
+}

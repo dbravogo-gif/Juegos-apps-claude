@@ -114,16 +114,17 @@ export class Sistema implements Subsistema {
 | (biblioteca) | `src/arte/` | La paleta, el material base compartido (`MaterialDiorama`, la receta de la skill `juego-3d`) y la escala del mundo (`escala.ts`: casilla de 1 unidad y escalón de 0,5). `modelos.ts` carga los glTF y los pasa al material del juego |
 | `motor` | `src/motor/` | El bucle, `ctx`, el registro de subsistemas, el paso fijo, los eventos y los niveles de calidad |
 | `render` | `src/sistemas/render/` | El renderizador, la escena, las luces, las sombras y el postproceso |
-| `camara` | `src/sistemas/camara/` | La cámara de diorama: sigue al jugador en la isla, encuadra la sala entera en los interiores y, al hablar, se acerca y sube a 72° entre los dos. Después, la de combate |
+| `camara` | `src/sistemas/camara/` | La cámara de diorama: sigue al jugador en la isla, encuadra la sala entera en los interiores y, al hablar, se acerca y sube a 72° entre los dos. En combate la coloca «combate» |
 | `entrada` | `src/sistemas/entrada/` | El teclado (no hay ratón): direcciones, interactuar (E, Enter o Espacio) y cancelar. Un toque corto cuenta como un paso, también si llega mientras se termina el anterior |
 | `mundo` | `src/sistemas/mundo/` | La isla en 3D, toda por código: terreno en terrazas por alturas, cumbres, mar, casas canarias (`canario.ts`) y kit de naturaleza (`kit.ts`), con los estilos y colores de cada isla, instanciado por trozos de 12 × 12, pasos cerrados y objetos. Publica `tapas`, la altura de lo más alto de cada casilla. Lee «partida»; no la cambia |
 | `criaturas` | `src/sistemas/criaturas/` | El generador de criaturas por piezas y su animación procedural. Se pide con `crear(aspecto)` y se anima con `accion(criatura, accion)` |
 | `personaje` | `src/sistemas/personaje/` | El jugador y los personajes de la isla y de los interiores (KayKit, animados), que se giran hacia el jugador al hablar; la silueta cuando algo tapa al jugador (con las `tapas` de «mundo») y las líneas de visión; más adelante, el generador y la personalización (F12) |
-| `salas` | `src/sistemas/salas/` | Los interiores en 3D, por código: dioramas pequeños lejos de la isla, con la pared de delante baja, muebles según las letras del mapa y las estatuas provisionales del museo. Una malla por sala |
-| `combate` | `src/sistemas/combate/` | La escena de combate: presenta los eventos del núcleo, con sus efectos |
+| `salas` | `src/sistemas/salas/` | Los interiores en 3D, por código: dioramas pequeños lejos de la isla, con la pared de delante baja, paredes y mostradores por tramos, muebles según las letras del mapa y los pedestales del museo con el modelo de cada inicial en piedra. Una malla por sala |
+| `companera` | `src/sistemas/companera/` | La inicial elegida, que va una casilla detrás del jugador por su mismo camino (`rastro.ts`). Lee «partida» y «personaje» |
+| `combate` | `src/sistemas/combate/` | El combate, en una arena aparte: fondo pintado, dos plataformas y las criaturas en diagonal; fichas de vida, mensajes y menú de ataques con teclado; presenta los eventos del núcleo con sus animaciones. Por ahora con datos provisionales (`data/combate-prueba.ts`) y solo con el primer entrenador. Emite `combate:fin` |
 | `captura` | `src/sistemas/captura/` | El gesto, el vuelo del objeto y el resultado en pantalla |
 | `interfaz` | `src/sistemas/interfaz/` | La interfaz en DOM: el cartel de zona, la caja de diálogo (quién habla, texto letra a letra y sí o no), el fundido al cruzar puertas y la ayuda; después, menús, marcador, tienda y equipo |
-| `partida` | `src/sistemas/partida/` | El estado del núcleo (la isla y sus interiores), los modos (explorar, diálogo y fundido; después combate y menú) y el guardado automático. Avanza a paso fijo con la entrada |
+| `partida` | `src/sistemas/partida/` | El estado del núcleo (la isla y sus interiores), los modos (explorar, diálogo, fundido y combate; después menú) y el guardado automático. Avanza a paso fijo con la entrada |
 | `depuracion` | `src/sistemas/depuracion/` | El panel de ajustes (solo en desarrollo) y los ganchos de `window.__JUEGO__` |
 | `catalogo` | `src/sistemas/catalogo/` | Herramienta, no juego: con `?catalogo` o `?catalogo=edificios`, las piezas propias del mundo en fila, con la luz y la cámara del juego; ← → acercan la cámara a cada una |
 | `prueba` | `src/sistemas/prueba/` | **Temporal:** la vitrina de la prueba de arte (`F04`), con `?vitrina`. Se queda para probar los modelos de Meshy; se borra cuando las criaturas entren en el juego |
@@ -218,6 +219,8 @@ y `?semilla=n`. Mientras exista la vitrina de F04: `?vista=combate|todas|explora
   - Lo que más pesa en triángulos son los laureles (300 cada uno) y las plataneras: la primera
     rebaja sería una variante ligera para el interior del bosque, que solo enseña la copa.
   - No está medido por subsistema.
+- **Medido en combate** (2026-11-10): 12 llamadas y 60.000 triángulos, con dos criaturas de
+  Meshy de unos 15.000 triángulos cada una.
 - **Medido en Lanzarote** (2026-11-10, calidad media, con conos, coladas altas y guijarros):
   - el peor punto es la caldera de las Montañas del Fuego, con 250 llamadas y 295.000
     triángulos: es lo que más lajas de colada ve a la vez;

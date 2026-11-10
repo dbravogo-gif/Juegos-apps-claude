@@ -199,7 +199,7 @@ describe('diálogos', () => {
   });
 
   it('elegir una estatua elige la inicial y abre el paso; después solo cuenta su historia', () => {
-    for (const tipo of ['planta', 'agua', 'infernal']) {
+    for (const tipo of ['planta', 'agua', 'infernal', 'roca']) {
       const { efectos } = leer(abrirDialogo(elegirDialogo(GUION_ISLA1, `estatua-${tipo}`, [], null)!), true);
       expect(efectos).toEqual([{ condicion: 'inicial-elegida', inicial: tipo }]);
       const luego = elegirDialogo(GUION_ISLA1, `estatua-${tipo}`, ['inicial-elegida'], tipo)!;

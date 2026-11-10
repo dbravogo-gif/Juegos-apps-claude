@@ -98,25 +98,27 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
 - **Sesiones abiertas:** se juega todo el tiempo que se quiera, con guardado automático
   continuo. El navegador puede cerrarse en cualquier momento.
 
-### Las tres historias
+### Las cuatro historias
 
-- Al empezar se cuentan las historias de las tres criaturas iniciales, y el jugador elige con
-  cuál se identifica.
+- Al empezar, en el museo, cuatro estatuas cuentan las historias de las cuatro criaturas
+  iniciales, y el jugador elige con cuál se identifica (autor, 2026-11-10).
 - La elección fija la **variante** de la partida. Cambian:
   - la historia y los uniformes del equipo enemigo, desde el principio;
   - y, más adelante, 2 salas pequeñas exclusivas.
 
   Todo lo demás es común.
-- **Las iniciales:** serán 4, todas con líneas de 3 formas (autor, 2026-11-10):
-  - Agua, que no acaba en Hielo;
-  - Planta/Mental;
-  - Infernal;
-  - la cuarta, Planta/Veneno. Su historia se hace con el autor.
+- **Las iniciales:** 4, todas con líneas de 3 formas (autor, 2026-11-10):
+  - Agua, que no acaba en Hielo: un caimán con una burbuja de agua en la cabeza;
+  - Planta, que acaba en chamán (Planta/Mental): un lagarto con hojas y musgo;
+  - Infernal: un elefante de orejas de fuego que acaba en mamut acorazado;
+  - Roca, con Veneno en la segunda y la tercera forma: un armadillo de piedra. Sustituye a
+    Planta/Veneno. Su historia se hace con el autor (la del museo es provisional).
+  - **Ciclo del autor:** el agua gana a la roca, la roca al fuego, el fuego a la planta y la
+    planta al agua. Con la tabla real, en las primeras formas Agua y Planta ganan además a la
+    pareja de enfrente (Infernal y Roca); los segundos tipos los equilibra el autor
+    (`CRIATURAS.md`).
   - Sus estadísticas son propias: las pasa el autor, no salen de la lista de `CRIATURAS.md`.
-  - Enfrentamientos con la tabla real, en `CRIATURAS.md`.
-  - Conceptos del autor en `conceptos/`: Agua, un cocodrilo excursionista; Planta, un lagarto
-    con setas que acaba en chamán; Infernal, un elefante de orejas de fuego
-    que acaba en mamut acorazado.
+  - Modelos de Meshy de la primera forma en `public/modelos/iniciales/`, con su imagen 2D.
   - Los segundos tipos los elige el autor, cuidando que no rompan el equilibrio (2026-11-10).
 - **Las otras iniciales se consiguen intercambiando con amigos.**
 - **Regalo por rejugar:** si ya has completado el juego con una inicial y empiezas otra partida
@@ -257,6 +259,15 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
 - 2026-11-07 · Más largo que Leyendas de Iberia: más contenido entre campeones.
 - 2026-11-07 · Las criaturas, con Meshy: el generador por piezas de la prueba F04 no convenció
   al autor (`prompts-meshy.md`, `investigacion/12-arte-criaturas.md`).
+- 2026-11-10 · Las 4 iniciales: Agua, Planta (Planta/Mental), Infernal y Roca (Roca/Veneno
+  desde la segunda forma), con cuatro estatuas en el museo, una por inicial, y cuatro
+  variantes.
+- 2026-11-10 · La inicial elegida te sigue por el mapa.
+- 2026-11-10 · Combate en diagonal, como en los juegos del género: tu criatura delante a la
+  izquierda, de espaldas, y la rival al fondo a la derecha. Arena aparte con dos fondos pintados
+  (exterior y gimnasio) para todo el juego.
+- 2026-11-10 · Las criaturas de Meshy, con la luz pintada en la textura y sin la luz del juego:
+  iguales en cualquier sitio (`ARTE.md`).
 - 2026-11-10 · Reparto de las 200 criaturas por tipo principal, quintil y papel, con un
   Pokémon de referencia por criatura para copiar sus estadísticas base (`CRIATURAS.md`).
 - 2026-11-07 · Sesiones abiertas con guardado automático.

@@ -6,6 +6,8 @@ import { nivelInicial, CALIDADES, type NivelCalidad } from './motor/calidad';
 import { Motor, type ClaseSubsistema } from './motor/motor';
 import { Camara } from './sistemas/camara/camara';
 import { Catalogo } from './sistemas/catalogo/catalogo';
+import { Combate } from './sistemas/combate/combate';
+import { Companera } from './sistemas/companera/companera';
 import { Criaturas } from './sistemas/criaturas/criaturas';
 import { Depuracion } from './sistemas/depuracion/depuracion';
 import { Entrada } from './sistemas/entrada/entrada';
@@ -20,7 +22,7 @@ import './estilo.css';
 
 // El juego: la isla 1 para explorar. Con ?vitrina, la vitrina de criaturas de la prueba de arte;
 // con ?catalogo, las piezas propias del mundo en fila para revisarlas.
-const JUEGO: ClaseSubsistema[] = [Render, Entrada, Partida, Mundo, Salas, Personaje, Camara, Interfaz, Depuracion];
+const JUEGO: ClaseSubsistema[] = [Render, Entrada, Partida, Mundo, Salas, Personaje, Companera, Camara, Combate, Interfaz, Depuracion];
 const VITRINA: ClaseSubsistema[] = [Render, Criaturas, Prueba, Depuracion];
 const CATALOGO: ClaseSubsistema[] = [Render, Catalogo, Depuracion];
 
