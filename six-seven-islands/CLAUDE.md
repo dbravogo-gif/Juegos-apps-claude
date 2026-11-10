@@ -8,6 +8,7 @@ Vitest.
 
 - Lee `ESTADO.md`, `DISENO.md` (las decisiones cerradas y las abiertas) y `ARCHITECTURE.md`.
 - Para lo visual, lee `ARTE.md` y la skill `juego-3d`.
+- Para diseñar criaturas, lee `CRIATURAS.md`: el reparto y el Pokémon de referencia de cada una.
 - **Vocabulario:** una especie es una línea evolutiva entera; una criatura es cada forma.
 - El núcleo viene copiado de `leyendas-de-iberia/src/core/`. Leyendas de Iberia no se toca
   desde aquí.

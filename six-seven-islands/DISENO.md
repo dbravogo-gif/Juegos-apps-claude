@@ -71,9 +71,12 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
 - **Tono de la historia:** ligero y con humor. Se vence al campeón de cada isla para avanzar,
   mientras se investiga por qué desapareció la séptima.
 - **Contenido:**
-  - 200 criaturas.
-  - Líneas de 2 y de 3 formas, algunas ramificadas (una base que evoluciona de varias maneras),
-    y especies sin evolución.
+  - 200 criaturas en 102 especies, con el reparto por tipos, quintiles de fuerza y papeles
+    de `CRIATURAS.md` (autor, 2026-11-10). Cada criatura toma las estadísticas base de un
+    Pokémon de referencia; el aspecto, el nombre, el tipo, algunos ataques y las habilidades
+    son nuestros.
+  - Líneas de 2 y de 3 formas y especies sin evolución. Las ramificadas (una base que
+    evoluciona de varias maneras), más adelante.
   - Las terceras formas, más fuertes, aparecen tarde.
 - **Tipos:** 16 (`src/data/tipos.ts`). Parten de los 15 de Leyendas de Iberia, obra del autor:
   Plasma se funde en Eléctrico, entran Bicho y Veneno (2026-11-08) y Roca sustituye a Luz con la
@@ -110,8 +113,7 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
   - Conceptos del autor en `conceptos/`: Agua, un cocodrilo excursionista que acaba en hielo;
     Planta, un lagarto con setas que acaba en chamán; Infernal, un elefante de orejas de fuego
     que acaba en mamut acorazado.
-  - Con los segundos tipos de las formas finales, el triángulo puede romperse: se elige con el
-    cálculo de enfrentamientos de la tabla real (propuesta en el chat del 2026-11-10).
+  - Los segundos tipos los elige el autor, cuidando que no rompan el equilibrio (2026-11-10).
 - **Las otras iniciales se consiguen intercambiando con amigos.**
 - **Regalo por rejugar:** si ya has completado el juego con una inicial y empiezas otra partida
   con otra, al vencer al campeón de la isla 4 te regalan la inicial con la que lo completaste.
@@ -190,7 +192,8 @@ turno. El servicio de tiempo real gratuito se elige al llegar a esa fase.
 - **Recados con objetos clave,** del tipo «lleva esto a esta persona».
 - **Un combate 2 contra 2** contra una pareja de entrenadores.
 - **Tienda y objetos.** La economía, con cuidado: al principio no se consigue nada muy valioso.
-- **Criaturas:** 11 especies de la isla y las 3 iniciales, hasta 23 criaturas.
+- **Criaturas** (provisional: se rehace con `CRIATURAS.md` cuando estén todas generadas): 11
+  especies de la isla y las 3 iniciales, hasta 23 criaturas.
   - 5 especies sin evolución: 5 criaturas.
   - 4 especies de 2 formas: 8 criaturas.
   - 2 especies de 3 formas, solo con las dos primeras: 4 criaturas.
@@ -248,6 +251,8 @@ una propuesta en `ISLA-1.md`.
 - 2026-11-07 · Primera versión: la isla 1 para un jugador, con el contenido de arriba. Unas
   2 horas de juego.
 - 2026-11-07 · Más largo que Leyendas de Iberia: más contenido entre campeones.
+- 2026-11-10 · Reparto de las 200 criaturas por tipo principal, quintil y papel, con un
+  Pokémon de referencia por criatura para copiar sus estadísticas base (`CRIATURAS.md`).
 - 2026-11-07 · Sesiones abiertas con guardado automático.
 - 2026-11-07 · Empate en combate (caen a la vez las últimas de los dos lados): gana el lado
   cuya última criatura cayó después, como con el daño de retroceso en el género.

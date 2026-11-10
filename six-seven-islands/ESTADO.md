@@ -9,28 +9,27 @@ código y la tabla de tipos C. La Palma, guardada para la 6. Las criaturas, con 
 
 ## Hecho
 
-- Entrevista (fase 1). Las decisiones están en `DISENO.md`.
-- Documentos (fase 2), aprobados el 2026-11-07: `DISENO.md`, `ARTE.md`, `ARCHITECTURE.md` y
-  `funciones.json`.
-- `F01`, el andamiaje: motor de subsistemas, render WebGPU o WebGL2, isla de prueba temporal,
-  panel `?depurar`, `window.__JUEGO__`, web instalable y publicación.
-- `F02`, el núcleo: reglas de Leyendas, con código propio y sin su contenido (`core/ORIGEN.md`).
-- `F03`, el combate N contra N (1 contra 1 y 2 contra 2), puro y determinista, con 1.000
-  combates de bots en las pruebas.
-- `F04`, generador de criaturas por piezas y vitrina. **El autor lo juzga insuficiente**
-  (2026-11-07): las criaturas saldrán de Meshy (`DISENO.md`).
+- Entrevista y documentos (fases 1 y 2), aprobados el 2026-11-07: `DISENO.md`, `ARTE.md`,
+  `ARCHITECTURE.md` y `funciones.json`.
+- `F01` andamiaje, `F02` núcleo con las reglas de Leyendas (`core/ORIGEN.md`) y `F03` combate
+  N contra N, puro y determinista, con 1.000 combates de bots en las pruebas.
+- `F04`, generador de criaturas por piezas: **el autor lo juzga insuficiente** (2026-11-07); las
+  criaturas saldrán de Meshy.
 
 ## Siguiente
 
 1. Isla 1, Lanzarote (`ISLA-1.md`): mapa, interiores y diálogos hechos, con los arreglos del
    probador (2026-11-10). Siguen encuentros, combate y captura.
 2. En paralelo, arte con Meshy (`prompts-meshy.md`): criaturas y edificios singulares.
+3. Criaturas: reparto y lista de referencia en `CRIATURAS.md` (2026-11-10). Se diseñan con el
+   autor y sus amigos; dónde aparece cada una se decide al final.
 
 ## Pendiente del autor
 
 - Decidir si entran las pasivas, como contenido propio. Propuesta de Claude: tras la isla 1.
 - Antes de la tanda 3, elegir los nombres que proponga Claude.
 - Puntuar el kit en `?catalogo` y en la isla; rehacer con Meshy lo que no llegue a 4.
+- Tipo de la cuarta inicial (Claude propone Espectral) y el tipo de cada gimnasio.
 
 ## Defectos conocidos
 
