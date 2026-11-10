@@ -6,6 +6,7 @@
 // entrenador. Con teclado: flechas para elegir y E, Enter o Espacio para confirmar.
 
 import {
+  AdditiveBlending,
   CanvasTexture,
   CylinderGeometry,
   Group,
@@ -26,6 +27,8 @@ import { crearRng } from '../../core/rng';
 import { vidaMaxima } from '../../core/estadisticas';
 import { MaterialDiorama } from '../../arte/material';
 import { MODELO_INICIAL, figuraCriatura } from '../../arte/criaturas3d';
+import { RADIO_CUBO, figuraCubo, girarCubo } from '../../arte/cubos';
+import { attribute } from 'three/tsl';
 import { DATOS_COMBATE_PRUEBA, ENTRENADOR_PRUEBA, ESPECIE_INICIAL, RIVAL_DE } from '../../data/combate-prueba';
 import { TIPOS } from '../../data/tipos';
 import type { Ctx, Subsistema } from '../../motor/motor';
@@ -37,12 +40,21 @@ const DATOS = DATOS_COMBATE_PRUEBA;
 /** La arena, lejos de la isla y de los interiores. */
 const ARENA = new Vector3(600, 0, 600);
 /** Dónde va cada criatura, respecto a la arena: la tuya delante a la izquierda, la rival al fondo. */
-const SITIO: [Vector3, Vector3] = [new Vector3(-1.45, 0, 1.15), new Vector3(1.75, 0, -1.4)];
+const SITIO: [Vector3, Vector3] = [new Vector3(-2.05, 0, 1.55), new Vector3(2.35, 0, -1.85)];
 const TAMANO: [number, number] = [1.0, 0.95];
-/** Hacia dónde miran: la tuya casi de espaldas (tres cuartos), la rival casi de frente. */
-const GIRO: [number, number] = [2.55, -0.55];
-const CAMARA = new Vector3(0, 2.6, 7.9);
-const MIRA = new Vector3(0.15, 0.45, 0);
+/**
+ * Hacia dónde miran: la una a la otra, sobre la diagonal, con la tuya un poco más de espaldas y la
+ * rival un poco más de frente para que se le vea la cara (autor, 2026-11-10: más en las esquinas y
+ * más giradas).
+ */
+const GIRO: [number, number] = [2.4, -0.75];
+const CAMARA = new Vector3(0.1, 2.7, 8.6);
+const MIRA = new Vector3(0.15, 0.4, 0);
+/** El cubo de captura con que sale cada criatura (por ahora, el blanco, el básico). */
+const CUBO: [number, number] = [0, 0];
+/** Desde qué altura cae el cubo y cuánto sube al rebotar. */
+const CAIDA = 2.6;
+const REBOTE = 0.5;
 /** Segundos de cada fundido, al entrar y al salir. */
 const FUNDIDO = 0.55;
 
@@ -82,6 +94,9 @@ export class Combate implements Subsistema {
   private render!: Render;
   private arena = new Group();
   private materiales: Material[] = [];
+  private materialCubo!: MaterialDiorama;
+  private materialDestello!: MeshBasicNodeMaterial;
+  private esferaDestello = new SphereGeometry(0.5, 20, 14);
   private fondoProvisional!: Texture;
   private fondoPintado: Texture | null = null;
   private guardado: { fondo: Color | Texture | null; niebla: Fog | null } | null = null;
@@ -133,6 +148,10 @@ export class Combate implements Subsistema {
 
   /** La arena: dos plataformas de jable con su canto, una para cada criatura. */
   private montarArena(): void {
+    this.materialCubo = new MaterialDiorama({ bordes: [-0.1, 0.45], especular: 0.25, dureza: 30, rebote: 0.15 }, attribute('color', 'vec3'));
+    this.materialDestello = new MeshBasicNodeMaterial({ color: '#fffbe8', transparent: true, depthWrite: false, blending: AdditiveBlending });
+    this.materialDestello.toneMapped = false;
+    this.materiales.push(this.materialCubo, this.materialDestello);
     this.arena.position.copy(ARENA);
     this.arena.visible = false;
     const arriba = new MaterialDiorama({ color: '#E9D6A8', bordes: [-0.05, 0.4], rebote: 0.15 });
@@ -292,16 +311,27 @@ export class Combate implements Subsistema {
     for (const ev of eventos) {
       switch (ev.tipo) {
         case 'entrada': {
+          // El cubo de captura cae en su plataforma, rebota una vez y la criatura sale con un
+          // destello de luz (autor, 2026-11-10).
           const lado = ev.ref.lado;
+          let cubo: Group | null = null;
+          let destello: Mesh | null = null;
+          const abierto = { chispas: false };
           this.encolar({
             texto: lado === 1 ? `¡El entrenador saca a ${ev.ficha.nombre}!` : `¡Adelante, ${ev.ficha.nombre}!`,
-            duracion: 0.9,
-            saltable: true,
+            duracion: 1.9,
+            saltable: false,
             empezar: () => {
-              this.luchadores[lado]!.visible = true;
               this.pintarFicha(lado, true);
+              cubo = figuraCubo(CUBO[lado], this.materialCubo);
+              cubo.position.copy(SITIO[lado]).setY(CAIDA);
+              this.arena.add(cubo);
+              destello = new Mesh(this.esferaDestello, this.materialDestello.clone());
+              destello.visible = false;
+              destello.position.copy(SITIO[lado]).setY(TAMANO[lado] * 0.45);
+              this.arena.add(destello);
             },
-            animar: (t) => (this.luchadores[lado]!.escala = rebote(t)),
+            animar: (t) => this.animarSalida(lado, t, cubo!, destello!, abierto),
           });
           break;
         }
@@ -502,6 +532,47 @@ export class Combate implements Subsistema {
   }
 
   // ——— Animación ———
+
+  /**
+   * La salida de una criatura, con t de 0 a 1: el cubo cae girando (hasta 0,36), rebota una vez
+   * (hasta 0,6), tiembla un instante y se abre en un destello (desde 0,66) del que sale la
+   * criatura con un rebote.
+   */
+  private animarSalida(lado: number, t: number, cubo: Group, destello: Mesh, abierto: { chispas: boolean }): void {
+    const suelo = RADIO_CUBO * 1.05;
+    const l = this.luchadores[lado]!;
+    girarCubo(cubo, this.reloj * (t < 0.6 ? 3 : 1));
+    if (t < 0.36) {
+      const u = t / 0.36;
+      cubo.position.y = suelo + (CAIDA - suelo) * (1 - u * u);
+    } else if (t < 0.6) {
+      const u = (t - 0.36) / 0.24;
+      cubo.position.y = suelo + REBOTE * Math.sin(u * Math.PI);
+    } else {
+      cubo.position.y = suelo;
+      cubo.rotation.z = t < 0.66 ? Math.sin(t * 120) * 0.12 : 0;
+    }
+    const abre = (t - 0.66) / 0.34;
+    if (abre >= 0 && !abierto.chispas) {
+      abierto.chispas = true;
+      this.chispas(lado, 0xffe39a);
+    }
+    if (abre >= 0) {
+      cubo.scale.setScalar(Math.max(0, 1 - abre * 5));
+      destello.visible = abre < 0.6;
+      destello.scale.setScalar(0.3 + abre * 3.2);
+      (destello.material as MeshBasicNodeMaterial).opacity = Math.max(0, 1 - abre / 0.6);
+      this.velo.style.cssText = `opacity:${Math.max(0, 0.35 - abre) * 1.2};background:#fffbe8`;
+      l.visible = true;
+      l.escala = rebote(Math.min(1, abre / 0.7));
+    }
+    if (t >= 1) {
+      cubo.removeFromParent();
+      destello.removeFromParent();
+      (destello.material as Material).dispose();
+      this.velo.style.cssText = 'opacity:0';
+    }
+  }
 
   private animarLuchadores(): void {
     for (const [lado, l] of this.luchadores.entries()) {

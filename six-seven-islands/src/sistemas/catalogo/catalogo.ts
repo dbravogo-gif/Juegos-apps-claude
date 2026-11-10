@@ -1,7 +1,8 @@
 // Subsistema «catalogo»: enseña las piezas propias en fila, con la luz y la cámara del juego, para
 // revisarlas de cerca y compararlas (ARTE.md, «Modelos del mundo»). No forma parte del juego.
-// Se abre con ?catalogo (plantas, rocas y muro) o ?catalogo=edificios (casas, casonas y faro;
-// primero los de Lanzarote, después los de La Palma).
+// Se abre con ?catalogo (plantas, rocas y muro), ?catalogo=edificios (casas, casonas y faro;
+// primero los de Lanzarote, después los de La Palma) o ?catalogo=cubos (los cubos de captura:
+// arriba, la figura completa de cada nivel; abajo, la que se lanza en combate).
 // Teclas: ← → acercan la cámara a cada pieza; Esc vuelve a verlas todas. ?pieza=N empieza en la N.
 
 import { Box3, Mesh, Vector3, type BufferGeometry } from 'three/webgpu';
@@ -12,12 +13,18 @@ import type { Ctx, Subsistema } from '../../motor/motor';
 import { casaCanaria, faro } from '../mundo/canario';
 import { piezaKit } from '../mundo/kit';
 import { Montaje } from '../../arte/montaje';
+import { CUBOS, RADIO_CUBO, geometriaCubo } from '../../arte/cubos';
 import type { Render } from '../render/render';
 
 interface Muestra {
   nombre: string;
   geometria: BufferGeometry;
 }
+
+const CUBOS_CAPTURA = (): Muestra[][] => [
+  CUBOS.map((c, i) => ({ nombre: c.nombre, geometria: geometriaCubo(i, true).translate(0, RADIO_CUBO * 1.5, 0) })),
+  CUBOS.map((c, i) => ({ nombre: `${c.nombre} (al lanzarlo)`, geometria: geometriaCubo(i, false).translate(0, RADIO_CUBO * 1.1, 0) })),
+];
 
 const NATURALEZA = (): Muestra[][] => [
   [
@@ -99,8 +106,8 @@ export class Catalogo implements Subsistema {
   };
 
   init(ctx: Ctx): void {
-    const edificios = new URLSearchParams(location.search).get('catalogo') === 'edificios';
-    const filas = edificios ? EDIFICIOS() : NATURALEZA();
+    const vista = new URLSearchParams(location.search).get('catalogo');
+    const filas = vista === 'edificios' ? EDIFICIOS() : vista === 'cubos' ? CUBOS_CAPTURA() : NATURALEZA();
     this.material = new MaterialDiorama({ bordes: [-0.1, 0.4], especular: 0.06, rebote: 0.12 }, attribute('color', 'vec3'));
     this.suelo = new MaterialDiorama({ color: COLORES.hierbaMenta, bordes: [-0.02, 0.32], rebote: 0.1 });
     sueloY.value = 0;

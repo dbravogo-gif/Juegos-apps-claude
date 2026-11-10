@@ -141,12 +141,20 @@ Se revisan de cerca en `?catalogo` (plantas, rocas y muro) y `?catalogo=edificio
 
 ## Combate
 
-- **En diagonal, como en los juegos del género** (autor, 2026-11-10): tu criatura delante a la
-  izquierda, de tres cuartos de espaldas, y la rival al fondo a la derecha, casi de frente.
+- **En diagonal, como en los juegos del género** (autor, 2026-11-10): tu criatura en la esquina
+  de delante a la izquierda y la rival en la del fondo a la derecha, giradas la una hacia la
+  otra (la tuya, de tres cuartos de espaldas; la rival, de tres cuartos de frente).
 - **Arena aparte** con la cámara quieta: un fondo pintado detrás (`public/fondos/`), dos
   plataformas de jable y las criaturas sin la luz del juego, que sí proyectan sombra.
 - **Dos fondos para todo el juego:** exterior y gimnasio, generados por el autor.
-- **Animaciones:** la criatura sale con un rebote, embiste al atacar, parpadea y tiembla al
+- **Salida:** el cubo de captura cae girando en su plataforma, rebota una vez, tiembla y se
+  abre en un destello de luz con chispas doradas, del que sale la criatura con un rebote
+  (autor, 2026-11-10).
+- **Cubos de captura** (`src/arte/cubos.ts`, `?catalogo=cubos`): la figura de Metatrón, con la
+  red de 13 esferas y los cinco sólidos platónicos uno dentro de otro, con aristas gruesas y
+  vértices redondos de juguete. El nivel va por color: blanco, verde, azul, rojo y morado. En la
+  imagen va completo; al lanzarlo, solo el dodecaedro con el icosaedro macizo dentro.
+- **Animaciones:** embiste al atacar, parpadea y tiembla al
   recibir, suelta chispas del color del tipo del ataque y se hunde al debilitarse. La vida baja
   con animación: verde, amarilla y roja.
 - **Interfaz:** ficha de la rival arriba a la izquierda, la tuya a la derecha y abajo la caja
