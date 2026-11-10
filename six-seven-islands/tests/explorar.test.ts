@@ -116,7 +116,8 @@ describe('exploración por casillas', () => {
 
   it('habla con el personaje que tiene delante', () => {
     const e = crearExploracion(m);
-    const vecino = enIsla(m, 'inicial', 5, 1);
+    const p = ISLA_1.zonas[0].personajes.find((q) => q.id === 'vecino-salida')!;
+    const vecino = enIsla(m, 'inicial', p.x, p.y);
     const [vx, vy] = deClave(vecino);
     // Ponerse al sur del vecino y mirar al norte.
     for (const d of camino(clave(e.x, e.y), (k) => k === clave(vx, vy + 1), new Set())) pulsar(e, d);
@@ -144,11 +145,11 @@ describe('un bot recorre la isla 1 con la lógica del juego', () => {
       pasos++;
     }
     expect(juntoAlBarco(clave(e.x, e.y))).toBe(true);
-    expect(zonas).toEqual(['inicial', 'combates', 'pueblo', 'bosque', 'capital']);
+    expect(zonas).toEqual(ISLA_1.zonas.map((z) => z.id));
     expect(pasos).toBeGreaterThan(150); // la isla tiene recorrido
   });
 
-  it('va a por la poción del claro del bosque y la recoge una sola vez', () => {
+  it('va a por la poción de la caldera y la recoge una sola vez', () => {
     const e = crearExploracion(m, [...TODAS_LAS_CONDICIONES]);
     const [k] = [...m.objetos.keys()];
     const recogidas: string[] = [];
@@ -161,7 +162,7 @@ describe('un bot recorre la isla 1 con la lógica del juego', () => {
     pulsar(e, opuesta[llegada]);
     for (const ev of pulsar(e, llegada)) if (ev.tipo === 'objeto') recogidas.push(ev.id);
     expect(clave(e.x, e.y)).toBe(k);
-    expect(recogidas).toEqual(['pocion-claro']);
+    expect(recogidas).toEqual(['pocion-caldera']);
   });
 
   it('la misma entrada da el mismo recorrido (determinista)', () => {

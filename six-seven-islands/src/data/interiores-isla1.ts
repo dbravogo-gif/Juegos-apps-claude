@@ -107,22 +107,3 @@ export const INTERIORES_ISLA1: readonly DefInterior[] = [
     entrada: { x: 5, y: 6 },
   },
 ];
-
-/**
- * A qué interior lleva cada puerta de la isla, por zona y casilla de la puerta (en coordenadas de
- * la zona). Las casas y los refugios comparten sala: al salir, se vuelve a la puerta por la que
- * se entró.
- */
-export const PUERTAS_ISLA1: Readonly<Record<string, Readonly<Record<string, string>>>> = {
-  inicial: { '6,6': 'casa-jugador', '11,6': 'casa', '7,13': 'museo' },
-  pueblo: { '3,7': 'casa', '17,8': 'refugio', '23,7': 'tienda', '22,14': 'casa' },
-  capital: {
-    '14,10': 'gimnasio',
-    '15,10': 'gimnasio',
-    '21,7': 'casa',
-    '5,9': 'refugio',
-    '4,16': 'casa',
-    '10,16': 'casa',
-    '16,16': 'casa',
-  },
-};

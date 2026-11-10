@@ -63,9 +63,11 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
 ## El juego completo
 
 - **Mundo:**
-  - Un archipiélago de 6 islas, cada una con su clima y su campeón.
-  - Una séptima isla secreta, desaparecida, que se descubre siguiendo el hilo del misterio.
-    Reaparece al final y en ella está la Liga.
+  - Un archipiélago de 6 islas, cada una con su clima y su campeón, inspiradas en Canarias y
+    recorridas de este a oeste, sin saltos (autor, 2026-11-10): 1 Lanzarote, 2 Fuerteventura,
+    3 Gran Canaria, 4 Tenerife, 5 La Gomera y 6 La Palma.
+  - Una séptima isla secreta, desaparecida, que se descubre siguiendo el hilo del misterio:
+    El Hierro. Reaparece al final y en ella está la Liga.
 - **Tono de la historia:** ligero y con humor. Se vence al campeón de cada isla para avanzar,
   mientras se investiga por qué desapareció la séptima.
 - **Contenido:**
@@ -201,13 +203,13 @@ turno. El servicio de tiempo real gratuito se elige al llegar a esa fase.
 
 ## Plan de nivel de la isla 1
 
-Está en `ISLA-1.md`, con el mapa en `isla-1-mapa.svg`: inspirada en La Palma, con la vuelta a la
-isla rodeando las cumbres. Son cinco zonas:
+Está en `ISLA-1.md`: inspirada en Lanzarote desde el 2026-11-10. La versión de La Palma se
+guarda para la isla 6 (`LA-PALMA.md`). Son cinco zonas:
 
 1. Zona inicial con el museo y la elección.
-2. Zona de combates.
-3. Pueblo con el anciano.
-4. Bosque.
+2. Zona de combates (El Golfo).
+3. Pueblo con el anciano (La Geria).
+4. Zona larga (las Montañas del Fuego; en La Palma, el bosque).
 5. Capital con el gimnasio y el puerto.
 
 Sustituye al plan anterior (2026-11-08). Lo que de aquel plan no está en la idea del autor (la
@@ -254,6 +256,9 @@ una propuesta en `ISLA-1.md`.
   obligatorios se rigen por las reglas de Leyendas de Iberia, para todo el juego.
 - 2026-11-08 · Tipos: Plasma se funde en Eléctrico y entran Bicho y Veneno, con cambios
   mínimos en la tabla de Leyendas (opción C del autor). 16 tipos.
+- 2026-11-10 · Islas de este a oeste: la isla 1 es Lanzarote, hecha desde cero con la misma
+  idea; La Palma se guarda para la 6 y El Hierro es la séptima. El gimnasio 1 es de Roca. De
+  aquí en adelante, como mucho 4 plantas nuevas.
 - 2026-11-10 · Tabla de tipos «C» revisada: Roca sustituye a Luz. Claude corrige sus
   contradicciones y los extremos (5 debilidades o resistencias). Reglas de Ancestral.
 - 2026-11-08 · Isla 1, segunda vuelta con el autor:

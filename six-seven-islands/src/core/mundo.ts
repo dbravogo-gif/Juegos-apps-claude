@@ -28,6 +28,10 @@ export const LEYENDA = {
   X: 'paso cerrado',
   P: 'muelle',
   B: 'barco',
+  // Lanzarote (2026-11-10).
+  V: 'viña en su hoyo',
+  U: 'tunera',
+  L: 'colada de lava',
   // Interiores: salas pequeñas aparte (ISLA-1.md, «Decisiones técnicas»).
   m: 'suelo',
   '|': 'pared',
@@ -90,13 +94,24 @@ export interface DefZona {
   /** Las casillas X de la zona se abren con esta condición. */
   cierre?: { condicion: Condicion; aviso: string };
   personajes: readonly Personaje[];
+  /** Cómo se dibujan sus casas (por defecto, rurales; en la capital, de balcones). */
+  casas?: EstiloCasas;
+  /** Qué árbol son sus `T` (por defecto, palmeras). */
+  arboles?: 'palmera' | 'laurel';
+  /** Qué crece entre sus rocas: secano (por defecto), humedad o volcán. */
+  flora?: 'seca' | 'humeda' | 'volcan';
 }
+
+/** Estilos de casa canaria: rural de teja, de balcones, o la blanca de azotea de Lanzarote. */
+export type EstiloCasas = 'rural' | 'balcones' | 'lanzarote' | 'balcones-blanca';
 
 export interface DefIsla {
   id: string;
   /** Las zonas en el orden del recorrido. */
   zonas: readonly DefZona[];
   inicio: { zona: string; x: number; y: number };
+  /** Colores propios de la isla: suelo por letra y las cumbres del centro. */
+  colores?: { suelo?: Partial<Record<string, string>>; cumbre?: string; ladoCumbre?: string };
 }
 
 export interface CasillaMundo {

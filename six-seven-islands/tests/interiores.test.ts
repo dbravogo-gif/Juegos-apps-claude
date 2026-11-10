@@ -13,8 +13,8 @@ import {
   type Mundo,
 } from '../src/core/mundo';
 import { GUION_ISLA1 } from '../src/data/guion-isla1';
-import { INTERIORES_ISLA1, PUERTAS_ISLA1 } from '../src/data/interiores-isla1';
-import { ISLA_1 } from '../src/data/isla1';
+import { INTERIORES_ISLA1 } from '../src/data/interiores-isla1';
+import { ISLA_1, PUERTAS_ISLA1 } from '../src/data/isla1';
 
 const isla = construirMundo(ISLA_1);
 const salas = new Map(INTERIORES_ISLA1.map((d, i) => [d.id, construirInterior(d, { x: 200 + i * 20, y: 0 })]));

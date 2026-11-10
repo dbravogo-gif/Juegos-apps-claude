@@ -9,8 +9,8 @@ import { avanzar, crearExploracion, cumplir, entrar, interactuar, salir, type Es
 import { abrirDialogo, elegirDialogo, lineaActual, pasoDialogo, pulsar, type Dialogo, type Efecto, type EstadoDialogo, type Tecla } from '../../core/guion';
 import { TODAS_LAS_CONDICIONES, clave, construirInterior, construirMundo, deClave, enIsla, type Condicion, type Mundo } from '../../core/mundo';
 import { GUION_ISLA1 } from '../../data/guion-isla1';
-import { INTERIORES_ISLA1, PUERTAS_ISLA1, SALA_INICIAL } from '../../data/interiores-isla1';
-import { ISLA_1 } from '../../data/isla1';
+import { INTERIORES_ISLA1, SALA_INICIAL } from '../../data/interiores-isla1';
+import { ISLA_1, PUERTAS_ISLA1 } from '../../data/isla1';
 import { NOMBRE_OBJETO, OBJETIVOS } from '../../data/textos-isla1';
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Entrada } from '../entrada/entrada';
