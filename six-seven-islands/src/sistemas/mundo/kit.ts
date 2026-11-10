@@ -3,7 +3,7 @@
 // semilla y se repite por toda la isla, instanciada (ARTE.md, «Modelos del mundo»). Funciones
 // puras y deterministas, con el origen en la base de la pieza, a ras de suelo.
 
-import { ConeGeometry, CylinderGeometry, SphereGeometry, Vector3, type BufferGeometry } from 'three/webgpu';
+import { BoxGeometry, ConeGeometry, CylinderGeometry, SphereGeometry, Vector3, type BufferGeometry } from 'three/webgpu';
 import { COLORES } from '../../arte/paleta';
 import { Montaje, abollar, acanalar, apuntar, azar, doblar, elegir, ruido } from '../../arte/montaje';
 
@@ -397,6 +397,45 @@ export function nube(semilla: number): BufferGeometry {
  */
 export const colada = (semilla: number): BufferGeometry => lajasMalpais(semilla, [COLORES.lavaNegra, COLORES.lavaNegra, COLORES.basalto, COLORES.crater]);
 
+/** Boya roja y blanca, flotando: bola, banda y un mástil con su luz. */
+export function boya(_semilla: number): BufferGeometry {
+  const M = new Montaje();
+  M.pon(new SphereGeometry(0.18, 12, 8).translate(0, 0.08, 0), COLORES.geranio);
+  M.pon(new CylinderGeometry(0.185, 0.185, 0.06, 12, 1, true).translate(0, 0.12, 0), COLORES.cal);
+  M.pon(new CylinderGeometry(0.025, 0.035, 0.3, 6).translate(0, 0.38, 0), COLORES.cal, 0.9);
+  M.pon(new SphereGeometry(0.045, 8, 6).translate(0, 0.55, 0), COLORES.amarilloLuz);
+  return M.fusionar();
+}
+
+/** Barca de pescadores canaria: casco blanco, borda de color, cubierta de madera y dos bancos. */
+export function barca(semilla: number): BufferGeometry {
+  const r = azar(semilla);
+  const M = new Montaje();
+  const franja = elegir(r, [COLORES.toldoAzul, COLORES.carpinteriaVerde, COLORES.geranio]);
+  // Cada barca, de un largo y con los bancos en su sitio.
+  const largo = 1.3 + r() * 0.4;
+  const banco = -0.35 + r() * 0.15;
+  /** Lo estrecha hacia proa y popa (y lo hace menos hondo), igual que el casco. */
+  const estrechar = (g: BufferGeometry, hondo = false): BufferGeometry => {
+    const pos = g.getAttribute('position');
+    for (let i = 0; i < pos.count; i++) {
+      const k = 1 - Math.pow(Math.min(1, Math.abs(pos.getX(i)) / (largo / 2)), 3) * 0.75;
+      pos.setZ(i, pos.getZ(i) * k);
+      if (hondo) pos.setY(i, pos.getY(i) * (0.8 + 0.2 * k));
+    }
+    g.computeVertexNormals();
+    return g;
+  };
+  // Casco: media caña tumbada a lo largo de x y abierta hacia arriba (de θ = π a 2π queda abajo).
+  const casco = new CylinderGeometry(0.32, 0.32, largo, 10, 8, false, Math.PI, Math.PI).rotateZ(Math.PI / 2);
+  M.pon(estrechar(casco, true).translate(0, 0.2, 0), COLORES.cal);
+  M.pon(estrechar(new BoxGeometry(largo - 0.04, 0.04, 0.6, 8, 1, 1)).translate(0, 0.17, 0), COLORES.maderaTostada);
+  // La borda, de color: es lo que se ve desde arriba.
+  for (const lado of [1, -1]) M.pon(estrechar(new BoxGeometry(largo - 0.02, 0.06, 0.07, 8, 1, 1).translate(0, 0, lado * 0.285)).translate(0, 0.23, 0), franja);
+  for (const x of [banco, banco + 0.55]) M.caja(0.1, 0.04, 0.5, x, 0.25, 0, COLORES.maderaTostada, 0.9);
+  return M.fusionar();
+}
+
 /** Todas las piezas del kit, por nombre. */
 export const KIT = {
   laurel,
@@ -416,6 +455,8 @@ export const KIT = {
   tunera,
   volcan,
   nube,
+  boya,
+  barca,
 } satisfies Record<string, (semilla: number) => BufferGeometry>;
 
 export type PiezaKit = keyof typeof KIT;
@@ -441,6 +482,8 @@ export const VARIANTES: Record<PiezaKit, number> = {
   tunera: 2,
   volcan: 3,
   nube: 2,
+  boya: 1,
+  barca: 2,
 };
 
 /** La geometría de una variante de una pieza del kit. */

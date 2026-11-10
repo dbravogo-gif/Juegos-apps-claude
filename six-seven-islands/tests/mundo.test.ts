@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   TODAS_LAS_CONDICIONES,
   TRANSITABLES,
+  transitable,
   alcanzables,
   clave,
   conexiones,
@@ -22,8 +23,10 @@ import { ISLA_LA_PALMA } from '../src/data/la-palma';
 interface Isla {
   nombre: string;
   isla: DefIsla;
-  /** La zona larga antes de la capital, que se cierra hasta hablar con el anciano. */
+  /** La zona larga, que se cierra hasta hablar con el anciano. */
   dura: string;
+  /** Una zona más entre la larga y la capital, si la hay (El Jable en Lanzarote, 2026-11-10). */
+  extra?: string;
   tam: Record<string, [number, number]>;
   /** La letra del árbol de la zona inicial. */
   arbol: string;
@@ -34,7 +37,8 @@ const ISLAS: Isla[] = [
     nombre: 'isla 1 (Lanzarote)',
     isla: ISLA_1,
     dura: 'fuego',
-    tam: { inicial: [24, 18], combates: [24, 60], pueblo: [28, 22], fuego: [56, 32], capital: [34, 28] },
+    extra: 'jable',
+    tam: { inicial: [24, 18], combates: [15, 52], pueblo: [28, 22], fuego: [48, 26], jable: [24, 22], capital: [34, 28] },
     arbol: 'T',
   },
   {
@@ -56,6 +60,26 @@ function probarIsla(c: Isla): void {
   const zonaDe = (k: number) => m.casillas.get(k)?.zona;
   const conCondiciones = (...cs: Condicion[]) => new Set<Condicion>(cs);
 
+  /** Pasos del camino más corto entre dos grupos de casillas, con todos los pasos abiertos. */
+  function pasosMinimos(desde: number[], hasta: number[]): number {
+    const meta = new Set(hasta);
+    const dist = new Map<number, number>(desde.map((k) => [k, 0]));
+    const cola = [...desde];
+    while (cola.length) {
+      const k = cola.shift()!;
+      const d = dist.get(k)!;
+      if (meta.has(k)) return d;
+      const [x, y] = deClave(k);
+      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        const v = clave(x + dx, y + dy);
+        if (dist.has(v) || !transitable(m, x + dx, y + dy, { condiciones: TODAS_LAS_CONDICIONES })) continue;
+        dist.set(v, d + 1);
+        cola.push(v);
+      }
+    }
+    return Infinity;
+  }
+
   /** Las casillas de la zona que tocan la zona anterior y la siguiente del recorrido. */
   function entradaYSalida(zona: string): [number[], number[]] {
     const i = orden.indexOf(zona);
@@ -65,7 +89,7 @@ function probarIsla(c: Isla): void {
   describe(`${c.nombre}: mapa bien escrito`, () => {
     it('se monta sin errores: filas iguales, letras de la leyenda y zonas que no se pisan', () => {
       expect(m.casillas.size).toBeGreaterThan(0);
-      expect(orden).toEqual(['inicial', 'combates', 'pueblo', c.dura, 'capital']);
+      expect(orden).toEqual(['inicial', 'combates', 'pueblo', c.dura, ...(c.extra ? [c.extra] : []), 'capital']);
     });
 
     it('detecta un mapa mal escrito', () => {
@@ -136,6 +160,21 @@ function probarIsla(c: Isla): void {
       expect(z.personajes.filter((p) => p.entrenador)).toHaveLength(4);
       expect(z.objetos?.map((o) => o.objeto)).toEqual(['pocion']);
     });
+
+    if (c.extra) {
+      it('zona extra: entre la larga y la capital, con hierba, un entrenador opcional y un objeto escondido', () => {
+        const z = m.zonas.get(c.extra!)!;
+        expect(z.hierbaObligatoria).toBe(false);
+        expect(z.mapa.join('')).toContain('"');
+        expect(z.personajes.filter((p) => p.entrenador)).toHaveLength(1);
+        expect(z.personajes.every((p) => !p.entrenador?.obligatorio)).toBe(true);
+        expect(z.objetos?.map((o) => o.objeto)).toEqual(['pocion']);
+        // Alarga el recorrido: de la entrada a la salida hay que dar la vuelta.
+        const [entrada, salida] = entradaYSalida(c.extra!);
+        const recta = Math.min(...entrada.flatMap((a) => salida.map((b) => Math.abs(deClave(a)[0] - deClave(b)[0]) + Math.abs(deClave(a)[1] - deClave(b)[1]))));
+        expect(pasosMinimos(entrada, salida)).toBeGreaterThan(recta * 2);
+      });
+    }
 
     it('pueblo: refugio, dos casas, tienda y el anciano', () => {
       expect(cuenta('pueblo')).toEqual({ R: 1, C: 2, S: 1 });
@@ -244,7 +283,7 @@ function probarIsla(c: Isla): void {
     it('todos los objetos se alcanzan, y el de la zona larga no hace falta para cruzarla', () => {
       const r = llega(TODAS_LAS_CONDICIONES);
       for (const [k, { objeto }] of m.objetos) expect(r.has(k), objeto.id).toBe(true);
-      const [entrada, salida] = [conexiones(m, c.dura, 'pueblo'), conexiones(m, c.dura, 'capital')];
+      const [entrada, salida] = [conexiones(m, c.dura, 'pueblo'), conexiones(m, c.dura, c.extra ?? 'capital')];
       const prohibidas = new Set([...m.objetos.keys()]);
       const sin = alcanzables(m, entrada, { condiciones: TODAS_LAS_CONDICIONES, prohibidas });
       expect(salida.some((k) => sin.has(k))).toBe(true);

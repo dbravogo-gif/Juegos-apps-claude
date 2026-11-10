@@ -41,33 +41,32 @@ z.edificio(11, 9, 4, 3, 'C', 12, 'casa-vecina')                 # casa vecina, i
 z.p(19, 10, 'T')                                                # la palmera
 z.r(18, 12, 3, 1, 'U')                                          # tuneras
 z.r(1, 4, 1, 2, 'U'); z.r(7, 3, 4, 2, 'V')                      # unas viñas en hoyos
-zonas['inicial'] = dict(nombre='Zona inicial', origen=(38, 114), z=z, altura=0, casas='lanzarote')
+zonas['inicial'] = dict(nombre='Zona inicial', origen=(38, 100), z=z, altura=0, casas='lanzarote')
 
-# 2. Zona de combates (24 × 60), El Golfo: costa oeste. Abajo x 11..13 (zona 1); arriba x 1..3.
+# 2. Zona de combates (15 × 52), El Golfo: costa oeste. Abajo x 11..13 (zona 1); arriba x 1..3.
 # De sur a norte (autor, 2026-11-08): playa de arena negra; barrera de piedra con el entrenador;
 # subida con dos manchas de malpaís (una obligatoria y otra opcional); y en llano, tierra con la
-# hierba obligatoria. El charco verde de El Golfo, en la playa. Ampliada el 2026-11-10 (autor:
-# zonas de encuentros más grandes, los mismos entrenadores): unas tres veces más hierba y malpaís,
-# con las mismas tres manchas.
-z = Z(24, 60, ':')
-z.r(0, 0, 24, 1, '#'); z.r(0, 59, 24, 1, '#'); z.r(23, 0, 1, 60, '#'); z.r(0, 0, 1, 39, '#')
-z.r(1, 0, 3, 1, ','); z.r(11, 59, 3, 1, '_')
-z.r(1, 39, 22, 20, '_')                                          # playa de arena negra
-for y in range(39, 59):
-    z.r(0, y, 2 if y < 44 else (3 if y < 51 else 5), 1, '~')     # el mar, al oeste
-z.r(13, 45, 4, 3, 'w')                                           # el charco verde
-z.camino([(12,58),(12,52),(9,52),(9,40)])
-z.camino([(9,37),(9,35)]); z.camino([(9,29),(9,15)]); z.camino([(9,7),(2,7),(2,1)])
-z.r(1, 38, 22, 1, '='); z.r(9, 38, 2, 1, '_')                    # barrera de piedra con su hueco
-z.r(1, 30, 3, 4, '#'); z.r(20, 30, 3, 4, '#'); z.r(4, 30, 16, 4, ';')  # malpaís obligatorio
-z.r(13, 22, 7, 5, ';')                                           # malpaís opcional
-z.r(1, 8, 3, 6, '#'); z.r(20, 8, 3, 6, '#'); z.r(4, 8, 16, 6, '"')     # hierba obligatoria, en llano
-z.r(19, 2, 3, 4, 'U'); z.r(3, 16, 3, 2, 'U')                     # tuneras en el llano
+# hierba obligatoria. El charco verde de El Golfo, en la playa. El 2026-11-10 el autor la quiso
+# más larga, no más ancha: más camino y manchas más hondas, y el charco más grande.
+z = Z(15, 52, ':')
+z.r(0, 0, 15, 1, '#'); z.r(0, 51, 15, 1, '#'); z.r(14, 0, 1, 52, '#'); z.r(0, 0, 1, 33, '#')
+z.r(1, 0, 3, 1, ','); z.r(11, 51, 3, 1, '_')
+z.r(1, 33, 13, 18, '_')                                          # playa de arena negra
+for y in range(33, 51):
+    z.r(0, y, 2 if y < 38 else (3 if y < 44 else 4), 1, '~')     # el mar, al oeste
+z.r(8, 37, 5, 4, 'w')                                            # el charco verde
+z.camino([(12,50),(12,46),(6,46),(6,34)])
+z.camino([(6,32),(6,31)]); z.camino([(6,26),(6,13)]); z.camino([(6,8),(2,8),(2,1)])
+z.r(1, 33, 13, 1, '='); z.r(6, 33, 2, 1, '_')                    # barrera de piedra con su hueco
+z.r(1, 27, 3, 4, '#'); z.r(11, 27, 3, 4, '#'); z.r(4, 27, 7, 4, ';')   # malpaís obligatorio
+z.r(8, 22, 5, 4, ';')                                             # malpaís opcional
+z.r(1, 9, 2, 4, '#'); z.r(12, 9, 2, 4, '#'); z.r(3, 9, 9, 4, '"')      # hierba obligatoria, en llano
+z.r(12, 2, 2, 4, 'U'); z.r(9, 15, 3, 2, 'U')                      # tuneras en el llano
 alt = []
-for y in range(60):
-    h = 4 if y <= 20 else 3 if y <= 26 else 2 if y <= 33 else 1 if y <= 37 else 0
-    alt.append(str(h) * 24)
-zonas['combates'] = dict(nombre='El Golfo', origen=(29, 54), z=z, alturas=alt, hierba=True)
+for y in range(52):
+    h = 4 if y <= 21 else 3 if y <= 25 else 2 if y <= 30 else 1 if y <= 32 else 0
+    alt.append(str(h) * 15)
+zonas['combates'] = dict(nombre='El Golfo', origen=(29, 48), z=z, alturas=alt, hierba=True)
 
 # 3. Pueblo (28 × 22), La Geria: casas blancas entre viñas en hoyos de picón. Abajo x 14..16;
 # arriba x 8..10 hacia las Montañas del Fuego (cerrado hasta hablar con el anciano).
@@ -86,42 +85,60 @@ z.camino([(17,16),(21,16)])
 z.r(10, 11, 3, 4, '.'); z.r(17, 11, 2, 4, '.')                  # la plaza
 for (x,y) in [(10,11),(12,11),(17,11),(18,11)]: z.p(x, y, 'T')  # palmeras al norte de la plaza
 z.r(24, 12, 2, 2, 'U'); z.r(1, 11, 2, 2, 'U')
-zonas['pueblo'] = dict(nombre='La Geria', origen=(16, 32), z=z, altura=4, casas='lanzarote', suelo="{ '.': '#4E4A4D' }")
+zonas['pueblo'] = dict(nombre='La Geria', origen=(16, 26), z=z, altura=4, casas='lanzarote', suelo="{ '.': '#4E4A4D' }")
 
-# 4. Montañas del Fuego (56 × 32): coladas de lava (no se pisan) con caminos de picón. Abajo x 4..6
-# (zona 3); derecha y 19..21 (zona 5). Como el bosque de La Palma: largo, con un malpaís que corta
-# el paso, una bifurcación a una caldera sin salida con otro entrenador y un objeto. Ampliada el
-# 2026-11-10: zona más grande y unas dos veces y media más malpaís.
-z = Z(56, 32, 'L')
-z.r(4, 31, 3, 1, '_')
-z.camino([(4,30),(4,3)], c='_', ancho=3)                          # sube por el oeste
-z.camino([(4,3),(26,3)], c='_', ancho=3)                          # cruza por el norte
-z.camino([(24,3),(24,15)], c='_', ancho=3)                        # baja al centro
-z.camino([(24,13),(42,13)], c='_', ancho=3)                       # cruza el centro hacia el este
-z.camino([(40,13),(40,19)], c='_', ancho=3)                       # baja por el este
-z.camino([(40,19),(55,19)], c='_', ancho=3)                       # sale al este
-z.camino([(25,16),(25,21)], c='_')                                # bifurcación hacia el sur
-z.r(19, 22, 13, 7, ':'); z.r(25, 22, 1, 2, '_')                   # la caldera sin salida
-z.r(10, 2, 12, 5, ';')                                           # malpaís obligatorio (corta el paso)
-z.r(5, 13, 5, 7, ';'); z.r(33, 10, 5, 5, ';'); z.r(27, 23, 4, 4, ';')   # malpaís rodeable
-z.r(9, 9, 6, 5, ':'); z.camino([(7,11),(9,11)], c='_')            # mirador del oeste
-z.r(30, 5, 7, 5, 'Q')                                            # un cono de escorias
-z.r(44, 1, 8, 7, 'Q'); z.r(10, 20, 8, 6, 'Q')                    # más volcanes, al norte de los caminos
-z.p(48, 18, '_'); z.p(30, 16, '_')
+# 4. Montañas del Fuego (48 × 26): coladas de lava (no se pisan) con caminos de picón. Abajo x 4..6
+# (zona 3); abajo x 34..36, hacia El Jable (zona 5). Como el bosque de La Palma: largo, con un
+# malpaís que corta el paso, una bifurcación a una caldera sin salida con otro entrenador y un
+# objeto.
+z = Z(48, 26, 'L')
+z.r(4, 25, 3, 1, '_')
+z.camino([(4,24),(4,3)], c='_', ancho=3)                          # sube por el oeste
+z.camino([(4,3),(22,3)], c='_', ancho=3)                          # cruza por el norte
+z.camino([(20,3),(20,13)], c='_', ancho=3)                        # baja al centro
+z.camino([(20,11),(36,11)], c='_', ancho=3)                       # cruza el centro hacia el este
+z.camino([(34,11),(34,25)], c='_', ancho=3)                       # baja por el este, hacia El Jable
+z.camino([(21,14),(21,17)], c='_')                                # bifurcación hacia el sur
+z.r(17, 18, 10, 5, ':'); z.r(21, 18, 1, 2, '_')                   # la caldera sin salida
+z.r(12, 3, 8, 3, ';')                                            # malpaís obligatorio (corta el paso)
+z.r(5, 13, 2, 4, ';'); z.r(29, 11, 3, 2, ';'); z.r(23, 19, 3, 3, ';')   # malpaís rodeable
+z.r(9, 8, 5, 4, ':'); z.camino([(7,10),(9,10)], c='_')            # mirador del oeste
+z.r(26, 5, 6, 4, 'Q')                                            # un cono de escorias
+z.r(38, 1, 7, 6, 'Q'); z.r(9, 15, 7, 5, 'Q')                     # más volcanes, al norte de los caminos
+z.p(37, 21, '_'); z.p(26, 14, '_')
 alt = []
-for y in range(32):
+for y in range(26):
     fila = ''
-    for x in range(56):
-        h = 4 if x < 24 else 3 if x < 34 else 2 if x < 44 else 1
-        if 19 <= x <= 31 and 22 <= y <= 28: h = 2                       # la caldera, hundida
+    for x in range(48):
+        h = 4 if x < 20 else 3 if x < 30 else 2 if x < 38 else 1
+        if 17 <= x <= 26 and 18 <= y <= 22: h = 2                       # la caldera, hundida
         fila += str(h)
     alt.append(fila)
 zonas['fuego'] = dict(nombre='Montañas del Fuego', origen=(20, 0), z=z, alturas=alt, hierba=True, flora='volcan')
 
-# 5. Capital (34 × 28), Arrecife: costa este. Izquierda y 1..3 (zona 4). Puerto al este; barco
+# 5. El Jable (24 × 22), zona nueva (autor, 2026-11-10: más recorrido, a la derecha de La Geria):
+# la llanura de arena del centro de la isla, entre las Montañas del Fuego y la capital. Arriba x
+# 10..12 (zona 4); derecha y 10..11 (zona 6). Un camino que da la vuelta entre gavias de piedra,
+# hierba seca, tuneras y palmeras, con un entrenador y un objeto escondido.
+z = Z(24, 22); z.borde('#')
+z.r(10, 0, 3, 1, '_'); z.r(23, 10, 1, 2, ',')
+# Muros de gavias que obligan a dar la vuelta: uno largo de norte a sur que deja la salida al otro
+# lado, y dos que cruzan con el hueco a uno y otro lado (zigzag).
+z.r(17, 1, 1, 17, '='); z.r(1, 6, 13, 1, '='); z.r(4, 12, 13, 1, '=')
+z.camino([(11,1),(11,4)], ancho=2); z.camino([(11,4),(15,4)], ancho=2); z.camino([(15,4),(15,11)], ancho=2)
+z.camino([(2,11),(15,11)]); z.camino([(2,11),(2,17)], ancho=2); z.camino([(2,18),(19,18)], ancho=2)
+z.camino([(19,10),(19,19)], ancho=2); z.camino([(19,10),(22,10)], ancho=2)
+z.r(5, 8, 8, 3, '"'); z.r(6, 14, 9, 3, '"')                      # dos campos de hierba seca
+z.r(19, 2, 3, 3, '"')                                            # y otro junto al rincón escondido
+z.r(1, 1, 2, 2, 'U'); z.r(21, 14, 2, 3, 'U'); z.r(9, 20, 3, 1, 'U')   # tuneras
+for (x, y) in [(14, 2), (5, 9 + 6), (13, 20)]: z.p(x, y, 'T')     # palmeras
+z.r(21, 20, 2, 1, '#'); z.r(1, 20, 2, 1, '#')                    # rocas
+zonas['jable'] = dict(nombre='El Jable', origen=(44, 26), z=z, altura=1)
+
+# 6. Capital (34 × 28), Arrecife: costa este. Izquierda y 18..19 (zona 5). Puerto al este; barco
 # cerrado hasta vencer al gimnasio. Un charco de agua de mar entre las casas, con su paseo de palmeras.
 z = Z(34, 28); z.borde('#')
-z.r(0, 1, 1, 3, ',')
+z.r(0, 18, 1, 2, ',')
 z.r(26, 1, 7, 26, '~'); z.r(1, 24, 25, 3, '~'); z.r(1, 22, 25, 2, 'a')   # mar y playa dorada
 z.r(1, 1, 2, 3, ','); z.camino([(1,3),(1,11)], ancho=2); z.camino([(5,9),(5,11)]); z.camino([(1,11),(24,11)], ancho=2)
 z.camino([(14,10),(14,11)]); z.camino([(15,10),(15,11)]); z.camino([(21,7),(21,11)])
@@ -138,22 +155,24 @@ z.r(25, 11, 6, 2, 'P'); z.r(31, 9, 2, 2, 'F'); z.r(29, 13, 2, 2, 'B')    # muell
 z.r(25, 11, 1, 2, 'X')                                                  # paso al muelle, cerrado
 z.r(1, 20, 6, 1, '~')                                                    # el charco, junto a la playa
 for x in (8, 12, 16, 20): z.p(x, 20, 'T')                                # paseo de palmeras
-zonas['capital'] = dict(nombre='Capital', origen=(76, 18), z=z, altura=1, casas='balcones-blanca')
+zonas['capital'] = dict(nombre='Capital', origen=(68, 18), z=z, altura=1, casas='balcones-blanca')
 
 PERSONAJES = {
  'inicial': ["{ id: 'vecino-salida', x: 5, y: 2, mira: 'o', frase: '¡Eh! Sin una criatura que te acompañe no se sale de aquí. La doctora te espera en el museo.' }"],
- 'combates': ["{ id: 'entrenador-barrera', x: 6, y: 37, mira: 'e', entrenador: { vision: 5, obligatorio: true }, frase: '¡Nadie sube por la ladera sin pasar antes por mí!' }",
-              "{ id: 'entrenador-llano', x: 2, y: 15, mira: 'e', entrenador: { vision: 4, obligatorio: false }, frase: 'En el llano, las criaturas se esconden entre la hierba seca.' }"],
+ 'combates': ["{ id: 'entrenador-barrera', x: 4, y: 32, mira: 'e', entrenador: { vision: 4, obligatorio: true }, frase: '¡Nadie sube por la ladera sin pasar antes por mí!' }",
+              "{ id: 'entrenador-llano', x: 2, y: 15, mira: 'e', entrenador: { vision: 3, obligatorio: false }, frase: 'En el llano, las criaturas se esconden entre la hierba seca.' }"],
  'pueblo': ["{ id: 'anciano', x: 11, y: 13, mira: 's', frase: 'Esa criatura no te hace caso, ¿verdad? Siéntate, que te cuento su historia.' }",
             "{ id: 'guarda-fuego', x: 7, y: 3, mira: 'e', frase: 'En las Montañas del Fuego, quien no va bien acompañado se pierde entre la lava.' }"],
- 'fuego': ["{ id: 'entrenador-salida-fuego', x: 48, y: 18, mira: 's', entrenador: { vision: 3, obligatorio: true }, frase: 'Si quieres llegar a la capital, antes tendrás que vencerme.' }",
-           "{ id: 'excursionista', x: 12, y: 11, mira: 'o', entrenador: { vision: 2, obligatorio: false }, frase: 'Aquí la tierra quema: un palmo bajo el suelo, se podría asar pescado.' }",
-           "{ id: 'entrenador-centro', x: 30, y: 16, mira: 'n', entrenador: { vision: 2, obligatorio: false }, frase: 'Entreno entre los volcanes. El calor me hace más fuerte.' }",
-           "{ id: 'entrenador-caldera', x: 21, y: 25, mira: 'e', entrenador: { vision: 3, obligatorio: false }, frase: 'Esta caldera es mi escondite. ¿Cómo la has encontrado?' }"],
+ 'fuego': ["{ id: 'entrenador-salida-fuego', x: 37, y: 21, mira: 'o', entrenador: { vision: 3, obligatorio: true }, frase: 'Si quieres llegar a la capital, antes tendrás que vencerme.' }",
+           "{ id: 'excursionista', x: 11, y: 9, mira: 'o', entrenador: { vision: 2, obligatorio: false }, frase: 'Aquí la tierra quema: un palmo bajo el suelo, se podría asar pescado.' }",
+           "{ id: 'entrenador-centro', x: 26, y: 14, mira: 'n', entrenador: { vision: 2, obligatorio: false }, frase: 'Entreno entre los volcanes. El calor me hace más fuerte.' }",
+           "{ id: 'entrenador-caldera', x: 19, y: 20, mira: 'e', entrenador: { vision: 3, obligatorio: false }, frase: 'Esta caldera es mi escondite. ¿Cómo la has encontrado?' }"],
+ 'jable': ["{ id: 'entrenador-jable', x: 8, y: 17, mira: 's', entrenador: { vision: 3, obligatorio: false }, frase: 'En el jable, la arena se mueve con el viento: hoy hay un camino y mañana otro.' }",
+           "{ id: 'agricultor-jable', x: 13, y: 3, mira: 's', frase: 'Aquí se siembra en la arena: guarda la humedad de la noche. ¡Las batatas salen dulcísimas!' }"],
  'capital': ["{ id: 'vecina-rivales', x: 9, y: 11, mira: 's', frase: 'Unos tipos raros preguntaban en el puerto por la isla que desapareció...' }",
              "{ id: 'marinero', x: 25, y: 13, mira: 'n', frase: 'El barco va a la isla siguiente, pero solo con quien ha vencido al gimnasio.' }"],
 }
-OBJETOS = {'fuego': ["{ id: 'pocion-caldera', x: 29, y: 27, objeto: 'pocion' }"]}
+OBJETOS = {'fuego': ["{ id: 'pocion-caldera', x: 25, y: 22, objeto: 'pocion' }"], 'jable': ["{ id: 'pocion-jable', x: 21, y: 6, objeto: 'pocion' }"]}
 CIERRES = {
  'inicial': "cierre: { condicion: 'inicial-elegida', aviso: 'Antes de salir, pasa por el museo y elige a tu compañera.' },",
  'pueblo': "cierre: {\n        condicion: 'anciano',\n        aviso: 'Tu criatura aún no te escucha. En las Montañas del Fuego os perderíais: habla antes con el anciano de la plaza.',\n      },",

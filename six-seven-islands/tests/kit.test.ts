@@ -23,6 +23,8 @@ const PRESUPUESTO: Record<PiezaKit, number> = {
   tunera: 800,
   volcan: 400,
   nube: 700,
+  boya: 400,
+  barca: 700,
 };
 /** Lo que puede salirse de su casilla cada pieza, desde el centro: las copas grandes se salen. */
 const RADIO: Record<PiezaKit, number> = {
@@ -43,6 +45,8 @@ const RADIO: Record<PiezaKit, number> = {
   tunera: 0.6,
   volcan: 1.1,
   nube: 1.3,
+  boya: 0.3,
+  barca: 0.9,
 };
 
 describe('kit canario de naturaleza', () => {

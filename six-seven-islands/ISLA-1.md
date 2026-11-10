@@ -6,15 +6,17 @@ hecha desde cero con la misma idea que La Palma, que queda guardada para la isla
 
 ## El recorrido
 
-Del sur al este, como en La Palma: 1 → 2 → 3 → 4 → 5. Lo decidido por el autor para la isla 1
-(zonas, reglas y orden de la zona de combates) se mantiene; cambia el paisaje.
+Del sur al este, como en La Palma: 1 → 2 → 3 → 4 → 5 → 6. Lo decidido por el autor para la
+isla 1 (zonas, reglas y orden de la zona de combates) se mantiene; cambia el paisaje. El
+2026-11-10 el autor pidió una isla más larga, no más ancha: más contenido y más tiempo para
+completarla. Por eso hay una zona más, El Jable, entre las Montañas del Fuego y la capital.
 
 1. **Zona inicial** (sur): pueblo blanco junto a una playa dorada.
    - La casa del jugador, otra casa igual, una palmera y el museo.
    - Unas tuneras y unas viñas en sus hoyos.
    - El paso se cierra hasta elegir la inicial.
 2. **El Golfo** (zona de combates, costa oeste), de sur a norte:
-   - playa de arena negra, con el charco verde;
+   - playa de arena negra, con el charco verde (5 × 4) y boyas en el mar;
    - la barrera de piedra, con el entrenador obligatorio justo detrás;
    - la subida con dos manchas de malpaís, una obligatoria y otra opcional;
    - el llano de tierra con la hierba obligatoria, tuneras y el entrenador opcional.
@@ -26,24 +28,38 @@ Del sur al este, como en La Palma: 1 → 2 → 3 → 4 → 5. Lo decidido por el
    - un malpaís obligatorio que corta el paso y otros que se rodean;
    - un cono de escorias y un mirador;
    - una caldera sin salida con un entrenador y una poción;
-   - el entrenador obligatorio a la salida.
-5. **La capital** (costa este):
+   - el entrenador obligatorio a la salida, que ahora baja al sur, hacia El Jable.
+5. **El Jable** (zona opcional de encuentros, entre el Fuego y la capital):
+   - arenal con muros de piedra seca que obligan a zigzaguear: el camino es más del doble de
+     largo que la línea recta;
+   - tres manchas de hierba, ninguna obligatoria;
+   - un entrenador opcional, un agricultor que habla de las batatas y una poción escondida.
+6. **La capital** (costa este):
    - refugio, el gimnasio de Roca (el edificio más grande), casas blancas de balcones;
    - un charco de agua de mar con su paseo de palmeras;
    - el muelle, el faro y el barco, que solo lleva a quien vence al gimnasio.
 
 ## Tamaños
 
-Ampliados el 2026-11-10: el autor pidió zonas de encuentros y de combates más grandes, con los
-mismos entrenadores.
+2026-11-10: el autor pidió zonas más grandes. Primero se ensancharon, pero él quería decir más
+largas, con más contenido. El Golfo vuelve a su ancho y se alarga; el Fuego vuelve a su tamaño, y
+se añade El Jable. Lo juzga el autor al probarlo.
 
 | Zona | Casillas |
 | --- | --- |
 | 1. Zona inicial | 24 × 18 |
-| 2. El Golfo | 24 × 60 (antes, 15 × 44) |
+| 2. El Golfo | 15 × 52 (antes, 15 × 44) |
 | 3. La Geria | 28 × 22 |
-| 4. Montañas del Fuego | 56 × 32 (antes, 48 × 26) |
-| 5. Capital | 34 × 28 |
+| 4. Montañas del Fuego | 48 × 26 |
+| 5. El Jable | 24 × 22 (nueva) |
+| 6. Capital | 34 × 28 |
+
+## El mar
+
+Alrededor de toda la isla (`src/sistemas/mundo/mar.ts`), para que no parezca que se puede
+andar sobre el agua (autor, 2026-11-10): espuma en las orillas, olas sueltas, rocas de basalto
+cerca de la costa, una fila de boyas frente a cada playa y barcas, amarradas en el puerto de la
+capital.
 
 ## Las islas, en orden
 
