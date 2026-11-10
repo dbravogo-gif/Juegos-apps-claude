@@ -23,6 +23,8 @@ describe('combate de prueba', () => {
         eventos.push(...r.eventos);
       }
       expect(r.estado.fin).not.toBeNull();
+      // El evento «usa» trae el id del movimiento, no su nombre: la pantalla busca el nombre.
+      for (const e of eventos) if (e.tipo === 'usa') expect(DATOS.movimientos[e.movimiento], e.movimiento).toBeDefined();
       expect(eventos.some((e) => e.tipo === 'danio' && e.ref.lado === 1 && e.eficacia > 1)).toBe(true);
     });
   }

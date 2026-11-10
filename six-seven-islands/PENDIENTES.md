@@ -65,8 +65,6 @@ propuesta de Claude y qué frena mientras siga abierto.
 
 ## Tareas del autor que no son decisiones
 
-- Subir los dos fondos de combate (Nano Banana) a `public/fondos/`: `combate-exterior.jpg` y
-  `combate-gimnasio.jpg`. Mientras no estén, el combate usa uno provisional hecho por código.
 
 - Medir los FPS en los ordenadores del autor y de sus amigos.
 - Prueba de Meshy: pagar Pro el primer mes (~10 $), y descargar y subir `planta-2.glb`

@@ -116,7 +116,7 @@ export class Combate implements Subsistema {
     this.fondoProvisional = fondoProvisional();
     // Si el autor ya ha subido el fondo pintado, se usa; si no, el provisional hecho por código.
     new TextureLoader().load(
-      `${import.meta.env.BASE_URL}fondos/combate-exterior.jpg`,
+      `${import.meta.env.BASE_URL}fondos/combate-exterior.webp`,
       (t) => {
         t.colorSpace = SRGBColorSpace;
         this.fondoPintado = t;
@@ -307,12 +307,13 @@ export class Combate implements Subsistema {
         }
         case 'usa': {
           atacante = ev.ref.lado;
-          const mov = Object.values(DATOS.movimientos).find((m) => m.nombre === ev.movimiento);
+          // El evento trae el id del movimiento; se enseña su nombre.
+          const mov = DATOS.movimientos[ev.movimiento];
           tipoUsado = mov?.tipo || 'comun';
           const lado = atacante;
           const estado = mov?.categoria === 'estado';
           this.encolar({
-            texto: `¡${ev.nombre} usa ${ev.movimiento}!`,
+            texto: `¡${ev.nombre} usa ${mov?.nombre ?? ev.movimiento}!`,
             duracion: 0.75,
             saltable: false,
             animar: (t) => {
