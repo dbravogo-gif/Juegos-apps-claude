@@ -52,3 +52,10 @@ Klk: 1. 67 (2305) · 2. 1 over u (2191) · 3. **Nitos (2003)** · 4. Aaroners (1
 Hasta 29-nov (presupuesto 100.0): sin cambios 3355 · 1 cambio (J. Johnson → Giannis) 3501 ·
 2 cambios manteniendo a Barnes (Reaves + J. Johnson → Cade + Avdija) 3682 · 2 cambios libres (J. Johnson + Barnes → Wembanyama + Avdija) 3701 · wildcard 3849.
 Plan: 2 cambios ahora (Cade + Avdija) y wildcard 1 hacia el 20-28 nov con datos frescos (caduca el 29-nov).
+
+## 11-nov (GW4): revisión
+
+Klk: 1. 1 over u 3578 · 2. 67 3202 · 3. Nitos 3142 · 4. Aaroners 2153. Wildcard 1 usada el GameDay 15. 2 fichajes gratis sin usar.
+Forma desde el 4-nov: Wembanyama 74, Avdija 46, K. George 43, Ajay 33 · flojos: Brooks 22, Spencer 23, Hyland 20, Kolek 18. Barnes (ingle, vuelve 12-nov) y da Silva (gemelo, vuelve 11-nov).
+Hasta 29-nov: sin cambios 2990 · Brooks + Spencer → Dosunmu + Walter Clayton Jr. 3020 (elegida, robusta) · Brooks + da Silva → Jenkins + Jalen Smith 3037 (Jenkins inflado por bajas de DET) · vender a Barnes 3060 (descartado: lesión corta).
+Hacer los cambios mañana (12-nov), después de que juegue Spencer hoy.

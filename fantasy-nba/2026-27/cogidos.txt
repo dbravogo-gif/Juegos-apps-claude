@@ -1,34 +1,34 @@
-# Jugadores de los otros equipos de la liga (GameDay 14). Generado por league.py.
-# 67
-Amen Thompson
-Tyrese Maxey
-Caleb Wilson
-Cameron Boozer
-Brandon Miller
-Terrence Shannon Jr.
-Jeremiah Fears
-Zaccharie Risacher
-Ja'Kobe Walter
-Trevon Brazile
+# Jugadores de los otros equipos de la liga (GameDay 21). Generado por league.py.
 # 1 over u
 Darius Acuff Jr.
-Luka Doncic
-Cooper Flagg
-Yaxel Lendeborg
-Karl-Anthony Towns
 Davion Mitchell
-Aaron Wiggins
+Karl-Anthony Towns
 Jaxson Hayes
 Aday Mara
+Cooper Flagg
+Aaron Wiggins
+Yaxel Lendeborg
 Quenton Jackson
+Luka Doncic
+# 67
+Tyrese Maxey
+Sidy Cissoko
+Cameron Boozer
+Caleb Wilson
+Franz Wagner
+Trevon Brazile
+Zaccharie Risacher
+Cade Cunningham
+Terrence Shannon Jr.
+Jeremiah Fears
 # Aaroners
 Shai Gilgeous-Alexander
 Christian Braun
-Matisse Thybulle
-Jayson Tatum
-Tari Eason
 Daniel Gafford
-Grayson Allen
-Keon Ellis
+Jayson Tatum
 Duncan Robinson
+Tari Eason
 Ace Bailey
+Grayson Allen
+Klay Thompson
+Tyrese Proctor
