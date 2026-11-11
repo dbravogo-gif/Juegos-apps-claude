@@ -397,6 +397,31 @@ export function nube(semilla: number): BufferGeometry {
  */
 export const colada = (semilla: number): BufferGeometry => lajasMalpais(semilla, [COLORES.lavaNegra, COLORES.lavaNegra, COLORES.basalto, COLORES.crater]);
 
+/** Sombrilla de playa: palo y tela a gajos de dos colores. */
+export function sombrilla(semilla: number): BufferGeometry {
+  const M = new Montaje();
+  const color = [COLORES.toldoAzul, COLORES.geranio][semilla % 2];
+  M.pon(new CylinderGeometry(0.025, 0.025, 1.25, 6).translate(0, 0.62, 0), COLORES.cal, 0.85);
+  // La tela: un cono bajo, con gajos alternos de color y de blanco.
+  const gajos = 8;
+  for (let i = 0; i < gajos; i++) {
+    const gajo = new ConeGeometry(0.62, 0.26, 2, 1, true, (i / gajos) * Math.PI * 2, (Math.PI * 2) / gajos).translate(0, 1.32, 0);
+    M.pon(gajo, i % 2 ? COLORES.cal : color);
+  }
+  M.pon(new SphereGeometry(0.035, 6, 4).translate(0, 1.46, 0), COLORES.cal);
+  // Clavada en la arena, nunca del todo recta.
+  return M.fusionar().rotateZ(semilla % 2 ? 0.1 : -0.07);
+}
+
+/** Toalla de playa, a rayas, tendida en la arena: más larga que la casilla, hacia el norte. */
+export function toalla(semilla: number): BufferGeometry {
+  const M = new Montaje();
+  const color = [COLORES.toldoAzul, COLORES.geranio, COLORES.carpinteriaVerde][semilla % 3];
+  for (let i = 0; i < 5; i++) M.caja(0.62, 0.02, 0.27, 0, 0.01, 0.4 - i * 0.27, i % 2 ? COLORES.cal : color);
+  // Tendida a mano: cada una, con su giro.
+  return M.fusionar().rotateY(((semilla % 3) - 1) * 0.08);
+}
+
 /** Boya roja y blanca, flotando: bola, banda y un mástil con su luz. */
 export function boya(_semilla: number): BufferGeometry {
   const M = new Montaje();
@@ -457,6 +482,8 @@ export const KIT = {
   nube,
   boya,
   barca,
+  sombrilla,
+  toalla,
 } satisfies Record<string, (semilla: number) => BufferGeometry>;
 
 export type PiezaKit = keyof typeof KIT;
@@ -484,6 +511,8 @@ export const VARIANTES: Record<PiezaKit, number> = {
   nube: 2,
   boya: 1,
   barca: 2,
+  sombrilla: 2,
+  toalla: 3,
 };
 
 /** La geometría de una variante de una pieza del kit. */

@@ -1,5 +1,6 @@
-// Subsistema «personaje»: el jugador y los personajes de la isla y de sus interiores, con los
-// personajes de KayKit (CC0) sin armas y animados (parado y andando). Dibuja al jugador donde dice
+// Subsistema «personaje»: el jugador y los personajes de la isla y de sus interiores. El jugador y
+// algunos personajes son personas de Meshy (`arte/personas.ts`); el resto, personajes de KayKit
+// (CC0) sin armas. Todos animados (parado y andando) o, si su modelo no trae esqueleto, respirando. Dibuja al jugador donde dice
 // «partida», interpolado entre pasos fijos. Si algo lo tapa (según las alturas de «mundo»), se ve
 // su silueta. Quien habla con el jugador se gira hacia él. Los entrenadores enseñan su línea de
 // visión en el suelo (ARTE.md, «Peligros»). Las estatuas las dibuja «salas». El generador de
@@ -7,6 +8,7 @@
 
 import {
   AnimationMixer,
+  AnimationUtils,
   Box3,
   CapsuleGeometry,
   GreaterDepth,
@@ -23,6 +25,7 @@ import {
   type BufferGeometry,
   type Material,
   type Object3D,
+  type Texture,
 } from 'three/webgpu';
 import { clone as clonarConEsqueleto } from 'three/addons/utils/SkeletonUtils.js';
 import type { GLTF } from 'three/addons/loaders/GLTFLoader.js';
@@ -31,6 +34,8 @@ import { clave, deClave, enIsla, vision, type Direccion, type Personaje as DefPe
 import { COLORES } from '../../arte/paleta';
 import { alturaSuelo } from '../../arte/escala';
 import { aMaterialDelJuego, cargarModelo, rutaModelo } from '../../arte/modelos';
+import { materialColor } from '../../arte/criaturas3d';
+import { PERSONAS, PERSONA_DE, PERSONA_JUGADOR, type DefPersona, type NombrePersona } from '../../arte/personas';
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Partida } from '../partida/partida';
 import type { Mundo } from '../mundo/mundo';
@@ -49,10 +54,22 @@ interface Figura {
   mezclador: AnimationMixer;
   acciones: Map<string, AnimationAction>;
   actual: string;
+  /** Los nombres de sus clips de andar y de parado. */
+  andar: string;
+  parado: string;
+  /** Sin esqueleto: respira (sube y baja un poco), para no parecer una estatua. */
+  respira?: { malla: Object3D; escala: number; fase: number };
 }
 
-/** Qué modelo de KayKit hace de cada personaje, hasta que lleguen las personas de F12. */
+/** Velocidad del jugador, en casillas por segundo (paso fijo de 60 por segundo). */
+const VELOCIDAD = 60 / PASOS_POR_CASILLA;
+
+/** Tinte de la piel quemada por el sol (el guiri de Famara). */
+const QUEMADO = [1, 0.66, 0.58] as const;
+
+/** Qué modelo de KayKit hace de cada personaje, hasta que lleguen las personas de Meshy. */
 function modeloDe(p: DefPersonaje): string {
+  if (p.postura === 'tumbado') return p.quemado ? 'Barbarian' : 'Rogue';
   if (p.id === 'anciano' || p.id === 'doctora') return 'Mage';
   if (p.id === 'lider-gimnasio') return 'Knight';
   if (p.entrenador) return p.entrenador.obligatorio ? 'Knight' : 'Barbarian';
@@ -73,7 +90,7 @@ export class Personaje implements Subsistema {
   private jugador!: Figura;
   private figuras: Figura[] = [];
   /** Los personajes por id, con hacia dónde miran normalmente, para girarlos al hablar. */
-  private porId = new Map<string, { figura: Figura; giro: number }>();
+  private porId = new Map<string, { figura: Figura; giro: number; tumbado?: boolean }>();
   private giro = 0;
   /** Segundos que lleva el jugador sin moverse: entre casilla y casilla hay un instante parado. */
   private quieto = 0;
@@ -81,6 +98,7 @@ export class Personaje implements Subsistema {
   private materiales: Material[] = [];
   private objetos: Object3D[] = [];
   private quitar: (() => void)[] = [];
+  private reloj = 0;
 
   async init(ctx: Ctx): Promise<void> {
     this.partida = ctx.get<Partida>('partida');
@@ -96,7 +114,7 @@ export class Personaje implements Subsistema {
     // revés). Como también se pintaría sobre el propio jugador, solo se enciende cuando algo lo
     // tapa. Es coral: la clara (espuma) desaparecía contra las casas blancas de Lanzarote, y el
     // coral se ve sobre la cal, las copas, el picón negro y el tejado azul del museo.
-    this.jugador = this.figura(await cargar('Rogue'), 'Rogue');
+    this.jugador = await this.figuraPersona(PERSONA_JUGADOR);
     const silueta = new MeshBasicNodeMaterial({ color: COLORES.acentoCoral, transparent: true, opacity: 0, depthWrite: false });
     silueta.depthFunc = GreaterDepth;
     this.silueta = silueta;
@@ -120,15 +138,27 @@ export class Personaje implements Subsistema {
       for (const z of mapa.zonas.values()) {
         for (const p of z.personajes) {
           if (p.id.startsWith('estatua-')) continue;
+          const persona = PERSONA_DE[p.id];
           const nombre = modeloDe(p);
-          const f = this.figura(await cargar(nombre), nombre);
+          const f = persona ? await this.figuraPersona(persona) : this.figura(await cargar(nombre), nombre, p.quemado ? QUEMADO : undefined);
           const k = enIsla(mapa, z.id, p.x, p.y);
           const [x, y] = deClave(k);
           f.raiz.position.set(x, alturaSuelo(mapa.casillas.get(k)!.h), y);
-          f.raiz.rotation.y = GIRO[p.mira];
+          if (p.postura === 'tumbado') {
+            // Boca arriba sobre su toalla, con la cabeza al norte y los pies en el borde sur de la
+            // casilla. No se gira al hablar.
+            const cuerpo = f.raiz.children[0];
+            cuerpo.rotation.x = -Math.PI / 2;
+            cuerpo.position.set(0, 0.1, 0.5);
+            // Pegado al suelo, su sombra no se ve y costaría una llamada de dibujo por pieza.
+            cuerpo.traverse((o) => (o.castShadow = false));
+            this.porId.set(p.id, { figura: f, giro: 0, tumbado: true });
+          } else {
+            f.raiz.rotation.y = GIRO[p.mira];
+            this.porId.set(p.id, { figura: f, giro: GIRO[p.mira] });
+          }
           ctx.escena.add(f.raiz);
           this.objetos.push(f.raiz);
-          this.porId.set(p.id, { figura: f, giro: GIRO[p.mira] });
           for (const v of vision(mapa, z.id, p)) {
             const [vx, vy] = deClave(v);
             visiones.push(new Matrix4().makeTranslation(vx, alturaSuelo(mapa.casillas.get(v)!.h) + 0.14, vy));
@@ -140,13 +170,13 @@ export class Personaje implements Subsistema {
     this.quitar.push(
       ctx.eventos.on('dialogo:abrir', ({ guionId }) => {
         const q = this.porId.get(guionId);
-        if (!q) return;
+        if (!q || q.tumbado) return;
         const r = q.figura.raiz.position;
         q.figura.raiz.rotation.y = Math.atan2(this.posicion.x - r.x, this.posicion.z - r.z);
       }),
       ctx.eventos.on('dialogo:cerrar', ({ guionId }) => {
         const q = this.porId.get(guionId);
-        if (q) q.figura.raiz.rotation.y = q.giro;
+        if (q && !q.tumbado) q.figura.raiz.rotation.y = q.giro;
       }),
     );
     if (visiones.length) {
@@ -169,7 +199,7 @@ export class Personaje implements Subsistema {
   }
 
   /** Una figurita: copia del modelo con su esqueleto, sin armas, a escala y con sus animaciones. */
-  private figura(gltf: GLTF, nombre: string): Figura {
+  private figura(gltf: GLTF, nombre: string, tinte?: readonly [number, number, number]): Figura {
     const base = nombre.split('_')[0];
     const copia = clonarConEsqueleto(gltf.scene);
     copia.traverse((o) => {
@@ -177,7 +207,7 @@ export class Personaje implements Subsistema {
       // Solo las piezas del cuerpo («Rogue_Body», «Mage_Hat»…); fuera armas, escudos y libros.
       o.visible = o.name.startsWith(`${base}_`) && !o.name.includes('Shield');
     });
-    this.materiales.push(...aMaterialDelJuego(copia, { bordes: [-0.25, 0.5], especular: 0.1, dureza: 16, contraluz: 0.35 }));
+    this.materiales.push(...aMaterialDelJuego(copia, { bordes: [-0.25, 0.5], especular: 0.1, dureza: 16, contraluz: 0.35 }, tinte));
     const caja = new Box3();
     copia.updateWorldMatrix(true, true);
     copia.traverse((o) => {
@@ -192,8 +222,64 @@ export class Personaje implements Subsistema {
     for (const clip of gltf.animations) acciones.set(clip.name, mezclador.clipAction(clip).setLoop(LoopRepeat, Infinity));
     // El jugador anda a unas 5,5 casillas por segundo: a su ritmo normal, los pies patinaban.
     acciones.get('Walking_A')?.setEffectiveTimeScale(1.6);
-    const f: Figura = { raiz, mezclador, acciones, actual: '' };
-    this.animar(f, 'Idle');
+    const f: Figura = { raiz, mezclador, acciones, actual: '', andar: 'Walking_A', parado: 'Idle' };
+    this.animar(f, f.parado);
+    this.figuras.push(f);
+    return f;
+  }
+
+  /**
+   * Una persona de Meshy: con su luz pintada, a la escala de las demás figuras y con la base en el
+   * suelo. Si trae esqueleto, corre al ritmo del jugador sin que patinen los pies.
+   */
+  private async figuraPersona(nombre: NombrePersona): Promise<Figura> {
+    const def: DefPersona = PERSONAS[nombre];
+    const gltf = await cargarModelo(rutaModelo(def.archivo));
+    const copia = clonarConEsqueleto(gltf.scene);
+    copia.traverse((o) => {
+      const m = o as Mesh;
+      if (!m.isMesh) return;
+      const viejo = (Array.isArray(m.material) ? m.material[0] : m.material) as Material & { map?: Texture | null };
+      m.material = materialColor(viejo.map ?? null);
+      m.castShadow = true;
+      m.receiveShadow = false;
+      // Las mallas con esqueleto no se recortan bien por su caja de reposo.
+      m.frustumCulled = false;
+    });
+    copia.updateWorldMatrix(true, true);
+    const caja = new Box3().setFromObject(copia);
+    const altoModelo = caja.max.y - caja.min.y || 1;
+    const escala = ALTO / altoModelo;
+    copia.scale.setScalar(escala);
+    copia.position.y = -caja.min.y * escala;
+    // El pivote, en los pies: lo que respira se estira desde el suelo.
+    const pivote = new Group();
+    pivote.add(copia);
+    const raiz = new Group();
+    raiz.add(pivote);
+    const mezclador = new AnimationMixer(copia);
+    const acciones = new Map<string, AnimationAction>();
+    const f: Figura = { raiz, mezclador, acciones, actual: '', andar: '', parado: '' };
+    if (def.mover) {
+      const clip = gltf.animations.find((c) => c.name === def.mover!.clip);
+      if (clip) {
+        // A esta escala, el pie apoyado va a pie × escala casillas por segundo.
+        const a = mezclador.clipAction(clip).setLoop(LoopRepeat, Infinity);
+        a.setEffectiveTimeScale(VELOCIDAD / (def.mover.pie * escala));
+        acciones.set('andar', a);
+        f.andar = 'andar';
+      }
+    }
+    if (def.parado) {
+      const clip = gltf.animations.find((c) => c.name === def.parado!.clip);
+      if (clip) {
+        const quieto = AnimationUtils.subclip(clip, `${clip.name}-parado`, def.parado.fotograma, def.parado.fotograma + 1, 30);
+        acciones.set('parado', mezclador.clipAction(quieto).setLoop(LoopRepeat, Infinity));
+        f.parado = 'parado';
+      }
+    }
+    if (!gltf.animations.length) f.respira = { malla: pivote, escala: 1, fase: this.figuras.length * 1.7 };
+    this.animar(f, f.parado);
     this.figuras.push(f);
     return f;
   }
@@ -220,7 +306,7 @@ export class Personaje implements Subsistema {
     // Andando se pasa un instante por paso 0 entre casilla y casilla: cambiar a «parado» ahí hacía
     // que la animación tropezara en cada casilla (el autor veía el andar raro, 2026-11-10).
     this.quieto = e.paso > 0 ? 0 : this.quieto + dt;
-    this.animar(this.jugador, this.quieto < 0.12 ? 'Walking_A' : 'Idle');
+    this.animar(this.jugador, this.quieto < 0.12 ? this.jugador.andar : this.jugador.parado);
     let objetivo = GIRO[e.mira];
     while (objetivo - this.giro > Math.PI) objetivo -= Math.PI * 2;
     while (objetivo - this.giro < -Math.PI) objetivo += Math.PI * 2;
@@ -244,7 +330,12 @@ export class Personaje implements Subsistema {
 
   actualizar(dt: number, ctx: Ctx): void {
     this.colocar(dt, ctx.tiempo.alfa);
-    for (const f of this.figuras) f.mezclador.update(dt);
+    this.reloj += dt;
+    for (const f of this.figuras) {
+      f.mezclador.update(dt);
+      // Respirar: un 1,2 % de alto, sin tocar los pies (la base está en el origen).
+      if (f.respira) f.respira.malla.scale.y = f.respira.escala * (1 + 0.012 * Math.sin(this.reloj * 2.2 + f.respira.fase));
+    }
   }
 
   dispose(): void {

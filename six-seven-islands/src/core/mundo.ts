@@ -35,6 +35,9 @@ export const LEYENDA = {
   w: 'charco verde',
   a: 'arena de playa',
   Q: 'cono volcánico',
+  // Famara (2026-11-11): la playa de los bañistas.
+  O: 'sombrilla',
+  t: 'toalla',
   // Interiores: salas pequeñas aparte (ISLA-1.md, «Decisiones técnicas»).
   m: 'suelo',
   '|': 'pared',
@@ -53,7 +56,7 @@ export const LEYENDA = {
 export type Casilla = keyof typeof LEYENDA;
 
 /** Se pueden pisar. Las X también, cuando su condición se cumple. */
-export const TRANSITABLES: ReadonlySet<string> = new Set(['.', ',', ':', '_', '"', ';', 'a', 'd', 'P', 'm']);
+export const TRANSITABLES: ReadonlySet<string> = new Set(['.', ',', ':', '_', '"', ';', 'a', 'd', 'P', 'm', 't']);
 /** Muebles de los interiores: no se pisan y se dibujan como piezas. */
 export const MUEBLES: ReadonlySet<string> = new Set(['o', 'h', 'c', 'k', 'l', 'v', 'e', 'j', 'n', 'q']);
 /** Terreno de encuentros: la hierba alta y el malpaís (y, más adelante, las dunas). */
@@ -72,6 +75,9 @@ export interface Personaje {
   y: number;
   mira: Direccion;
   entrenador?: { vision: number; obligatorio: boolean };
+  /** Tumbado en el suelo (los bañistas de Famara), y con la piel quemada por el sol. */
+  postura?: 'tumbado';
+  quemado?: boolean;
   /** Lo que dice al hablarle, mientras no lleguen los diálogos de verdad (F15). */
   frase?: string;
 }
@@ -123,6 +129,11 @@ export interface DefIsla {
   gimnasio?: string;
   /** Colores propios de la isla: suelo por letra, las cumbres del centro y las matas de la hierba alta. */
   colores?: { suelo?: Partial<Record<string, string>>; cumbre?: string; ladoCumbre?: string; matas?: string };
+  /**
+   * La costa de la isla, como polígono en casillas (x, y). Lo que queda dentro y no es de ninguna
+   * zona es tierra que no se pisa. Sin silueta, la tierra solo rellena los huecos entre zonas.
+   */
+  silueta?: readonly (readonly [number, number])[];
 }
 
 export interface CasillaMundo {
@@ -205,6 +216,11 @@ export function construirMundo(isla: DefIsla): Mundo {
       }
       objetos.set(k, { zona: z.id, objeto: o });
     }
+  }
+  // La silueta puede salirse de las zonas: el mundo llega hasta ella.
+  for (const [x, y] of isla.silueta ?? []) {
+    ancho = Math.max(ancho, Math.ceil(x) + 1);
+    alto = Math.max(alto, Math.ceil(y) + 1);
   }
   return { isla, casillas, zonas, ocupadas, objetos, ancho, alto };
 }

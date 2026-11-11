@@ -23,6 +23,9 @@ agentes. El patrón viene de *Claude of Duty* (Matt Shumer, MIT).
   el cargador glTF, `SkeletonUtils` y las animaciones. El reparto tampoco está medido.
 - `BufferGeometryUtils`, `GLTFLoader` y `SkeletonUtils` (`three/addons/`) son parte de `three`:
   no son dependencias nuevas.
+- **Personas de Meshy** (`arte/personas.ts`): el jugador y algunos personajes, sin la luz del
+  juego, como las criaturas. Si traen esqueleto, el clip de correr se acelera según lo que va su
+  pie apoyado, para que no patinen.
 - **Modelos:** solo los 5 personajes de KayKit (CC0, `CREDITS.md`), 2,7 MB en
   `public/modelos/kaykit/`. Se cargan una vez con `src/arte/modelos.ts`. Los prepara
   `herramientas/recursos-kaykit.mjs`, que se ejecuta a mano con `@gltf-transform` instalado
@@ -32,6 +35,8 @@ agentes. El patrón viene de *Claude of Duty* (Matt Shumer, MIT).
   - `mundo/canario.ts`: casas y faro;
   - `mundo/kit.ts`: plantas, rocas, muro, volcanes, nubes, boya y barca;
   - `mundo/mar.ts`: qué hay en el mar (plan puro) y su espuma, en una sola malla;
+  - `mundo/terreno.ts`, `cumbres`: con `silueta` en la isla, toda la tierra de su costa que no es
+    de ninguna zona, con alturas suaves (bajan junto al mar y a las zonas);
   - `mapa/`: el plano en 2D de la isla, sacado de los mismos datos (`plano.ts`, puro) y dibujado
     en un lienzo (`dibujo.ts`). Hoy, la vista `?mapa`; mañana, el mapa dentro del juego;
   - `salas/salas.ts`: los interiores.

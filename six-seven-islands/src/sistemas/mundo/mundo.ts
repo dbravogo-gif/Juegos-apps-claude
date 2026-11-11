@@ -5,6 +5,7 @@
 
 import { BoxGeometry, CylinderGeometry, InstancedMesh, Matrix4, Mesh, PlaneGeometry, Quaternion, SphereGeometry, Vector3, type BufferGeometry, type Material } from 'three/webgpu';
 import { attribute } from 'three/tsl';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { TRANSITABLES, clave, deClave, edificios, type Casilla, type DefZona, type Mundo as MundoLogico } from '../../core/mundo';
 import { MaterialDiorama, sueloY } from '../../arte/material';
 import { COLORES } from '../../arte/paleta';
@@ -324,6 +325,10 @@ export class Mundo implements Subsistema {
         this.subirTapa(k, colocarKit('drago', r, x, y, suelo, 1, giro));
       } else if (cm.c === 'V') {
         this.subirTapa(k, colocarKit('vid', r, x, y, suelo, 1, (r % 3) * 0.2 - 0.2));
+      } else if (cm.c === 'O') {
+        this.subirTapa(k, colocarKit('sombrilla', r, x, y, suelo, 1, 0));
+      } else if (cm.c === 't') {
+        colocarKit('toalla', r, x, y, suelo, 1, 0);
       } else if (cm.c === 'U') {
         this.subirTapa(k, colocarKit('tunera', r, x + dx, y + dz, suelo, 1 + ((r >>> 4) & 3) * 0.1, giro));
       } else if (cm.c === 'L' && r % 6 === 0) {
@@ -363,8 +368,10 @@ export class Mundo implements Subsistema {
         this.subirTapa(k, base + cima * Math.min(1, Math.max(0, (1 - d) / (1 - BOCA_VOLCAN))));
       }
     }
-    // Volcanes sobre las cumbres: pequeños, juntos y a más de tres casillas de las zonas, para que
-    // no se monten sobre los caminos ni tapen al jugador.
+    // Volcanes sobre las cumbres: pequeños y a más de tres casillas de las zonas, para que no se
+    // monten sobre los caminos ni tapen al jugador. Con la silueta de Lanzarote hay mucha tierra:
+    // van más separados y todos en una sola malla (por trozos costaban 70 llamadas de dibujo más).
+    const volcanes: BufferGeometry[] = [];
     const cercaDeZona = (x: number, y: number, radio: number): boolean => {
       for (let dy = -radio; dy <= radio; dy++) {
         for (let dx = -radio; dx <= radio; dx++) if (m.casillas.has(clave(x + dx, y + dy))) return true;
@@ -373,13 +380,21 @@ export class Mundo implements Subsistema {
     };
     for (const [k, h] of cumbre) {
       const [x, y] = deClave(k);
-      if (x % 4 !== 0 || y % 4 !== 0) continue;
+      if (x % 5 !== 0 || y % 5 !== 0) continue;
       const r = pseudo(k);
+      if (r % 3 === 0) continue;
       const px = x + ((r >>> 4) % 3) - 1;
       const py = y + ((r >>> 6) % 3) - 1;
       const escala = 1.3 + ((r >>> 8) % 4) * 0.25;
       if (!cumbre.has(clave(px, py)) || cercaDeZona(px, py, Math.ceil(escala) + 3)) continue;
-      colocarKit('volcan', r, px, py, alturaSuelo(h) - 0.2, escala, (r % 6) * (Math.PI / 3), TROZO_GRANDE);
+      q.setFromAxisAngle(eje, (r % 6) * (Math.PI / 3));
+      const mt = new Matrix4().compose(new Vector3(px, alturaSuelo(h) - 0.2, py), q, new Vector3(escala, escala, escala));
+      volcanes.push(this.pieza(`volcan_${r % VARIANTES.volcan}`).clone().applyMatrix4(mt));
+    }
+    if (volcanes.length) {
+      const g = mergeGeometries(volcanes, false);
+      for (const v of volcanes) v.dispose();
+      if (g) this.anadir(new Mesh(g, this.materialColores));
     }
     // Algunas nubes sobre el mar del norte. Solo allí: con la cámara mirando al norte, una nube
     // a 10 de altura tapa lo que hay unas 8 casillas al norte de ella (tapaban la zona inicial).

@@ -20,8 +20,8 @@ export type Acabado = 'color' | 'piedra';
 
 const materiales = new Map<string, Material>();
 
-/** Unlit con su textura: así se ve como en el visor de Meshy, con su luz pintada. */
-function materialColor(mapa: Texture | null): Material {
+/** Unlit con su textura: así se ve como en el visor de Meshy, con su luz pintada. También para las personas. */
+export function materialColor(mapa: Texture | null): Material {
   const clave = `color:${mapa?.uuid ?? ''}`;
   let m = materiales.get(clave);
   if (!m) {

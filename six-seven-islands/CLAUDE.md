@@ -31,6 +31,9 @@ Vitest.
 Las que surjan de errores observados (regla R6) o de decisiones del autor, cada una con la fecha
 y el porqué.
 
+- **2026-11-11 · Publicar cada paso jugable en cuanto esté** (autor). El autor prueba según
+  llega. Si el uso diario o semanal puede acabarse antes de terminar, se publica antes lo que
+  ya funcione, con las pruebas en verde.
 - **2026-11-08 · Solo para ordenador y solo con teclado.** Lo decide el autor: él y sus amigos
   juegan en portátiles, algunos Mac. Dentro de esta carpeta manda sobre la convención «móvil
   primero» de la raíz:

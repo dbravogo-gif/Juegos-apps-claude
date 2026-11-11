@@ -40,6 +40,10 @@ completarla. Por eso hay una zona más, El Jable, entre las Montañas del Fuego 
    - refugio, el gimnasio de Roca (el edificio más grande), casas blancas de balcones;
    - un charco de agua de mar con su paseo de palmeras;
    - el muelle, el faro y el barco, que solo lleva a quien vence al gimnasio.
+7. **Famara** (opcional, al norte de las Montañas del Fuego; autor, 2026-11-11): una playa al pie
+   del Risco, con dos bañistas tumbados (uno, un guiri quemado), sombrillas, un poco de barrilla
+   en las dunas y dos entrenadores opcionales, uno pescando y otro cogiendo pulpos. No lleva a
+   ningún sitio.
 
 ## Tamaños
 
@@ -55,6 +59,15 @@ se añade El Jable. Lo juzga el autor al probarlo.
 | 4. Montañas del Fuego | 48 × 26 |
 | 5. El Jable | 24 × 22 (nueva) |
 | 6. Capital | 34 × 28 |
+| 7. Famara | 28 × 18 (opcional) |
+
+## La forma de la isla
+
+Desde el 2026-11-11 la isla tiene la silueta de Lanzarote (`silueta` en `src/data/isla1.ts`):
+aproximada, dibujada de memoria y más ancha que la real. Las zonas no cambian. Lo que queda dentro
+de la costa y fuera de las zonas es tierra volcánica que no se pisa: baja junto al mar y las
+zonas, para no tapar los caminos, y sube hacia el interior, con volcanes. Las zonas bajaron 76
+casillas para dejar sitio al norte, que queda libre para más adelante.
 
 ## El mar
 

@@ -45,9 +45,18 @@ propuesta de Claude y qué frena mientras siga abierto.
 
 ## Islas y mundo
 
-- **Personajes nuevos de Meshy** (pedido del autor, 2026-11-10), con su andar, y la
-  personalización del protagonista: colores, peinados, ojos y sudadera o capa. Primero, una
-  prueba (`public/modelos/personas/LEEME.md`).
+- **Personas de los amigos** (autor, 2026-11-11). Cada amigo pasa una foto de cómo quiere su
+  personaje y el autor lo hace con Meshy: no hace falta personalizar. Ya están Dani (el autor),
+  el pescador y el informático (`public/modelos/personas/LEEME.md`).
+  - Dani no trae animación de parado. Hoy se usa un fotograma de su andar; si el autor lo
+    exporta con `Idle`, se cambia en un minuto.
+- **Selección de personaje al inicio** (autor, 2026-11-11): cada jugador elige su nombre y su
+  persona.
+  - **Propuesta:** se hace al llegar la segunda persona jugable; hasta entonces solo está Dani.
+- **Llamadas de dibujo** (2026-11-11): unas 210 mirando a Famara, frente a las 160 del reparto.
+  - Lo que más gasta son los personajes de KayKit: cada uno son 5 o 6 mallas, más su sombra.
+    Los de Meshy son una sola malla, así que al cambiarlos baja solo.
+  - Falta medirlo en los portátiles del autor y sus amigos.
 - **El autor y sus amigos, dentro del juego** (autor, 2026-11-11; para más adelante).
   - 4 o 5 personajes repartidos por el mapa en sitios concretos.
   - Al hablar con ellos, su retrato aparece encima de la pantalla, en 2 o 3 poses según lo
@@ -55,19 +64,10 @@ propuesta de Claude y qué frena mientras siga abierto.
   - Falta: quiénes son, dónde está cada uno, y sus fotos o dibujos, con su permiso.
   - **Propuesta:** retratos con el estilo del juego hechos a partir de fotos, con tres poses:
     normal, contento y sorprendido. La caja de diálogo ya existe; solo le falta el retrato.
-- **Forma de la isla 1** (autor, 2026-11-11): el mapa no se parece a Lanzarote.
-  - **Propuesta:** silueta aproximada de Lanzarote alrededor de las zonas, que quedan como
-    están. La tierra nueva es volcánica y no se pisa. Al norte queda hueco para zonas nuevas
-    (Famara, Haría y los Jameos). Boceto enviado al autor.
-  - Cambia: el relleno de tierra (`cumbres`, en `terreno.ts`) y el origen de las zonas, que
-    bajan para dejar sitio al norte.
-- **Más contenido en las zonas de captura** (autor, 2026-11-11). Propuestas, para que elija:
-  - rincones opcionales con premio: una cueva en El Golfo y criaturas raras en un sitio fijo;
-  - un hilo de historia: el equipo enemigo aparece en las Montañas del Fuego;
-  - recados cortos: el agricultor de El Jable, un niño perdido…;
-  - zonas nuevas al norte, si se aprueba la silueta.
-  - **Recomendación:** historia y rincones antes que estirar caminos, porque andar es lo que
-    menos tiempo cuesta (menos de un minuto en toda la isla).
+- **La historia** (autor, 2026-11-11): la escribe el autor con otra IA a partir de
+  `PROMPT-HISTORIA.md`. Lo que salga va a `HISTORIA.md` y, de ahí, al juego.
+- **El norte de Lanzarote** queda libre para más adelante (Haría, los Jameos). Para la isla 1
+  basta con Famara (autor, 2026-11-11).
 - **Mapa dentro del juego** (2026-11-11). El dibujo ya existe (`?mapa`). Falta decidir con qué
   tecla se abre y qué enseña.
   - **Propuesta:** tecla M; las zonas sin visitar, en gris y con su nombre oculto.

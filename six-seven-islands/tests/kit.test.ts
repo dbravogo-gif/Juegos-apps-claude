@@ -25,6 +25,8 @@ const PRESUPUESTO: Record<PiezaKit, number> = {
   nube: 700,
   boya: 400,
   barca: 700,
+  sombrilla: 300,
+  toalla: 200,
 };
 /** Lo que puede salirse de su casilla cada pieza, desde el centro: las copas grandes se salen. */
 const RADIO: Record<PiezaKit, number> = {
@@ -47,6 +49,8 @@ const RADIO: Record<PiezaKit, number> = {
   nube: 1.3,
   boya: 0.3,
   barca: 0.9,
+  sombrilla: 0.8,
+  toalla: 0.85,
 };
 
 describe('kit canario de naturaleza', () => {

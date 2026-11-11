@@ -165,8 +165,9 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
 
 ### Personaje y nombres
 
-- **Personaje:** personalización básica (cuerpo, piel, pelo y colores de la ropa), generada por
-  código. Basta para reconocer a cada amigo.
+- **Personaje:** cada amigo juega con su propia persona, hecha con Meshy a partir de una foto
+  (autor, 2026-11-11). Al empezar, cada uno elige su nombre y su persona. Sustituye a la
+  personalización por código.
 - **Nombres de criaturas:**
   - La mayoría, inventados con raíces en inglés o japonés. Ejemplo del autor: a un pato no se le
     llama «Patil», sino «Duckil».
@@ -300,6 +301,16 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
   se añade El Jable, de 24 × 22, entre el Fuego y la capital: muros que obligan a zigzaguear,
   hierba opcional, un entrenador opcional y una poción. El ensanche anterior se deshace. El autor
   juzga los tamaños al probarlo.
+- 2026-11-11 · **La isla con forma de Lanzarote** (autor, opción 1 del boceto): silueta
+  alrededor de las zonas, que no cambian; tierra volcánica que no se pisa y el norte libre.
+  **Famara**, zona opcional: playa con bañistas (uno, un guiri quemado) y dos entrenadores que
+  pescan o cogen pulpos. Para la primera isla, suficiente.
+- 2026-11-11 · **Personas de Meshy en vez de personalizar** (autor): cada amigo tendrá su
+  personaje, hecho con Meshy a partir de una foto; al empezar, cada uno elige nombre y persona.
+  Dani, el del autor, es el jugador desde ya.
+- 2026-11-11 · **Objetos: al principio, pocos y flojos** (autor). Una poción, no una hiperpoción a
+  un equipo de nivel 6. En la isla 1, solo pociones y 4 como mucho en el suelo; lo vigila una
+  prueba. Las recompensas de los recados, igual de modestas.
 - 2026-11-11 · Los entrenadores opcionales miran al camino: quien va por él se los encuentra, y
   esquivarlos cuesta un rodeo. Las rocas y boyas del mar, a dos casillas de agua de la costa como
   mínimo (autor).
