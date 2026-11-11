@@ -17,7 +17,7 @@ const COLOR: Partial<Record<Casilla, string>> = {
   '"': '#57b86e',
   ';': '#8a4a3c',
   '#': '#A9AFD6',
-  '~': '#3CC8D8',
+  '~': '#259AB1',
   T: '#1d5c3a',
   Y: '#5d8a3a',
   b: '#9fcf5a',

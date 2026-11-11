@@ -7,7 +7,8 @@ export const COLORES = {
   acentoCoral: '#FF6B6B',
   sombraLavanda: '#6B7BB8',
   cieloMelocoton: '#FFD8B0',
-  aguaTurquesa: '#3CC8D8',
+  // Más oscuro desde el 2026-11-11 (autor): el de antes, #3CC8D8, se veía demasiado claro.
+  aguaTurquesa: '#259AB1',
   sol: '#FFE2B8',
   // Relleno del cielo, azul lavanda: es lo que queda en la sombra, así que la tiñe (ARTE.md).
   rellenoCielo: '#C4C6F2',

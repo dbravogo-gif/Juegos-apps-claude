@@ -21,7 +21,7 @@ No se improvisan colores.
 | Acento coral | `#FF6B6B` | Acento, solo para lo importante: objetivos, objetos y el botón principal |
 | Sombra lavanda | `#6B7BB8` | Sombra: tiñe las sombras, que nunca son negras |
 | Cielo melocotón | `#FFD8B0` | Niebla y cielo cerca del horizonte |
-| Agua turquesa | `#3CC8D8` | Mar, ríos y espuma |
+| Agua turquesa | `#259AB1` | Mar y ríos. Oscurecida el 2026-11-11 a petición del autor; antes, `#3CC8D8` |
 
 - **Derivados** (en `src/arte/paleta.ts`, mezclas de los de arriba): hierba honda `#5BBF8A`,
   madera tostada `#B98A5A`, piedra lavanda `#A9AFD6`, espuma `#E9FBF7`, crema `#FFF4E0`, ojo
