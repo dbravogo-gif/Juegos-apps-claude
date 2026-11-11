@@ -12,8 +12,13 @@ import { VARIANTES } from './kit';
 
 /** Hasta dónde se adorna el mar, en casillas desde la costa: más lejos no lo ve la cámara. */
 export const ALCANCE_MAR = 8;
-/** Las boyas marcan la zona de baño a esta distancia de la playa. */
-export const DISTANCIA_BOYAS = 3;
+/**
+ * Lo más cerca de la costa que van las rocas y las barcas: entre ellas y la orilla quedan al menos
+ * dos casillas de agua (autor, 2026-11-11). Las del puerto, amarradas, sí van junto al muelle.
+ */
+export const DISTANCIA_MINIMA = 3;
+/** Las boyas marcan la zona de baño a esta distancia de la playa, algo más afuera que las rocas. */
+export const DISTANCIA_BOYAS = 4;
 /** Suelo de las playas: arena dorada y picón negro (El Golfo). */
 const PLAYA = new Set(['a', '_']);
 
@@ -172,7 +177,7 @@ export function planMar(m: Mundo, cumbre: Map<number, number>): PlanMar {
     const { d, origen } = dist.get(k)!;
     const [x, y] = deClaveMar(k);
     const r = pseudo(k);
-    if (d > 3 || r % 13 !== 0 || ocupadas.has(k) || esMuelle(origen)) continue;
+    if (d < DISTANCIA_MINIMA || d > DISTANCIA_MINIMA + 2 || r % 11 !== 0 || ocupadas.has(k) || esMuelle(origen)) continue;
     const escala = 1 + ((r >>> 6) % 5) * 0.18;
     piezas.push({ tipo: 'roca', x, y, altura: NIVEL_MAR - 0.12 * escala, escala, giro: ((r >>> 10) % 6) * (Math.PI / 3), semilla: r >>> 3 });
     ocupadas.add(k);
@@ -189,7 +194,7 @@ export function planMar(m: Mundo, cumbre: Map<number, number>): PlanMar {
     const [x, y] = deClaveMar(k);
     const r = pseudo(k);
     const puerto = esMuelle(origen);
-    if (d < 2 || d > (puerto ? 3 : 6) || r % (puerto ? 4 : 29) !== 0 || !libre(x, y, 1)) continue;
+    if (d < (puerto ? 2 : DISTANCIA_MINIMA) || d > (puerto ? 3 : 7) || r % (puerto ? 4 : 29) !== 0 || !libre(x, y, 1)) continue;
     let cerca = false;
     for (const p of piezas) if (p.tipo === 'barca' && Math.abs(p.x - x) + Math.abs(p.y - y) < (puerto ? 4 : 10)) cerca = true;
     if (cerca) continue;

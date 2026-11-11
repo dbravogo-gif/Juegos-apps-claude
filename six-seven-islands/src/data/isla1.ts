@@ -56,7 +56,7 @@ export const ISLA_1: DefIsla = {
       hierbaObligatoria: true,
       personajes: [
         { id: 'entrenador-barrera', x: 4, y: 32, mira: 'e', entrenador: { vision: 4, obligatorio: true }, frase: '¡Nadie sube por la ladera sin pasar antes por mí!' },
-        { id: 'entrenador-llano', x: 2, y: 15, mira: 'e', entrenador: { vision: 3, obligatorio: false }, frase: 'En el llano, las criaturas se esconden entre la hierba seca.' },
+        { id: 'entrenador-llano', x: 2, y: 18, mira: 'e', entrenador: { vision: 5, obligatorio: false }, frase: 'En el llano, las criaturas se esconden entre la hierba seca.' },
       ],
       alturas: [
         '444444444444444',
@@ -217,9 +217,9 @@ export const ISLA_1: DefIsla = {
       flora: 'volcan',
       personajes: [
         { id: 'entrenador-salida-fuego', x: 37, y: 21, mira: 'o', entrenador: { vision: 3, obligatorio: true }, frase: 'Si quieres llegar a la capital, antes tendrás que vencerme.' },
-        { id: 'excursionista', x: 11, y: 9, mira: 'o', entrenador: { vision: 2, obligatorio: false }, frase: 'Aquí la tierra quema: un palmo bajo el suelo, se podría asar pescado.' },
+        { id: 'excursionista', x: 10, y: 10, mira: 'o', entrenador: { vision: 5, obligatorio: false }, frase: 'Aquí la tierra quema: un palmo bajo el suelo, se podría asar pescado.' },
         { id: 'entrenador-centro', x: 26, y: 14, mira: 'n', entrenador: { vision: 2, obligatorio: false }, frase: 'Entreno entre los volcanes. El calor me hace más fuerte.' },
-        { id: 'entrenador-caldera', x: 19, y: 20, mira: 'e', entrenador: { vision: 3, obligatorio: false }, frase: 'Esta caldera es mi escondite. ¿Cómo la has encontrado?' },
+        { id: 'entrenador-caldera', x: 19, y: 20, mira: 'e', entrenador: { vision: 5, obligatorio: false }, frase: 'Esta caldera es mi escondite. ¿Cómo la has encontrado?' },
       ],
       objetos: [{ id: 'pocion-caldera', x: 25, y: 22, objeto: 'pocion' }],
       alturas: [
@@ -271,9 +271,9 @@ export const ISLA_1: DefIsla = {
         'LLLL___LLQQQQQQQLLLLL_LLLLLLLLLLLL___LLLLLLLLLLL',
         'LLLL___LLQQQQQQQL::::_:::::LLLLLLL___LLLLLLLLLLL',
         'LLLL___LLQQQQQQQL::::_:;;;:LLLLLLL___LLLLLLLLLLL',
-        'LLLL___LLLLLLLLLL::::::;;;:LLLLLLL___LLLLLLLLLLL',
-        'LLLL___LLLLLLLLLL::::::;;;:LLLLLLL____LLLLLLLLLL',
-        'LLLL___LLLLLLLLLL::::::::::LLLLLLL___LLLLLLLLLLL',
+        'LLLL___LLLLLLLLLL::::_:;;;:LLLLLLL___LLLLLLLLLLL',
+        'LLLL___LLLLLLLLLL::::_:;;;:LLLLLLL____LLLLLLLLLL',
+        'LLLL___LLLLLLLLLL::::_____:LLLLLLL___LLLLLLLLLLL',
         'LLLL___LLLLLLLLLLLLLLLLLLLLLLLLLLL___LLLLLLLLLLL',
         'LLLL___LLLLLLLLLLLLLLLLLLLLLLLLLLL___LLLLLLLLLLL',
         'LLLL___LLLLLLLLLLLLLLLLLLLLLLLLLLL___LLLLLLLLLLL',

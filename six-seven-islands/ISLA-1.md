@@ -19,7 +19,8 @@ completarla. Por eso hay una zona más, El Jable, entre las Montañas del Fuego 
    - playa de arena negra, con el charco verde (5 × 4) y boyas en el mar;
    - la barrera de piedra, con el entrenador obligatorio justo detrás;
    - la subida con dos manchas de malpaís, una obligatoria y otra opcional;
-   - el llano de tierra con la hierba obligatoria, tuneras y el entrenador opcional.
+   - el llano de tierra con la hierba obligatoria, tuneras y el entrenador opcional, que mira de
+     lado al camino.
 3. **La Geria** (pueblo): casas blancas entre viñas en hoyos de picón.
    - Refugio, dos casas, tienda y la plaza de palmeras con el anciano.
    - El paso a las Montañas del Fuego se cierra hasta hablar con el anciano.
@@ -27,7 +28,8 @@ completarla. Por eso hay una zona más, El Jable, entre las Montañas del Fuego 
    - coladas de lava que no se pisan y caminos de picón;
    - un malpaís obligatorio que corta el paso y otros que se rodean;
    - un cono de escorias y un mirador;
-   - una caldera sin salida con un entrenador y una poción;
+   - el excursionista, a la puerta del mirador del oeste, mirando al camino de subida;
+   - una caldera sin salida con un entrenador que vigila la senda hasta la poción;
    - el entrenador obligatorio a la salida, que ahora baja al sur, hacia El Jable.
 5. **El Jable** (zona opcional de encuentros, entre el Fuego y la capital):
    - arenal con muros de piedra seca que obligan a zigzaguear: el camino es más del doble de
@@ -69,6 +71,8 @@ al final con la Liga.
 
 ## Lo propio de Lanzarote
 
+- **Entrenadores opcionales** (autor, 2026-11-11): se pueden esquivar, pero miran al camino,
+  así que quien va por él se los encuentra. Lo vigila una prueba.
 - **Gimnasio de Roca:** la isla de los volcanes. Tiene un volcán pintado en la azotea.
 - **Casas:** la casa blanca de azotea, con chimenea redonda y carpintería verde o azul, en el
   campo; en la capital, casas blancas de balcones.

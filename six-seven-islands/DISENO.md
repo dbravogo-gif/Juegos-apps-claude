@@ -300,6 +300,9 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
   se añade El Jable, de 24 × 22, entre el Fuego y la capital: muros que obligan a zigzaguear,
   hierba opcional, un entrenador opcional y una poción. El ensanche anterior se deshace. El autor
   juzga los tamaños al probarlo.
+- 2026-11-11 · Los entrenadores opcionales miran al camino: quien va por él se los encuentra, y
+  esquivarlos cuesta un rodeo. Las rocas y boyas del mar, a dos casillas de agua de la costa como
+  mínimo (autor).
 - 2026-11-11 · Mar más oscuro (`#259AB1`, autor). El mapa de la isla se dibuja en 2D desde los
   mismos datos del mundo; lo usarán la vista `?mapa` y el mapa del juego.
 - 2026-11-10 · El mar nunca queda liso junto a donde se camina (autor): espuma en la orilla,

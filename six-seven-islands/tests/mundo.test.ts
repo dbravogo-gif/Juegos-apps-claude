@@ -30,6 +30,8 @@ interface Isla {
   tam: Record<string, [number, number]>;
   /** La letra del árbol de la zona inicial. */
   arbol: string;
+  /** Entrenadores revisados con la regla del 2026-11-11 (miran al camino). La Palma, al retomarla. */
+  entrenadoresRevisados?: boolean;
 }
 
 const ISLAS: Isla[] = [
@@ -40,6 +42,7 @@ const ISLAS: Isla[] = [
     extra: 'jable',
     tam: { inicial: [24, 18], combates: [15, 52], pueblo: [28, 22], fuego: [48, 26], jable: [24, 22], capital: [34, 28] },
     arbol: 'T',
+    entrenadoresRevisados: true,
   },
   {
     nombre: 'La Palma (isla 6)',
@@ -357,6 +360,18 @@ function probarIsla(c: Isla): void {
           const prohibidas = new Set([enIsla(m, z.id, p.x, p.y), ...vision(m, z.id, p)]);
           const r = alcanzables(m, entrada, { condiciones: TODAS_LAS_CONDICIONES, prohibidas });
           expect(salida.some((k) => r.has(k)), p.id).toBe(true);
+        }
+      }
+    });
+
+    // Los opcionales se pueden esquivar, pero miran al camino: si no, ni cortan el paso ni te ven
+    // (autor, 2026-11-11).
+    it.runIf(c.entrenadoresRevisados)('cada entrenador opcional ve el camino, y al menos 2 casillas', () => {
+      for (const z of ISLA.zonas) {
+        for (const p of z.personajes.filter((q) => q.entrenador && !q.entrenador.obligatorio)) {
+          const vistas = vision(m, z.id, p);
+          expect(vistas.length, p.id).toBeGreaterThanOrEqual(2);
+          expect(vistas.some((k) => [',', '_'].includes(m.casillas.get(k)!.c)), `${p.id} no ve el camino`).toBe(true);
         }
       }
     });

@@ -99,7 +99,7 @@ z.camino([(20,3),(20,13)], c='_', ancho=3)                        # baja al cent
 z.camino([(20,11),(36,11)], c='_', ancho=3)                       # cruza el centro hacia el este
 z.camino([(34,11),(34,25)], c='_', ancho=3)                       # baja por el este, hacia El Jable
 z.camino([(21,14),(21,17)], c='_')                                # bifurcación hacia el sur
-z.r(17, 18, 10, 5, ':'); z.r(21, 18, 1, 2, '_')                   # la caldera sin salida
+z.r(17, 18, 10, 5, ':'); z.r(21, 18, 1, 5, '_'); z.r(22, 22, 4, 1, '_')   # la caldera sin salida, con su senda hasta la poción
 z.r(12, 3, 8, 3, ';')                                            # malpaís obligatorio (corta el paso)
 z.r(5, 13, 2, 4, ';'); z.r(29, 11, 3, 2, ';'); z.r(23, 19, 3, 3, ';')   # malpaís rodeable
 z.r(9, 8, 5, 4, ':'); z.camino([(7,10),(9,10)], c='_')            # mirador del oeste
@@ -160,13 +160,13 @@ zonas['capital'] = dict(nombre='Capital', origen=(68, 18), z=z, altura=1, casas=
 PERSONAJES = {
  'inicial': ["{ id: 'vecino-salida', x: 5, y: 2, mira: 'o', frase: '¡Eh! Sin una criatura que te acompañe no se sale de aquí. La doctora te espera en el museo.' }"],
  'combates': ["{ id: 'entrenador-barrera', x: 4, y: 32, mira: 'e', entrenador: { vision: 4, obligatorio: true }, frase: '¡Nadie sube por la ladera sin pasar antes por mí!' }",
-              "{ id: 'entrenador-llano', x: 2, y: 15, mira: 'e', entrenador: { vision: 3, obligatorio: false }, frase: 'En el llano, las criaturas se esconden entre la hierba seca.' }"],
+              "{ id: 'entrenador-llano', x: 2, y: 18, mira: 'e', entrenador: { vision: 5, obligatorio: false }, frase: 'En el llano, las criaturas se esconden entre la hierba seca.' }"],
  'pueblo': ["{ id: 'anciano', x: 11, y: 13, mira: 's', frase: 'Esa criatura no te hace caso, ¿verdad? Siéntate, que te cuento su historia.' }",
             "{ id: 'guarda-fuego', x: 7, y: 3, mira: 'e', frase: 'En las Montañas del Fuego, quien no va bien acompañado se pierde entre la lava.' }"],
  'fuego': ["{ id: 'entrenador-salida-fuego', x: 37, y: 21, mira: 'o', entrenador: { vision: 3, obligatorio: true }, frase: 'Si quieres llegar a la capital, antes tendrás que vencerme.' }",
-           "{ id: 'excursionista', x: 11, y: 9, mira: 'o', entrenador: { vision: 2, obligatorio: false }, frase: 'Aquí la tierra quema: un palmo bajo el suelo, se podría asar pescado.' }",
+           "{ id: 'excursionista', x: 10, y: 10, mira: 'o', entrenador: { vision: 5, obligatorio: false }, frase: 'Aquí la tierra quema: un palmo bajo el suelo, se podría asar pescado.' }",
            "{ id: 'entrenador-centro', x: 26, y: 14, mira: 'n', entrenador: { vision: 2, obligatorio: false }, frase: 'Entreno entre los volcanes. El calor me hace más fuerte.' }",
-           "{ id: 'entrenador-caldera', x: 19, y: 20, mira: 'e', entrenador: { vision: 3, obligatorio: false }, frase: 'Esta caldera es mi escondite. ¿Cómo la has encontrado?' }"],
+           "{ id: 'entrenador-caldera', x: 19, y: 20, mira: 'e', entrenador: { vision: 5, obligatorio: false }, frase: 'Esta caldera es mi escondite. ¿Cómo la has encontrado?' }"],
  'jable': ["{ id: 'entrenador-jable', x: 8, y: 17, mira: 's', entrenador: { vision: 3, obligatorio: false }, frase: 'En el jable, la arena se mueve con el viento: hoy hay un camino y mañana otro.' }",
            "{ id: 'agricultor-jable', x: 13, y: 3, mira: 's', frase: 'Aquí se siembra en la arena: guarda la humedad de la noche. ¡Las batatas salen dulcísimas!' }"],
  'capital': ["{ id: 'vecina-rivales', x: 9, y: 11, mira: 's', frase: 'Unos tipos raros preguntaban en el puerto por la isla que desapareció...' }",

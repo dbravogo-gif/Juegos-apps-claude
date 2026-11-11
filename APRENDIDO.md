@@ -4,6 +4,13 @@ Errores ya pagados y la barrera que evita repetirlos (regla R6). Formato: fecha 
 causa · barrera. Lo más reciente va arriba. Si un error vuelve a pasar, su barrera sube de
 nivel: de nota a regla, y de regla a prueba o hook.
 
+- **2026-11-11 · Entrenadores opcionales que no veían el camino** (Six-seven islands; lo vio el
+  autor). Uno miraba a tres casillas que se quedaban a una del camino; otro estaba en una salita
+  aparte.
+  - Causa: las pruebas solo pedían que los opcionales se pudieran esquivar, no que estuvieran
+    donde pasa el jugador.
+  - Barrera: prueba en `tests/mundo.test.ts`: todo entrenador opcional ve al menos una casilla de
+    camino. Antes de colocar uno, se dibuja su vista sobre el mapa.
 - **2026-11-10 · Al hablar, paredes y suelos de los interiores se llenaban de líneas que se
   movían** (Six-seven islands; lo vio el autor en su portátil).
   - Causa: caras que coincidían.

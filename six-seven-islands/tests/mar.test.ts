@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { TRANSITABLES, clave, construirMundo } from '../src/core/mundo';
 import { ISLA_1 } from '../src/data/isla1';
 import { cumbres } from '../src/sistemas/mundo/terreno';
-import { DISTANCIA_BOYAS, claveMar, distanciasMar, esMar, geometriaEspuma, geometriaPiezasMar, planMar } from '../src/sistemas/mundo/mar';
+import { DISTANCIA_BOYAS, DISTANCIA_MINIMA, claveMar, distanciasMar, esMar, geometriaEspuma, geometriaPiezasMar, planMar } from '../src/sistemas/mundo/mar';
 import { piezaKit, type PiezaKit } from '../src/sistemas/mundo/kit';
 import { carasSolapadas } from './utiles/coplanares';
 
@@ -23,6 +23,13 @@ describe('el mar de Lanzarote', () => {
       expect(esMar(m, cumbre, p.x, p.y), `${p.tipo} en ${p.x},${p.y}`).toBe(true);
       const c = m.casillas.get(clave(p.x, p.y))?.c;
       expect(c === undefined || !TRANSITABLES.has(c)).toBe(true);
+    }
+  });
+
+  it('las rocas y las boyas dejan al menos dos casillas de agua hasta la costa (autor, 2026-11-11)', () => {
+    const dist = distanciasMar(m, cumbre);
+    for (const p of plan.piezas.filter((p) => p.tipo !== 'barca')) {
+      expect(dist.get(claveMar(p.x, p.y))!.d, `${p.tipo} en ${p.x},${p.y}`).toBeGreaterThanOrEqual(DISTANCIA_MINIMA);
     }
   });
 
