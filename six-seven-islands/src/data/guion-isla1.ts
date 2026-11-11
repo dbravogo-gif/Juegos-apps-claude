@@ -91,13 +91,13 @@ export const GUION_ISLA1: Guion = {
   'estatua-agua': estatua('agua'),
   'estatua-infernal': estatua('infernal'),
   'estatua-roca': estatua('roca'),
-  informatica: [
+  informatico: [
     {
       sin: 'inicial-elegida',
-      dialogo: { lineas: [{ quien: 'Informática', texto: 'Estoy pasando al ordenador todo lo que se sabe de las criaturas de la isla. ¡Hay más de las que crees!' }] },
+      dialogo: { lineas: [{ quien: 'Informático', texto: 'Estoy pasando al ordenador todo lo que se sabe de las criaturas de la isla. ¡Hay más de las que crees!' }] },
     },
     {
-      dialogo: { lineas: [{ quien: 'Informática', texto: 'Cada criatura nueva que veas se apuntará sola. Algún día quiero tenerlas todas.' }] },
+      dialogo: { lineas: [{ quien: 'Informático', texto: 'Cada criatura nueva que veas se apuntará sola. Algún día quiero tenerlas todas.' }] },
     },
   ],
   madre: [

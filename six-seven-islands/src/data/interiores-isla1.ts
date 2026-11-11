@@ -25,7 +25,7 @@ const SALAS: Record<string, DefSala> = {
       // Cuatro pedestales, uno por inicial (autor, 2026-11-10).
       ...['planta', 'agua', 'infernal', 'roca'].map((t, i) => ({ id: `estatua-${t}`, x: s.estatuas[i].x, y: s.estatuas[i].y, mira: 's' as const })),
       { id: 'doctora', x: s.residente.x, y: s.residente.y, mira: 's' },
-      { id: 'informatica', x: s.ordenador!.x, y: s.ordenador!.y, mira: 'o' },
+      { id: 'informatico', x: s.ordenador!.x, y: s.ordenador!.y, mira: 'o' },
     ],
   },
   'casa-jugador': { nombre: 'Tu casa', gente: vive('madre') },
