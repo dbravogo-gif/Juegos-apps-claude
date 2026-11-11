@@ -18,8 +18,64 @@ import { FONDO, alturaSuelo } from '../../arte/escala';
 import { COLORES } from '../../arte/paleta';
 import { piezaKit } from './kit';
 
-/** Casillas que no son de ninguna zona pero quedan dentro de la isla: las cumbres del centro. */
+/** Si el punto (x, y) cae dentro del polígono (regla par-impar). */
+export function dentroDe(pol: readonly (readonly [number, number])[], x: number, y: number): boolean {
+  let dentro = false;
+  for (let i = 0, j = pol.length - 1; i < pol.length; j = i++) {
+    const [xi, yi] = pol[i];
+    const [xj, yj] = pol[j];
+    if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) dentro = !dentro;
+  }
+  return dentro;
+}
+
+/**
+ * La tierra de la silueta (autor, 2026-11-11): lo que cae dentro de la costa y no es de ninguna
+ * zona. Baja junto al mar y junto a las zonas, para no tapar los caminos a la cámara, y sube hacia
+ * el interior, hasta 5 escalones; los volcanes los pone «mundo» encima.
+ */
+function tierraDeSilueta(m: Mundo, silueta: readonly (readonly [number, number])[]): Map<number, number> {
+  const tierra = new Set<number>();
+  for (let y = 0; y < m.alto; y++) {
+    for (let x = 0; x < m.ancho; x++) {
+      const k = clave(x, y);
+      if (!m.casillas.has(k) && dentroDe(silueta, x, y)) tierra.add(k);
+    }
+  }
+  // Distancia a lo que no es esta tierra (el mar o una zona), por anchura.
+  const dist = new Map<number, number>();
+  let frente: number[] = [];
+  for (const k of tierra) {
+    const [x, y] = deClave(k);
+    if ([clave(x + 1, y), clave(x - 1, y), clave(x, y + 1), clave(x, y - 1)].some((v) => !tierra.has(v))) {
+      dist.set(k, 1);
+      frente.push(k);
+    }
+  }
+  for (let d = 2; frente.length; d++) {
+    const siguiente: number[] = [];
+    for (const k of frente) {
+      const [x, y] = deClave(k);
+      for (const v of [clave(x + 1, y), clave(x - 1, y), clave(x, y + 1), clave(x, y - 1)]) {
+        if (tierra.has(v) && !dist.has(v)) {
+          dist.set(v, d);
+          siguiente.push(v);
+        }
+      }
+    }
+    frente = siguiente;
+  }
+  const res = new Map<number, number>();
+  for (const [k, d] of dist) res.set(k, Math.min(5, 1 + Math.floor((d - 1) / 2)));
+  return res;
+}
+
+/**
+ * Casillas que no son de ninguna zona pero quedan dentro de la isla: con silueta, toda la tierra
+ * de su costa; sin ella, las cumbres del centro, entre zona y zona.
+ */
 export function cumbres(m: Mundo): Map<number, number> {
+  if (m.isla.silueta) return tierraDeSilueta(m, m.isla.silueta);
   const res = new Map<number, number>();
   for (let y = 0; y < m.alto; y++) {
     let min = Infinity;
@@ -135,7 +191,8 @@ function colorTimanfaya(x: number, y: number, c: Color): Color {
 }
 
 /** Casillas de una planta: su suelo es el de alrededor, para que no quede un cuadro de otro color. */
-const PLANTAS: ReadonlySet<string> = new Set(['T', 'U', 'Y', 'b']);
+/** Lo que se pone encima del suelo: debajo, el suelo es del color del de alrededor. */
+const PLANTAS: ReadonlySet<string> = new Set(['T', 'U', 'Y', 'b', 'O', 't']);
 
 /** El suelo más repetido alrededor de una planta (sin contar plantas ni edificios), si hay. */
 function sueloAlrededor(m: Mundo, x: number, y: number): CasillaMundo | undefined {

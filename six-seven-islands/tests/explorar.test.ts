@@ -133,7 +133,7 @@ describe('un bot recorre la isla 1 con la lógica del juego', () => {
     return [clave(x + 1, y), clave(x - 1, y), clave(x, y + 1), clave(x, y - 1)].some((v) => barco.has(v));
   };
 
-  it('con todo hecho, cruza de la casa al barco pasando por las cinco zonas en orden', () => {
+  it('con todo hecho, cruza de la casa al barco pasando por las zonas del recorrido en orden', () => {
     const e = crearExploracion(m, [...TODAS_LAS_CONDICIONES]);
     const ruta = camino(clave(e.x, e.y), juntoAlBarco, TODAS_LAS_CONDICIONES);
     const zonas: string[] = [e.zona];
@@ -145,7 +145,8 @@ describe('un bot recorre la isla 1 con la lógica del juego', () => {
       pasos++;
     }
     expect(juntoAlBarco(clave(e.x, e.y))).toBe(true);
-    expect(zonas).toEqual(ISLA_1.zonas.map((z) => z.id));
+    // Famara es opcional (2026-11-11): cuelga de las Montañas del Fuego y no está en el recorrido.
+    expect(zonas).toEqual(ISLA_1.zonas.map((z) => z.id).filter((id) => id !== 'famara'));
     expect(pasos).toBeGreaterThan(150); // la isla tiene recorrido
   });
 

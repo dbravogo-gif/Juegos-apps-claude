@@ -54,8 +54,9 @@ describe('el mar de Lanzarote', () => {
   });
 
   it('la espuma no tiene caras solapadas en el mismo plano (titilaría)', () => {
-    // Un trozo de costa con esquinas, para que la prueba sea rápida.
-    const trozo = plan.espuma.filter((e) => e.x > 25 && e.x < 40 && e.y > 78 && e.y < 100);
+    // Un trozo de costa con esquinas (la playa de El Golfo), para que la prueba sea rápida.
+    const g = m.zonas.get('combates')!.origen;
+    const trozo = plan.espuma.filter((e) => e.x > g.x - 4 && e.x < g.x + 11 && e.y > g.y + 30 && e.y < g.y + 52);
     expect(trozo.length).toBeGreaterThan(10);
     expect(carasSolapadas(geometriaEspuma(trozo)!)).toEqual([]);
   });

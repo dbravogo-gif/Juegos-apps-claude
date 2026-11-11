@@ -95,7 +95,7 @@ z = Z(48, 26, 'L')
 z.r(4, 25, 3, 1, '_')
 z.camino([(4,24),(4,3)], c='_', ancho=3)                          # sube por el oeste
 z.camino([(4,3),(22,3)], c='_', ancho=3)                          # cruza por el norte
-z.camino([(20,3),(20,13)], c='_', ancho=3)                        # baja al centro
+z.camino([(20,0),(20,13)], c='_', ancho=3)                        # baja al centro; arriba, salida a Famara (zona 7)
 z.camino([(20,11),(36,11)], c='_', ancho=3)                       # cruza el centro hacia el este
 z.camino([(34,11),(34,25)], c='_', ancho=3)                       # baja por el este, hacia El Jable
 z.camino([(21,14),(21,17)], c='_')                                # bifurcación hacia el sur
@@ -157,6 +157,41 @@ z.r(1, 20, 6, 1, '~')                                                    # el ch
 for x in (8, 12, 16, 20): z.p(x, 20, 'T')                                # paseo de palmeras
 zonas['capital'] = dict(nombre='Capital', origen=(68, 18), z=z, altura=1, casas='balcones-blanca')
 
+# 7. Famara (28 × 18), zona opcional (autor, 2026-11-11): la playa del norte, al pie del Risco de
+# Famara, con bañistas (uno, un guiri quemado) y dos entrenadores que pescan o cogen pulpos. Se
+# llega desde las Montañas del Fuego (abajo x 13..15, junto a su salida norte) y no lleva a ningún
+# sitio. Las dunas suben hacia el sur, hasta la altura del Fuego.
+z = Z(28, 18, 'a')
+z.r(0, 0, 28, 4, '~'); z.r(0, 4, 5, 1, '~'); z.r(0, 5, 2, 1, '~')       # el mar, con la orilla irregular
+z.r(22, 0, 6, 18, '#'); z.r(20, 4, 2, 2, '#')                           # el Risco de Famara y sus rocas al pie
+z.r(0, 6, 1, 11, '#'); z.r(1, 6, 1, 2, '#'); z.r(0, 17, 28, 1, '#')     # rocas al oeste y abajo
+z.r(13, 13, 3, 5, ',')                                                  # la bajada desde el Fuego
+z.camino([(14,13),(14,6)]); z.camino([(2,6),(19,6)])                    # hasta la orilla, y a lo largo de ella
+z.r(3, 12, 6, 3, '"')                                                    # barrilla de las dunas (encuentros, opcional)
+z.p(6, 10, 't'); z.p(7, 10, 'O')                                         # una bañista bajo su sombrilla
+z.p(18, 10, 't')                                                         # el guiri, sin sombrilla
+z.p(10, 8, 't'); z.p(11, 8, 'O')                                         # una toalla libre
+alt = []
+for y in range(18):
+    h = 0 if y < 12 else 1 if y < 14 else 2 if y < 16 else 3
+    alt.append(''.join('4' if (x >= 22 or (20 <= x <= 21 and 4 <= y <= 5)) else str(h) for x in range(28)))
+zonas['famara'] = dict(nombre='Famara', origen=(27, -18), z=z, alturas=alt)
+
+# Las zonas bajan para dejar sitio al norte de la isla, que en Lanzarote sigue mucho más allá de
+# las Montañas del Fuego (autor, 2026-11-11: que el mapa tenga su forma).
+NORTE = 76
+for v in zonas.values(): v['origen'] = (v['origen'][0], v['origen'][1] + NORTE)
+
+# La costa de Lanzarote, aproximada y estilizada (más ancha que la real), alrededor de las zonas:
+# de la punta suroeste, por la costa oeste (El Golfo, Timanfaya), la bahía de Famara y el Risco,
+# hasta la punta norte, y de vuelta por la costa este (la capital) hasta el sur. En casillas, antes
+# de bajar las zonas; los .5 caen entre casillas, para que ninguna quede justo en el borde.
+SILUETA = [(36.5,117.5),(27.5,108.5),(28.5,99.5),(28.5,80.5),(21.5,70.5),(14.5,56.5),(11.5,41.5),
+           (12.5,26.5),(14.5,10.5),(16.5,-3.5),(21.5,-11.5),(25.5,-15.5),(25.5,-18.5),(55.5,-18.5),
+           (60.5,-28.5),(65.5,-42.5),(71.5,-56.5),(75.5,-66.5),(81.5,-64.5),(84.5,-50.5),
+           (86.5,-34.5),(92.5,-18.5),(98.5,-6.5),(101.5,4.5),(101.5,45.5),(67.5,45.5),(65.5,60.5),
+           (62.5,76.5),(62.5,117.5)]
+
 PERSONAJES = {
  'inicial': ["{ id: 'vecino-salida', x: 5, y: 2, mira: 'o', frase: '¡Eh! Sin una criatura que te acompañe no se sale de aquí. La doctora te espera en el museo.' }"],
  'combates': ["{ id: 'entrenador-barrera', x: 4, y: 32, mira: 'e', entrenador: { vision: 4, obligatorio: true }, frase: '¡Nadie sube por la ladera sin pasar antes por mí!' }",
@@ -169,6 +204,10 @@ PERSONAJES = {
            "{ id: 'entrenador-caldera', x: 19, y: 20, mira: 'e', entrenador: { vision: 5, obligatorio: false }, frase: 'Esta caldera es mi escondite. ¿Cómo la has encontrado?' }"],
  'jable': ["{ id: 'entrenador-jable', x: 8, y: 17, mira: 's', entrenador: { vision: 3, obligatorio: false }, frase: 'En el jable, la arena se mueve con el viento: hoy hay un camino y mañana otro.' }",
            "{ id: 'agricultor-jable', x: 13, y: 3, mira: 's', frase: 'Aquí se siembra en la arena: guarda la humedad de la noche. ¡Las batatas salen dulcísimas!' }"],
+ 'famara': ["{ id: 'pescador-famara', x: 20, y: 6, mira: 'o', entrenador: { vision: 4, obligatorio: false }, frase: 'Aquí pican las viejas. ¿Tú qué buscas, criaturas o pescado?' }",
+            "{ id: 'pulpero-famara', x: 2, y: 6, mira: 'e', entrenador: { vision: 4, obligatorio: false }, frase: 'Los pulpos se esconden entre las rocas. Igual que algunas criaturas, ¿eh?' }",
+            "{ id: 'banista-famara', x: 6, y: 10, mira: 's', postura: 'tumbado', frase: 'Aquí se viene a no hacer nada. Y a ver cómo se pone el sol detrás del risco.' }",
+            "{ id: 'guiri-famara', x: 18, y: 10, mira: 's', postura: 'tumbado', quemado: true, frase: '¡Hola, amigo! En mi país ahora nieva... Creo que me he quemado un poquito.' }"],
  'capital': ["{ id: 'vecina-rivales', x: 9, y: 11, mira: 's', frase: 'Unos tipos raros preguntaban en el puerto por la isla que desapareció...' }",
              "{ id: 'marinero', x: 25, y: 13, mira: 'n', frase: 'El barco va a la isla siguiente, pero solo con quien ha vencido al gimnasio.' }"],
 }
@@ -218,6 +257,8 @@ ts=("// Isla 1, inspirada en Lanzarote (2026-11-10): el mapa por casillas (ISLA-
 "  // El gimnasio es de Roca: la isla de los volcanes.\n"
 "  gimnasio: 'roca',\n"
 "  colores: {\n    suelo: { '.': '#D9C59A', '\"': '#9AA05A' },\n    cumbre: '#9A6B55',\n    ladoCumbre: '#7C5444',\n    matas: '#6F8436',\n  },\n"
+"  // La costa de Lanzarote, aproximada (herramientas/isla1.py): dentro, tierra que no se pisa.\n"
+"  silueta: [\n"+''.join(f"    [{x}, {y + NORTE}],\n" for x, y in SILUETA)+"  ],\n"
 "  zonas: [\n"+''.join(partes)+"  ],\n};\n\n"
 "/** A qué sala lleva cada puerta, por zona y casilla de la puerta (en coordenadas de la zona). */\n"
 "export const PUERTAS_ISLA1: Readonly<Record<string, Readonly<Record<string, string>>>> = "+pu(puertas)+";\n")

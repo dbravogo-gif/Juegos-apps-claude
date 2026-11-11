@@ -32,6 +32,13 @@ interface Isla {
   arbol: string;
   /** Entrenadores revisados con la regla del 2026-11-11 (miran al camino). La Palma, al retomarla. */
   entrenadoresRevisados?: boolean;
+  /**
+   * Objetos que puede haber en el suelo y cuántos como mucho: al principio, pocos y flojos (una
+   * poción, no una hiperpoción a un equipo de nivel 6; autor, 2026-11-11).
+   */
+  objetos?: { permitidos: string[]; maximo: number };
+  /** Zonas opcionales, fuera del recorrido, y la zona de la que cuelgan (Famara, 2026-11-11). */
+  opcionales?: Record<string, string>;
 }
 
 const ISLAS: Isla[] = [
@@ -40,9 +47,11 @@ const ISLAS: Isla[] = [
     isla: ISLA_1,
     dura: 'fuego',
     extra: 'jable',
-    tam: { inicial: [24, 18], combates: [15, 52], pueblo: [28, 22], fuego: [48, 26], jable: [24, 22], capital: [34, 28] },
+    tam: { inicial: [24, 18], combates: [15, 52], pueblo: [28, 22], fuego: [48, 26], jable: [24, 22], capital: [34, 28], famara: [28, 18] },
     arbol: 'T',
     entrenadoresRevisados: true,
+    opcionales: { famara: 'fuego' },
+    objetos: { permitidos: ['pocion'], maximo: 4 },
   },
   {
     nombre: 'La Palma (isla 6)',
@@ -58,7 +67,9 @@ for (const c of ISLAS) probarIsla(c);
 function probarIsla(c: Isla): void {
   const ISLA = c.isla;
   const m = construirMundo(ISLA);
-  const orden = ISLA.zonas.map((z) => z.id);
+  const opcionales = c.opcionales ?? {};
+  /** Las zonas del recorrido, en orden; las opcionales cuelgan de una de ellas. */
+  const orden = ISLA.zonas.map((z) => z.id).filter((id) => !(id in opcionales));
   const inicio = enIsla(m, ISLA.inicio.zona, ISLA.inicio.x, ISLA.inicio.y);
   const zonaDe = (k: number) => m.casillas.get(k)?.zona;
   const conCondiciones = (...cs: Condicion[]) => new Set<Condicion>(cs);
@@ -106,6 +117,15 @@ function probarIsla(c: Isla): void {
     it('tiene los tamaños de su documento', () => {
       const tam = Object.fromEntries(ISLA.zonas.map((z) => [z.id, [z.mapa[0].length, z.mapa.length]]));
       expect(tam).toEqual(c.tam);
+    });
+
+    it('cada zona opcional solo toca la zona de la que cuelga, y no lleva a ningún sitio', () => {
+      for (const [zona, de] of Object.entries(opcionales)) {
+        for (const otra of ISLA.zonas.map((z) => z.id)) {
+          if (otra === zona) continue;
+          expect(conexiones(m, zona, otra).length > 0, `${zona} y ${otra}`).toBe(otra === de);
+        }
+      }
     });
 
     it('cada zona solo toca la anterior y la siguiente del recorrido: no hay atajos', () => {
@@ -253,7 +273,7 @@ function probarIsla(c: Isla): void {
     it('sin vencer al gimnasio se llega a la capital y a su puerta, pero no al barco', () => {
       const c = conCondiciones('inicial-elegida', 'anciano');
       const r = llega(c);
-      expect(zonasAlcanzadas(c)).toEqual(new Set(orden));
+      expect(zonasAlcanzadas(c)).toEqual(new Set([...orden, ...Object.keys(opcionales)]));
       const gimnasio = edificios(m, 'capital').find((e) => e.tipo === 'G')!;
       expect(gimnasio.puertas.some((p) => r.has(p))).toBe(true);
       expect(casillasDe('B').flatMap(junto).some((k) => r.has(k))).toBe(false);
@@ -354,7 +374,7 @@ function probarIsla(c: Isla): void {
     }
 
     it('los entrenadores opcionales sí se pueden esquivar', () => {
-      for (const z of ISLA.zonas) {
+      for (const z of ISLA.zonas.filter((q) => !(q.id in opcionales))) {
         for (const p of z.personajes.filter((q) => q.entrenador && !q.entrenador.obligatorio)) {
           const [entrada, salida] = entradaYSalida(z.id);
           const prohibidas = new Set([enIsla(m, z.id, p.x, p.y), ...vision(m, z.id, p)]);
@@ -374,6 +394,12 @@ function probarIsla(c: Isla): void {
           expect(vistas.some((k) => [',', '_'].includes(m.casillas.get(k)!.c)), `${p.id} no ve el camino`).toBe(true);
         }
       }
+    });
+
+    it.runIf(c.objetos)('pocos objetos en el suelo, y flojos', () => {
+      const todos = ISLA.zonas.flatMap((z) => z.objetos ?? []);
+      expect(todos.length).toBeLessThanOrEqual(c.objetos!.maximo);
+      for (const o of todos) expect(c.objetos!.permitidos, o.id).toContain(o.objeto);
     });
 
     it('cada entrenador ve al menos una casilla', () => {

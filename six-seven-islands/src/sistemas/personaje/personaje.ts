@@ -64,8 +64,12 @@ interface Figura {
 /** Velocidad del jugador, en casillas por segundo (paso fijo de 60 por segundo). */
 const VELOCIDAD = 60 / PASOS_POR_CASILLA;
 
-/** Qué modelo de KayKit hace de cada personaje, hasta que lleguen las personas de F12. */
+/** Tinte de la piel quemada por el sol (el guiri de Famara). */
+const QUEMADO = [1, 0.66, 0.58] as const;
+
+/** Qué modelo de KayKit hace de cada personaje, hasta que lleguen las personas de Meshy. */
 function modeloDe(p: DefPersonaje): string {
+  if (p.postura === 'tumbado') return p.quemado ? 'Barbarian' : 'Rogue';
   if (p.id === 'anciano' || p.id === 'doctora') return 'Mage';
   if (p.id === 'lider-gimnasio') return 'Knight';
   if (p.entrenador) return p.entrenador.obligatorio ? 'Knight' : 'Barbarian';
@@ -86,7 +90,7 @@ export class Personaje implements Subsistema {
   private jugador!: Figura;
   private figuras: Figura[] = [];
   /** Los personajes por id, con hacia dónde miran normalmente, para girarlos al hablar. */
-  private porId = new Map<string, { figura: Figura; giro: number }>();
+  private porId = new Map<string, { figura: Figura; giro: number; tumbado?: boolean }>();
   private giro = 0;
   /** Segundos que lleva el jugador sin moverse: entre casilla y casilla hay un instante parado. */
   private quieto = 0;
@@ -136,14 +140,25 @@ export class Personaje implements Subsistema {
           if (p.id.startsWith('estatua-')) continue;
           const persona = PERSONA_DE[p.id];
           const nombre = modeloDe(p);
-          const f = persona ? await this.figuraPersona(persona) : this.figura(await cargar(nombre), nombre);
+          const f = persona ? await this.figuraPersona(persona) : this.figura(await cargar(nombre), nombre, p.quemado ? QUEMADO : undefined);
           const k = enIsla(mapa, z.id, p.x, p.y);
           const [x, y] = deClave(k);
           f.raiz.position.set(x, alturaSuelo(mapa.casillas.get(k)!.h), y);
-          f.raiz.rotation.y = GIRO[p.mira];
+          if (p.postura === 'tumbado') {
+            // Boca arriba sobre su toalla, con la cabeza al norte y los pies en el borde sur de la
+            // casilla. No se gira al hablar.
+            const cuerpo = f.raiz.children[0];
+            cuerpo.rotation.x = -Math.PI / 2;
+            cuerpo.position.set(0, 0.1, 0.5);
+            // Pegado al suelo, su sombra no se ve y costaría una llamada de dibujo por pieza.
+            cuerpo.traverse((o) => (o.castShadow = false));
+            this.porId.set(p.id, { figura: f, giro: 0, tumbado: true });
+          } else {
+            f.raiz.rotation.y = GIRO[p.mira];
+            this.porId.set(p.id, { figura: f, giro: GIRO[p.mira] });
+          }
           ctx.escena.add(f.raiz);
           this.objetos.push(f.raiz);
-          this.porId.set(p.id, { figura: f, giro: GIRO[p.mira] });
           for (const v of vision(mapa, z.id, p)) {
             const [vx, vy] = deClave(v);
             visiones.push(new Matrix4().makeTranslation(vx, alturaSuelo(mapa.casillas.get(v)!.h) + 0.14, vy));
@@ -155,13 +170,13 @@ export class Personaje implements Subsistema {
     this.quitar.push(
       ctx.eventos.on('dialogo:abrir', ({ guionId }) => {
         const q = this.porId.get(guionId);
-        if (!q) return;
+        if (!q || q.tumbado) return;
         const r = q.figura.raiz.position;
         q.figura.raiz.rotation.y = Math.atan2(this.posicion.x - r.x, this.posicion.z - r.z);
       }),
       ctx.eventos.on('dialogo:cerrar', ({ guionId }) => {
         const q = this.porId.get(guionId);
-        if (q) q.figura.raiz.rotation.y = q.giro;
+        if (q && !q.tumbado) q.figura.raiz.rotation.y = q.giro;
       }),
     );
     if (visiones.length) {
@@ -184,7 +199,7 @@ export class Personaje implements Subsistema {
   }
 
   /** Una figurita: copia del modelo con su esqueleto, sin armas, a escala y con sus animaciones. */
-  private figura(gltf: GLTF, nombre: string): Figura {
+  private figura(gltf: GLTF, nombre: string, tinte?: readonly [number, number, number]): Figura {
     const base = nombre.split('_')[0];
     const copia = clonarConEsqueleto(gltf.scene);
     copia.traverse((o) => {
@@ -192,7 +207,7 @@ export class Personaje implements Subsistema {
       // Solo las piezas del cuerpo («Rogue_Body», «Mage_Hat»…); fuera armas, escudos y libros.
       o.visible = o.name.startsWith(`${base}_`) && !o.name.includes('Shield');
     });
-    this.materiales.push(...aMaterialDelJuego(copia, { bordes: [-0.25, 0.5], especular: 0.1, dureza: 16, contraluz: 0.35 }));
+    this.materiales.push(...aMaterialDelJuego(copia, { bordes: [-0.25, 0.5], especular: 0.1, dureza: 16, contraluz: 0.35 }, tinte));
     const caja = new Box3();
     copia.updateWorldMatrix(true, true);
     copia.traverse((o) => {
