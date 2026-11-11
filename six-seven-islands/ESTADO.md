@@ -16,9 +16,9 @@ Tanda 1: Lanzarote es la isla 1 (`ISLA-1.md`), con kit por código y la tabla de
 ## Siguiente
 
 1. Isla 1, Lanzarote (`ISLA-1.md`): mapa con 6 zonas (El Jable, nueva), un interior por
-   edificio, mar con espuma, boyas y barcas. Con las 4 iniciales de Meshy: compañera, estatuas y
-   combate de prueba en diagonal. El autor juzga los tamaños de zona. Siguen el combate de
-   verdad, encuentros y captura.
+   edificio, mar con espuma, boyas y barcas, y plano en 2D (`?mapa`). Con las 4 iniciales de
+   Meshy: compañera, estatuas y combate de prueba en diagonal. El autor juzga el largo con el
+   mapa. Siguen el combate de verdad, encuentros y captura.
 2. En paralelo, arte con Meshy (`prompts-meshy.md`): criaturas y edificios singulares.
 3. Criaturas: reparto y lista de referencia en `CRIATURAS.md` (2026-11-10). Se diseñan con el
    autor y sus amigos; dónde aparece cada una se decide al final.

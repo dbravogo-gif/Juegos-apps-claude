@@ -48,6 +48,17 @@ propuesta de Claude y qué frena mientras siga abierto.
 - **Personajes nuevos de Meshy** (pedido del autor, 2026-11-10), con su andar, y la
   personalización del protagonista: colores, peinados, ojos y sudadera o capa. Primero, una
   prueba (`public/modelos/personas/LEEME.md`).
+- **El autor y sus amigos, dentro del juego** (autor, 2026-11-11; para más adelante).
+  - 4 o 5 personajes repartidos por el mapa en sitios concretos.
+  - Al hablar con ellos, su retrato aparece encima de la pantalla, en 2 o 3 poses según lo
+    que dicen.
+  - Falta: quiénes son, dónde está cada uno, y sus fotos o dibujos, con su permiso.
+  - **Propuesta:** retratos con el estilo del juego hechos a partir de fotos, con tres poses:
+    normal, contento y sorprendido. La caja de diálogo ya existe; solo le falta el retrato.
+- **Largo de la isla 1** (2026-11-11). El autor dirá, viendo el mapa, si hace falta más.
+- **Mapa dentro del juego** (2026-11-11). El dibujo ya existe (`?mapa`). Falta decidir con qué
+  tecla se abre y qué enseña.
+  - **Propuesta:** tecla M; las zonas sin visitar, en gris y con su nombre oculto.
 
 11. **Tipo de cada gimnasio.**
     - Lanzarote es de Roca. Faltan Fuerteventura, Gran Canaria, Tenerife, La Gomera y La Palma.

@@ -32,6 +32,8 @@ agentes. El patrón viene de *Claude of Duty* (Matt Shumer, MIT).
   - `mundo/canario.ts`: casas y faro;
   - `mundo/kit.ts`: plantas, rocas, muro, volcanes, nubes, boya y barca;
   - `mundo/mar.ts`: qué hay en el mar (plan puro) y su espuma, en una sola malla;
+  - `mapa/`: el plano en 2D de la isla, sacado de los mismos datos (`plano.ts`, puro) y dibujado
+    en un lienzo (`dibujo.ts`). Hoy, la vista `?mapa`; mañana, el mapa dentro del juego;
   - `salas/salas.ts`: los interiores.
 - **Las islas son datos:** `data/isla1.ts` (Lanzarote) y `data/la-palma.ts` (guardada para la
   6). Se generan con un borrador en Python a partir de rectángulos y caminos; el mapa manda y las
@@ -131,6 +133,7 @@ export class Sistema implements Subsistema {
 | `interfaz` | `src/sistemas/interfaz/` | La interfaz en DOM: el cartel de zona, la caja de diálogo (quién habla, texto letra a letra y sí o no), el fundido al cruzar puertas y la ayuda; después, menús, marcador, tienda y equipo |
 | `partida` | `src/sistemas/partida/` | El estado del núcleo (la isla y sus interiores), los modos (explorar, diálogo, fundido y combate; después menú) y el guardado automático. Avanza a paso fijo con la entrada |
 | `depuracion` | `src/sistemas/depuracion/` | El panel de ajustes (solo en desarrollo) y los ganchos de `window.__JUEGO__` |
+| (vista `?mapa`) | `src/sistemas/mapa/` | Herramienta y base del mapa del juego: el plano 2D de la isla 1 a pantalla completa, sin 3D. `?mapa=12` fija 12 píxeles por casilla |
 | `catalogo` | `src/sistemas/catalogo/` | Herramienta, no juego: con `?catalogo` o `?catalogo=edificios`, las piezas propias del mundo en fila, con la luz y la cámara del juego; ← → acercan la cámara a cada una |
 | `prueba` | `src/sistemas/prueba/` | **Temporal:** la vitrina de la prueba de arte (`F04`), con `?vitrina`. Se queda para probar los modelos de Meshy; se borra cuando las criaturas entren en el juego |
 | `audio` | `src/sistemas/audio/` | El sonido generado por código. Llegará después |

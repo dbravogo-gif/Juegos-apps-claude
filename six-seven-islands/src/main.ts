@@ -18,10 +18,11 @@ import { Personaje } from './sistemas/personaje/personaje';
 import { Prueba } from './sistemas/prueba/prueba';
 import { Render } from './sistemas/render/render';
 import { Salas } from './sistemas/salas/salas';
+import { mostrarMapa } from './sistemas/mapa/vista';
 import './estilo.css';
 
 // El juego: la isla 1 para explorar. Con ?vitrina, la vitrina de criaturas de la prueba de arte;
-// con ?catalogo, las piezas propias del mundo en fila para revisarlas.
+// con ?catalogo, las piezas propias del mundo en fila para revisarlas; con ?mapa, el plano en 2D.
 const JUEGO: ClaseSubsistema[] = [Render, Entrada, Partida, Mundo, Salas, Personaje, Companera, Camara, Combate, Interfaz, Depuracion];
 const VITRINA: ClaseSubsistema[] = [Render, Criaturas, Prueba, Depuracion];
 const CATALOGO: ClaseSubsistema[] = [Render, Catalogo, Depuracion];
@@ -36,6 +37,7 @@ function mostrarFallo(e: unknown): void {
 
 async function arrancar(): Promise<void> {
   const parametros = new URLSearchParams(location.search);
+  if (parametros.has('mapa')) return mostrarMapa(parametros.get('mapa'));
   const pedido = parametros.get('calidad') as NivelCalidad | null;
   const nivel = pedido && CALIDADES[pedido] ? pedido : nivelInicial();
   const semilla = parametros.get('semilla') ?? 67;
