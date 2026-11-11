@@ -55,7 +55,19 @@ propuesta de Claude y qué frena mientras siga abierto.
   - Falta: quiénes son, dónde está cada uno, y sus fotos o dibujos, con su permiso.
   - **Propuesta:** retratos con el estilo del juego hechos a partir de fotos, con tres poses:
     normal, contento y sorprendido. La caja de diálogo ya existe; solo le falta el retrato.
-- **Largo de la isla 1** (2026-11-11). El autor dirá, viendo el mapa, si hace falta más.
+- **Forma de la isla 1** (autor, 2026-11-11): el mapa no se parece a Lanzarote.
+  - **Propuesta:** silueta aproximada de Lanzarote alrededor de las zonas, que quedan como
+    están. La tierra nueva es volcánica y no se pisa. Al norte queda hueco para zonas nuevas
+    (Famara, Haría y los Jameos). Boceto enviado al autor.
+  - Cambia: el relleno de tierra (`cumbres`, en `terreno.ts`) y el origen de las zonas, que
+    bajan para dejar sitio al norte.
+- **Más contenido en las zonas de captura** (autor, 2026-11-11). Propuestas, para que elija:
+  - rincones opcionales con premio: una cueva en El Golfo y criaturas raras en un sitio fijo;
+  - un hilo de historia: el equipo enemigo aparece en las Montañas del Fuego;
+  - recados cortos: el agricultor de El Jable, un niño perdido…;
+  - zonas nuevas al norte, si se aprueba la silueta.
+  - **Recomendación:** historia y rincones antes que estirar caminos, porque andar es lo que
+    menos tiempo cuesta (menos de un minuto en toda la isla).
 - **Mapa dentro del juego** (2026-11-11). El dibujo ya existe (`?mapa`). Falta decidir con qué
   tecla se abre y qué enseña.
   - **Propuesta:** tecla M; las zonas sin visitar, en gris y con su nombre oculto.
