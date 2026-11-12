@@ -187,8 +187,10 @@ y `?semilla=n`. Mientras exista la vitrina de F04: `?vista=combate|todas|explora
 
 ## Guardado
 
-- **Automático:** al cambiar de zona, al acabar cada combate y cada pocos segundos mientras se
-  explora. Va en `localStorage`, con una versión de formato y migraciones.
+- **Automático** (hecho el 2026-11-12): al cambiar de zona, al cruzar una puerta, al acabar cada
+  combate y cada 5 segundos explorando. Va en `localStorage` (`six-seven-islands:partida`), con
+  versión de formato (`core/guardado.ts`). Si el mapa cambia y la casilla guardada ya no se pisa,
+  se vuelve a casa conservando el equipo y los avances. `?nueva` empieza sin cargar.
 - **Registro de partidas completadas:** con qué iniciales se ha terminado el juego. Va en una
   clave aparte, que sobrevive al empezar una partida nueva, porque lo necesita el regalo por
   rejugar (`DISENO.md`).

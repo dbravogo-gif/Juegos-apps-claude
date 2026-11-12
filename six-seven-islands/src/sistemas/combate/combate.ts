@@ -115,7 +115,6 @@ export class Combate implements Subsistema {
   private fondoProvisional!: Texture;
   private fondoPintado: Texture | null = null;
   private guardado: { fondo: Color | Texture | null; niebla: Fog | null } | null = null;
-  private vencidos = new Set<string>();
 
   private fase: Fase = 'fuera';
   private reloj = 0;
@@ -166,7 +165,7 @@ export class Combate implements Subsistema {
     );
     ctx.eventos.on('dialogo:cerrar', ({ guionId }) => {
       const inicial = this.partida.estado.inicial;
-      if (guionId === ENTRENADOR_PRUEBA && inicial && !this.vencidos.has(guionId)) {
+      if (guionId === ENTRENADOR_PRUEBA && inicial && !this.partida.vencidos.includes(guionId)) {
         // Provisional: el primer entrenador saca la inicial que pierde contra la tuya.
         const rng = crearRng(`rival-${guionId}`);
         void this.empezar([crearCriatura(DATOS, ESPECIE_INICIAL[RIVAL_DE[inicial] ?? 'roca'], 5, rng)], guionId);
@@ -326,7 +325,7 @@ export class Combate implements Subsistema {
         // El equipo vuelve a «partida» como ha quedado: vida, PP, estados y experiencia.
         this.partida.equipo = e.lados[0].equipo;
         if (e.capturada && this.partida.equipo.length < MAX_EQUIPO) this.partida.equipo.push(e.capturada);
-        if (e.fin === 'victoria' && this.entrenador) this.vencidos.add(this.entrenador);
+        if (e.fin === 'victoria' && this.entrenador && !this.partida.vencidos.includes(this.entrenador)) this.partida.vencidos.push(this.entrenador);
         this.partida.terminarCombate();
         if (e.fin === 'derrota') this.partida.volverAlRefugio();
         this.ctx.eventos.emit('combate:fin', { resultado: e.fin ?? 'victoria' });
