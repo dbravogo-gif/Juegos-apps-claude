@@ -119,7 +119,7 @@
       "tanda": 3,
       "descripcion": "Dinero, tienda y objetos básicos de la isla 1. Economía ajustada: al principio no hay nada muy valioso.",
       "como_se_comprueba": "Prueba de datos: ningún objeto de la isla 1 supera el valor fijado en DISENO.md. Un bot compra, usa un objeto y el dinero cuadra.",
-      "hecha": false
+      "hecha": true
     },
     {
       "id": "F18-recados",

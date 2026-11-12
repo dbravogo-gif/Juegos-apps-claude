@@ -42,6 +42,8 @@ const CURANDEROS: Readonly<Record<string, string>> = {
   enfermera: 'refugio-geria',
   'enfermera-capital': 'refugio-capital',
 };
+/** Quién abre la tienda al terminar de hablarle. */
+const TENDEROS: ReadonlySet<string> = new Set(['tendero']);
 /** Nivel de la inicial al elegirla. */
 const NIVEL_INICIAL = 5;
 /** Dónde se guarda la partida en el navegador. */
@@ -57,6 +59,8 @@ export interface EstadoParcial {
   inicial?: string;
   /** Solo para pruebas: deja al equipo con esta vida como mucho (para probar la derrota). */
   vida?: number;
+  /** Solo para pruebas: el dinero. */
+  dinero?: number;
   /** Zona de la isla o id de un interior. */
   zona?: string;
   x?: number;
@@ -268,6 +272,11 @@ export class Partida implements Subsistema {
       this.espera = ESPERA_TRAS_DIALOGO;
       this.entrada.olvidar();
       this.ctx.eventos.emit('dialogo:cerrar', { guionId: this.hablando });
+      // El tendero, al acabar de hablar, abre la tienda (en el subsistema «menu»).
+      if (TENDEROS.has(this.hablando)) {
+        this.modo = 'menu';
+        this.ctx.eventos.emit('tienda:abrir', {});
+      }
     }
   }
 
@@ -408,6 +417,7 @@ export class Partida implements Subsistema {
       this.formarEquipo();
     }
     if (p.vida !== undefined) for (const c of this.equipo) c.vida = Math.min(c.vida, p.vida);
+    if (p.dinero !== undefined) this.dinero = p.dinero;
     if (p.zona === undefined) return;
     this.modo = 'explorar';
     this.dialogo = null;

@@ -302,6 +302,9 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
   se añade El Jable, de 24 × 22, entre el Fuego y la capital: muros que obligan a zigzaguear,
   hierba opcional, un entrenador opcional y una poción. El ensanche anterior se deshace. El autor
   juzga los tamaños al probarlo.
+- 2026-11-12 · **Tienda** (F17) en La Geria: al hablar con el tendero. Poción a 300 y cubo blanco
+  a 200; el dinero solo sale de los entrenadores (de 100 a 600), así que al principio alcanza
+  para poco, como pidió el autor.
 - 2026-11-12 · **Menú de pausa** con Esc mientras se explora: Equipo (la primera es la que sale
   a combatir), Mochila (pociones fuera de combate), Mapa (con tu posición) y Exportar e Importar
   la partida como código (para Safari, que borra lo guardado tras 7 días).

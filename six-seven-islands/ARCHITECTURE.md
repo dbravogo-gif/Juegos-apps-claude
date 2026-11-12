@@ -163,6 +163,7 @@ export class Sistema implements Subsistema {
 | `guardado:hecho` | `{}` | `partida` |
 | `entrenador:visto` | `{ id }` | `partida` |
 | `menu:abrir` | `{}` | `partida` |
+| `tienda:abrir` | `{}` | `partida` |
 | `calidad:cambio` | `{ nivel }` | `depuracion` |
 | `objeto:recogido` | `{ id, objeto }` | `partida` |
 | `inicial:elegida` | `{ tipo }` | `partida` |
