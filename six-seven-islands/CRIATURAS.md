@@ -76,6 +76,63 @@ del Q5 son las 12 legendarias y las 4 formas finales más fuertes (líneas 25 a 
 - TF, tanque físico: 26;
 - TE, tanque especial: 20.
 
+## Cómo se reparten por zonas (autor, 2026-11-12)
+
+- El autor pide listas por zona («dame X para tal zona») y Claude propone: cuántas formas tiene
+  cada especie, el tipo de cada forma y qué Pokémon de la lista le da las estadísticas. Si la
+  referencia tiene 3 formas, la especie tiene 3.
+- **Tipo principal:** se acerca a los objetivos de la tabla del Excel (arriba, «Por tipo
+  principal»; Lucha, por decidir).
+- **Tipo secundario:** ningún tipo se repite demasiado como secundario, y el 60 % de las
+  criaturas no tiene. A menudo la primera forma no tiene y las siguientes sí.
+- **Se reutilizan** las especies ya diseñadas (tabla de abajo) donde encajen.
+- Lo asignado se apunta aquí, en «Asignadas», con su zona.
+
+## Asignadas y diseñadas
+
+Las láminas del autor dicen «Pokémon» y llevan una Poké Ball: es solo para nosotros. En el juego
+se usa otra palabra (R8).
+
+| Especie (formas) | Tipos por forma | Estadísticas de | Estado |
+| --- | --- | --- | --- |
+| Cronti → Chicront → Krantacor | Agua · Agua · Agua | Propias (inicial) | Nombre |
+| Armalito → Uralito → Reactolito | Roca · Roca/Veneno · Roca/Veneno | Propias (inicial) | Lámina |
+| Caprún → Roquén → Terracorn | Tierra | Shinx → Luxio → Luxray (Q1) | Lámina |
+| Melaní → Favenir → Reginis | Bicho · Bicho/Veneno · Bicho/Veneno | Venipede → Whirlipede → Scolipede (Q1) | Lámina |
+| Magmín → Lavtún → Teidrón | Infernal | Litwick → Lampent → Chandelure (Q1) | Lámina |
+| Salmito → Salmarín → Salmástil | Por decidir | Spheal → Sealeo → Walrein (Q1) | Nombre |
+| Tinzal → Azurvan | Aire · Aire/Mental | Taillow → Swellow (Q1) | Lámina |
+| Aerund → Marwen | Aire · Aire/Agua | Wingull → Pelipper (Q1) | Lámina |
+| Tibicán | Oscuridad | Absol (Q3) | Lámina |
+| Magecora | Infernal/Mental | Reshiram (Q5, legendaria) | Lámina |
+| Dragosil → Dragombo → Dragalis | Planta | Propuesta: Lotad → Lombre → Ludicolo (Q1) | Lámina |
+| Briso → Alisor → Alisior | Eléctrico | Propuesta: Tynamo → Eelektrik → Eelektross (Q1) | Lámina |
+| Guanchín → Menceyor → Achamán | Infernal · Infernal/Ancestral · Infernal/Ancestral | Propuesta: Bagon → Shelgon → Salamence (Q2) | Lámina |
+| Sanbor → Borondis → Atlantea | Agua · Agua/Ancestral · Agua/Ancestral | Propuesta: Deino → Zweilous → Hydreigon (Q2) | Lámina |
+| Patatín → Paparrón | Tierra | Propuesta: Makuhita → Hariyama (Q1) | Lámina |
+| Esporín → Micelord | Planta | Propuesta: Foongus → Amoonguss (Q1) | Lámina |
+| Voltéro → Raigón | Eléctrico | Propuesta: Electrike → Manectric (Q1) | Lámina |
+| Miralín → Reflexán | Mental | Propuesta: Elgyem → Beheeyem (Q2) | Lámina |
+| Tunelín → Taladrex | Tierra | Propuesta: Drilbur → Excadrill (Q2) ⚠ | Lámina |
+| Cangrix → Costrarca | Roca | Propuesta: Dwebble → Crustle (Q2) ⚠ | Lámina |
+| Basún → Toxárro | Veneno | Propuesta: Trubbish → Garbodor (Q2) ⚠ | Lámina |
+| Civeta (sin nombre, 2) | Común | Propuesta: Zigzagoon → Linoone (Q1) | Lámina |
+| Dino del casco de roca (sin nombre, 2) | Roca | Propuesta: Cranidos → Rampardos (Q2) ⚠ | Lámina |
+
+En los tipos, «Infernal · Infernal/Ancestral» quiere decir: la primera forma sin secundario y las
+siguientes con él. Las láminas ponen el doble tipo a toda la línea; quitárselo a las primeras
+formas ayuda al 60 %.
+
+⚠ **Demasiado parecidas a su Pokémon de referencia** en idea y dibujo, y con sus mismas
+estadísticas se leerían como una copia (R8):
+- el topo con taladro (Excadrill);
+- el ermitaño que carga una roca (Crustle);
+- la bolsa de basura (Garbodor);
+- el dinosaurio de cabeza de piedra (Cranidos).
+
+Conviene cambiarles la idea, o el dibujo, o las estadísticas de referencia. Las abejas de Melaní
+recuerdan a Combee y Vespiquen, aunque sus estadísticas sean de Scolipede.
+
 ## Lista de referencia
 
 Cada especie con sus formas en orden de evolución, con la numeración del PDF del autor (sin las
