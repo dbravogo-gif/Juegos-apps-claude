@@ -1,7 +1,8 @@
 // Subsistema «menu»: el menú de pausa, con Esc mientras se explora (F10 y punto 5 de la lista del
 // autor, 2026-11-12). Equipo (poner a una criatura la primera), Mochila (usar pociones), Mapa (el
-// plano con tu posición), Exportar e Importar la partida como código, y Volver. Todo con el
-// teclado: flechas para elegir, E, Enter o Espacio para confirmar y Esc para volver atrás.
+// plano con tu posición), Exportar e Importar la partida como código, y Volver. También la tienda
+// (F17), al acabar de hablar con el tendero. Todo con el teclado: flechas para elegir, E, Enter o
+// Espacio para confirmar y Esc para volver atrás.
 
 import { nombreDe, objetoUtil, usarObjeto } from '../../core/criatura';
 import { vidaMaxima } from '../../core/estadisticas';
@@ -13,7 +14,7 @@ import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Entrada } from '../entrada/entrada';
 import type { Partida } from '../partida/partida';
 
-type Pantalla = 'cerrado' | 'principal' | 'equipo' | 'mochila' | 'objetivo' | 'mapa' | 'exportar' | 'importar';
+type Pantalla = 'cerrado' | 'principal' | 'equipo' | 'mochila' | 'objetivo' | 'mapa' | 'exportar' | 'importar' | 'tienda';
 
 interface Opcion {
   texto: string;
@@ -78,7 +79,10 @@ export class Menu implements Subsistema {
         this.abrir('principal');
       }
     });
-    this.quitar.push(ctx.eventos.on('menu:abrir', () => this.abrir('principal')));
+    this.quitar.push(
+      ctx.eventos.on('menu:abrir', () => this.abrir('principal')),
+      ctx.eventos.on('tienda:abrir', () => this.abrir('tienda')),
+    );
   }
 
   private abrir(p: Pantalla): void {
@@ -149,6 +153,28 @@ export class Menu implements Subsistema {
             this.nota.textContent = `${nombreDe(c, DATOS)} recupera vida.`;
           },
         }));
+        break;
+      }
+      case 'tienda': {
+        const dinero = this.partida.dinero;
+        this.titulo.textContent = `Tienda · ${dinero} de dinero`;
+        if (!this.nota.textContent) this.nota.textContent = 'Elige qué comprar. Esc: salir.';
+        this.opciones = Object.values(DATOS.objetos)
+          .filter((o) => o.precio !== undefined)
+          .map((o) => ({
+            texto: `${o.nombre} · ${o.precio}`,
+            detalle: `${o.descripcion} Tienes ${this.partida.mochila[o.id] ?? 0}.`,
+            activa: dinero >= o.precio!,
+            elegir: () => {
+              this.partida.dinero -= o.precio!;
+              this.partida.mochila[o.id] = (this.partida.mochila[o.id] ?? 0) + 1;
+              const eleccion = this.eleccion;
+              this.abrir('tienda');
+              this.nota.textContent = `Compras ${o.nombre}. ¡Gracias!`;
+              this.eleccion = this.opciones[eleccion]?.activa ? eleccion : this.eleccion;
+              this.pintar();
+            },
+          }));
         break;
       }
       case 'mapa':
@@ -249,7 +275,7 @@ export class Menu implements Subsistema {
       this.pintar();
     }
     if (cancelar) {
-      if (this.pantalla === 'principal') this.cerrar();
+      if (this.pantalla === 'principal' || this.pantalla === 'tienda') this.cerrar();
       else if (this.pantalla === 'objetivo') this.abrir('mochila');
       else this.abrir('principal');
       return;

@@ -21,8 +21,8 @@ Tanda 1: Lanzarote es la isla 1 (`ISLA-1.md`), con kit por código y la tabla de
    Huir, experiencia, captura con la barra, cura y vuelta al refugio al perder, y guardado
    automático (`?nueva` empieza de cero) y todos los entrenadores, que te ven, retan y pagan;
    la líder abre el barco, y menú de pausa con Esc (equipo, mochila, mapa y exportar o importar
-   la partida). Siguen la tienda, la evolución, la selección de personaje, el sonido y la tabla
-   de tipos con Lucha.
+   la partida) y tienda en La Geria. Siguen la evolución, la selección de personaje, el
+   sonido y la tabla de tipos con Lucha.
 2. En paralelo, arte con Meshy (`prompts-meshy.md`): criaturas y edificios singulares.
 3. Criaturas: reparto y lista de referencia en `CRIATURAS.md` (2026-11-10). Se diseñan con el
    autor y sus amigos; dónde aparece cada una se decide al final.

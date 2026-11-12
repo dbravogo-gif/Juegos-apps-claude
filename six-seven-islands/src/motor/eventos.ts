@@ -24,6 +24,8 @@ export interface MapaEventos {
   'entrenador:visto': { id: string };
   /** Se abre el menú de pausa (Esc mientras se explora). */
   'menu:abrir': Record<string, never>;
+  /** Se abre la tienda, al acabar de hablar con el tendero. */
+  'tienda:abrir': Record<string, never>;
 }
 
 export type NombreEvento = keyof MapaEventos;

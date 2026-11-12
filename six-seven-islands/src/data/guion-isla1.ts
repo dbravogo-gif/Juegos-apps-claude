@@ -141,7 +141,7 @@ export const GUION_ISLA1: Guion = {
   tendero: [
     {
       dialogo: {
-        lineas: [{ quien: 'Tendero', texto: '¡Buenas! Estoy esperando el barco con la mercancía. Pásate más adelante.' }],
+        lineas: [{ quien: 'Tendero', texto: '¡Buenas! Poca cosa tengo hasta que llegue el barco, pero lo básico no falta. ¿Qué te pongo?' }],
       },
     },
   ],
