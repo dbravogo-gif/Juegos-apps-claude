@@ -63,6 +63,8 @@ describe('combate determinista', () => {
 });
 
 describe('1.000 combates de bots', () => {
+  // Pesada a propósito (unos 3 s solos): con la máquina ocupada pasaba de los 5 s por defecto y
+  // fallaba sin motivo (2026-11-12). Por eso lleva su propio límite.
   it('terminan todos, sin errores y sin romper las invariantes', () => {
     const especies = Object.keys(D.especies);
     const rng = crearRng('mil');
@@ -98,7 +100,7 @@ describe('1.000 combates de bots', () => {
     expect(resultados.derrota).toBeGreaterThan(50);
     expect(resultados.captura).toBeGreaterThan(10);
     expect(resultados.huida).toBeGreaterThan(10);
-  });
+  }, 30_000);
 });
 
 describe('2 contra 2', () => {
