@@ -67,6 +67,8 @@ export interface EstadoParcial {
   dinero?: number;
   /** Solo para pruebas: los entrenadores vencidos. */
   vencidos?: string[];
+  /** Solo para pruebas: criaturas que se añaden al equipo (especie y nivel). */
+  anadir?: { especie: string; nivel: number }[];
   /** Zona de la isla o id de un interior. */
   zona?: string;
   x?: number;
@@ -506,6 +508,7 @@ export class Partida implements Subsistema {
       this.estado.inicial = p.inicial;
       this.formarEquipo();
     }
+    for (const a of p.anadir ?? []) if (this.equipo.length < 6) this.equipo.push(crearCriatura(DATOS, a.especie, a.nivel, this.ctx.rng));
     if (p.vida !== undefined) for (const c of this.equipo) c.vida = Math.min(c.vida, p.vida);
     if (p.dinero !== undefined) this.dinero = p.dinero;
     if (p.vencidos !== undefined) this.vencidos = [...p.vencidos];

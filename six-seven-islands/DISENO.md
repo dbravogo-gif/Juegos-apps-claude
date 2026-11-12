@@ -318,6 +318,11 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
 - 2026-11-12 · **Inicial rebelde** (F25): hasta hablar con el anciano, no hace caso el 45 % de
   sus turnos; la mitad de esas veces usa otro movimiento y la otra mitad se distrae. Lo decide
   el generador del combate.
+- 2026-11-12 · **Equipo y mochila como siempre** (autor): el equipo es la rejilla de seis con
+  Datos, Mover y Objeto; la mochila, una pantalla con la mochila dibujada y un bolsillo por
+  clase de objeto (botiquín, cubos, objetos clave y técnicas). Los objetos se usan desde la
+  mochila (eligiendo a quién) o desde Equipo → Objeto. Equipar objetos y las técnicas, más
+  adelante.
 - 2026-11-12 · **Menús nuevos y medallero** (autor): pausa con degradado y opciones en una
   columna a la derecha; tienda transparente con las opciones a la izquierda; las medallas son las
   pintaderas de cada isla (`ARTE.md`, «Menús»). Sonido, exportar, importar y nueva partida van

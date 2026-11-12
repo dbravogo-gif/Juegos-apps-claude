@@ -150,6 +150,13 @@ Se revisan de cerca en `?catalogo` (plantas, rocas y muro) y `?catalogo=edificio
   crema; la elegida, blanca, con una franja coral y adelantada. A la izquierda, sobre lo oscuro,
   el contenido: el equipo en seis huecos, la ficha de una criatura, un objeto, el medallero, el
   mapa…
+- **Equipo:** el menú de equipo de siempre, seis tarjetas en dos columnas (nombre, nivel, vida,
+  estado y cuál sale primera). Al elegir una: Datos (estadísticas, experiencia, temperamento y
+  movimientos), Mover (cambiarla de sitio) y Objeto (usarle algo del botiquín).
+- **Mochila:** una mochila dibujada por código (`arte/mochila.ts`) cuyos bolsillos son sus
+  secciones: la solapa, los objetos clave; el de delante, el botiquín; los laterales, los cubos y
+  las técnicas. El elegido se pinta en coral y salta al cambiar; ← y → cambian de bolsillo. Si
+  un día llega una mochila de Meshy, se cambia ahí sin tocar el menú.
 - **Tienda y menús de su estilo** (confirmar una compra): todo transparente salvo las opciones, a
   la izquierda, con el título y la nota en etiquetas oscuras.
 - **Medallas:** la pintadera de cada isla, el sello de barro de los antiguos canarios. Seis
