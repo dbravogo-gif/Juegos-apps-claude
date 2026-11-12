@@ -410,14 +410,18 @@ body {
   color: #6b5a4f;
 }
 
-/* Menú de pausa (src/sistemas/menu). */
+/* Menú de pausa y tienda (src/sistemas/menu). Diseño del autor, 2026-11-12:
+   - pausa: degradado oscuro de izquierda (menos transparente) a derecha (casi nada), con el
+     contenido a la izquierda y las opciones en una columna a la derecha;
+   - tienda: todo transparente salvo las opciones, a la izquierda. */
 .menu-juego {
   position: fixed;
   inset: 0;
   z-index: 25;
   display: grid;
-  place-items: center;
-  background: rgb(29 23 32 / 0.45);
+  grid-template-columns: minmax(0, 1fr) 340px;
+  align-items: center;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
 .menu-juego[hidden],
@@ -425,79 +429,389 @@ body {
   display: none;
 }
 
-.menu-panel {
+.menu-juego.estilo-pausa {
+  background: linear-gradient(90deg, rgb(24 18 30 / 0.94) 0%, rgb(24 18 30 / 0.82) 36%, rgb(24 18 30 / 0.35) 66%, rgb(24 18 30 / 0.06) 100%);
+  animation: menu-entra 0.18s ease-out;
+}
+
+@keyframes menu-entra {
+  from {
+    opacity: 0;
+  }
+}
+
+/* El panel de la izquierda, sobre lo oscuro. */
+.menu-detalle {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  min-width: min(460px, calc(100% - 48px));
-  max-width: calc(100% - 48px);
-  max-height: calc(100% - 48px);
+  gap: 14px;
+  max-width: 620px;
+  max-height: 100%;
   box-sizing: border-box;
-  padding: 18px 22px;
+  padding: 40px 0 40px 64px;
   overflow: auto;
-  border-radius: 16px;
-  background: rgb(255 246 234 / 0.97);
-  color: var(--texto);
-  box-shadow: 0 8px 24px rgb(59 42 32 / 0.3);
+  color: var(--crema);
 }
 
-.menu-titulo {
-  margin: 0 0 4px;
-  font: 800 22px/1.2 system-ui, -apple-system, 'Segoe UI', sans-serif;
+.menu-contenido {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
-.menu-lista {
+.menu-encabezado,
+.menu-ficha h2 {
+  margin: 0;
+  font: 800 30px/1.15 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  letter-spacing: 0.01em;
+}
+
+.menu-ayuda {
+  margin: 0;
+  font: 500 16px/1.45 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color: rgb(255 246 234 / 0.82);
+}
+
+.menu-dato,
+.menu-nota {
+  margin: 0;
+  font: 600 14px/1.4 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color: rgb(255 246 234 / 0.7);
+}
+
+/* Resumen: seis huecos del equipo, el dinero y la tira de medallas. */
+.menu-huecos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.menu-hueco {
+  display: grid;
+  grid-template-columns: 12px minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  column-gap: 10px;
+  row-gap: 6px;
+  align-items: center;
+  min-height: 58px;
+  box-sizing: border-box;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: rgb(255 246 234 / 0.1);
+  border: 1px solid rgb(255 246 234 / 0.14);
+}
+
+.menu-hueco.vacio {
+  background: none;
+  border-style: dashed;
+}
+
+.menu-hueco b {
+  overflow: hidden;
+  font: 700 16px/1.2 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.menu-hueco small {
+  font: 600 13px/1 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color: rgb(255 246 234 / 0.7);
+}
+
+.menu-hueco .menu-vida {
+  grid-column: 2 / 4;
+}
+
+.menu-punto {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgb(255 246 234 / 0.25);
+}
+
+.menu-vida {
+  display: block;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: rgb(255 246 234 / 0.18);
+}
+
+.menu-vida i {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+}
+
+.menu-cifras {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font: 700 15px/1 system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+.menu-tira {
+  display: flex;
+  gap: 6px;
+}
+
+.menu-tira svg {
+  width: 28px;
+  height: 28px;
+}
+
+/* Ficha de una criatura o de un objeto. */
+.menu-ficha {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 22px 24px;
+  border-radius: 18px;
+  background: rgb(255 246 234 / 0.08);
+  border: 1px solid rgb(255 246 234 / 0.14);
+}
+
+.menu-cabeza {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.menu-nivel {
+  font: 700 18px/1 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color: rgb(255 246 234 / 0.75);
+}
+
+.menu-tipos {
+  display: flex;
+  gap: 6px;
+}
+
+.menu-tipos i,
+.menu-movs i {
+  padding: 3px 10px;
+  border-radius: 999px;
+  font: 700 12px/1.3 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-style: normal;
+  color: #fff;
+  text-shadow: 0 1px 1px rgb(0 0 0 / 0.35);
+}
+
+.menu-vida-grande {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
+.menu-vida-grande .menu-vida {
+  height: 10px;
+  border-radius: 5px;
+}
+
+.menu-vida-grande small {
+  font: 600 14px/1 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color: rgb(255 246 234 / 0.75);
+}
+
+.menu-movs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.menu-movs li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 4px 8px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgb(255 246 234 / 0.08);
+}
+
+.menu-movs b {
+  overflow: hidden;
+  font: 700 15px/1.2 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.menu-movs small {
+  grid-column: 1 / 3;
+  font: 600 12px/1 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color: rgb(255 246 234 / 0.65);
+}
+
+/* Medallero: las pintaderas de las islas. */
+.menu-medallas {
+  display: grid;
+  margin-bottom: 10px;
+  grid-template-columns: repeat(3, 120px);
+  gap: 18px 26px;
+}
+
+.menu-medallas figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  transition: transform 0.15s ease-out;
+}
+
+.menu-medallas svg {
+  width: 96px;
+  height: 96px;
+  filter: drop-shadow(0 4px 6px rgb(0 0 0 / 0.35));
+}
+
+.menu-medallas figcaption {
+  font: 700 13px/1.2 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color: rgb(255 246 234 / 0.7);
+}
+
+.menu-medallas figure.elegida {
+  transform: scale(1.12);
+}
+
+.menu-medallas figure.elegida figcaption {
+  color: var(--crema);
+}
+
+.menu-mapa {
+  align-self: flex-start;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.35);
+}
+
+.menu-codigo {
+  width: min(540px, 100%);
+  height: 140px;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 1px solid rgb(255 246 234 / 0.3);
+  border-radius: 12px;
+  background: rgb(255 246 234 / 0.95);
+  color: var(--texto);
+  font: 13px/1.4 ui-monospace, monospace;
+  word-break: break-all;
+  resize: none;
+}
+
+/* La columna de opciones: a la derecha en la pausa. */
+.menu-columna {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 100%;
+  box-sizing: border-box;
+  /* Hueco a la izquierda para la opción elegida, que se adelanta 12 px. */
+  padding: 32px 48px 32px 16px;
+  overflow: auto;
+}
+
+.menu-titulo {
+  margin: 0 0 6px 4px;
+  font: 800 13px/1 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--crema);
+  text-shadow: 0 1px 3px rgb(0 0 0 / 0.6);
+}
+
+.menu-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .menu-op {
-  padding: 8px 12px;
-  border: 2px solid transparent;
-  border-radius: 10px;
-  background: #fff;
+  padding: 13px 20px;
+  border-left: 6px solid transparent;
+  border-radius: 14px;
+  background: rgb(255 246 234 / 0.82);
+  color: var(--texto);
+  box-shadow: 0 2px 8px rgb(24 18 30 / 0.25);
+  transition:
+    transform 0.12s ease-out,
+    background 0.12s;
 }
 
 .menu-op b {
   display: block;
-  font: 700 16px/1.25 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font: 700 17px/1.25 system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
 .menu-op small {
-  font: 500 13px/1.3 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  display: block;
+  margin-top: 4px;
+  font: 500 13px/1.35 system-ui, -apple-system, 'Segoe UI', sans-serif;
   color: #6b5a4f;
 }
 
 .menu-op.elegido {
-  border-color: var(--coral);
-  box-shadow: 0 0 0 3px rgb(255 107 107 / 0.25);
+  border-left-color: var(--coral);
+  background: #fff;
+  box-shadow: 0 6px 18px rgb(24 18 30 / 0.35);
+  transform: translateX(-12px);
 }
 
 .menu-op.apagado {
   opacity: 0.5;
 }
 
-.menu-mapa {
-  align-self: center;
-  border-radius: 10px;
+.menu-pie {
+  margin: 8px 0 0 4px;
+  font: 600 12px/1.3 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color: rgb(255 246 234 / 0.85);
+  text-shadow: 0 1px 3px rgb(0 0 0 / 0.7);
 }
 
-.menu-codigo {
-  width: min(560px, 80vw);
-  height: 120px;
-  padding: 10px;
-  border: 2px solid #e6d6c2;
-  border-radius: 10px;
-  font: 13px/1.4 ui-monospace, monospace;
-  word-break: break-all;
-  resize: none;
+/* Tienda: sin fondo; solo las opciones, a la izquierda. */
+.menu-juego.estilo-tienda {
+  grid-template-columns: 380px minmax(0, 1fr);
+  background: none;
 }
 
-.menu-nota {
-  margin: 4px 0 0;
-  font: 500 14px/1.4 system-ui, -apple-system, 'Segoe UI', sans-serif;
-  color: #6b5a4f;
+.estilo-tienda .menu-detalle {
+  display: none;
+}
+
+.estilo-tienda .menu-columna {
+  grid-column: 1;
+  grid-row: 1;
+  padding: 32px 16px 32px 48px;
+}
+
+.estilo-tienda .menu-titulo {
+  align-self: flex-start;
+  margin: 0;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgb(43 35 64 / 0.85);
+  letter-spacing: 0.06em;
+  text-shadow: none;
+}
+
+.estilo-tienda .menu-op.elegido {
+  transform: translateX(12px);
+}
+
+.estilo-tienda .menu-pie {
+  align-self: flex-start;
+  margin: 2px 0 0;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgb(43 35 64 / 0.85);
+  text-shadow: none;
+}
+
+.estilo-tienda .menu-pie:empty {
+  display: none;
 }
 
 /* Combate: fichas de vida, caja de mensajes y ataques (src/sistemas/combate). */

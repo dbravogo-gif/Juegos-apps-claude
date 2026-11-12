@@ -55,8 +55,7 @@ propuesta de Claude y qué frena mientras siga abierto.
     - quitar a Planta la debilidad ante Bicho o ante Veneno;
     - quitar a Infernal la resistencia ante Acero.
 
-    Hasta que diga algo, se queda como está. Lucha necesita además cuántas criaturas lleva en
-    `CRIATURAS.md`.
+    Hasta que diga algo, se queda como está. Lucha lleva 9 criaturas (autor, 2026-11-12).
 
 ## Islas y mundo
 
