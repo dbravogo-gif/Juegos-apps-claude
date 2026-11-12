@@ -302,6 +302,9 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
   se añade El Jable, de 24 × 22, entre el Fuego y la capital: muros que obligan a zigzaguear,
   hierba opcional, un entrenador opcional y una poción. El ensanche anterior se deshace. El autor
   juzga los tamaños al probarlo.
+- 2026-11-12 · **Sonido** (F24) por código, sin archivos: efectos para menús, hierba, puertas,
+  golpes, captura, subir de nivel… y dos melodías en bucle (explorar y combate). Se silencia
+  en el menú, y ahí mismo se escucha cada efecto para valorarlo.
 - 2026-11-12 · **Portada:** una partida nueva empieza eligiendo persona (las de los amigos, con su
   foto) y escribiendo el nombre, que sale en los diálogos (`{nombre}` en un texto). Con una
   partida guardada se sigue donde se dejó.

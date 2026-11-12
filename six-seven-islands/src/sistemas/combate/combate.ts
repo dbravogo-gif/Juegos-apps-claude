@@ -39,6 +39,7 @@ import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Entrada } from '../entrada/entrada';
 import type { Partida } from '../partida/partida';
 import type { Render } from '../render/render';
+import type { NombreEfecto } from '../sonido/sonido';
 
 const DATOS = DATOS_COMBATE_PRUEBA;
 /** La arena, lejos de la isla y de los interiores. */
@@ -83,6 +84,8 @@ interface Opcion {
 /** Un paso de la función: un mensaje, una animación o las dos cosas a la vez. */
 interface Paso {
   texto?: string;
+  /** El efecto que suena al empezar el paso (tabla EFECTOS de «sonido»). */
+  sonido?: NombreEfecto;
   duracion: number;
   /** Se puede adelantar pulsando. */
   saltable: boolean;
@@ -422,6 +425,7 @@ export class Combate implements Subsistema {
             // La salvaje ya está ahí: aparece de un salto, sin cubo.
             this.encolar({
               texto: `¡Un ${ev.ficha.nombre} salvaje te sale al paso!`,
+              sonido: 'salida',
               duracion: 1.3,
               saltable: false,
               empezar: () => {
@@ -443,6 +447,7 @@ export class Combate implements Subsistema {
           const abierto = { chispas: false };
           this.encolar({
             texto: lado === 1 ? `¡El entrenador saca a ${ev.ficha.nombre}!` : `¡Adelante, ${ev.ficha.nombre}!`,
+            sonido: 'salida',
             duracion: 1.9,
             saltable: false,
             empezar: () => {
@@ -469,6 +474,7 @@ export class Combate implements Subsistema {
           const estado = mov?.categoria === 'estado';
           this.encolar({
             texto: `¡${ev.nombre} usa ${mov?.nombre ?? ev.movimiento}!`,
+            sonido: estado ? 'confirmar' : 'ataque',
             duracion: 0.75,
             saltable: false,
             animar: (t) => {
@@ -494,6 +500,7 @@ export class Combate implements Subsistema {
           this.encolar({
             duracion: 0.55,
             saltable: false,
+            sonido: 'golpe',
             empezar: () => {
               this.chispas(lado, color);
               this.pintarVida(lado, ev.vida, ev.vidaMax);
@@ -505,8 +512,8 @@ export class Combate implements Subsistema {
             },
           });
           if (ev.critico) this.encolar({ texto: '¡Un golpe crítico!', duracion: 0.9, saltable: true });
-          if (ev.eficacia > 1) this.encolar({ texto: '¡Es muy eficaz!', duracion: 0.9, saltable: true });
-          else if (ev.eficacia > 0 && ev.eficacia < 1) this.encolar({ texto: 'No es muy eficaz…', duracion: 0.9, saltable: true });
+          if (ev.eficacia > 1) this.encolar({ texto: '¡Es muy eficaz!', sonido: 'eficaz', duracion: 0.9, saltable: true });
+          else if (ev.eficacia > 0 && ev.eficacia < 1) this.encolar({ texto: 'No es muy eficaz…', sonido: 'pocoEficaz', duracion: 0.9, saltable: true });
           break;
         }
         case 'falla':
@@ -536,6 +543,7 @@ export class Combate implements Subsistema {
           const lado = ev.ref.lado;
           this.encolar({
             texto: `¡${ev.nombre} se ha debilitado!`,
+            sonido: 'debilitado',
             duracion: 1.1,
             saltable: false,
             animar: (t) => {
@@ -568,20 +576,20 @@ export class Combate implements Subsistema {
         case 'experiencia': {
           this.encolar({ texto: `${ev.nombre} gana ${ev.cantidad} puntos de experiencia.`, duracion: 1.1, saltable: true });
           for (const s of ev.subidas) {
-            this.encolar({ texto: `¡${ev.nombre} sube al nivel ${s.nivel}!`, duracion: 1.3, saltable: true, empezar: () => this.pintarFicha(0, true) });
+            this.encolar({ texto: `¡${ev.nombre} sube al nivel ${s.nivel}!`, sonido: 'nivel', duracion: 1.3, saltable: true, empezar: () => this.pintarFicha(0, true) });
             for (const m of s.aprendidos) this.encolar({ texto: `¡${ev.nombre} aprende ${DATOS.movimientos[m]?.nombre ?? m}!`, duracion: 1.2, saltable: true });
           }
           break;
         }
         case 'curacion':
-          this.encolar({ texto: 'Recupera vida.', duracion: 0.9, saltable: true, empezar: () => this.pintarVida(ev.ref.lado, ev.vida, ev.vidaMax) });
+          this.encolar({ texto: 'Recupera vida.', sonido: 'curar', duracion: 0.9, saltable: true, empezar: () => this.pintarVida(ev.ref.lado, ev.vida, ev.vidaMax) });
           break;
         case 'objetoUsado': {
           const o = DATOS.objetos[ev.objeto];
           const nombre = o?.nombre ?? ev.objeto;
           if (o?.tipo === 'captura') {
             // El cubo vuela hasta la salvaje, que desaparece dentro.
-            this.encolar({ texto: `¡Lanzas un ${nombre}!`, duracion: 0.9, saltable: false, animar: (t) => (this.luchadores[1]!.escala = 1 - t) });
+            this.encolar({ texto: `¡Lanzas un ${nombre}!`, sonido: 'lanzar', duracion: 0.9, saltable: false, animar: (t) => (this.luchadores[1]!.escala = 1 - t) });
           } else {
             this.encolar({ texto: ev.lado === 0 ? `Usas ${nombre}.` : `El entrenador usa ${nombre}.`, duracion: 1, saltable: true });
           }
@@ -589,20 +597,20 @@ export class Combate implements Subsistema {
         }
         case 'captura': {
           for (let i = 0; i < ev.sacudidas; i++) {
-            this.encolar({ texto: '…', duracion: 0.55, saltable: false, animar: (t) => this.luchadores[1]!.extra.set(Math.sin(t * Math.PI * 2) * 0.12, 0, 0) });
+            this.encolar({ texto: '…', sonido: 'sacudida', duracion: 0.55, saltable: false, animar: (t) => this.luchadores[1]!.extra.set(Math.sin(t * Math.PI * 2) * 0.12, 0, 0) });
           }
           const nombre = this.activa(1) ? nombreDe(this.activa(1)!, DATOS) : 'la criatura';
           if (ev.exito) {
             const cabe = this.partida.equipo.length < MAX_EQUIPO;
-            this.encolar({ texto: `¡Has capturado a ${nombre}!`, duracion: 1.6, saltable: true });
+            this.encolar({ texto: `¡Has capturado a ${nombre}!`, sonido: 'captura', duracion: 1.6, saltable: true });
             if (!cabe) this.encolar({ texto: 'Pero tu equipo está lleno: se queda en libertad.', duracion: 1.6, saltable: true });
           } else {
-            this.encolar({ texto: '¡Oh, no! Se ha escapado.', duracion: 1.1, saltable: true, animar: (t) => (this.luchadores[1]!.escala = rebote(t)) });
+            this.encolar({ texto: '¡Oh, no! Se ha escapado.', sonido: 'escapa', duracion: 1.1, saltable: true, animar: (t) => (this.luchadores[1]!.escala = rebote(t)) });
           }
           break;
         }
         case 'huida':
-          this.encolar({ texto: ev.exito ? '¡Escapas sin problemas!' : '¡No has podido escapar!', duracion: 1.1, saltable: true });
+          this.encolar({ texto: ev.exito ? '¡Escapas sin problemas!' : '¡No has podido escapar!', sonido: ev.exito ? 'huir' : 'atras', duracion: 1.1, saltable: true });
           break;
         case 'fin': {
           const premio = this.entrenador ? (ENTRENADORES_ISLA1[this.entrenador]?.premio ?? 0) : 0;
@@ -642,13 +650,21 @@ export class Combate implements Subsistema {
         const paso = dir === 'e' ? 1 : dir === 'o' ? -1 : dir === 's' ? columnas : -columnas;
         if (columnas === 2 || dir === 'n' || dir === 's') {
           const n = this.eleccion + paso;
-          if (n >= 0 && n < this.opciones.length) this.eleccion = n;
+          if (n >= 0 && n < this.opciones.length && n !== this.eleccion) {
+            this.eleccion = n;
+            this.ctx.eventos.emit('sonido:tocar', { nombre: 'seleccion' });
+          }
         }
         this.pintarMenu();
       }
       const o = this.opciones[this.eleccion];
-      if (confirmar && o?.activa) o.elegir();
-      else if (cancelar && this.menuActual !== 'raiz' && this.menuActual !== 'forzado') this.abrirMenu('raiz');
+      if (confirmar && o?.activa) {
+        this.ctx.eventos.emit('sonido:tocar', { nombre: 'confirmar' });
+        o.elegir();
+      } else if (cancelar && this.menuActual !== 'raiz' && this.menuActual !== 'forzado') {
+        this.ctx.eventos.emit('sonido:tocar', { nombre: 'atras' });
+        this.abrirMenu('raiz');
+      }
       return;
     }
     // Una flecha pulsada mientras salen los mensajes no debe mover el menú al abrirse (se elegía
@@ -665,6 +681,7 @@ export class Combate implements Subsistema {
       this.paso = this.cola.shift()!;
       this.tPaso = 0;
       this.paso.empezar?.();
+      if (this.paso.sonido) this.ctx.eventos.emit('sonido:tocar', { nombre: this.paso.sonido });
       if (this.paso.texto !== undefined) this.texto.textContent = this.paso.texto;
     }
     if (this.paso) {

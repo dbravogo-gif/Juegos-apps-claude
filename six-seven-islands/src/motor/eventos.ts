@@ -28,6 +28,10 @@ export interface MapaEventos {
   'tienda:abrir': Record<string, never>;
   /** Al empezar una partida nueva: el nombre y la persona elegidos. */
   'jugador:elegido': { nombre: string; persona: string };
+  /** Que suene un efecto de la tabla EFECTOS de «sonido». */
+  'sonido:tocar': { nombre: string };
+  /** Activar o silenciar el sonido. */
+  'sonido:alternar': Record<string, never>;
 }
 
 export type NombreEvento = keyof MapaEventos;

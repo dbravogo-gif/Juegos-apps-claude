@@ -15,6 +15,7 @@ export class Inicio implements Subsistema {
   static readonly id = 'inicio';
   static readonly deps: readonly string[] = ['entrada', 'partida'];
 
+  private ctx!: Ctx;
   private entrada!: Entrada;
   private partida!: Partida;
   private raiz!: HTMLDivElement;
@@ -25,6 +26,7 @@ export class Inicio implements Subsistema {
   private pista!: HTMLElement;
 
   init(ctx: Ctx): void {
+    this.ctx = ctx;
     this.entrada = ctx.get<Entrada>('entrada');
     this.partida = ctx.get<Partida>('partida');
     const raiz = document.createElement('div');
@@ -94,16 +96,26 @@ export class Inicio implements Subsistema {
     const confirmar = this.entrada.consumir('confirmar');
     const cancelar = this.entrada.consumir('cancelar');
     const dir = this.entrada.pulsacion();
+    const sonar = (nombre: string) => this.ctx.eventos.emit('sonido:tocar', { nombre });
     if (this.paso === 'portada') {
-      if (confirmar) this.ir('persona');
+      if (confirmar) {
+        sonar('confirmar');
+        this.ir('persona');
+      }
       return;
     }
     if (dir === 'e' || dir === 'o') {
       this.eleccion = (this.eleccion + (dir === 'e' ? 1 : -1) + this.cartas.length) % this.cartas.length;
+      sonar('seleccion');
       this.pintar();
     }
-    if (confirmar) this.ir('nombre');
-    else if (cancelar) this.ir('portada');
+    if (confirmar) {
+      sonar('confirmar');
+      this.ir('nombre');
+    } else if (cancelar) {
+      sonar('atras');
+      this.ir('portada');
+    }
   }
 
   dispose(): void {

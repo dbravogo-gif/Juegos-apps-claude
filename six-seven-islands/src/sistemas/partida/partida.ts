@@ -353,6 +353,7 @@ export class Partida implements Subsistema {
         const refugio = CURANDEROS[ev.personaje];
         if (refugio && this.equipo.length) {
           this.curarEquipo();
+          this.ctx.eventos.emit('sonido:tocar', { nombre: 'curar' });
           this.ultimoRefugio = refugio;
           dialogo = { ...dialogo, lineas: [...dialogo.lineas, { texto: 'Tu equipo está como nuevo.' }] };
         }
@@ -360,6 +361,7 @@ export class Partida implements Subsistema {
         break;
       }
       case 'hierba': {
+        this.ctx.eventos.emit('sonido:tocar', { nombre: 'hierba' });
         // Sin una criatura en pie no se lucha: la hierba se cruza sin más.
         if (!this.equipo.some((c) => c.vida > 0)) break;
         const s = sortearEncuentro(ENCUENTROS_ISLA1, ev.zona, this.ctx.rng);
@@ -374,6 +376,7 @@ export class Partida implements Subsistema {
     const conNombre = (l: Dialogo['lineas'][number]) => ({ ...l, texto: l.texto.replaceAll('{nombre}', this.nombre) });
     d = { ...d, lineas: d.lineas.map(conNombre), ...(d.pregunta ? { pregunta: conNombre(d.pregunta) } : {}), ...(d.tras ? { tras: d.tras.map(conNombre) } : {}) };
     this.dialogo = abrirDialogo(d);
+    this.ctx.eventos.emit('sonido:tocar', { nombre: 'hablar' });
     this.hablando = guionId;
     this.modo = 'dialogo';
     this.entrada.olvidar();
@@ -403,6 +406,7 @@ export class Partida implements Subsistema {
 
   /** Empieza el fundido para entrar en un interior (o salir, con null). */
   private cruzar(destino: string | null): void {
+    this.ctx.eventos.emit('sonido:tocar', { nombre: 'puerta' });
     this.cruce = { paso: 0, destino };
     this.modo = 'fundido';
   }
