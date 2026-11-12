@@ -43,6 +43,21 @@ propuesta de Claude y qué frena mientras siga abierto.
     - **Propuesta:** los del juego. Parpadean, se cierran al debilitarse y son iguales en
       todas (`prompts-meshy.md`).
 
+11b. **Equilibrio de la tabla nueva** (2026-11-12). Está metida tal cual la mandó el autor.
+    Lo que más se sale:
+    - Acero resiste 8 tipos y es inmune a Veneno.
+    - Planta tiene 5 debilidades y a su ataque le resisten 6.
+    - Infernal resiste 5.
+    - A Bicho le resisten 6 y a Veneno 5. Veneno solo es ×2 contra Planta y Ancestral.
+
+    **Propuestas mínimas**, si el autor quiere retocar:
+    - quitar 3 resistencias a Acero (por ejemplo, ante Planta, Aire y Mental);
+    - quitar a Planta la debilidad ante Bicho o ante Veneno;
+    - quitar a Infernal la resistencia ante Acero.
+
+    Hasta que diga algo, se queda como está. Lucha necesita además cuántas criaturas lleva en
+    `CRIATURAS.md`.
+
 ## Islas y mundo
 
 - **Personas de los amigos** (autor, 2026-11-11). Cada amigo pasa una foto de cómo quiere su
