@@ -1,5 +1,6 @@
-// Captura: la fórmula del género (tercera y cuarta generación) más la calidad del lanzamiento
-// con el dedo, de 0 a 1, que sale de la puntería y del momento (DISENO.md).
+// Captura: la fórmula del género (tercera y cuarta generación) más la calidad del lanzamiento, que
+// sale de la barra (DISENO.md, «Captura»): una flecha que va y viene sobre una barra gris con una
+// zona blanca y, en su centro, una verde pequeña. Ninguna zona asegura la captura.
 
 import type { EstadoCriatura } from './modelo';
 import { entero, type EstadoRng } from './rng';
@@ -12,14 +13,32 @@ export interface DatosCaptura {
   /** Bonificación del objeto de captura (el básico vale 1). */
   bonus: number;
   estado: EstadoCriatura | null;
-  /** Calidad del lanzamiento, de 0 (malo) a 1 (perfecto). */
+  /** Calidad del lanzamiento, de 0 a 1: 0 la zona gris, 0,5 la blanca y 1 la verde. */
   calidad: number;
 }
 
-/** Multiplicador del lanzamiento: ×0,75 el peor, ×1,25 el perfecto. */
+export type ZonaBarra = 'gris' | 'blanca' | 'verde';
+
+/** La calidad que da cada zona de la barra. */
+export const CALIDAD_ZONA: Readonly<Record<ZonaBarra, number>> = { gris: 0, blanca: 0.5, verde: 1 };
+
+/** Mitad del ancho de cada zona, desde el centro de la barra (de 0 a 1): verde, 5 %; blanca, 15 %. */
+export const MEDIA_VERDE = 0.05;
+export const MEDIA_BLANCA = 0.15;
+
+/** La zona de la barra donde se para la flecha, con `pos` de 0 (izquierda) a 1 (derecha). */
+export function zonaBarra(pos: number): ZonaBarra {
+  const d = Math.abs(pos - 0.5);
+  return d <= MEDIA_VERDE ? 'verde' : d <= MEDIA_BLANCA ? 'blanca' : 'gris';
+}
+
+/**
+ * Multiplicador del lanzamiento (propuesta de DISENO.md): gris ×1, blanca ×1,5 y verde ×2,5.
+ * Por debajo de la blanca cuenta como gris; desde la verde, como verde.
+ */
 export function factorLanzamiento(calidad: number): number {
-  const q = Math.max(0, Math.min(1, Number.isFinite(calidad) ? calidad : 0));
-  return 0.75 + 0.5 * q;
+  const q = Number.isFinite(calidad) ? calidad : 0;
+  return q >= 1 ? 2.5 : q >= 0.5 ? 1.5 : 1;
 }
 
 /** Valor «a» de la fórmula. 255 o más: captura segura. */
