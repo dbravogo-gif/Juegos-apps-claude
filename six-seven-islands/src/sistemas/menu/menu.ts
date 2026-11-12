@@ -1,8 +1,9 @@
 // Subsistema «menu»: el menú de pausa, con Esc mientras se explora (F10 y punto 5 de la lista del
 // autor, 2026-11-12). Equipo (poner a una criatura la primera), Mochila (usar pociones), Mapa (el
 // plano con tu posición), Exportar e Importar la partida como código, y Volver. También la tienda
-// (F17), al acabar de hablar con el tendero. Todo con el teclado: flechas para elegir, E, Enter o
-// Espacio para confirmar y Esc para volver atrás.
+// (F17), al acabar de hablar con el tendero: cada compra se confirma (uno o cinco), para no comprar
+// sin querer al venir pulsando E desde el diálogo. Y «Nueva partida», también con confirmación.
+// Todo con el teclado: flechas para elegir, E, Enter o Espacio para confirmar y Esc para volver.
 
 import { nombreDe, objetoUtil, usarObjeto } from '../../core/criatura';
 import { vidaMaxima } from '../../core/estadisticas';
@@ -15,7 +16,10 @@ import type { Entrada } from '../entrada/entrada';
 import type { Partida } from '../partida/partida';
 import { EFECTOS, sonidoActivo, type NombreEfecto } from '../sonido/sonido';
 
-type Pantalla = 'cerrado' | 'principal' | 'equipo' | 'mochila' | 'objetivo' | 'mapa' | 'exportar' | 'importar' | 'tienda' | 'sonidos';
+type Pantalla = 'cerrado' | 'principal' | 'equipo' | 'mochila' | 'objetivo' | 'mapa' | 'exportar' | 'importar' | 'tienda' | 'compra' | 'sonidos' | 'nueva';
+
+/** Al abrirse el menú o la tienda, pasos fijos (0,4 s) en que Enter y E no eligen: la pulsación que cerraba el diálogo no compra. */
+const ESPERA_AL_ABRIR = 24;
 
 interface Opcion {
   texto: string;
@@ -40,8 +44,11 @@ export class Menu implements Subsistema {
   private pantalla: Pantalla = 'cerrado';
   private opciones: Opcion[] = [];
   private eleccion = 0;
-  /** El objeto que se va a usar, mientras se elige sobre quién. */
+  /** El objeto que se va a usar (mientras se elige sobre quién) o a comprar (mientras se confirma). */
   private objeto: string | null = null;
+  /** La opción elegida en el menú principal y en la tienda, para volver a ella al regresar. */
+  private vuelta: Partial<Record<Pantalla, number>> = {};
+  private espera = 0;
   private plano: Plano | null = null;
   private quitar: (() => void)[] = [];
 
@@ -81,12 +88,22 @@ export class Menu implements Subsistema {
       }
     });
     this.quitar.push(
-      ctx.eventos.on('menu:abrir', () => this.abrir('principal')),
-      ctx.eventos.on('tienda:abrir', () => this.abrir('tienda')),
+      ctx.eventos.on('menu:abrir', () => {
+        this.vuelta = {};
+        this.espera = ESPERA_AL_ABRIR;
+        this.abrir('principal');
+      }),
+      ctx.eventos.on('tienda:abrir', () => {
+        this.vuelta = {};
+        this.espera = ESPERA_AL_ABRIR;
+        this.abrir('tienda');
+      }),
     );
   }
 
   private abrir(p: Pantalla): void {
+    // Al salir del principal o de la tienda hacia otra pantalla, se recuerda dónde estaba el cursor.
+    if ((this.pantalla === 'principal' || this.pantalla === 'tienda') && p !== this.pantalla) this.vuelta[this.pantalla] = this.eleccion;
     this.pantalla = p;
     this.raiz.hidden = p === 'cerrado';
     this.lienzo.hidden = p !== 'mapa';
@@ -118,7 +135,16 @@ export class Menu implements Subsistema {
             },
           },
           { texto: 'Probar sonidos', detalle: 'Escucha cada efecto para valorarlo', activa: true, elegir: () => this.abrir('sonidos') },
+          { texto: 'Nueva partida', detalle: 'Borra esta y empieza desde la portada', activa: true, elegir: () => this.abrir('nueva') },
           { texto: 'Volver al juego', activa: true, elegir: () => this.cerrar() },
+        ];
+        break;
+      case 'nueva':
+        this.titulo.textContent = '¿Empezar una partida nueva?';
+        this.nota.textContent = 'Se borra la partida de este navegador. Si quieres guardarla, expórtala antes.';
+        this.opciones = [
+          { texto: 'No, seguir con esta', activa: true, elegir: () => this.abrir('principal') },
+          { texto: 'Sí, borrarla y empezar otra', activa: true, elegir: () => this.partida.borrarPartida() },
         ];
         break;
       case 'equipo':
@@ -173,24 +199,40 @@ export class Menu implements Subsistema {
       case 'tienda': {
         const dinero = this.partida.dinero;
         this.titulo.textContent = `Tienda · ${dinero} de dinero`;
-        if (!this.nota.textContent) this.nota.textContent = 'Elige qué comprar. Esc: salir.';
-        this.opciones = Object.values(DATOS.objetos)
-          .filter((o) => o.precio !== undefined)
-          .map((o) => ({
-            texto: `${o.nombre} · ${o.precio}`,
-            detalle: `${o.descripcion} Tienes ${this.partida.mochila[o.id] ?? 0}.`,
-            activa: dinero >= o.precio!,
-            elegir: () => {
-              this.partida.dinero -= o.precio!;
-              this.partida.mochila[o.id] = (this.partida.mochila[o.id] ?? 0) + 1;
-              this.ctx.eventos.emit('sonido:tocar', { nombre: 'comprar' });
-              const eleccion = this.eleccion;
-              this.abrir('tienda');
-              this.nota.textContent = `Compras ${o.nombre}. ¡Gracias!`;
-              this.eleccion = this.opciones[eleccion]?.activa ? eleccion : this.eleccion;
-              this.pintar();
-            },
-          }));
+        this.nota.textContent = 'Elige qué comprar. Esc: salir.';
+        this.opciones = [
+          ...Object.values(DATOS.objetos)
+            .filter((o) => o.precio !== undefined)
+            .map((o) => ({
+              texto: `${o.nombre} · ${o.precio}`,
+              detalle: `${o.descripcion} Tienes ${this.partida.mochila[o.id] ?? 0}.`,
+              activa: dinero >= o.precio!,
+              elegir: () => {
+                this.objeto = o.id;
+                this.abrir('compra');
+              },
+            })),
+          { texto: 'Salir', activa: true, elegir: () => this.cerrar() },
+        ];
+        break;
+      }
+      case 'compra': {
+        const o = DATOS.objetos[this.objeto!];
+        const precio = o.precio!;
+        const comprar = (n: number) => () => {
+          this.partida.dinero -= precio * n;
+          this.partida.mochila[o.id] = (this.partida.mochila[o.id] ?? 0) + n;
+          this.ctx.eventos.emit('sonido:tocar', { nombre: 'comprar' });
+          this.abrir('tienda');
+          this.nota.textContent = `Compras ${n === 1 ? o.nombre : `${n} × ${o.nombre}`}. ¡Gracias!`;
+        };
+        this.titulo.textContent = `Comprar ${o.nombre}`;
+        this.opciones = [
+          { texto: `×1 · ${precio}`, activa: this.partida.dinero >= precio, elegir: comprar(1) },
+          { texto: `×5 · ${precio * 5}`, activa: this.partida.dinero >= precio * 5, elegir: comprar(5) },
+          { texto: 'Nada, gracias', activa: true, elegir: () => this.abrir('tienda') },
+        ];
+        this.nota.textContent = `Tienes ${this.partida.dinero} de dinero. Esc: volver a la tienda.`;
         break;
       }
       case 'sonidos':
@@ -226,7 +268,10 @@ export class Menu implements Subsistema {
         this.area.focus();
         break;
     }
-    this.eleccion = Math.max(0, this.opciones.findIndex((o) => o.activa));
+    // Se vuelve a la opción de antes (al regresar al principal o a la tienda), si se puede elegir;
+    // si no, a la primera que se pueda.
+    const antes = this.vuelta[p];
+    this.eleccion = antes !== undefined && this.opciones[antes]?.activa ? antes : Math.max(0, this.opciones.findIndex((o) => o.activa));
     this.pintar();
   }
 
@@ -291,9 +336,13 @@ export class Menu implements Subsistema {
   pasoFijo(): void {
     // En exportar e importar manda el cuadro del código, que tiene el foco.
     if (this.pantalla === 'cerrado' || this.pantalla === 'importar' || this.pantalla === 'exportar') return;
-    const confirmar = this.entrada.consumir('confirmar');
+    let confirmar = this.entrada.consumir('confirmar');
     const cancelar = this.entrada.consumir('cancelar');
     const dir = this.entrada.pulsacion();
+    if (this.espera > 0) {
+      this.espera--;
+      confirmar = false;
+    }
     if (dir === 'n' || dir === 's') {
       const n = this.eleccion + (dir === 's' ? 1 : -1);
       if (n >= 0 && n < this.opciones.length && n !== this.eleccion) {
@@ -306,6 +355,7 @@ export class Menu implements Subsistema {
       this.ctx.eventos.emit('sonido:tocar', { nombre: 'atras' });
       if (this.pantalla === 'principal' || this.pantalla === 'tienda') this.cerrar();
       else if (this.pantalla === 'objetivo') this.abrir('mochila');
+      else if (this.pantalla === 'compra') this.abrir('tienda');
       else this.abrir('principal');
       return;
     }

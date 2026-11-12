@@ -14,6 +14,9 @@ import type { Partida } from '../partida/partida';
 
 type Paso = 'portada' | 'persona' | 'nombre' | 'fin';
 
+/** Lo que el final no hace caso a las teclas: 1,5 s a 60 pasos por segundo. */
+const BLOQUEO_FIN = 90;
+
 export class Inicio implements Subsistema {
   static readonly id = 'inicio';
   static readonly deps: readonly string[] = ['entrada', 'partida'];
@@ -27,6 +30,8 @@ export class Inicio implements Subsistema {
   private cartas: HTMLElement[] = [];
   private campo!: HTMLInputElement;
   private pista!: HTMLElement;
+  /** Pasos fijos en que el final no hace caso a las teclas, para que no se salte sin leerlo. */
+  private bloqueo = 0;
 
   init(ctx: Ctx): void {
     this.ctx = ctx;
@@ -84,7 +89,13 @@ export class Inicio implements Subsistema {
       nombre: 'Escribe tu nombre y pulsa Enter. Esc: volver',
       fin: 'Enter: seguir explorando Lanzarote',
     }[p];
-    if (p === 'fin') this.pintarFin();
+    if (p === 'fin') {
+      this.pintarFin();
+      // 1,5 s sin hacer caso: quien venía pulsando E para pasar el diálogo no se lo salta. La
+      // pista sale cuando ya se puede seguir.
+      this.bloqueo = BLOQUEO_FIN;
+      this.pista.textContent = '';
+    }
     if (p === 'persona') this.pintar();
     if (p === 'nombre') {
       this.campo.value = JUGABLES[this.eleccion][1].jugable!.nombre;
@@ -124,6 +135,10 @@ export class Inicio implements Subsistema {
     const cancelar = this.entrada.consumir('cancelar');
     const dir = this.entrada.pulsacion();
     if (this.paso === 'fin') {
+      if (this.bloqueo > 0) {
+        if (--this.bloqueo === 0) this.pista.textContent = 'Enter: seguir explorando Lanzarote';
+        return;
+      }
       if (confirmar) {
         this.ctx.eventos.emit('sonido:tocar', { nombre: 'confirmar' });
         this.ir('portada');

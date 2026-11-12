@@ -37,6 +37,7 @@ agentes. El patrón viene de *Claude of Duty* (Matt Shumer, MIT).
   - `mundo/mar.ts`: qué hay en el mar (plan puro) y su espuma, en una sola malla;
   - `core/encuentros.ts`: el sorteo de criaturas salvajes por zona (tablas en
     `data/encuentros-isla1.ts`). «partida» lo usa al pisar hierba y avisa con `encuentro:inicio`;
+  - `core/economia.ts`: lo que se pierde al caer derrotado (el 10 % del dinero);
   - `mundo/terreno.ts`, `cumbres`: con `silueta` en la isla, toda la tierra de su costa que no es
     de ninguna zona, con alturas suaves (bajan junto al mar y a las zonas);
   - `mapa/`: el plano en 2D de la isla, sacado de los mismos datos (`plano.ts`, puro) y dibujado
@@ -197,7 +198,9 @@ y `?semilla=n`. Mientras exista la vitrina de F04: `?vista=combate|todas|explora
 ## Guardado
 
 - **Automático** (hecho el 2026-11-12): al cambiar de zona, al cruzar una puerta, al acabar cada
-  combate y cada 5 segundos explorando. Va en `localStorage` (`six-seven-islands:partida`), con
+  combate, cada 5 segundos explorando y al cerrar u ocultar la pestaña (`pagehide` y
+  `visibilitychange`; en combate no). «Nueva partida», en el menú de pausa, lo borra y vuelve a la
+  portada. Cada partida nueva tiene su propio azar; `?semilla=N` lo fija para las pruebas. Va en `localStorage` (`six-seven-islands:partida`), con
   versión de formato (`core/guardado.ts`). Si el mapa cambia y la casilla guardada ya no se pisa,
   se vuelve a casa conservando el equipo y los avances. `?nueva` empieza sin cargar.
 - **Registro de partidas completadas:** con qué iniciales se ha terminado el juego. Va en una

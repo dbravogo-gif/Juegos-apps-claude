@@ -1,6 +1,6 @@
 // Subsistema «entrada»: el teclado, que es el único control del juego (sin ratón ni mando).
 // Flechas o WASD para andar; E, Enter o Espacio para interactuar (hablar, pasar los diálogos y
-// confirmar); Escape para volver.
+// confirmar); Escape para volver; del 1 al 9, atajo a una opción del menú de combate.
 // Un toque corto cuenta como un paso aunque se suelte antes de que el juego lo lea, y aunque
 // llegue mientras el jugador termina el paso anterior: así no se pierde ninguno.
 
@@ -37,6 +37,8 @@ export class Entrada implements Subsistema {
   /** Un toque que aún no se ha leído. */
   private toque: Direccion | null = null;
   private pendientes = new Set<Accion>();
+  /** Un número pulsado (del 1 al 9, como índice desde 0) que aún no se ha leído. */
+  private numero: number | null = null;
   private quitar: (() => void) | null = null;
 
   init(_ctx: Ctx): void {
@@ -45,6 +47,8 @@ export class Entrada implements Subsistema {
       if ((ev.target as HTMLElement | null)?.closest?.('input, textarea')) return;
       const d = DIRECCIONES[ev.code];
       const a = ACCIONES[ev.code];
+      const n = /^(?:Digit|Numpad)([1-9])$/.exec(ev.code);
+      if (n && !ev.repeat) this.numero = Number(n[1]) - 1;
       if (!d && !a) return;
       ev.preventDefault();
       if (ev.repeat) return;
@@ -94,10 +98,18 @@ export class Entrada implements Subsistema {
     return this.pendientes.delete(a);
   }
 
+  /** El número pulsado desde la última vez (0 para el 1), o null. */
+  consumirNumero(): number | null {
+    const n = this.numero;
+    this.numero = null;
+    return n;
+  }
+
   /** Olvida lo pulsado (al cambiar de modo, para que no se cuele una pulsación vieja). */
   olvidar(): void {
     this.pendientes.clear();
     this.toque = null;
+    this.numero = null;
   }
 
   dispose(): void {

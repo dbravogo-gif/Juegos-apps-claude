@@ -27,6 +27,7 @@ import { crearCriatura, nombreDe, objetoUtil } from '../../core/criatura';
 import type { Criatura } from '../../core/modelo';
 import { CALIDAD_ZONA, MEDIA_BLANCA, MEDIA_VERDE, zonaBarra } from '../../core/captura';
 import { crearRng } from '../../core/rng';
+import { perdidaPorDerrota } from '../../core/economia';
 import { vidaMaxima } from '../../core/estadisticas';
 import { MaterialDiorama } from '../../arte/material';
 import { figuraCriatura } from '../../arte/criaturas3d';
@@ -245,6 +246,9 @@ export class Combate implements Subsistema {
     this.fase = 'entrando';
     this.entrenador = entrenador;
     this.partida.empezarCombate();
+    // Que no asome el texto ni el menú del combate anterior mientras se aclara la arena.
+    this.texto.textContent = '';
+    this.menu.hidden = true;
     const rng = crearRng(`combate-${entrenador ?? 'salvaje'}-${this.ctx.tiempo.pasos}`);
     // La inicial no hace caso hasta que el anciano cuenta su historia (F25).
     const especieInicial = ESPECIE_INICIAL[this.partida.estado.inicial ?? ''];
@@ -400,10 +404,22 @@ export class Combate implements Subsistema {
     const zona = zonaBarra(this.posicionFlecha());
     this.barra.hidden = true;
     this.lanzamiento = null;
-    if (!lanzar) return this.abrirMenu('mochila');
+    if (!lanzar) {
+      // De vuelta a la mochila, con el cursor en el cubo que se iba a lanzar.
+      this.abrirMenu('mochila');
+      this.eleccion = Math.max(0, this.objetosMochila().indexOf(l.objeto));
+      return this.pintarMenu();
+    }
     const texto = { verde: '¡En el verde! Un lanzamiento perfecto.', blanca: 'En el blanco: buen lanzamiento.', gris: 'En el gris… Lanzas como puedes.' }[zona];
     this.encolar({ texto, duracion: 1, saltable: true });
     this.enviar({ tipo: 'objeto', objeto: l.objeto, calidad: CALIDAD_ZONA[zona] });
+  }
+
+  /** Los objetos que hay en la mochila, en el orden en que salen en el menú. */
+  private objetosMochila(): string[] {
+    return Object.entries(this.partida.mochila)
+      .filter(([id, n]) => n > 0 && DATOS.objetos[id])
+      .map(([id]) => id);
   }
 
   /** La criatura activa de un lado. */
@@ -616,7 +632,10 @@ export class Combate implements Subsistema {
           const premio = this.entrenador ? (ENTRENADORES_ISLA1[this.entrenador]?.premio ?? 0) : 0;
           const textos: Record<string, string> = {
             victoria: this.entrenador ? `¡Has vencido al entrenador! Te da ${premio} de dinero.` : '¡Has ganado!',
-            derrota: 'No te quedan criaturas que puedan luchar… Vuelves corriendo al refugio.',
+            derrota:
+              perdidaPorDerrota(this.partida.dinero) > 0
+                ? `No te quedan criaturas que puedan luchar… Vuelves corriendo al refugio y por el camino se te caen ${perdidaPorDerrota(this.partida.dinero)} de dinero.`
+                : 'No te quedan criaturas que puedan luchar… Vuelves corriendo al refugio.',
           };
           if (textos[ev.resultado]) this.encolar({ texto: textos[ev.resultado], duracion: 1.8, saltable: true });
           break;
@@ -637,6 +656,7 @@ export class Combate implements Subsistema {
     if (this.fase === 'fuera') return;
     const confirmar = this.entrada.consumir('confirmar');
     const cancelar = this.entrada.consumir('cancelar');
+    const numero = this.entrada.consumirNumero();
     if (this.fase === 'barra') {
       if (confirmar) this.pararBarra(true);
       else if (cancelar) this.pararBarra(false);
@@ -657,8 +677,13 @@ export class Combate implements Subsistema {
         }
         this.pintarMenu();
       }
+      // Del 1 al 9: elige esa opción directamente (1 = la primera).
+      if (numero !== null && numero < this.opciones.length) {
+        this.eleccion = numero;
+        this.pintarMenu();
+      }
       const o = this.opciones[this.eleccion];
-      if (confirmar && o?.activa) {
+      if ((confirmar || (numero !== null && numero < this.opciones.length)) && o?.activa) {
         this.ctx.eventos.emit('sonido:tocar', { nombre: 'confirmar' });
         o.elegir();
       } else if (cancelar && this.menuActual !== 'raiz' && this.menuActual !== 'forzado') {
@@ -735,17 +760,16 @@ export class Combate implements Subsistema {
       case 'mochila': {
         texto = '¿Qué usas? (Esc: volver)';
         const activo = e.lados[0].activos[0];
-        this.opciones = Object.entries(this.partida.mochila)
-          .filter(([id, n]) => n > 0 && DATOS.objetos[id])
-          .map(([id, n]) => {
-            const o = DATOS.objetos[id];
-            const captura = o.tipo === 'captura';
-            return {
-              html: boton(`${o.nombre} ×${n}`, o.descripcion),
-              activa: captura ? e.salvaje : objetoUtil(c, id, DATOS),
-              elegir: () => (captura ? this.abrirBarra(id) : this.enviar({ tipo: 'objeto', objeto: id, objetivo: activo })),
-            };
-          });
+        this.opciones = this.objetosMochila().map((id) => {
+          const n = this.partida.mochila[id];
+          const o = DATOS.objetos[id];
+          const captura = o.tipo === 'captura';
+          return {
+            html: boton(`${o.nombre} ×${n}`, o.descripcion),
+            activa: captura ? e.salvaje : objetoUtil(c, id, DATOS),
+            elegir: () => (captura ? this.abrirBarra(id) : this.enviar({ tipo: 'objeto', objeto: id, objetivo: activo })),
+          };
+        });
         if (!this.opciones.length) texto = 'La mochila está vacía. (Esc: volver)';
         break;
       }

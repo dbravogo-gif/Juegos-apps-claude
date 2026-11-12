@@ -3,10 +3,11 @@
 // Modos: explorar la isla y sus interiores, leer un diálogo, el fundido al cruzar una puerta y el
 // combate (lo lleva «combate»). Aquí viven también el equipo y la mochila: al pisar terreno de
 // encuentros se sortea si sale una criatura, y las enfermeras y la madre curan al equipo.
-// Guardado automático (F10) en localStorage: al cambiar de zona, al acabar cada combate y cada 5
-// segundos explorando; al abrir el juego se sigue donde se dejó.
+// Guardado automático (F10) en localStorage: al cambiar de zona, al acabar cada combate, cada 5
+// segundos explorando y al cerrar u ocultar la pestaña; al abrir el juego se sigue donde se dejó.
 //
-// Parámetros de prueba: ?abrir=todo abre todos los pasos cerrados; ?nueva empieza sin cargar.
+// Parámetros de prueba: ?abrir=todo abre todos los pasos cerrados; ?nueva empieza sin cargar;
+// ?semilla=N fija el azar de una partida nueva (sin ella, cada partida nueva es distinta).
 
 import { avanzar, crearExploracion, cumplir, entrar, interactuar, salir, type EstadoExplorar, type EventoExplorar } from '../../core/explorar';
 import { abrirDialogo, elegirDialogo, lineaActual, pasoDialogo, pulsar, type Dialogo, type Efecto, type EstadoDialogo, type Tecla } from '../../core/guion';
@@ -19,6 +20,8 @@ import { ISLA_1, PUERTAS_ISLA1 } from '../../data/isla1';
 import { NOMBRE_OBJETO, OBJETIVOS } from '../../data/textos-isla1';
 import { crearCriatura, curarDelTodo } from '../../core/criatura';
 import { sortearEncuentro } from '../../core/encuentros';
+import { perdidaPorDerrota } from '../../core/economia';
+import { crearRng } from '../../core/rng';
 import { VERSION_GUARDADO, deserializar, serializar, type Guardado } from '../../core/guardado';
 import type { Criatura } from '../../core/modelo';
 import { DATOS_COMBATE_PRUEBA as DATOS, ESPECIE_INICIAL, MOCHILA_INICIAL } from '../../data/combate-prueba';
@@ -62,6 +65,8 @@ export interface EstadoParcial {
   vida?: number;
   /** Solo para pruebas: el dinero. */
   dinero?: number;
+  /** Solo para pruebas: los entrenadores vencidos. */
+  vencidos?: string[];
   /** Zona de la isla o id de un interior. */
   zona?: string;
   x?: number;
@@ -94,6 +99,10 @@ export class Partida implements Subsistema {
   /** Un entrenador acaba de ver al jugador: cuando pase la exclamación, habla. */
   private alerta: { zona: string; personaje: string; pasos: number } | null = null;
   private pasosSinGuardar = 0;
+  /** Esc pulsado mientras se anda (o con una flecha apretada): el menú se abre al acabar el paso. */
+  private menuPendiente = false;
+  /** La partida se ha borrado para empezar otra: ya no se guarda nada (ni al cerrar la pestaña). */
+  private borrada = false;
   /** El diálogo abierto, si lo hay. */
   dialogo: EstadoDialogo | null = null;
   /** Negro del fundido al cruzar una puerta, de 0 a 1 (lo dibuja la interfaz). */
@@ -105,6 +114,7 @@ export class Partida implements Subsistema {
   private cruce: { paso: number; destino: string | null } | null = null;
   private hablando = '';
   private espera = 0;
+  private quitar: (() => void) | null = null;
 
   init(ctx: Ctx): void {
     this.ctx = ctx;
@@ -133,6 +143,20 @@ export class Partida implements Subsistema {
     const cargada = !new URLSearchParams(location.search).has('nueva') && this.cargar();
     if (!cargada) this.modo = 'titulo';
     void navigator.storage?.persist?.().catch(() => undefined);
+    // Al cerrar u ocultar la pestaña se guarda, para no perder los últimos pasos. En combate no:
+    // el combate no se guarda a medias y vale lo guardado al empezarlo.
+    const alSalir = () => {
+      if (this.modo !== 'combate') this.guardar();
+    };
+    const alOcultar = () => {
+      if (document.visibilityState === 'hidden') alSalir();
+    };
+    window.addEventListener('pagehide', alSalir);
+    document.addEventListener('visibilitychange', alOcultar);
+    this.quitar = () => {
+      window.removeEventListener('pagehide', alSalir);
+      document.removeEventListener('visibilitychange', alOcultar);
+    };
   }
 
   /** El estado que se guarda: posición, equipo, mochila, refugio, vencidos y generador. */
@@ -161,16 +185,20 @@ export class Partida implements Subsistema {
 
   /** Desde la portada: el nombre y la persona elegidos, y a jugar. */
   empezarPartida(nombre: string, persona: string): void {
+    // Cada partida nueva con su propio azar (encuentros, valores de las criaturas), salvo con
+    // ?semilla, que la deja fija para las pruebas.
+    if (!new URLSearchParams(location.search).has('semilla')) this.ctx.rng.s = crearRng(`partida-${Date.now()}-${performance.now()}`).s;
     this.nombre = nombre.trim().slice(0, 16) || 'Dani';
     this.persona = persona in PERSONAS ? persona : PERSONA_JUGADOR;
     this.modo = 'explorar';
     this.entrada.olvidar();
     this.ctx.eventos.emit('jugador:elegido', { nombre: this.nombre, persona: this.persona });
+    this.ctx.eventos.emit('zona:entrar', { zonaId: this.estado.zona });
     this.guardar();
   }
 
   guardar(): void {
-    if (this.modo === 'titulo') return;
+    if (this.modo === 'titulo' || this.borrada) return;
     this.pasosSinGuardar = 0;
     try {
       localStorage.setItem(CLAVE_GUARDADO, serializar(this.guardado()));
@@ -178,6 +206,18 @@ export class Partida implements Subsistema {
     } catch {
       // Sin almacenamiento (ventana privada, cuota llena): se sigue jugando sin guardar.
     }
+  }
+
+  /** Borra la partida guardada y vuelve a la portada (desde el menú, con confirmación). */
+  borrarPartida(): void {
+    this.borrada = true;
+    try {
+      localStorage.removeItem(CLAVE_GUARDADO);
+    } catch {
+      // Sin almacenamiento no había nada guardado.
+    }
+    // Se recarga sin parámetros de prueba: la portada sale porque ya no hay partida guardada.
+    location.replace(location.pathname);
   }
 
   /** Carga la partida guardada, si la hay. Dice si ha cargado algo. */
@@ -233,6 +273,7 @@ export class Partida implements Subsistema {
   }
 
   pasoFijo(): void {
+    if (this.modo !== 'explorar') this.menuPendiente = false;
     // En combate manda el subsistema «combate»; en el menú, «menu», y en la portada y el final, «inicio».
     if (this.modo === 'combate' || this.modo === 'menu' || this.modo === 'titulo' || this.modo === 'fin') return;
     if (this.modo === 'fundido') return this.pasoFundido();
@@ -250,18 +291,21 @@ export class Partida implements Subsistema {
       this.alerta = null;
       return this.atender({ tipo: 'hablar', zona: a.zona, personaje: a.personaje });
     }
-    const antes = this.estado.paso;
-    const parado = this.estado.paso === 0;
-    const eventos = avanzar(this.activo(), this.estado, this.entrada.direccion(parado));
-    // Interactuar mientras se anda espera a que termine el paso, en vez de perderse.
-    if (this.estado.paso === 0 && this.entrada.consumir('confirmar')) eventos.push(...interactuar(this.activo(), this.estado));
-    // Esc, parado: el menú de pausa.
-    if (this.entrada.consumir('cancelar') && this.estado.paso === 0 && !eventos.length) {
+    // Esc: el menú de pausa. Si se está andando, se abre al acabar el paso, antes del siguiente
+    // (aunque se mantenga una flecha apretada); así no se pierde la pulsación.
+    if (this.entrada.consumir('cancelar')) this.menuPendiente = true;
+    if (this.menuPendiente && this.estado.paso === 0) {
+      this.menuPendiente = false;
       this.modo = 'menu';
       this.entrada.olvidar();
       this.ctx.eventos.emit('menu:abrir', {});
       return;
     }
+    const antes = this.estado.paso;
+    const parado = this.estado.paso === 0;
+    const eventos = avanzar(this.activo(), this.estado, this.entrada.direccion(parado));
+    // Interactuar mientras se anda espera a que termine el paso, en vez de perderse.
+    if (this.estado.paso === 0 && this.entrada.consumir('confirmar')) eventos.push(...interactuar(this.activo(), this.estado));
     for (const ev of eventos) {
       this.atender(ev);
       if (this.modo !== 'explorar') break;
@@ -447,8 +491,9 @@ export class Partida implements Subsistema {
     this.equipo = this.equipo.map((c) => curarDelTodo(c, DATOS));
   }
 
-  /** Tras perder un combate (en negro): el equipo, curado, y el jugador, en el último refugio. */
+  /** Tras perder un combate (en negro): se cae el 10 % del dinero, y el equipo, curado, y el jugador, al último refugio. */
   volverAlRefugio(): void {
+    this.dinero -= perdidaPorDerrota(this.dinero);
     this.curarEquipo();
     this.poner({ zona: this.ultimoRefugio });
   }
@@ -463,6 +508,7 @@ export class Partida implements Subsistema {
     }
     if (p.vida !== undefined) for (const c of this.equipo) c.vida = Math.min(c.vida, p.vida);
     if (p.dinero !== undefined) this.dinero = p.dinero;
+    if (p.vencidos !== undefined) this.vencidos = [...p.vencidos];
     if (p.zona === undefined) return;
     this.modo = 'explorar';
     this.dialogo = null;
@@ -523,5 +569,7 @@ export class Partida implements Subsistema {
     };
   }
 
-  dispose(): void {}
+  dispose(): void {
+    this.quitar?.();
+  }
 }

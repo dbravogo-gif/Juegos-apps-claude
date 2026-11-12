@@ -100,11 +100,14 @@ export class Interfaz implements Subsistema {
     const objetivo = this.partida.objetivo();
     const texto = objetivo ? `Objetivo: ${objetivo}` : '';
     if (this.objetivo.textContent !== texto) this.objetivo.textContent = texto;
-    const combate = this.partida.modo === 'combate';
-    this.objetivo.hidden = !objetivo || combate;
+    // En combate, en la portada y en el final no se ve nada de la exploración.
+    const modo = this.partida.modo;
+    const oculta = modo === 'combate' || modo === 'titulo' || modo === 'fin';
+    this.objetivo.hidden = !objetivo || oculta;
     this.pintarDialogo();
-    this.ayuda.hidden = this.partida.dialogo !== null || combate;
-    if (combate) this.cartel.classList.remove('visible');
+    // La ayuda de las teclas de explorar, tampoco en el menú ni en la tienda (tienen la suya).
+    this.ayuda.hidden = this.partida.dialogo !== null || oculta || modo === 'menu';
+    if (oculta) this.cartel.classList.remove('visible');
   }
 
   private pintarDialogo(): void {

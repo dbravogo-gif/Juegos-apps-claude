@@ -69,6 +69,11 @@ propuesta de Claude y qué frena mientras siga abierto.
   en cuanto llega su GLB con foto: se añade en `arte/personas.ts` con `jugable`.
 - **Evolución** (F20): el núcleo ya evoluciona, pero faltan las segundas formas y sus niveles
   (del autor). Con los niveles de la isla 1 (hasta el 12), nadie evolucionaría todavía.
+- **Del probador (2026-11-12), sin arreglar:**
+  - Los modelos de las salvajes se repiten (relleno con el de la inicial de su tipo): se va con
+    las criaturas del autor.
+  - «Probar sonidos» está en el menú de todos: se quita cuando el autor valore los efectos.
+  - La compañera encima del jugador tras un salto de sitio: no se ha podido reproducir.
 - **Llamadas de dibujo** (2026-11-11): unas 210 mirando a Famara, frente a las 160 del reparto.
   - Lo que más gasta son los personajes de KayKit: cada uno son 5 o 6 mallas, más su sombra.
     Los de Meshy son una sola malla, así que al cambiarlos baja solo.

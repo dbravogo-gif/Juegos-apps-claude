@@ -318,6 +318,12 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
 - 2026-11-12 · **Inicial rebelde** (F25): hasta hablar con el anciano, no hace caso el 45 % de
   sus turnos; la mitad de esas veces usa otro movimiento y la otra mitad se distrae. Lo decide
   el generador del combate.
+- 2026-11-12 · **Arreglos tras el probador:** la tienda pide confirmar cada compra (×1 o ×5) y no
+  hace caso a E durante 0,4 s al abrirse; perder ya cuesta el 10 % del dinero; atajos del 1 al 9
+  en los menús del combate; el final no se salta en 1,5 s; Esc andando abre el menú al acabar el
+  paso; los entrenadores vencidos ya no enseñan su visión; «Nueva partida» en el menú, con
+  confirmación; cada partida nueva con su propio azar; en El Golfo, la criatura de Planta sale
+  1 de cada 10 veces y a nivel 3 (con la inicial de Agua era muy difícil empezar).
 - 2026-11-12 · **Tienda** (F17) en La Geria: al hablar con el tendero. Poción a 300 y cubo blanco
   a 200; el dinero solo sale de los entrenadores (de 100 a 600), así que al principio alcanza
   para poco, como pidió el autor.
