@@ -17,6 +17,8 @@ export interface Efecto {
   condicion?: Condicion;
   /** El tipo de la inicial que se elige. */
   inicial?: string;
+  /** Acaba la versión (zarpar hacia la isla siguiente): sale la pantalla del final. */
+  fin?: boolean;
 }
 
 export interface Dialogo {

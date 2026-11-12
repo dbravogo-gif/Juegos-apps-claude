@@ -1,15 +1,18 @@
 // Subsistema «inicio»: la portada de una partida nueva (autor, 2026-11-12). Se elige la persona
 // (cada amigo tiene la suya, hecha con Meshy) y se escribe el nombre. Se enseña mientras «partida»
-// está en modo «titulo»: con una partida guardada no sale, porque se sigue donde se dejó.
+// está en modo «titulo»: con una partida guardada no sale, porque se sigue donde se dejó. También
+// la pantalla del final de la isla 1 (F23), en modo «fin», con el gancho hacia la isla 2.
 // Teclado: flechas para elegir, E, Enter o Espacio para seguir y Esc para volver.
 
 import { JUGABLES } from '../../arte/personas';
+import { nombreDe } from '../../core/criatura';
+import { DATOS_COMBATE_PRUEBA as DATOS } from '../../data/combate-prueba';
 import { rutaModelo } from '../../arte/modelos';
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Entrada } from '../entrada/entrada';
 import type { Partida } from '../partida/partida';
 
-type Paso = 'portada' | 'persona' | 'nombre';
+type Paso = 'portada' | 'persona' | 'nombre' | 'fin';
 
 export class Inicio implements Subsistema {
   static readonly id = 'inicio';
@@ -36,6 +39,7 @@ export class Inicio implements Subsistema {
       <div class="inicio-panel">
         <h1 class="inicio-titulo">Six-seven islands</h1>
         <div class="inicio-portada"><p>Un archipiélago de criaturas por descubrir.</p></div>
+        <div class="inicio-fin" hidden><h2>¡Isla 1 completada!</h2><p class="inicio-fin-texto"></p><ul class="inicio-fin-equipo"></ul><p class="inicio-fin-gancho"></p></div>
         <div class="inicio-personas" hidden></div>
         <label class="inicio-nombre" hidden>¿Cómo te llamas?<input maxlength="16" spellcheck="false" autocomplete="off" /></label>
         <p class="inicio-pista"></p>
@@ -69,6 +73,8 @@ export class Inicio implements Subsistema {
 
   private ir(p: Paso): void {
     this.paso = p;
+    this.raiz.querySelector<HTMLElement>('.inicio-fin')!.hidden = p !== 'fin';
+    this.raiz.querySelector<HTMLElement>('.inicio-titulo')!.hidden = p === 'fin';
     this.raiz.querySelector<HTMLElement>('.inicio-portada')!.hidden = p !== 'portada';
     this.raiz.querySelector<HTMLElement>('.inicio-personas')!.hidden = p !== 'persona';
     this.raiz.querySelector<HTMLElement>('.inicio-nombre')!.hidden = p !== 'nombre';
@@ -76,7 +82,9 @@ export class Inicio implements Subsistema {
       portada: 'Pulsa Enter para empezar',
       persona: '¿Quién eres? Flechas para elegir, Enter para seguir',
       nombre: 'Escribe tu nombre y pulsa Enter. Esc: volver',
+      fin: 'Enter: seguir explorando Lanzarote',
     }[p];
+    if (p === 'fin') this.pintarFin();
     if (p === 'persona') this.pintar();
     if (p === 'nombre') {
       this.campo.value = JUGABLES[this.eleccion][1].jugable!.nombre;
@@ -85,17 +93,44 @@ export class Inicio implements Subsistema {
     } else this.campo.blur();
   }
 
+  /** El final: quién eres, tu equipo y lo que viene. */
+  private pintarFin(): void {
+    const pa = this.partida;
+    const raiz = this.raiz;
+    raiz.querySelector('.inicio-fin-texto')!.textContent = `${pa.nombre}, has vencido a la líder de Roca y zarpas rumbo a Fuerteventura con tu equipo:`;
+    raiz.querySelector('.inicio-fin-equipo')!.replaceChildren(
+      ...pa.equipo.map((c) => {
+        const li = document.createElement('li');
+        li.textContent = `${nombreDe(c, DATOS)} · Nv. ${c.nivel}`;
+        return li;
+      }),
+    );
+    raiz.querySelector('.inicio-fin-gancho')!.textContent =
+      'Desde la cubierta, a lo lejos, se ve una isla que no sale en ningún mapa… Continuará en la isla 2. Gracias por jugar esta primera versión.';
+  }
+
   private pintar(): void {
     this.cartas.forEach((c, i) => c.classList.toggle('elegida', i === this.eleccion));
   }
 
   pasoFijo(): void {
-    const visible = this.partida.modo === 'titulo';
+    const modo = this.partida.modo;
+    const visible = modo === 'titulo' || modo === 'fin';
     if (this.raiz.hidden === visible) this.raiz.hidden = !visible;
-    if (!visible || this.paso === 'nombre') return;
+    if (!visible) return;
+    if (modo === 'fin' && this.paso !== 'fin') this.ir('fin');
+    if (this.paso === 'nombre') return;
     const confirmar = this.entrada.consumir('confirmar');
     const cancelar = this.entrada.consumir('cancelar');
     const dir = this.entrada.pulsacion();
+    if (this.paso === 'fin') {
+      if (confirmar) {
+        this.ctx.eventos.emit('sonido:tocar', { nombre: 'confirmar' });
+        this.ir('portada');
+        this.partida.seguirTrasFin();
+      }
+      return;
+    }
     const sonar = (nombre: string) => this.ctx.eventos.emit('sonido:tocar', { nombre });
     if (this.paso === 'portada') {
       if (confirmar) {

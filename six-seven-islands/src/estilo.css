@@ -382,6 +382,28 @@ body {
   color: var(--texto);
 }
 
+.inicio-fin {
+  max-width: 560px;
+}
+
+.inicio-fin h2 {
+  margin: 0 0 10px;
+  font: 900 40px/1.1 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color: var(--coral);
+}
+
+.inicio-fin p {
+  margin: 0;
+  font: 500 18px/1.45 system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+.inicio-fin-equipo {
+  margin: 12px 0;
+  padding: 0;
+  list-style: none;
+  font: 700 18px/1.6 system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
 .inicio-pista {
   margin: 0;
   font: 600 15px/1.4 system-ui, -apple-system, 'Segoe UI', sans-serif;
