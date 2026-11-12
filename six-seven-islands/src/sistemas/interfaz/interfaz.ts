@@ -47,7 +47,7 @@ export class Interfaz implements Subsistema {
         <span class="dialogo-seguir" aria-hidden="true">▼</span>
       </div>
       <div class="fundido"></div>
-      <p class="ayuda">Flechas o WASD: andar · E, Enter o Espacio: hablar y seguir · Esc: saltar</p>`;
+      <p class="ayuda">Flechas o WASD: andar · E, Enter o Espacio: hablar y seguir · Esc: menú</p>`;
     document.body.append(raiz);
     this.raiz = raiz;
     this.cartel = raiz.querySelector('.zona-cartel')!;

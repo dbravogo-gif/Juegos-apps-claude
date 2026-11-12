@@ -22,6 +22,8 @@ export interface MapaEventos {
   'inicial:elegida': { tipo: string };
   /** Un entrenador ha visto al jugador: sale la exclamación y luego habla (F16). */
   'entrenador:visto': { id: string };
+  /** Se abre el menú de pausa (Esc mientras se explora). */
+  'menu:abrir': Record<string, never>;
 }
 
 export type NombreEvento = keyof MapaEventos;

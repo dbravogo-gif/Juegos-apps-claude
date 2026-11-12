@@ -25,7 +25,7 @@ import { ENCUENTROS_ISLA1 } from '../../data/encuentros-isla1';
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Entrada } from '../entrada/entrada';
 
-export type Modo = 'explorar' | 'dialogo' | 'fundido' | 'combate';
+export type Modo = 'explorar' | 'dialogo' | 'fundido' | 'combate' | 'menu';
 
 /** Pasos fijos de cada mitad del fundido al cruzar una puerta: 0,2 s a negro y 0,2 s de vuelta. */
 export const PASOS_FUNDIDO = 12;
@@ -196,8 +196,8 @@ export class Partida implements Subsistema {
   }
 
   pasoFijo(): void {
-    // En combate manda el subsistema «combate»: aquí no se anda ni se habla.
-    if (this.modo === 'combate') return;
+    // En combate manda el subsistema «combate», y en el menú, «menu»: aquí no se anda ni se habla.
+    if (this.modo === 'combate' || this.modo === 'menu') return;
     if (this.modo === 'fundido') return this.pasoFundido();
     if (this.modo === 'dialogo') return this.pasoDialogo();
     if (this.espera > 0) {
@@ -218,7 +218,13 @@ export class Partida implements Subsistema {
     const eventos = avanzar(this.activo(), this.estado, this.entrada.direccion(parado));
     // Interactuar mientras se anda espera a que termine el paso, en vez de perderse.
     if (this.estado.paso === 0 && this.entrada.consumir('confirmar')) eventos.push(...interactuar(this.activo(), this.estado));
-    this.entrada.consumir('cancelar');
+    // Esc, parado: el menú de pausa.
+    if (this.entrada.consumir('cancelar') && this.estado.paso === 0 && !eventos.length) {
+      this.modo = 'menu';
+      this.entrada.olvidar();
+      this.ctx.eventos.emit('menu:abrir', {});
+      return;
+    }
     for (const ev of eventos) {
       this.atender(ev);
       if (this.modo !== 'explorar') break;
@@ -337,6 +343,14 @@ export class Partida implements Subsistema {
     this.modo = 'dialogo';
     this.entrada.olvidar();
     this.ctx.eventos.emit('dialogo:abrir', { guionId });
+  }
+
+  /** Lo llama «menu» al cerrarse. */
+  cerrarMenu(): void {
+    this.modo = 'explorar';
+    this.espera = ESPERA_TRAS_DIALOGO;
+    this.entrada.olvidar();
+    this.guardar();
   }
 
   /** Lo llama «combate» al empezar (ya en negro) y al terminar. */
