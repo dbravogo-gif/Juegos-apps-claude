@@ -159,6 +159,20 @@ export const GUION_ISLA1: Guion = {
       dialogo: { lineas: [{ quien: 'Líder', texto: 'Me has vencido con justicia. El barco te espera en el puerto.' }] },
     },
   ],
+  marinero: [
+    {
+      sin: 'gimnasio-vencido',
+      dialogo: { lineas: [{ quien: 'Marinero', texto: 'El barco va a la isla siguiente, pero solo con quien ha vencido al gimnasio.' }] },
+    },
+    {
+      dialogo: {
+        lineas: [{ quien: 'Marinero', texto: '¡Has vencido a la líder! El barco sale hacia Fuerteventura cuando tú digas.' }],
+        pregunta: { quien: 'Marinero', texto: '¿Subes al barco?' },
+        efecto: { fin: true },
+        tras: [{ quien: 'Marinero', texto: '¡Pues arriba! ¡Levamos anclas!' }],
+      },
+    },
+  ],
   'vecino-salida': [
     {
       sin: 'inicial-elegida',

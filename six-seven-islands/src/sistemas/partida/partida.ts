@@ -26,7 +26,7 @@ import { ENCUENTROS_ISLA1 } from '../../data/encuentros-isla1';
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Entrada } from '../entrada/entrada';
 
-export type Modo = 'titulo' | 'explorar' | 'dialogo' | 'fundido' | 'combate' | 'menu';
+export type Modo = 'titulo' | 'explorar' | 'dialogo' | 'fundido' | 'combate' | 'menu' | 'fin';
 
 /** Pasos fijos de cada mitad del fundido al cruzar una puerta: 0,2 s a negro y 0,2 s de vuelta. */
 export const PASOS_FUNDIDO = 12;
@@ -89,6 +89,8 @@ export class Partida implements Subsistema {
   /** El nombre y la persona del jugador, elegidos al empezar. */
   nombre = 'Dani';
   persona: string = PERSONA_JUGADOR;
+  /** Se ha dicho que sí al barco: al cerrar el diálogo, sale la pantalla del final. */
+  private finPendiente = false;
   /** Un entrenador acaba de ver al jugador: cuando pase la exclamación, habla. */
   private alerta: { zona: string; personaje: string; pasos: number } | null = null;
   private pasosSinGuardar = 0;
@@ -147,6 +149,14 @@ export class Partida implements Subsistema {
       nombre: this.nombre,
       persona: this.persona,
     };
+  }
+
+  /** Tras la pantalla del final: se sigue explorando Lanzarote. */
+  seguirTrasFin(): void {
+    this.modo = 'explorar';
+    this.espera = ESPERA_TRAS_DIALOGO;
+    this.entrada.olvidar();
+    this.guardar();
   }
 
   /** Desde la portada: el nombre y la persona elegidos, y a jugar. */
@@ -223,8 +233,8 @@ export class Partida implements Subsistema {
   }
 
   pasoFijo(): void {
-    // En combate manda el subsistema «combate»; en el menú, «menu», y en la portada, «inicio».
-    if (this.modo === 'combate' || this.modo === 'menu' || this.modo === 'titulo') return;
+    // En combate manda el subsistema «combate»; en el menú, «menu», y en la portada y el final, «inicio».
+    if (this.modo === 'combate' || this.modo === 'menu' || this.modo === 'titulo' || this.modo === 'fin') return;
     if (this.modo === 'fundido') return this.pasoFundido();
     if (this.modo === 'dialogo') return this.pasoDialogo();
     if (this.espera > 0) {
@@ -295,8 +305,12 @@ export class Partida implements Subsistema {
       this.espera = ESPERA_TRAS_DIALOGO;
       this.entrada.olvidar();
       this.ctx.eventos.emit('dialogo:cerrar', { guionId: this.hablando });
-      // El tendero, al acabar de hablar, abre la tienda (en el subsistema «menu»).
-      if (TENDEROS.has(this.hablando)) {
+      if (this.finPendiente) {
+        // El final de la versión (F23): lo enseña «inicio»; con Enter se sigue explorando.
+        this.finPendiente = false;
+        this.modo = 'fin';
+      } else if (TENDEROS.has(this.hablando)) {
+        // El tendero, al acabar de hablar, abre la tienda (en el subsistema «menu»).
         this.modo = 'menu';
         this.ctx.eventos.emit('tienda:abrir', {});
       }
@@ -413,6 +427,7 @@ export class Partida implements Subsistema {
 
   private aplicar(e: Efecto): void {
     if (e.condicion) cumplir(this.estado, e.condicion);
+    if (e.fin) this.finPendiente = true;
     if (e.inicial) {
       this.estado.inicial = e.inicial;
       this.formarEquipo();
