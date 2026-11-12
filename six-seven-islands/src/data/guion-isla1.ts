@@ -103,7 +103,7 @@ export const GUION_ISLA1: Guion = {
   madre: [
     {
       sin: 'inicial-elegida',
-      dialogo: { lineas: [{ quien: 'Mamá', texto: '¿Hoy es el día? ¡La doctora te espera en el museo, aquí al lado!' }] },
+      dialogo: { lineas: [{ quien: 'Mamá', texto: '¡{nombre}! ¿Hoy es el día? ¡La doctora te espera en el museo, aquí al lado!' }] },
     },
     {
       dialogo: {
