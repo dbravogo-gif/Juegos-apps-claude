@@ -42,14 +42,14 @@
       "tanda": 1,
       "descripcion": "Los pasos por la hierba alta generan encuentros por sorpresa, según la tabla de aparición de la zona y de forma determinista.",
       "como_se_comprueba": "Pruebas del núcleo: con la misma semilla y el mismo recorrido salen los mismos encuentros, y la frecuencia media queda dentro del rango fijado. En partida, el bot entra en un combate al cruzar la hierba.",
-      "hecha": false
+      "hecha": true
     },
     {
       "id": "F07-combate-jugable",
       "tanda": 1,
       "descripcion": "La escena de combate con formas simples: 4 movimientos, cambiar, objeto y huir, con botones grandes. Presenta los eventos del núcleo y da experiencia y niveles al terminar.",
       "como_se_comprueba": "Un bot gana un combate salvaje solo con la interfaz y el teclado. Capturas de cada menú en escritorio (1280 × 800). Todo se usa solo con teclado.",
-      "hecha": false
+      "hecha": true
     },
     {
       "id": "F08-captura-con-gesto",
@@ -63,7 +63,7 @@
       "tanda": 1,
       "descripcion": "Si caen todas las criaturas, el jugador vuelve al último refugio con el equipo curado y pierde parte del dinero. El refugio cura gratis.",
       "como_se_comprueba": "Un bot que no se defiende pierde y aparece en el refugio, con el equipo curado y el dinero descontado según DISENO.md. Dos bots, uno rápido y otro con 300 ms de retraso, obtienen resultados distintos.",
-      "hecha": false
+      "hecha": true
     },
     {
       "id": "F10-guardado",

@@ -1,7 +1,8 @@
-// Datos PROVISIONALES para ver el combate (autor, 2026-11-10: «solo quiero ver cómo será
-// visualmente»). Las estadísticas de las iniciales las pasará el autor y los ataques definitivos
-// llegarán con su sistema; los nombres de las criaturas y de los ataques son de relleno, propios
-// y sin copiar los de otros juegos (R8).
+// Datos PROVISIONALES del combate (2026-11-10, ampliados el 2026-11-12 para jugarlo): las 4
+// iniciales, 4 criaturas salvajes de relleno, sus ataques y los primeros objetos. Las
+// estadísticas de las iniciales las pasará el autor y las criaturas de verdad llegarán con sus
+// modelos; los nombres de las criaturas y de los ataques son de relleno, propios y sin copiar los
+// de otros juegos (R8).
 
 import type { DatosJuego, Especie, Estadisticas, Movimiento } from '../core/modelo';
 import { TEMPERAMENTOS } from './temperamentos';
@@ -34,6 +35,12 @@ const movimientos: Movimiento[] = [
 const aprende = (...ids: string[]) => ids.map((movimiento) => ({ nivel: 1, movimiento }));
 
 const especies: Especie[] = [
+  // Salvajes de relleno, fáciles de capturar. Hasta que lleguen las del autor, usan el modelo de la
+  // inicial de su tipo (MODELO_DE, abajo).
+  { id: 'cangrejo-de-charco', nombre: 'Cangrejo de charco', tipos: ['agua'], base: base(40, 45, 55, 35, 40, 45), expBase: 50, ratioCaptura: 200, aprende: aprende('topetazo', 'remojon'), descripcion: '' },
+  { id: 'lagartija-de-picon', nombre: 'Lagartija de picón', tipos: ['roca'], base: base(40, 50, 50, 30, 35, 55), expBase: 50, ratioCaptura: 200, aprende: aprende('topetazo', 'polvo-de-picon'), descripcion: '' },
+  { id: 'tabaiba-andante', nombre: 'Tabaiba andante', tipos: ['planta'], base: base(45, 40, 45, 45, 45, 35), expBase: 50, ratioCaptura: 200, aprende: aprende('topetazo', 'latigazo-de-musgo'), descripcion: '' },
+  { id: 'chispa-de-colada', nombre: 'Chispa de colada', tipos: ['infernal'], base: base(35, 40, 35, 55, 40, 60), expBase: 55, ratioCaptura: 190, aprende: aprende('mirada-fija', 'soplo-de-brasas'), descripcion: '' },
   { id: 'inicial-agua', nombre: 'Inicial de Agua', tipos: ['agua'], base: base(50, 50, 55, 55, 55, 45), expBase: 60, ratioCaptura: 45, aprende: aprende('remojon', 'ola-de-cresta', 'topetazo', 'mirada-fija'), descripcion: '' },
   { id: 'inicial-planta', nombre: 'Inicial de Planta', tipos: ['planta'], base: base(50, 50, 50, 55, 55, 50), expBase: 60, ratioCaptura: 45, aprende: aprende('latigazo-de-musgo', 'esporas-de-hoja', 'topetazo', 'mirada-fija'), descripcion: '' },
   { id: 'inicial-infernal', nombre: 'Inicial Infernal', tipos: ['infernal'], base: base(50, 55, 50, 55, 45, 55), expBase: 60, ratioCaptura: 45, aprende: aprende('soplo-de-brasas', 'orejazo-ardiente', 'topetazo', 'barrito'), descripcion: '' },
@@ -45,8 +52,27 @@ export const DATOS_COMBATE_PRUEBA: DatosJuego = {
   movimientos: Object.fromEntries(movimientos.map((m) => [m.id, m])),
   temperamentos: TEMPERAMENTOS,
   tipos: TABLA_TIPOS,
-  objetos: {},
+  // Pocos y flojos al principio (autor, 2026-11-11).
+  objetos: {
+    pocion: { id: 'pocion', nombre: 'Poción', descripcion: 'Cura 20 puntos de vida.', tipo: 'curar', cantidad: 20, precio: 300 },
+    'cubo-blanco': { id: 'cubo-blanco', nombre: 'Cubo blanco', descripcion: 'El cubo de captura más sencillo.', tipo: 'captura', bonus: 1, precio: 200 },
+  },
 };
+
+/** El modelo de cada especie. Las salvajes de relleno llevan el de la inicial de su tipo. */
+export const MODELO_DE: Readonly<Record<string, string>> = {
+  'inicial-agua': 'iniciales/inicial-agua-1.glb',
+  'inicial-planta': 'iniciales/inicial-planta-1.glb',
+  'inicial-infernal': 'iniciales/inicial-infernal-1.glb',
+  'inicial-roca': 'iniciales/inicial-roca-1.glb',
+  'cangrejo-de-charco': 'iniciales/inicial-agua-1.glb',
+  'lagartija-de-picon': 'iniciales/inicial-roca-1.glb',
+  'tabaiba-andante': 'iniciales/inicial-planta-1.glb',
+  'chispa-de-colada': 'iniciales/inicial-infernal-1.glb',
+};
+
+/** Con lo que empieza la mochila al elegir la inicial: poco (autor, 2026-11-11). */
+export const MOCHILA_INICIAL: Readonly<Record<string, number>> = { pocion: 2, 'cubo-blanco': 5 };
 
 /** La especie de combate de cada inicial, por su id. */
 export const ESPECIE_INICIAL: Readonly<Record<string, string>> = {

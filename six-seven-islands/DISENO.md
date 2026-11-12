@@ -301,6 +301,11 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
   se añade El Jable, de 24 × 22, entre el Fuego y la capital: muros que obligan a zigzaguear,
   hierba opcional, un entrenador opcional y una poción. El ensanche anterior se deshace. El autor
   juzga los tamaños al probarlo.
+- 2026-11-12 · **Combate jugable** (F06, F07 y F09): pisar hierba o malpaís saca una criatura
+  1 de cada 10 pasos, de la tabla de su zona. El menú tiene Luchar, Mochila, Equipo y Huir. Al
+  perder, se vuelve curado al último sitio donde te curaron (al principio, tu casa). Curan la
+  madre y las enfermeras. Las salvajes son de relleno, con el modelo de la inicial de su tipo,
+  hasta que lleguen las criaturas del autor.
 - 2026-11-11 · **La isla con forma de Lanzarote** (autor, opción 1 del boceto): silueta
   alrededor de las zonas, que no cambian; tierra volcánica que no se pisa y el norte libre.
   **Famara**, zona opcional: playa con bañistas (uno, un guiri quemado) y dos entrenadores que

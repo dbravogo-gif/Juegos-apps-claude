@@ -422,6 +422,19 @@ body {
   font-style: normal;
 }
 
+.combate-menu.lista {
+  grid-template-columns: 1fr;
+  gap: 5px;
+}
+
+.combate-menu.lista .combate-ataque {
+  padding: 5px 12px;
+}
+
+.combate-ataque.apagado {
+  opacity: 0.45;
+}
+
 .combate-ataque.elegido {
   border-color: var(--coral);
   box-shadow: 0 0 0 3px rgb(255 107 107 / 0.25);
