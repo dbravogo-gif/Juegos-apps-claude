@@ -302,6 +302,9 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
   se añade El Jable, de 24 × 22, entre el Fuego y la capital: muros que obligan a zigzaguear,
   hierba opcional, un entrenador opcional y una poción. El ensanche anterior se deshace. El autor
   juzga los tamaños al probarlo.
+- 2026-11-12 · **Menú de pausa** con Esc mientras se explora: Equipo (la primera es la que sale
+  a combatir), Mochila (pociones fuera de combate), Mapa (con tu posición) y Exportar e Importar
+  la partida como código (para Safari, que borra lo guardado tras 7 días).
 - 2026-11-12 · **Entrenadores** (F16): al pisar su línea de visión les sale una exclamación,
   hablan y retan; también si se les habla. Vencidos, no vuelven a retar y dan dinero (de 100 a
   600). Equipos provisionales, con niveles que suben con el recorrido (`entrenadores-isla1.ts`).

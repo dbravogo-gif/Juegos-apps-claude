@@ -41,6 +41,8 @@ export class Entrada implements Subsistema {
 
   init(_ctx: Ctx): void {
     const abajo = (ev: KeyboardEvent) => {
+      // En un cuadro de texto (importar la partida) se escribe: el juego no lee esas teclas.
+      if ((ev.target as HTMLElement | null)?.closest?.('input, textarea')) return;
       const d = DIRECCIONES[ev.code];
       const a = ACCIONES[ev.code];
       if (!d && !a) return;
