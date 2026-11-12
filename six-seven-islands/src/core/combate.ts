@@ -66,6 +66,8 @@ export interface EstadoCombate {
   capturada: Criatura | null;
   /** Lado de la última criatura debilitada: desempata si caen a la vez las últimas de los dos. */
   ultimaCaida: IdLado | null;
+  /** Uids de las criaturas que pueden desobedecer (la inicial, hasta hablar con el anciano). */
+  rebeldes: string[];
 }
 
 export type Accion =
@@ -94,6 +96,8 @@ export type Evento =
   | { tipo: 'retirada'; ref: Ref; nombre: string }
   | { tipo: 'usa'; ref: Ref; nombre: string; movimiento: string }
   | { tipo: 'noSeMueve'; ref: Ref; nombre: string; motivo: 'dormido' | 'paralizado' | 'retroceso' }
+  /** La inicial rebelde no hace caso: usa otro movimiento o se distrae y no hace nada. */
+  | { tipo: 'desobedece'; ref: Ref; nombre: string; como: 'otro' | 'distrae' }
   | { tipo: 'despierta'; ref: Ref; nombre: string }
   | { tipo: 'falla'; ref: Ref; nombre: string }
   | { tipo: 'sinObjetivo'; ref: Ref }
@@ -126,6 +130,8 @@ export interface ParametrosCombate {
   rng: EstadoRng;
   /** Si el lado 0 gana experiencia. Obligatorio: en los retos entre amigos, `false`. */
   experiencia: boolean;
+  /** Uids de las criaturas que pueden desobedecer (F25): la inicial, hasta el anciano. */
+  rebeldes?: string[];
 }
 
 /** Sin PP en ningún movimiento: golpe sin tipo y retroceso de un cuarto del daño. */
@@ -140,6 +146,8 @@ export const EMPUJON: Movimiento = {
 };
 /** Probabilidad de no moverse estando paralizado. */
 export const PROB_PARALISIS = 25;
+/** La inicial rebelde no hace caso en este tanto por ciento de sus turnos (DISENO.md). */
+export const PROB_DESOBEDIENCIA = 45;
 
 const etapasCero = (): Etapas => ({ fuerza: 0, escudo: 0, magia: 0, resMagica: 0, celeridad: 0 });
 const volatilCero = (): Volatil => ({ protegido: false, usosProteger: 0, retrocede: false, actuado: false });
@@ -225,6 +233,7 @@ export function iniciarCombate(p: ParametrosCombate, datos: DatosJuego): Resulta
     fin: null,
     capturada: null,
     ultimaCaida: null,
+    rebeldes: [...(p.rebeldes ?? [])],
   };
   const eventos: Evento[] = [];
   for (const lado of [1, 0] as IdLado[]) {
@@ -468,8 +477,21 @@ function ejecutarMovimiento(
     return;
   }
 
-  const mov = movimientoUsado(c, a.indice, datos);
-  if (mov !== EMPUJON) c.movimientos[a.indice].pp -= 1;
+  // La inicial rebelde (F25): la mitad de las veces que no obedece usa otro movimiento; la otra
+  // mitad se distrae y pierde el turno.
+  let indice = a.indice;
+  if (e.rebeldes.includes(c.uid) && probabilidad(e.rng, PROB_DESOBEDIENCIA)) {
+    const otros = c.movimientos.map((_, i) => i).filter((i) => i !== a.indice && c.movimientos[i].pp > 0);
+    if (otros.length && probabilidad(e.rng, 50)) {
+      indice = otros[entero(e.rng, 0, otros.length - 1)];
+      ev.push({ tipo: 'desobedece', ref, nombre, como: 'otro' });
+    } else {
+      ev.push({ tipo: 'desobedece', ref, nombre, como: 'distrae' });
+      return;
+    }
+  }
+  const mov = movimientoUsado(c, indice, datos);
+  if (mov !== EMPUJON) c.movimientos[indice].pp -= 1;
   ev.push({ tipo: 'usa', ref, nombre, movimiento: mov.id });
   const efectos = mov.efectos ?? [];
 

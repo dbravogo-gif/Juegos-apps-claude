@@ -243,8 +243,11 @@ export class Combate implements Subsistema {
     this.entrenador = entrenador;
     this.partida.empezarCombate();
     const rng = crearRng(`combate-${entrenador ?? 'salvaje'}-${this.ctx.tiempo.pasos}`);
+    // La inicial no hace caso hasta que el anciano cuenta su historia (F25).
+    const especieInicial = ESPECIE_INICIAL[this.partida.estado.inicial ?? ''];
+    const rebeldes = this.partida.estado.condiciones.includes('anciano') ? [] : this.partida.equipo.filter((c) => c.especie === especieInicial).map((c) => c.uid);
     const r = iniciarCombate(
-      { equipos: [structuredClone(this.partida.equipo), rival], formato: 1, salvaje: entrenador === null, control: ['jugador', 'ia'], rng, experiencia: true },
+      { equipos: [structuredClone(this.partida.equipo), rival], formato: 1, salvaje: entrenador === null, control: ['jugador', 'ia'], rng, experiencia: true, rebeldes },
       DATOS,
     );
     this.estado = r.estado;
@@ -540,6 +543,15 @@ export class Combate implements Subsistema {
               l.extra.set(0, -t * 0.5, 0);
               l.escala = 1 - t;
             },
+          });
+          break;
+        }
+        case 'desobedece': {
+          const distraida = ['se pone a mirar las nubes', 'se rasca una oreja con mucha calma', 'bosteza y se sienta un momento', 'persigue una mosca'][(this.estado?.turno ?? 0) % 4];
+          this.encolar({
+            texto: ev.como === 'otro' ? `¡${ev.nombre} no te hace caso y hace lo que le da la gana!` : `${ev.nombre} no te hace caso: ${distraida}.`,
+            duracion: 1.3,
+            saltable: true,
           });
           break;
         }
