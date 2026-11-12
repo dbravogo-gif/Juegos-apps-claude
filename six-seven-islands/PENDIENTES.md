@@ -68,6 +68,9 @@ propuesta de Claude y qué frena mientras siga abierto.
   `PROMPT-HISTORIA.md`. Lo que salga va a `HISTORIA.md` y, de ahí, al juego.
 - **El norte de Lanzarote** queda libre para más adelante (Haría, los Jameos). Para la isla 1
   basta con Famara (autor, 2026-11-11).
+- **Exportar e importar la partida como código** (F10): hecho en el núcleo
+  (`core/guardado.ts`); falta el botón, que irá en el menú de pausa. Importa en Safari, que borra
+  lo guardado tras 7 días sin entrar.
 - **Mapa dentro del juego** (2026-11-11). El dibujo ya existe (`?mapa`). Falta decidir con qué
   tecla se abre y qué enseña.
   - **Propuesta:** tecla M; las zonas sin visitar, en gris y con su nombre oculto.

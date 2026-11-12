@@ -2,20 +2,22 @@
 // (60 Hz) con la entrada del teclado; el resto solo lo lee y lo dibuja.
 // Modos: explorar la isla y sus interiores, leer un diálogo, el fundido al cruzar una puerta y el
 // combate (lo lleva «combate»). Aquí viven también el equipo y la mochila: al pisar terreno de
-// encuentros se sortea si sale una criatura, y las enfermeras y la madre curan al equipo. El
-// guardado llega en su función.
+// encuentros se sortea si sale una criatura, y las enfermeras y la madre curan al equipo.
+// Guardado automático (F10) en localStorage: al cambiar de zona, al acabar cada combate y cada 5
+// segundos explorando; al abrir el juego se sigue donde se dejó.
 //
-// Parámetros de prueba: ?abrir=todo abre todos los pasos cerrados.
+// Parámetros de prueba: ?abrir=todo abre todos los pasos cerrados; ?nueva empieza sin cargar.
 
 import { avanzar, crearExploracion, cumplir, entrar, interactuar, salir, type EstadoExplorar, type EventoExplorar } from '../../core/explorar';
 import { abrirDialogo, elegirDialogo, lineaActual, pasoDialogo, pulsar, type Dialogo, type Efecto, type EstadoDialogo, type Tecla } from '../../core/guion';
-import { TODAS_LAS_CONDICIONES, clave, construirInterior, construirMundo, deClave, enIsla, type Condicion, type Mundo } from '../../core/mundo';
+import { TODAS_LAS_CONDICIONES, clave, construirInterior, construirMundo, deClave, enIsla, transitable, type Condicion, type Mundo } from '../../core/mundo';
 import { GUION_ISLA1 } from '../../data/guion-isla1';
 import { INTERIORES_ISLA1, SALA_INICIAL } from '../../data/interiores-isla1';
 import { ISLA_1, PUERTAS_ISLA1 } from '../../data/isla1';
 import { NOMBRE_OBJETO, OBJETIVOS } from '../../data/textos-isla1';
 import { crearCriatura, curarDelTodo } from '../../core/criatura';
 import { sortearEncuentro } from '../../core/encuentros';
+import { VERSION_GUARDADO, deserializar, serializar, type Guardado } from '../../core/guardado';
 import type { Criatura } from '../../core/modelo';
 import { DATOS_COMBATE_PRUEBA as DATOS, ESPECIE_INICIAL, MOCHILA_INICIAL } from '../../data/combate-prueba';
 import { ENCUENTROS_ISLA1 } from '../../data/encuentros-isla1';
@@ -41,6 +43,10 @@ const CURANDEROS: Readonly<Record<string, string>> = {
 };
 /** Nivel de la inicial al elegirla. */
 const NIVEL_INICIAL = 5;
+/** Dónde se guarda la partida en el navegador. */
+const CLAVE_GUARDADO = 'six-seven-islands:partida';
+/** Cada cuántos pasos fijos se guarda mientras se explora: 5 segundos. */
+const PASOS_GUARDADO = 300;
 
 /** Lo que se puede cargar con poner(): para pruebas y para el guardado (F10). */
 export interface EstadoParcial {
@@ -69,6 +75,9 @@ export class Partida implements Subsistema {
   mochila: Record<string, number> = {};
   /** Al perder, se vuelve curado a esta sala: el último sitio donde curaron al equipo. */
   ultimoRefugio = SALA_INICIAL;
+  /** Entrenadores vencidos: no vuelven a retar. */
+  vencidos: string[] = [];
+  private pasosSinGuardar = 0;
   /** El diálogo abierto, si lo hay. */
   dialogo: EstadoDialogo | null = null;
   /** Negro del fundido al cruzar una puerta, de 0 a 1 (lo dibuja la interfaz). */
@@ -103,6 +112,64 @@ export class Partida implements Subsistema {
       this.estado.zona = this.mundo.casillas.get(puerta)!.zona;
       entrar(this.estado, SALA_INICIAL, this.interiores.get(SALA_INICIAL)!);
     }
+    // Se sigue donde se dejó, salvo con ?nueva. En Safari, se pide que no se borre lo guardado.
+    if (!new URLSearchParams(location.search).has('nueva')) this.cargar();
+    void navigator.storage?.persist?.().catch(() => undefined);
+  }
+
+  /** El estado que se guarda: posición, equipo, mochila, refugio, vencidos y generador. */
+  guardado(): Guardado {
+    return {
+      version: VERSION_GUARDADO,
+      explorar: structuredClone(this.estado),
+      equipo: structuredClone(this.equipo),
+      mochila: { ...this.mochila },
+      ultimoRefugio: this.ultimoRefugio,
+      vencidos: [...this.vencidos],
+      rng: structuredClone(this.ctx.rng),
+    };
+  }
+
+  guardar(): void {
+    this.pasosSinGuardar = 0;
+    try {
+      localStorage.setItem(CLAVE_GUARDADO, serializar(this.guardado()));
+      this.ctx.eventos.emit('guardado:hecho', {});
+    } catch {
+      // Sin almacenamiento (ventana privada, cuota llena): se sigue jugando sin guardar.
+    }
+  }
+
+  private cargar(): void {
+    let texto: string | null = null;
+    try {
+      texto = localStorage.getItem(CLAVE_GUARDADO);
+    } catch {
+      return;
+    }
+    const g = deserializar(texto);
+    if (g) this.aplicarGuardado(g);
+  }
+
+  /**
+   * Carga un guardado. Si el mapa ha cambiado desde entonces y su casilla ya no se pisa (o su
+   * interior ya no existe), se queda en casa, pero con su equipo, su mochila y sus avances.
+   */
+  aplicarGuardado(g: Guardado): void {
+    const e = g.explorar;
+    const mapa = e.dentro ? this.interiores.get(e.dentro) : this.mundo;
+    const valido = !!mapa && transitable(mapa, e.x, e.y, { condiciones: new Set(e.condiciones) }) && (!e.fuera || this.mundo.casillas.has(clave(e.fuera.x, e.fuera.y)));
+    if (valido) this.estado = e;
+    else {
+      this.estado.condiciones = [...e.condiciones];
+      this.estado.recogidos = [...e.recogidos];
+      this.estado.inicial = e.inicial;
+    }
+    this.equipo = g.equipo;
+    this.mochila = g.mochila;
+    this.ultimoRefugio = this.interiores.has(g.ultimoRefugio) ? g.ultimoRefugio : SALA_INICIAL;
+    this.vencidos = g.vencidos;
+    this.ctx.rng.s = [...g.rng.s] as typeof this.ctx.rng.s;
   }
 
   /** El objetivo que se enseña en pantalla, o null si no queda ninguno. */
@@ -129,6 +196,7 @@ export class Partida implements Subsistema {
       this.espera--;
       this.entrada.consumir('confirmar');
     }
+    if (++this.pasosSinGuardar >= PASOS_GUARDADO) this.guardar();
     const parado = this.estado.paso === 0;
     const eventos = avanzar(this.activo(), this.estado, this.entrada.direccion(parado));
     // Interactuar mientras se anda espera a que termine el paso, en vez de perderse.
@@ -171,6 +239,7 @@ export class Partida implements Subsistema {
       if (c.destino) entrar(this.estado, c.destino, this.interiores.get(c.destino)!);
       else salir(this.estado);
       this.ctx.eventos.emit('zona:entrar', { zonaId: this.estado.zona });
+      this.guardar();
     }
     if (c.paso >= 2 * PASOS_FUNDIDO) {
       this.cruce = null;
@@ -184,6 +253,7 @@ export class Partida implements Subsistema {
     switch (ev.tipo) {
       case 'zona':
         this.ctx.eventos.emit('zona:entrar', { zonaId: ev.zona });
+        this.guardar();
         break;
       case 'aviso':
         this.abrir({ lineas: [{ texto: ev.texto }] }, 'aviso');
@@ -243,6 +313,7 @@ export class Partida implements Subsistema {
     this.modo = 'explorar';
     this.espera = ESPERA_TRAS_DIALOGO;
     this.entrada.olvidar();
+    this.guardar();
   }
 
   /** Empieza el fundido para entrar en un interior (o salir, con null). */
@@ -313,6 +384,8 @@ export class Partida implements Subsistema {
       this.estado.zona = m.casillas.get(clave(this.estado.x, this.estado.y))?.zona ?? p.zona;
     }
     this.ctx.eventos.emit('zona:entrar', { zonaId: this.estado.zona });
+    // Un salto de sitio cuenta como cambio de zona: se guarda.
+    this.guardar();
   }
 
   /** Resumen para window.__JUEGO__.estado(). */
