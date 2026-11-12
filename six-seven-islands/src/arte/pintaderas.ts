@@ -5,7 +5,7 @@
 
 /** Colores de barro cocido; la que no se ha ganado sale en gris, como un hueco. */
 const BARRO = { fondo: '#b5532f', dibujo: '#f6dfc3', borde: '#5a2412' };
-const HUECO = { fondo: '#463e50', dibujo: '#6c6279', borde: '#2c2533' };
+const HUECO = { fondo: '#544a60', dibujo: '#857a94', borde: '#2c2533' };
 
 type Colores = typeof BARRO;
 

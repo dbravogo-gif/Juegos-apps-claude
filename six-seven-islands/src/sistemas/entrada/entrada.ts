@@ -36,6 +36,8 @@ export class Entrada implements Subsistema {
   private pulsadas: Direccion[] = [];
   /** Un toque que aún no se ha leído. */
   private toque: Direccion | null = null;
+  /** El toque viene de la repetición del teclado (tecla mantenida): se borra al soltarla. */
+  private toqueRepetido = false;
   private pendientes = new Set<Accion>();
   /** Un número pulsado (del 1 al 9, como índice desde 0) que aún no se ha leído. */
   private numero: number | null = null;
@@ -51,8 +53,17 @@ export class Entrada implements Subsistema {
       if (n && !ev.repeat) this.numero = Number(n[1]) - 1;
       if (!d && !a) return;
       ev.preventDefault();
-      if (ev.repeat) return;
+      if (ev.repeat) {
+        // Mantener una flecha repite en los menús (pulsacion); al andar no cambia nada, porque
+        // manda la tecla apretada, y al soltarla se borra para no dar un paso de más.
+        if (d) {
+          this.toque = d;
+          this.toqueRepetido = true;
+        }
+        return;
+      }
       if (d) {
+        this.toqueRepetido = false;
         this.pulsadas = this.pulsadas.filter((x) => x !== d);
         this.pulsadas.push(d);
         this.toque = d;
@@ -62,6 +73,10 @@ export class Entrada implements Subsistema {
     const arriba = (ev: KeyboardEvent) => {
       const d = DIRECCIONES[ev.code];
       if (d) this.pulsadas = this.pulsadas.filter((x) => x !== d);
+      if (d && this.toqueRepetido && this.toque === d) {
+        this.toque = null;
+        this.toqueRepetido = false;
+      }
     };
     const soltarTodo = () => {
       this.pulsadas = [];

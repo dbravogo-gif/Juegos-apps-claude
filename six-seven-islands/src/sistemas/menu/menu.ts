@@ -92,6 +92,32 @@ const NOMBRE_ESTADISTICA: Record<Estadistica, string> = {
 };
 const NOMBRE_ESTADO: Record<string, string> = { quemado: 'Quemada', dormido: 'Dormida', paralizado: 'Paralizada', envenenado: 'Envenenada', intoxicado: 'Intoxicada' };
 const NOMBRE_CATEGORIA: Record<string, string> = { fisico: 'Física', magico: 'Mágica', estado: 'Estado' };
+/** Cómo se llama cada efecto de sonido en «Probar sonidos». */
+const NOMBRE_EFECTO: Record<NombreEfecto, string> = {
+  seleccion: 'Mover el cursor',
+  confirmar: 'Aceptar',
+  atras: 'Volver',
+  hablar: 'Hablar',
+  puerta: 'Puerta',
+  hierba: 'Pisar hierba',
+  objeto: 'Encontrar un objeto',
+  encuentro: 'Sale una criatura',
+  exclamacion: 'Un entrenador te ve',
+  salida: 'Salir a combatir',
+  ataque: 'Ataque',
+  golpe: 'Golpe',
+  eficaz: 'Es eficaz',
+  pocoEficaz: 'Es poco eficaz',
+  debilitado: 'Debilitada',
+  lanzar: 'Lanzar el cubo',
+  sacudida: 'El cubo se sacude',
+  captura: 'Captura',
+  escapa: 'Se escapa',
+  nivel: 'Sube de nivel',
+  curar: 'Curar',
+  comprar: 'Comprar',
+  huir: 'Huir',
+};
 
 interface Opcion {
   texto: string;
@@ -199,7 +225,10 @@ export class Menu implements Subsistema {
     // copia (exportar) o importa, y Esc vuelve a Opciones.
     this.area.addEventListener('keydown', (ev) => {
       if (this.pantalla !== 'importar' && this.pantalla !== 'exportar') return;
-      if (ev.key === 'Enter' && !ev.shiftKey) {
+      if (ev.key === 'Tab') {
+        // Sin ratón, salir del cuadro con Tab dejaba la pantalla sin teclas (probador).
+        ev.preventDefault();
+      } else if (ev.key === 'Enter' && !ev.shiftKey) {
         ev.preventDefault();
         if (this.pantalla === 'importar') this.importar();
         else this.copiar();
@@ -211,7 +240,9 @@ export class Menu implements Subsistema {
     const abrirDesdeFuera = (p: Pantalla) => () => {
       this.vuelta = {};
       this.usarEn = null;
-      this.espera = ESPERA_AL_ABRIR;
+      // Solo la tienda, que se abre al acabar un diálogo, no hace caso a la E durante un momento;
+      // el menú se abre con Esc y responde al instante (probador, 2026-11-12).
+      this.espera = p === 'tienda' ? ESPERA_AL_ABRIR : 0;
       this.abrir(p);
     };
     this.quitar.push(ctx.eventos.on('menu:abrir', abrirDesdeFuera('principal')), ctx.eventos.on('tienda:abrir', abrirDesdeFuera('tienda')));
@@ -233,15 +264,17 @@ export class Menu implements Subsistema {
     this.lienzo.hidden = p !== 'mapa';
     this.area.hidden = p !== 'exportar' && p !== 'importar';
     this.nota.textContent = '';
-    this.pie.textContent = ESTILO_TIENDA.has(p)
-      ? ''
-      : REJILLA.has(p)
-        ? 'Flechas: elegir · Enter: aceptar · Esc: volver'
-        : p === 'mochila'
-          ? '← → bolsillo · ↑ ↓ objeto · Enter: usar · Esc: volver'
-          : p === 'datos'
-            ? '← → otra criatura · Esc: volver'
-            : '↑ ↓ elegir · Enter: aceptar · Esc: volver';
+    const pies: Partial<Record<Pantalla, string>> = {
+      tienda: '',
+      compra: '',
+      mochila: '← → bolsillo · ↑ ↓ objeto · Enter: usar · Esc: volver',
+      datos: '← → otra criatura · Esc: volver',
+      medallero: 'Flechas: ver otra isla · Esc: volver',
+      mapa: 'Esc: volver',
+      exportar: 'Enter: copiar · Esc: volver',
+      importar: 'Enter: importar · Esc: volver',
+    };
+    this.pie.textContent = pies[p] ?? (REJILLA.has(p) ? 'Flechas: elegir · Enter: aceptar · Esc: volver' : '↑ ↓ elegir · Enter: aceptar · Esc: volver');
     if (p !== 'importar') this.area.blur();
     const equipo = this.partida.equipo;
     const ganadas = medallasGanadas(this.partida.estado.condiciones).length;
@@ -311,7 +344,8 @@ export class Menu implements Subsistema {
           dato: i,
           elegir: () => {
             [equipo[this.elegida], equipo[i]] = [equipo[i], equipo[this.elegida]];
-            this.irEquipo(i, i === 0 || this.elegida === 0 ? `${nombreDe(equipo[0], DATOS)} sale ahora la primera.` : 'Cambiadas de sitio.');
+            const primera = equipo.find((x) => x.vida > 0);
+            this.irEquipo(i, primera ? `Cambiadas de sitio. ${nombreDe(primera, DATOS)} sale primera a combatir.` : 'Cambiadas de sitio.');
           },
         }));
         break;
@@ -384,9 +418,9 @@ export class Menu implements Subsistema {
         break;
       case 'sonidos':
         this.titulo.textContent = 'Probar sonidos';
-        this.nota.textContent = 'Enter: escuchar. Esc: volver. Los parámetros están en EFECTOS (sistemas/sonido).';
         this.opciones = (Object.keys(EFECTOS) as NombreEfecto[]).map((n) => ({
-          texto: n,
+          texto: NOMBRE_EFECTO[n],
+          detalle: 'Enter: escuchar.',
           activa: true,
           elegir: () => this.ctx.eventos.emit('sonido:tocar', { nombre: n }),
         }));
@@ -499,6 +533,8 @@ export class Menu implements Subsistema {
           return fila;
         }),
       );
+      // En las listas largas (probar sonidos), la elegida siempre a la vista.
+      this.lista.querySelector('.elegido')?.scrollIntoView({ block: 'nearest' });
     }
     if (!tienda) this.pintarDetalle();
   }
@@ -602,7 +638,8 @@ export class Menu implements Subsistema {
       const pie = el('div', 'menu-tarjeta-pie');
       pie.append(el('small', undefined, c.vida > 0 ? `Vida ${c.vida} / ${max}` : 'Debilitada'));
       if (c.estado) pie.append(el('i', 'menu-estado', NOMBRE_ESTADO[c.estado.tipo] ?? c.estado.tipo));
-      if (i === 0) pie.append(el('i', 'menu-primera', 'Primera'));
+      // Sale a combatir la primera que está en pie, no la primera de la lista.
+      if (i === equipo.findIndex((x) => x.vida > 0)) pie.append(el('i', 'menu-primera', 'Sale primera'));
       t.append(cabeza, barraVida(c.vida, max), pie);
       caja.append(t);
     }
@@ -704,9 +741,10 @@ export class Menu implements Subsistema {
     this.plano ??= planoIsla(this.partida.mundo);
     const p = this.plano;
     // El mapa ocupa el panel de la izquierda, sin meterse bajo la columna de opciones.
-    const ancho = Math.max(200, window.innerWidth - 340 - 48 - 120);
-    const alto = Math.max(200, window.innerHeight - 160);
-    const px = Math.max(2, Math.floor(Math.min(alto / p.alto, ancho / p.ancho)));
+    const ancho = Math.max(200, window.innerWidth - 340 - 48 - 100);
+    const alto = Math.max(200, window.innerHeight - 120);
+    // Escala en cuartos de píxel: con números enteros, a 1366×768 bajaba de 3 a 2 y salía diminuto.
+    const px = Math.max(2, Math.floor(Math.min(alto / p.alto, ancho / p.ancho) * 4) / 4);
     const dpr = Math.min(2, window.devicePixelRatio || 1);
     this.lienzo.width = p.ancho * px * dpr;
     this.lienzo.height = p.alto * px * dpr;
@@ -754,8 +792,21 @@ export class Menu implements Subsistema {
   }
 
   pasoFijo(): void {
-    // En exportar e importar manda el cuadro del código, que tiene el foco.
-    if (this.pantalla === 'cerrado' || this.pantalla === 'importar' || this.pantalla === 'exportar') return;
+    if (this.pantalla === 'cerrado') return;
+    // En exportar e importar manda el cuadro del código, que tiene el foco. Si lo perdiera, Esc y
+    // Enter siguen funcionando desde aquí, y el foco vuelve al cuadro.
+    if (this.pantalla === 'importar' || this.pantalla === 'exportar') {
+      const enter = this.entrada.consumir('confirmar');
+      const esc = this.entrada.consumir('cancelar');
+      this.entrada.pulsacion();
+      if (esc) return this.abrir('opciones');
+      if (enter) {
+        if (this.pantalla === 'importar') this.importar();
+        else this.copiar();
+      }
+      if (document.activeElement !== this.area) this.area.focus();
+      return;
+    }
     let confirmar = this.entrada.consumir('confirmar');
     const cancelar = this.entrada.consumir('cancelar');
     const dir = this.entrada.pulsacion();
@@ -772,13 +823,18 @@ export class Menu implements Subsistema {
         this.bolsillo = (this.bolsillo + lado + BOLSILLOS.length) % BOLSILLOS.length;
         this.ctx.eventos.emit('sonido:tocar', { nombre: 'seleccion' });
         this.abrir('mochila');
+      } else if (lado && this.pantalla === 'medallero') {
+        // El medallero se ve en rejilla: ← y → también pasan de isla.
+        this.mover((this.eleccion + lado + this.opciones.length) % this.opciones.length);
       } else if (lado && this.pantalla === 'datos' && this.partida.equipo.length > 1) {
         const n = this.partida.equipo.length;
         this.elegida = (this.elegida + lado + n) % n;
         this.ctx.eventos.emit('sonido:tocar', { nombre: 'seleccion' });
         this.abrir('datos');
-      } else if (!lado) {
-        this.mover(this.eleccion + (dir === 's' ? 1 : -1));
+      } else if (!lado && this.opciones.length) {
+        // Las listas dan la vuelta, como en los juegos de siempre.
+        const n = this.opciones.length;
+        this.mover((this.eleccion + (dir === 's' ? 1 : -1) + n) % n);
       }
     }
     if (cancelar) {
@@ -800,7 +856,12 @@ export class Menu implements Subsistema {
     }
     if (!confirmar) return;
     const o = this.opciones[this.eleccion];
-    if (!o?.activa) return;
+    if (!o) return;
+    if (!o.activa) {
+      // Una opción apagada responde con el sonido de «no».
+      this.ctx.eventos.emit('sonido:tocar', { nombre: 'atras' });
+      return;
+    }
     // Al probar sonidos, solo suena el elegido; en el medallero, elegir no hace nada.
     if (this.pantalla !== 'sonidos' && this.pantalla !== 'medallero') this.ctx.eventos.emit('sonido:tocar', { nombre: 'confirmar' });
     o.elegir();

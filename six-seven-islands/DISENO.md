@@ -318,6 +318,12 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
 - 2026-11-12 · **Inicial rebelde** (F25): hasta hablar con el anciano, no hace caso el 45 % de
   sus turnos; la mitad de esas veces usa otro movimiento y la otra mitad se distrae. Lo decide
   el generador del combate.
+- 2026-11-12 · **Menús revisados por el probador:** título y pie de teclas en etiquetas oscuras
+  (se leen sobre casas blancas), opciones apagadas opacas, listas que dan la vuelta y mantener
+  una flecha repite, la pausa responde al instante (la espera de 0,4 s queda solo en la tienda),
+  Tab ya no bloquea Exportar e Importar, «Probar sonidos» con nombres para el jugador y la
+  elegida siempre a la vista, mapa más grande a 1366 × 768, y «Sale primera» marca a la primera
+  criatura en pie.
 - 2026-11-12 · **Equipo y mochila como siempre** (autor): el equipo es la rejilla de seis con
   Datos, Mover y Objeto; la mochila, una pantalla con la mochila dibujada y un bolsillo por
   clase de objeto (botiquín, cubos, objetos clave y técnicas). Los objetos se usan desde la

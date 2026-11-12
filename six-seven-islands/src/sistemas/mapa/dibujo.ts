@@ -97,18 +97,30 @@ export function dibujarPlano(ctx: CanvasRenderingContext2D, p: Plano, op: Opcion
     for (const d of e.puertas) ctx.fillRect(d.x * px + px * 0.3, d.y * px - px * 0.2, px * 0.4, px * 0.35);
   }
 
-  // 4. Nombres de las zonas.
-  for (const e of p.etiquetas) etiqueta(ctx, e.texto, e.x * px, e.y * px, Math.max(10, px * 1.5));
-
-  // 5. El jugador.
-  if (op.jugador) {
-    const [X, Y] = [(op.jugador.x + MARGEN_PLANO + 0.5) * px, (op.jugador.y + MARGEN_PLANO + 0.5) * px];
+  // 4. El jugador, debajo de los nombres para no taparlos (probador, 2026-11-12)…
+  const radio = Math.max(4, px * 0.8);
+  const jugador = op.jugador ? [(op.jugador.x + MARGEN_PLANO + 0.5) * px, (op.jugador.y + MARGEN_PLANO + 0.5) * px] : null;
+  if (jugador) {
     ctx.beginPath();
-    ctx.arc(X, Y, Math.max(4, px * 0.8), 0, Math.PI * 2);
+    ctx.arc(jugador[0], jugador[1], radio, 0, Math.PI * 2);
     ctx.fillStyle = COLORES.acentoCoral;
     ctx.fill();
-    ctx.lineWidth = Math.max(2, px * 0.25);
+  }
+
+  // 5. Nombres de las zonas.
+  for (const e of p.etiquetas) etiqueta(ctx, e.texto, e.x * px, e.y * px, Math.max(11, px * 1.5));
+
+  // …y su aro encima, que se ve aunque un nombre le caiga encima.
+  if (jugador) {
+    ctx.beginPath();
+    ctx.arc(jugador[0], jugador[1], radio + Math.max(1, px * 0.15), 0, Math.PI * 2);
+    ctx.lineWidth = Math.max(2, px * 0.3);
     ctx.strokeStyle = '#FFFFFF';
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(jugador[0], jugador[1], radio + Math.max(2.5, px * 0.45), 0, Math.PI * 2);
+    ctx.lineWidth = Math.max(1.5, px * 0.2);
+    ctx.strokeStyle = COLORES.acentoCoral;
     ctx.stroke();
   }
 
