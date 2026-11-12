@@ -1,7 +1,9 @@
 // Subsistema «partida»: el estado del juego en el núcleo y sus modos. Lo avanza a paso fijo
 // (60 Hz) con la entrada del teclado; el resto solo lo lee y lo dibuja.
-// Modos: explorar la isla y sus interiores, leer un diálogo y el fundido al cruzar una puerta.
-// El combate y el guardado llegan en sus funciones.
+// Modos: explorar la isla y sus interiores, leer un diálogo, el fundido al cruzar una puerta y el
+// combate (lo lleva «combate»). Aquí viven también el equipo y la mochila: al pisar terreno de
+// encuentros se sortea si sale una criatura, y las enfermeras y la madre curan al equipo. El
+// guardado llega en su función.
 //
 // Parámetros de prueba: ?abrir=todo abre todos los pasos cerrados.
 
@@ -12,6 +14,11 @@ import { GUION_ISLA1 } from '../../data/guion-isla1';
 import { INTERIORES_ISLA1, SALA_INICIAL } from '../../data/interiores-isla1';
 import { ISLA_1, PUERTAS_ISLA1 } from '../../data/isla1';
 import { NOMBRE_OBJETO, OBJETIVOS } from '../../data/textos-isla1';
+import { crearCriatura, curarDelTodo } from '../../core/criatura';
+import { sortearEncuentro } from '../../core/encuentros';
+import type { Criatura } from '../../core/modelo';
+import { DATOS_COMBATE_PRUEBA as DATOS, ESPECIE_INICIAL, MOCHILA_INICIAL } from '../../data/combate-prueba';
+import { ENCUENTROS_ISLA1 } from '../../data/encuentros-isla1';
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Entrada } from '../entrada/entrada';
 
@@ -26,10 +33,21 @@ const ORIGEN_INTERIORES = { x: 200, y: 0 };
 /** Entre sala y sala: la más ancha (el gimnasio) mide 16 casillas. */
 const SEPARACION_INTERIORES = 24;
 
+/** Quién cura al equipo al hablarle, y el refugio al que se vuelve al perder desde entonces. */
+const CURANDEROS: Readonly<Record<string, string>> = {
+  madre: 'casa-jugador',
+  enfermera: 'refugio-geria',
+  'enfermera-capital': 'refugio-capital',
+};
+/** Nivel de la inicial al elegirla. */
+const NIVEL_INICIAL = 5;
+
 /** Lo que se puede cargar con poner(): para pruebas y para el guardado (F10). */
 export interface EstadoParcial {
   condiciones?: Condicion[];
   inicial?: string;
+  /** Solo para pruebas: deja al equipo con esta vida como mucho (para probar la derrota). */
+  vida?: number;
   /** Zona de la isla o id de un interior. */
   zona?: string;
   x?: number;
@@ -46,6 +64,11 @@ export class Partida implements Subsistema {
   readonly interiores = new Map<string, Mundo>();
   estado!: EstadoExplorar;
   modo: Modo = 'explorar';
+  /** El equipo (hasta 6) y la mochila (objeto → cuántos). Se llenan al elegir la inicial. */
+  equipo: Criatura[] = [];
+  mochila: Record<string, number> = {};
+  /** Al perder, se vuelve curado a esta sala: el último sitio donde curaron al equipo. */
+  ultimoRefugio = SALA_INICIAL;
   /** El diálogo abierto, si lo hay. */
   dialogo: EstadoDialogo | null = null;
   /** Negro del fundido al cruzar una puerta, de 0 a 1 (lo dibuja la interfaz). */
@@ -166,6 +189,7 @@ export class Partida implements Subsistema {
         this.abrir({ lineas: [{ texto: ev.texto }] }, 'aviso');
         break;
       case 'objeto':
+        this.mochila[ev.objeto] = (this.mochila[ev.objeto] ?? 0) + 1;
         this.ctx.eventos.emit('objeto:recogido', { id: ev.id, objeto: ev.objeto });
         this.abrir({ lineas: [{ texto: `Has encontrado ${NOMBRE_OBJETO[ev.objeto] ?? ev.objeto}.` }] }, 'objeto');
         break;
@@ -181,7 +205,21 @@ export class Partida implements Subsistema {
       case 'hablar': {
         const d = elegirDialogo(GUION_ISLA1, ev.personaje, this.estado.condiciones, this.estado.inicial);
         const frase = this.activo().zonas.get(ev.zona)?.personajes.find((p) => p.id === ev.personaje)?.frase;
-        this.abrir(d ?? { lineas: [{ texto: frase ?? '…' }] }, ev.personaje);
+        let dialogo: Dialogo = d ?? { lineas: [{ texto: frase ?? '…' }] };
+        const refugio = CURANDEROS[ev.personaje];
+        if (refugio && this.equipo.length) {
+          this.curarEquipo();
+          this.ultimoRefugio = refugio;
+          dialogo = { ...dialogo, lineas: [...dialogo.lineas, { texto: 'Tu equipo está como nuevo.' }] };
+        }
+        this.abrir(dialogo, ev.personaje);
+        break;
+      }
+      case 'hierba': {
+        // Sin una criatura en pie no se lucha: la hierba se cruza sin más.
+        if (!this.equipo.some((c) => c.vida > 0)) break;
+        const s = sortearEncuentro(ENCUENTROS_ISLA1, ev.zona, this.ctx.rng);
+        if (s) this.ctx.eventos.emit('encuentro:inicio', { salvajes: [crearCriatura(DATOS, s.especie, s.nivel, this.ctx.rng)], visible: false });
         break;
       }
     }
@@ -217,15 +255,38 @@ export class Partida implements Subsistema {
     if (e.condicion) cumplir(this.estado, e.condicion);
     if (e.inicial) {
       this.estado.inicial = e.inicial;
+      this.formarEquipo();
       this.ctx.eventos.emit('inicial:elegida', { tipo: e.inicial });
     }
+  }
+
+  /** Con la inicial elegida y el equipo vacío: la inicial al nivel 5 y la mochila de salida. */
+  private formarEquipo(): void {
+    const tipo = this.estado.inicial;
+    if (!tipo || this.equipo.length || !ESPECIE_INICIAL[tipo]) return;
+    this.equipo = [crearCriatura(DATOS, ESPECIE_INICIAL[tipo], NIVEL_INICIAL, this.ctx.rng)];
+    this.mochila = { ...MOCHILA_INICIAL };
+  }
+
+  curarEquipo(): void {
+    this.equipo = this.equipo.map((c) => curarDelTodo(c, DATOS));
+  }
+
+  /** Tras perder un combate (en negro): el equipo, curado, y el jugador, en el último refugio. */
+  volverAlRefugio(): void {
+    this.curarEquipo();
+    this.poner({ zona: this.ultimoRefugio });
   }
 
   /** Carga un estado parcial: condiciones, inicial y posición (en coordenadas de la zona o de la sala). */
   poner(e: unknown): void {
     const p = e as EstadoParcial;
     for (const c of p.condiciones ?? []) cumplir(this.estado, c);
-    if (p.inicial !== undefined) this.estado.inicial = p.inicial;
+    if (p.inicial !== undefined) {
+      this.estado.inicial = p.inicial;
+      this.formarEquipo();
+    }
+    if (p.vida !== undefined) for (const c of this.equipo) c.vida = Math.min(c.vida, p.vida);
     if (p.zona === undefined) return;
     this.modo = 'explorar';
     this.dialogo = null;
@@ -263,6 +324,8 @@ export class Partida implements Subsistema {
     condiciones: Condicion[];
     inicial: string | null;
     dialogo: string | null;
+    equipo: { especie: string; nivel: number; vida: number; exp: number }[];
+    mochila: Record<string, number>;
   } {
     const z = this.activo().zonas.get(this.estado.zona)!;
     return {
@@ -273,6 +336,8 @@ export class Partida implements Subsistema {
       condiciones: [...this.estado.condiciones],
       inicial: this.estado.inicial,
       dialogo: this.dialogo ? lineaActual(this.dialogo).texto : null,
+      equipo: this.equipo.map((c) => ({ especie: c.especie, nivel: c.nivel, vida: c.vida, exp: c.exp })),
+      mochila: { ...this.mochila },
     };
   }
 

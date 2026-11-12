@@ -35,6 +35,8 @@ agentes. El patrón viene de *Claude of Duty* (Matt Shumer, MIT).
   - `mundo/canario.ts`: casas y faro;
   - `mundo/kit.ts`: plantas, rocas, muro, volcanes, nubes, boya y barca;
   - `mundo/mar.ts`: qué hay en el mar (plan puro) y su espuma, en una sola malla;
+  - `core/encuentros.ts`: el sorteo de criaturas salvajes por zona (tablas en
+    `data/encuentros-isla1.ts`). «partida» lo usa al pisar hierba y avisa con `encuentro:inicio`;
   - `mundo/terreno.ts`, `cumbres`: con `silueta` en la isla, toda la tierra de su costa que no es
     de ninguna zona, con alturas suaves (bajan junto al mar y a las zonas);
   - `mapa/`: el plano en 2D de la isla, sacado de los mismos datos (`plano.ts`, puro) y dibujado

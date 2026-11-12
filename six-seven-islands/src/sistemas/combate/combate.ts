@@ -2,8 +2,9 @@
 // tu criatura delante a la izquierda, de espaldas, y la rival al fondo a la derecha, mirándote
 // (autor, 2026-11-10). Es una arena aparte, lejos de la isla, con un fondo pintado detrás, dos
 // plataformas y las criaturas de Meshy. Las reglas son las del núcleo (src/core/combate.ts); los
-// datos son provisionales (src/data/combate-prueba.ts) y por ahora solo lo lanza el primer
-// entrenador. Con teclado: flechas para elegir y E, Enter o Espacio para confirmar.
+// datos son provisionales (src/data/combate-prueba.ts). Lo lanzan los encuentros en la hierba y el
+// primer entrenador. Lucha el equipo de «partida», y al acabar se le devuelve con su vida y su
+// experiencia. Con teclado: flechas para elegir, E, Enter o Espacio para confirmar y Esc para volver.
 
 import {
   AdditiveBlending,
@@ -21,15 +22,16 @@ import {
   type Material,
   type Texture,
 } from 'three/webgpu';
-import { iniciarCombate, resolverTurno, type EstadoCombate, type Evento } from '../../core/combate';
-import { crearCriatura } from '../../core/criatura';
+import { iniciarCombate, reemplazar, resolverTurno, type Accion, type EstadoCombate, type Evento, type Resultado } from '../../core/combate';
+import { crearCriatura, nombreDe, objetoUtil } from '../../core/criatura';
+import type { Criatura } from '../../core/modelo';
 import { crearRng } from '../../core/rng';
 import { vidaMaxima } from '../../core/estadisticas';
 import { MaterialDiorama } from '../../arte/material';
-import { MODELO_INICIAL, figuraCriatura } from '../../arte/criaturas3d';
+import { figuraCriatura } from '../../arte/criaturas3d';
 import { RADIO_CUBO, figuraCubo, girarCubo } from '../../arte/cubos';
 import { attribute } from 'three/tsl';
-import { DATOS_COMBATE_PRUEBA, ENTRENADOR_PRUEBA, ESPECIE_INICIAL, RIVAL_DE } from '../../data/combate-prueba';
+import { DATOS_COMBATE_PRUEBA, ENTRENADOR_PRUEBA, ESPECIE_INICIAL, MODELO_DE, RIVAL_DE } from '../../data/combate-prueba';
 import { TIPOS } from '../../data/tipos';
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Entrada } from '../entrada/entrada';
@@ -57,12 +59,24 @@ const CAIDA = 2.6;
 const REBOTE = 0.5;
 /** Segundos de cada fundido, al entrar y al salir. */
 const FUNDIDO = 0.55;
+/** Calidad del lanzamiento del cubo hasta que llegue la barra de captura (F08): normal. */
+const CALIDAD_PROVISIONAL = 0.5;
+/** Cuántas criaturas caben en el equipo. */
+const MAX_EQUIPO = 6;
 
 const NOMBRE_TIPO = new Map<string, string>(TIPOS.map((t) => [t.id, t.nombre]));
 const COLOR_TIPO = new Map<string, number>(TIPOS.map((t) => [t.id, t.color]));
 const ESTADISTICA: Record<string, string> = { fuerza: 'la fuerza', escudo: 'el escudo', magia: 'la magia', resMagica: 'la resistencia mágica', celeridad: 'la celeridad' };
 
 type Fase = 'fuera' | 'entrando' | 'mensajes' | 'menu' | 'saliendo';
+/** Qué menú está abierto: el principal, los ataques, la mochila, el equipo o el cambio obligado. */
+type Menu = 'raiz' | 'ataques' | 'mochila' | 'equipo' | 'forzado';
+
+interface Opcion {
+  html: string;
+  activa: boolean;
+  elegir: () => void;
+}
 
 /** Un paso de la función: un mensaje, una animación o las dos cosas a la vez. */
 interface Paso {
@@ -110,6 +124,12 @@ export class Combate implements Subsistema {
   private paso: Paso | null = null;
   private tPaso = 0;
   private eleccion = 0;
+  private menuActual: Menu = 'raiz';
+  private opciones: Opcion[] = [];
+  /** La figura de cada criatura del combate, por su uid: se cargan todas al empezar. */
+  private figuras = new Map<string, Group>();
+  /** Contra quién se lucha: el id del entrenador, o null si es salvaje. */
+  private entrenador: string | null = null;
   private particulas: { malla: Mesh; vel: Vector3; vida: number }[] = [];
   private vidaVista: [number, number] = [0, 0];
 
@@ -140,10 +160,14 @@ export class Combate implements Subsistema {
       () => undefined,
     );
     ctx.eventos.on('dialogo:cerrar', ({ guionId }) => {
-      if (guionId === ENTRENADOR_PRUEBA && this.partida.estado.inicial && !this.vencidos.has(guionId) && this.fase === 'fuera') {
-        void this.empezar(guionId);
+      const inicial = this.partida.estado.inicial;
+      if (guionId === ENTRENADOR_PRUEBA && inicial && !this.vencidos.has(guionId)) {
+        // Provisional: el primer entrenador saca la inicial que pierde contra la tuya.
+        const rng = crearRng(`rival-${guionId}`);
+        void this.empezar([crearCriatura(DATOS, ESPECIE_INICIAL[RIVAL_DE[inicial] ?? 'roca'], 5, rng)], guionId);
       }
     });
+    ctx.eventos.on('encuentro:inicio', ({ salvajes }) => void this.empezar(salvajes as Criatura[], null));
   }
 
   /** La arena: dos plataformas de jable con su canto, una para cada criatura. */
@@ -195,22 +219,24 @@ export class Combate implements Subsistema {
 
   // ——— Entrar y salir ———
 
-  private async empezar(entrenador: string): Promise<void> {
-    const inicial = this.partida.estado.inicial!;
-    const rival = RIVAL_DE[inicial] ?? 'roca';
+  /** Empieza un combate contra un entrenador (`entrenador`, su id) o una criatura salvaje (null). */
+  private async empezar(rival: Criatura[], entrenador: string | null): Promise<void> {
+    if (this.fase !== 'fuera' || !this.partida.equipo.some((c) => c.vida > 0)) return;
     this.fase = 'entrando';
+    this.entrenador = entrenador;
     this.partida.empezarCombate();
-    const rng = crearRng(`combate-${entrenador}-${this.ctx.tiempo.pasos}`);
-    const propia = crearCriatura(DATOS, ESPECIE_INICIAL[inicial], 5, rng);
-    const contraria = crearCriatura(DATOS, ESPECIE_INICIAL[rival], 5, rng);
-    const r = iniciarCombate({ equipos: [[propia], [contraria]], formato: 1, salvaje: false, control: ['jugador', 'ia'], rng, experiencia: false }, DATOS);
+    const rng = crearRng(`combate-${entrenador ?? 'salvaje'}-${this.ctx.tiempo.pasos}`);
+    const r = iniciarCombate(
+      { equipos: [structuredClone(this.partida.equipo), rival], formato: 1, salvaje: entrenador === null, control: ['jugador', 'ia'], rng, experiencia: true },
+      DATOS,
+    );
     this.estado = r.estado;
-    const figuras = await Promise.all([figuraCriatura(MODELO_INICIAL[inicial], 'color', TAMANO[0]), figuraCriatura(MODELO_INICIAL[rival], 'color', TAMANO[1])]);
-    figuras.forEach((f, lado) => {
-      this.luchadores[lado]?.raiz.removeFromParent();
-      this.luchadores[lado] = { raiz: f, giro: GIRO[lado], extra: new Vector3(), escala: 0, visible: false };
-      this.arena.add(f);
-    });
+    // Todas las figuras, antes del fundido: un cambio de criatura no espera a cargar nada.
+    this.figuras.clear();
+    const todas = r.estado.lados.flatMap((l, lado) => l.equipo.map((c) => [lado, c] as const));
+    await Promise.all(todas.map(async ([lado, c]) => this.figuras.set(c.uid, await figuraCriatura(MODELO_DE[c.especie] ?? MODELO_DE['inicial-roca'], 'color', TAMANO[lado]))));
+    for (const l of this.luchadores) l?.raiz.removeFromParent();
+    this.luchadores = [null, null];
     // Destello y fundido a negro; en negro, se cambia a la arena.
     this.encolar({ duracion: 0.45, saltable: false, animar: (t) => (this.velo.style.cssText = `opacity:${Math.sin(t * Math.PI * 3) ** 2 * 0.85};background:#fff`) });
     this.encolar({ duracion: FUNDIDO, saltable: false, animar: (t) => (this.velo.style.cssText = `opacity:${t};background:#1d1720`) });
@@ -218,6 +244,15 @@ export class Combate implements Subsistema {
     this.encolar({ duracion: FUNDIDO, saltable: false, animar: (t) => (this.velo.style.cssText = `opacity:${1 - t};background:#1d1720`) });
     this.mostrarEventos(r.eventos);
     this.fase = 'mensajes';
+  }
+
+  /** Pone en su plataforma la figura de una criatura, en lugar de la que hubiera. */
+  private ponerLuchador(lado: number, uid: string): void {
+    const f = this.figuras.get(uid);
+    if (!f) return;
+    this.luchadores[lado]?.raiz.removeFromParent();
+    this.luchadores[lado] = { raiz: f, giro: GIRO[lado], extra: new Vector3(), escala: 0, visible: false };
+    this.arena.add(f);
   }
 
   private mostrarArena(si: boolean): void {
@@ -275,8 +310,14 @@ export class Combate implements Subsistema {
         for (const p of paneles) p.style.visibility = 'hidden';
         for (const l of this.luchadores) l?.raiz.removeFromParent();
         this.luchadores = [null, null];
+        const e = this.estado!;
+        // El equipo vuelve a «partida» como ha quedado: vida, PP, estados y experiencia.
+        this.partida.equipo = e.lados[0].equipo;
+        if (e.capturada && this.partida.equipo.length < MAX_EQUIPO) this.partida.equipo.push(e.capturada);
+        if (e.fin === 'victoria' && this.entrenador) this.vencidos.add(this.entrenador);
         this.partida.terminarCombate();
-        this.ctx.eventos.emit('combate:fin', { resultado: this.estado?.fin ?? 'victoria' });
+        if (e.fin === 'derrota') this.partida.volverAlRefugio();
+        this.ctx.eventos.emit('combate:fin', { resultado: e.fin ?? 'victoria' });
       },
     });
     this.encolar({ duracion: FUNDIDO, saltable: false, animar: (t) => (this.velo.style.cssText = `opacity:${1 - t};background:#1d1720`) });
@@ -295,13 +336,31 @@ export class Combate implements Subsistema {
 
   // ——— Turnos ———
 
-  private elegir(indice: number): void {
-    const e = this.estado!;
-    const r = resolverTurno(e, { 0: [{ tipo: 'movimiento', indice, objetivo: { lado: 1, hueco: 0 } }] }, DATOS);
+  /** Manda la acción del jugador al núcleo y enseña lo que pasa en el turno. */
+  private enviar(a: Accion): void {
+    let r: Resultado;
+    try {
+      r = resolverTurno(this.estado!, { 0: [a] }, DATOS);
+    } catch {
+      this.texto.textContent = 'Eso no se puede hacer ahora.';
+      return;
+    }
+    // Los objetos se gastan de la mochila de verdad.
+    if (a.tipo === 'objeto') this.partida.mochila[a.objeto] = Math.max(0, (this.partida.mochila[a.objeto] ?? 0) - 1);
+    this.seguir(r);
+  }
+
+  private seguir(r: Resultado): void {
     this.estado = r.estado;
     this.menu.hidden = true;
     this.fase = 'mensajes';
     this.mostrarEventos(r.eventos);
+  }
+
+  /** La criatura activa de un lado. */
+  private activa(lado: 0 | 1): Criatura | undefined {
+    const l = this.estado?.lados[lado];
+    return l ? l.equipo[l.activos[0]] : undefined;
   }
 
   /** Convierte los eventos del núcleo en la función: mensajes y animaciones, en orden. */
@@ -311,9 +370,28 @@ export class Combate implements Subsistema {
     for (const ev of eventos) {
       switch (ev.tipo) {
         case 'entrada': {
+          const lado = ev.ref.lado;
+          const uid = ev.ficha.uid;
+          if (lado === 1 && this.estado?.salvaje) {
+            // La salvaje ya está ahí: aparece de un salto, sin cubo.
+            this.encolar({
+              texto: `¡Un ${ev.ficha.nombre} salvaje te sale al paso!`,
+              duracion: 1.3,
+              saltable: false,
+              empezar: () => {
+                this.ponerLuchador(lado, uid);
+                this.pintarFicha(lado, true);
+              },
+              animar: (t) => {
+                const l = this.luchadores[lado]!;
+                l.visible = true;
+                l.escala = rebote(Math.min(1, t * 1.6));
+              },
+            });
+            break;
+          }
           // El cubo de captura cae en su plataforma, rebota una vez y la criatura sale con un
           // destello de luz (autor, 2026-11-10).
-          const lado = ev.ref.lado;
           let cubo: Group | null = null;
           let destello: Mesh | null = null;
           const abierto = { chispas: false };
@@ -322,6 +400,7 @@ export class Combate implements Subsistema {
             duracion: 1.9,
             saltable: false,
             empezar: () => {
+              this.ponerLuchador(lado, uid);
               this.pintarFicha(lado, true);
               cubo = figuraCubo(CUBO[lado], this.materialCubo);
               cubo.position.copy(SITIO[lado]).setY(CAIDA);
@@ -421,16 +500,63 @@ export class Combate implements Subsistema {
           });
           break;
         }
-        case 'fin':
+        case 'retirada': {
+          const lado = ev.ref.lado;
           this.encolar({
-            texto: ev.resultado === 'victoria' ? '¡Has ganado el combate!' : 'Te has quedado sin criaturas que puedan luchar…',
-            duracion: 1.8,
-            saltable: true,
-            empezar: () => {
-              if (ev.resultado === 'victoria') this.vencidos.add(ENTRENADOR_PRUEBA);
-            },
+            texto: lado === 0 ? `¡${ev.nombre}, vuelve!` : `El entrenador retira a ${ev.nombre}.`,
+            duracion: 0.8,
+            saltable: false,
+            animar: (t) => (this.luchadores[lado]!.escala = 1 - t),
           });
           break;
+        }
+        case 'experiencia': {
+          this.encolar({ texto: `${ev.nombre} gana ${ev.cantidad} puntos de experiencia.`, duracion: 1.1, saltable: true });
+          for (const s of ev.subidas) {
+            this.encolar({ texto: `¡${ev.nombre} sube al nivel ${s.nivel}!`, duracion: 1.3, saltable: true, empezar: () => this.pintarFicha(0, true) });
+            for (const m of s.aprendidos) this.encolar({ texto: `¡${ev.nombre} aprende ${DATOS.movimientos[m]?.nombre ?? m}!`, duracion: 1.2, saltable: true });
+          }
+          break;
+        }
+        case 'curacion':
+          this.encolar({ texto: 'Recupera vida.', duracion: 0.9, saltable: true, empezar: () => this.pintarVida(ev.ref.lado, ev.vida, ev.vidaMax) });
+          break;
+        case 'objetoUsado': {
+          const o = DATOS.objetos[ev.objeto];
+          const nombre = o?.nombre ?? ev.objeto;
+          if (o?.tipo === 'captura') {
+            // El cubo vuela hasta la salvaje, que desaparece dentro.
+            this.encolar({ texto: `¡Lanzas un ${nombre}!`, duracion: 0.9, saltable: false, animar: (t) => (this.luchadores[1]!.escala = 1 - t) });
+          } else {
+            this.encolar({ texto: ev.lado === 0 ? `Usas ${nombre}.` : `El entrenador usa ${nombre}.`, duracion: 1, saltable: true });
+          }
+          break;
+        }
+        case 'captura': {
+          for (let i = 0; i < ev.sacudidas; i++) {
+            this.encolar({ texto: '…', duracion: 0.55, saltable: false, animar: (t) => this.luchadores[1]!.extra.set(Math.sin(t * Math.PI * 2) * 0.12, 0, 0) });
+          }
+          const nombre = this.activa(1) ? nombreDe(this.activa(1)!, DATOS) : 'la criatura';
+          if (ev.exito) {
+            const cabe = this.partida.equipo.length < MAX_EQUIPO;
+            this.encolar({ texto: `¡Has capturado a ${nombre}!`, duracion: 1.6, saltable: true });
+            if (!cabe) this.encolar({ texto: 'Pero tu equipo está lleno: se queda en libertad.', duracion: 1.6, saltable: true });
+          } else {
+            this.encolar({ texto: '¡Oh, no! Se ha escapado.', duracion: 1.1, saltable: true, animar: (t) => (this.luchadores[1]!.escala = rebote(t)) });
+          }
+          break;
+        }
+        case 'huida':
+          this.encolar({ texto: ev.exito ? '¡Escapas sin problemas!' : '¡No has podido escapar!', duracion: 1.1, saltable: true });
+          break;
+        case 'fin': {
+          const textos: Record<string, string> = {
+            victoria: this.entrenador ? '¡Has vencido al entrenador!' : '¡Has ganado!',
+            derrota: 'No te quedan criaturas que puedan luchar… Vuelves corriendo al refugio.',
+          };
+          if (textos[ev.resultado]) this.encolar({ texto: textos[ev.resultado], duracion: 1.8, saltable: true });
+          break;
+        }
         default:
           break;
       }
@@ -446,19 +572,27 @@ export class Combate implements Subsistema {
   pasoFijo(): void {
     if (this.fase === 'fuera') return;
     const confirmar = this.entrada.consumir('confirmar');
-    this.entrada.consumir('cancelar');
+    const cancelar = this.entrada.consumir('cancelar');
     if (this.fase === 'menu') {
       const dir = this.entrada.pulsacion();
       if (dir) {
-        const fila = this.eleccion >> 1;
-        const col = this.eleccion & 1;
-        if (dir === 'e' || dir === 'o') this.eleccion = fila * 2 + (1 - col);
-        else this.eleccion = (1 - fila) * 2 + col;
+        // En rejilla de dos columnas (menú y ataques) o en lista (mochila y equipo).
+        const columnas = this.menu.classList.contains('lista') ? 1 : 2;
+        const paso = dir === 'e' ? 1 : dir === 'o' ? -1 : dir === 's' ? columnas : -columnas;
+        if (columnas === 2 || dir === 'n' || dir === 's') {
+          const n = this.eleccion + paso;
+          if (n >= 0 && n < this.opciones.length) this.eleccion = n;
+        }
         this.pintarMenu();
       }
-      if (confirmar) this.elegir(this.eleccion);
+      const o = this.opciones[this.eleccion];
+      if (confirmar && o?.activa) o.elegir();
+      else if (cancelar && this.menuActual !== 'raiz' && this.menuActual !== 'forzado') this.abrirMenu('raiz');
       return;
     }
+    // Una flecha pulsada mientras salen los mensajes no debe mover el menú al abrirse (se elegía
+    // otra opción sin querer).
+    this.entrada.pulsacion();
     if (confirmar && this.paso?.saltable && this.tPaso > 0.25) this.tPaso = this.paso.duracion;
   }
 
@@ -482,29 +616,84 @@ export class Combate implements Subsistema {
       }
     } else if (this.fase === 'mensajes') {
       if (this.estado?.fin) this.terminar();
-      else this.abrirMenu();
+      else this.abrirMenu(this.estado?.pendientes.length ? 'forzado' : 'raiz');
     }
     this.animarLuchadores();
     this.animarParticulas(dt);
     if (this.arena.visible) this.colocarCamara();
   }
 
-  private abrirMenu(): void {
+  private abrirMenu(cual: Menu): void {
     this.fase = 'menu';
-    const c = this.estado!.lados[0].equipo[0];
-    this.texto.textContent = `¿Qué hará ${DATOS.especies[c.especie].nombre}?`;
+    this.menuActual = cual;
+    const e = this.estado!;
+    const c = this.activa(0)!;
+    const nombre = nombreDe(c, DATOS);
+    const boton = (titulo: string, detalle = '') => `<b>${titulo}</b>${detalle ? `<small>${detalle}</small>` : ''}`;
+    let texto = `¿Qué hará ${nombre}?`;
+    switch (cual) {
+      case 'raiz':
+        this.opciones = [
+          { html: boton('Luchar'), activa: true, elegir: () => this.abrirMenu('ataques') },
+          { html: boton('Mochila'), activa: true, elegir: () => this.abrirMenu('mochila') },
+          { html: boton('Equipo'), activa: e.lados[0].equipo.length > 1, elegir: () => this.abrirMenu('equipo') },
+          { html: boton('Huir'), activa: e.salvaje, elegir: () => this.enviar({ tipo: 'huir' }) },
+        ];
+        break;
+      case 'ataques':
+        this.opciones = c.movimientos.map((m, indice) => {
+          const mov = DATOS.movimientos[m.id];
+          const color = `#${(COLOR_TIPO.get(mov.tipo) ?? 0xa8a29e).toString(16).padStart(6, '0')}`;
+          return {
+            html: boton(mov.nombre, `<i style="background:${color}">${NOMBRE_TIPO.get(mov.tipo) ?? 'Común'}</i> PP ${m.pp}/${mov.pp}`),
+            activa: m.pp > 0,
+            elegir: () => this.enviar({ tipo: 'movimiento', indice, objetivo: { lado: 1, hueco: 0 } }),
+          };
+        });
+        break;
+      case 'mochila': {
+        texto = '¿Qué usas? (Esc: volver)';
+        const activo = e.lados[0].activos[0];
+        this.opciones = Object.entries(this.partida.mochila)
+          .filter(([id, n]) => n > 0 && DATOS.objetos[id])
+          .map(([id, n]) => {
+            const o = DATOS.objetos[id];
+            const captura = o.tipo === 'captura';
+            return {
+              html: boton(`${o.nombre} ×${n}`, o.descripcion),
+              activa: captura ? e.salvaje : objetoUtil(c, id, DATOS),
+              elegir: () => this.enviar(captura ? { tipo: 'objeto', objeto: id, calidad: CALIDAD_PROVISIONAL } : { tipo: 'objeto', objeto: id, objetivo: activo }),
+            };
+          });
+        if (!this.opciones.length) texto = 'La mochila está vacía. (Esc: volver)';
+        break;
+      }
+      case 'equipo':
+      case 'forzado': {
+        texto = cual === 'forzado' ? '¿A quién sacas?' : '¿A quién sacas? (Esc: volver)';
+        const l = e.lados[0];
+        this.opciones = l.equipo.map((x, indice) => ({
+          html: boton(`${nombreDe(x, DATOS)} · Nv. ${x.nivel}`, `Vida ${x.vida}/${vidaMaxima(x, DATOS)}${l.activos.includes(indice) ? ' · en combate' : ''}`),
+          activa: x.vida > 0 && !l.activos.includes(indice),
+          elegir: () => (cual === 'forzado' ? this.seguir(reemplazar(this.estado!, { lado: 0, hueco: 0 }, indice, DATOS)) : this.enviar({ tipo: 'cambio', indice })),
+        }));
+        break;
+      }
+    }
+    this.texto.textContent = texto;
     this.menu.hidden = false;
+    this.menu.classList.toggle('lista', cual === 'mochila' || cual === 'equipo' || cual === 'forzado');
     this.menu.replaceChildren();
-    this.botones = c.movimientos.map((m) => {
-      const mov = DATOS.movimientos[m.id];
+    this.botones = this.opciones.map((o) => {
       const b = document.createElement('span');
       b.className = 'combate-ataque';
-      const color = `#${(COLOR_TIPO.get(mov.tipo) ?? 0xa8a29e).toString(16).padStart(6, '0')}`;
-      b.innerHTML = `<b>${mov.nombre}</b><small><i style="background:${color}">${NOMBRE_TIPO.get(mov.tipo) ?? 'Común'}</i> PP ${m.pp}/${mov.pp}</small>`;
+      b.classList.toggle('apagado', !o.activa);
+      b.innerHTML = o.html;
       this.menu.append(b);
       return b;
     });
-    this.eleccion = Math.min(this.eleccion, this.botones.length - 1);
+    // Se empieza en la primera opción que se puede elegir.
+    this.eleccion = Math.max(0, this.opciones.findIndex((o) => o.activa));
     this.pintarMenu();
   }
 
@@ -513,10 +702,10 @@ export class Combate implements Subsistema {
   }
 
   private pintarFicha(lado: 0 | 1, deGolpe = false): void {
-    const c = this.estado?.lados[lado].equipo[0];
+    const c = this.activa(lado);
     if (!c) return;
     const f = this.fichas[lado];
-    f.nombre.textContent = DATOS.especies[c.especie].nombre;
+    f.nombre.textContent = nombreDe(c, DATOS);
     f.nivel.textContent = `Nv. ${c.nivel}`;
     if (deGolpe) this.pintarVida(lado, c.vida, vidaMaxima(c, DATOS), true);
   }
