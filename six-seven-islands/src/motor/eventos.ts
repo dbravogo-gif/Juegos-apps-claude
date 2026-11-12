@@ -20,6 +20,8 @@ export interface MapaEventos {
   'objeto:recogido': { id: string; objeto: string };
   /** Se acaba de elegir la inicial en el museo. */
   'inicial:elegida': { tipo: string };
+  /** Un entrenador ha visto al jugador: sale la exclamación y luego habla (F16). */
+  'entrenador:visto': { id: string };
 }
 
 export type NombreEvento = keyof MapaEventos;

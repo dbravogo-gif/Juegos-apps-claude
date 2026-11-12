@@ -321,6 +321,18 @@ export function vision(m: Mundo, zona: string, p: Personaje): number[] {
   return vistas;
 }
 
+/** El primer entrenador no vencido de la zona que ve la casilla x, y, o null (F16). */
+export function entrenadorQueVe(m: Mundo, x: number, y: number, vencidos: readonly string[]): { zona: string; personaje: string } | null {
+  const k = clave(x, y);
+  const zona = m.casillas.get(k)?.zona;
+  const z = zona ? m.zonas.get(zona) : undefined;
+  if (!z || !zona) return null;
+  for (const p of z.personajes) {
+    if (p.entrenador && !vencidos.includes(p.id) && vision(m, zona, p).includes(k)) return { zona, personaje: p.id };
+  }
+  return null;
+}
+
 /** Casillas pisables de la zona `a` que tocan una casilla pisable de la zona `b`. */
 export function conexiones(m: Mundo, a: string, b: string): number[] {
   const res: number[] = [];

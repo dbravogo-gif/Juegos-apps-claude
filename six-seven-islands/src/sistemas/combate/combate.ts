@@ -33,6 +33,7 @@ import { figuraCriatura } from '../../arte/criaturas3d';
 import { RADIO_CUBO, figuraCubo, girarCubo } from '../../arte/cubos';
 import { attribute } from 'three/tsl';
 import { DATOS_COMBATE_PRUEBA, ENTRENADOR_PRUEBA, ESPECIE_INICIAL, MODELO_DE, RIVAL_DE } from '../../data/combate-prueba';
+import { ENTRENADORES_ISLA1 } from '../../data/entrenadores-isla1';
 import { TIPOS } from '../../data/tipos';
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Entrada } from '../entrada/entrada';
@@ -163,13 +164,18 @@ export class Combate implements Subsistema {
       undefined,
       () => undefined,
     );
+    // Hablar con un entrenador no vencido (o que te vea) acaba en combate (F16).
     ctx.eventos.on('dialogo:cerrar', ({ guionId }) => {
       const inicial = this.partida.estado.inicial;
-      if (guionId === ENTRENADOR_PRUEBA && inicial && !this.partida.vencidos.includes(guionId)) {
-        // Provisional: el primer entrenador saca la inicial que pierde contra la tuya.
-        const rng = crearRng(`rival-${guionId}`);
-        void this.empezar([crearCriatura(DATOS, ESPECIE_INICIAL[RIVAL_DE[inicial] ?? 'roca'], 5, rng)], guionId);
-      }
+      const def = ENTRENADORES_ISLA1[guionId];
+      if (!def || !inicial || this.partida.vencidos.includes(guionId)) return;
+      const rng = crearRng(`rival-${guionId}`);
+      // El primer entrenador saca la inicial que pierde contra la tuya.
+      const equipo =
+        guionId === ENTRENADOR_PRUEBA
+          ? [crearCriatura(DATOS, ESPECIE_INICIAL[RIVAL_DE[inicial] ?? 'roca'], 5, rng)]
+          : def.equipo.map((e) => crearCriatura(DATOS, e.especie, e.nivel, rng));
+      void this.empezar(equipo, guionId);
     });
     ctx.eventos.on('encuentro:inicio', ({ salvajes }) => void this.empezar(salvajes as Criatura[], null));
   }
@@ -325,7 +331,7 @@ export class Combate implements Subsistema {
         // El equipo vuelve a «partida» como ha quedado: vida, PP, estados y experiencia.
         this.partida.equipo = e.lados[0].equipo;
         if (e.capturada && this.partida.equipo.length < MAX_EQUIPO) this.partida.equipo.push(e.capturada);
-        if (e.fin === 'victoria' && this.entrenador && !this.partida.vencidos.includes(this.entrenador)) this.partida.vencidos.push(this.entrenador);
+        if (e.fin === 'victoria' && this.entrenador) this.partida.vencerA(this.entrenador);
         this.partida.terminarCombate();
         if (e.fin === 'derrota') this.partida.volverAlRefugio();
         this.ctx.eventos.emit('combate:fin', { resultado: e.fin ?? 'victoria' });
@@ -587,8 +593,9 @@ export class Combate implements Subsistema {
           this.encolar({ texto: ev.exito ? '¡Escapas sin problemas!' : '¡No has podido escapar!', duracion: 1.1, saltable: true });
           break;
         case 'fin': {
+          const premio = this.entrenador ? (ENTRENADORES_ISLA1[this.entrenador]?.premio ?? 0) : 0;
           const textos: Record<string, string> = {
-            victoria: this.entrenador ? '¡Has vencido al entrenador!' : '¡Has ganado!',
+            victoria: this.entrenador ? `¡Has vencido al entrenador! Te da ${premio} de dinero.` : '¡Has ganado!',
             derrota: 'No te quedan criaturas que puedan luchar… Vuelves corriendo al refugio.',
           };
           if (textos[ev.resultado]) this.encolar({ texto: textos[ev.resultado], duracion: 1.8, saltable: true });
