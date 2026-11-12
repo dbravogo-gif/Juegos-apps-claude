@@ -45,6 +45,7 @@ Del autor, 2026-11-10. Es la «lista de reglas» a la que nos referimos al dise�
 | Eléctrico | 11 | Ancestral | 4 |
 | Hielo | 8 | Bicho | 16 |
 | Infernal | 16 | Veneno | 12 |
+| Lucha | por decidir | | |
 
 Las iniciales suman aparte, por tipo principal: Agua 3, Planta 3, Infernal 3 y Roca 3
 (autor, 2026-11-10).

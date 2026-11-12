@@ -78,15 +78,17 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
   - Líneas de 2 y de 3 formas y especies sin evolución. Las ramificadas (una base que
     evoluciona de varias maneras), más adelante.
   - Las terceras formas, más fuertes, aparecen tarde.
-- **Tipos:** 16 (`src/data/tipos.ts`). Parten de los 15 de Leyendas de Iberia, obra del autor:
-  Plasma se funde en Eléctrico, entran Bicho y Veneno (2026-11-08) y Roca sustituye a Luz con la
-  tabla revisada «C» (2026-11-10).
-  - Equilibrio: nadie tiene más de 4 debilidades ni más de 4 resistencias, como mucho 3 tipos
-    llegan a 4, y todo ataque tiene quien le resista. Lo vigilan las pruebas.
+- **Tipos:** 17 (`src/data/tipos.ts`; tabla en `conceptos/tipos/tabla-tipos.png`). Parten de
+  los 15 de Leyendas de Iberia, obra del autor: Plasma se funde en Eléctrico, entran Bicho y
+  Veneno (2026-11-08), Roca sustituye a Luz (2026-11-10) y el autor rehace la tabla y añade
+  Lucha (2026-11-12).
+  - Lo que vigilan las pruebas: todo ataque tiene quien le resista, todo tipo tiene alguna
+    debilidad, las inmunidades son las de la tabla y se cumple el ciclo de las iniciales.
   - La tabla es fija: no cambia con el nivel ni con la evolución.
 - **Ancestral, tipo especial** (autor, 2026-11-10): criaturas primordiales, guardianes antiguos y
   legendarias.
-  - No es mejor que los demás: tiene 4 debilidades (Agua, Hielo, Espectral y Veneno).
+  - No es mejor que los demás: es débil ante Agua, Hielo y Veneno, y resiste Eléctrico, Infernal
+    y Ancestral (foto del autor, 2026-11-12).
   - Su fuerza viene de las estadísticas, los movimientos exclusivos, la evolución y lo difícil
     que es conseguirlas.
   - Hay pocas no legendarias, con progresión controlada: primera forma modesta, segunda con buen
@@ -302,6 +304,8 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
   se añade El Jable, de 24 × 22, entre el Fuego y la capital: muros que obligan a zigzaguear,
   hierba opcional, un entrenador opcional y una poción. El ensanche anterior se deshace. El autor
   juzga los tamaños al probarlo.
+- 2026-11-12 · **Tabla de tipos nueva, con Lucha** (17 tipos): la del autor, tal cual. Ancestral
+  defiende según su foto propia. Sustituye a la «C» y a sus límites de equilibrio.
 - 2026-11-12 · **Final de la isla 1** (F23): tras vencer a la líder, el marinero pregunta si subes
   al barco; con un sí sale la pantalla del final (tu equipo y el gancho de la isla que no sale en
   los mapas) y luego se puede seguir explorando. Falta un bot que complete la isla entera.

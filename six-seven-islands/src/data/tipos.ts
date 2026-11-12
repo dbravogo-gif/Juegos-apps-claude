@@ -1,8 +1,7 @@
-// Los 16 tipos y su tabla. Parten de los 15 de Leyendas de Iberia (decisión del autor); el
-// 2026-11-08 Plasma se fundió en Eléctrico y entraron Bicho y Veneno, y el 2026-11-10 el autor
-// eligió la tabla revisada «C»: Roca sustituye a Luz (archipiélago volcánico), con las
-// correcciones de Claude anotadas abajo para que ningún tipo acumule debilidades o
-// resistencias. Las reglas de equilibrio están en tests/nucleo.test.ts.
+// Los 17 tipos y su tabla. Parten de los 15 de Leyendas de Iberia (decisión del autor); el
+// 2026-11-08 Plasma se fundió en Eléctrico y entraron Bicho y Veneno; el 2026-11-10 Roca sustituyó
+// a Luz, y el 2026-11-12 el autor rehízo la tabla, porque estaba descompensada, y añadió Lucha. Es
+// su tabla tal cual (fotos en conceptos/tipos/). Las pruebas de tests/nucleo.test.ts la vigilan.
 import type { DefTablaTipos } from '../core/modelo';
 
 export const TIPOS = [
@@ -14,6 +13,7 @@ export const TIPOS = [
   { id: 'electrico', nombre: 'Eléctrico', color: 0xeab308 },
   { id: 'hielo', nombre: 'Hielo', color: 0x67e8f9 },
   { id: 'infernal', nombre: 'Infernal', color: 0xdc2626 },
+  { id: 'lucha', nombre: 'Lucha', color: 0x9f1239 },
   { id: 'mental', nombre: 'Mental', color: 0xec4899 },
   { id: 'oscuridad', nombre: 'Oscuridad', color: 0x57534e },
   { id: 'espectral', nombre: 'Espectral', color: 0x7c3aed },
@@ -30,36 +30,28 @@ type Relacion = { eficaz: TipoId[]; pocoEficaz: TipoId[]; sinEfecto: TipoId[] };
 
 /**
  * Tabla de eficacias: tipo del movimiento atacante contra el tipo del defensor. Lo que no aparece
- * es ×1. Con dos tipos, los multiplicadores se multiplican (×4 o ×0,25). Es la tabla «C» del
- * autor (2026-11-10). Las correcciones de Claude, anotadas, quitan contradicciones y evitan que
- * un tipo tenga 5 debilidades o 5 resistencias: como mucho 4, y en pocos tipos.
+ * es ×1. Con dos tipos, los multiplicadores se multiplican (×4 o ×0,25). Es la tabla del autor del
+ * 2026-11-12. Ancestral, al defender, sigue la foto de sus interacciones especiales (lo pidió el
+ * autor): Agua, Hielo y Veneno le hacen ×2, y Eléctrico, Infernal y Ancestral, ×½.
  */
 const RELACIONES: Record<TipoId, Relacion> = {
   comun: { eficaz: [], pocoEficaz: ['roca', 'acero'], sinEfecto: ['espectral'] },
-  agua: { eficaz: ['tierra', 'roca', 'infernal', 'ancestral'], pocoEficaz: ['agua', 'planta'], sinEfecto: [] },
-  tierra: { eficaz: ['electrico', 'acero', 'veneno'], pocoEficaz: ['planta', 'bicho'], sinEfecto: ['aire'] },
-  planta: { eficaz: ['agua', 'tierra', 'roca'], pocoEficaz: ['planta', 'aire', 'infernal', 'veneno'], sinEfecto: [] },
-  // Corrección: el Acero ya no le resiste (Acero llegaba a 5 resistencias).
-  aire: { eficaz: ['planta', 'bicho'], pocoEficaz: ['electrico', 'roca'], sinEfecto: [] },
+  agua: { eficaz: ['infernal', 'tierra', 'roca', 'ancestral'], pocoEficaz: ['agua', 'planta'], sinEfecto: [] },
+  tierra: { eficaz: ['infernal', 'electrico', 'veneno', 'acero'], pocoEficaz: ['planta', 'bicho'], sinEfecto: ['aire'] },
+  planta: { eficaz: ['agua', 'tierra', 'roca'], pocoEficaz: ['infernal', 'planta', 'veneno', 'aire', 'bicho', 'acero'], sinEfecto: [] },
+  aire: { eficaz: ['planta', 'lucha', 'bicho'], pocoEficaz: ['electrico', 'roca', 'acero'], sinEfecto: [] },
   electrico: { eficaz: ['agua', 'aire'], pocoEficaz: ['electrico', 'planta', 'ancestral'], sinEfecto: ['tierra'] },
-  // Corrección: ya no es muy eficaz contra Planta (Planta llegaba a 5 debilidades y Hielo
-  // atacaba bien a 4 tipos con solo 2 que le resistían).
-  hielo: { eficaz: ['aire', 'tierra', 'ancestral'], pocoEficaz: ['agua', 'hielo'], sinEfecto: [] },
-  infernal: { eficaz: ['planta', 'hielo', 'acero', 'comun'], pocoEficaz: ['agua', 'roca', 'infernal', 'ancestral'], sinEfecto: [] },
-  // Corrección: el Acero ya no le resiste.
-  mental: { eficaz: ['infernal', 'veneno'], pocoEficaz: ['mental'], sinEfecto: [] },
-  // Corrección: Mental salía a la vez como ×2 y ×0,5; se queda en ×2.
-  oscuridad: { eficaz: ['mental', 'espectral'], pocoEficaz: ['oscuridad', 'bicho'], sinEfecto: [] },
-  // Corrección: Oscuridad salía como ×2 y ×0,5; se queda en ×2. Para que su ataque tenga quien
-  // le resista, el Acero le resiste. Sigue sin afectar a Común, como hasta ahora.
-  espectral: { eficaz: ['mental', 'oscuridad', 'ancestral'], pocoEficaz: ['acero'], sinEfecto: ['comun'] },
-  acero: { eficaz: ['hielo', 'roca', 'bicho'], pocoEficaz: ['infernal', 'electrico'], sinEfecto: [] },
-  // Nuevo. Corrección: el Acero ya no le resiste.
-  roca: { eficaz: ['aire', 'infernal', 'hielo'], pocoEficaz: ['tierra'], sinEfecto: [] },
-  // Corrección: Planta y Roca ya no le resisten (las dos llegaban a 5 resistencias).
-  ancestral: { eficaz: ['electrico', 'acero'], pocoEficaz: ['ancestral'], sinEfecto: [] },
-  bicho: { eficaz: ['planta', 'mental', 'oscuridad'], pocoEficaz: ['infernal', 'aire', 'acero', 'veneno'], sinEfecto: [] },
-  veneno: { eficaz: ['planta', 'bicho', 'ancestral'], pocoEficaz: ['tierra', 'roca', 'veneno', 'espectral'], sinEfecto: ['acero'] },
+  hielo: { eficaz: ['planta', 'tierra', 'aire', 'ancestral'], pocoEficaz: ['infernal', 'agua', 'hielo', 'acero'], sinEfecto: [] },
+  infernal: { eficaz: ['planta', 'hielo', 'bicho', 'acero'], pocoEficaz: ['infernal', 'agua', 'roca', 'ancestral'], sinEfecto: [] },
+  lucha: { eficaz: ['comun', 'hielo', 'roca', 'oscuridad', 'acero'], pocoEficaz: ['veneno', 'aire', 'mental', 'bicho'], sinEfecto: ['espectral'] },
+  mental: { eficaz: ['lucha', 'veneno'], pocoEficaz: ['mental', 'acero'], sinEfecto: ['oscuridad'] },
+  oscuridad: { eficaz: ['mental', 'espectral'], pocoEficaz: ['lucha', 'oscuridad'], sinEfecto: [] },
+  espectral: { eficaz: ['mental', 'espectral'], pocoEficaz: ['oscuridad'], sinEfecto: ['comun'] },
+  acero: { eficaz: ['hielo', 'roca'], pocoEficaz: ['infernal', 'agua', 'electrico', 'acero'], sinEfecto: [] },
+  roca: { eficaz: ['infernal', 'hielo', 'aire', 'bicho'], pocoEficaz: ['tierra', 'acero', 'lucha'], sinEfecto: [] },
+  ancestral: { eficaz: ['acero'], pocoEficaz: ['ancestral'], sinEfecto: [] },
+  bicho: { eficaz: ['planta', 'mental', 'oscuridad'], pocoEficaz: ['infernal', 'lucha', 'veneno', 'aire', 'espectral', 'acero'], sinEfecto: [] },
+  veneno: { eficaz: ['planta', 'ancestral'], pocoEficaz: ['veneno', 'tierra', 'roca', 'espectral'], sinEfecto: ['acero'] },
 };
 
 export const TABLA_TIPOS: DefTablaTipos = {
@@ -83,6 +75,7 @@ export const COLOR_CRIATURA: Record<TipoId, number> = {
   electrico: 0xffc83e,
   hielo: 0x8bf1ff,
   infernal: 0xe4312e,
+  lucha: 0xbf2f4c,
   mental: 0xed499a,
   oscuridad: 0x504c47,
   espectral: 0x7c39ed,

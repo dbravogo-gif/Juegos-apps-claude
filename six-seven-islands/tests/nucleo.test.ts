@@ -31,9 +31,9 @@ describe('tipos', () => {
   const R = TABLA_TIPOS.relaciones as unknown as Record<string, Rel>;
   const ids = TABLA_TIPOS.tipos.map((t) => t.id as string);
 
-  it('son 16: los de Leyendas sin Plasma ni Luz, más Bicho, Veneno y Roca (autor, 2026-11-08 y 11-10)', () => {
+  it('son 17: los de Leyendas sin Plasma ni Luz, más Bicho, Veneno, Roca y Lucha (autor, 2026-11-08, 11-10 y 11-12)', () => {
     const deLeyendas = TABLA_LEYENDAS.tipos.map((t) => t.id as string).filter((id) => id !== 'plasma' && id !== 'luz');
-    expect([...ids].sort()).toEqual([...deLeyendas, 'bicho', 'veneno', 'roca'].sort());
+    expect([...ids].sort()).toEqual([...deLeyendas, 'bicho', 'veneno', 'roca', 'lucha'].sort());
     expect(Object.keys(R).sort()).toEqual([...ids].sort());
   });
 
@@ -46,29 +46,34 @@ describe('tipos', () => {
     }
   });
 
-  it('todo ataque tiene quien le resista, y ninguno está muy descompensado (salvo Común, que es neutro)', () => {
+  // Los límites de equilibrio de la tabla C (como mucho 4 debilidades y 4 resistencias) ya no se
+  // aplican: el autor rehízo la tabla el 2026-11-12. Lo que sigue siendo regla: todo ataque tiene
+  // quien le resista y todo tipo tiene alguna debilidad.
+  it('todo ataque tiene quien le resista, y todo tipo tiene alguna debilidad', () => {
     for (const id of ids) {
-      const contra = R[id].pocoEficaz.length + R[id].sinEfecto.length;
-      expect(contra, `${id}: nadie le resiste`).toBeGreaterThanOrEqual(1);
-      if (id !== 'comun') expect(Math.abs(R[id].eficaz.length - contra), id).toBeLessThanOrEqual(2);
+      expect(R[id].pocoEficaz.length + R[id].sinEfecto.length, `${id}: nadie le resiste`).toBeGreaterThanOrEqual(1);
+      expect(ids.filter((a) => R[a].eficaz.includes(id)).length, `${id}: sin debilidades`).toBeGreaterThanOrEqual(1);
     }
   });
 
-  it('nadie tiene más de 4 debilidades ni más de 4 resistencias, y pocos llegan a 4 (autor, 2026-11-10)', () => {
-    const debil = (d: string) => ids.filter((a) => R[a].eficaz.includes(d)).length;
-    const resiste = (d: string) => ids.filter((a) => R[a].pocoEficaz.includes(d)).length;
-    for (const d of ids) {
-      expect(debil(d), `${d} débil`).toBeGreaterThanOrEqual(1);
-      expect(debil(d), `${d} débil`).toBeLessThanOrEqual(4);
-      expect(resiste(d), `${d} resiste`).toBeLessThanOrEqual(4);
-    }
-    expect(ids.filter((d) => debil(d) === 4).length, 'tipos con 4 debilidades').toBeLessThanOrEqual(3);
-    expect(ids.filter((d) => resiste(d) === 4).length, 'tipos con 4 resistencias').toBeLessThanOrEqual(3);
-  });
-
-  it('las inmunidades son las decididas: las cuatro de la tabla C y la de Espectral a Común', () => {
+  it('las inmunidades son las de la tabla del autor (2026-11-12)', () => {
     const inmunes = ids.flatMap((a) => R[a].sinEfecto.map((d) => `${a}→${d}`)).sort();
-    expect(inmunes).toEqual(['comun→espectral', 'electrico→tierra', 'espectral→comun', 'tierra→aire', 'veneno→acero'].sort());
+    expect(inmunes).toEqual(
+      ['comun→espectral', 'tierra→aire', 'electrico→tierra', 'lucha→espectral', 'mental→oscuridad', 'espectral→comun', 'veneno→acero'].sort(),
+    );
+  });
+
+  it('Ancestral defiende como dice su foto: Agua, Hielo y Veneno ×2; Eléctrico, Infernal y Ancestral ×½', () => {
+    const contra = (a: string) => eficacia(TABLA_TIPOS, a, ['ancestral']);
+    for (const id of ids) {
+      const esperado = ['agua', 'hielo', 'veneno'].includes(id) ? 2 : ['electrico', 'infernal', 'ancestral'].includes(id) ? 0.5 : 1;
+      expect(contra(id), id).toBe(esperado);
+    }
+  });
+
+  it('el ciclo de las iniciales: el agua gana a la roca, la roca al fuego, el fuego a la planta y la planta al agua', () => {
+    const e = (a: string, d: string) => eficacia(TABLA_TIPOS, a, [d]);
+    expect([e('agua', 'roca'), e('roca', 'infernal'), e('infernal', 'planta'), e('planta', 'agua')]).toEqual([2, 2, 2, 2]);
   });
 
   it('las iniciales Agua, Planta e Infernal forman un triángulo perfecto', () => {
