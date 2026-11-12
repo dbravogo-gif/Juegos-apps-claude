@@ -143,6 +143,21 @@ Se revisan de cerca en `?catalogo` (plantas, rocas y muro) y `?catalogo=edificio
 - **Las estatuas del museo:** el modelo de cada inicial en piedra, con la luz del juego, sobre su
   pedestal, hasta que lleguen las esculturas del autor.
 
+## Menús (autor, 2026-11-12)
+
+- **Menú de pausa:** un degradado oscuro de izquierda a derecha, de menos a más transparente,
+  que deja ver el juego. A la derecha, las opciones en una sola columna, como pastillas color
+  crema; la elegida, blanca, con una franja coral y adelantada. A la izquierda, sobre lo oscuro,
+  el contenido: el equipo en seis huecos, la ficha de una criatura, un objeto, el medallero, el
+  mapa…
+- **Tienda y menús de su estilo** (confirmar una compra): todo transparente salvo las opciones, a
+  la izquierda, con el título y la nota en etiquetas oscuras.
+- **Medallas:** la pintadera de cada isla, el sello de barro de los antiguos canarios. Seis
+  diseños propios por código (`arte/pintaderas.ts`): Lanzarote, un sol de triángulos;
+  Fuerteventura, un damero; Gran Canaria, círculos y cruz; Tenerife, un triángulo con zigzag;
+  La Gomera, cheurones, y La Palma, una espiral. Toman el estilo, no copian ninguna pieza (R8).
+  Ganadas, en barro; sin ganar, en gris.
+
 ## Combate
 
 - **En diagonal, como en los juegos del género** (autor, 2026-11-10): tu criatura en la esquina

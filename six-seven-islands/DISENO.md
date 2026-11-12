@@ -318,6 +318,10 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
 - 2026-11-12 · **Inicial rebelde** (F25): hasta hablar con el anciano, no hace caso el 45 % de
   sus turnos; la mitad de esas veces usa otro movimiento y la otra mitad se distrae. Lo decide
   el generador del combate.
+- 2026-11-12 · **Menús nuevos y medallero** (autor): pausa con degradado y opciones en una
+  columna a la derecha; tienda transparente con las opciones a la izquierda; las medallas son las
+  pintaderas de cada isla (`ARTE.md`, «Menús»). Sonido, exportar, importar y nueva partida van
+  dentro de «Opciones».
 - 2026-11-12 · **Arreglos tras el probador:** la tienda pide confirmar cada compra (×1 o ×5) y no
   hace caso a E durante 0,4 s al abrirse; perder ya cuesta el 10 % del dinero; atajos del 1 al 9
   en los menús del combate; el final no se salta en 1,5 s; Esc andando abre el menú al acabar el
