@@ -33,19 +33,21 @@ Del autor, 2026-11-10. Es la «lista de reglas» a la que nos referimos al dise�
   líneas 21 a 24 del PDF del autor (Torchic, Turtwig, Piplup y Aron) se quitaron: su sitio lo
   ocupan las iniciales (autor, 2026-11-10).
 
-**Por tipo principal** (las 188 que no son iniciales; criaturas, no especies):
+**Por tipo principal** (las 188 que no son iniciales; criaturas, no especies). Lucha, del autor
+el 2026-11-12: se quitan 1 de Planta, 2 de Tierra, 1 de Roca, 2 de Aire y 3 de Bicho, y esas 9
+son de Lucha.
 
 | Tipo | Criaturas | Tipo | Criaturas |
 | --- | --- | --- | --- |
 | Común | 16 | Mental | 8 |
 | Agua | 21 | Oscuridad | 8 |
-| Tierra | 13 | Espectral | 7 |
-| Planta | 18 | Acero | 6 |
-| Aire | 13 | Roca | 11 |
+| Tierra | 11 | Espectral | 7 |
+| Planta | 17 | Acero | 6 |
+| Aire | 11 | Roca | 10 |
 | Eléctrico | 11 | Ancestral | 4 |
-| Hielo | 8 | Bicho | 16 |
+| Hielo | 8 | Bicho | 13 |
 | Infernal | 16 | Veneno | 12 |
-| Lucha | por decidir | | |
+| Lucha | 9 | | |
 
 Las iniciales suman aparte, por tipo principal: Agua 3, Planta 3, Infernal 3 y Roca 3
 (autor, 2026-11-10).
@@ -81,12 +83,20 @@ del Q5 son las 12 legendarias y las 4 formas finales más fuertes (líneas 25 a 
 - El autor pide listas por zona («dame X para tal zona») y Claude propone: cuántas formas tiene
   cada especie, el tipo de cada forma y qué Pokémon de la lista le da las estadísticas. Si la
   referencia tiene 3 formas, la especie tiene 3.
-- **Tipo principal:** se acerca a los objetivos de la tabla del Excel (arriba, «Por tipo
-  principal»; Lucha, por decidir).
+- **Tipo principal:** se acerca a los objetivos de la tabla de arriba, «Por tipo principal».
 - **Tipo secundario:** ningún tipo se repite demasiado como secundario, y el 60 % de las
   criaturas no tiene. A menudo la primera forma no tiene y las siguientes sí.
 - **Se reutilizan** las especies ya diseñadas (tabla de abajo) donde encajen.
 - Lo asignado se apunta aquí, en «Asignadas», con su zona.
+- **No todas las láminas entran** (autor, 2026-11-12): la que no cuadra, fuera.
+- **Varias especies en cada hierba, nunca una sola** (autor, 2026-11-12). Se pueden repetir
+  entre hierbas cercanas. En los juegos de referencia, la primera ruta tiene 2 o 3 especies; las
+  siguientes, de 3 a 5, y más adelante de 5 a 8. Suelen ser dos comunes (40-45 % cada una) y
+  una rara (5-10 %), y las comunes se repiten en las rutas vecinas. Ejemplos: la ruta 101 de
+  Rubí y Zafiro, con 45 / 45 / 10 % y niveles 2-3; el bosque Verde de Rojo y Azul, con 4 o 5
+  especies y una rara al 5 % ([StrategyWiki](https://strategywiki.org/wiki/Pok%C3%A9mon_Ruby_and_Sapphire/Route_101),
+  [Serebii](https://serebii.net/pokearth/hoenn/route101.shtml), [Giant Bomb](https://giantbomb.com/wiki/Locations/Viridian_Forest)).
+  Aquí: de 3 a 4 por hierba en la isla 1, con una rara al 10 %, y de 4 a 6 más adelante.
 
 ## Asignadas y diseñadas
 
@@ -113,25 +123,50 @@ se usa otra palabra (R8).
 | Esporín → Micelord | Planta | Propuesta: Foongus → Amoonguss (Q1) | Lámina |
 | Voltéro → Raigón | Eléctrico | Propuesta: Electrike → Manectric (Q1) | Lámina |
 | Miralín → Reflexán | Mental | Propuesta: Elgyem → Beheeyem (Q2) | Lámina |
-| Tunelín → Taladrex | Tierra | Propuesta: Drilbur → Excadrill (Q2) ⚠ | Lámina |
-| Cangrix → Costrarca | Roca | Propuesta: Dwebble → Crustle (Q2) ⚠ | Lámina |
-| Basún → Toxárro | Veneno | Propuesta: Trubbish → Garbodor (Q2) ⚠ | Lámina |
 | Civeta (sin nombre, 2) | Común | Propuesta: Zigzagoon → Linoone (Q1) | Lámina |
-| Dino del casco de roca (sin nombre, 2) | Roca | Propuesta: Cranidos → Rampardos (Q2) ⚠ | Lámina |
 
 En los tipos, «Infernal · Infernal/Ancestral» quiere decir: la primera forma sin secundario y las
 siguientes con él. Las láminas ponen el doble tipo a toda la línea; quitárselo a las primeras
 formas ayuda al 60 %.
 
-⚠ **Demasiado parecidas a su Pokémon de referencia** en idea y dibujo, y con sus mismas
-estadísticas se leerían como una copia (R8):
-- el topo con taladro (Excadrill);
-- el ermitaño que carga una roca (Crustle);
-- la bolsa de basura (Garbodor);
-- el dinosaurio de cabeza de piedra (Cranidos).
+**Descartadas** (2026-11-12, con el permiso del autor de dejar fuera lo que no cuadre): Tunelín,
+el topo con taladro (Excadrill); Cangrix, el ermitaño que carga una roca (Crustle); Basún, la
+bolsa de basura (Garbodor), y el dinosaurio de cabeza de piedra (Cranidos). Eran demasiado
+parecidos a su referencia en idea y dibujo, y con sus mismas estadísticas se leerían como una
+copia (R8). Las abejas de Melaní recuerdan a Combee y Vespiquen, pero sus estadísticas son de
+Scolipede: se quedan.
 
-Conviene cambiarles la idea, o el dibujo, o las estadísticas de referencia. Las abejas de Melaní
-recuerdan a Combee y Vespiquen, aunque sus estadísticas sean de Scolipede.
+## Lanzarote (propuesta 2, 2026-11-12)
+
+Solo salen las primeras formas; las demás llegan evolucionando. Peso: de cada 100 encuentros.
+Las nuevas, por diseñar, se cubren con las láminas que mande el autor.
+
+| Hierba (niveles) | Especies (peso) |
+| --- | --- |
+| El Golfo (3-5) | Civeta 40 · Tinzal 30 · pez del charco 20 · Dragosil 10 (rara) |
+| Montañas del Fuego, malpaís (5-7) | Magmín 40 · luchador nuevo 30 · Civeta 20 · roca nueva 10 (rara) |
+| El Jable, 3 manchas (6-8) | Patatín 35 · Melaní 30 · Tinzal 25 · luchador nuevo 10 (raro) |
+| Famara (6-8) | Aerund 40 · Salmito 30 · pez del charco 20 · roca nueva 10 (rara) |
+
+| Especie (formas) | Tipos por forma | Estadísticas de |
+| --- | --- | --- |
+| Civeta (2) | Común · Común | Zigzagoon → Linoone |
+| Tinzal → Azurvan | Aire · Aire/Mental | Taillow → Swellow |
+| Pez del charco (2), nueva | Agua · Agua/Tierra | Barboach → Whiscash |
+| Dragosil → Dragombo → Dragalis | Planta | Lotad → Lombre → Ludicolo |
+| Magmín → Lavtún → Teidrón | Infernal | Litwick → Lampent → Chandelure |
+| Luchador (2), nueva | Lucha · Lucha | Riolu → Lucario |
+| Roca (3), nueva | Roca · Roca · Roca | Roggenrola → Boldore → Gigalith |
+| Patatín → Paparrón | Tierra | Makuhita → Hariyama |
+| Melaní → Favenir → Reginis | Bicho · Bicho/Veneno · Bicho/Veneno | Venipede → Whirlipede → Scolipede |
+| Aerund → Marwen | Aire · Aire/Agua | Wingull → Pelipper |
+| Salmito → Salmarín → Salmástil | Agua · Agua · Agua/Hielo | Spheal → Sealeo → Walrein |
+
+- 11 especies y 27 criaturas, de 3 a 4 por hierba, y las comunes se repiten entre hierbas
+  vecinas. 6 criaturas llevan tipo secundario (22 %).
+- La roca nueva vive en el risco de Famara, donde dormía la leyenda de Roca, y la líder del
+  gimnasio la usa evolucionada.
+- En El Golfo, la de Planta (Dragosil) es la rara: con la inicial de Agua, empezar ya es difícil.
 
 ## Lista de referencia
 

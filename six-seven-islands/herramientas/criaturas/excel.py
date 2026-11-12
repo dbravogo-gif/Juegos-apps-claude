@@ -10,11 +10,11 @@ from openpyxl.worksheet.datavalidation import DataValidation
 import lista  # B1..B4 y forma()
 
 ARIAL = 'Arial'
-TIPOS = [('Común', 16, 0xa8a29e), ('Agua', 21, 0x3b82f6), ('Tierra', 13, 0xa16207), ('Planta', 18, 0x16a34a),
-         ('Aire', 13, 0x7dd3fc), ('Eléctrico', 11, 0xeab308), ('Hielo', 8, 0x67e8f9), ('Infernal', 16, 0xdc2626),
-         # Lucha entra el 2026-11-12; su número de criaturas lo decide el autor (por ahora, 0).
-         ('Lucha', 0, 0x9f1239), ('Mental', 8, 0xec4899), ('Oscuridad', 8, 0x57534e), ('Espectral', 7, 0x7c3aed), ('Acero', 6, 0x94a3b8),
-         ('Roca', 11, 0x9a7e64), ('Ancestral', 4, 0xb45309), ('Bicho', 16, 0x84cc16), ('Veneno', 12, 0xa21caf)]
+# Lucha entra el 2026-11-12 con 9, quitadas a Planta (1), Tierra (2), Roca (1), Aire (2) y Bicho (3).
+TIPOS = [('Común', 16, 0xa8a29e), ('Agua', 21, 0x3b82f6), ('Tierra', 11, 0xa16207), ('Planta', 17, 0x16a34a),
+         ('Aire', 11, 0x7dd3fc), ('Eléctrico', 11, 0xeab308), ('Hielo', 8, 0x67e8f9), ('Infernal', 16, 0xdc2626),
+         ('Lucha', 9, 0x9f1239), ('Mental', 8, 0xec4899), ('Oscuridad', 8, 0x57534e), ('Espectral', 7, 0x7c3aed), ('Acero', 6, 0x94a3b8),
+         ('Roca', 10, 0x9a7e64), ('Ancestral', 4, 0xb45309), ('Bicho', 13, 0x84cc16), ('Veneno', 12, 0xa21caf)]
 INICIALES = {'Agua': 3, 'Planta': 3, 'Infernal': 3, 'Roca': 3}
 LINEAS_INICIALES = {'Torchic', 'Turtwig', 'Piplup', 'Aron'}
 
