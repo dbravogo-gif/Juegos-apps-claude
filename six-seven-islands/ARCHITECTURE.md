@@ -142,6 +142,7 @@ export class Sistema implements Subsistema {
 | `depuracion` | `src/sistemas/depuracion/` | El panel de ajustes (solo en desarrollo) y los ganchos de `window.__JUEGO__` |
 | (vista `?mapa`) | `src/sistemas/mapa/` | Herramienta y base del mapa del juego: el plano 2D de la isla 1 a pantalla completa, sin 3D. `?mapa=12` fija 12 píxeles por casilla |
 | `inicio` | `src/sistemas/inicio/` | La portada de una partida nueva: elegir persona (las jugables de `arte/personas.ts`) y escribir el nombre. Sale mientras «partida» está en modo «titulo» |
+| `sonido` | `src/sistemas/sonido/` | Efectos (tabla `EFECTOS`) y música en bucle (explorar y combate) con Web Audio, sin archivos. Arranca con la primera tecla y se silencia desde el menú |
 | `menu` | `src/sistemas/menu/` | El menú de pausa (Esc explorando): equipo, mochila, mapa y exportar o importar la partida. Cambia el orden del equipo y gasta objetos de «partida» |
 | `catalogo` | `src/sistemas/catalogo/` | Herramienta, no juego: con `?catalogo` o `?catalogo=edificios`, las piezas propias del mundo en fila, con la luz y la cámara del juego; ← → acercan la cámara a cada una |
 | `prueba` | `src/sistemas/prueba/` | **Temporal:** la vitrina de la prueba de arte (`F04`), con `?vitrina`. Se queda para probar los modelos de Meshy; se borra cuando las criaturas entren en el juego |
@@ -166,6 +167,8 @@ export class Sistema implements Subsistema {
 | `menu:abrir` | `{}` | `partida` |
 | `tienda:abrir` | `{}` | `partida` |
 | `jugador:elegido` | `{ nombre, persona }` | `partida` |
+| `sonido:tocar` | `{ nombre }` | `partida`, `combate`, `menu`, `inicio` |
+| `sonido:alternar` | `{}` | `menu` |
 | `calidad:cambio` | `{ nivel }` | `depuracion` |
 | `objeto:recogido` | `{ id, objeto }` | `partida` |
 | `inicial:elegida` | `{ tipo }` | `partida` |

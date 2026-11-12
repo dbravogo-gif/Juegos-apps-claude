@@ -168,7 +168,7 @@
       "tanda": 3,
       "descripcion": "Sonido generado por código: pasos, hierba, golpes, captura y música sencilla.",
       "como_se_comprueba": "Sin errores de audio en la consola. El autor lo escucha y lo puntúa de 1 a 5.",
-      "hecha": false
+      "hecha": true
     },
     {
       "id": "F25-inicial-rebelde",

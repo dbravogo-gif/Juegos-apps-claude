@@ -13,8 +13,9 @@ import { planoIsla, type Plano } from '../mapa/plano';
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Entrada } from '../entrada/entrada';
 import type { Partida } from '../partida/partida';
+import { EFECTOS, sonidoActivo, type NombreEfecto } from '../sonido/sonido';
 
-type Pantalla = 'cerrado' | 'principal' | 'equipo' | 'mochila' | 'objetivo' | 'mapa' | 'exportar' | 'importar' | 'tienda';
+type Pantalla = 'cerrado' | 'principal' | 'equipo' | 'mochila' | 'objetivo' | 'mapa' | 'exportar' | 'importar' | 'tienda' | 'sonidos';
 
 interface Opcion {
   texto: string;
@@ -104,6 +105,19 @@ export class Menu implements Subsistema {
           { texto: 'Mapa', activa: true, elegir: () => this.abrir('mapa') },
           { texto: 'Exportar partida', detalle: 'Un código para llevártela a otro navegador', activa: true, elegir: () => this.abrir('exportar') },
           { texto: 'Importar partida', detalle: 'Pega un código exportado', activa: true, elegir: () => this.abrir('importar') },
+          {
+            texto: `Sonido: ${sonidoActivo() ? 'activado' : 'silenciado'}`,
+            detalle: 'Enter para cambiarlo',
+            activa: true,
+            elegir: () => {
+              this.ctx.eventos.emit('sonido:alternar', {});
+              const e = this.eleccion;
+              this.abrir('principal');
+              this.eleccion = e;
+              this.pintar();
+            },
+          },
+          { texto: 'Probar sonidos', detalle: 'Escucha cada efecto para valorarlo', activa: true, elegir: () => this.abrir('sonidos') },
           { texto: 'Volver al juego', activa: true, elegir: () => this.cerrar() },
         ];
         break;
@@ -148,6 +162,7 @@ export class Menu implements Subsistema {
           activa: objetoUtil(c, id, DATOS),
           elegir: () => {
             equipo[i] = usarObjeto(c, id, DATOS);
+            this.ctx.eventos.emit('sonido:tocar', { nombre: 'curar' });
             this.partida.mochila[id] = Math.max(0, (this.partida.mochila[id] ?? 0) - 1);
             this.abrir('mochila');
             this.nota.textContent = `${nombreDe(c, DATOS)} recupera vida.`;
@@ -168,6 +183,7 @@ export class Menu implements Subsistema {
             elegir: () => {
               this.partida.dinero -= o.precio!;
               this.partida.mochila[o.id] = (this.partida.mochila[o.id] ?? 0) + 1;
+              this.ctx.eventos.emit('sonido:tocar', { nombre: 'comprar' });
               const eleccion = this.eleccion;
               this.abrir('tienda');
               this.nota.textContent = `Compras ${o.nombre}. ¡Gracias!`;
@@ -177,6 +193,15 @@ export class Menu implements Subsistema {
           }));
         break;
       }
+      case 'sonidos':
+        this.titulo.textContent = 'Probar sonidos';
+        this.nota.textContent = 'Enter: escuchar. Esc: volver. Los parámetros están en EFECTOS (sistemas/sonido).';
+        this.opciones = (Object.keys(EFECTOS) as NombreEfecto[]).map((n) => ({
+          texto: n,
+          activa: true,
+          elegir: () => this.ctx.eventos.emit('sonido:tocar', { nombre: n }),
+        }));
+        break;
       case 'mapa':
         this.titulo.textContent = 'Lanzarote';
         this.opciones = [];
@@ -271,10 +296,14 @@ export class Menu implements Subsistema {
     const dir = this.entrada.pulsacion();
     if (dir === 'n' || dir === 's') {
       const n = this.eleccion + (dir === 's' ? 1 : -1);
-      if (n >= 0 && n < this.opciones.length) this.eleccion = n;
+      if (n >= 0 && n < this.opciones.length && n !== this.eleccion) {
+        this.eleccion = n;
+        this.ctx.eventos.emit('sonido:tocar', { nombre: 'seleccion' });
+      }
       this.pintar();
     }
     if (cancelar) {
+      this.ctx.eventos.emit('sonido:tocar', { nombre: 'atras' });
       if (this.pantalla === 'principal' || this.pantalla === 'tienda') this.cerrar();
       else if (this.pantalla === 'objetivo') this.abrir('mochila');
       else this.abrir('principal');
@@ -282,7 +311,10 @@ export class Menu implements Subsistema {
     }
     if (!confirmar) return;
     const o = this.opciones[this.eleccion];
-    if (o?.activa) o.elegir();
+    if (!o?.activa) return;
+    // Al probar sonidos, solo suena el elegido.
+    if (this.pantalla !== 'sonidos') this.ctx.eventos.emit('sonido:tocar', { nombre: 'confirmar' });
+    o.elegir();
   }
 
   dispose(): void {
