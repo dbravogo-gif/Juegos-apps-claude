@@ -112,7 +112,7 @@
       "tanda": 2,
       "descripcion": "Entrenadores rivales con línea de visión visible, una exclamación al verte, combate y recompensa en dinero.",
       "como_se_comprueba": "Un bot cruza la línea de visión y entra en combate. Vencido, el entrenador no vuelve a retar. Captura de la línea de visión.",
-      "hecha": false
+      "hecha": true
     },
     {
       "id": "F17-tienda-y-objetos",

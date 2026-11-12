@@ -20,6 +20,8 @@ export interface Guardado {
   /** Entrenadores ya vencidos: no vuelven a retar. */
   vencidos: string[];
   rng: EstadoRng;
+  /** Dinero ganado a los entrenadores (desde el 2026-11-12; si falta, 0). */
+  dinero?: number;
 }
 
 export function serializar(g: Guardado): string {

@@ -160,6 +160,7 @@ export class Sistema implements Subsistema {
 | `dialogo:abrir` | `{ guionId }`: el id del personaje, o `aviso`, `objeto` o `puerta` | `partida` |
 | `dialogo:cerrar` | `{ guionId, eleccion? }` | `partida` |
 | `guardado:hecho` | `{}` | `partida` |
+| `entrenador:visto` | `{ id }` | `partida` |
 | `calidad:cambio` | `{ nivel }` | `depuracion` |
 | `objeto:recogido` | `{ id, objeto }` | `partida` |
 | `inicial:elegida` | `{ tipo }` | `partida` |

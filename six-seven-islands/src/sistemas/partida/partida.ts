@@ -10,7 +10,8 @@
 
 import { avanzar, crearExploracion, cumplir, entrar, interactuar, salir, type EstadoExplorar, type EventoExplorar } from '../../core/explorar';
 import { abrirDialogo, elegirDialogo, lineaActual, pasoDialogo, pulsar, type Dialogo, type Efecto, type EstadoDialogo, type Tecla } from '../../core/guion';
-import { TODAS_LAS_CONDICIONES, clave, construirInterior, construirMundo, deClave, enIsla, transitable, type Condicion, type Mundo } from '../../core/mundo';
+import { TODAS_LAS_CONDICIONES, clave, construirInterior, construirMundo, deClave, enIsla, entrenadorQueVe, transitable, type Condicion, type Mundo } from '../../core/mundo';
+import { ENTRENADORES_ISLA1 } from '../../data/entrenadores-isla1';
 import { GUION_ISLA1 } from '../../data/guion-isla1';
 import { INTERIORES_ISLA1, SALA_INICIAL } from '../../data/interiores-isla1';
 import { ISLA_1, PUERTAS_ISLA1 } from '../../data/isla1';
@@ -47,6 +48,8 @@ const NIVEL_INICIAL = 5;
 const CLAVE_GUARDADO = 'six-seven-islands:partida';
 /** Cada cuántos pasos fijos se guarda mientras se explora: 5 segundos. */
 const PASOS_GUARDADO = 300;
+/** Lo que dura la exclamación del entrenador que te ve, antes de que hable: 0,75 s. */
+const PASOS_ALERTA = 45;
 
 /** Lo que se puede cargar con poner(): para pruebas y para el guardado (F10). */
 export interface EstadoParcial {
@@ -77,6 +80,9 @@ export class Partida implements Subsistema {
   ultimoRefugio = SALA_INICIAL;
   /** Entrenadores vencidos: no vuelven a retar. */
   vencidos: string[] = [];
+  dinero = 0;
+  /** Un entrenador acaba de ver al jugador: cuando pase la exclamación, habla. */
+  private alerta: { zona: string; personaje: string; pasos: number } | null = null;
   private pasosSinGuardar = 0;
   /** El diálogo abierto, si lo hay. */
   dialogo: EstadoDialogo | null = null;
@@ -127,6 +133,7 @@ export class Partida implements Subsistema {
       ultimoRefugio: this.ultimoRefugio,
       vencidos: [...this.vencidos],
       rng: structuredClone(this.ctx.rng),
+      dinero: this.dinero,
     };
   }
 
@@ -169,6 +176,7 @@ export class Partida implements Subsistema {
     this.mochila = g.mochila;
     this.ultimoRefugio = this.interiores.has(g.ultimoRefugio) ? g.ultimoRefugio : SALA_INICIAL;
     this.vencidos = g.vencidos;
+    this.dinero = g.dinero ?? 0;
     this.ctx.rng.s = [...g.rng.s] as typeof this.ctx.rng.s;
   }
 
@@ -197,6 +205,15 @@ export class Partida implements Subsistema {
       this.entrada.consumir('confirmar');
     }
     if (++this.pasosSinGuardar >= PASOS_GUARDADO) this.guardar();
+    if (this.alerta) {
+      // Quieto mientras sale la exclamación; luego, el entrenador habla y reta.
+      this.entrada.olvidar();
+      if (--this.alerta.pasos > 0) return;
+      const a = this.alerta;
+      this.alerta = null;
+      return this.atender({ tipo: 'hablar', zona: a.zona, personaje: a.personaje });
+    }
+    const antes = this.estado.paso;
     const parado = this.estado.paso === 0;
     const eventos = avanzar(this.activo(), this.estado, this.entrada.direccion(parado));
     // Interactuar mientras se anda espera a que termine el paso, en vez de perderse.
@@ -206,6 +223,24 @@ export class Partida implements Subsistema {
       this.atender(ev);
       if (this.modo !== 'explorar') break;
     }
+    // Al terminar un paso, ¿le ve algún entrenador? Sin criaturas en pie, no retan.
+    if (this.modo === 'explorar' && antes > 0 && this.estado.paso === 0 && !this.estado.dentro && this.equipo.some((c) => c.vida > 0)) {
+      const quien = entrenadorQueVe(this.mundo, this.estado.x, this.estado.y, this.vencidos);
+      if (quien) {
+        this.alerta = { ...quien, pasos: PASOS_ALERTA };
+        this.ctx.eventos.emit('entrenador:visto', { id: quien.personaje });
+      }
+    }
+  }
+
+  /** Tras vencer a un entrenador: su premio y, si lo da, su condición (la líder abre el barco). */
+  vencerA(id: string): { premio: number } {
+    if (!this.vencidos.includes(id)) this.vencidos.push(id);
+    const def = ENTRENADORES_ISLA1[id];
+    if (!def) return { premio: 0 };
+    this.dinero += def.premio;
+    if (def.condicion) cumplir(this.estado, def.condicion);
+    return { premio: def.premio };
   }
 
   private pasoDialogo(): void {
@@ -275,7 +310,8 @@ export class Partida implements Subsistema {
       case 'hablar': {
         const d = elegirDialogo(GUION_ISLA1, ev.personaje, this.estado.condiciones, this.estado.inicial);
         const frase = this.activo().zonas.get(ev.zona)?.personajes.find((p) => p.id === ev.personaje)?.frase;
-        let dialogo: Dialogo = d ?? { lineas: [{ texto: frase ?? '…' }] };
+        const vencido = this.vencidos.includes(ev.personaje) ? ENTRENADORES_ISLA1[ev.personaje] : undefined;
+        let dialogo: Dialogo = d ?? { lineas: [{ texto: (vencido ? vencido.tras : frase) ?? '…' }] };
         const refugio = CURANDEROS[ev.personaje];
         if (refugio && this.equipo.length) {
           this.curarEquipo();
@@ -399,6 +435,8 @@ export class Partida implements Subsistema {
     dialogo: string | null;
     equipo: { especie: string; nivel: number; vida: number; exp: number }[];
     mochila: Record<string, number>;
+    dinero: number;
+    vencidos: string[];
   } {
     const z = this.activo().zonas.get(this.estado.zona)!;
     return {
@@ -411,6 +449,8 @@ export class Partida implements Subsistema {
       dialogo: this.dialogo ? lineaActual(this.dialogo).texto : null,
       equipo: this.equipo.map((c) => ({ especie: c.especie, nivel: c.nivel, vida: c.vida, exp: c.exp })),
       mochila: { ...this.mochila },
+      dinero: this.dinero,
+      vencidos: [...this.vencidos],
     };
   }
 

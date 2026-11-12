@@ -302,6 +302,10 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
   se añade El Jable, de 24 × 22, entre el Fuego y la capital: muros que obligan a zigzaguear,
   hierba opcional, un entrenador opcional y una poción. El ensanche anterior se deshace. El autor
   juzga los tamaños al probarlo.
+- 2026-11-12 · **Entrenadores** (F16): al pisar su línea de visión les sale una exclamación,
+  hablan y retan; también si se les habla. Vencidos, no vuelven a retar y dan dinero (de 100 a
+  600). Equipos provisionales, con niveles que suben con el recorrido (`entrenadores-isla1.ts`).
+  La líder de Roca (niveles 11 y 12) abre el barco. Aún no caminan hacia el jugador.
 - 2026-11-12 · **Combate jugable** (F06, F07 y F09): pisar hierba o malpaís saca una criatura
   1 de cada 10 pasos, de la tabla de su zona. El menú tiene Luchar, Mochila, Equipo y Huir. Al
   perder, se vuelve curado al último sitio donde te curaron (al principio, tu casa). Curan la

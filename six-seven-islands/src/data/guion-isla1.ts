@@ -151,7 +151,7 @@ export const GUION_ISLA1: Guion = {
       dialogo: {
         lineas: [
           { quien: 'Líder', texto: 'Soy la líder de este gimnasio. Mis criaturas son duras como la lava cuando se enfría.' },
-          { quien: 'Líder', texto: 'Cuando quieras, combatiremos. Antes, entrena a tu equipo en el malpaís de las Montañas del Fuego.' },
+          { quien: 'Líder', texto: '¿Vienes a por el barco? Primero tendrás que vencerme. ¡En guardia!' },
         ],
       },
     },

@@ -10,6 +10,10 @@ import {
   AnimationMixer,
   AnimationUtils,
   Box3,
+  CanvasTexture,
+  SRGBColorSpace,
+  Sprite,
+  SpriteNodeMaterial,
   CapsuleGeometry,
   GreaterDepth,
   Group,
@@ -99,6 +103,9 @@ export class Personaje implements Subsistema {
   private objetos: Object3D[] = [];
   private quitar: (() => void)[] = [];
   private reloj = 0;
+  /** La exclamación sobre el entrenador que acaba de ver al jugador (F16). */
+  private exclamacion!: Sprite;
+  private tExclamacion = -1;
 
   async init(ctx: Ctx): Promise<void> {
     this.partida = ctx.get<Partida>('partida');
@@ -166,6 +173,20 @@ export class Personaje implements Subsistema {
         }
       }
     }
+    // La exclamación: un bocadillo blanco con un «!» coral, que salta sobre el entrenador.
+    this.exclamacion = new Sprite(this.materialExclamacion());
+    this.exclamacion.visible = false;
+    this.exclamacion.renderOrder = 20;
+    ctx.escena.add(this.exclamacion);
+    this.objetos.push(this.exclamacion);
+    this.quitar.push(
+      ctx.eventos.on('entrenador:visto', ({ id }) => {
+        const q = this.porId.get(id);
+        if (!q) return;
+        this.exclamacion.position.copy(q.figura.raiz.position).add(new Vector3(0, ALTO + 0.5, 0));
+        this.tExclamacion = 0;
+      }),
+    );
     // Quien habla con el jugador se gira hacia él, y al acabar vuelve a mirar donde miraba.
     this.quitar.push(
       ctx.eventos.on('dialogo:abrir', ({ guionId }) => {
@@ -191,6 +212,32 @@ export class Personaje implements Subsistema {
       this.objetos.push(im);
     }
     this.colocar(0, 0);
+  }
+
+  private materialExclamacion(): SpriteNodeMaterial {
+    const lienzo = document.createElement('canvas');
+    lienzo.width = lienzo.height = 128;
+    const g = lienzo.getContext('2d')!;
+    g.fillStyle = '#fffaf2';
+    g.strokeStyle = '#2b2340';
+    g.lineWidth = 8;
+    g.beginPath();
+    g.arc(64, 56, 44, 0, Math.PI * 2);
+    g.moveTo(52, 96);
+    g.lineTo(64, 122);
+    g.lineTo(76, 96);
+    g.fill();
+    g.stroke();
+    g.fillStyle = COLORES.acentoCoral;
+    g.font = '900 72px system-ui, sans-serif';
+    g.textAlign = 'center';
+    g.textBaseline = 'middle';
+    g.fillText('!', 64, 60);
+    const t = new CanvasTexture(lienzo);
+    t.colorSpace = SRGBColorSpace;
+    const m = new SpriteNodeMaterial({ map: t, transparent: true, depthTest: false });
+    this.materiales.push(m);
+    return m;
   }
 
   /** Dónde está un personaje (no el jugador), o null si no tiene figura. */
@@ -331,6 +378,14 @@ export class Personaje implements Subsistema {
   actualizar(dt: number, ctx: Ctx): void {
     this.colocar(dt, ctx.tiempo.alfa);
     this.reloj += dt;
+    if (this.tExclamacion >= 0) {
+      // Salta y se queda un momento; dura lo mismo que la espera de «partida» (0,75 s).
+      this.tExclamacion += dt;
+      const t = this.tExclamacion;
+      this.exclamacion.visible = t < 0.85;
+      this.exclamacion.scale.setScalar(0.62 * Math.min(1, t * 9) * (1 + 0.15 * Math.sin(Math.min(1, t * 3) * Math.PI)));
+      if (t >= 0.85) this.tExclamacion = -1;
+    }
     for (const f of this.figuras) {
       f.mezclador.update(dt);
       // Respirar: un 1,2 % de alto, sin tocar los pies (la base está en el origen).
