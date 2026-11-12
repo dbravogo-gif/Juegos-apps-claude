@@ -68,6 +68,9 @@ propuesta de Claude y qué frena mientras siga abierto.
   en cuanto llega su GLB con foto: se añade en `arte/personas.ts` con `jugable`.
 - **Evolución** (F20): el núcleo ya evoluciona, pero faltan las segundas formas y sus niveles
   (del autor). Con los niveles de la isla 1 (hasta el 12), nadie evolucionaría todavía.
+- **Mochila y equipo** (2026-11-12): faltan los objetos que se llevan equipados (Equipar y
+  Quitar en Equipo → Objeto) y las técnicas que enseñan movimientos (su bolsillo ya está). Una
+  mochila de Meshy es opcional: la de ahora se dibuja por código.
 - **Del probador (2026-11-12), sin arreglar:**
   - Los modelos de las salvajes se repiten (relleno con el de la inicial de su tipo): se va con
     las criaturas del autor.

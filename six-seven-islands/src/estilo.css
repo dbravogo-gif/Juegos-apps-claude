@@ -702,6 +702,224 @@ body {
   resize: none;
 }
 
+/* Equipo: el menú de siempre, seis tarjetas en dos columnas. */
+.menu-equipo {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 280px));
+  gap: 12px;
+}
+
+.menu-tarjeta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 92px;
+  box-sizing: border-box;
+  padding: 14px 16px;
+  border: 2px solid rgb(255 246 234 / 0.16);
+  border-radius: 16px;
+  background: rgb(255 246 234 / 0.1);
+  transition:
+    transform 0.12s ease-out,
+    border-color 0.12s,
+    background 0.12s;
+}
+
+.menu-tarjeta.vacio {
+  border-style: dashed;
+  background: none;
+}
+
+.menu-tarjeta.elegido {
+  border-color: var(--coral);
+  background: rgb(255 246 234 / 0.2);
+  box-shadow: 0 0 0 4px rgb(255 107 107 / 0.25);
+  transform: translateY(-2px);
+}
+
+.menu-tarjeta.origen {
+  border-style: dashed;
+  border-color: #f2c14e;
+}
+
+.menu-tarjeta.apagado {
+  opacity: 0.45;
+}
+
+.menu-tarjeta-cabeza {
+  display: grid;
+  grid-template-columns: 12px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.menu-tarjeta-cabeza b {
+  overflow: hidden;
+  font: 700 16px/1.2 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.menu-tarjeta .menu-vida {
+  height: 8px;
+  border-radius: 4px;
+}
+
+.menu-tarjeta-pie {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.menu-tarjeta-pie small {
+  margin-right: auto;
+  font: 600 13px/1 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color: rgb(255 246 234 / 0.75);
+}
+
+.menu-estado,
+.menu-primera,
+.menu-chip {
+  padding: 3px 9px;
+  border-radius: 999px;
+  font: 700 11px/1.3 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-style: normal;
+  color: #fff;
+  text-shadow: 0 1px 1px rgb(0 0 0 / 0.35);
+}
+
+.menu-estado {
+  background: #a855f7;
+}
+
+.menu-primera {
+  background: rgb(255 246 234 / 0.2);
+}
+
+.menu-instruccion {
+  margin: 0 0 0 4px;
+  font: 700 17px/1.35 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color: var(--crema);
+  text-shadow: 0 1px 3px rgb(0 0 0 / 0.6);
+}
+
+/* Datos de una criatura. */
+.menu-datos {
+  max-width: 560px;
+}
+
+.menu-datos .menu-cabeza {
+  flex-wrap: wrap;
+}
+
+.menu-exp {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.menu-exp small {
+  font: 600 13px/1 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color: rgb(255 246 234 / 0.75);
+}
+
+.menu-estadisticas {
+  display: grid;
+  gap: 6px;
+}
+
+.menu-estadistica {
+  display: grid;
+  grid-template-columns: 110px 70px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  font: 600 14px/1.2 system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+.menu-estadistica b {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.menu-estadistica .menu-vida {
+  height: 8px;
+  border-radius: 4px;
+}
+
+/* Mochila: los bolsillos arriba y la mochila dibujada. */
+.menu-bolsa {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.menu-bolsa.entra {
+  animation: bolsa-entra 0.3s ease-out;
+}
+
+@keyframes bolsa-entra {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(0.96);
+  }
+}
+
+.menu-bolsa.cambia .bolsillo-elegido {
+  animation: bolsillo-salta 0.22s ease-out;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes bolsillo-salta {
+  from {
+    transform: scale(0.85);
+  }
+}
+
+.menu-bolsillos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.menu-bolsillos span {
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgb(255 246 234 / 0.1);
+  font: 700 14px/1 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color: rgb(255 246 234 / 0.7);
+}
+
+.menu-bolsillos span.elegido {
+  background: var(--coral);
+  color: #fff;
+}
+
+.menu-bolsa-cuerpo {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 24px;
+  align-items: center;
+}
+
+.menu-bolsa-dibujo svg {
+  display: block;
+  width: 220px;
+  height: auto;
+  filter: drop-shadow(0 10px 14px rgb(0 0 0 / 0.4));
+}
+
+.menu-bolsa-texto {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.menu-bolsa-texto h2 {
+  margin: 0;
+  font: 800 24px/1.2 system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
 /* La columna de opciones: a la derecha en la pausa. */
 .menu-columna {
   display: flex;
