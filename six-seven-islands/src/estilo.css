@@ -297,10 +297,102 @@ body {
   pointer-events: none;
 }
 
+/* Portada: elegir persona y nombre (src/sistemas/inicio). */
+.inicio {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(180deg, rgb(255 216 176 / 0.88), rgb(255 246 234 / 0.94));
+}
+
+.inicio[hidden],
+.inicio [hidden] {
+  display: none;
+}
+
+.inicio-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  color: var(--texto);
+  text-align: center;
+}
+
+.inicio-titulo {
+  margin: 0;
+  font: 900 56px/1 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  letter-spacing: -0.02em;
+  color: var(--coral);
+  text-shadow: 0 4px 0 #fff;
+}
+
+.inicio-portada p {
+  margin: 0;
+  font: 500 20px/1.4 system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+.inicio-personas {
+  display: flex;
+  gap: 16px;
+}
+
+.inicio-carta {
+  margin: 0;
+  padding: 10px 10px 8px;
+  border: 3px solid transparent;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 6px 18px rgb(59 42 32 / 0.18);
+}
+
+.inicio-carta img {
+  display: block;
+  width: 150px;
+  height: 200px;
+  object-fit: contain;
+}
+
+.inicio-carta figcaption {
+  margin-top: 6px;
+  font: 800 18px/1.2 system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+.inicio-carta.elegida {
+  border-color: var(--coral);
+  box-shadow: 0 0 0 4px rgb(255 107 107 / 0.25);
+}
+
+.inicio-nombre {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font: 700 22px/1.2 system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+.inicio-nombre input {
+  width: 280px;
+  padding: 10px 14px;
+  border: 3px solid var(--coral);
+  border-radius: 12px;
+  font: 700 22px/1.2 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  text-align: center;
+  color: var(--texto);
+}
+
+.inicio-pista {
+  margin: 0;
+  font: 600 15px/1.4 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color: #6b5a4f;
+}
+
 /* Menú de pausa (src/sistemas/menu). */
 .menu-juego {
   position: fixed;
   inset: 0;
+  z-index: 25;
   display: grid;
   place-items: center;
   background: rgb(29 23 32 / 0.45);

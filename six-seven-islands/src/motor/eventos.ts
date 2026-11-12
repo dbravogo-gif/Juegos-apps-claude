@@ -26,6 +26,8 @@ export interface MapaEventos {
   'menu:abrir': Record<string, never>;
   /** Se abre la tienda, al acabar de hablar con el tendero. */
   'tienda:abrir': Record<string, never>;
+  /** Al empezar una partida nueva: el nombre y la persona elegidos. */
+  'jugador:elegido': { nombre: string; persona: string };
 }
 
 export type NombreEvento = keyof MapaEventos;

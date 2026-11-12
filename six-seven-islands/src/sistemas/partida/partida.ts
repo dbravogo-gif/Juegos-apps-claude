@@ -12,6 +12,7 @@ import { avanzar, crearExploracion, cumplir, entrar, interactuar, salir, type Es
 import { abrirDialogo, elegirDialogo, lineaActual, pasoDialogo, pulsar, type Dialogo, type Efecto, type EstadoDialogo, type Tecla } from '../../core/guion';
 import { TODAS_LAS_CONDICIONES, clave, construirInterior, construirMundo, deClave, enIsla, entrenadorQueVe, transitable, type Condicion, type Mundo } from '../../core/mundo';
 import { ENTRENADORES_ISLA1 } from '../../data/entrenadores-isla1';
+import { PERSONA_JUGADOR, PERSONAS } from '../../arte/personas';
 import { GUION_ISLA1 } from '../../data/guion-isla1';
 import { INTERIORES_ISLA1, SALA_INICIAL } from '../../data/interiores-isla1';
 import { ISLA_1, PUERTAS_ISLA1 } from '../../data/isla1';
@@ -25,7 +26,7 @@ import { ENCUENTROS_ISLA1 } from '../../data/encuentros-isla1';
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Entrada } from '../entrada/entrada';
 
-export type Modo = 'explorar' | 'dialogo' | 'fundido' | 'combate' | 'menu';
+export type Modo = 'titulo' | 'explorar' | 'dialogo' | 'fundido' | 'combate' | 'menu';
 
 /** Pasos fijos de cada mitad del fundido al cruzar una puerta: 0,2 s a negro y 0,2 s de vuelta. */
 export const PASOS_FUNDIDO = 12;
@@ -85,6 +86,9 @@ export class Partida implements Subsistema {
   /** Entrenadores vencidos: no vuelven a retar. */
   vencidos: string[] = [];
   dinero = 0;
+  /** El nombre y la persona del jugador, elegidos al empezar. */
+  nombre = 'Dani';
+  persona: string = PERSONA_JUGADOR;
   /** Un entrenador acaba de ver al jugador: cuando pase la exclamación, habla. */
   private alerta: { zona: string; personaje: string; pasos: number } | null = null;
   private pasosSinGuardar = 0;
@@ -122,8 +126,10 @@ export class Partida implements Subsistema {
       this.estado.zona = this.mundo.casillas.get(puerta)!.zona;
       entrar(this.estado, SALA_INICIAL, this.interiores.get(SALA_INICIAL)!);
     }
-    // Se sigue donde se dejó, salvo con ?nueva. En Safari, se pide que no se borre lo guardado.
-    if (!new URLSearchParams(location.search).has('nueva')) this.cargar();
+    // Se sigue donde se dejó, salvo con ?nueva. Sin partida guardada, se empieza en la portada
+    // (elegir persona y nombre). En Safari, se pide que no se borre lo guardado.
+    const cargada = !new URLSearchParams(location.search).has('nueva') && this.cargar();
+    if (!cargada) this.modo = 'titulo';
     void navigator.storage?.persist?.().catch(() => undefined);
   }
 
@@ -138,10 +144,23 @@ export class Partida implements Subsistema {
       vencidos: [...this.vencidos],
       rng: structuredClone(this.ctx.rng),
       dinero: this.dinero,
+      nombre: this.nombre,
+      persona: this.persona,
     };
   }
 
+  /** Desde la portada: el nombre y la persona elegidos, y a jugar. */
+  empezarPartida(nombre: string, persona: string): void {
+    this.nombre = nombre.trim().slice(0, 16) || 'Dani';
+    this.persona = persona in PERSONAS ? persona : PERSONA_JUGADOR;
+    this.modo = 'explorar';
+    this.entrada.olvidar();
+    this.ctx.eventos.emit('jugador:elegido', { nombre: this.nombre, persona: this.persona });
+    this.guardar();
+  }
+
   guardar(): void {
+    if (this.modo === 'titulo') return;
     this.pasosSinGuardar = 0;
     try {
       localStorage.setItem(CLAVE_GUARDADO, serializar(this.guardado()));
@@ -151,15 +170,17 @@ export class Partida implements Subsistema {
     }
   }
 
-  private cargar(): void {
+  /** Carga la partida guardada, si la hay. Dice si ha cargado algo. */
+  private cargar(): boolean {
     let texto: string | null = null;
     try {
       texto = localStorage.getItem(CLAVE_GUARDADO);
     } catch {
-      return;
+      return false;
     }
     const g = deserializar(texto);
     if (g) this.aplicarGuardado(g);
+    return !!g;
   }
 
   /**
@@ -181,6 +202,8 @@ export class Partida implements Subsistema {
     this.ultimoRefugio = this.interiores.has(g.ultimoRefugio) ? g.ultimoRefugio : SALA_INICIAL;
     this.vencidos = g.vencidos;
     this.dinero = g.dinero ?? 0;
+    this.nombre = g.nombre ?? 'Dani';
+    this.persona = g.persona && g.persona in PERSONAS ? g.persona : PERSONA_JUGADOR;
     this.ctx.rng.s = [...g.rng.s] as typeof this.ctx.rng.s;
   }
 
@@ -200,8 +223,8 @@ export class Partida implements Subsistema {
   }
 
   pasoFijo(): void {
-    // En combate manda el subsistema «combate», y en el menú, «menu»: aquí no se anda ni se habla.
-    if (this.modo === 'combate' || this.modo === 'menu') return;
+    // En combate manda el subsistema «combate»; en el menú, «menu», y en la portada, «inicio».
+    if (this.modo === 'combate' || this.modo === 'menu' || this.modo === 'titulo') return;
     if (this.modo === 'fundido') return this.pasoFundido();
     if (this.modo === 'dialogo') return this.pasoDialogo();
     if (this.espera > 0) {
@@ -347,6 +370,9 @@ export class Partida implements Subsistema {
   }
 
   private abrir(d: Dialogo, guionId: string): void {
+    // {nombre} en un texto se cambia por el nombre del jugador.
+    const conNombre = (l: Dialogo['lineas'][number]) => ({ ...l, texto: l.texto.replaceAll('{nombre}', this.nombre) });
+    d = { ...d, lineas: d.lineas.map(conNombre), ...(d.pregunta ? { pregunta: conNombre(d.pregunta) } : {}), ...(d.tras ? { tras: d.tras.map(conNombre) } : {}) };
     this.dialogo = abrirDialogo(d);
     this.hablando = guionId;
     this.modo = 'dialogo';

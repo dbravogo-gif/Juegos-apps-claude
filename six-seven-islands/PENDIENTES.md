@@ -50,9 +50,10 @@ propuesta de Claude y qué frena mientras siga abierto.
   el pescador y el informático (`public/modelos/personas/LEEME.md`).
   - Dani no trae animación de parado. Hoy se usa un fotograma de su andar; si el autor lo
     exporta con `Idle`, se cambia en un minuto.
-- **Selección de personaje al inicio** (autor, 2026-11-11): cada jugador elige su nombre y su
-  persona.
-  - **Propuesta:** se hace al llegar la segunda persona jugable; hasta entonces solo está Dani.
+- **Personas jugables:** la portada ya deja elegir persona y nombre (2026-11-12). Cada amigo sale
+  en cuanto llega su GLB con foto: se añade en `arte/personas.ts` con `jugable`.
+- **Evolución** (F20): el núcleo ya evoluciona, pero faltan las segundas formas y sus niveles
+  (del autor). Con los niveles de la isla 1 (hasta el 12), nadie evolucionaría todavía.
 - **Llamadas de dibujo** (2026-11-11): unas 210 mirando a Famara, frente a las 160 del reparto.
   - Lo que más gasta son los personajes de KayKit: cada uno son 5 o 6 mallas, más su sombra.
     Los de Meshy son una sola malla, así que al cambiarlos baja solo.

@@ -103,6 +103,7 @@ export class Personaje implements Subsistema {
   private objetos: Object3D[] = [];
   private quitar: (() => void)[] = [];
   private reloj = 0;
+  private personaJugador: NombrePersona = PERSONA_JUGADOR;
   /** La exclamación sobre el entrenador que acaba de ver al jugador (F16). */
   private exclamacion!: Sprite;
   private tExclamacion = -1;
@@ -121,7 +122,9 @@ export class Personaje implements Subsistema {
     // revés). Como también se pintaría sobre el propio jugador, solo se enciende cuando algo lo
     // tapa. Es coral: la clara (espuma) desaparecía contra las casas blancas de Lanzarote, y el
     // coral se ve sobre la cal, las copas, el picón negro y el tejado azul del museo.
-    this.jugador = await this.figuraPersona(PERSONA_JUGADOR);
+    const persona = (this.partida.persona in PERSONAS ? this.partida.persona : PERSONA_JUGADOR) as NombrePersona;
+    this.jugador = await this.figuraPersona(persona);
+    this.personaJugador = persona;
     const silueta = new MeshBasicNodeMaterial({ color: COLORES.acentoCoral, transparent: true, opacity: 0, depthWrite: false });
     silueta.depthFunc = GreaterDepth;
     this.silueta = silueta;
@@ -173,6 +176,13 @@ export class Personaje implements Subsistema {
         }
       }
     }
+    // Al empezar una partida nueva con otra persona, se cambia la figura del jugador.
+    this.quitar.push(
+      ctx.eventos.on('jugador:elegido', ({ persona }) => {
+        if (persona === this.personaJugador || !(persona in PERSONAS)) return;
+        void this.cambiarJugador(persona as NombrePersona, ctx);
+      }),
+    );
     // La exclamación: un bocadillo blanco con un «!» coral, que salta sobre el entrenador.
     this.exclamacion = new Sprite(this.materialExclamacion());
     this.exclamacion.visible = false;
@@ -238,6 +248,19 @@ export class Personaje implements Subsistema {
     const m = new SpriteNodeMaterial({ map: t, transparent: true, depthTest: false });
     this.materiales.push(m);
     return m;
+  }
+
+  private async cambiarJugador(persona: NombrePersona, ctx: Ctx): Promise<void> {
+    const nueva = await this.figuraPersona(persona);
+    const vieja = this.jugador;
+    for (const m of this.mallasSilueta) nueva.raiz.add(m);
+    vieja.mezclador.stopAllAction();
+    vieja.raiz.removeFromParent();
+    this.figuras = this.figuras.filter((f) => f !== vieja);
+    ctx.escena.add(nueva.raiz);
+    this.objetos.push(nueva.raiz);
+    this.jugador = nueva;
+    this.personaJugador = persona;
   }
 
   /** Dónde está un personaje (no el jugador), o null si no tiene figura. */
