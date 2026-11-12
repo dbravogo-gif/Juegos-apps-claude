@@ -175,7 +175,7 @@
       "tanda": 3,
       "descripcion": "La inicial desobedece en el 45 % de los turnos (usa otro movimiento o se distrae) hasta que el anciano del pueblo cuenta su historia; desde entonces obedece. Lo decide el generador del combate, así que es reproducible. El paso al bosque se abre al hablar con él.",
       "como_se_comprueba": "Pruebas del núcleo: proporción de desobediencia cercana al 45 % en miles de turnos con semilla, 0 % tras el anciano y el mismo resultado con la misma semilla. Un bot no entra en el bosque sin hablar con el anciano.",
-      "hecha": false
+      "hecha": true
     }
   ]
 }
