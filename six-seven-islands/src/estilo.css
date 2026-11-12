@@ -440,6 +440,44 @@ body {
   box-shadow: 0 0 0 3px rgb(255 107 107 / 0.25);
 }
 
+.combate-barra {
+  position: absolute;
+  left: 50%;
+  bottom: 172px;
+  width: min(520px, 70%);
+  height: 26px;
+  transform: translateX(-50%);
+  border: 3px solid #fff8ee;
+  border-radius: 14px;
+  background: #9b9393;
+  box-shadow: 0 6px 18px rgb(59 42 32 / 0.3);
+}
+
+.combate-barra i {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+
+.combate-barra .blanca {
+  background: #f4efe6;
+}
+
+.combate-barra .verde {
+  background: #4cc26e;
+}
+
+.combate-barra .flecha {
+  position: absolute;
+  top: -18px;
+  width: 0;
+  height: 0;
+  border-right: 11px solid transparent;
+  border-left: 11px solid transparent;
+  border-top: 16px solid var(--coral);
+  transform: translateX(-50%);
+}
+
 .combate-velo {
   position: absolute;
   inset: 0;

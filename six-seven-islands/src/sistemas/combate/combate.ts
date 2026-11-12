@@ -25,6 +25,7 @@ import {
 import { iniciarCombate, reemplazar, resolverTurno, type Accion, type EstadoCombate, type Evento, type Resultado } from '../../core/combate';
 import { crearCriatura, nombreDe, objetoUtil } from '../../core/criatura';
 import type { Criatura } from '../../core/modelo';
+import { CALIDAD_ZONA, MEDIA_BLANCA, MEDIA_VERDE, zonaBarra } from '../../core/captura';
 import { crearRng } from '../../core/rng';
 import { vidaMaxima } from '../../core/estadisticas';
 import { MaterialDiorama } from '../../arte/material';
@@ -59,8 +60,8 @@ const CAIDA = 2.6;
 const REBOTE = 0.5;
 /** Segundos de cada fundido, al entrar y al salir. */
 const FUNDIDO = 0.55;
-/** Calidad del lanzamiento del cubo hasta que llegue la barra de captura (F08): normal. */
-const CALIDAD_PROVISIONAL = 0.5;
+/** Segundos que tarda la flecha de la barra de captura en cruzarla de lado a lado. */
+const BARRIDO = 1.1;
 /** Cuántas criaturas caben en el equipo. */
 const MAX_EQUIPO = 6;
 
@@ -68,7 +69,7 @@ const NOMBRE_TIPO = new Map<string, string>(TIPOS.map((t) => [t.id, t.nombre]));
 const COLOR_TIPO = new Map<string, number>(TIPOS.map((t) => [t.id, t.color]));
 const ESTADISTICA: Record<string, string> = { fuerza: 'la fuerza', escudo: 'el escudo', magia: 'la magia', resMagica: 'la resistencia mágica', celeridad: 'la celeridad' };
 
-type Fase = 'fuera' | 'entrando' | 'mensajes' | 'menu' | 'saliendo';
+type Fase = 'fuera' | 'entrando' | 'mensajes' | 'menu' | 'barra' | 'saliendo';
 /** Qué menú está abierto: el principal, los ataques, la mochila, el equipo o el cambio obligado. */
 type Menu = 'raiz' | 'ataques' | 'mochila' | 'equipo' | 'forzado';
 
@@ -130,6 +131,10 @@ export class Combate implements Subsistema {
   private figuras = new Map<string, Group>();
   /** Contra quién se lucha: el id del entrenador, o null si es salvaje. */
   private entrenador: string | null = null;
+  /** La barra de captura (F08): qué cubo se lanza y cuánto lleva la flecha moviéndose. */
+  private barra!: HTMLDivElement;
+  private flecha!: HTMLElement;
+  private lanzamiento: { objeto: string; t: number } | null = null;
   private particulas: { malla: Mesh; vel: Vector3; vida: number }[] = [];
   private vidaVista: [number, number] = [0, 0];
 
@@ -199,12 +204,19 @@ export class Combate implements Subsistema {
       <div class="combate-ficha rival"><p class="combate-nombre"></p><p class="combate-nivel"></p><div class="combate-vida"><div class="combate-relleno"></div></div></div>
       <div class="combate-ficha propia"><p class="combate-nombre"></p><p class="combate-nivel"></p><div class="combate-vida"><div class="combate-relleno"></div></div><p class="combate-numeros"></p></div>
       <div class="combate-caja"><p class="combate-texto" aria-live="assertive"></p><div class="combate-menu" hidden></div></div>
+      <div class="combate-barra" hidden><i class="blanca"></i><i class="verde"></i><b class="flecha"></b></div>
       <div class="combate-velo"></div>`;
     document.body.append(raiz);
     this.raiz = raiz;
     this.texto = raiz.querySelector('.combate-texto')!;
     this.menu = raiz.querySelector('.combate-menu')!;
     this.velo = raiz.querySelector('.combate-velo')!;
+    this.barra = raiz.querySelector('.combate-barra')!;
+    this.flecha = raiz.querySelector('.combate-barra .flecha')!;
+    // Las zonas, con los anchos del núcleo: así lo que se ve es lo que cuenta.
+    const zona = (clase: string, media: number) => (raiz.querySelector<HTMLElement>(`.combate-barra .${clase}`)!.style.cssText = `left:${(0.5 - media) * 100}%;width:${media * 200}%`);
+    zona('blanca', MEDIA_BLANCA);
+    zona('verde', MEDIA_VERDE);
     for (const ficha of raiz.querySelectorAll('.combate-ficha')) {
       this.fichas.push({
         nombre: ficha.querySelector('.combate-nombre')!,
@@ -355,6 +367,32 @@ export class Combate implements Subsistema {
     this.menu.hidden = true;
     this.fase = 'mensajes';
     this.mostrarEventos(r.eventos);
+  }
+
+  /** La barra de captura: la flecha va y viene hasta que se para con Espacio, E o Enter. */
+  private abrirBarra(objeto: string): void {
+    this.fase = 'barra';
+    this.lanzamiento = { objeto, t: 0 };
+    this.menu.hidden = true;
+    this.barra.hidden = false;
+    this.texto.textContent = 'Para la flecha con Espacio. En el verde, mucho mejor. (Esc: volver)';
+  }
+
+  /** Dónde está la flecha, de 0 (izquierda) a 1 (derecha): va y viene. */
+  private posicionFlecha(): number {
+    const u = ((this.lanzamiento?.t ?? 0) / BARRIDO) % 2;
+    return u < 1 ? u : 2 - u;
+  }
+
+  private pararBarra(lanzar: boolean): void {
+    const l = this.lanzamiento!;
+    const zona = zonaBarra(this.posicionFlecha());
+    this.barra.hidden = true;
+    this.lanzamiento = null;
+    if (!lanzar) return this.abrirMenu('mochila');
+    const texto = { verde: '¡En el verde! Un lanzamiento perfecto.', blanca: 'En el blanco: buen lanzamiento.', gris: 'En el gris… Lanzas como puedes.' }[zona];
+    this.encolar({ texto, duracion: 1, saltable: true });
+    this.enviar({ tipo: 'objeto', objeto: l.objeto, calidad: CALIDAD_ZONA[zona] });
   }
 
   /** La criatura activa de un lado. */
@@ -573,6 +611,11 @@ export class Combate implements Subsistema {
     if (this.fase === 'fuera') return;
     const confirmar = this.entrada.consumir('confirmar');
     const cancelar = this.entrada.consumir('cancelar');
+    if (this.fase === 'barra') {
+      if (confirmar) this.pararBarra(true);
+      else if (cancelar) this.pararBarra(false);
+      return;
+    }
     if (this.fase === 'menu') {
       const dir = this.entrada.pulsacion();
       if (dir) {
@@ -614,6 +657,9 @@ export class Combate implements Subsistema {
         for (const l of this.luchadores) if (l && l.escala > 0) l.extra.set(0, 0, 0);
         this.paso = null;
       }
+    } else if (this.fase === 'barra' && this.lanzamiento) {
+      this.lanzamiento.t += dt;
+      this.flecha.style.left = `${this.posicionFlecha() * 100}%`;
     } else if (this.fase === 'mensajes') {
       if (this.estado?.fin) this.terminar();
       else this.abrirMenu(this.estado?.pendientes.length ? 'forzado' : 'raiz');
@@ -662,7 +708,7 @@ export class Combate implements Subsistema {
             return {
               html: boton(`${o.nombre} ×${n}`, o.descripcion),
               activa: captura ? e.salvaje : objetoUtil(c, id, DATOS),
-              elegir: () => this.enviar(captura ? { tipo: 'objeto', objeto: id, calidad: CALIDAD_PROVISIONAL } : { tipo: 'objeto', objeto: id, objetivo: activo }),
+              elegir: () => (captura ? this.abrirBarra(id) : this.enviar({ tipo: 'objeto', objeto: id, objetivo: activo })),
             };
           });
         if (!this.opciones.length) texto = 'La mochila está vacía. (Esc: volver)';

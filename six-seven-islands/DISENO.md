@@ -145,8 +145,9 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
   - Tras debilitar a la criatura, se lanza el objeto parando con Espacio una flecha que va y
     viene sobre una barra con tres zonas: gris, blanca y una verde pequeña (decidido por el
     autor, 2026-11-08).
-  - Ninguna zona asegura la captura: solo la hacen más o menos fácil. Propuesta: gris ×1,
-    blanca ×1,5 y verde ×2,5 sobre la probabilidad base.
+  - Ninguna zona asegura la captura: solo la hacen más o menos fácil. Gris ×1, blanca ×1,5 y
+    verde ×2,5 sobre la probabilidad base (hecho el 2026-11-12, `core/captura.ts`). La verde
+    ocupa el 10 % central y la blanca, el 30 %; la flecha cruza la barra en 1,1 s.
   - La puntería y el momento suben la probabilidad. La base depende de la Vida que le quede, de
     su estado y del objeto.
 

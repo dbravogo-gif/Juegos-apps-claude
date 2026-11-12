@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { factorLanzamiento, intentarCaptura, probabilidadCaptura, type DatosCaptura } from '../src/core/captura';
+import { CALIDAD_ZONA, factorLanzamiento, intentarCaptura, probabilidadCaptura, zonaBarra, type DatosCaptura } from '../src/core/captura';
 import { crearCriatura, curarDelTodo, objetoUtil, usarObjeto } from '../src/core/criatura';
 import { calcularDanio, type Combatiente } from '../src/core/danio';
 import {
@@ -153,8 +153,15 @@ describe('captura', () => {
     expect(p({ ...base, estado: { tipo: 'paralizado' } })).toBeGreaterThan(p(base));
   });
 
-  it('el lanzamiento va de ×0,75 a ×1,25 y tolera valores fuera de rango', () => {
-    expect([factorLanzamiento(0), factorLanzamiento(1), factorLanzamiento(-3), factorLanzamiento(9), factorLanzamiento(NaN)]).toEqual([0.75, 1.25, 0.75, 1.25, 0.75]);
+  it('el lanzamiento multiplica según la zona de la barra y tolera valores fuera de rango', () => {
+    // Gris ×1, blanca ×1,5 y verde ×2,5 (DISENO.md); lo de fuera de rango cuenta como el extremo.
+    expect([factorLanzamiento(0), factorLanzamiento(0.5), factorLanzamiento(1), factorLanzamiento(-3), factorLanzamiento(9), factorLanzamiento(NaN)]).toEqual([1, 1.5, 2.5, 1, 2.5, 1]);
+  });
+
+  it('la barra: verde pequeña en el centro, blanca alrededor y gris en los lados', () => {
+    expect([zonaBarra(0.5), zonaBarra(0.53), zonaBarra(0.6), zonaBarra(0.36), zonaBarra(0.1), zonaBarra(0.95)]).toEqual(['verde', 'verde', 'blanca', 'blanca', 'gris', 'gris']);
+    expect(factorLanzamiento(CALIDAD_ZONA.verde)).toBeGreaterThan(factorLanzamiento(CALIDAD_ZONA.blanca));
+    expect(factorLanzamiento(CALIDAD_ZONA.blanca)).toBeGreaterThan(factorLanzamiento(CALIDAD_ZONA.gris));
   });
 
   it('la tasa observada coincide con la calculada', () => {
