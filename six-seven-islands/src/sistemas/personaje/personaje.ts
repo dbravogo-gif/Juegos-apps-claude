@@ -106,6 +106,10 @@ export class Personaje implements Subsistema {
   private personaJugador: NombrePersona = PERSONA_JUGADOR;
   /** La exclamación sobre el entrenador que acaba de ver al jugador (F16). */
   private exclamacion!: Sprite;
+  /** Las casillas que ve cada entrenador, en una sola malla: qué instancias son de quién. */
+  private visiones: { malla: InstancedMesh; matrices: Matrix4[]; deQuien: Map<string, number[]> } | null = null;
+  /** Los vencidos ya aplicados a la malla de visiones (los vencidos no ven: sus casillas se ocultan). */
+  private firmaVencidos: string | null = null;
   private tExclamacion = -1;
 
   async init(ctx: Ctx): Promise<void> {
@@ -144,6 +148,7 @@ export class Personaje implements Subsistema {
 
     // Personajes de la isla y de los interiores, y lo que ven los entrenadores.
     const visiones: Matrix4[] = [];
+    const deQuien = new Map<string, number[]>();
     for (const mapa of [m, ...this.partida.interiores.values()]) {
       for (const z of mapa.zonas.values()) {
         for (const p of z.personajes) {
@@ -171,6 +176,7 @@ export class Personaje implements Subsistema {
           this.objetos.push(f.raiz);
           for (const v of vision(mapa, z.id, p)) {
             const [vx, vy] = deClave(v);
+            deQuien.set(p.id, [...(deQuien.get(p.id) ?? []), visiones.length]);
             visiones.push(new Matrix4().makeTranslation(vx, alturaSuelo(mapa.casillas.get(v)!.h) + 0.14, vy));
           }
         }
@@ -220,6 +226,7 @@ export class Personaje implements Subsistema {
       im.computeBoundingSphere();
       ctx.escena.add(im);
       this.objetos.push(im);
+      this.visiones = { malla: im, matrices: visiones, deQuien };
     }
     this.colocar(0, 0);
   }
@@ -398,8 +405,24 @@ export class Personaje implements Subsistema {
     return false;
   }
 
+  /** Oculta lo que ven los entrenadores vencidos (al vencerlos, al cargar o al importar). */
+  private ocultarVisionesVencidas(): void {
+    const v = this.visiones;
+    const vencidos = this.partida.vencidos;
+    const firma = vencidos.join(',');
+    if (!v || firma === this.firmaVencidos) return;
+    this.firmaVencidos = firma;
+    const nada = new Matrix4().makeScale(0, 0, 0);
+    for (const [id, indices] of v.deQuien) {
+      const vencido = vencidos.includes(id);
+      for (const i of indices) v.malla.setMatrixAt(i, vencido ? nada : v.matrices[i]);
+    }
+    v.malla.instanceMatrix.needsUpdate = true;
+  }
+
   actualizar(dt: number, ctx: Ctx): void {
     this.colocar(dt, ctx.tiempo.alfa);
+    this.ocultarVisionesVencidas();
     this.reloj += dt;
     if (this.tExclamacion >= 0) {
       // Salta y se queda un momento; dura lo mismo que la espera de «partida» (0,75 s).

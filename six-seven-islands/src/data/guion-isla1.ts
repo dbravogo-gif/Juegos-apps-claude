@@ -124,14 +124,20 @@ export const GUION_ISLA1: Guion = {
       },
     },
   ],
+  // Con equipo, «partida» cura y añade «Tu equipo está como nuevo» (probador, 2026-11-12: antes
+  // decía también que estaban perfectamente, aunque llegaran agotadas).
   enfermera: [
     {
+      sin: 'inicial-elegida',
       dialogo: {
         lineas: [
           { quien: 'Enfermera', texto: 'Te damos la bienvenida al refugio. Aquí cuidamos de tu equipo sin cobrar nada.' },
-          { quien: 'Enfermera', texto: 'Ahora mismo tus criaturas están perfectamente. Vuelve cuando estén cansadas.' },
+          { quien: 'Enfermera', texto: 'Cuando tengas criaturas, tráelas y te las dejamos como nuevas.' },
         ],
       },
+    },
+    {
+      dialogo: { lineas: [{ quien: 'Enfermera', texto: 'Te damos la bienvenida al refugio. Aquí cuidamos de tu equipo sin cobrar nada.' }] },
     },
   ],
   // La enfermera del refugio de la capital dice lo mismo que la de La Geria.
