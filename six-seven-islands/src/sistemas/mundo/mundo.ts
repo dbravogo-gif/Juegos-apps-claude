@@ -15,6 +15,7 @@ import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Partida } from '../partida/partida';
 import { alturaCara, cumbres, decoracion, geometriaTerreno, pseudo } from './terreno';
 import { casaCanaria, faro, type OpcionesCasa, type UsoCasa } from './canario';
+import { bocaCueva } from './kit';
 import { VARIANTES, piezaKit, type PiezaKit } from './kit';
 import { geometriaEspuma, geometriaPiezasMar, planMar } from './mar';
 
@@ -183,11 +184,12 @@ export class Mundo implements Subsistema {
 
     // Objetos en el suelo: un frasco que flota y gira despacio hasta que se recoge (de momento,
     // el único objeto es la poción). Se ve como algo que se coge, no como una bola sin forma.
-    const objs = [...m.objetos];
+    // También los de los interiores (la cueva de Ajuy), que están lejos, con sus propias claves.
+    const objs = [m, ...this.partida.interiores.values()].flatMap((mapa) => [...mapa.objetos].map(([k, o]) => [k, o, mapa] as const));
     if (objs.length) {
-      const matrices = objs.map(([k]) => {
+      const matrices = objs.map(([k, , mapa]) => {
         const [x, y] = deClave(k);
-        return new Matrix4().makeTranslation(x, alturaSuelo(m.casillas.get(k)!.h) + 0.12, y);
+        return new Matrix4().makeTranslation(x, alturaSuelo(mapa.casillas.get(k)!.h) + 0.12, y);
       });
       const im = this.instanciar(frasco(), this.materialColores, matrices);
       this.objetos = { malla: im, ids: objs.map(([, o]) => o.objeto.id), matrices };
@@ -266,6 +268,17 @@ export class Mundo implements Subsistema {
           const casa = new Mesh(geometria, this.materialColores);
           casa.position.set(cx, base, cz);
           this.anadir(casa);
+          for (const k of e.casillas) this.subirTapa(k, base + geometria.boundingBox!.max.y);
+          continue;
+        }
+        if (e.tipo === 'J') {
+          // La boca de la cueva (Ajuy): un risco con su arco, que tapa lo de detrás como una casa.
+          const puerta = e.puertas.length ? deClave(e.puertas[0])[0] - cx : 0;
+          const geometria = bocaCueva(e.ancho, e.fondo, puerta, pseudo(e.casillas[0]));
+          geometria.computeBoundingBox();
+          const risco = new Mesh(geometria, this.materialColores);
+          risco.position.set(cx, base, cz);
+          this.anadir(risco);
           for (const k of e.casillas) this.subirTapa(k, base + geometria.boundingBox!.max.y);
           continue;
         }

@@ -220,7 +220,8 @@ export class Partida implements Subsistema {
   }
 
   /** Zarpa en barco: fundido a negro, se guarda la partida en la isla de destino y se recarga. */
-  private viajar(n: number): void {
+  viajar(n: number): void {
+    if (!ISLAS[n]) throw new Error(`No existe la isla ${n}`);
     this.viajePendiente = n;
     this.modo = 'viaje';
     this.pasosViaje = 0;
