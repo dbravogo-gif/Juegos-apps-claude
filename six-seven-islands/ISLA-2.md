@@ -106,9 +106,19 @@ Lo juzga el autor al probarlo.
 
 ## Por fases, publicando cada una
 
+**Fase 1, hecha (2026-11-13).**
+- El mapa sale de `herramientas/isla2.py` (`src/data/isla2.ts`) y la isla está registrada en
+  `data/islas.ts`.
+- El barco de Lanzarote lleva a Corralejo y el marinero de Corralejo trae de vuelta.
+- Las Dunas tienen las crestas en zigzag, la calima, el horno de cal, la arqueóloga con su estatua
+  y tres entrenadores perdidos.
+- El camino del sur queda tapado por una duna hasta la fase 2.
+- Provisional: las crestas son bloques de arena (se pueden redondear), las salvajes son de
+  relleno y Lobos aún no se ve en el mar.
+
 | Fase | Qué | Coste |
 | --- | --- | --- |
-| 1 | Varias islas y viaje en barco; Corralejo y Las Dunas jugables | alto |
+| 1 | Varias islas y viaje en barco; Corralejo y Las Dunas jugables (**hecha**, 2026-11-13) | alto |
 | 2 | Puerto del Rosario, Betancuria y Ajuy con su cueva | alto |
 | 3 | Sotavento y Morro Jable con el gimnasio de Aire | alto |
 | 4 | Tindaya y Cofete, entrenadores, pulido y revisión del probador | medio |

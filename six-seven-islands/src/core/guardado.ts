@@ -22,6 +22,8 @@ export interface Guardado {
   rng: EstadoRng;
   /** Dinero ganado a los entrenadores (desde el 2026-11-12; si falta, 0). */
   dinero?: number;
+  /** La isla en la que se está (desde el 2026-11-13; sin ella, la 1). */
+  isla?: number;
   /** El nombre y la persona elegidos al empezar (desde el 2026-11-12). */
   nombre?: string;
   persona?: string;

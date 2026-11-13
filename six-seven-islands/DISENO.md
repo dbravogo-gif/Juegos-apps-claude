@@ -318,6 +318,9 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
 - 2026-11-12 · **Inicial rebelde** (F25): hasta hablar con el anciano, no hace caso el 45 % de
   sus turnos; la mitad de esas veces usa otro movimiento y la otra mitad se distrae. Lo decide
   el generador del combate.
+- 2026-11-13 · **Fuerteventura, fase 1:** varias islas y viaje en barco (se recarga en la isla de
+  destino), Corralejo y Las Dunas jugables, con la calima, la arqueóloga y su estatua
+  (`ISLA-2.md`).
 - 2026-11-13 · **Quinta inicial, de Tierra** (autor: se une otro amigo): acaba siendo
   Tierra/Espectral. Museo con cinco pedestales en el orden del círculo; estadísticas y modelo
   provisionales hasta que lleguen los suyos (en combate y de compañera, el de Roca).

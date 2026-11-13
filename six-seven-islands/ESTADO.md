@@ -22,8 +22,9 @@ Tanda 1: Lanzarote es la isla 1 (`ISLA-1.md`), con kit por código y la tabla de
    la partida), tienda en La Geria, inicial rebelde hasta el anciano, portada (persona y
    nombre), sonido por código y final de la isla 1 (el barco, tras la líder). Tabla de tipos del
    autor, con Lucha (9 criaturas). Menús nuevos con medallero de pintaderas, equipo y mochila
-   por bolsillos, y un gimnasio de Roca de verdad. Siguiente isla: Fuerteventura (`ISLA-2.md`,
-   por aprobar). Con las criaturas del autor, la evolución.
+   por bolsillos, y un gimnasio de Roca de verdad. Fuerteventura (`ISLA-2.md`): fase 1 hecha
+   (barco, Corralejo y Las Dunas); siguen las fases 2 a 4. Con las criaturas del autor, la
+   evolución.
 2. En paralelo, arte con Meshy (`prompts-meshy.md`): criaturas y edificios singulares.
 3. Criaturas: reparto, lista de referencia y lista de Lanzarote en `CRIATURAS.md`.
 
@@ -35,6 +36,5 @@ Aprobar Fuerteventura (`ISLA-2.md`) y lo demás de la lista viva de `PENDIENTES.
 ## Defectos conocidos
 
 - Solo ordenador desde 2026-11-08: falta medir los FPS en los PC del autor y sus amigos.
-- En la caldera de las Montañas del Fuego, `mundo` gasta más de su reparto de llamadas
-  (`ARCHITECTURE.md`).
+- En la caldera del Fuego, `mundo` gasta más llamadas de dibujo de su reparto (`ARCHITECTURE.md`).
 - Las estatuas del museo y los personajes de KayKit son provisionales.

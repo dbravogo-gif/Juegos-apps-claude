@@ -108,6 +108,10 @@ export const COLORES = {
   // La playa dorada, más viva que el jable gris del suelo de Lanzarote, para que se distinga.
   arenaDorada: '#F2D08A',
   ladoArena: '#C9A266',
+  // Las dunas de Corralejo, de arena casi blanca (Fuerteventura, 2026-11-13).
+  arenaDuna: '#F3E4BE',
+  crestaDuna: '#EAD6A4',
+  ladoDuna: '#D4BC86',
   // Los colores de Timanfaya: el picón no es solo negro, tiene manchas óxido y ocre.
   piconOxido: '#8A5546',
   piconOcre: '#A97A50',

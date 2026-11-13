@@ -166,6 +166,7 @@ export class Sistema implements Subsistema {
 | `guardado:hecho` | `{}` | `partida` |
 | `entrenador:visto` | `{ id }` | `partida` |
 | `menu:abrir` | `{}` | `partida` |
+| `jugador:viaja` | `{ isla }` | `partida` (justo antes de recargar en la otra isla) |
 | `tienda:abrir` | `{}` | `partida` |
 | `jugador:elegido` | `{ nombre, persona }` | `partida` |
 | `sonido:tocar` | `{ nombre }` | `partida`, `combate`, `menu`, `inicio` |
@@ -195,6 +196,15 @@ y `?semilla=n`. Mientras exista la vitrina de F04: `?vista=combate|todas|explora
 `?criatura=0..3`, `?gris` y `?lento=0.1` (cámara lenta, para revisar las animaciones). En el juego,
 `?abrir=todo` abre los pasos cerrados para recorrer la isla entera.
 - **Dos arranques:** el juego por defecto y la vitrina con `?vitrina` (`src/main.ts`).
+
+## Islas y viajes
+
+- `data/islas.ts` reúne lo propio de cada isla (mapa, puertas, interiores, encuentros,
+  entrenadores, guion, objetivos, curanderos, tenderos, refugio y llegada en barco). «partida»,
+  «combate» y el menú leen `partida.datos`, la isla actual.
+- **Viajar en barco** (efecto de diálogo `viaje`): fundido a negro, se guarda la partida en la isla
+  de destino, junto a su muelle, y se recarga la página. Así cada isla se monta desde cero con
+  todos los subsistemas, sin tener que desmontar la anterior. El guardado lleva `isla`.
 
 ## Guardado
 

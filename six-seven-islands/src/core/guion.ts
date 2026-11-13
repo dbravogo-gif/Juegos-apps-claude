@@ -17,8 +17,10 @@ export interface Efecto {
   condicion?: Condicion;
   /** El tipo de la inicial que se elige. */
   inicial?: string;
-  /** Acaba la versión (zarpar hacia la isla siguiente): sale la pantalla del final. */
+  /** Acaba la isla (zarpar hacia la siguiente por primera vez): sale la pantalla del final. */
   fin?: boolean;
+  /** Viajar en barco a esta isla (por su número), al cerrar el diálogo o tras el final. */
+  viaje?: number;
 }
 
 export interface Dialogo {

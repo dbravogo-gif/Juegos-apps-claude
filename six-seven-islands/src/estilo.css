@@ -410,6 +410,45 @@ body {
   color: #6b5a4f;
 }
 
+/* La calima de Las Dunas: unas motas de polvo que cruzan de derecha a izquierda (interfaz). */
+.calima {
+  position: fixed;
+  inset: 0;
+  z-index: 4;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.calima[hidden] {
+  display: none;
+}
+
+.calima i {
+  position: absolute;
+  left: 100%;
+  width: 26px;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, rgb(214 180 120 / 0), rgb(214 180 120 / 0.55));
+  animation: calima-cruza linear infinite;
+}
+
+@keyframes calima-cruza {
+  from {
+    left: 102%;
+    translate: 0 0;
+  }
+
+  50% {
+    translate: 0 14px;
+  }
+
+  to {
+    left: -6%;
+    translate: 0 -6px;
+  }
+}
+
 /* La pintadera recién ganada, en grande sobre el juego (src/sistemas/interfaz). */
 .medalla-ganada {
   position: fixed;

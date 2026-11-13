@@ -124,6 +124,8 @@ export function alturaCara(cm: CasillaMundo | undefined, cumbre: number | undefi
       return alturaSuelo(cm.h) - 0.15;
     case '#':
       return alturaSuelo(cm.h) + 0.9;
+    case 'K': // la cresta de la duna, más alta que la arena que se pisa
+      return alturaSuelo(cm.h) + 0.7;
     case '"':
     case ';':
       return alturaSuelo(cm.h) + SUBIDA_ENCUENTRO;
@@ -159,6 +161,9 @@ const COLOR_ARRIBA: Partial<Record<Casilla, string>> = {
   w: COLORES.charcoVerde,
   a: COLORES.arenaDorada,
   Q: COLORES.lavaNegra,
+  D: COLORES.arenaDuna,
+  K: COLORES.crestaDuna,
+  E: COLORES.arenaDuna,
 };
 
 type ColoresIsla = Mundo['isla']['colores'];
@@ -231,6 +236,7 @@ function colorLado(cm: CasillaMundo | undefined, esCumbre: boolean, isla: Colore
   if (esCumbre) return isla?.ladoCumbre ?? '#9196C6';
   if (cm?.c === '#') return '#7E746F';
   if (cm?.c === 'a') return COLORES.ladoArena;
+  if (cm?.c === 'K' || cm?.c === 'D' || cm?.c === 'E') return COLORES.ladoDuna;
   if (cm?.c === '_' || cm?.c === ';' || cm?.c === 'L' || cm?.c === 'Q') return '#4A4247';
   return '#8E6A4D';
 }

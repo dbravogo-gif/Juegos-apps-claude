@@ -35,7 +35,6 @@ import { figuraCriatura } from '../../arte/criaturas3d';
 import { RADIO_CUBO, figuraCubo, girarCubo } from '../../arte/cubos';
 import { attribute } from 'three/tsl';
 import { DATOS_COMBATE_PRUEBA, ENTRENADOR_PRUEBA, ESPECIE_INICIAL, MODELO_DE, RIVAL_DE } from '../../data/combate-prueba';
-import { ENTRENADORES_ISLA1 } from '../../data/entrenadores-isla1';
 import { TIPOS } from '../../data/tipos';
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Entrada } from '../entrada/entrada';
@@ -176,7 +175,7 @@ export class Combate implements Subsistema {
     // Hablar con un entrenador no vencido (o que te vea) acaba en combate (F16).
     ctx.eventos.on('dialogo:cerrar', ({ guionId }) => {
       const inicial = this.partida.estado.inicial;
-      const def = ENTRENADORES_ISLA1[guionId];
+      const def = this.partida.datos.entrenadores[guionId];
       if (!def || !inicial || this.partida.vencidos.includes(guionId)) return;
       const rng = crearRng(`rival-${guionId}`);
       // El primer entrenador saca la inicial que pierde contra la tuya.
@@ -636,7 +635,7 @@ export class Combate implements Subsistema {
           this.encolar({ texto: ev.exito ? '¡Escapas sin problemas!' : '¡No has podido escapar!', sonido: ev.exito ? 'huir' : 'atras', duracion: 1.1, saltable: true });
           break;
         case 'fin': {
-          const premio = this.entrenador ? (ENTRENADORES_ISLA1[this.entrenador]?.premio ?? 0) : 0;
+          const premio = this.entrenador ? (this.partida.datos.entrenadores[this.entrenador]?.premio ?? 0) : 0;
           const textos: Record<string, string> = {
             victoria: this.entrenador ? `¡Has vencido al entrenador! Te da ${premio} de dinero.` : '¡Has ganado!',
             derrota:

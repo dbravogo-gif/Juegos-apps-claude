@@ -87,7 +87,7 @@ export class Inicio implements Subsistema {
       portada: 'Pulsa Enter para empezar',
       persona: '¿Quién eres? Flechas para elegir, Enter para seguir',
       nombre: 'Escribe tu nombre y pulsa Enter. Esc: volver',
-      fin: 'Enter: seguir explorando Lanzarote',
+      fin: this.pistaFin(),
     }[p];
     if (p === 'fin') {
       this.pintarFin();
@@ -104,11 +104,18 @@ export class Inicio implements Subsistema {
     } else this.campo.blur();
   }
 
+  /** Qué hace Enter en el final: zarpar (si hay isla a la que ir) o seguir explorando. */
+  private pistaFin(): string {
+    const destino = this.partida.destinoViaje;
+    return destino ? `Enter: zarpar hacia ${destino.nombre}` : `Enter: seguir explorando ${this.partida.datos.nombre}`;
+  }
+
   /** El final: quién eres, tu equipo y lo que viene. */
   private pintarFin(): void {
     const pa = this.partida;
     const raiz = this.raiz;
-    raiz.querySelector('.inicio-fin-texto')!.textContent = `${pa.nombre}, has vencido a la líder de Roca y zarpas rumbo a Fuerteventura con tu equipo:`;
+    const destino = pa.destinoViaje?.nombre ?? 'Fuerteventura';
+    raiz.querySelector('.inicio-fin-texto')!.textContent = `${pa.nombre}, has vencido a la líder de Roca y zarpas rumbo a ${destino} con tu equipo:`;
     raiz.querySelector('.inicio-fin-equipo')!.replaceChildren(
       ...pa.equipo.map((c) => {
         const li = document.createElement('li');
@@ -117,7 +124,9 @@ export class Inicio implements Subsistema {
       }),
     );
     raiz.querySelector('.inicio-fin-gancho')!.textContent =
-      'Desde la cubierta, a lo lejos, se ve una isla que no sale en ningún mapa… Continuará en la isla 2. Gracias por jugar esta primera versión.';
+      pa.destinoViaje
+        ? 'Desde la cubierta, a lo lejos, se ve una isla que no sale en ningún mapa… Pero el barco pone rumbo al sur, hacia las dunas.'
+        : 'Desde la cubierta, a lo lejos, se ve una isla que no sale en ningún mapa… Continuará en la isla 2.';
   }
 
   private pintar(): void {
@@ -136,7 +145,7 @@ export class Inicio implements Subsistema {
     const dir = this.entrada.pulsacion();
     if (this.paso === 'fin') {
       if (this.bloqueo > 0) {
-        if (--this.bloqueo === 0) this.pista.textContent = 'Enter: seguir explorando Lanzarote';
+        if (--this.bloqueo === 0) this.pista.textContent = this.pistaFin();
         return;
       }
       if (confirmar) {
