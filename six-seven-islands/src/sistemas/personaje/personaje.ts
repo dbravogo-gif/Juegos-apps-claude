@@ -380,8 +380,9 @@ export class Personaje implements Subsistema {
     const t = e.paso === 0 ? 1 : Math.min(1, (e.paso + alfa) / PASOS_POR_CASILLA);
     this.posicion.set(p.x, h0 + (h1 - h0) * t, p.y);
     this.jugador.raiz.position.copy(this.posicion);
-    // Andando se pasa un instante por paso 0 entre casilla y casilla: cambiar a «parado» ahí hacía
-    // que la animación tropezara en cada casilla (el autor veía el andar raro, 2026-11-10).
+    // Al andar seguido ya no se pasa por paso 0 entre casillas («partida» encadena los pasos), pero
+    // al chocar con algo o al soltar y volver a pulsar sí: cambiar a «parado» al instante hacía que
+    // la animación tropezara (el autor veía el andar raro, 2026-11-10).
     this.quieto = e.paso > 0 ? 0 : this.quieto + dt;
     this.animar(this.jugador, this.quieto < 0.12 ? this.jugador.andar : this.jugador.parado);
     let objetivo = GIRO[e.mira];

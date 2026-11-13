@@ -3,7 +3,7 @@
 // estatua en piedra, esta sí con la luz del juego. Los modelos se descargan una vez y se clonan.
 
 import { Box3, Group, Mesh, MeshBasicNodeMaterial, Vector3, type Material, type Object3D, type Texture } from 'three/webgpu';
-import { texture, vec3 } from 'three/tsl';
+import { pow, texture, vec3 } from 'three/tsl';
 import { MaterialDiorama } from './material';
 import { COLORES } from './paleta';
 import { cargarModelo, rutaModelo } from './modelos';
@@ -18,14 +18,26 @@ export const MODELO_INICIAL: Readonly<Record<string, string>> = {
 
 export type Acabado = 'color' | 'piedra';
 
+/**
+ * Retoques de color por modelo, cuando la textura de Meshy sale más oscura que su dibujo. `luz`
+ * aclara las sombras (una curva sobre el color lineal: 1 lo deja igual; menos, aclara más lo oscuro
+ * que lo claro). La inicial de fuego salió casi negra (gris 23 sobre 255 en pantalla) cuando su
+ * dibujo es gris carbón (unos 65): con 0,7 queda en unos 55 y las llamas, igual de naranjas
+ * (autor, 2026-11-13).
+ */
+export const RETOQUE: Readonly<Record<string, { luz: number }>> = {
+  'iniciales/inicial-infernal-1.glb': { luz: 0.7 },
+};
+
 const materiales = new Map<string, Material>();
 
 /** Unlit con su textura: así se ve como en el visor de Meshy, con su luz pintada. También para las personas. */
-export function materialColor(mapa: Texture | null): Material {
-  const clave = `color:${mapa?.uuid ?? ''}`;
+export function materialColor(mapa: Texture | null, luz = 1): Material {
+  const clave = `color:${mapa?.uuid ?? ''}:${luz}`;
   let m = materiales.get(clave);
   if (!m) {
     const b = new MeshBasicNodeMaterial({ map: mapa ?? undefined });
+    if (mapa && luz !== 1) b.colorNode = pow(texture(mapa).rgb, vec3(luz));
     // Sin el mapeo tonal del juego, que apagaba un poco sus colores respecto al visor.
     b.toneMapped = false;
     m = b;
@@ -62,7 +74,7 @@ export async function figuraCriatura(modelo: string, acabado: Acabado, tamano: n
     const malla = o as Mesh;
     if (!malla.isMesh) return;
     const viejo = (Array.isArray(malla.material) ? malla.material[0] : malla.material) as Material & { map?: Texture | null };
-    malla.material = acabado === 'color' ? materialColor(viejo.map ?? null) : materialPiedra(viejo.map ?? null);
+    malla.material = acabado === 'color' ? materialColor(viejo.map ?? null, RETOQUE[modelo]?.luz) : materialPiedra(viejo.map ?? null);
     malla.castShadow = true;
     malla.receiveShadow = acabado === 'piedra';
   });

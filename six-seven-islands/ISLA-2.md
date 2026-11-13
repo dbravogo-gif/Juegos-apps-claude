@@ -23,7 +23,12 @@ barco a Gran Canaria. Son 7 zonas en el camino y 2 opcionales: 9, frente a las 7
    - crestas de duna que no se pisan y obligan a zigzaguear;
    - **la calima**: el polvo del Sáhara que tiñe el aire de ocre y no deja ver lejos;
    - las ruinas de un horno de cal como refugio a medio camino, objetos medio enterrados y
-     entrenadores perdidos en la arena.
+     entrenadores perdidos en la arena;
+   - **una arqueóloga** (autor, 2026-11-13) en su excavación, con cuerdas y herramientas, que
+     desentierra la **estatua de una criatura ancestral**. Cuenta un trozo de la historia: la
+     guerra de las cuatro naciones de las leyendas y algo de lo que hubo antes que ellas. La
+     estatua, por ahora, es provisional: un bloque de piedra medio enterrado con una cabeza
+     tallada. Ya se verá cómo es la de verdad.
 3. **Puerto del Rosario** (la capital, en la costa este): refugio, tienda, el puerto con sus
    barcos y algunas esculturas en las calles. Aquí no hay gimnasio.
 4. **Betancuria** (la zona de montaña): la antigua capital, en un valle entre montañas peladas.
