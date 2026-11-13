@@ -32,6 +32,8 @@ export class Interfaz implements Subsistema {
   private ultimaZona = '';
   private quitar: (() => void)[] = [];
   private temporizador = 0;
+  /** La calima (Las Dunas): unas pocas partículas de polvo que cruzan de derecha a izquierda. */
+  private calima!: HTMLElement;
   /** La pintadera recién ganada, en grande, y lo que le queda en pantalla. */
   private medalla!: HTMLElement;
   private tMedalla = 0;
@@ -51,6 +53,7 @@ export class Interfaz implements Subsistema {
         <p class="dialogo-opciones" hidden><span class="opcion">Sí</span><span class="opcion">No</span></p>
         <span class="dialogo-seguir" aria-hidden="true">▼</span>
       </div>
+      <div class="calima" hidden aria-hidden="true"></div>
       <div class="medalla-ganada" hidden><div class="medalla-dibujo"></div><p></p></div>
       <div class="fundido"></div>
       <p class="ayuda">Flechas o WASD: andar · E, Enter o Espacio: hablar y seguir · Esc: menú</p>`;
@@ -58,6 +61,17 @@ export class Interfaz implements Subsistema {
     this.raiz = raiz;
     this.cartel = raiz.querySelector('.zona-cartel')!;
     this.medalla = raiz.querySelector('.medalla-ganada')!;
+    // Pocas, a distintas alturas y velocidades, con su propio retraso: que se note, sin molestar
+    // ni tapar nada (autor, 2026-11-13).
+    this.calima = raiz.querySelector('.calima')!;
+    for (let i = 0; i < 9; i++) {
+      const mota = document.createElement('i');
+      mota.style.top = `${8 + ((i * 37) % 84)}%`;
+      mota.style.animationDuration = `${7 + ((i * 5) % 6)}s`;
+      mota.style.animationDelay = `${-((i * 2.3) % 9)}s`;
+      mota.style.transform = `scale(${0.6 + ((i * 3) % 5) * 0.15})`;
+      this.calima.append(mota);
+    }
     this.caja = raiz.querySelector('.dialogo')!;
     this.quien = raiz.querySelector('.dialogo-quien')!;
     this.texto = raiz.querySelector('.dialogo-texto')!;
@@ -128,6 +142,10 @@ export class Interfaz implements Subsistema {
     // El objetivo tampoco, con el menú o la tienda abiertos.
     this.objetivo.hidden = !objetivo || oculta || modo === 'menu';
     this.pintarDialogo();
+    // La calima, solo fuera y en las zonas que la tienen.
+    const e = this.partida.estado;
+    const calima = !oculta && modo !== 'menu' && !e.dentro && this.partida.mundo.zonas.get(e.zona)?.clima === 'calima';
+    if (this.calima.hidden === calima) this.calima.hidden = !calima;
     // La ayuda de las teclas de explorar, tampoco en el menú ni en la tienda (tienen la suya).
     this.ayuda.hidden = this.partida.dialogo !== null || oculta || modo === 'menu';
     if (oculta || modo === 'menu') this.cartel.classList.remove('visible');

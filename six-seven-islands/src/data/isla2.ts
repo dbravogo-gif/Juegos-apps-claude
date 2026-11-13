@@ -75,6 +75,7 @@ export const ISLA_2: DefIsla = {
       origen: { x: 33, y: 20 },
       hierbaObligatoria: true,
       cierre: { condicion: 'palanca:camino-sur', aviso: 'Una duna enorme tapa el camino del sur. Los de la carretera dicen que la despejarán pronto.' },
+      clima: 'calima',
       personajes: [
         { id: 'perdido-dunas-1', x: 3, y: 10, mira: 'e', entrenador: { vision: 5, obligatorio: false }, frase: '¡Por fin alguien! Llevo horas dando vueltas. ¿Luchamos mientras me oriento?' },
         { id: 'perdido-dunas-2', x: 36, y: 18, mira: 'o', entrenador: { vision: 5, obligatorio: false }, frase: 'Todas las dunas son iguales… ¿Tú también te has perdido? ¡Pues a luchar!' },

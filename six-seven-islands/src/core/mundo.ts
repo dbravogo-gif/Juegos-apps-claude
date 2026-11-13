@@ -128,6 +128,8 @@ export interface DefZona {
   arboles?: 'palmera' | 'laurel';
   /** Qué crece entre sus rocas: secano (por defecto), humedad o volcán. */
   flora?: 'seca' | 'humeda' | 'volcan';
+  /** El tiempo que hace: la calima de Las Dunas (unas partículas de polvo; solo se ve). */
+  clima?: 'calima';
   /** Colores propios del suelo de la zona, por letra; mandan sobre los de la isla. */
   suelo?: Partial<Record<string, string>>;
 }

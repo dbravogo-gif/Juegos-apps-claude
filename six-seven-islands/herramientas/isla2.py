@@ -64,7 +64,7 @@ z.r(31, 9, 6, 1, '#'); z.r(31, 9, 1, 4, '#'); z.r(36, 9, 1, 4, '#'); z.p(33, 9, 
 z.r(3, 16, 8, 4, ':')                                           # el campamento de la arqueóloga
 z.p(6, 17, 'E')                                                 # la estatua medio enterrada
 z.r(22, 23, 6, 3, ':'); z.r(12, 30, 6, 3, ':'); z.r(17, 33, 5, 2, ':')
-zonas['dunas'] = dict(nombre='Las Dunas', origen=(33, 20), z=z, altura=0, hierba=True)
+zonas['dunas'] = dict(nombre='Las Dunas', origen=(33, 20), z=z, altura=0, hierba=True, clima='calima')
 
 # La costa del norte de Fuerteventura, aproximada: la punta de Corralejo y el comienzo de la isla
 # hacia el sur (el resto llega con las fases siguientes). En casillas; los .5 caen entre casillas.
@@ -96,6 +96,7 @@ for zid, v in zonas.items():
     t=f"    {{\n      id: '{zid}',\n      nombre: '{v['nombre']}',\n      origen: {{ x: {ox}, y: {oy} }},\n      hierbaObligatoria: {'true' if v.get('hierba') else 'false'},\n"
     if zid in CIERRES: t+=f"      {CIERRES[zid]}\n"
     if v.get('casas'): t+=f"      casas: '{v['casas']}',\n"
+    if v.get('clima'): t+=f"      clima: '{v['clima']}',\n"
     t+=bloque(PERSONAJES.get(zid,[]),'personajes') if PERSONAJES.get(zid) else "      personajes: [],\n"
     t+=bloque(OBJETOS.get(zid,[]),'objetos')
     t+=f"      altura: {v['altura']},\n"
