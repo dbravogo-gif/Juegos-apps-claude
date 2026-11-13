@@ -37,6 +37,38 @@ export const GUION_ISLA2: Guion = {
   'enfermera-betancuria': [
     { dialogo: { lineas: [{ quien: 'Enfermera', texto: 'Hasta aquí arriba llega poca gente. ¡Descansa, que el camino es largo!' }] } },
   ],
+  // Fase 3: Morro Jable y el gimnasio de Aire.
+  'enfermera-morro': [
+    { dialogo: { lineas: [{ quien: 'Enfermera', texto: 'Bienvenido a Morro Jable. Antes del gimnasio, deja a tu equipo como nuevo.' }] } },
+  ],
+  'tendero-morro': [
+    { dialogo: { lineas: [{ quien: 'Tendero', texto: '¡Buenas! Para el gimnasio de Aire, pociones. El viento cansa mucho.' }] } },
+  ],
+  'vigilante-aire': [
+    {
+      sin: 'gimnasio2-vencido',
+      dialogo: {
+        lineas: [
+          { quien: 'Vigilante', texto: '¡Bienvenido al gimnasio de Aire! Aquí manda el viento: las corrientes del suelo te llevan.' },
+          { quien: 'Vigilante', texto: 'Las aspas de los molinos cambian hacia dónde sopla una corriente. Gíralas con E.' },
+          { quien: 'Vigilante', texto: 'Un consejo: a lo de Aire le hacen mucho daño la Roca, el Hielo y lo Eléctrico.' },
+        ],
+      },
+    },
+    { dialogo: { lineas: [{ quien: 'Vigilante', texto: '¡Dos pintaderas! El viento ya te lleva hacia Gran Canaria.' }] } },
+  ],
+  'lider-aire': [
+    {
+      sin: 'gimnasio2-vencido',
+      dialogo: {
+        lineas: [
+          { quien: 'Líder', texto: 'Has subido con el viento a favor. Veamos si aguantas cuando sople en contra.' },
+          { quien: 'Líder', texto: 'Soy la líder del gimnasio de Aire. ¡Que empiece la tormenta!' },
+        ],
+      },
+    },
+    { dialogo: { lineas: [{ quien: 'Líder', texto: 'Has dominado el viento. El de Gran Canaria es distinto: ya lo verás.' }] } },
+  ],
   // La arqueóloga de Las Dunas (autor, 2026-11-13): desentierra una estatua ancestral y cuenta un
   // trozo de la historia. La estatua de verdad, ya se verá.
   arqueologa: [

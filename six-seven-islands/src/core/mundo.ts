@@ -45,6 +45,10 @@ export const LEYENDA = {
   E: 'estatua enterrada',
   // La boca de una cueva en el acantilado (Ajuy): se entra por su puerta, como en un edificio.
   J: 'boca de cueva',
+  // El gimnasio de Aire (Fuerteventura): corrientes que empujan hasta chocar y aspas de molino
+  // que, al girarlas, cambian hacia dónde sopla una corriente.
+  W: 'corriente de viento',
+  H: 'aspas de molino',
   // Interiores: salas pequeñas aparte (ISLA-1.md, «Decisiones técnicas»).
   m: 'suelo',
   '|': 'pared',
@@ -65,7 +69,7 @@ export const LEYENDA = {
 export type Casilla = keyof typeof LEYENDA;
 
 /** Se pueden pisar. Las X también, cuando su condición se cumple. */
-export const TRANSITABLES: ReadonlySet<string> = new Set(['.', ',', ':', '_', '"', ';', 'a', 'd', 'P', 'm', 't', 'D']);
+export const TRANSITABLES: ReadonlySet<string> = new Set(['.', ',', ':', '_', '"', ';', 'a', 'd', 'P', 'm', 't', 'D', 'W']);
 /** Muebles de los interiores: no se pisan y se dibujan como piezas. */
 export const MUEBLES: ReadonlySet<string> = new Set(['o', 'h', 'c', 'k', 'l', 'v', 'e', 'j', 'n', 'q']);
 /** Terreno de encuentros: la hierba alta, el malpaís y la arena de las dunas (como los desiertos). */
@@ -78,7 +82,15 @@ export type Direccion = 'n' | 's' | 'e' | 'o';
  * Lo que abre pasos y cambia diálogos. Además de los hitos con nombre: `vencido:<id>`, al vencer
  * a un entrenador, y `palanca:<id>`, al bajar una palanca (las compuertas de los gimnasios).
  */
-export type Condicion = 'inicial-elegida' | 'anciano' | 'gimnasio-vencido' | 'isla1-completada' | `vencido:${string}` | `palanca:${string}`;
+export type Condicion =
+  | 'inicial-elegida'
+  | 'anciano'
+  | 'gimnasio-vencido'
+  | 'isla1-completada'
+  | 'gimnasio2-vencido'
+  | `vencido:${string}`
+  | `palanca:${string}`
+  | `aspas:${string}`;
 export const TODAS_LAS_CONDICIONES: ReadonlySet<Condicion> = new Set(['inicial-elegida', 'anciano', 'gimnasio-vencido']);
 
 export interface Personaje {
@@ -123,6 +135,10 @@ export interface DefZona {
   cierres?: Readonly<Record<string, Cierre>>;
   /** Palancas (`p`), por casilla (`"x,y"` de la zona): bajarla cumple `palanca:<id>`. */
   palancas?: Readonly<Record<string, string>>;
+  /** Corrientes de viento (`W`), por casilla (`"x,y"` de la zona). */
+  corrientes?: Readonly<Record<string, Corriente>>;
+  /** Aspas de molino (`H`), por casilla: girarlas activa o desactiva `aspas:<id>`. */
+  aspas?: Readonly<Record<string, string>>;
   personajes: readonly Personaje[];
   /** Cómo se dibujan sus casas (por defecto, rurales; en la capital, de balcones). */
   casas?: EstiloCasas;
@@ -131,9 +147,19 @@ export interface DefZona {
   /** Qué crece entre sus rocas: secano (por defecto), humedad o volcán. */
   flora?: 'seca' | 'humeda' | 'volcan';
   /** El tiempo que hace: la calima de Las Dunas (unas partículas de polvo; solo se ve). */
-  clima?: 'calima';
+  clima?: 'calima' | 'viento';
   /** Colores propios del suelo de la zona, por letra; mandan sobre los de la isla. */
   suelo?: Partial<Record<string, string>>;
+}
+
+/**
+ * Una corriente de viento: hacia dónde empuja y, si unas aspas la gobiernan, hacia dónde empuja
+ * cuando están giradas.
+ */
+export interface Corriente {
+  dir: Direccion;
+  alterna?: Direccion;
+  aspas?: string;
 }
 
 /** Lo que abre una casilla X y lo que se dice al chocar con ella cerrada. */
@@ -227,6 +253,8 @@ export function construirMundo(isla: DefIsla): Mundo {
       [...f].forEach((c, x) => {
         if (c === 'X' && !z.cierre && !z.cierres?.[`${x},${y}`]) throw new Error(`Zona «${z.id}»: la X de ${x},${y} no dice qué la abre`);
         if (c === 'p' && !z.palancas?.[`${x},${y}`]) throw new Error(`Zona «${z.id}»: la palanca de ${x},${y} no tiene id`);
+        if (c === 'W' && !z.corrientes?.[`${x},${y}`]) throw new Error(`Zona «${z.id}»: la corriente de ${x},${y} no dice hacia dónde sopla`);
+        if (c === 'H' && !z.aspas?.[`${x},${y}`]) throw new Error(`Zona «${z.id}»: las aspas de ${x},${y} no tienen id`);
       }),
     );
     for (const p of z.personajes) {
@@ -268,6 +296,9 @@ export interface DefInterior {
   cierres?: Readonly<Record<string, Cierre>>;
   /** Objetos en el suelo (la cueva de Ajuy), como en `DefZona`. */
   objetos?: readonly ObjetoEnSuelo[];
+  /** Corrientes y aspas (el gimnasio de Aire), como en `DefZona`. */
+  corrientes?: Readonly<Record<string, Corriente>>;
+  aspas?: Readonly<Record<string, string>>;
   palancas?: Readonly<Record<string, string>>;
 }
 
@@ -276,7 +307,7 @@ export interface DefInterior {
  * que sus casillas tienen claves propias y se dibuja aparte sin estorbar.
  */
 export function construirInterior(def: DefInterior, origen: { x: number; y: number }): Mundo {
-  const zona: DefZona = { id: def.id, nombre: def.nombre, origen, mapa: def.mapa, altura: 0, hierbaObligatoria: false, personajes: def.personajes, cierres: def.cierres, palancas: def.palancas, objetos: def.objetos };
+  const zona: DefZona = { id: def.id, nombre: def.nombre, origen, mapa: def.mapa, altura: 0, hierbaObligatoria: false, personajes: def.personajes, cierres: def.cierres, palancas: def.palancas, objetos: def.objetos, corrientes: def.corrientes, aspas: def.aspas };
   return construirMundo({ id: def.id, zonas: [zona], inicio: { zona: def.id, ...def.entrada } });
 }
 
@@ -313,6 +344,26 @@ export function cierreEn(m: Mundo, k: number): Cierre | undefined {
   if (!z) return undefined;
   const [x, y] = deClave(k);
   return z.cierres?.[`${x - z.origen.x},${y - z.origen.y}`] ?? z.cierre;
+}
+
+/** Hacia dónde empuja la corriente de la casilla `k` con estas condiciones, o null si no hay. */
+export function corrienteEn(m: Mundo, k: number, condiciones: readonly string[]): Direccion | null {
+  const cm = m.casillas.get(k);
+  const z = cm?.c === 'W' ? m.zonas.get(cm.zona) : undefined;
+  if (!z) return null;
+  const [x, y] = deClave(k);
+  const c = z.corrientes?.[`${x - z.origen.x},${y - z.origen.y}`];
+  if (!c) return null;
+  return c.aspas && c.alterna && condiciones.includes(`aspas:${c.aspas}`) ? c.alterna : c.dir;
+}
+
+/** El id de las aspas de la casilla `k`, si las hay. */
+export function aspasEn(m: Mundo, k: number): string | undefined {
+  const cm = m.casillas.get(k);
+  const z = cm?.c === 'H' ? m.zonas.get(cm.zona) : undefined;
+  if (!z) return undefined;
+  const [x, y] = deClave(k);
+  return z.aspas?.[`${x - z.origen.x},${y - z.origen.y}`];
 }
 
 /** El id de la palanca de la casilla `k`, si la hay. */

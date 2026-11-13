@@ -262,7 +262,7 @@ export class Mundo implements Subsistema {
             uso === 'museo'
               ? { estilo: deZona.estilo === 'lanzarote' ? 'lanzarote' : 'rural', techo: 'teja' }
               : uso === 'gimnasio'
-                ? { estilo: 'balcones', blanca: deZona.blanca, techo: 'azotea', emblema: m.isla.gimnasio === 'roca' ? 'volcan' : 'sol' }
+                ? { estilo: 'balcones', blanca: deZona.blanca, techo: 'azotea', emblema: m.isla.gimnasio === 'roca' ? 'volcan' : m.isla.gimnasio === 'aire' ? 'molino' : 'sol' }
                 : deZona;
           const geometria = casaCanaria({ ...estilo, uso, ancho: e.ancho, fondo: e.fondo, puerta, semilla: pseudo(e.casillas[0]) });
           const casa = new Mesh(geometria, this.materialColores);

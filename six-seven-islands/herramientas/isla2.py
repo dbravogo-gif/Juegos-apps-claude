@@ -105,7 +105,7 @@ zonas['betancuria'] = dict(nombre='Betancuria', origen=(34-30, 64), z=z, altura=
 # arena negra, acantilados y la boca de la cueva (J), por la que se entra a la cueva de las pozas.
 # El camino del sur, cerrado hasta la fase 3.
 z = Z(24, 30, ':'); z.borde('#')
-z.r(23, 22, 1, 2, ','); z.r(11, 29, 3, 1, 'X')
+z.r(23, 22, 1, 2, ','); z.r(11, 29, 3, 1, ',')                  # salida hacia Sotavento (fase 3)
 z.r(0, 1, 6, 28, '~'); z.r(6, 8, 4, 18, 'a')                   # el mar y la playa negra
 z.r(6, 1, 17, 2, '#'); z.r(6, 3, 2, 5, '#'); z.r(14, 3, 9, 6, '#')        # acantilados del norte
 z.r(8, 3, 6, 2, 'J'); z.p(10, 5, 'd'); z.puertas.append((10, 5, 'cueva-ajuy'))   # la boca de la cueva
@@ -116,16 +116,47 @@ z.edificio(14, 25, 3, 2, 'C', 15, 'casa-ajuy')
 z.r(6, 26, 4, 3, '#'); z.r(17, 13, 1, 1, '#')
 zonas['ajuy'] = dict(nombre='Ajuy', origen=(10-30, 64), z=z, altura=0, hierba=True, suelo="{ a: '#3E3638' }")
 
+# 6. Sotavento (36 × 26): la playa del viento, en el istmo. Entrada arriba (x 11..13, desde Ajuy);
+# salida abajo (x 11..13, a Morro Jable). Jable con tuneras, hierba seca (una mancha en el camino),
+# la playa larga y el mar al este; kitesurfistas que anuncian el gimnasio de Aire.
+z = Z(36, 26, '.'); z.borde('#')
+z.r(11, 0, 3, 1, ','); z.r(11, 25, 3, 1, ',')
+z.r(30, 1, 5, 24, '~'); z.r(26, 1, 4, 24, 'a')                  # el mar y la playa
+z.camino([(12,0),(12,8)]); z.camino([(12,8),(20,8)]); z.camino([(20,8),(20,16)]); z.camino([(12,16),(20,16)]); z.camino([(12,16),(12,25)])
+z.r(2, 4, 7, 6, '"'); z.r(16, 10, 3, 4, '"'); z.r(10, 18, 5, 3, '"')     # hierba seca; la de abajo, en el camino
+for x, y, w, h in ((3, 13, 3, 2), (22, 3, 2, 2), (5, 20, 3, 2), (22, 19, 2, 3)): z.r(x, y, w, h, 'U')
+z.p(27, 10, 'O'); z.p(28, 10, 't'); z.p(27, 20, 'O'); z.p(28, 20, 't')
+zonas['sotavento'] = dict(nombre='Sotavento', origen=(10-30, 94), z=z, altura=0, hierba=True, clima='viento')
+
+# 7. Morro Jable (34 × 26): el puerto del sur. Entrada arriba (x 15..17, desde Sotavento). La calle
+# del refugio, la tienda y el gimnasio de Aire; otra calle con dos casas; la playa, el faro, el
+# muelle y el barco a Gran Canaria, que aún no sale.
+z = Z(34, 26, ':'); z.borde('#')
+z.r(15, 0, 3, 1, ',')
+z.r(1, 20, 32, 5, '~'); z.r(1, 18, 32, 2, 'a')                  # el mar y la playa
+z.camino([(15,0),(15,17)], ancho=3)
+z.camino([(1,8),(32,8)]); z.camino([(1,14),(32,14)]); z.camino([(1,17),(32,17)])
+z.edificio(2, 5, 5, 3, 'R', 4, 'refugio-morro')
+z.edificio(9, 5, 4, 3, 'S', 10, 'tienda-morro')
+z.edificio(22, 3, 7, 5, 'G', 25, 'gimnasio-aire')
+z.edificio(2, 11, 4, 3, 'C', 3, 'casa-morro-1')
+z.edificio(22, 11, 4, 3, 'C', 23, 'casa-morro-2')
+z.r(29, 18, 2, 2, 'F')                                          # el faro
+z.r(18, 20, 2, 3, 'P'); z.r(20, 21, 2, 2, 'B')                  # el muelle y el barco
+for x, y in ((8, 11), (13, 11), (19, 11), (30, 10)): z.p(x, y, 'T')
+zonas['morro'] = dict(nombre='Morro Jable', origen=(6-30, 120), z=z, altura=0, casas='lanzarote')
+
 # Toda la isla, 30 casillas al este: así cabe la costa oeste (Ajuy), sin coordenadas negativas.
 DESPLAZAMIENTO = 30
 for v in zonas.values(): v['origen'] = (v['origen'][0] + DESPLAZAMIENTO, v['origen'][1])
 
 # La costa de Fuerteventura, aproximada: de la punta de Corralejo por la costa este hasta Puerto
-# del Rosario, y por la oeste, Ajuy; el sur llega con las fases siguientes. En casillas, ya con el
+# del Rosario, y por la oeste, Ajuy, Sotavento y Morro Jable. En casillas, ya con el
 # desplazamiento; los .5 caen entre casillas.
 SILUETA = [(68.5,3.5),(75.5,0.5),(96.5,0.5),(104.5,5.5),(107.5,20.5),(106.5,45.5),(100.5,56.5),
-           (96.5,82.5),(88.5,98.5),(68.5,102.5),(48.5,106.5),(28.5,110.5),(14.5,106.5),(9.5,96.5),
-           (9.5,70.5),(16.5,61.5),(34.5,59.5),(56.5,57.5),(60.5,45.5),(61.5,20.5),(64.5,8.5)]
+           (96.5,82.5),(88.5,96.5),(66.5,100.5),(50.5,102.5),(45.5,110.5),(44.5,124.5),(40.5,140.5),
+           (30.5,143.5),(12.5,143.5),(4.5,138.5),(4.5,120.5),(8.5,108.5),(9.5,96.5),(9.5,70.5),
+           (16.5,61.5),(34.5,59.5),(56.5,57.5),(60.5,45.5),(61.5,20.5),(64.5,8.5)]
 
 PERSONAJES = {
  'corralejo': ["{ id: 'marinero-corralejo', x: 11, y: 4, mira: 's', frase: 'Este barco va y viene de Lanzarote todo el día.' }",
@@ -143,12 +174,15 @@ PERSONAJES = {
                 "{ id: 'anciana-betancuria', x: 14, y: 13, mira: 's', frase: 'Betancuria fue la capital de la isla hace siglos. Por eso la escondieron entre montañas.' }"],
  'ajuy': ["{ id: 'pescador-ajuy', x: 8, y: 18, mira: 'e', entrenador: { vision: 4, obligatorio: false }, frase: 'Estas rocas son las más viejas de Canarias. ¡Y yo, el pescador más viejo de Ajuy!' }",
           "{ id: 'nino-ajuy', x: 12, y: 7, mira: 's', frase: 'Dentro de la cueva hay pozas con agua del mar. ¡Y algo que brilla al fondo!' }"],
+ 'sotavento': ["{ id: 'kite-sotavento-1', x: 27, y: 8, mira: 'o', entrenador: { vision: 7, obligatorio: false }, frase: '¡Hoy sopla de lujo! Si vas al gimnasio de Aire, prepárate para volar.' }",
+               "{ id: 'kite-sotavento-2', x: 28, y: 15, mira: 'o', entrenador: { vision: 8, obligatorio: false }, frase: 'Con este viento, mi cometa y mis criaturas no paran quietas. ¡A luchar!' }",
+               "{ id: 'corredor-sotavento', x: 5, y: 16, mira: 'e', entrenador: { vision: 7, obligatorio: false }, frase: 'Corro contra el viento todos los días. ¿Te atreves a luchar contra él?' }"],
+ 'morro': ["{ id: 'marinero-morro', x: 17, y: 19, mira: 's', frase: 'El barco a Gran Canaria saldrá pronto. Dicen que primero hay que vencer al gimnasio de Aire.' }",
+           "{ id: 'vecina-morro', x: 11, y: 15, mira: 'n', frase: 'En el gimnasio de Aire, el viento te lleva de un lado a otro. ¡Fíjate en las aspas!' }"],
 }
 OBJETOS = {'dunas': ["{ id: 'pocion-horno', x: 33, y: 11, objeto: 'pocion' }", "{ id: 'cubo-dunas', x: 37, y: 31, objeto: 'cubo-blanco' }"],
            'betancuria': ["{ id: 'pocion-presa', x: 4, y: 16, objeto: 'pocion' }"]}
-CIERRES = {
- 'ajuy': "cierre: { condicion: 'palanca:camino-sur', aviso: 'Un desprendimiento tapa el camino del sur. Dicen que lo despejarán pronto.' },",
-}
+CIERRES = {}
 
 def bloque(lista, nombre):
     if not lista: return ''

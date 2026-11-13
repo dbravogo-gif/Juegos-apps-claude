@@ -124,8 +124,8 @@ Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
 - **Amigos:** sus fotos y GLB de Meshy para las personas jugables, y sus 2 o 3 poses para los
   retratos de diálogo.
 - **Dani con `Idle`** en el GLB (opcional).
-- **Puntuar de 1 a 5** lo último publicado: menús, equipo, mochila, medallero y el gimnasio de
-  Roca.
+- **Puntuar de 1 a 5** lo último publicado: menús, equipo, mochila, medallero, el gimnasio de
+  Roca y Fuerteventura entera (sobre todo el gimnasio de Aire).
 - **Decir si vale «Técnicas»** como nombre del bolsillo de las máquinas.
 
 - Medir los FPS en los ordenadores del autor y de sus amigos.

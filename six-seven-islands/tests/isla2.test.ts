@@ -41,12 +41,11 @@ describe('Fuerteventura (isla 2)', () => {
     }
   });
 
-  it('el camino del sur (en Ajuy) está cerrado, con aviso, y no se abre con nada de lo que hay', () => {
-    const x = [...m.casillas].filter(([, c]) => c.c === 'X').map(([k]) => k);
-    expect(x.every((k) => m.casillas.get(k)!.zona === 'ajuy')).toBe(true);
-    expect(x.length).toBe(3);
-    expect(x.some((k) => vecinas(k).some((v) => r.has(v)))).toBe(true);
-    for (const k of x) expect(r.has(k)).toBe(false);
+  it('se cruza entera, de Corralejo a Morro Jable, y se llega a la puerta del gimnasio de Aire', () => {
+    expect([...m.casillas.values()].some((c) => c.c === 'X')).toBe(false);
+    const [xy] = Object.entries(PUERTAS_ISLA2.morro).find(([, sala]) => sala === 'gimnasio-aire')!;
+    const [x, y] = xy.split(',').map(Number);
+    expect(r.has(enIsla('morro', x, y))).toBe(true);
   });
 
   it('en Las Dunas, casi todo es arena con criaturas, con descansos de tierra dura', () => {
@@ -56,9 +55,9 @@ describe('Fuerteventura (isla 2)', () => {
     expect(arena.length / pisables.length).toBeLessThan(0.95);
   });
 
-  it('cada entrenador de Las Dunas ve casillas por las que se pasa, y todos tienen equipo', () => {
-    for (const p of zona('dunas').personajes.filter((x) => x.entrenador)) {
-      const ve = vision(m, 'dunas', p);
+  it('cada entrenador de la isla ve casillas por las que se pasa, y todos tienen equipo', () => {
+    for (const p of ISLA_2.zonas.flatMap((z) => z.personajes.filter((x) => x.entrenador).map((x) => ({ ...x, zona: z.id })))) {
+      const ve = vision(m, p.zona, p);
       expect(ve.some((k) => r.has(k)), p.id).toBe(true);
       const def = FUERTEVENTURA.entrenadores[p.id];
       expect(def?.equipo.length, p.id).toBeGreaterThan(0);
@@ -66,8 +65,8 @@ describe('Fuerteventura (isla 2)', () => {
     }
   });
 
-  it('las zonas van encadenadas: Corralejo, Las Dunas, Puerto del Rosario, Betancuria y Ajuy', () => {
-    const orden = ['corralejo', 'dunas', 'puerto', 'betancuria', 'ajuy'];
+  it('las zonas van encadenadas: Corralejo, Las Dunas, Puerto del Rosario, Betancuria, Ajuy, Sotavento y Morro Jable', () => {
+    const orden = ['corralejo', 'dunas', 'puerto', 'betancuria', 'ajuy', 'sotavento', 'morro'];
     for (const z of orden) expect([...r].some((k) => m.casillas.get(k)?.zona === z), z).toBe(true);
   });
 
@@ -104,12 +103,12 @@ describe('Fuerteventura (isla 2)', () => {
     expect(FUERTEVENTURA.interiores.some((d) => d.id === FUERTEVENTURA.refugio)).toBe(true);
   });
 
-  it('sus salvajes existen y van del nivel 10 al 15', () => {
+  it('sus salvajes existen y van del nivel 10 al 17', () => {
     for (const t of Object.values(FUERTEVENTURA.encuentros)) {
       for (const e of t) {
         expect(DATOS.especies[e.especie], e.especie).toBeDefined();
         expect(e.nivel[0]).toBeGreaterThanOrEqual(10);
-        expect(e.nivel[1]).toBeLessThanOrEqual(15);
+        expect(e.nivel[1]).toBeLessThanOrEqual(17);
       }
     }
   });
