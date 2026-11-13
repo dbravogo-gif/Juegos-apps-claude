@@ -30,6 +30,8 @@ export interface MapaEventos {
   'jugador:elegido': { nombre: string; persona: string };
   /** Se gana la pintadera de una isla (al vencer a su líder): la interfaz la enseña en grande. */
   'medalla:ganada': { isla: number };
+  /** Se zarpa hacia otra isla (justo antes de recargar en ella). */
+  'jugador:viaja': { isla: number };
   /** Que suene un efecto de la tabla EFECTOS de «sonido». */
   'sonido:tocar': { nombre: string };
   /** Activar o silenciar el sonido. */

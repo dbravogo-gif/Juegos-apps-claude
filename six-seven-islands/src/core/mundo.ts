@@ -71,7 +71,7 @@ export type Direccion = 'n' | 's' | 'e' | 'o';
  * Lo que abre pasos y cambia diálogos. Además de los hitos con nombre: `vencido:<id>`, al vencer
  * a un entrenador, y `palanca:<id>`, al bajar una palanca (las compuertas de los gimnasios).
  */
-export type Condicion = 'inicial-elegida' | 'anciano' | 'gimnasio-vencido' | `vencido:${string}` | `palanca:${string}`;
+export type Condicion = 'inicial-elegida' | 'anciano' | 'gimnasio-vencido' | 'isla1-completada' | `vencido:${string}` | `palanca:${string}`;
 export const TODAS_LAS_CONDICIONES: ReadonlySet<Condicion> = new Set(['inicial-elegida', 'anciano', 'gimnasio-vencido']);
 
 export interface Personaje {

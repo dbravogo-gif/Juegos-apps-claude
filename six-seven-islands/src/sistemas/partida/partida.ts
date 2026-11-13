@@ -25,7 +25,7 @@ import { DATOS_COMBATE_PRUEBA as DATOS, ESPECIE_INICIAL, MOCHILA_INICIAL } from 
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Entrada } from '../entrada/entrada';
 
-export type Modo = 'titulo' | 'explorar' | 'dialogo' | 'fundido' | 'combate' | 'menu' | 'fin';
+export type Modo = 'titulo' | 'explorar' | 'dialogo' | 'fundido' | 'combate' | 'menu' | 'fin' | 'viaje';
 
 /** Pasos fijos de cada mitad del fundido al cruzar una puerta: 0,2 s a negro y 0,2 s de vuelta. */
 export const PASOS_FUNDIDO = 12;
@@ -88,6 +88,10 @@ export class Partida implements Subsistema {
   persona: string = PERSONA_JUGADOR;
   /** Se ha dicho que sí al barco: al cerrar el diálogo, sale la pantalla del final. */
   private finPendiente = false;
+  /** Se ha dicho que sí al barco: la isla a la que se zarpa (tras el final, si lo hay). */
+  private viajePendiente: number | null = null;
+  /** Pasos fijos del fundido del viaje. */
+  private pasosViaje = 0;
   /** Lo que dice el entrenador recién vencido, al volver del combate (compuertas, pintadera). */
   private trasCombate: { lineas: string[]; medalla?: number } | null = null;
   /** Un entrenador acaba de ver al jugador: cuando pase la exclamación, habla. */
@@ -178,6 +182,7 @@ export class Partida implements Subsistema {
 
   /** Tras la pantalla del final: se sigue explorando Lanzarote. */
   seguirTrasFin(): void {
+    if (this.viajePendiente !== null) return this.viajar(this.viajePendiente);
     this.modo = 'explorar';
     this.espera = ESPERA_TRAS_DIALOGO;
     this.entrada.olvidar();
@@ -207,6 +212,55 @@ export class Partida implements Subsistema {
     } catch {
       // Sin almacenamiento (ventana privada, cuota llena): se sigue jugando sin guardar.
     }
+  }
+
+  /** La isla a la que se va a zarpar, o null: lo usa la pantalla del final. */
+  get destinoViaje(): DatosIsla | null {
+    return this.viajePendiente !== null ? (ISLAS[this.viajePendiente] ?? null) : null;
+  }
+
+  /** Zarpa en barco: fundido a negro, se guarda la partida en la isla de destino y se recarga. */
+  private viajar(n: number): void {
+    this.viajePendiente = n;
+    this.modo = 'viaje';
+    this.pasosViaje = 0;
+    this.entrada.olvidar();
+    this.ctx.eventos.emit('sonido:tocar', { nombre: 'salida' });
+  }
+
+  private pasoViaje(): void {
+    this.pasosViaje++;
+    this.fundido = Math.min(1, this.pasosViaje / (PASOS_FUNDIDO * 3));
+    if (this.pasosViaje !== PASOS_FUNDIDO * 3) return;
+    const n = this.viajePendiente!;
+    const destino = ISLAS[n];
+    try {
+      localStorage.setItem(CLAVE_GUARDADO, serializar(this.guardadoEnIsla(n)));
+    } catch {
+      // Sin almacenamiento no se puede viajar recargando: se queda donde está.
+      this.modo = 'explorar';
+      this.fundido = 0;
+      return;
+    }
+    // Ya no se guarda nada de esta isla (ni al cerrar la pestaña, que lo pisaría).
+    this.borrada = true;
+    this.ctx.eventos.emit('jugador:viaja', { isla: destino.numero });
+    location.replace(location.pathname);
+  }
+
+  /** La partida tal cual, pero en la isla `n`, junto a su muelle. */
+  guardadoEnIsla(n: number): Guardado {
+    const destino = ISLAS[n];
+    const m = construirMundo(destino.def);
+    const z = m.zonas.get(destino.llegada.zona)!;
+    const e = crearExploracion(m, this.estado.condiciones);
+    e.recogidos = [...this.estado.recogidos];
+    e.inicial = this.estado.inicial;
+    e.x = e.desdeX = z.origen.x + destino.llegada.x;
+    e.y = e.desdeY = z.origen.y + destino.llegada.y;
+    e.zona = destino.llegada.zona;
+    e.mira = 's';
+    return { ...this.guardado(), isla: n, explorar: e, ultimoRefugio: destino.refugio };
   }
 
   /** Borra la partida guardada y vuelve a la portada (desde el menú, con confirmación). */
@@ -273,6 +327,7 @@ export class Partida implements Subsistema {
     if (this.modo !== 'explorar') this.menuPendiente = false;
     // En combate manda el subsistema «combate»; en el menú, «menu», y en la portada y el final, «inicio».
     if (this.modo === 'combate' || this.modo === 'menu' || this.modo === 'titulo' || this.modo === 'fin') return;
+    if (this.modo === 'viaje') return this.pasoViaje();
     if (this.modo === 'fundido') return this.pasoFundido();
     if (this.modo === 'dialogo') return this.pasoDialogo();
     if (this.espera > 0) {
@@ -351,9 +406,11 @@ export class Partida implements Subsistema {
       this.entrada.olvidar();
       this.ctx.eventos.emit('dialogo:cerrar', { guionId: this.hablando });
       if (this.finPendiente) {
-        // El final de la versión (F23): lo enseña «inicio»; con Enter se sigue explorando.
+        // El final de la isla (F23): lo enseña «inicio»; con Enter se zarpa (o se sigue).
         this.finPendiente = false;
         this.modo = 'fin';
+      } else if (this.viajePendiente !== null) {
+        this.viajar(this.viajePendiente);
       } else if (this.datos.tenderos.has(this.hablando)) {
         // El tendero, al acabar de hablar, abre la tienda (en el subsistema «menu»).
         this.modo = 'menu';
@@ -492,6 +549,7 @@ export class Partida implements Subsistema {
   private aplicar(e: Efecto): void {
     if (e.condicion) cumplir(this.estado, e.condicion);
     if (e.fin) this.finPendiente = true;
+    if (e.viaje !== undefined && ISLAS[e.viaje]) this.viajePendiente = e.viaje;
     if (e.inicial) {
       this.estado.inicial = e.inicial;
       this.formarEquipo();
