@@ -461,6 +461,31 @@ export function barca(semilla: number): BufferGeometry {
   return M.fusionar();
 }
 
+/**
+ * La estatua que desentierra la arqueóloga en las dunas (Fuerteventura, 2026-11-13; provisional,
+ * «ya veremos cómo ponemos la estatua»): un bloque de piedra medio enterrado e inclinado, con una
+ * cabeza tallada de criatura ancestral, y alrededor las estacas y la cuerda de la excavación.
+ */
+export function estatuaEnterrada(semilla: number): BufferGeometry {
+  const M = new Montaje();
+  const piedra = '#B9AE9C';
+  M.pon(new BoxGeometry(0.62, 0.7, 0.5).rotateZ(0.18).translate(0.02, 0.29, 0), piedra, 0.95);
+  // La cabeza, con el hocico hacia delante y dos cuernos hacia atrás.
+  M.pon(new SphereGeometry(0.24, 9, 7).scale(1, 0.9, 1.1).translate(0.12, 0.72, 0.02), piedra);
+  M.pon(new BoxGeometry(0.2, 0.14, 0.26).translate(0.14, 0.66, 0.24), piedra, 0.92);
+  for (const s of [-1, 1]) M.pon(new ConeGeometry(0.05, 0.3, 6).rotateX(-0.9).translate(0.12 + s * 0.12, 0.92, -0.12), piedra, 0.88);
+  // Las estacas en las esquinas y la cuerda roja entre ellas.
+  const esquinas: [number, number][] = [[-0.46, -0.46], [0.46, -0.46], [0.46, 0.46], [-0.46, 0.46]];
+  for (const [x, z] of esquinas) M.pon(new CylinderGeometry(0.02, 0.02, 0.42, 5).translate(x, 0.21, z), COLORES.maderaTostada);
+  for (let i = 0; i < 4; i++) {
+    const [x0, z0] = esquinas[i];
+    const [x1, z1] = esquinas[(i + 1) % 4];
+    const largo = Math.hypot(x1 - x0, z1 - z0);
+    M.pon(new BoxGeometry(largo, 0.015, 0.015).rotateY(-Math.atan2(z1 - z0, x1 - x0)).translate((x0 + x1) / 2, 0.36, (z0 + z1) / 2), COLORES.geranio);
+  }
+  return M.fusionar().rotateY((semilla % 4) * 0.2);
+}
+
 /** Todas las piezas del kit, por nombre. */
 export const KIT = {
   laurel,
@@ -484,6 +509,7 @@ export const KIT = {
   barca,
   sombrilla,
   toalla,
+  estatua: estatuaEnterrada,
 } satisfies Record<string, (semilla: number) => BufferGeometry>;
 
 export type PiezaKit = keyof typeof KIT;
@@ -513,6 +539,7 @@ export const VARIANTES: Record<PiezaKit, number> = {
   barca: 2,
   sombrilla: 2,
   toalla: 3,
+  estatua: 1,
 };
 
 /** La geometría de una variante de una pieza del kit. */

@@ -38,6 +38,11 @@ export const LEYENDA = {
   // Famara (2026-11-11): la playa de los bañistas.
   O: 'sombrilla',
   t: 'toalla',
+  // Fuerteventura (2026-11-13): las dunas, donde toda la arena tiene criaturas, sus crestas, que
+  // no se pisan, y la estatua que desentierra la arqueóloga.
+  D: 'arena de duna',
+  K: 'cresta de duna',
+  E: 'estatua enterrada',
   // Interiores: salas pequeñas aparte (ISLA-1.md, «Decisiones técnicas»).
   m: 'suelo',
   '|': 'pared',
@@ -58,11 +63,11 @@ export const LEYENDA = {
 export type Casilla = keyof typeof LEYENDA;
 
 /** Se pueden pisar. Las X también, cuando su condición se cumple. */
-export const TRANSITABLES: ReadonlySet<string> = new Set(['.', ',', ':', '_', '"', ';', 'a', 'd', 'P', 'm', 't']);
+export const TRANSITABLES: ReadonlySet<string> = new Set(['.', ',', ':', '_', '"', ';', 'a', 'd', 'P', 'm', 't', 'D']);
 /** Muebles de los interiores: no se pisan y se dibujan como piezas. */
 export const MUEBLES: ReadonlySet<string> = new Set(['o', 'h', 'c', 'k', 'l', 'v', 'e', 'j', 'n', 'q']);
-/** Terreno de encuentros: la hierba alta y el malpaís (y, más adelante, las dunas). */
-export const DE_ENCUENTROS: ReadonlySet<string> = new Set(['"', ';']);
+/** Terreno de encuentros: la hierba alta, el malpaís y la arena de las dunas (como los desiertos). */
+export const DE_ENCUENTROS: ReadonlySet<string> = new Set(['"', ';', 'D']);
 /** Las letras de los edificios. Cada grupo de casillas iguales y contiguas es un edificio. */
 export const EDIFICIOS: ReadonlySet<string> = new Set(['C', 'M', 'R', 'S', 'G', 'F']);
 

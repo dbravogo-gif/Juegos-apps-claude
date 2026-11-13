@@ -4,7 +4,7 @@
 // propio de cada sala: su nombre y quién vive o trabaja en ella. Las frases de los vecinos
 // nuevos son provisionales.
 
-import { construirMundo, deClave, edificios, type Casilla, type DefInterior, type DefZona, type Personaje } from '../core/mundo';
+import { construirMundo, deClave, edificios, type Casilla, type DefInterior, type DefIsla, type DefZona, type Personaje } from '../core/mundo';
 import { ISLA_1, PUERTAS_ISLA1 } from './isla1';
 import { generarInterior, type InteriorGenerado, type TipoSala } from './generar-interior';
 import { GIMNASIO_ROCA } from './gimnasio-roca';
@@ -12,12 +12,12 @@ import { GIMNASIO_ROCA } from './gimnasio-roca';
 /** La partida empieza dentro de casa: mamá te manda al museo (probador, 2026-11-08). */
 export const SALA_INICIAL = 'casa-jugador';
 
-interface DefSala {
+export interface DefSala {
   nombre: string;
   gente: (s: InteriorGenerado) => Personaje[];
 }
 
-const vive = (id: string, frase?: string) => (s: InteriorGenerado): Personaje[] => [{ id, x: s.residente.x, y: s.residente.y, mira: 's', ...(frase ? { frase } : {}) }];
+export const vive = (id: string, frase?: string) => (s: InteriorGenerado): Personaje[] => [{ id, x: s.residente.x, y: s.residente.y, mira: 's', ...(frase ? { frase } : {}) }];
 
 const SALAS: Record<string, DefSala> = {
   museo: {
@@ -55,26 +55,37 @@ function plantasDe(z: DefZona, tipo: TipoSala): 1 | 2 {
 /** Número estable a partir de un texto, para variar los muebles entre casas. */
 const semillaDe = (id: string) => [...id].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7);
 
-function generar(): DefInterior[] {
-  const m = construirMundo(ISLA_1);
+/**
+ * Los interiores de una isla: uno por edificio con puerta y sala conocida, generado a partir de su
+ * exterior; los de `aMano` (los gimnasios) se usan tal cual.
+ */
+export function generarInteriores(
+  isla: DefIsla,
+  puertasIsla: Readonly<Record<string, Readonly<Record<string, string>>>>,
+  salas: Readonly<Record<string, DefSala>>,
+  aMano: readonly DefInterior[] = [],
+): DefInterior[] {
+  const m = construirMundo(isla);
   const res: DefInterior[] = [];
   const hechas = new Set<string>();
-  for (const z of ISLA_1.zonas) {
-    const puertas = PUERTAS_ISLA1[z.id] ?? {};
+  for (const z of isla.zonas) {
+    const puertas = puertasIsla[z.id] ?? {};
     for (const e of edificios(m, z.id)) {
       const tipo = TIPO[e.tipo];
       const k = e.puertas[0];
       if (!tipo || k === undefined) continue;
       const [x, y] = deClave(k);
       const id = puertas[`${x - z.origen.x},${y - z.origen.y}`];
-      const def = id ? SALAS[id] : undefined;
-      if (!id || !def || hechas.has(id)) continue;
+      const hecha = aMano.find((d) => d.id === id);
+      const def = id ? salas[id] : undefined;
+      if (!id || (!def && !hecha) || hechas.has(id)) continue;
       hechas.add(id);
-      // El gimnasio está hecho a mano: terrazas, compuertas y aprendices (gimnasio-roca.ts).
-      if (id === GIMNASIO_ROCA.id) {
-        res.push(GIMNASIO_ROCA);
+      // Los hechos a mano (el gimnasio de Roca: terrazas, compuertas y aprendices) van tal cual.
+      if (hecha) {
+        res.push(hecha);
         continue;
       }
+      if (!def) continue;
       const s = generarInterior({ tipo, ancho: e.ancho, fondo: e.fondo, plantas: plantasDe(z, tipo), semilla: semillaDe(id) });
       res.push({ id, nombre: def.nombre, mapa: s.mapa, personajes: def.gente(s), entrada: s.entrada });
     }
@@ -82,4 +93,4 @@ function generar(): DefInterior[] {
   return res;
 }
 
-export const INTERIORES_ISLA1: readonly DefInterior[] = generar();
+export const INTERIORES_ISLA1: readonly DefInterior[] = generarInteriores(ISLA_1, PUERTAS_ISLA1, SALAS, [GIMNASIO_ROCA]);
