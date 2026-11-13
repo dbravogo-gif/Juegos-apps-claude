@@ -318,6 +318,9 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
 - 2026-11-12 · **Inicial rebelde** (F25): hasta hablar con el anciano, no hace caso el 45 % de
   sus turnos; la mitad de esas veces usa otro movimiento y la otra mitad se distrae. Lo decide
   el generador del combate.
+- 2026-11-13 · **Mochila por bolsillos también en combate:** botiquín y cubos, con ← y →.
+- 2026-11-13 · **Fuerteventura, propuesta** en `ISLA-2.md`, por aprobar: 7 zonas y 2 opcionales,
+  desierto en Las Dunas, agua en Sotavento y gimnasio de Aire con corrientes de viento.
 - 2026-11-13 · **Gimnasio de Roca de verdad** (autor): terrazas, compuertas de basalto, tres
   aprendices que no se esquivan, una palanca y la ceremonia de la pintadera (`ISLA-1.md`). El
   núcleo admite compuertas por casilla (`cierres`) y palancas (`p`); vencer a cualquiera cumple

@@ -116,6 +116,19 @@ propuesta de Claude y qué frena mientras siga abierto.
 
 ## Tareas del autor que no son decisiones
 
+Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
+
+- **Aprobar Fuerteventura** (`ISLA-2.md`): tipo del gimnasio, zona de agua, calima y recorrido.
+- **Criaturas:** decir si vale la lista 2 de Lanzarote (`CRIATURAS.md`); pasar las láminas de
+  Lucha y las demás, y los nombres de la civeta y de Dragosil.
+- **Entrenadores y zonas de captura de Lanzarote** que hay que mejorar: decir cuáles.
+- **La historia,** con otra IA a partir de `PROMPT-HISTORIA.md`.
+- **Amigos:** sus fotos y GLB de Meshy para las personas jugables, y sus 2 o 3 poses para los
+  retratos de diálogo.
+- **Dani con `Idle`** en el GLB (opcional).
+- **Puntuar de 1 a 5** lo último publicado: menús, equipo, mochila, medallero y el gimnasio de
+  Roca.
+- **Decir si vale «Técnicas»** como nombre del bolsillo de las máquinas.
 
 - Medir los FPS en los ordenadores del autor y de sus amigos.
 - Prueba de Meshy: pagar Pro el primer mes (~10 $), y descargar y subir `planta-2.glb`
