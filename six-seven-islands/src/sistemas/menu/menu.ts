@@ -295,7 +295,7 @@ export class Menu implements Subsistema {
             },
           },
           { texto: 'Medallero', detalle: `${ganadas} de ${MEDALLAS.length} pintaderas. Se gana una en el gimnasio de cada isla.`, activa: true, elegir: () => this.abrir('medallero') },
-          { texto: 'Mapa', detalle: 'Lanzarote, con tu posición.', activa: true, elegir: () => this.abrir('mapa') },
+          { texto: 'Mapa', detalle: `${this.partida.datos.nombre}, con tu posición.`, activa: true, elegir: () => this.abrir('mapa') },
           { texto: 'Opciones', detalle: 'Sonido, exportar o importar la partida y empezar otra.', activa: true, elegir: () => this.abrir('opciones') },
           { texto: 'Volver al juego', detalle: 'También con Esc.', activa: true, elegir: () => this.cerrar() },
         ];
@@ -571,7 +571,7 @@ export class Menu implements Subsistema {
         hijos.push(this.medallero(typeof o?.dato === 'number' ? o.dato : 1));
         break;
       case 'mapa':
-        hijos.push(el('h2', 'menu-encabezado', 'Lanzarote'));
+        hijos.push(el('h2', 'menu-encabezado', this.partida.datos.nombre));
         break;
       case 'nueva':
         hijos.push(el('h2', 'menu-encabezado', '¿Empezar una partida nueva?'), el('p', 'menu-ayuda', 'Se borra la partida de este navegador. Si quieres guardarla, expórtala antes desde Opciones.'));

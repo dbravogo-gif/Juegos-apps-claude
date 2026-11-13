@@ -12,12 +12,9 @@
 import { avanzar, crearExploracion, cumplir, entrar, interactuar, salir, type EstadoExplorar, type EventoExplorar } from '../../core/explorar';
 import { abrirDialogo, elegirDialogo, lineaActual, pasoDialogo, pulsar, type Dialogo, type Efecto, type EstadoDialogo, type Tecla } from '../../core/guion';
 import { TODAS_LAS_CONDICIONES, clave, construirInterior, construirMundo, deClave, enIsla, entrenadorQueVe, transitable, type Condicion, type Mundo } from '../../core/mundo';
-import { ENTRENADORES_ISLA1 } from '../../data/entrenadores-isla1';
 import { PERSONA_JUGADOR, PERSONAS } from '../../arte/personas';
-import { GUION_ISLA1 } from '../../data/guion-isla1';
-import { INTERIORES_ISLA1, SALA_INICIAL } from '../../data/interiores-isla1';
-import { ISLA_1, PUERTAS_ISLA1 } from '../../data/isla1';
-import { NOMBRE_OBJETO, OBJETIVOS } from '../../data/textos-isla1';
+import { ISLAS, LANZAROTE, type DatosIsla } from '../../data/islas';
+import { NOMBRE_OBJETO } from '../../data/textos-isla1';
 import { crearCriatura, curarDelTodo } from '../../core/criatura';
 import { sortearEncuentro } from '../../core/encuentros';
 import { perdidaPorDerrota } from '../../core/economia';
@@ -25,7 +22,6 @@ import { crearRng } from '../../core/rng';
 import { VERSION_GUARDADO, deserializar, serializar, type Guardado } from '../../core/guardado';
 import type { Criatura } from '../../core/modelo';
 import { DATOS_COMBATE_PRUEBA as DATOS, ESPECIE_INICIAL, MOCHILA_INICIAL } from '../../data/combate-prueba';
-import { ENCUENTROS_ISLA1 } from '../../data/encuentros-isla1';
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Entrada } from '../entrada/entrada';
 
@@ -40,14 +36,6 @@ const ORIGEN_INTERIORES = { x: 200, y: 0 };
 /** Entre sala y sala: la más ancha (el gimnasio) mide 16 casillas. */
 const SEPARACION_INTERIORES = 24;
 
-/** Quién cura al equipo al hablarle, y el refugio al que se vuelve al perder desde entonces. */
-const CURANDEROS: Readonly<Record<string, string>> = {
-  madre: 'casa-jugador',
-  enfermera: 'refugio-geria',
-  'enfermera-capital': 'refugio-capital',
-};
-/** Quién abre la tienda al terminar de hablarle. */
-const TENDEROS: ReadonlySet<string> = new Set(['tendero']);
 /** Nivel de la inicial al elegirla. */
 const NIVEL_INICIAL = 5;
 /** Dónde se guarda la partida en el navegador. */
@@ -79,6 +67,8 @@ export class Partida implements Subsistema {
   static readonly id = 'partida';
   static readonly deps: readonly string[] = ['entrada'];
 
+  /** La isla en la que se está, con todo lo suyo (data/islas.ts). */
+  datos: DatosIsla = LANZAROTE;
   /** La isla. */
   mundo!: Mundo;
   /** Los interiores, por id: salas aparte, lejos de la isla. */
@@ -89,7 +79,7 @@ export class Partida implements Subsistema {
   equipo: Criatura[] = [];
   mochila: Record<string, number> = {};
   /** Al perder, se vuelve curado a esta sala: el último sitio donde curaron al equipo. */
-  ultimoRefugio = SALA_INICIAL;
+  ultimoRefugio = LANZAROTE.refugio;
   /** Entrenadores vencidos: no vuelven a retar. */
   vencidos: string[] = [];
   dinero = 0;
@@ -123,11 +113,16 @@ export class Partida implements Subsistema {
   init(ctx: Ctx): void {
     this.ctx = ctx;
     this.entrada = ctx.get<Entrada>('entrada');
-    this.mundo = construirMundo(ISLA_1);
-    INTERIORES_ISLA1.forEach((def, i) => {
+    // Primero, en qué isla está la partida guardada: de ella sale todo lo demás.
+    const nueva = new URLSearchParams(location.search).has('nueva');
+    const guardada = nueva ? null : this.leerGuardado();
+    this.datos = ISLAS[guardada?.isla ?? 1] ?? LANZAROTE;
+    this.ultimoRefugio = this.datos.refugio;
+    this.mundo = construirMundo(this.datos.def);
+    this.datos.interiores.forEach((def, i) => {
       this.interiores.set(def.id, construirInterior(def, { x: ORIGEN_INTERIORES.x + i * SEPARACION_INTERIORES, y: ORIGEN_INTERIORES.y }));
     });
-    for (const [zona, puertas] of Object.entries(PUERTAS_ISLA1)) {
+    for (const [zona, puertas] of Object.entries(this.datos.puertas)) {
       for (const [xy, id] of Object.entries(puertas)) {
         const [x, y] = xy.split(',').map(Number);
         this.puertas.set(enIsla(this.mundo, zona, x, y), id);
@@ -136,16 +131,17 @@ export class Partida implements Subsistema {
     const abrirTodo = new URLSearchParams(location.search).get('abrir') === 'todo';
     this.estado = crearExploracion(this.mundo, abrirTodo ? [...TODAS_LAS_CONDICIONES] : []);
     // Se empieza dentro de casa, como si se acabara de entrar por su puerta.
-    const puerta = [...this.puertas].find(([, id]) => id === SALA_INICIAL)?.[0];
-    if (puerta !== undefined) {
+    const sala = this.datos.salaInicial;
+    const puerta = sala ? [...this.puertas].find(([, id]) => id === sala)?.[0] : undefined;
+    if (sala && puerta !== undefined) {
       [this.estado.x, this.estado.y] = deClave(puerta);
       this.estado.zona = this.mundo.casillas.get(puerta)!.zona;
-      entrar(this.estado, SALA_INICIAL, this.interiores.get(SALA_INICIAL)!);
+      entrar(this.estado, sala, this.interiores.get(sala)!);
     }
     // Se sigue donde se dejó, salvo con ?nueva. Sin partida guardada, se empieza en la portada
     // (elegir persona y nombre). En Safari, se pide que no se borre lo guardado.
-    const cargada = !new URLSearchParams(location.search).has('nueva') && this.cargar();
-    if (!cargada) this.modo = 'titulo';
+    if (guardada) this.aplicarGuardado(guardada);
+    else this.modo = 'titulo';
     void navigator.storage?.persist?.().catch(() => undefined);
     // Al cerrar u ocultar la pestaña se guarda, para no perder los últimos pasos. En combate no:
     // el combate no se guarda a medias y vale lo guardado al empezarlo.
@@ -167,6 +163,7 @@ export class Partida implements Subsistema {
   guardado(): Guardado {
     return {
       version: VERSION_GUARDADO,
+      isla: this.datos.numero,
       explorar: structuredClone(this.estado),
       equipo: structuredClone(this.equipo),
       mochila: { ...this.mochila },
@@ -224,17 +221,13 @@ export class Partida implements Subsistema {
     location.replace(location.pathname);
   }
 
-  /** Carga la partida guardada, si la hay. Dice si ha cargado algo. */
-  private cargar(): boolean {
-    let texto: string | null = null;
+  /** La partida guardada en el navegador, si la hay. */
+  private leerGuardado(): Guardado | null {
     try {
-      texto = localStorage.getItem(CLAVE_GUARDADO);
+      return deserializar(localStorage.getItem(CLAVE_GUARDADO));
     } catch {
-      return false;
+      return null;
     }
-    const g = deserializar(texto);
-    if (g) this.aplicarGuardado(g);
-    return !!g;
   }
 
   /**
@@ -253,7 +246,7 @@ export class Partida implements Subsistema {
     }
     this.equipo = g.equipo;
     this.mochila = g.mochila;
-    this.ultimoRefugio = this.interiores.has(g.ultimoRefugio) ? g.ultimoRefugio : SALA_INICIAL;
+    this.ultimoRefugio = this.interiores.has(g.ultimoRefugio) ? g.ultimoRefugio : this.datos.refugio;
     this.vencidos = g.vencidos;
     this.dinero = g.dinero ?? 0;
     this.nombre = g.nombre ?? 'Dani';
@@ -263,7 +256,7 @@ export class Partida implements Subsistema {
 
   /** El objetivo que se enseña en pantalla, o null si no queda ninguno. */
   objetivo(): string | null {
-    return OBJETIVOS.find((o) => !this.estado.condiciones.includes(o.hasta))?.texto ?? null;
+    return this.datos.objetivos.find((o) => !this.estado.condiciones.includes(o.hasta))?.texto ?? null;
   }
 
   /** El mapa donde está el jugador: la isla o el interior. */
@@ -330,7 +323,7 @@ export class Partida implements Subsistema {
     if (!this.vencidos.includes(id)) this.vencidos.push(id);
     // Vencer a alguien abre lo que dependa de él (las compuertas del gimnasio).
     cumplir(this.estado, `vencido:${id}`);
-    const def = ENTRENADORES_ISLA1[id];
+    const def = this.datos.entrenadores[id];
     if (!def) return { premio: 0 };
     this.dinero += def.premio;
     if (def.condicion) cumplir(this.estado, def.condicion);
@@ -361,7 +354,7 @@ export class Partida implements Subsistema {
         // El final de la versión (F23): lo enseña «inicio»; con Enter se sigue explorando.
         this.finPendiente = false;
         this.modo = 'fin';
-      } else if (TENDEROS.has(this.hablando)) {
+      } else if (this.datos.tenderos.has(this.hablando)) {
         // El tendero, al acabar de hablar, abre la tienda (en el subsistema «menu»).
         this.modo = 'menu';
         this.ctx.eventos.emit('tienda:abrir', {});
@@ -412,11 +405,11 @@ export class Partida implements Subsistema {
         this.cruzar(null);
         break;
       case 'hablar': {
-        const d = elegirDialogo(GUION_ISLA1, ev.personaje, this.estado.condiciones, this.estado.inicial);
+        const d = elegirDialogo(this.datos.guion, ev.personaje, this.estado.condiciones, this.estado.inicial);
         const frase = this.activo().zonas.get(ev.zona)?.personajes.find((p) => p.id === ev.personaje)?.frase;
-        const vencido = this.vencidos.includes(ev.personaje) ? ENTRENADORES_ISLA1[ev.personaje] : undefined;
+        const vencido = this.vencidos.includes(ev.personaje) ? this.datos.entrenadores[ev.personaje] : undefined;
         let dialogo: Dialogo = d ?? { lineas: [{ texto: (vencido ? vencido.tras : frase) ?? '…' }] };
-        const refugio = CURANDEROS[ev.personaje];
+        const refugio = this.datos.curanderos[ev.personaje];
         if (refugio && this.equipo.length) {
           this.curarEquipo();
           this.ctx.eventos.emit('sonido:tocar', { nombre: 'curar' });
@@ -439,7 +432,7 @@ export class Partida implements Subsistema {
         this.ctx.eventos.emit('sonido:tocar', { nombre: 'hierba' });
         // Sin una criatura en pie no se lucha: la hierba se cruza sin más.
         if (!this.equipo.some((c) => c.vida > 0)) break;
-        const s = sortearEncuentro(ENCUENTROS_ISLA1, ev.zona, this.ctx.rng);
+        const s = sortearEncuentro(this.datos.encuentros, ev.zona, this.ctx.rng);
         if (s) this.ctx.eventos.emit('encuentro:inicio', { salvajes: [crearCriatura(DATOS, s.especie, s.nivel, this.ctx.rng)], visible: false });
         break;
       }
