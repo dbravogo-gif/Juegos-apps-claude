@@ -346,6 +346,13 @@ export class Mundo implements Subsistema {
         colocarKit('estatua', r, x, y, suelo, 1, 0);
       } else if (cm.c === 'g') {
         colocarKit('grabado', r, x, y, suelo, 1, 0);
+      } else if (cm.c === 'K') {
+        // Las crestas de las dunas: un lomo redondo por casilla, de altura algo distinta, estirado
+        // hacia las crestas vecinas para que la fila se lea como un lomo seguido y no como bolas.
+        const esK = (a: number, b: number) => m.casillas.get(clave(a, b))?.c === 'K';
+        const ex = esK(x - 1, y) && esK(x + 1, y) ? 1.3 : 1;
+        const ez = esK(x, y - 1) && esK(x, y + 1) ? 1.3 : 1;
+        this.subirTapa(k, colocarKit('duna', r, x, y, suelo, new Vector3(ex, 0.8 + ((r >>> 4) & 3) * 0.06, ez), 0));
       } else if (cm.c === 'U') {
         this.subirTapa(k, colocarKit('tunera', r, x + dx, y + dz, suelo, 1 + ((r >>> 4) & 3) * 0.1, giro));
       } else if (cm.c === 'L' && r % 6 === 0) {
