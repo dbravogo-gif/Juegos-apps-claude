@@ -7,6 +7,7 @@
 import { construirMundo, deClave, edificios, type Casilla, type DefInterior, type DefZona, type Personaje } from '../core/mundo';
 import { ISLA_1, PUERTAS_ISLA1 } from './isla1';
 import { generarInterior, type InteriorGenerado, type TipoSala } from './generar-interior';
+import { GIMNASIO_ROCA } from './gimnasio-roca';
 
 /** La partida empieza dentro de casa: mamá te manda al museo (probador, 2026-11-08). */
 export const SALA_INICIAL = 'casa-jugador';
@@ -68,6 +69,11 @@ function generar(): DefInterior[] {
       const def = id ? SALAS[id] : undefined;
       if (!id || !def || hechas.has(id)) continue;
       hechas.add(id);
+      // El gimnasio está hecho a mano: terrazas, compuertas y aprendices (gimnasio-roca.ts).
+      if (id === GIMNASIO_ROCA.id) {
+        res.push(GIMNASIO_ROCA);
+        continue;
+      }
       const s = generarInterior({ tipo, ancho: e.ancho, fondo: e.fondo, plantas: plantasDe(z, tipo), semilla: semillaDe(id) });
       res.push({ id, nombre: def.nombre, mapa: s.mapa, personajes: def.gente(s), entrada: s.entrada });
     }

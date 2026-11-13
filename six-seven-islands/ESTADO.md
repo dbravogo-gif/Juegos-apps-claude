@@ -21,11 +21,11 @@ Tanda 1: Lanzarote es la isla 1 (`ISLA-1.md`), con kit por código y la tabla de
    la líder abre el barco, y menú de pausa con Esc (equipo, mochila, mapa y exportar o importar
    la partida), tienda en La Geria, inicial rebelde hasta el anciano, portada (persona y
    nombre), sonido por código y final de la isla 1 (el barco, tras la líder). Tabla de tipos del
-   autor, con Lucha (9 criaturas). Revisado por el probador y arreglado. Menús nuevos con
-   medallero de pintaderas. Con las criaturas del autor, la evolución.
+   autor, con Lucha (9 criaturas). Menús nuevos con medallero de pintaderas, equipo y mochila
+   por bolsillos, y un gimnasio de Roca de verdad. Siguiente isla: Fuerteventura (`ISLA-2.md`,
+   por aprobar). Con las criaturas del autor, la evolución.
 2. En paralelo, arte con Meshy (`prompts-meshy.md`): criaturas y edificios singulares.
-3. Criaturas: reparto y lista de referencia en `CRIATURAS.md` (2026-11-10). Se diseñan con el
-   autor y sus amigos; dónde aparece cada una se decide al final.
+3. Criaturas: reparto, lista de referencia y lista de Lanzarote en `CRIATURAS.md`.
 
 ## Pendiente del autor
 

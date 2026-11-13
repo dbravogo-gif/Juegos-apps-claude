@@ -13,6 +13,10 @@ export interface DefEntrenador {
   tras: string;
   /** Lo que se consigue al vencerle (la líder abre el barco). */
   condicion?: Condicion;
+  /** Lo que dice nada más vencerle, al volver del combate (abrir una compuerta, dar la pintadera). */
+  alVencer?: readonly string[];
+  /** La isla cuya pintadera da (los líderes de gimnasio). */
+  medalla?: number;
 }
 
 export const ENTRENADORES_ISLA1: Readonly<Record<string, DefEntrenador>> = {
@@ -25,10 +29,35 @@ export const ENTRENADORES_ISLA1: Readonly<Record<string, DefEntrenador>> = {
   'entrenador-jable': { equipo: [{ especie: 'tabaiba-andante', nivel: 8 }, { especie: 'lagartija-de-picon', nivel: 9 }], premio: 240, tras: 'El viento borra las huellas. Mañana nadie sabrá que me ganaste.' },
   'pescador-famara': { equipo: [{ especie: 'cangrejo-de-charco', nivel: 9 }, { especie: 'cangrejo-de-charco', nivel: 9 }], premio: 260, tras: 'Hoy no pican ni las viejas ni las criaturas. Qué le vamos a hacer.' },
   'pulpero-famara': { equipo: [{ especie: 'cangrejo-de-charco', nivel: 9 }, { especie: 'tabaiba-andante', nivel: 8 }], premio: 260, tras: 'Ni un pulpo y encima pierdo. ¡Qué día!' },
+  // Los aprendices del gimnasio de Roca (gimnasio-roca.ts): vencerlos abre sus compuertas.
+  'aprendiz-roca-1': {
+    equipo: [{ especie: 'lagartija-de-picon', nivel: 9 }],
+    premio: 270,
+    tras: 'La líder dice que la roca aguanta lo que le echen. Contigo no ha aguantado.',
+    alVencer: ['Con un estruendo, la compuerta de basalto se hunde en la lava. ¡El paso está abierto!'],
+  },
+  'aprendiz-roca-2': {
+    equipo: [{ especie: 'inicial-roca', nivel: 9 }, { especie: 'lagartija-de-picon', nivel: 9 }],
+    premio: 300,
+    tras: 'Mira bien las columnas: son hexagonales. Así se enfría el basalto.',
+    alVencer: ['Se oye un crujido al fondo: la segunda compuerta baja.'],
+  },
+  'aprendiz-roca-3': {
+    equipo: [{ especie: 'inicial-roca', nivel: 10 }],
+    premio: 320,
+    tras: 'La palanca está ahí al lado. Bájala, que la líder te espera.',
+  },
   'lider-gimnasio': {
     equipo: [{ especie: 'lagartija-de-picon', nivel: 11 }, { especie: 'inicial-roca', nivel: 12 }],
     premio: 600,
     tras: 'Me has vencido con justicia. El barco te espera en el puerto.',
     condicion: 'gimnasio-vencido',
+    alVencer: [
+      '¡Qué combate! Tienes la cabeza tan dura como el basalto.',
+      'Toma: la pintadera de Lanzarote. Con ella, todo el archipiélago sabrá que has vencido al gimnasio de Roca.',
+      '{nombre} recibe la pintadera de Lanzarote.',
+      'Ve al puerto: con la pintadera, el marinero te llevará a Fuerteventura.',
+    ],
+    medalla: 1,
   },
 };

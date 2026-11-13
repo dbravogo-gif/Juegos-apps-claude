@@ -3,6 +3,7 @@ import { avanzar, crearExploracion, entrar, interactuar, salir, type EstadoExplo
 import { abrirDialogo, completa, elegirDialogo, lineaActual, pasoDialogo, pulsar, type Efecto, type EstadoDialogo } from '../src/core/guion';
 import {
   clave,
+  type Condicion,
   construirInterior,
   construirMundo,
   deClave,
@@ -27,15 +28,15 @@ function andar(m: Mundo, e: EstadoExplorar, dir: Direccion): EventoExplorar[] {
   return ev;
 }
 
-/** Casillas que se alcanzan andando desde `desde`. */
-function alcanza(m: Mundo, desde: number): Set<number> {
+/** Casillas que se alcanzan andando desde `desde` (con estas condiciones cumplidas). */
+function alcanza(m: Mundo, desde: number, condiciones: ReadonlySet<Condicion> = new Set()): Set<number> {
   const vistos = new Set([desde]);
   const cola = [desde];
   while (cola.length) {
     const [x, y] = deClave(cola.pop()!);
     for (const [dx, dy] of Object.values(PASOS)) {
       const k = clave(x + dx, y + dy);
-      if (!vistos.has(k) && transitable(m, x + dx, y + dy)) {
+      if (!vistos.has(k) && transitable(m, x + dx, y + dy, { condiciones })) {
         vistos.add(k);
         cola.push(k);
       }
@@ -71,7 +72,8 @@ describe('interiores de la isla 1', () => {
       expect(salidas, def.id).toHaveLength(1);
       const [sx, sy] = deClave(salidas[0][0]);
       expect(m.casillas.has(clave(sx, sy + 1)), `${def.id}: la salida da al sur, fuera de la sala`).toBe(false);
-      const r = alcanza(m, entrada);
+      // Con sus compuertas abiertas (el gimnasio): lo que se consigue dentro de la sala.
+      const r = alcanza(m, entrada, new Set(Object.values(def.cierres ?? {}).map((c) => c.condicion)));
       expect(r.has(salidas[0][0]), `${def.id}: se llega a la salida`).toBe(true);
       for (const [k, { personaje }] of m.ocupadas) {
         const [x, y] = deClave(k);

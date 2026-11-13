@@ -86,7 +86,17 @@ al final con la Liga.
 
 - **Entrenadores opcionales** (autor, 2026-11-11): se pueden esquivar, pero miran al camino,
   así que quien va por él se los encuentra. Lo vigila una prueba.
-- **Gimnasio de Roca:** la isla de los volcanes. Tiene un volcán pintado en la azotea.
+- **Gimnasio de Roca:** la isla de los volcanes. Tiene un volcán pintado en la azotea. Por dentro
+  (autor, 2026-11-13: «hay que hacer el gimnasio bien bien»; `data/gimnasio-roca.ts`), una cueva
+  volcánica en tres terrazas separadas por coladas de lava encendida:
+  - el vigilante de la entrada explica las compuertas y que a la Roca le hacen daño el Agua y la
+    Planta;
+  - cada terraza tiene una compuerta de basalto: las dos primeras se hunden al vencer a su
+    aprendiz y la tercera con una palanca, en un saliente que vigila el tercer aprendiz;
+  - los tres aprendices ven el único camino, así que no se esquivan (lo vigila una prueba);
+  - la líder espera arriba, ante un volcán en relieve. Al vencerla da la pintadera de Lanzarote,
+    que sale en grande en pantalla, y el barco queda abierto;
+  - la historia no cierra el gimnasio: se entra desde el principio (en otras islas sí lo hará).
 - **Casas:** la casa blanca de azotea, con chimenea redonda y carpintería verde o azul, en el
   campo; en la capital, casas blancas de balcones.
 - **Flora:** palmeras, tuneras, viñas en hoyos de picón, tabaibas y cardones entre las rocas; en

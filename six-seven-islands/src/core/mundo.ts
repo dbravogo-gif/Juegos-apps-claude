@@ -51,6 +51,8 @@ export const LEYENDA = {
   j: 'juguetes',
   n: 'cocina',
   q: 'sofá',
+  // Gimnasios (2026-11-13): una palanca que abre una compuerta (no se pisa; se usa con E).
+  p: 'palanca',
 } as const;
 
 export type Casilla = keyof typeof LEYENDA;
@@ -65,7 +67,11 @@ export const DE_ENCUENTROS: ReadonlySet<string> = new Set(['"', ';']);
 export const EDIFICIOS: ReadonlySet<string> = new Set(['C', 'M', 'R', 'S', 'G', 'F']);
 
 export type Direccion = 'n' | 's' | 'e' | 'o';
-export type Condicion = 'inicial-elegida' | 'anciano' | 'gimnasio-vencido';
+/**
+ * Lo que abre pasos y cambia diálogos. Además de los hitos con nombre: `vencido:<id>`, al vencer
+ * a un entrenador, y `palanca:<id>`, al bajar una palanca (las compuertas de los gimnasios).
+ */
+export type Condicion = 'inicial-elegida' | 'anciano' | 'gimnasio-vencido' | `vencido:${string}` | `palanca:${string}`;
 export const TODAS_LAS_CONDICIONES: ReadonlySet<Condicion> = new Set(['inicial-elegida', 'anciano', 'gimnasio-vencido']);
 
 export interface Personaje {
@@ -105,7 +111,11 @@ export interface DefZona {
   /** Una zona con hierba obligatoria no se cruza sin pisar terreno de encuentros. */
   hierbaObligatoria: boolean;
   /** Las casillas X de la zona se abren con esta condición. */
-  cierre?: { condicion: Condicion; aviso: string };
+  cierre?: Cierre;
+  /** Compuertas con su propia condición, por casilla (`"x,y"` de la zona): mandan sobre `cierre`. */
+  cierres?: Readonly<Record<string, Cierre>>;
+  /** Palancas (`p`), por casilla (`"x,y"` de la zona): bajarla cumple `palanca:<id>`. */
+  palancas?: Readonly<Record<string, string>>;
   personajes: readonly Personaje[];
   /** Cómo se dibujan sus casas (por defecto, rurales; en la capital, de balcones). */
   casas?: EstiloCasas;
@@ -115,6 +125,12 @@ export interface DefZona {
   flora?: 'seca' | 'humeda' | 'volcan';
   /** Colores propios del suelo de la zona, por letra; mandan sobre los de la isla. */
   suelo?: Partial<Record<string, string>>;
+}
+
+/** Lo que abre una casilla X y lo que se dice al chocar con ella cerrada. */
+export interface Cierre {
+  condicion: Condicion;
+  aviso: string;
 }
 
 /** Estilos de casa canaria: rural de teja, de balcones, o la blanca de azotea de Lanzarote. */
@@ -198,7 +214,12 @@ export function construirMundo(isla: DefIsla): Mundo {
         alto = Math.max(alto, gy + 1);
       }
     });
-    if (z.mapa.some((f) => f.includes('X')) && !z.cierre) throw new Error(`Zona «${z.id}»: tiene X pero no dice qué la abre`);
+    z.mapa.forEach((f, y) =>
+      [...f].forEach((c, x) => {
+        if (c === 'X' && !z.cierre && !z.cierres?.[`${x},${y}`]) throw new Error(`Zona «${z.id}»: la X de ${x},${y} no dice qué la abre`);
+        if (c === 'p' && !z.palancas?.[`${x},${y}`]) throw new Error(`Zona «${z.id}»: la palanca de ${x},${y} no tiene id`);
+      }),
+    );
     for (const p of z.personajes) {
       const k = clave(z.origen.x + p.x, z.origen.y + p.y);
       const debajo = casillas.get(k);
@@ -234,6 +255,9 @@ export interface DefInterior {
   personajes: readonly Personaje[];
   /** Dónde aparece el jugador al entrar, en coordenadas de la sala. */
   entrada: { x: number; y: number };
+  /** Compuertas y palancas (los gimnasios), como en `DefZona`. */
+  cierres?: Readonly<Record<string, Cierre>>;
+  palancas?: Readonly<Record<string, string>>;
 }
 
 /**
@@ -241,7 +265,7 @@ export interface DefInterior {
  * que sus casillas tienen claves propias y se dibuja aparte sin estorbar.
  */
 export function construirInterior(def: DefInterior, origen: { x: number; y: number }): Mundo {
-  const zona: DefZona = { id: def.id, nombre: def.nombre, origen, mapa: def.mapa, altura: 0, hierbaObligatoria: false, personajes: def.personajes };
+  const zona: DefZona = { id: def.id, nombre: def.nombre, origen, mapa: def.mapa, altura: 0, hierbaObligatoria: false, personajes: def.personajes, cierres: def.cierres, palancas: def.palancas };
   return construirMundo({ id: def.id, zonas: [zona], inicio: { zona: def.id, ...def.entrada } });
 }
 
@@ -263,12 +287,30 @@ export function transitable(m: Mundo, x: number, y: number, op: OpcionesPaso = {
   if (!cm) return false;
   if (m.ocupadas.has(k) || op.prohibidas?.has(k)) return false;
   if (cm.c === 'X') {
-    const cierre = m.zonas.get(cm.zona)?.cierre;
+    const cierre = cierreEn(m, k);
     return Boolean(cierre && op.condiciones?.has(cierre.condicion));
   }
   if (op.sinEncuentros && DE_ENCUENTROS.has(cm.c)) return false;
   if (op.evitar?.has(cm.c)) return false;
   return TRANSITABLES.has(cm.c);
+}
+
+/** Lo que abre la casilla X de la clave `k`: su compuerta propia o el cierre de su zona. */
+export function cierreEn(m: Mundo, k: number): Cierre | undefined {
+  const cm = m.casillas.get(k);
+  const z = cm ? m.zonas.get(cm.zona) : undefined;
+  if (!z) return undefined;
+  const [x, y] = deClave(k);
+  return z.cierres?.[`${x - z.origen.x},${y - z.origen.y}`] ?? z.cierre;
+}
+
+/** El id de la palanca de la casilla `k`, si la hay. */
+export function palancaEn(m: Mundo, k: number): string | undefined {
+  const cm = m.casillas.get(k);
+  const z = cm?.c === 'p' ? m.zonas.get(cm.zona) : undefined;
+  if (!z) return undefined;
+  const [x, y] = deClave(k);
+  return z.palancas?.[`${x - z.origen.x},${y - z.origen.y}`];
 }
 
 /** Todas las casillas a las que se llega andando desde las de partida. */
