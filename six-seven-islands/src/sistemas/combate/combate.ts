@@ -121,6 +121,8 @@ export class Combate implements Subsistema {
   private esferaDestello = new SphereGeometry(0.5, 20, 14);
   private fondoProvisional!: Texture;
   private fondoPintado: Texture | null = null;
+  /** El fondo pintado de los gimnasios (un interior con su volcán; probador, 2026-11-13). */
+  private fondoGimnasio: Texture | null = null;
   private guardado: { fondo: Color | Texture | null; niebla: Fog | null } | null = null;
 
   private fase: Fase = 'fuera';
@@ -162,16 +164,20 @@ export class Combate implements Subsistema {
     this.montarArena();
     this.montarInterfaz();
     this.fondoProvisional = fondoProvisional();
-    // Si el autor ya ha subido el fondo pintado, se usa; si no, el provisional hecho por código.
-    new TextureLoader().load(
-      `${import.meta.env.BASE_URL}fondos/combate-exterior.webp`,
-      (t) => {
-        t.colorSpace = SRGBColorSpace;
-        this.fondoPintado = t;
-      },
-      undefined,
-      () => undefined,
-    );
+    // Si el autor ya ha subido los fondos pintados, se usan; si no, el provisional hecho por código.
+    // Dentro de un gimnasio, el del gimnasio; en el resto, el exterior.
+    const cargar = (archivo: string, listo: (t: Texture) => void) =>
+      new TextureLoader().load(
+        `${import.meta.env.BASE_URL}fondos/${archivo}`,
+        (t) => {
+          t.colorSpace = SRGBColorSpace;
+          listo(t);
+        },
+        undefined,
+        () => undefined,
+      );
+    cargar('combate-exterior.webp', (t) => (this.fondoPintado = t));
+    cargar('combate-gimnasio.webp', (t) => (this.fondoGimnasio = t));
     // Hablar con un entrenador no vencido (o que te vea) acaba en combate (F16).
     ctx.eventos.on('dialogo:cerrar', ({ guionId }) => {
       const inicial = this.partida.estado.inicial;
@@ -292,7 +298,8 @@ export class Combate implements Subsistema {
     this.raiz.hidden = !si;
     if (si) {
       this.guardado = { fondo: escena.background as Color | Texture | null, niebla: escena.fog as Fog | null };
-      escena.background = this.fondoPintado ?? this.fondoProvisional;
+      const enGimnasio = this.partida.estado.dentro?.startsWith('gimnasio') ?? false;
+      escena.background = (enGimnasio ? this.fondoGimnasio : null) ?? this.fondoPintado ?? this.fondoProvisional;
       escena.fog = null;
       this.ajustarFondo();
       this.render.enfocar(ARENA.x, 0, ARENA.z);
@@ -933,6 +940,7 @@ export class Combate implements Subsistema {
     for (const m of this.materiales) m.dispose();
     this.fondoProvisional.dispose();
     this.fondoPintado?.dispose();
+    this.fondoGimnasio?.dispose();
   }
 }
 

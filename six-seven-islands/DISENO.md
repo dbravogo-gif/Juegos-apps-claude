@@ -318,6 +318,9 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
 - 2026-11-12 · **Inicial rebelde** (F25): hasta hablar con el anciano, no hace caso el 45 % de
   sus turnos; la mitad de esas veces usa otro movimiento y la otra mitad se distrae. Lo decide
   el generador del combate.
+- 2026-11-13 · **Tras la revisión del probador:** los entrenadores dan su consejo nada más
+  vencerles (antes, solo si se les volvía a hablar) y dicen quién son; cada isla recuerda su
+  último refugio; los gimnasios combaten con su fondo pintado.
 - 2026-11-13 · **Fuerteventura, fase 4:** Tindaya y Cofete, opcionales, más fuertes y con una
   Superpoción cada una (solo como premio, no en tiendas); Lobos se ve desde Corralejo; rocas
   grabadas que se leen (`g`), que sirven de letrero en cualquier zona.

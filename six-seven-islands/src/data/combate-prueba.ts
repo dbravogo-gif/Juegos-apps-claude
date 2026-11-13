@@ -30,6 +30,9 @@ const movimientos: Movimiento[] = [
   { id: 'rodada-de-piedra', nombre: 'Rodada de piedra', tipo: 'roca', categoria: 'fisico', poder: 50, precision: 95, pp: 20 },
   { id: 'polvo-de-picon', nombre: 'Polvo de picón', tipo: 'roca', categoria: 'magico', poder: 40, precision: 100, pp: 25 },
   // La quinta inicial, de Tierra (autor, 2026-11-13).
+  // De Aire, para las de relleno del gimnasio de Aire (probador, 2026-11-13).
+  { id: 'rafaga', nombre: 'Ráfaga', tipo: 'aire', categoria: 'magico', poder: 40, precision: 100, pp: 25 },
+  { id: 'picado', nombre: 'Picado', tipo: 'aire', categoria: 'fisico', poder: 55, precision: 95, pp: 15 },
   { id: 'pisoton', nombre: 'Pisotón', tipo: 'tierra', categoria: 'fisico', poder: 50, precision: 95, pp: 20 },
   { id: 'arenazo', nombre: 'Arenazo', tipo: 'tierra', categoria: 'magico', poder: 40, precision: 100, pp: 25 },
   { id: 'caparazon', nombre: 'Caparazón', tipo: 'comun', categoria: 'estado', poder: 0, precision: null, pp: 20, objetivo: 'propio', efectos: [{ tipo: 'etapa', a: 'propio', estadistica: 'escudo', cambio: 1, prob: 100 }] },
@@ -43,6 +46,10 @@ const especies: Especie[] = [
   { id: 'cangrejo-de-charco', nombre: 'Cangrejo de charco', tipos: ['agua'], base: base(40, 45, 55, 35, 40, 45), expBase: 50, ratioCaptura: 200, aprende: aprende('topetazo', 'remojon'), descripcion: '' },
   { id: 'lagartija-de-picon', nombre: 'Lagartija de picón', tipos: ['roca'], base: base(40, 50, 50, 30, 35, 55), expBase: 50, ratioCaptura: 200, aprende: aprende('topetazo', 'polvo-de-picon'), descripcion: '' },
   { id: 'tabaiba-andante', nombre: 'Tabaiba andante', tipos: ['planta'], base: base(45, 40, 45, 45, 45, 35), expBase: 50, ratioCaptura: 200, aprende: aprende('topetazo', 'latigazo-de-musgo'), descripcion: '' },
+  // De Aire (provisionales, para el gimnasio de Aire y Sotavento; probador, 2026-11-13): sin ellas,
+  // el gimnasio no tenía ni una criatura de su tipo.
+  { id: 'remolino-de-jable', nombre: 'Remolino de jable', tipos: ['aire'], base: base(40, 40, 35, 55, 40, 65), expBase: 55, ratioCaptura: 190, aprende: aprende('mirada-fija', 'rafaga'), descripcion: '' },
+  { id: 'guirre-de-viento', nombre: 'Guirre de viento', tipos: ['aire'], base: base(55, 60, 45, 50, 45, 65), expBase: 70, ratioCaptura: 90, aprende: aprende('rafaga', 'picado', 'mirada-fija'), descripcion: '' },
   { id: 'chispa-de-colada', nombre: 'Chispa de colada', tipos: ['infernal'], base: base(35, 40, 35, 55, 40, 60), expBase: 55, ratioCaptura: 190, aprende: aprende('mirada-fija', 'soplo-de-brasas'), descripcion: '' },
   { id: 'inicial-agua', nombre: 'Inicial de Agua', tipos: ['agua'], base: base(50, 50, 55, 55, 55, 45), expBase: 60, ratioCaptura: 45, aprende: aprende('remojon', 'ola-de-cresta', 'topetazo', 'mirada-fija'), descripcion: '' },
   { id: 'inicial-planta', nombre: 'Inicial de Planta', tipos: ['planta'], base: base(50, 50, 50, 55, 55, 50), expBase: 60, ratioCaptura: 45, aprende: aprende('latigazo-de-musgo', 'esporas-de-hoja', 'topetazo', 'mirada-fija'), descripcion: '' },
@@ -78,6 +85,8 @@ export const MODELO_DE: Readonly<Record<string, string>> = {
   'lagartija-de-picon': 'iniciales/inicial-roca-1.glb',
   'tabaiba-andante': 'iniciales/inicial-planta-1.glb',
   'chispa-de-colada': 'iniciales/inicial-infernal-1.glb',
+  'remolino-de-jable': 'iniciales/inicial-planta-1.glb',
+  'guirre-de-viento': 'iniciales/inicial-agua-1.glb',
 };
 
 /** Con lo que empieza la mochila al elegir la inicial: poco (autor, 2026-11-11). */

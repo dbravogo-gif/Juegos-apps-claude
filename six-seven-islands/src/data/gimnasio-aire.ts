@@ -38,7 +38,7 @@ export const GIMNASIO_AIRE: DefInterior = {
   entrada: { x: 8, y: 12 },
   personajes: [
     { id: 'vigilante-aire', x: 10, y: 12, mira: 'o' },
-    { id: 'aprendiz-aire-1', x: 12, y: 10, mira: 'e', entrenador: { vision: 3, obligatorio: true }, frase: '¿Quieres subir por la columna del viento? Antes, tendrás que vencerme.' },
+    { id: 'aprendiz-aire-1', x: 12, y: 10, mira: 'e', entrenador: { vision: 3, obligatorio: true }, frase: '¿Quieres subir por la columna del viento? No basta con vencerme: alguien tiene que girar las aspas.' },
     { id: 'aprendiz-aire-2', x: 13, y: 2, mira: 's', entrenador: { vision: 2, obligatorio: true }, frase: '¡Has llegado volando! Pues ahora toca aterrizar… contra mis criaturas.' },
     { id: 'aprendiz-aire-3', x: 5, y: 8, mira: 'e', entrenador: { vision: 3, obligatorio: true }, frase: 'El pasillo de la líder sopla hacia abajo. A no ser que alguien gire las aspas…' },
     { id: 'lider-aire', x: 8, y: 1, mira: 's' },

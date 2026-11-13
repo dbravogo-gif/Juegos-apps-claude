@@ -72,11 +72,16 @@ const VELOCIDAD = 60 / PASOS_POR_CASILLA;
 /** Tinte de la piel quemada por el sol (el guiri de Famara). */
 const QUEMADO = [1, 0.66, 0.58] as const;
 
+/** Los líderes de gimnasio: `lider-gimnasio` (Lanzarote) y `lider-<tipo>` en las demás islas. */
+const esLider = (p: DefPersonaje): boolean => p.id.startsWith('lider-');
+
 /** Qué modelo de KayKit hace de cada personaje, hasta que lleguen las personas de Meshy. */
 function modeloDe(p: DefPersonaje): string {
   if (p.postura === 'tumbado') return p.quemado ? 'Barbarian' : 'Rogue';
   if (p.id === 'anciano' || p.id === 'doctora') return 'Mage';
-  if (p.id === 'lider-gimnasio') return 'Knight';
+  // Las líderes, con la figura de maga y más grandes (abajo): antes llevaban la misma que sus
+  // aprendices o que el vigilante y no se distinguían (probador, 2026-11-13).
+  if (esLider(p)) return 'Mage';
   if (p.entrenador) return p.entrenador.obligatorio ? 'Knight' : 'Barbarian';
   return 'Rogue_Hooded';
 }
@@ -162,6 +167,7 @@ export class Personaje implements Subsistema {
           const k = enIsla(mapa, z.id, p.x, p.y);
           const [x, y] = deClave(k);
           f.raiz.position.set(x, alturaSuelo(mapa.casillas.get(k)!.h), y);
+          if (esLider(p)) f.raiz.scale.setScalar(1.25);
           if (p.postura === 'tumbado') {
             // Boca arriba sobre su toalla, con la cabeza al norte y los pies en el borde sur de la
             // casilla. No se gira al hablar.

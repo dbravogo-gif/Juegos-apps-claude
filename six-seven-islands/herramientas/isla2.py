@@ -162,11 +162,24 @@ z.r(6, 7, 6, 6, ':')                                            # la cima
 z.p(7, 9, 'g'); z.p(10, 9, 'g')                                 # rocas con pies grabados
 z.r(18, 2, 6, 4, '"'); z.r(17, 13, 6, 4, '"')                   # hierba seca del llano
 z.r(20, 7, 2, 2, 'U')
+# Alturas: la senda sube por escalones (2 abajo, 3 arriba) hasta la cima (4). Cada roca queda justo
+# por debajo de lo más alto que pisa a su lado (la roca se dibuja 0,9 más alta, casi dos escalones):
+# así la montaña sube en terrazas y la cima queda arriba, no hundida entre rocas (probador).
+def h_pisable(x, y):
+    if 6 <= x <= 11 and 7 <= y <= 12: return 4                   # la cima
+    if (x == 4 and 4 <= y <= 11) or (y == 4 and 4 <= x <= 11) or (x == 11 and 5 <= y <= 6): return 3
+    if 2 <= x <= 15 and 2 <= y <= 17: return 1 if (x, y) == (15, 10) else 2   # la senda de abajo
+    return 0                                                     # el llano
 alt = []
 for y in range(20):
     fila = ''
     for x in range(26):
-        h = 3 if (6 <= x <= 11 and 7 <= y <= 12) else 2 if (4 <= x <= 13 and 4 <= y <= 15) else 1 if (2 <= x <= 15 and 2 <= y <= 17) else 0
+        if z.g[y][x] == '#' and 2 <= x <= 15 and 2 <= y <= 17:
+            vecinas = [h_pisable(x + i, y + j) for i in (-1, 0, 1) for j in (-1, 0, 1)
+                       if 0 <= x + i < 26 and 0 <= y + j < 20 and z.g[y + j][x + i] != '#']
+            h = max(0, max(vecinas, default=0) - 2)
+        elif z.g[y][x] == '#': h = 0
+        else: h = h_pisable(x, y)
         fila += str(h)
     alt.append(fila)
 zonas['tindaya'] = dict(nombre='Tindaya', origen=(7, 28), z=z, alturas=alt, hierba=True)

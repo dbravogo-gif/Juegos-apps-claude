@@ -40,24 +40,23 @@ export const ENTRENADORES_ISLA2: Readonly<Record<string, DefEntrenador>> = {
     premio: 460,
     tras: 'Lo que brilla está al fondo, a la izquierda. Yo ya me he cansado de buscar.',
   },
-  // Fase 3: Sotavento y el gimnasio de Aire (Morro Jable). Equipos provisionales: aún no hay
-  // criaturas de Aire de relleno.
-  'kite-sotavento-1': { equipo: [{ especie: 'chispa-de-colada', nivel: 16 }], premio: 440, tras: 'Mañana sopla más. ¡Revancha con más viento!' },
+  // Fase 3: Sotavento y el gimnasio de Aire (Morro Jable), con las dos de Aire de relleno.
+  'kite-sotavento-1': { equipo: [{ especie: 'remolino-de-jable', nivel: 16 }], premio: 440, tras: 'Mañana sopla más. ¡Revancha con más viento!' },
   'kite-sotavento-2': {
     equipo: [{ especie: 'cangrejo-de-charco', nivel: 16 }, { especie: 'lagartija-de-picon', nivel: 17 }],
     premio: 460,
     tras: 'El gimnasio está en Morro Jable. Allí el viento sí que manda.',
   },
   'corredor-sotavento': { equipo: [{ especie: 'lagartija-de-picon', nivel: 17 }], premio: 460, tras: 'Contra el viento corro más despacio. Contra ti, también he perdido.' },
-  'aprendiz-aire-1': { equipo: [{ especie: 'chispa-de-colada', nivel: 17 }], premio: 480, tras: 'La corriente del centro solo sube hacia la líder si alguien gira las aspas de arriba a la derecha.' },
-  'aprendiz-aire-2': { equipo: [{ especie: 'tabaiba-andante', nivel: 18 }], premio: 500, tras: 'Gira esas aspas de ahí y la corriente del centro te subirá hasta la líder.' },
+  'aprendiz-aire-1': { equipo: [{ especie: 'remolino-de-jable', nivel: 17 }], premio: 480, tras: 'La corriente del centro solo sube hacia la líder si alguien gira las aspas de arriba a la derecha.' },
+  'aprendiz-aire-2': { equipo: [{ especie: 'remolino-de-jable', nivel: 18 }], premio: 500, tras: 'Gira esas aspas de ahí y la corriente del centro te subirá hasta la líder.' },
   'aprendiz-aire-3': {
-    equipo: [{ especie: 'lagartija-de-picon', nivel: 18 }, { especie: 'cangrejo-de-charco', nivel: 18 }],
+    equipo: [{ especie: 'remolino-de-jable', nivel: 18 }, { especie: 'guirre-de-viento', nivel: 17 }],
     premio: 520,
     tras: 'Si el pasillo te devuelve, es que las aspas de arriba siguen sin girar.',
   },
   'lider-aire': {
-    equipo: [{ especie: 'chispa-de-colada', nivel: 20 }, { especie: 'inicial-planta', nivel: 21 }],
+    equipo: [{ especie: 'remolino-de-jable', nivel: 20 }, { especie: 'guirre-de-viento', nivel: 21 }],
     premio: 900,
     tras: 'El viento sopla hacia Gran Canaria. Cuando salga el barco, ahí estarás.',
     condicion: 'gimnasio2-vencido',

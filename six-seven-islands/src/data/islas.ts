@@ -69,7 +69,11 @@ export const FUERTEVENTURA: DatosIsla = {
   encuentros: ENCUENTROS_ISLA2,
   entrenadores: ENTRENADORES_ISLA2,
   guion: GUION_ISLA2,
-  objetivos: [{ hasta: 'gimnasio2-vencido', texto: 'Cruza la isla hasta Morro Jable y vence al gimnasio de Aire' }],
+  objetivos: [
+    { hasta: 'gimnasio2-vencido', texto: 'Cruza la isla hasta Morro Jable y vence al gimnasio de Aire' },
+    // El barco a Gran Canaria aún no sale (la isla 3 está por aprobar, ISLA-3.md).
+    { hasta: 'isla2-completada', texto: 'Explora Tindaya y Cofete mientras el barco a Gran Canaria se prepara' },
+  ],
   curanderos: { 'enfermera-corralejo': 'refugio-corralejo', 'enfermera-puerto': 'refugio-puerto', 'enfermera-betancuria': 'refugio-betancuria', 'enfermera-morro': 'refugio-morro' },
   tenderos: new Set(['tendero-corralejo', 'tendero-puerto', 'tendero-morro']),
   refugio: 'refugio-corralejo',

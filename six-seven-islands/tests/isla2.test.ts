@@ -6,6 +6,7 @@ import { interactuar, crearExploracion } from '../src/core/explorar';
 import { ISLAS, FUERTEVENTURA, LANZAROTE } from '../src/data/islas';
 import { ISLA_2, PUERTAS_ISLA2 } from '../src/data/isla2';
 import { DATOS_COMBATE_PRUEBA as DATOS } from '../src/data/combate-prueba';
+import { quienEs } from '../src/data/entrenadores-isla1';
 
 const m = construirMundo(ISLA_2);
 const zona = (id: string) => m.zonas.get(id)!;
@@ -78,6 +79,14 @@ describe('Fuerteventura (isla 2)', () => {
     const ve = new Set(vision(m, 'betancuria', g));
     const sinVer = alcanzables(m, [llegada], { prohibidas: ve });
     expect([...sinVer].some((k) => m.casillas.get(k)?.zona === 'ajuy')).toBe(false);
+  });
+
+  it('todo entrenador de las dos islas dice quién es al hablar, y el gimnasio de Aire es de Aire', () => {
+    for (const d of [LANZAROTE, FUERTEVENTURA]) for (const id of Object.keys(d.entrenadores)) expect(quienEs(id), id).toBeDefined();
+    for (const id of ['aprendiz-aire-1', 'aprendiz-aire-2', 'aprendiz-aire-3', 'lider-aire']) {
+      const tipos = FUERTEVENTURA.entrenadores[id].equipo.map((e) => DATOS.especies[e.especie].tipos[0]);
+      expect(tipos.every((t) => t === 'aire'), id).toBe(true);
+    }
   });
 
   it('a Tindaya se llega desde Las Dunas y a Cofete desde Morro Jable, y sin ellas se cruza igual', () => {

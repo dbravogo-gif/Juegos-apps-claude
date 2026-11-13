@@ -114,6 +114,8 @@ propuesta de Claude y qué frena mientras siga abierto.
 
 Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
 
+- **Inicial de fuego en el gimnasio de Roca:** todos sus ataques están resistidos y, a nivel 12,
+  pierde contra el primer aprendiz (probador). ¿Se deja así de difícil o se le da algo?
 - **Gran Canaria (`ISLA-3.md`):** aprobar el recorrido y elegir el tipo del gimnasio (Lucha,
   recomendado; Planta o Eléctrico), si la historia lo abre (el líder en el Roque Nublo) y los
   niveles.
