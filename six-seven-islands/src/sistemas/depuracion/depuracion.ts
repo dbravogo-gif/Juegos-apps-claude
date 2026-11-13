@@ -26,6 +26,8 @@ export interface GanchosJuego {
   estado(): EstadoVisible;
   semilla(n: number | string): void;
   poner(estado: unknown): void;
+  /** Viaja en barco a otra isla, como al decir que sí al marinero (recarga la página). */
+  viajar(isla: number): void;
   contadores(): Contadores;
   calidad(nivel: NivelCalidad): void;
 }
@@ -84,6 +86,10 @@ export class Depuracion implements Subsistema {
       poner: (estado) => {
         if (!ctx.tiene('partida')) throw new Error('En la vitrina no hay partida');
         ctx.get<Subsistema & ConPoner>('partida').poner(estado);
+      },
+      viajar: (isla) => {
+        if (!ctx.tiene('partida')) throw new Error('En la vitrina no hay partida');
+        ctx.get<Subsistema & { viajar(n: number): void }>('partida').viajar(isla);
       },
       contadores: () => this.render.contadores(),
       calidad: cambiarCalidad,

@@ -14,6 +14,32 @@ export const ENTRENADORES_ISLA2: Readonly<Record<string, DefEntrenador>> = {
     premio: 340,
     tras: 'Si ves el horno de cal, ya casi has cruzado la mitad. Eso me dijeron.',
   },
+  // Fase 2.
+  'paseante-puerto': {
+    equipo: [{ especie: 'cangrejo-de-charco', nivel: 13 }, { especie: 'tabaiba-andante', nivel: 13 }],
+    premio: 360,
+    tras: 'Mañana vuelvo a pasear. Y a retar. Me gusta perder con estilo.',
+  },
+  'guarda-betancuria': {
+    equipo: [{ especie: 'lagartija-de-picon', nivel: 14 }, { especie: 'inicial-roca', nivel: 15 }],
+    premio: 420,
+    tras: 'Pasa, pasa. El camino de Ajuy baja por el barranco hasta el mar.',
+  },
+  'cabrero-betancuria': {
+    equipo: [{ especie: 'tabaiba-andante', nivel: 14 }],
+    premio: 380,
+    tras: 'Mis cabras ni se han enterado. Siguen comiendo aulagas tan tranquilas.',
+  },
+  'pescador-ajuy': {
+    equipo: [{ especie: 'cangrejo-de-charco', nivel: 15 }, { especie: 'cangrejo-de-charco', nivel: 14 }],
+    premio: 420,
+    tras: 'Dentro de la cueva el mar entra con las mareas. Ten cuidado con las pozas.',
+  },
+  'explorador-cueva': {
+    equipo: [{ especie: 'chispa-de-colada', nivel: 15 }, { especie: 'lagartija-de-picon', nivel: 16 }],
+    premio: 460,
+    tras: 'Lo que brilla está al fondo, a la izquierda. Yo ya me he cansado de buscar.',
+  },
   'buscador-dunas': {
     equipo: [{ especie: 'chispa-de-colada', nivel: 12 }, { especie: 'lagartija-de-picon', nivel: 13 }],
     premio: 380,

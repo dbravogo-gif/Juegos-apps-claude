@@ -54,7 +54,7 @@ zonas['corralejo'] = dict(nombre='Corralejo', origen=(40, 0), z=z, altura=0, cas
 # ruinas y el campamento de la arqueóloga. Entrada arriba (x 18..20); el camino del sur, cerrado.
 z = Z(40, 36, 'D'); z.borde('K')
 z.r(18, 0, 3, 1, ':')                                           # entrada desde Corralejo
-z.r(18, 35, 3, 1, 'X')                                          # el camino del sur, tapado por una duna
+z.r(18, 35, 3, 1, ':')                                          # salida hacia Puerto del Rosario (fase 2)
 z.r(1, 7, 29, 1, 'K'); z.r(10, 14, 29, 1, 'K'); z.r(1, 21, 29, 1, 'K'); z.r(10, 28, 29, 1, 'K')   # crestas en zigzag
 for x, y, w, h in ((24, 3, 3, 2), (5, 11, 2, 2), (16, 17, 4, 2), (30, 24, 2, 3), (4, 31, 3, 2)): z.r(x, y, w, h, 'K')   # dunas sueltas
 # Tierra dura: la bajada de la entrada, el horno de cal, el campamento y descansos por el camino.
@@ -66,10 +66,66 @@ z.p(6, 17, 'E')                                                 # la estatua med
 z.r(22, 23, 6, 3, ':'); z.r(12, 30, 6, 3, ':'); z.r(17, 33, 5, 2, ':')
 zonas['dunas'] = dict(nombre='Las Dunas', origen=(33, 20), z=z, altura=0, hierba=True, clima='calima')
 
-# La costa del norte de Fuerteventura, aproximada: la punta de Corralejo y el comienzo de la isla
-# hacia el sur (el resto llega con las fases siguientes). En casillas; los .5 caen entre casillas.
-SILUETA = [(38.5,3.5),(45.5,0.5),(66.5,0.5),(74.5,5.5),(77.5,20.5),(78.5,45.5),(77.5,70.5),
-           (70.5,92.5),(48.5,96.5),(29.5,92.5),(27.5,70.5),(29.5,45.5),(31.5,20.5),(34.5,8.5)]
+# 3. Puerto del Rosario (32 × 26): la capital, en la costa este. Entrada arriba (x 13..15, desde
+# Las Dunas); salida al oeste (y 12..13, hacia Betancuria). El mar al este, con el muelle.
+z = Z(32, 26, ':'); z.borde('#')
+z.r(13, 0, 3, 1, ':'); z.r(0, 12, 1, 2, ':')
+z.r(26, 1, 5, 24, '~')                                          # el mar
+z.r(22, 12, 4, 2, 'P')                                          # el muelle
+z.camino([(13,0),(13,21)], ancho=3)                             # calle principal, de norte a sur
+z.camino([(1,8),(25,8)]); z.camino([(0,12),(25,12)], ancho=2); z.camino([(1,21),(20,21)])
+z.edificio(2, 4, 5, 3, 'R', 4, 'refugio-puerto')
+z.edificio(18, 4, 4, 3, 'S', 19, 'tienda-puerto')
+z.edificio(2, 9, 4, 2, 'C', 3, 'casa-puerto-1')
+z.edificio(18, 9, 4, 2, 'C', 19, 'casa-puerto-2')
+z.edificio(2, 17, 4, 3, 'C', 3, 'casa-puerto-3')
+for y in (3, 6, 16, 19, 23): z.p(24, y, 'T')                    # palmeras del paseo, junto al mar
+z.r(18, 16, 5, 4, '.'); z.p(20, 17, 'Y')                        # la plaza con su árbol
+zonas['puerto'] = dict(nombre='Puerto del Rosario', origen=(38, 56), z=z, altura=0, casas='lanzarote')
+
+# 4. Betancuria (34 × 30): la antigua capital, en un valle entre montañas peladas. Entrada al
+# este (y 4..5, desde Puerto del Rosario); salida al oeste (y 22..23, hacia Ajuy). El pueblito con
+# su iglesia (sin puerta) y su refugio; la presa con palmeras en el barranco; laderas con hierba
+# seca, una obligatoria, y el guarda del paso a Ajuy.
+z = Z(34, 30, ':'); z.borde('#')
+z.r(33, 4, 1, 2, ','); z.r(0, 22, 1, 2, ',')
+z.r(1, 1, 6, 6, '#'); z.r(26, 9, 7, 5, '#'); z.r(1, 25, 10, 4, '#'); z.r(24, 24, 9, 5, '#')   # montañas peladas
+z.camino([(33,4),(20,4)], ancho=2); z.camino([(20,4),(20,23)], ancho=2); z.camino([(20,22),(0,22)], ancho=2)
+z.r(10, 9, 6, 4, 'M')                                           # la iglesia, sin puerta
+z.camino([(22,17),(23,17)]); z.camino([(11,18),(20,18)])         # los caminos, sin pisar las puertas
+z.edificio(22, 14, 5, 3, 'R', 24, 'refugio-betancuria')
+z.edificio(9, 15, 4, 3, 'C', 10, 'casa-betancuria')
+z.r(3, 12, 5, 3, '~')                                           # la presa
+for x, y in ((2, 11), (8, 11), (2, 15), (8, 15), (5, 16)): z.p(x, y, 'T')
+z.r(22, 1, 10, 3, '"'); z.r(14, 19, 5, 6, '"'); z.r(2, 19, 8, 3, '"')    # hierba seca de las laderas
+z.r(19, 6, 4, 3, '"')                                           # la mancha que no se esquiva, en el camino
+zonas['betancuria'] = dict(nombre='Betancuria', origen=(34-30, 64), z=z, altura=0, hierba=True, casas='rural')
+
+# 5. Ajuy (24 × 30): la costa de las cuevas. Entrada al este (y 22..23, desde Betancuria). Playa de
+# arena negra, acantilados y la boca de la cueva (J), por la que se entra a la cueva de las pozas.
+# El camino del sur, cerrado hasta la fase 3.
+z = Z(24, 30, ':'); z.borde('#')
+z.r(23, 22, 1, 2, ','); z.r(11, 29, 3, 1, 'X')
+z.r(0, 1, 6, 28, '~'); z.r(6, 8, 4, 18, 'a')                   # el mar y la playa negra
+z.r(6, 1, 17, 2, '#'); z.r(6, 3, 2, 5, '#'); z.r(14, 3, 9, 6, '#')        # acantilados del norte
+z.r(8, 3, 6, 2, 'J'); z.p(10, 5, 'd'); z.puertas.append((10, 5, 'cueva-ajuy'))   # la boca de la cueva
+z.camino([(10,6),(10,9)]); z.camino([(10,9),(18,9)])
+z.camino([(18,9),(18,23)]); z.camino([(18,22),(23,22)], ancho=2); z.camino([(11,23),(18,23)]); z.camino([(12,23),(12,28)])
+z.r(14, 12, 4, 6, '"'); z.r(19, 24, 4, 4, '"')                  # hierba en lo alto del acantilado
+z.edificio(14, 25, 3, 2, 'C', 15, 'casa-ajuy')
+z.r(6, 26, 4, 3, '#'); z.r(17, 13, 1, 1, '#')
+zonas['ajuy'] = dict(nombre='Ajuy', origen=(10-30, 64), z=z, altura=0, hierba=True, suelo="{ a: '#3E3638' }")
+
+# Toda la isla, 30 casillas al este: así cabe la costa oeste (Ajuy), sin coordenadas negativas.
+DESPLAZAMIENTO = 30
+for v in zonas.values(): v['origen'] = (v['origen'][0] + DESPLAZAMIENTO, v['origen'][1])
+
+# La costa de Fuerteventura, aproximada: de la punta de Corralejo por la costa este hasta Puerto
+# del Rosario, y por la oeste, Ajuy; el sur llega con las fases siguientes. En casillas, ya con el
+# desplazamiento; los .5 caen entre casillas.
+SILUETA = [(68.5,3.5),(75.5,0.5),(96.5,0.5),(104.5,5.5),(107.5,20.5),(106.5,45.5),(100.5,56.5),
+           (96.5,82.5),(88.5,98.5),(68.5,102.5),(48.5,106.5),(28.5,110.5),(14.5,106.5),(9.5,96.5),
+           (9.5,70.5),(16.5,61.5),(34.5,59.5),(56.5,57.5),(60.5,45.5),(61.5,20.5),(64.5,8.5)]
 
 PERSONAJES = {
  'corralejo': ["{ id: 'marinero-corralejo', x: 11, y: 4, mira: 's', frase: 'Este barco va y viene de Lanzarote todo el día.' }",
@@ -79,10 +135,19 @@ PERSONAJES = {
            "{ id: 'perdido-dunas-2', x: 36, y: 18, mira: 'o', entrenador: { vision: 5, obligatorio: false }, frase: 'Todas las dunas son iguales… ¿Tú también te has perdido? ¡Pues a luchar!' }",
            "{ id: 'buscador-dunas', x: 14, y: 26, mira: 'e', entrenador: { vision: 5, obligatorio: false }, frase: 'La arena esconde tesoros. Y criaturas. ¡Y entrenadores como yo!' }",
            "{ id: 'arqueologa', x: 7, y: 17, mira: 'o', frase: '¡Cuidado con las cuerdas!' }"],
+ 'puerto': ["{ id: 'escultor-puerto', x: 17, y: 13, mira: 's', frase: 'Esta ciudad está llena de esculturas por la calle. Algún día pondrán una mía.' }",
+            "{ id: 'vecina-puerto', x: 9, y: 21, mira: 'n', frase: 'De aquí salían los barcos de la cal. Hoy salen los de turistas.' }",
+            "{ id: 'paseante-puerto', x: 21, y: 22, mira: 'o', entrenador: { vision: 4, obligatorio: false }, frase: 'Paseo cada tarde junto al mar. Y cada tarde reto a alguien. ¡Hoy te toca!' }"],
+ 'betancuria': ["{ id: 'guarda-betancuria', x: 1, y: 21, mira: 's', entrenador: { vision: 2, obligatorio: true }, frase: 'El camino de Ajuy es estrecho y peligroso. Antes, demuéstrame que sabes luchar.' }",
+                "{ id: 'cabrero-betancuria', x: 27, y: 5, mira: 'n', entrenador: { vision: 2, obligatorio: false }, frase: 'Mis cabras pastan en estas laderas. ¡Y mis criaturas las vigilan!' }",
+                "{ id: 'anciana-betancuria', x: 14, y: 13, mira: 's', frase: 'Betancuria fue la capital de la isla hace siglos. Por eso la escondieron entre montañas.' }"],
+ 'ajuy': ["{ id: 'pescador-ajuy', x: 8, y: 18, mira: 'e', entrenador: { vision: 4, obligatorio: false }, frase: 'Estas rocas son las más viejas de Canarias. ¡Y yo, el pescador más viejo de Ajuy!' }",
+          "{ id: 'nino-ajuy', x: 12, y: 7, mira: 's', frase: 'Dentro de la cueva hay pozas con agua del mar. ¡Y algo que brilla al fondo!' }"],
 }
-OBJETOS = {'dunas': ["{ id: 'pocion-horno', x: 33, y: 11, objeto: 'pocion' }", "{ id: 'cubo-dunas', x: 37, y: 31, objeto: 'cubo-blanco' }"]}
+OBJETOS = {'dunas': ["{ id: 'pocion-horno', x: 33, y: 11, objeto: 'pocion' }", "{ id: 'cubo-dunas', x: 37, y: 31, objeto: 'cubo-blanco' }"],
+           'betancuria': ["{ id: 'pocion-presa', x: 4, y: 16, objeto: 'pocion' }"]}
 CIERRES = {
- 'dunas': "cierre: { condicion: 'palanca:camino-sur', aviso: 'Una duna enorme tapa el camino del sur. Los de la carretera dicen que la despejarán pronto.' },",
+ 'ajuy': "cierre: { condicion: 'palanca:camino-sur', aviso: 'Un desprendimiento tapa el camino del sur. Dicen que lo despejarán pronto.' },",
 }
 
 def bloque(lista, nombre):
@@ -96,6 +161,7 @@ for zid, v in zonas.items():
     t=f"    {{\n      id: '{zid}',\n      nombre: '{v['nombre']}',\n      origen: {{ x: {ox}, y: {oy} }},\n      hierbaObligatoria: {'true' if v.get('hierba') else 'false'},\n"
     if zid in CIERRES: t+=f"      {CIERRES[zid]}\n"
     if v.get('casas'): t+=f"      casas: '{v['casas']}',\n"
+    if v.get('suelo'): t+=f"      // Arena negra, como la playa de Ajuy.\n      suelo: {v['suelo']},\n"
     if v.get('clima'): t+=f"      clima: '{v['clima']}',\n"
     t+=bloque(PERSONAJES.get(zid,[]),'personajes') if PERSONAJES.get(zid) else "      personajes: [],\n"
     t+=bloque(OBJETOS.get(zid,[]),'objetos')

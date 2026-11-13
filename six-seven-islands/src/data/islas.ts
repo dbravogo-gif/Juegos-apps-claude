@@ -59,7 +59,7 @@ export const LANZAROTE: DatosIsla = {
   salaInicial: SALA_INICIAL,
 };
 
-/** Fuerteventura (ISLA-2.md). Fase 1: Corralejo y Las Dunas; el camino del sur, cerrado. */
+/** Fuerteventura (ISLA-2.md). Fases 1 y 2: de Corralejo a Ajuy; el camino del sur, cerrado. */
 export const FUERTEVENTURA: DatosIsla = {
   numero: 2,
   nombre: 'Fuerteventura',
@@ -69,9 +69,9 @@ export const FUERTEVENTURA: DatosIsla = {
   encuentros: ENCUENTROS_ISLA2,
   entrenadores: ENTRENADORES_ISLA2,
   guion: GUION_ISLA2,
-  objetivos: [{ hasta: 'palanca:camino-sur', texto: 'Cruza Las Dunas hacia el sur' }],
-  curanderos: { 'enfermera-corralejo': 'refugio-corralejo' },
-  tenderos: new Set(['tendero-corralejo']),
+  objetivos: [{ hasta: 'palanca:camino-sur', texto: 'Cruza la isla hacia el sur: Puerto del Rosario, Betancuria y Ajuy' }],
+  curanderos: { 'enfermera-corralejo': 'refugio-corralejo', 'enfermera-puerto': 'refugio-puerto', 'enfermera-betancuria': 'refugio-betancuria' },
+  tenderos: new Set(['tendero-corralejo', 'tendero-puerto']),
   refugio: 'refugio-corralejo',
   llegada: { zona: 'corralejo', x: 12, y: 5 },
 };

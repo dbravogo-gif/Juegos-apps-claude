@@ -27,6 +27,16 @@ export const GUION_ISLA2: Guion = {
       },
     },
   ],
+  // Fase 2: los refugios y la tienda de Puerto del Rosario y Betancuria.
+  'enfermera-puerto': [
+    { dialogo: { lineas: [{ quien: 'Enfermera', texto: 'Bienvenido al refugio de Puerto del Rosario. Tu equipo, como nuevo, sin cobrar nada.' }] } },
+  ],
+  'tendero-puerto': [
+    { dialogo: { lineas: [{ quien: 'Tendero', texto: '¡Buenas! En la capital no falta de nada… bueno, casi de nada.' }] } },
+  ],
+  'enfermera-betancuria': [
+    { dialogo: { lineas: [{ quien: 'Enfermera', texto: 'Hasta aquí arriba llega poca gente. ¡Descansa, que el camino es largo!' }] } },
+  ],
   // La arqueóloga de Las Dunas (autor, 2026-11-13): desentierra una estatua ancestral y cuenta un
   // trozo de la historia. La estatua de verdad, ya se verá.
   arqueologa: [

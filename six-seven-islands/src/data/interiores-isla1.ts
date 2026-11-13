@@ -73,10 +73,12 @@ export function generarInteriores(
     for (const e of edificios(m, z.id)) {
       const tipo = TIPO[e.tipo];
       const k = e.puertas[0];
-      if (!tipo || k === undefined) continue;
+      if (k === undefined) continue;
       const [x, y] = deClave(k);
       const id = puertas[`${x - z.origen.x},${y - z.origen.y}`];
       const hecha = aMano.find((d) => d.id === id);
+      // Sin tipo de sala conocido (la boca de una cueva), solo vale si está hecha a mano.
+      if (!tipo && !hecha) continue;
       const def = id ? salas[id] : undefined;
       if (!id || (!def && !hecha) || hechas.has(id)) continue;
       hechas.add(id);
@@ -85,7 +87,7 @@ export function generarInteriores(
         res.push(hecha);
         continue;
       }
-      if (!def) continue;
+      if (!def || !tipo) continue;
       const s = generarInterior({ tipo, ancho: e.ancho, fondo: e.fondo, plantas: plantasDe(z, tipo), semilla: semillaDe(id) });
       res.push({ id, nombre: def.nombre, mapa: s.mapa, personajes: def.gente(s), entrada: s.entrada });
     }

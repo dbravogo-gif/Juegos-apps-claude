@@ -43,6 +43,8 @@ export const LEYENDA = {
   D: 'arena de duna',
   K: 'cresta de duna',
   E: 'estatua enterrada',
+  // La boca de una cueva en el acantilado (Ajuy): se entra por su puerta, como en un edificio.
+  J: 'boca de cueva',
   // Interiores: salas pequeñas aparte (ISLA-1.md, «Decisiones técnicas»).
   m: 'suelo',
   '|': 'pared',
@@ -69,7 +71,7 @@ export const MUEBLES: ReadonlySet<string> = new Set(['o', 'h', 'c', 'k', 'l', 'v
 /** Terreno de encuentros: la hierba alta, el malpaís y la arena de las dunas (como los desiertos). */
 export const DE_ENCUENTROS: ReadonlySet<string> = new Set(['"', ';', 'D']);
 /** Las letras de los edificios. Cada grupo de casillas iguales y contiguas es un edificio. */
-export const EDIFICIOS: ReadonlySet<string> = new Set(['C', 'M', 'R', 'S', 'G', 'F']);
+export const EDIFICIOS: ReadonlySet<string> = new Set(['C', 'M', 'R', 'S', 'G', 'F', 'J']);
 
 export type Direccion = 'n' | 's' | 'e' | 'o';
 /**
@@ -264,6 +266,8 @@ export interface DefInterior {
   entrada: { x: number; y: number };
   /** Compuertas y palancas (los gimnasios), como en `DefZona`. */
   cierres?: Readonly<Record<string, Cierre>>;
+  /** Objetos en el suelo (la cueva de Ajuy), como en `DefZona`. */
+  objetos?: readonly ObjetoEnSuelo[];
   palancas?: Readonly<Record<string, string>>;
 }
 
@@ -272,7 +276,7 @@ export interface DefInterior {
  * que sus casillas tienen claves propias y se dibuja aparte sin estorbar.
  */
 export function construirInterior(def: DefInterior, origen: { x: number; y: number }): Mundo {
-  const zona: DefZona = { id: def.id, nombre: def.nombre, origen, mapa: def.mapa, altura: 0, hierbaObligatoria: false, personajes: def.personajes, cierres: def.cierres, palancas: def.palancas };
+  const zona: DefZona = { id: def.id, nombre: def.nombre, origen, mapa: def.mapa, altura: 0, hierbaObligatoria: false, personajes: def.personajes, cierres: def.cierres, palancas: def.palancas, objetos: def.objetos };
   return construirMundo({ id: def.id, zonas: [zona], inicio: { zona: def.id, ...def.entrada } });
 }
 

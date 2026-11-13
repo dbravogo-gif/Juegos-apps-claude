@@ -486,6 +486,31 @@ export function estatuaEnterrada(semilla: number): BufferGeometry {
   return M.fusionar().rotateY((semilla % 4) * 0.2);
 }
 
+/**
+ * La boca de una cueva marina en el acantilado (Ajuy, Fuerteventura; 2026-11-13): un risco de roca
+ * oscura del tamaño del solar, con un arco negro donde está la puerta (`puerta`, en casillas desde
+ * el centro). Se entra por él como por la puerta de una casa.
+ */
+export function bocaCueva(ancho: number, fondo: number, puerta: number, semilla: number): BufferGeometry {
+  const M = new Montaje();
+  const roca = '#4E4644';
+  const alto = 1.8;
+  // El risco: bloques abollados, más altos al fondo.
+  for (let i = 0; i < ancho; i++) {
+    for (let j = 0; j < fondo; j++) {
+      const x = i - (ancho - 1) / 2;
+      const z = j - (fondo - 1) / 2;
+      const h = alto * (0.75 + 0.25 * (1 - j / Math.max(1, fondo - 1))) * (0.9 + ((semilla >>> (i + j * 3)) & 3) * 0.06);
+      M.pon(abollar(new BoxGeometry(1.04, h, 1.04, 2, 2, 2), 0.12, semilla + i * 7 + j).translate(x, h / 2, z), roca, 0.9 + ((i + j) % 3) * 0.05);
+    }
+  }
+  // El arco de la entrada, negro, en la cara sur, y un umbral de arena oscura.
+  const zSur = fondo / 2 + 0.03;
+  M.pon(new BoxGeometry(0.8, 1.05, 0.08).translate(puerta, 0.52, zSur), '#141012');
+  M.pon(new CylinderGeometry(0.4, 0.4, 0.08, 12, 1, false, 0, Math.PI).rotateZ(Math.PI / 2).rotateY(Math.PI / 2).translate(puerta, 1.05, zSur), '#141012');
+  return M.fusionar();
+}
+
 /** Todas las piezas del kit, por nombre. */
 export const KIT = {
   laurel,

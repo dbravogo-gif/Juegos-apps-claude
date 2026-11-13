@@ -198,7 +198,8 @@ export function geometriaSala(sala: Mundo, id: string): BufferGeometry {
   // través de cada casilla (autor, 2026-11-10).
   // El gimnasio de Roca es una cueva volcánica (gimnasio-roca.ts): basalto en vez de tablas y de
   // cal, y lava que brilla en sus coladas (la pone `Salas`, sin luz, para que se vea encendida).
-  const volcanica = [...sala.casillas.values()].some((c) => c.c === 'L');
+  // También las cuevas (la de Ajuy), con pozas de agua (`~`) en vez de lava.
+  const volcanica = [...sala.casillas.values()].some((c) => c.c === 'L' || c.c === '~');
   const suelo = volcanica ? [COLORES.basalto, COLORES.lavaNegra] : [COLORES.maderaSuelo, COLORES.maderaSueloOscura];
   M.caja(maxX - minX + 1, 0.1, maxY - minY + 1, centroX, SUELO - 0.1, centroY, volcanica ? COLORES.lavaNegra : COLORES.maderaSueloOscura, 0.8);
   // Paredes por tramos, lisas: un solo color, sin juntas entre casillas.
@@ -231,6 +232,11 @@ export function geometriaSala(sala: Mundo, id: string): BufferGeometry {
     // En la lava no hay suelo: brilla la colada (la pone `Salas`) con costras negras flotando.
     if (cm.c === 'L') {
       for (const [dx, dz, s] of [[-0.22, -0.18, 0.34], [0.24, 0.2, 0.26]]) M.pon(abollar(new SphereGeometry(0.5, 7, 4), 0.25, n + dx * 10).scale(s, 0.04, s * 0.8).translate(x + dx, SUELO + 0.012, y + dz), COLORES.lavaNegra);
+      continue;
+    }
+    // Las pozas de la cueva: el agua la pone `Salas`, sin luz; aquí, solo alguna piedra.
+    if (cm.c === '~') {
+      if (n % 3 === 0) M.pon(abollar(new SphereGeometry(0.5, 7, 4), 0.25, n).scale(0.2, 0.08, 0.16).translate(x + 0.2, SUELO - 0.02, y - 0.15), COLORES.basalto);
       continue;
     }
     // Bajo las compuertas, un puente de basalto más claro sobre la colada.
@@ -311,7 +317,8 @@ export class Salas implements Subsistema {
     this.material = new MaterialDiorama({ bordes: [-0.1, 0.4], especular: 0.06, rebote: 0.12 }, attribute('color', 'vec3'));
     const piedra = new MaterialDiorama({ color: COLORES.basalto, bordes: [-0.1, 0.4], especular: 0.05, rebote: 0.12 });
     const lava = new MeshBasicNodeMaterial({ color: COLORES.lava });
-    this.materialesExtra.push(piedra, lava);
+    const agua = new MeshBasicNodeMaterial({ color: '#2E7F9A' });
+    this.materialesExtra.push(piedra, lava, agua);
     const cargas: Promise<void>[] = [];
     for (const [id, sala] of partida.interiores) {
       const malla = new Mesh(geometriaSala(sala, id), this.material);
@@ -328,6 +335,18 @@ export class Salas implements Subsistema {
         const g = mergeGeometries(charcos);
         for (const c of charcos) c.dispose();
         const m = new Mesh(g, lava);
+        ctx.escena.add(m);
+        this.mallas.push(m);
+      }
+      // Las pozas de agua de las cuevas, igual: sin luz, sobre la losa (en el hueco del suelo).
+      const pozas = [...sala.casillas].filter(([, c]) => c.c === '~').map(([k]) => {
+        const [x, y] = deClave(k);
+        return new PlaneGeometry(1, 1).rotateX(-Math.PI / 2).translate(x, SUELO + 0.003, y);
+      });
+      if (pozas.length) {
+        const g = mergeGeometries(pozas);
+        for (const c of pozas) c.dispose();
+        const m = new Mesh(g, agua);
         ctx.escena.add(m);
         this.mallas.push(m);
       }

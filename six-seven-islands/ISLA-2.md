@@ -116,10 +116,21 @@ Lo juzga el autor al probarlo.
 - Provisional: las crestas son bloques de arena (se pueden redondear), las salvajes son de
   relleno y Lobos aún no se ve en el mar.
 
+**Fase 2, hecha (2026-11-13).**
+- **Puerto del Rosario:** refugio, tienda, tres casas, el muelle, el paseo de palmeras y una
+  plaza; un entrenador en el paseo.
+- **Betancuria:** la iglesia (sin puerta), el refugio, una casa, la presa con palmeras, laderas
+  con hierba seca (dos manchas en el camino), el cabrero y el guarda que no se esquiva camino de
+  Ajuy.
+- **Ajuy:** playa de arena negra, acantilados, la boca de la cueva (un edificio nuevo, `J`) y la
+  cueva de las pozas (`data/cueva-ajuy.ts`), con un explorador y un cubo al fondo. El camino del
+  sur, tapado por un desprendimiento hasta la fase 3.
+- Toda la isla se desplazó 30 casillas al este para que quepa la costa oeste.
+
 | Fase | Qué | Coste |
 | --- | --- | --- |
 | 1 | Varias islas y viaje en barco; Corralejo y Las Dunas jugables (**hecha**, 2026-11-13) | alto |
-| 2 | Puerto del Rosario, Betancuria y Ajuy con su cueva | alto |
+| 2 | Puerto del Rosario, Betancuria y Ajuy con su cueva (**hecha**, 2026-11-13) | alto |
 | 3 | Sotavento y Morro Jable con el gimnasio de Aire | alto |
 | 4 | Tindaya y Cofete, entrenadores, pulido y revisión del probador | medio |
 

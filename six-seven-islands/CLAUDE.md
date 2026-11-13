@@ -31,6 +31,9 @@ Vitest.
 Las que surjan de errores observados (regla R6) o de decisiones del autor, cada una con la fecha
 y el porqué.
 
+- **2026-11-13 · En cada mensaje, la lista de lo que le toca al autor** (autor). Al final de cada
+  respuesta, aunque sea corta. La lista viva está en `PENDIENTES.md`, «Tareas del autor». Cuando
+  el autor no puede revisar, se sigue adelantando y revisando para que luego lo vea todo seguido.
 - **2026-11-11 · Publicar cada paso jugable en cuanto esté** (autor). El autor prueba según
   llega. Si el uso diario o semanal puede acabarse antes de terminar, se publica antes lo que
   ya funcione, con las pruebas en verde.

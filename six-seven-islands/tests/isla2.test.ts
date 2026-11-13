@@ -41,8 +41,9 @@ describe('Fuerteventura (isla 2)', () => {
     }
   });
 
-  it('el camino del sur está cerrado, con aviso, y no se abre con nada de lo que hay', () => {
-    const x = [...m.casillas].filter(([, c]) => c.zona === 'dunas' && c.c === 'X').map(([k]) => k);
+  it('el camino del sur (en Ajuy) está cerrado, con aviso, y no se abre con nada de lo que hay', () => {
+    const x = [...m.casillas].filter(([, c]) => c.c === 'X').map(([k]) => k);
+    expect(x.every((k) => m.casillas.get(k)!.zona === 'ajuy')).toBe(true);
     expect(x.length).toBe(3);
     expect(x.some((k) => vecinas(k).some((v) => r.has(v)))).toBe(true);
     for (const k of x) expect(r.has(k)).toBe(false);
@@ -65,6 +66,25 @@ describe('Fuerteventura (isla 2)', () => {
     }
   });
 
+  it('las zonas van encadenadas: Corralejo, Las Dunas, Puerto del Rosario, Betancuria y Ajuy', () => {
+    const orden = ['corralejo', 'dunas', 'puerto', 'betancuria', 'ajuy'];
+    for (const z of orden) expect([...r].some((k) => m.casillas.get(k)?.zona === z), z).toBe(true);
+  });
+
+  it('el guarda de Betancuria no se esquiva camino de Ajuy', () => {
+    const g = zona('betancuria').personajes.find((p) => p.id === 'guarda-betancuria')!;
+    const ve = new Set(vision(m, 'betancuria', g));
+    const sinVer = alcanzables(m, [llegada], { prohibidas: ve });
+    expect([...sinVer].some((k) => m.casillas.get(k)?.zona === 'ajuy')).toBe(false);
+  });
+
+  it('la cueva de Ajuy se entra por la boca del acantilado y tiene su objeto', () => {
+    const cueva = FUERTEVENTURA.interiores.find((d) => d.id === 'cueva-ajuy')!;
+    expect(cueva).toBeDefined();
+    expect(cueva.objetos?.length).toBe(1);
+    expect(Object.values(PUERTAS_ISLA2.ajuy)).toContain('cueva-ajuy');
+  });
+
   it('la arqueóloga está junto a la estatua y cuenta la historia', () => {
     const a = zona('dunas').personajes.find((p) => p.id === 'arqueologa')!;
     const e = { ...crearExploracion(m), x: zona('dunas').origen.x + a.x + 1, y: zona('dunas').origen.y + a.y, mira: 'o' as const, zona: 'dunas' };
@@ -84,12 +104,12 @@ describe('Fuerteventura (isla 2)', () => {
     expect(FUERTEVENTURA.interiores.some((d) => d.id === FUERTEVENTURA.refugio)).toBe(true);
   });
 
-  it('sus salvajes existen y van del nivel 10 al 13', () => {
+  it('sus salvajes existen y van del nivel 10 al 15', () => {
     for (const t of Object.values(FUERTEVENTURA.encuentros)) {
       for (const e of t) {
         expect(DATOS.especies[e.especie], e.especie).toBeDefined();
         expect(e.nivel[0]).toBeGreaterThanOrEqual(10);
-        expect(e.nivel[1]).toBeLessThanOrEqual(13);
+        expect(e.nivel[1]).toBeLessThanOrEqual(15);
       }
     }
   });
