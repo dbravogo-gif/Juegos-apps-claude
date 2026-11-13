@@ -18,6 +18,13 @@ export const ENCUENTROS_ISLA2: TablaEncuentros = {
     { especie: 'cangrejo-de-charco', nivel: [12, 13], peso: 20 },
     { especie: 'chispa-de-colada', nivel: [13, 14], peso: 15 },
   ],
+  // Fase 3: la hierba seca de Sotavento.
+  sotavento: [
+    { especie: 'lagartija-de-picon', nivel: [15, 17], peso: 35 },
+    { especie: 'chispa-de-colada', nivel: [15, 17], peso: 25 },
+    { especie: 'cangrejo-de-charco', nivel: [15, 16], peso: 25 },
+    { especie: 'tabaiba-andante', nivel: [16, 17], peso: 15 },
+  ],
   ajuy: [
     { especie: 'cangrejo-de-charco', nivel: [13, 15], peso: 40 },
     { especie: 'tabaiba-andante', nivel: [13, 14], peso: 30 },

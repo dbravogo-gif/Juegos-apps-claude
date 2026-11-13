@@ -477,6 +477,16 @@ export class Partida implements Subsistema {
         this.abrir(dialogo, ev.personaje);
         break;
       }
+      case 'aspas': {
+        // Las aspas se giran y se vuelven a girar: así nadie se queda sin salida.
+        const cond: Condicion = `aspas:${ev.id}`;
+        if (ev.activas) this.estado.condiciones = this.estado.condiciones.filter((c) => c !== cond);
+        else cumplir(this.estado, cond);
+        this.ctx.eventos.emit('sonido:tocar', { nombre: 'salida' });
+        this.abrir({ lineas: [{ texto: 'Giras las aspas del molino. En algún sitio, el viento cambia de dirección.' }] }, 'aspas');
+        this.guardar();
+        break;
+      }
       case 'palanca':
         if (ev.ya) this.abrir({ lineas: [{ texto: 'La palanca ya está bajada. La compuerta sigue abierta.' }] }, 'palanca');
         else {

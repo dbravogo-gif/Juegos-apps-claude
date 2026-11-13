@@ -127,11 +127,22 @@ Lo juzga el autor al probarlo.
   sur, tapado por un desprendimiento hasta la fase 3.
 - Toda la isla se desplazó 30 casillas al este para que quepa la costa oeste.
 
+**Fase 3, hecha (2026-11-13).**
+- **Sotavento:** jable con aulagas y hierba seca (salvajes del 15 al 17), el viento que no para
+  (rachas en pantalla) y tres entrenadores: dos de kitesurf y un corredor.
+- **Morro Jable:** refugio, tienda, casas, el faro, el muelle con el barco y el gimnasio.
+- **Gimnasio de Aire** (`data/gimnasio-aire.ts`): corrientes de viento (`W`) que empujan hasta
+  chocar y dos molinos (`H`) que, al girarlos, invierten una corriente cada uno. Hacen falta los
+  dos. Tres aprendices que no se esquivan y la líder (niveles 20 y 21), con su pintadera. Una prueba
+  recorre todos los estados posibles: se puede resolver, hacen falta los dos molinos y no hay
+  ninguna trampa sin salida.
+- El barco de Morro Jable a Gran Canaria aún no sale: la isla 3 no existe.
+
 | Fase | Qué | Coste |
 | --- | --- | --- |
 | 1 | Varias islas y viaje en barco; Corralejo y Las Dunas jugables (**hecha**, 2026-11-13) | alto |
 | 2 | Puerto del Rosario, Betancuria y Ajuy con su cueva (**hecha**, 2026-11-13) | alto |
-| 3 | Sotavento y Morro Jable con el gimnasio de Aire | alto |
+| 3 | Sotavento y Morro Jable con el gimnasio de Aire (**hecha**, 2026-11-13) | alto |
 | 4 | Tindaya y Cofete, entrenadores, pulido y revisión del probador | medio |
 
 ## Decisiones del autor (2026-11-13)

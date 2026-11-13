@@ -8,7 +8,7 @@ import { BoxGeometry, ConeGeometry, CylinderGeometry, Group, Mesh, MeshBasicNode
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { MODELO_INICIAL, figuraCriatura } from '../../arte/criaturas3d';
 import { attribute } from 'three/tsl';
-import { cierreEn, clave, deClave, palancaEn, type Condicion, type Mundo } from '../../core/mundo';
+import { aspasEn, cierreEn, clave, corrienteEn, deClave, palancaEn, type Condicion, type Direccion, type Mundo } from '../../core/mundo';
 import { MaterialDiorama } from '../../arte/material';
 import { COLORES } from '../../arte/paleta';
 import { alturaSuelo } from '../../arte/escala';
@@ -241,15 +241,27 @@ export function geometriaSala(sala: Mundo, id: string): BufferGeometry {
     }
     // Bajo las compuertas, un puente de basalto más claro sobre la colada.
     M.pon(new PlaneGeometry(1, 1).rotateX(-Math.PI / 2).translate(x, SUELO + 0.002, y), cm.c === 'X' ? COLORES.basaltoClaro : (x + y) % 2 ? suelo[0] : suelo[1], 0.96 + (n % 3) * 0.03);
-    if (cm.c === '#') {
+    if (cm.c === '#' && volcanica) {
       // Columna de basalto hexagonal, de altura variable, como las de los acantilados.
       const alto = 1.2 + ((x * 5 + y * 3) % 4) * 0.25;
       M.pon(new CylinderGeometry(0.4, 0.44, alto, 6).translate(x, SUELO + alto / 2, y), COLORES.basalto, 0.95 + (n % 3) * 0.04);
       M.pon(new CylinderGeometry(0.4, 0.4, 0.04, 6).translate(x, SUELO + alto + 0.02, y), COLORES.basaltoClaro);
+    } else if (cm.c === '#') {
+      // Fuera de las cuevas (el gimnasio de Aire), un tabique blanco y bajo, con su zócalo: no tapa
+      // la sala ni parece una cueva.
+      M.caja(1, 0.85, 1, x, SUELO, y, COLORES.cal);
+      M.caja(1.02, 0.18, 1.02, x, SUELO, y, COLORES.zocaloOcre);
     } else if (cm.c === 'p') {
       // El pedestal de la palanca (la palanca la mueve `Salas`).
       M.cajaRedonda(0.5, 0.55, 0.42, x, SUELO, y, COLORES.basalto, 0.05);
       M.caja(0.12, 0.02, 0.3, x, SUELO + 0.55, y, COLORES.lavaNegra);
+    } else if (cm.c === 'W') {
+      // Corriente de viento (gimnasio de Aire): el suelo, azul claro; la flecha la mueve `Salas`.
+      M.caja(0.92, 0.008, 0.92, x, SUELO + 0.002, y, '#CDE9F5');
+    } else if (cm.c === 'H') {
+      // Molino: peana y poste; las aspas, que giran, las pone `Salas`.
+      M.cajaRedonda(0.56, 0.28, 0.56, x, SUELO, y, COLORES.balcon, 0.05);
+      M.pon(new CylinderGeometry(0.06, 0.09, 1.25, 8).translate(x, SUELO + 0.28 + 0.62, y), COLORES.cal);
     } else if (cm.c === 'X') {
       // La compuerta la pone `Salas`, que la hunde al abrirse.
     } else if (cm.c === '|') {
@@ -308,6 +320,11 @@ export class Salas implements Subsistema {
   private compuertas: { malla: Mesh; condicion: Condicion; abierta: number }[] = [];
   /** Las palancas: su mango baja cuando se usan. */
   private palancas: { mango: Group; condicion: Condicion; bajada: number }[] = [];
+  /** Las flechas de las corrientes de viento: giran si cambia hacia dónde soplan. */
+  private flechas: { malla: Mesh; sala: Mundo; k: number; x: number; y: number }[] = [];
+  /** Las aspas de los molinos: giran siempre; su eje se enciende cuando están giradas. */
+  private molinos: { aspas: Group; eje: Mesh; condicion: Condicion }[] = [];
+  private reloj = 0;
   private geometrias: BufferGeometry[] = [];
   private materialesExtra: { dispose(): void }[] = [];
 
@@ -318,7 +335,11 @@ export class Salas implements Subsistema {
     const piedra = new MaterialDiorama({ color: COLORES.basalto, bordes: [-0.1, 0.4], especular: 0.05, rebote: 0.12 });
     const lava = new MeshBasicNodeMaterial({ color: COLORES.lava });
     const agua = new MeshBasicNodeMaterial({ color: '#2E7F9A' });
-    this.materialesExtra.push(piedra, lava, agua);
+    const viento = new MeshBasicNodeMaterial({ color: '#5BB8DE' });
+    const piedraClara = new MaterialDiorama({ color: COLORES.cal, bordes: [-0.1, 0.4], especular: 0.05, rebote: 0.12 });
+    this.materialesExtra.push(piedra, lava, agua, viento, piedraClara);
+    this.lavaMaterial = lava;
+    this.piedraMaterial = piedra;
     const cargas: Promise<void>[] = [];
     for (const [id, sala] of partida.interiores) {
       const malla = new Mesh(geometriaSala(sala, id), this.material);
@@ -363,6 +384,31 @@ export class Salas implements Subsistema {
           ctx.escena.add(losa);
           this.geometrias.push(g);
           this.compuertas.push({ malla: losa, condicion: cierre.condicion, abierta: partida.estado.condiciones.includes(cierre.condicion) ? 1 : 0 });
+        } else if (c.c === 'W') {
+          // Una flecha de viento, plana, que apunta hacia donde sopla.
+          const g = new ConeGeometry(0.22, 0.42, 3).rotateX(-Math.PI / 2).scale(1, 0.25, 1);
+          const flecha = new Mesh(g, viento);
+          flecha.position.set(x, SUELO + 0.05, y);
+          ctx.escena.add(flecha);
+          this.geometrias.push(g);
+          this.flechas.push({ malla: flecha, sala, k, x, y });
+        } else if (c.c === 'H') {
+          const id = aspasEn(sala, k);
+          if (!id) continue;
+          const pala = new BoxGeometry(0.12, 0.62, 0.03).translate(0, 0.33, 0);
+          const ejeG = new SphereGeometry(0.08, 8, 6);
+          const aspas = new Group();
+          for (let i = 0; i < 4; i++) {
+            const p = new Mesh(pala, piedraClara);
+            p.rotation.z = (i * Math.PI) / 2;
+            aspas.add(p);
+          }
+          const eje = new Mesh(ejeG, piedra);
+          aspas.add(eje);
+          aspas.position.set(x, SUELO + 1.5, y + 0.12);
+          ctx.escena.add(aspas);
+          this.geometrias.push(pala, ejeG);
+          this.molinos.push({ aspas, eje, condicion: `aspas:${id}` });
         } else if (c.c === 'p') {
           const id = palancaEn(sala, k);
           if (!id) continue;
@@ -395,9 +441,29 @@ export class Salas implements Subsistema {
     this.actualizar(0);
   }
 
+  private lavaMaterial: MeshBasicNodeMaterial | null = null;
+  private piedraMaterial: MaterialDiorama | null = null;
+
   /** Las compuertas se hunden en la lava y las palancas bajan, poco a poco, al cumplirse lo suyo. */
   actualizar(dt: number): void {
     const hechas = this.partida.estado.condiciones;
+    this.reloj += dt;
+    // Las flechas del viento: hacia donde sopla cada corriente, y avanzando un poco, en bucle.
+    const giro: Record<Direccion, number> = { n: 0, o: Math.PI / 2, s: Math.PI, e: -Math.PI / 2 };
+    const paso: Record<Direccion, [number, number]> = { n: [0, -1], s: [0, 1], e: [1, 0], o: [-1, 0] };
+    for (const f of this.flechas) {
+      const d = corrienteEn(f.sala, f.k, hechas);
+      if (!d) continue;
+      f.malla.rotation.y = giro[d];
+      const t = ((this.reloj * 1.4 + (f.x + f.y) * 0.25) % 1) - 0.5;
+      f.malla.position.x = f.x + paso[d][0] * t * 0.5;
+      f.malla.position.z = f.y + paso[d][1] * t * 0.5;
+    }
+    for (const mo of this.molinos) {
+      const giradas = hechas.includes(mo.condicion);
+      mo.aspas.rotation.z -= dt * (giradas ? 4 : 1.2);
+      mo.eje.material = giradas && this.lavaMaterial ? this.lavaMaterial : (this.piedraMaterial ?? mo.eje.material);
+    }
     for (const c of this.compuertas) {
       const objetivo = hechas.includes(c.condicion) ? 1 : 0;
       c.abierta += Math.sign(objetivo - c.abierta) * Math.min(Math.abs(objetivo - c.abierta), dt * 0.8);
@@ -422,6 +488,8 @@ export class Salas implements Subsistema {
     for (const e of this.estatuas) e.removeFromParent();
     for (const c of this.compuertas) c.malla.removeFromParent();
     for (const p of this.palancas) p.mango.removeFromParent();
+    for (const f of this.flechas) f.malla.removeFromParent();
+    for (const mo of this.molinos) mo.aspas.removeFromParent();
     for (const g of this.geometrias) g.dispose();
     for (const m of this.materialesExtra) m.dispose();
     this.material.dispose();

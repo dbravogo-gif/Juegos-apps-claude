@@ -206,6 +206,17 @@ y `?semilla=n`. Mientras exista la vitrina de F04: `?vista=combate|todas|explora
   de destino, junto a su muelle, y se recarga la página. Así cada isla se monta desde cero con
   todos los subsistemas, sin tener que desmontar la anterior. El guardado lleva `isla`.
 
+## Gimnasios: compuertas, palancas y viento
+
+Todo en el núcleo (`core/mundo.ts` y `core/explorar.ts`), igual en zonas e interiores:
+- **Compuertas** (`cierres`, por casilla `"x,y"`): cerradas hasta cumplir su condición.
+- **Palancas** (`p`): cumplen `palanca:<id>` al usarlas.
+- **Corrientes de viento** (`W`, `corrientes`): al acabar un paso sobre una, el jugador queda
+  empujado en su dirección (`empuje`) hasta que la casilla siguiente no se pueda pisar. Con
+  `alterna` y `aspas`, la dirección cambia mientras se cumple `aspas:<id>`.
+- **Aspas de molino** (`H`, `aspas`): no se pisan; usarlas pone o quita `aspas:<id>`.
+- Vencer a cualquiera cumple `vencido:<id>`. Las salas los dibujan en vivo (`salas.ts`).
+
 ## Guardado
 
 - **Automático** (hecho el 2026-11-12): al cambiar de zona, al cruzar una puerta, al acabar cada

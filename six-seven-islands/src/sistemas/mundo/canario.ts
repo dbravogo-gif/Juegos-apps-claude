@@ -20,7 +20,7 @@ export interface OpcionesCasa {
   /** Las de balcones, blancas, de azotea y sin cantería en las esquinas (la capital de Lanzarote). */
   blanca?: boolean;
   /** Lo que lleva pintado en la azotea el gimnasio: el sol (Luz) o un volcán (Roca). */
-  emblema?: 'sol' | 'volcan';
+  emblema?: 'sol' | 'volcan' | 'molino';
   uso?: UsoCasa;
   /** Ancho de la fachada y fondo del solar, en casillas. La fachada mira al sur (+z). */
   ancho: number;
@@ -237,6 +237,11 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
       M.pon(plano([[-1.3, 0.9], [1.3, 0.9], [0.35, -0.7], [-0.35, -0.7]], y), COLORES.rocaGimnasio);
       M.pon(plano([[-0.35, -0.7], [0.35, -0.7], [0.2, -0.95], [-0.2, -0.95]], y + 0.005), COLORES.lava);
       M.pon(plano([[-0.1, -0.7], [0.1, -0.7], [0.25, 0.2], [-0.05, 0.4]], y + 0.006), COLORES.lava, 0.9);
+    } else if (uso === 'gimnasio' && op.emblema === 'molino') {
+      // Unas aspas de molino pintadas en la azotea: el gimnasio de Aire (Fuerteventura).
+      const y = H + 0.135;
+      M.pon(new CylinderGeometry(0.22, 0.22, 0.03, 14).translate(0, y, 0.1), COLORES.toldoAzul);
+      for (let i = 0; i < 4; i++) M.pon(new BoxGeometry(0.28, 0.03, 1.1).translate(0, y, 0.7).rotateY((i * Math.PI) / 2 + 0.4).translate(0, 0, 0.1), COLORES.toldoAzul);
     } else if (uso === 'gimnasio') {
       // Un sol pintado en la azotea: el gimnasio de tipo Luz se reconoce desde arriba.
       M.pon(new CylinderGeometry(0.75, 0.75, 0.03, 20).translate(0, H + 0.135, 0.2), COLORES.solPintado);

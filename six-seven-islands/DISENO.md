@@ -318,6 +318,8 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
 - 2026-11-12 · **Inicial rebelde** (F25): hasta hablar con el anciano, no hace caso el 45 % de
   sus turnos; la mitad de esas veces usa otro movimiento y la otra mitad se distrae. Lo decide
   el generador del combate.
+- 2026-11-13 · **Fuerteventura, fase 3:** Sotavento, Morro Jable y el gimnasio de Aire, con
+  corrientes de viento que empujan hasta chocar y dos molinos que las invierten (`ISLA-2.md`).
 - 2026-11-13 · **Fuerteventura, fase 2:** Puerto del Rosario, Betancuria y Ajuy con su cueva
   (`ISLA-2.md`). Edificio nuevo, la boca de cueva (`J`), y salas con pozas de agua.
 - 2026-11-13 · **Fuerteventura, fase 1:** varias islas y viaje en barco (se recarga en la isla de

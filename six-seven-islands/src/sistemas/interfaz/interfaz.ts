@@ -67,7 +67,7 @@ export class Interfaz implements Subsistema {
     for (let i = 0; i < 9; i++) {
       const mota = document.createElement('i');
       mota.style.top = `${8 + ((i * 37) % 84)}%`;
-      mota.style.animationDuration = `${7 + ((i * 5) % 6)}s`;
+      mota.style.setProperty('--d', `${7 + ((i * 5) % 6)}s`);
       mota.style.animationDelay = `${-((i * 2.3) % 9)}s`;
       mota.style.transform = `scale(${0.6 + ((i * 3) % 5) * 0.15})`;
       this.calima.append(mota);
@@ -142,10 +142,12 @@ export class Interfaz implements Subsistema {
     // El objetivo tampoco, con el menú o la tienda abiertos.
     this.objetivo.hidden = !objetivo || oculta || modo === 'menu';
     this.pintarDialogo();
-    // La calima, solo fuera y en las zonas que la tienen.
+    // La calima o el viento, solo fuera y en las zonas que los tienen.
     const e = this.partida.estado;
-    const calima = !oculta && modo !== 'menu' && !e.dentro && this.partida.mundo.zonas.get(e.zona)?.clima === 'calima';
-    if (this.calima.hidden === calima) this.calima.hidden = !calima;
+    const clima = e.dentro ? undefined : this.partida.mundo.zonas.get(e.zona)?.clima;
+    const visible = !oculta && modo !== 'menu' && !!clima;
+    if (this.calima.hidden === visible) this.calima.hidden = !visible;
+    this.calima.classList.toggle('viento', clima === 'viento');
     // La ayuda de las teclas de explorar, tampoco en el menú ni en la tienda (tienen la suya).
     this.ayuda.hidden = this.partida.dialogo !== null || oculta || modo === 'menu';
     if (oculta || modo === 'menu') this.cartel.classList.remove('visible');

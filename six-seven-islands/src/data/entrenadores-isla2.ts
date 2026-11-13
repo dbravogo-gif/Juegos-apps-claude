@@ -40,6 +40,35 @@ export const ENTRENADORES_ISLA2: Readonly<Record<string, DefEntrenador>> = {
     premio: 460,
     tras: 'Lo que brilla está al fondo, a la izquierda. Yo ya me he cansado de buscar.',
   },
+  // Fase 3: Sotavento y el gimnasio de Aire (Morro Jable). Equipos provisionales: aún no hay
+  // criaturas de Aire de relleno.
+  'kite-sotavento-1': { equipo: [{ especie: 'chispa-de-colada', nivel: 16 }], premio: 440, tras: 'Mañana sopla más. ¡Revancha con más viento!' },
+  'kite-sotavento-2': {
+    equipo: [{ especie: 'cangrejo-de-charco', nivel: 16 }, { especie: 'lagartija-de-picon', nivel: 17 }],
+    premio: 460,
+    tras: 'El gimnasio está en Morro Jable. Allí el viento sí que manda.',
+  },
+  'corredor-sotavento': { equipo: [{ especie: 'lagartija-de-picon', nivel: 17 }], premio: 460, tras: 'Contra el viento corro más despacio. Contra ti, también he perdido.' },
+  'aprendiz-aire-1': { equipo: [{ especie: 'chispa-de-colada', nivel: 17 }], premio: 480, tras: 'La columna del viento solo sube si alguien gira las aspas de abajo a la izquierda.' },
+  'aprendiz-aire-2': { equipo: [{ especie: 'tabaiba-andante', nivel: 18 }], premio: 500, tras: 'Esas aspas de ahí cambian el pasillo de la líder. Gíralas y baja por la corriente.' },
+  'aprendiz-aire-3': {
+    equipo: [{ especie: 'lagartija-de-picon', nivel: 18 }, { especie: 'cangrejo-de-charco', nivel: 18 }],
+    premio: 520,
+    tras: 'Si el pasillo te devuelve, es que las aspas de arriba siguen sin girar.',
+  },
+  'lider-aire': {
+    equipo: [{ especie: 'chispa-de-colada', nivel: 20 }, { especie: 'inicial-planta', nivel: 21 }],
+    premio: 900,
+    tras: 'El viento sopla hacia Gran Canaria. Cuando salga el barco, ahí estarás.',
+    condicion: 'gimnasio2-vencido',
+    alVencer: [
+      '¡Me has dejado sin aliento! Has dominado el viento de mi gimnasio.',
+      'Toma: la pintadera de Fuerteventura. Ya llevas dos.',
+      '{nombre} recibe la pintadera de Fuerteventura.',
+      'El barco a Gran Canaria aún no sale… pero el viento ya sopla hacia allí.',
+    ],
+    medalla: 2,
+  },
   'buscador-dunas': {
     equipo: [{ especie: 'chispa-de-colada', nivel: 12 }, { especie: 'lagartija-de-picon', nivel: 13 }],
     premio: 380,

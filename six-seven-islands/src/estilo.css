@@ -431,6 +431,15 @@ body {
   border-radius: 2px;
   background: linear-gradient(90deg, rgb(214 180 120 / 0), rgb(214 180 120 / 0.55));
   animation: calima-cruza linear infinite;
+  animation-duration: var(--d, 8s);
+}
+
+/* El viento de Sotavento: las mismas motas, blancas, más largas y mucho más rápidas. */
+.calima.viento i {
+  width: 44px;
+  height: 2px;
+  background: linear-gradient(90deg, rgb(255 255 255 / 0), rgb(255 255 255 / 0.6));
+  animation-duration: calc(var(--d, 8s) * 0.3);
 }
 
 @keyframes calima-cruza {

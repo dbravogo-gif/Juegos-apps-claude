@@ -17,7 +17,7 @@ export interface DefMedalla {
 
 export const MEDALLAS: readonly DefMedalla[] = [
   { isla: 1, nombre: 'Lanzarote', gimnasio: 'Roca', condicion: 'gimnasio-vencido' },
-  { isla: 2, nombre: 'Fuerteventura', gimnasio: null, condicion: null },
+  { isla: 2, nombre: 'Fuerteventura', gimnasio: 'Aire', condicion: 'gimnasio2-vencido' },
   { isla: 3, nombre: 'Gran Canaria', gimnasio: null, condicion: null },
   { isla: 4, nombre: 'Tenerife', gimnasio: null, condicion: null },
   { isla: 5, nombre: 'La Gomera', gimnasio: null, condicion: null },

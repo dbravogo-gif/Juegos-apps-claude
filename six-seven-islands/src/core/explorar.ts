@@ -5,7 +5,7 @@
 //
 // Las funciones reciben el mapa activo: la isla o el interior donde está el jugador.
 
-import { DE_ENCUENTROS, EDIFICIOS, cierreEn, clave, palancaEn, transitable, type Condicion, type Direccion, type Mundo } from './mundo';
+import { DE_ENCUENTROS, EDIFICIOS, aspasEn, cierreEn, clave, corrienteEn, palancaEn, transitable, type Condicion, type Direccion, type Mundo } from './mundo';
 
 /** Pasos fijos que se tarda en cruzar una casilla: 11 a 60 Hz, unos 0,18 s. */
 export const PASOS_POR_CASILLA = 11;
@@ -39,6 +39,8 @@ export interface EstadoExplorar {
   fuera: { x: number; y: number; zona: string } | null;
   /** El tipo de la inicial elegida en el museo, o null. */
   inicial: string | null;
+  /** Una corriente de viento le empuja hacia aquí (gimnasio de Aire): no manda el teclado. */
+  empuje?: Direccion | null;
 }
 
 export type EventoExplorar =
@@ -52,6 +54,8 @@ export type EventoExplorar =
   | { tipo: 'hablar'; zona: string; personaje: string }
   /** Usar la palanca que se tiene delante (`ya`: estaba bajada). */
   | { tipo: 'palanca'; id: string; ya: boolean }
+  /** Girar las aspas que se tienen delante (`activas`: estaban giradas). */
+  | { tipo: 'aspas'; id: string; activas: boolean }
   /** Ha terminado un paso sobre terreno de encuentros: quien juega sortea si sale una criatura. */
   | { tipo: 'hierba'; zona: string };
 
@@ -76,6 +80,13 @@ export function avanzar(m: Mundo, e: EstadoExplorar, dir: Direccion | null): Eve
       llegar(m, e, eventos);
     }
     return eventos;
+  }
+  // Empujado por una corriente: va hacia donde sopla, mande lo que mande el teclado. Si choca,
+  // se para ahí y vuelve a mandar el jugador.
+  if (e.empuje) {
+    const [ex, ey] = DESPLAZAMIENTO[e.empuje];
+    if (transitable(m, e.x + ex, e.y + ey, { condiciones: new Set(e.condiciones) })) dir = e.empuje;
+    else e.empuje = null;
   }
   if (!dir) {
     e.avisoEn = null;
@@ -123,6 +134,8 @@ function llegar(m: Mundo, e: EstadoExplorar, eventos: EventoExplorar[]): void {
     eventos.push({ tipo: 'objeto', id: o.objeto.id, objeto: o.objeto.objeto });
   }
   if (DE_ENCUENTROS.has(cm.c)) eventos.push({ tipo: 'hierba', zona: cm.zona });
+  // Sobre una corriente, lo siguiente es dejarse llevar; fuera de ellas, vuelve a mandar el jugador.
+  e.empuje = corrienteEn(m, k, e.condiciones);
   const puerta = cruzarPuerta(m, e, e.mira);
   if (puerta) eventos.push(puerta);
 }
@@ -173,6 +186,8 @@ export function salir(e: EstadoExplorar): void {
 export function interactuar(m: Mundo, e: EstadoExplorar): EventoExplorar[] {
   if (e.paso > 0) return [];
   const [dx, dy] = DESPLAZAMIENTO[e.mira];
+  const aspas = aspasEn(m, clave(e.x + dx, e.y + dy));
+  if (aspas) return [{ tipo: 'aspas', id: aspas, activas: e.condiciones.includes(`aspas:${aspas}`) }];
   const palanca = palancaEn(m, clave(e.x + dx, e.y + dy));
   if (palanca) return [{ tipo: 'palanca', id: palanca, ya: e.condiciones.includes(`palanca:${palanca}`) }];
   const mostrador = m.casillas.get(clave(e.x + dx, e.y + dy))?.c === 'c';
