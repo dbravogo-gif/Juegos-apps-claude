@@ -91,7 +91,8 @@ propuesta de Claude y qué frena mientras siga abierto.
   propia (M).
 
 11. **Tipo de cada gimnasio.**
-    - Lanzarote es de Roca. Faltan Fuerteventura, Gran Canaria, Tenerife, La Gomera y La Palma.
+    - Lanzarote es de Roca y Fuerteventura, de Aire. Para Gran Canaria, propuesta en
+      `ISLA-3.md` (Lucha recomendado). Faltan Tenerife, La Gomera y La Palma.
     - El emblema del gimnasio de La Palma era un sol, del tipo Luz, que ya no existe.
     - **Frena:** dónde dar las criaturas que les hacen frente (punto 6).
 12. **Formato de la Liga** (en El Hierro, la isla que reaparece).
@@ -113,6 +114,9 @@ propuesta de Claude y qué frena mientras siga abierto.
 
 Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
 
+- **Gran Canaria (`ISLA-3.md`):** aprobar el recorrido y elegir el tipo del gimnasio (Lucha,
+  recomendado; Planta o Eléctrico), si la historia lo abre (el líder en el Roque Nublo) y los
+  niveles.
 - **Tabla de tipos:** si se le da algo a Bicho y si la Tierra hace ×2 a la Roca (para el
   círculo de cinco).
 - **Quinta inicial (Tierra):** sus estadísticas, su lámina y su GLB, y su nombre.
