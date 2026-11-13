@@ -76,6 +76,8 @@ describe('tipos', () => {
     expect([e('planta', 'acero'), e('aire', 'acero'), e('mental', 'acero')]).toEqual([1, 1, 1]);
     expect(e('bicho', 'planta')).toBe(1);
     expect(e('acero', 'infernal')).toBe(1);
+    // Veneno, ×2 contra Común y ningún tipo más que los de antes (Planta y Ancestral).
+    expect(ids.filter((d) => e('veneno', d) === 2).sort()).toEqual(['ancestral', 'comun', 'planta']);
   });
 
   it('el ciclo de las iniciales: el agua gana a la roca, la roca al fuego, el fuego a la planta y la planta al agua', () => {

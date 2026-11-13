@@ -2,8 +2,8 @@
 // 2026-11-08 Plasma se fundió en Eléctrico y entraron Bicho y Veneno; el 2026-11-10 Roca sustituyó
 // a Luz, y el 2026-11-12 el autor rehízo la tabla, porque estaba descompensada, y añadió Lucha. Es
 // su tabla (fotos en conceptos/tipos/) con el ajuste del 2026-11-13: Acero ya no resiste Planta,
-// Aire ni Mental; Bicho ya no es eficaz contra Planta, e Infernal ya no resiste a Acero. Las
-// pruebas de tests/nucleo.test.ts la vigilan.
+// Aire ni Mental; Bicho ya no es eficaz contra Planta, e Infernal ya no resiste a Acero, y Veneno
+// hace ×2 a Común (solo a ese, autor). Las pruebas de tests/nucleo.test.ts la vigilan.
 import type { DefTablaTipos } from '../core/modelo';
 
 export const TIPOS = [
@@ -53,7 +53,7 @@ const RELACIONES: Record<TipoId, Relacion> = {
   roca: { eficaz: ['infernal', 'hielo', 'aire', 'bicho'], pocoEficaz: ['tierra', 'acero', 'lucha'], sinEfecto: [] },
   ancestral: { eficaz: ['acero'], pocoEficaz: ['ancestral'], sinEfecto: [] },
   bicho: { eficaz: ['mental', 'oscuridad'], pocoEficaz: ['infernal', 'lucha', 'veneno', 'aire', 'espectral', 'acero'], sinEfecto: [] },
-  veneno: { eficaz: ['planta', 'ancestral'], pocoEficaz: ['veneno', 'tierra', 'roca', 'espectral'], sinEfecto: ['acero'] },
+  veneno: { eficaz: ['planta', 'ancestral', 'comun'], pocoEficaz: ['veneno', 'tierra', 'roca', 'espectral'], sinEfecto: ['acero'] },
 };
 
 export const TABLA_TIPOS: DefTablaTipos = {

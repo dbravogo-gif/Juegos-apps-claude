@@ -46,13 +46,7 @@ propuesta de Claude y qué frena mientras siga abierto.
 11b. **Equilibrio de la tabla** (2026-11-13). Hecho lo que pidió el autor: Acero ya no resiste
     Planta, Aire ni Mental (de 9 resistencias a 6); Bicho ya no es ×2 contra Planta, e Infernal
     ya no resiste a Acero. Lucha lleva 9 criaturas.
-    - **Veneno, ×2 contra algún tipo más** (lo pide el autor; le resisten 5 y solo gana a Planta
-      y Ancestral). Opciones, a elegir:
-      - **A (recomendada): Común y Agua.** Común solo tiene una debilidad (Lucha) y Agua, dos; el
-        veneno que ensucia el agua tiene sentido.
-      - B: Común y Eléctrico, los dos tipos con una sola debilidad. Equilibra mejor, pero tiene
-        menos sentido.
-      - C: Agua y Bicho, el veneno contra las plagas.
+    - **Veneno** hace ×2 también a Común, y a ningún tipo más (autor, 2026-11-13).
     - **Bicho** se queda con solo 2 ataques ×2 (Mental y Oscuridad) y le resisten 6: es el más
       flojo atacando. Conviene darle uno (por ejemplo, ×2 contra Veneno o contra Tierra).
     - **Tierra contra Roca:** con la quinta inicial (Tierra entre Roca y Agua), la Tierra debería
@@ -119,12 +113,10 @@ propuesta de Claude y qué frena mientras siga abierto.
 
 Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
 
-- **Aprobar Fuerteventura** (`ISLA-2.md`, boceto en `conceptos/isla-2-boceto.png`): la calima y
-  el recorrido. El gimnasio será de Aire y no hay zona de agua (decidido).
-- **Tabla de tipos:** elegir a quién más hace ×2 el Veneno (opciones en el punto 11b), si se le
-  da algo a Bicho y si la Tierra hace ×2 a la Roca (para el círculo de cinco).
-- **Quinta inicial (Tierra):** sus estadísticas, su lámina y su GLB, y su nombre. Decir si el
-  total pasa a 203 criaturas o se quita una línea de 3 formas de la lista.
+- **Tabla de tipos:** si se le da algo a Bicho y si la Tierra hace ×2 a la Roca (para el
+  círculo de cinco).
+- **Quinta inicial (Tierra):** sus estadísticas, su lámina y su GLB, y su nombre.
+- **Criaturas de Lanzarote:** subirlas a `conceptos/criaturas/lanzarote/`.
 - **Criaturas:** decir si vale la lista 2 de Lanzarote (`CRIATURAS.md`); pasar las láminas de
   Lucha y las demás, y los nombres de la civeta y de Dragosil.
 - **Entrenadores y zonas de captura de Lanzarote** que hay que mejorar: decir cuáles.

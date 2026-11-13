@@ -24,7 +24,7 @@ Del autor, 2026-11-10. Es la «lista de reglas» a la que nos referimos al dise�
 ## Cuántas hay
 
 - **203 criaturas en 103 especies** (200 y 102 hasta el 2026-11-13, cuando se unió la quinta
-  inicial; falta que el autor diga si se quita una línea de la lista para volver a 200):
+  inicial; el autor decide dejarlo en 203):
   - las 5 iniciales, de 3 formas: 15 criaturas, con estadísticas propias que pasa el autor;
   - 24 especies de 3 formas de la lista;
   - 42 de 2 formas;
