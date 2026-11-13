@@ -326,7 +326,10 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
   odia al fuego (`PROMPT-HISTORIA.md`). Las placas del museo ya lo cuentan, provisionales.
 - 2026-11-13 · **Tabla de tipos:** Acero ya no resiste Planta, Aire ni Mental; Bicho ya no gana
   a Planta; Infernal ya no resiste a Acero (autor). Veneno, por decidir (`PENDIENTES.md`).
-- 2026-11-13 · **Fuerteventura:** gimnasio de Aire y sin zona de agua (autor).
+- 2026-11-13 · **Fuerteventura aprobada** (`ISLA-2.md`): gimnasio de Aire, sin zona de agua, el
+  recorrido del boceto y una calima de pocas partículas que no molesta (autor).
+- 2026-11-13 · **Veneno** hace ×2 también a Común, y a nada más (autor). **203 criaturas** con la
+  quinta inicial (autor).
 - 2026-11-13 · **Correr, fluido:** el jugador se dibuja entre los dos últimos pasos fijos. **La
   inicial de fuego,** aclarada hasta el gris carbón de su dibujo (`RETOQUE`).
 - 2026-11-13 · **Mochila por bolsillos también en combate:** botiquín y cubos, con ← y →.

@@ -1,9 +1,10 @@
-# Isla 2: Fuerteventura (propuesta, por aprobar)
+# Isla 2: Fuerteventura (aprobada el 2026-11-13)
 
 2026-11-13. Pedido del autor: Fuerteventura será algo más larga que Lanzarote, con una zona de
 desierto en las dunas y con un gimnasio hecho «bien bien». En esta isla la historia no cierra el
 gimnasio; en las siguientes, a menudo sí («ya veremos qué cosas en concreto»). **Nada de esto se
-construye hasta que el autor apruebe el recorrido.** Boceto del mapa: `conceptos/isla-2-boceto.png`.
+construía hasta aprobar el recorrido:** el autor lo aprobó el 2026-11-13. Boceto del mapa:
+`conceptos/isla-2-boceto.png`.
 
 **Decidido por el autor (2026-11-13):**
 - **Gimnasio de Aire.** Así la inicial de Roca, que lo pasa peor en el primero, tiene un segundo
@@ -26,7 +27,8 @@ barco a Gran Canaria. Son 7 zonas en el camino y 2 opcionales: 9, frente a las 7
    - un arenal blanco enorme donde **toda la arena es terreno de encuentros**, como los desiertos
      de los juegos de referencia: no hay camino seguro;
    - crestas de duna que no se pisan y obligan a zigzaguear;
-   - **la calima**: el polvo del Sáhara que tiñe el aire de ocre y no deja ver lejos;
+   - **la calima** (autor, 2026-11-13): unas pocas partículas de polvo que cruzan de derecha a
+     izquierda. Que se note, pero sin acortar la vista ni molestar;
    - las ruinas de un horno de cal como refugio a medio camino, objetos medio enterrados y
      entrenadores perdidos en la arena;
    - **una arqueóloga** (autor, 2026-11-13) en su excavación, con cuerdas y herramientas, que
@@ -97,7 +99,7 @@ Lo juzga el autor al probarlo.
 4. **Terrenos nuevos:**
    - arena de duna, que es terreno de encuentros;
    - cresta de duna, que no se pisa.
-5. **La calima:** neblina ocre y partículas de arena en Las Dunas.
+5. **La calima:** pocas partículas de polvo de derecha a izquierda en Las Dunas.
 6. **Corrientes de viento y aspas que giran** (el gimnasio): un movimiento forzado nuevo en el
    núcleo, con sus pruebas.
 7. **Encuentros, entrenadores y diálogos** de la isla, con las criaturas que pase el autor.
@@ -111,9 +113,7 @@ Lo juzga el autor al probarlo.
 | 3 | Sotavento y Morro Jable con el gimnasio de Aire | alto |
 | 4 | Tindaya y Cofete, entrenadores, pulido y revisión del probador | medio |
 
-## Preguntas para el autor
+## Decisiones del autor (2026-11-13)
 
-1. **La calima:**
-   - solo se ve (recomendado);
-   - o además acorta la vista de los entrenadores y esconde objetos.
-2. **¿Te vale el recorrido y los tamaños** (mira el boceto), o quieres cambiar alguna zona?
+- Gimnasio de Aire, sin zona de agua, recorrido y tamaños como arriba.
+- La calima: pocas partículas de derecha a izquierda, sin acortar la vista ni esconder nada.
