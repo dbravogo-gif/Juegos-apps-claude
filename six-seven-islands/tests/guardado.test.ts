@@ -1,7 +1,7 @@
 // El guardado (F10): guardar y cargar da el mismo estado, el código exportado se importa igual y
 // lo que no es un guardado válido no se carga.
 import { describe, expect, it } from 'vitest';
-import { deserializar, exportarCodigo, importarCodigo, reubicar, serializar, VERSION_GUARDADO, type Guardado } from '../src/core/guardado';
+import { deserializar, exportarCodigo, importarCodigo, refugiosAlViajar, reubicar, serializar, VERSION_GUARDADO, type Guardado } from '../src/core/guardado';
 import { crearExploracion } from '../src/core/explorar';
 import { construirMundo } from '../src/core/mundo';
 import { crearCriatura } from '../src/core/criatura';
@@ -54,5 +54,13 @@ describe('guardado', () => {
     expect(r.fuera).toEqual({ x: 100, y: 30, zona: 'capital' });
     // Sin tocar el original.
     expect(e.x).toBe(50);
+  });
+
+  it('al volver en barco a una isla, el refugio es el último de esa isla, no la casa del principio', () => {
+    const ida = refugiosAlViajar({}, 1, 'refugio-capital', 2, 'refugio-corralejo');
+    expect(ida.ultimo).toBe('refugio-corralejo');
+    const vuelta = refugiosAlViajar(ida.refugios, 2, 'refugio-morro', 1, 'casa-jugador');
+    expect(vuelta.ultimo).toBe('refugio-capital');
+    expect(refugiosAlViajar(vuelta.refugios, 1, 'refugio-capital', 2, 'refugio-corralejo').ultimo).toBe('refugio-morro');
   });
 });

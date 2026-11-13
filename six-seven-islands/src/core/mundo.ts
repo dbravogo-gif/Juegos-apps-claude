@@ -87,6 +87,8 @@ export type Condicion =
   | 'inicial-elegida'
   | 'anciano'
   | 'gimnasio-vencido'
+  /** Aún no se cumple: llegará con el barco de Morro Jable a Gran Canaria. */
+  | 'isla2-completada'
   | 'isla1-completada'
   | 'gimnasio2-vencido'
   | `vencido:${string}`

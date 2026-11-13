@@ -464,7 +464,11 @@ export class Salas implements Subsistema {
       mo.aspas.rotation.z -= dt * (giradas ? 4 : 1.2);
       mo.eje.material = giradas && this.lavaMaterial ? this.lavaMaterial : (this.piedraMaterial ?? mo.eje.material);
     }
+    // En combate no se mueven: la compuerta se hunde al volver, mientras el vencido lo cuenta, y no
+    // durante el fundido (probador, 2026-11-13).
+    const quietas = this.partida.modo === 'combate';
     for (const c of this.compuertas) {
+      if (quietas) break;
       const objetivo = hechas.includes(c.condicion) ? 1 : 0;
       c.abierta += Math.sign(objetivo - c.abierta) * Math.min(Math.abs(objetivo - c.abierta), dt * 0.8);
       // Un temblor mientras baja.

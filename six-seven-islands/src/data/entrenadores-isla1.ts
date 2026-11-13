@@ -19,6 +19,33 @@ export interface DefEntrenador {
   medalla?: number;
 }
 
+/** Cómo se presenta cada clase de entrenador en el diálogo, por el principio de su id. */
+const OFICIO: Readonly<Record<string, string>> = {
+  aprendiz: 'Aprendiz',
+  buscador: 'Buscador',
+  cabrero: 'Cabrero',
+  corredor: 'Corredor',
+  entrenador: 'Entrenador',
+  excursionista: 'Excursionista',
+  explorador: 'Explorador',
+  guarda: 'Guarda',
+  kite: 'Kitesurfista',
+  lider: 'Líder',
+  montanera: 'Montañera',
+  paseante: 'Paseante',
+  pastor: 'Pastor',
+  perdido: 'Excursionista perdido',
+  peregrino: 'Peregrino',
+  pescador: 'Pescador',
+  pulpero: 'Pulpero',
+  surfista: 'Surfista',
+};
+
+/** El nombre con que habla un entrenador (probador, 2026-11-13: sus frases no decían quién hablaba). */
+export function quienEs(id: string): string | undefined {
+  return OFICIO[id.split('-')[0]];
+}
+
 export const ENTRENADORES_ISLA1: Readonly<Record<string, DefEntrenador>> = {
   'entrenador-barrera': { equipo: [], premio: 100, tras: 'Vale, vale: puedes subir. ¡Pero que conste que la ladera es mía!' },
   'entrenador-llano': { equipo: [{ especie: 'lagartija-de-picon', nivel: 5 }, { especie: 'cangrejo-de-charco', nivel: 4 }], premio: 120, tras: 'En la hierba seca hay más criaturas de las que se ven.' },

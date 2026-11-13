@@ -15,11 +15,12 @@ import { TODAS_LAS_CONDICIONES, clave, construirInterior, construirMundo, deClav
 import { PERSONA_JUGADOR, PERSONAS } from '../../arte/personas';
 import { ISLAS, LANZAROTE, type DatosIsla } from '../../data/islas';
 import { NOMBRE_OBJETO } from '../../data/textos-isla1';
+import { quienEs } from '../../data/entrenadores-isla1';
 import { crearCriatura, curarDelTodo } from '../../core/criatura';
 import { sortearEncuentro } from '../../core/encuentros';
 import { perdidaPorDerrota } from '../../core/economia';
 import { crearRng } from '../../core/rng';
-import { VERSION_GUARDADO, deserializar, reubicar, serializar, type Guardado, type Origenes } from '../../core/guardado';
+import { VERSION_GUARDADO, deserializar, refugiosAlViajar, reubicar, serializar, type Guardado, type Origenes } from '../../core/guardado';
 import type { Criatura } from '../../core/modelo';
 import { DATOS_COMBATE_PRUEBA as DATOS, ESPECIE_INICIAL, MOCHILA_INICIAL } from '../../data/combate-prueba';
 import type { Ctx, Subsistema } from '../../motor/motor';
@@ -80,6 +81,8 @@ export class Partida implements Subsistema {
   mochila: Record<string, number> = {};
   /** Al perder, se vuelve curado a esta sala: el último sitio donde curaron al equipo. */
   ultimoRefugio = LANZAROTE.refugio;
+  /** El último refugio de cada isla visitada, para volver a él al regresar en barco. */
+  private refugios: Record<string, string> = {};
   /** Entrenadores vencidos: no vuelven a retar. */
   vencidos: string[] = [];
   dinero = 0;
@@ -93,7 +96,7 @@ export class Partida implements Subsistema {
   /** Pasos fijos del fundido del viaje. */
   private pasosViaje = 0;
   /** Lo que dice el entrenador recién vencido, al volver del combate (compuertas, pintadera). */
-  private trasCombate: { lineas: string[]; medalla?: number } | null = null;
+  private trasCombate: { lineas: string[]; quien?: string; medalla?: number } | null = null;
   /** Un entrenador acaba de ver al jugador: cuando pase la exclamación, habla. */
   private alerta: { zona: string; personaje: string; pasos: number } | null = null;
   private pasosSinGuardar = 0;
@@ -172,6 +175,7 @@ export class Partida implements Subsistema {
       equipo: structuredClone(this.equipo),
       mochila: { ...this.mochila },
       ultimoRefugio: this.ultimoRefugio,
+      refugios: { ...this.refugios },
       vencidos: [...this.vencidos],
       rng: structuredClone(this.ctx.rng),
       dinero: this.dinero,
@@ -271,7 +275,8 @@ export class Partida implements Subsistema {
     e.y = e.desdeY = z.origen.y + destino.llegada.y;
     e.zona = destino.llegada.zona;
     e.mira = 's';
-    return { ...this.guardado(), isla: n, explorar: e, ultimoRefugio: destino.refugio, origenes: { actual: { ...z.origen } } };
+    const { refugios, ultimo } = refugiosAlViajar(this.refugios, this.datos.numero, this.ultimoRefugio, n, destino.refugio);
+    return { ...this.guardado(), isla: n, explorar: e, ultimoRefugio: ultimo, refugios, origenes: { actual: { ...z.origen } } };
   }
 
   /** Borra la partida guardada y vuelve a la portada (desde el menú, con confirmación). */
@@ -318,6 +323,7 @@ export class Partida implements Subsistema {
     this.equipo = g.equipo;
     this.mochila = g.mochila;
     this.ultimoRefugio = this.interiores.has(g.ultimoRefugio) ? g.ultimoRefugio : this.datos.refugio;
+    this.refugios = { ...g.refugios };
     this.vencidos = g.vencidos;
     this.dinero = g.dinero ?? 0;
     this.nombre = g.nombre ?? 'Dani';
@@ -399,7 +405,10 @@ export class Partida implements Subsistema {
     if (!def) return { premio: 0 };
     this.dinero += def.premio;
     if (def.condicion) cumplir(this.estado, def.condicion);
-    if (def.alVencer?.length) this.trasCombate = { lineas: [...def.alVencer], medalla: def.medalla };
+    // Nada más volver, el vencido habla: el líder da su pintadera y los demás, su consejo (antes
+    // solo salía si se le volvía a hablar; probador, 2026-11-13).
+    const quien = quienEs(id);
+    this.trasCombate = def.alVencer?.length ? { lineas: [...def.alVencer], quien, medalla: def.medalla } : { lineas: [def.tras], quien };
     return { premio: def.premio };
   }
 
@@ -482,7 +491,8 @@ export class Partida implements Subsistema {
         const d = elegirDialogo(this.datos.guion, ev.personaje, this.estado.condiciones, this.estado.inicial);
         const frase = this.activo().zonas.get(ev.zona)?.personajes.find((p) => p.id === ev.personaje)?.frase;
         const vencido = this.vencidos.includes(ev.personaje) ? this.datos.entrenadores[ev.personaje] : undefined;
-        let dialogo: Dialogo = d ?? { lineas: [{ texto: (vencido ? vencido.tras : frase) ?? '…' }] };
+        const quien = this.datos.entrenadores[ev.personaje] ? quienEs(ev.personaje) : undefined;
+        let dialogo: Dialogo = d ?? { lineas: [{ quien, texto: (vencido ? vencido.tras : frase) ?? '…' }] };
         const refugio = this.datos.curanderos[ev.personaje];
         if (refugio && this.equipo.length) {
           this.curarEquipo();
@@ -562,7 +572,7 @@ export class Partida implements Subsistema {
     const t = this.trasCombate;
     this.trasCombate = null;
     if (t) {
-      this.abrir({ lineas: t.lineas.map((texto) => ({ texto })) }, 'tras-combate');
+      this.abrir({ lineas: t.lineas.map((texto) => ({ quien: t.quien, texto })) }, 'tras-combate');
       if (t.medalla !== undefined) {
         this.ctx.eventos.emit('sonido:tocar', { nombre: 'nivel' });
         this.ctx.eventos.emit('medalla:ganada', { isla: t.medalla });

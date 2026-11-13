@@ -152,14 +152,28 @@ Lo juzga el autor al probarlo.
 - La isla se desplazó otra vez (60 al este y 10 al sur) para que quepan Cofete y Lobos. Las
   partidas guardadas ya sobreviven a estos cambios (`origenes` del guardado).
 - Las crestas de las dunas ya son lomos redondos (kit `duna`), estirados hacia sus vecinas.
-- Falta: la revisión del probador (fases 2 a 4).
+
+**Revisión del probador (2026-11-13).** Los dos gimnasios se terminan sin atascos. Arreglado:
+- en los gimnasios, el combate usa el fondo pintado del gimnasio;
+- el gimnasio de Aire ya es de Aire: dos salvajes de relleno nuevas (Remolino de jable y Guirre
+  de viento, provisionales), que también salen en Sotavento;
+- al volver en barco, el refugio es el último de esa isla y no tu casa;
+- objetivos al día en las dos islas y después de cada líder;
+- las compuertas se hunden al volver del combate, mientras el vencido lo cuenta;
+- cada entrenador dice quién es y, nada más vencerle, da su consejo;
+- las líderes son más grandes y con otra figura; la calima se ve más; Tindaya sube en terrazas.
+
+Queda pendiente (visual): la cueva de Ajuy aún parece una sala, la iglesia de Betancuria es el
+modelo del museo, faltan el muelle y las esculturas de Puerto del Rosario y las cometas de
+Sotavento, Lobos son bloques, la arena de encuentros se distingue poco del camino, el cubo del
+suelo se dibuja como una poción y la compañera aparece encima del jugador al llegar en barco.
 
 | Fase | Qué | Coste |
 | --- | --- | --- |
 | 1 | Varias islas y viaje en barco; Corralejo y Las Dunas jugables (**hecha**, 2026-11-13) | alto |
 | 2 | Puerto del Rosario, Betancuria y Ajuy con su cueva (**hecha**, 2026-11-13) | alto |
 | 3 | Sotavento y Morro Jable con el gimnasio de Aire (**hecha**, 2026-11-13) | alto |
-| 4 | Tindaya y Cofete, entrenadores, pulido y revisión del probador (**casi hecha**: falta el probador) | medio |
+| 4 | Tindaya y Cofete, entrenadores, pulido y revisión del probador (**hecha**, 2026-11-13; queda pulido visual) | medio |
 
 ## Decisiones del autor (2026-11-13)
 

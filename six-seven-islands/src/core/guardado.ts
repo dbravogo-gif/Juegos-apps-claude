@@ -32,6 +32,24 @@ export interface Guardado {
    * 2026-11-13). Si después se mueve una zona o un interior, la posición se corrige con ellos.
    */
   origenes?: Origenes;
+  /** El último refugio de cada isla visitada, por número (desde el 2026-11-13). */
+  refugios?: Record<string, string>;
+}
+
+/**
+ * Al viajar en barco: se apunta el refugio de la isla que se deja y se recupera el de la isla de
+ * destino, o el suyo por defecto si nunca te curaron allí. Antes, volver a Lanzarote dejaba como
+ * refugio tu casa, el del principio (probador, 2026-11-13).
+ */
+export function refugiosAlViajar(
+  refugios: Readonly<Record<string, string>> | undefined,
+  desde: number,
+  ultimo: string,
+  hacia: number,
+  porDefecto: string,
+): { refugios: Record<string, string>; ultimo: string } {
+  const r: Record<string, string> = { ...refugios, [String(desde)]: ultimo };
+  return { refugios: r, ultimo: r[String(hacia)] ?? porDefecto };
 }
 
 export interface Punto {
