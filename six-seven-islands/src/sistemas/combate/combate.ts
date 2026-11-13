@@ -28,6 +28,7 @@ import type { Criatura } from '../../core/modelo';
 import { CALIDAD_ZONA, MEDIA_BLANCA, MEDIA_VERDE, zonaBarra } from '../../core/captura';
 import { crearRng } from '../../core/rng';
 import { perdidaPorDerrota } from '../../core/economia';
+import { BOLSILLOS, bolsilloDe, type IdBolsillo } from '../../data/bolsillos';
 import { vidaMaxima } from '../../core/estadisticas';
 import { MaterialDiorama } from '../../arte/material';
 import { figuraCriatura } from '../../arte/criaturas3d';
@@ -63,6 +64,8 @@ const CAIDA = 2.6;
 const REBOTE = 0.5;
 /** Segundos de cada fundido, al entrar y al salir. */
 const FUNDIDO = 0.55;
+/** Los bolsillos que se abren en combate: lo que cura y los cubos (objetos clave y técnicas, no). */
+const BOLSILLOS_COMBATE: readonly IdBolsillo[] = ['botiquin', 'cubos'];
 /** Segundos que tarda la flecha de la barra de captura en cruzarla de lado a lado. */
 const BARRIDO = 1.1;
 /** Cuántas criaturas caben en el equipo. */
@@ -130,6 +133,8 @@ export class Combate implements Subsistema {
   private tPaso = 0;
   private eleccion = 0;
   private menuActual: Menu = 'raiz';
+  /** El bolsillo de la mochila que se ve en combate (solo los que se usan luchando). */
+  private bolsillo = 0;
   private opciones: Opcion[] = [];
   /** La figura de cada criatura del combate, por su uid: se cargan todas al empezar. */
   private figuras = new Map<string, Group>();
@@ -405,7 +410,8 @@ export class Combate implements Subsistema {
     this.barra.hidden = true;
     this.lanzamiento = null;
     if (!lanzar) {
-      // De vuelta a la mochila, con el cursor en el cubo que se iba a lanzar.
+      // De vuelta a la mochila, en los cubos y con el cursor en el que se iba a lanzar.
+      this.bolsillo = BOLSILLOS_COMBATE.indexOf(bolsilloDe(DATOS.objetos[l.objeto]));
       this.abrirMenu('mochila');
       this.eleccion = Math.max(0, this.objetosMochila().indexOf(l.objeto));
       return this.pintarMenu();
@@ -415,10 +421,11 @@ export class Combate implements Subsistema {
     this.enviar({ tipo: 'objeto', objeto: l.objeto, calidad: CALIDAD_ZONA[zona] });
   }
 
-  /** Los objetos que hay en la mochila, en el orden en que salen en el menú. */
+  /** Los objetos del bolsillo que se ve, en el orden en que salen en el menú. */
   private objetosMochila(): string[] {
+    const b = BOLSILLOS_COMBATE[this.bolsillo];
     return Object.entries(this.partida.mochila)
-      .filter(([id, n]) => n > 0 && DATOS.objetos[id])
+      .filter(([id, n]) => n > 0 && DATOS.objetos[id] && bolsilloDe(DATOS.objetos[id]) === b)
       .map(([id]) => id);
   }
 
@@ -664,7 +671,11 @@ export class Combate implements Subsistema {
     }
     if (this.fase === 'menu') {
       const dir = this.entrada.pulsacion();
-      if (dir) {
+      if (dir && this.menuActual === 'mochila' && (dir === 'e' || dir === 'o')) {
+        this.bolsillo = (this.bolsillo + (dir === 'e' ? 1 : -1) + BOLSILLOS_COMBATE.length) % BOLSILLOS_COMBATE.length;
+        this.ctx.eventos.emit('sonido:tocar', { nombre: 'seleccion' });
+        this.abrirMenu('mochila');
+      } else if (dir) {
         // En rejilla de dos columnas (menú y ataques) o en lista (mochila y equipo).
         const columnas = this.menu.classList.contains('lista') ? 1 : 2;
         const paso = dir === 'e' ? 1 : dir === 'o' ? -1 : dir === 's' ? columnas : -columnas;
@@ -758,7 +769,9 @@ export class Combate implements Subsistema {
         });
         break;
       case 'mochila': {
-        texto = '¿Qué usas? (Esc: volver)';
+        // Por bolsillos, como fuera del combate: ← y → cambian entre el botiquín y los cubos.
+        const b = BOLSILLOS.find((x) => x.id === BOLSILLOS_COMBATE[this.bolsillo])!;
+        texto = `◀ ${b.nombre} ▶ ¿Qué usas? (Esc: volver)`;
         const activo = e.lados[0].activos[0];
         this.opciones = this.objetosMochila().map((id) => {
           const n = this.partida.mochila[id];
@@ -770,7 +783,7 @@ export class Combate implements Subsistema {
             elegir: () => (captura ? this.abrirBarra(id) : this.enviar({ tipo: 'objeto', objeto: id, objetivo: activo })),
           };
         });
-        if (!this.opciones.length) texto = 'La mochila está vacía. (Esc: volver)';
+        if (!this.opciones.length) texto = `◀ ${b.nombre} ▶ ${b.vacio} (Esc: volver)`;
         break;
       }
       case 'equipo':
