@@ -318,6 +318,10 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
 - 2026-11-12 · **Inicial rebelde** (F25): hasta hablar con el anciano, no hace caso el 45 % de
   sus turnos; la mitad de esas veces usa otro movimiento y la otra mitad se distrae. Lo decide
   el generador del combate.
+- 2026-11-13 · **Gimnasio de Roca de verdad** (autor): terrazas, compuertas de basalto, tres
+  aprendices que no se esquivan, una palanca y la ceremonia de la pintadera (`ISLA-1.md`). El
+  núcleo admite compuertas por casilla (`cierres`) y palancas (`p`); vencer a cualquiera cumple
+  `vencido:<id>` y una palanca, `palanca:<id>`. Sirve para todos los gimnasios.
 - 2026-11-12 · **Menús revisados por el probador:** título y pie de teclas en etiquetas oscuras
   (se leen sobre casas blancas), opciones apagadas opacas, listas que dan la vuelta y mantener
   una flecha repite, la pausa responde al instante (la espera de 0,4 s queda solo en la tienda),

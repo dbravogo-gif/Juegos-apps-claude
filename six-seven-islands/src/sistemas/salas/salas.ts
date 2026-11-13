@@ -4,10 +4,11 @@
 // dentro. Los muebles salen de las letras del mapa (LEYENDA) y las estatuas del museo, de sus
 // personajes. Una malla por sala. Lee «partida»; no la cambia.
 
-import { CylinderGeometry, Mesh, PlaneGeometry, SphereGeometry, type BufferGeometry, type Object3D } from 'three/webgpu';
+import { BoxGeometry, ConeGeometry, CylinderGeometry, Group, Mesh, MeshBasicNodeMaterial, PlaneGeometry, SphereGeometry, type BufferGeometry, type Object3D } from 'three/webgpu';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { MODELO_INICIAL, figuraCriatura } from '../../arte/criaturas3d';
 import { attribute } from 'three/tsl';
-import { clave, deClave, type Mundo } from '../../core/mundo';
+import { cierreEn, clave, deClave, palancaEn, type Condicion, type Mundo } from '../../core/mundo';
 import { MaterialDiorama } from '../../arte/material';
 import { COLORES } from '../../arte/paleta';
 import { alturaSuelo } from '../../arte/escala';
@@ -195,7 +196,11 @@ export function geometriaSala(sala: Mundo, id: string): BufferGeometry {
   // Suelo: una losa para toda la sala y, encima, un cuadrado de madera por casilla en dos tonos,
   // sin juntas. Las tablas con rendija dejaban ver el fondo, y con fondo oscuro, rayas negras a
   // través de cada casilla (autor, 2026-11-10).
-  M.caja(maxX - minX + 1, 0.1, maxY - minY + 1, centroX, SUELO - 0.1, centroY, COLORES.maderaSueloOscura, 0.8);
+  // El gimnasio de Roca es una cueva volcánica (gimnasio-roca.ts): basalto en vez de tablas y de
+  // cal, y lava que brilla en sus coladas (la pone `Salas`, sin luz, para que se vea encendida).
+  const volcanica = [...sala.casillas.values()].some((c) => c.c === 'L');
+  const suelo = volcanica ? [COLORES.basalto, COLORES.lavaNegra] : [COLORES.maderaSuelo, COLORES.maderaSueloOscura];
+  M.caja(maxX - minX + 1, 0.1, maxY - minY + 1, centroX, SUELO - 0.1, centroY, volcanica ? COLORES.lavaNegra : COLORES.maderaSueloOscura, 0.8);
   // Paredes por tramos, lisas: un solo color, sin juntas entre casillas.
   for (const t of tramosDePared(sala)) {
     const alto = t.y0 === minY ? ALTO_PARED : t.y1 === maxY ? ALTO_DELANTE : ALTO_LADO;
@@ -204,13 +209,13 @@ export function geometriaSala(sala: Mundo, id: string): BufferGeometry {
     const cx = (t.x0 + t.x1) / 2;
     const cz = (t.y0 + t.y1) / 2;
     const fila = t.y0 === t.y1;
-    M.caja(an, alto, fo, cx, SUELO, cz, COLORES.cal);
+    M.caja(an, alto, fo, cx, SUELO, cz, volcanica ? COLORES.lavaParda : COLORES.cal);
     // El zócalo sobresale solo hacia los lados de la pared; en las columnas se queda 1 cm corto
     // por cada punta para no solaparse con el de la fila en la esquina.
-    if (alto > ALTO_DELANTE) M.caja(fila ? an - 0.02 : 1.02, 0.45, fila ? 1.02 : fo - 0.02, cx, SUELO, cz, COLORES.zocaloOcre);
+    if (alto > ALTO_DELANTE) M.caja(fila ? an - 0.02 : 1.02, 0.45, fila ? 1.02 : fo - 0.02, cx, SUELO, cz, volcanica ? COLORES.escoriaHonda : COLORES.zocaloOcre);
     // El remate, 1 cm más alto que la pared: con la cara de arriba a la misma altura, las dos
     // se peleaban por cada píxel.
-    if (t.y0 === minY && fila) M.caja(an + 0.02, 0.13, 1.02, cx, SUELO + alto - 0.12, cz, COLORES.balcon);
+    if (t.y0 === minY && fila) M.caja(an + 0.02, 0.13, 1.02, cx, SUELO + alto - 0.12, cz, volcanica ? COLORES.basalto : COLORES.balcon);
   }
   // Mostradores: cada tramo seguido, de una pieza, por lo mismo que las paredes.
   for (const t of tramosDe(sala, 'c')) {
@@ -223,9 +228,26 @@ export function geometriaSala(sala: Mundo, id: string): BufferGeometry {
     const [x, y] = deClave(k);
     const n = (x * 7 + y * 13) % 5;
     // 2 mm por encima de la losa: con la misma altura, las dos caras se pelearían por el píxel.
-    M.pon(new PlaneGeometry(1, 1).rotateX(-Math.PI / 2).translate(x, SUELO + 0.002, y), (x + y) % 2 ? COLORES.maderaSuelo : COLORES.maderaSueloOscura, 0.96 + (n % 3) * 0.03);
-    if (cm.c === '|') {
-      if (y === minY) {
+    // En la lava no hay suelo: brilla la colada (la pone `Salas`) con costras negras flotando.
+    if (cm.c === 'L') {
+      for (const [dx, dz, s] of [[-0.22, -0.18, 0.34], [0.24, 0.2, 0.26]]) M.pon(abollar(new SphereGeometry(0.5, 7, 4), 0.25, n + dx * 10).scale(s, 0.04, s * 0.8).translate(x + dx, SUELO + 0.012, y + dz), COLORES.lavaNegra);
+      continue;
+    }
+    // Bajo las compuertas, un puente de basalto más claro sobre la colada.
+    M.pon(new PlaneGeometry(1, 1).rotateX(-Math.PI / 2).translate(x, SUELO + 0.002, y), cm.c === 'X' ? COLORES.basaltoClaro : (x + y) % 2 ? suelo[0] : suelo[1], 0.96 + (n % 3) * 0.03);
+    if (cm.c === '#') {
+      // Columna de basalto hexagonal, de altura variable, como las de los acantilados.
+      const alto = 1.2 + ((x * 5 + y * 3) % 4) * 0.25;
+      M.pon(new CylinderGeometry(0.4, 0.44, alto, 6).translate(x, SUELO + alto / 2, y), COLORES.basalto, 0.95 + (n % 3) * 0.04);
+      M.pon(new CylinderGeometry(0.4, 0.4, 0.04, 6).translate(x, SUELO + alto + 0.02, y), COLORES.basaltoClaro);
+    } else if (cm.c === 'p') {
+      // El pedestal de la palanca (la palanca la mueve `Salas`).
+      M.cajaRedonda(0.5, 0.55, 0.42, x, SUELO, y, COLORES.basalto, 0.05);
+      M.caja(0.12, 0.02, 0.3, x, SUELO + 0.55, y, COLORES.lavaNegra);
+    } else if (cm.c === 'X') {
+      // La compuerta la pone `Salas`, que la hunde al abrirse.
+    } else if (cm.c === '|') {
+      if (y === minY && !volcanica) {
         // Ventanas en la pared del fondo, una de cada tres casillas.
         if ((x - minX) % 3 === 2 && x < maxX) {
           M.caja(0.62, 0.72, 0.06, x, SUELO + 0.95, y + 0.5, COLORES.canteria);
@@ -248,7 +270,14 @@ export function geometriaSala(sala: Mundo, id: string): BufferGeometry {
     const largo = maxY - (minY + 3);
     M.caja(0.8, 0.015, largo, px, SUELO, minY + 3 + (largo - 1) / 2, COLORES.alfombra, 0.95);
   }
-  if (id === 'gimnasio') {
+  if (id === 'gimnasio' && volcanica) {
+    // Un volcán en relieve en la pared del fondo, detrás de la líder, con su cráter encendido, y
+    // una alfombra de picón rojizo de la última compuerta a la líder.
+    M.pon(new ConeGeometry(2.2, 2.6, 9).translate(centroX, SUELO + 1.3, minY + 0.55), COLORES.lavaRojiza);
+    M.pon(new ConeGeometry(1.2, 1.4, 9).translate(centroX, SUELO + 1.95, minY + 0.62), COLORES.lavaParda);
+    M.pon(new CylinderGeometry(0.34, 0.3, 0.1, 9).translate(centroX, SUELO + 2.62, minY + 0.66), COLORES.lava, 1.2);
+    M.caja(1, 0.012, 2, centroX, SUELO, minY + 2.5, COLORES.escoria, 0.95);
+  } else if (id === 'gimnasio') {
     const cy = (minY + maxY) / 2;
     M.pon(new CylinderGeometry(1.1, 1.1, 0.02, 24).translate(centroX, SUELO + 0.01, cy), COLORES.rocaGimnasio);
     M.pon(new CylinderGeometry(0.4, 0.4, 0.025, 18).translate(centroX, SUELO + 0.015, cy), COLORES.lava);
@@ -268,10 +297,21 @@ export class Salas implements Subsistema {
   private mallas: Mesh[] = [];
   private estatuas: Object3D[] = [];
   private material!: MaterialDiorama;
+  private partida!: Partida;
+  /** Las compuertas de basalto: bajan cuando se cumple su condición. */
+  private compuertas: { malla: Mesh; condicion: Condicion; abierta: number }[] = [];
+  /** Las palancas: su mango baja cuando se usan. */
+  private palancas: { mango: Group; condicion: Condicion; bajada: number }[] = [];
+  private geometrias: BufferGeometry[] = [];
+  private materialesExtra: { dispose(): void }[] = [];
 
   async init(ctx: Ctx): Promise<void> {
     const partida = ctx.get<Partida>('partida');
+    this.partida = partida;
     this.material = new MaterialDiorama({ bordes: [-0.1, 0.4], especular: 0.06, rebote: 0.12 }, attribute('color', 'vec3'));
+    const piedra = new MaterialDiorama({ color: COLORES.basalto, bordes: [-0.1, 0.4], especular: 0.05, rebote: 0.12 });
+    const lava = new MeshBasicNodeMaterial({ color: COLORES.lava });
+    this.materialesExtra.push(piedra, lava);
     const cargas: Promise<void>[] = [];
     for (const [id, sala] of partida.interiores) {
       const malla = new Mesh(geometriaSala(sala, id), this.material);
@@ -279,6 +319,45 @@ export class Salas implements Subsistema {
       malla.receiveShadow = true;
       ctx.escena.add(malla);
       this.mallas.push(malla);
+      // La lava de las coladas, sin luz: brilla aunque la sala esté en sombra.
+      const charcos = [...sala.casillas].filter(([, c]) => c.c === 'L').map(([k]) => {
+        const [x, y] = deClave(k);
+        return new PlaneGeometry(1, 1).rotateX(-Math.PI / 2).translate(x, SUELO + 0.004, y);
+      });
+      if (charcos.length) {
+        const g = mergeGeometries(charcos);
+        for (const c of charcos) c.dispose();
+        const m = new Mesh(g, lava);
+        ctx.escena.add(m);
+        this.mallas.push(m);
+      }
+      for (const [k, c] of sala.casillas) {
+        const [x, y] = deClave(k);
+        if (c.c === 'X') {
+          const cierre = cierreEn(sala, k);
+          if (!cierre) continue;
+          // Una losa de basalto de una casilla, con vetas: sube del puente.
+          const g = new BoxGeometry(0.98, 1.3, 0.5).translate(0, 0.65, 0);
+          const losa = new Mesh(g, piedra);
+          losa.position.set(x, SUELO, y);
+          losa.castShadow = true;
+          ctx.escena.add(losa);
+          this.geometrias.push(g);
+          this.compuertas.push({ malla: losa, condicion: cierre.condicion, abierta: partida.estado.condiciones.includes(cierre.condicion) ? 1 : 0 });
+        } else if (c.c === 'p') {
+          const id = palancaEn(sala, k);
+          if (!id) continue;
+          const g = new BoxGeometry(0.07, 0.5, 0.07).translate(0, 0.25, 0);
+          const pomo = new SphereGeometry(0.07, 8, 6).translate(0, 0.52, 0);
+          const mango = new Group();
+          mango.add(new Mesh(g, piedra), new Mesh(pomo, lava));
+          mango.position.set(x, SUELO + 0.56, y);
+          ctx.escena.add(mango);
+          this.geometrias.push(g, pomo);
+          const condicion: Condicion = `palanca:${id}`;
+          this.palancas.push({ mango, condicion, bajada: partida.estado.condiciones.includes(condicion) ? 1 : 0 });
+        }
+      }
       // Las estatuas: el modelo de cada inicial, en piedra, sobre su pedestal.
       for (const [k, { personaje }] of sala.ocupadas) {
         const modelo = personaje.id.startsWith('estatua-') ? MODELO_INICIAL[personaje.id.slice(8)] : undefined;
@@ -294,6 +373,26 @@ export class Salas implements Subsistema {
       }
     }
     await Promise.all(cargas);
+    this.actualizar(0);
+  }
+
+  /** Las compuertas se hunden en la lava y las palancas bajan, poco a poco, al cumplirse lo suyo. */
+  actualizar(dt: number): void {
+    const hechas = this.partida.estado.condiciones;
+    for (const c of this.compuertas) {
+      const objetivo = hechas.includes(c.condicion) ? 1 : 0;
+      c.abierta += Math.sign(objetivo - c.abierta) * Math.min(Math.abs(objetivo - c.abierta), dt * 0.8);
+      // Un temblor mientras baja.
+      const temblor = c.abierta > 0 && c.abierta < 1 ? Math.sin(c.abierta * 90) * 0.02 : 0;
+      c.malla.position.y = SUELO - c.abierta * 1.32;
+      c.malla.position.x = Math.round(c.malla.position.x) + temblor;
+      c.malla.visible = c.abierta < 1;
+    }
+    for (const p of this.palancas) {
+      const objetivo = hechas.includes(p.condicion) ? 1 : 0;
+      p.bajada += Math.sign(objetivo - p.bajada) * Math.min(Math.abs(objetivo - p.bajada), dt * 3);
+      p.mango.rotation.x = -0.7 + p.bajada * 1.4;
+    }
   }
 
   dispose(): void {
@@ -302,6 +401,10 @@ export class Salas implements Subsistema {
       m.geometry.dispose();
     }
     for (const e of this.estatuas) e.removeFromParent();
+    for (const c of this.compuertas) c.malla.removeFromParent();
+    for (const p of this.palancas) p.mango.removeFromParent();
+    for (const g of this.geometrias) g.dispose();
+    for (const m of this.materialesExtra) m.dispose();
     this.material.dispose();
   }
 }

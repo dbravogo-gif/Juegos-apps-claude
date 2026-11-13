@@ -410,6 +410,51 @@ body {
   color: #6b5a4f;
 }
 
+/* La pintadera recién ganada, en grande sobre el juego (src/sistemas/interfaz). */
+.medalla-ganada {
+  position: fixed;
+  top: 18%;
+  left: 50%;
+  z-index: 22;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.medalla-ganada[hidden] {
+  display: none;
+}
+
+.medalla-dibujo svg {
+  display: block;
+  width: 168px;
+  height: 168px;
+  filter: drop-shadow(0 0 18px rgb(255 214 120 / 0.85)) drop-shadow(0 10px 16px rgb(0 0 0 / 0.45));
+}
+
+.medalla-ganada p {
+  margin: 0;
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: rgb(43 35 64 / 0.9);
+  font: 800 22px/1.2 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color: var(--crema);
+}
+
+.medalla-ganada.entra .medalla-dibujo {
+  animation: medalla-entra 0.9s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+
+@keyframes medalla-entra {
+  from {
+    opacity: 0;
+    transform: scale(0.2) rotate(-200deg);
+  }
+}
+
 /* Menú de pausa y tienda (src/sistemas/menu). Diseño del autor, 2026-11-12:
    - pausa: degradado oscuro de izquierda (menos transparente) a derecha (casi nada), con el
      contenido a la izquierda y las opciones en una columna a la derecha;

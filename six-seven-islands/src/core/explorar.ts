@@ -5,7 +5,7 @@
 //
 // Las funciones reciben el mapa activo: la isla o el interior donde está el jugador.
 
-import { DE_ENCUENTROS, EDIFICIOS, clave, transitable, type Condicion, type Direccion, type Mundo } from './mundo';
+import { DE_ENCUENTROS, EDIFICIOS, cierreEn, clave, palancaEn, transitable, type Condicion, type Direccion, type Mundo } from './mundo';
 
 /** Pasos fijos que se tarda en cruzar una casilla: 11 a 60 Hz, unos 0,18 s. */
 export const PASOS_POR_CASILLA = 11;
@@ -50,6 +50,8 @@ export type EventoExplorar =
   /** Salir del interior por su puerta. */
   | { tipo: 'salida' }
   | { tipo: 'hablar'; zona: string; personaje: string }
+  /** Usar la palanca que se tiene delante (`ya`: estaba bajada). */
+  | { tipo: 'palanca'; id: string; ya: boolean }
   /** Ha terminado un paso sobre terreno de encuentros: quien juega sortea si sale una criatura. */
   | { tipo: 'hierba'; zona: string };
 
@@ -100,7 +102,7 @@ export function avanzar(m: Mundo, e: EstadoExplorar, dir: Direccion | null): Eve
   const k = clave(nx, ny);
   const cm = m.casillas.get(k);
   if (cm?.c === 'X' && e.avisoEn !== k) {
-    const aviso = m.zonas.get(cm.zona)?.cierre?.aviso;
+    const aviso = cierreEn(m, k)?.aviso;
     if (aviso) eventos.push({ tipo: 'aviso', texto: aviso });
     e.avisoEn = k;
   }
@@ -171,6 +173,8 @@ export function salir(e: EstadoExplorar): void {
 export function interactuar(m: Mundo, e: EstadoExplorar): EventoExplorar[] {
   if (e.paso > 0) return [];
   const [dx, dy] = DESPLAZAMIENTO[e.mira];
+  const palanca = palancaEn(m, clave(e.x + dx, e.y + dy));
+  if (palanca) return [{ tipo: 'palanca', id: palanca, ya: e.condiciones.includes(`palanca:${palanca}`) }];
   const mostrador = m.casillas.get(clave(e.x + dx, e.y + dy))?.c === 'c';
   const p = m.ocupadas.get(mostrador ? clave(e.x + 2 * dx, e.y + 2 * dy) : clave(e.x + dx, e.y + dy));
   return p ? [{ tipo: 'hablar', zona: p.zona, personaje: p.personaje.id }] : [];

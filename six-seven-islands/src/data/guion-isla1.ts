@@ -151,6 +151,22 @@ export const GUION_ISLA1: Guion = {
       },
     },
   ],
+  // El vigilante de la entrada del gimnasio: cómo funciona y contra qué es débil la Roca.
+  'vigilante-gimnasio': [
+    {
+      sin: 'gimnasio-vencido',
+      dialogo: {
+        lineas: [
+          { quien: 'Vigilante', texto: '¡Bienvenido al gimnasio de Roca! Lo excavaron dentro de una colada, como los jameos.' },
+          { quien: 'Vigilante', texto: 'Las compuertas de basalto se hunden cuando vences a los aprendices. La última, con una palanca.' },
+          { quien: 'Vigilante', texto: 'Un consejo: a la Roca le hacen mucho daño el Agua y la Planta. El fuego, casi nada.' },
+        ],
+      },
+    },
+    {
+      dialogo: { lineas: [{ quien: 'Vigilante', texto: '¡Lo has conseguido! Esa pintadera te abre el barco. Buen viaje, campeón.' }] },
+    },
+  ],
   'lider-gimnasio': [
     {
       sin: 'gimnasio-vencido',

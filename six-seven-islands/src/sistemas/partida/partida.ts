@@ -67,7 +67,7 @@ export interface EstadoParcial {
   dinero?: number;
   /** Solo para pruebas: los entrenadores vencidos. */
   vencidos?: string[];
-  /** Solo para pruebas: criaturas que se añaden al equipo (especie y nivel). */
+  /** Solo para pruebas: criaturas que se añaden al principio del equipo (especie y nivel). */
   anadir?: { especie: string; nivel: number }[];
   /** Zona de la isla o id de un interior. */
   zona?: string;
@@ -98,6 +98,8 @@ export class Partida implements Subsistema {
   persona: string = PERSONA_JUGADOR;
   /** Se ha dicho que sí al barco: al cerrar el diálogo, sale la pantalla del final. */
   private finPendiente = false;
+  /** Lo que dice el entrenador recién vencido, al volver del combate (compuertas, pintadera). */
+  private trasCombate: { lineas: string[]; medalla?: number } | null = null;
   /** Un entrenador acaba de ver al jugador: cuando pase la exclamación, habla. */
   private alerta: { zona: string; personaje: string; pasos: number } | null = null;
   private pasosSinGuardar = 0;
@@ -312,9 +314,10 @@ export class Partida implements Subsistema {
       this.atender(ev);
       if (this.modo !== 'explorar') break;
     }
-    // Al terminar un paso, ¿le ve algún entrenador? Sin criaturas en pie, no retan.
-    if (this.modo === 'explorar' && antes > 0 && this.estado.paso === 0 && !this.estado.dentro && this.equipo.some((c) => c.vida > 0)) {
-      const quien = entrenadorQueVe(this.mundo, this.estado.x, this.estado.y, this.vencidos);
+    // Al terminar un paso, ¿le ve algún entrenador? También dentro (los aprendices del gimnasio).
+    // Sin criaturas en pie, no retan.
+    if (this.modo === 'explorar' && antes > 0 && this.estado.paso === 0 && this.equipo.some((c) => c.vida > 0)) {
+      const quien = entrenadorQueVe(this.activo(), this.estado.x, this.estado.y, this.vencidos);
       if (quien) {
         this.alerta = { ...quien, pasos: PASOS_ALERTA };
         this.ctx.eventos.emit('entrenador:visto', { id: quien.personaje });
@@ -325,10 +328,13 @@ export class Partida implements Subsistema {
   /** Tras vencer a un entrenador: su premio y, si lo da, su condición (la líder abre el barco). */
   vencerA(id: string): { premio: number } {
     if (!this.vencidos.includes(id)) this.vencidos.push(id);
+    // Vencer a alguien abre lo que dependa de él (las compuertas del gimnasio).
+    cumplir(this.estado, `vencido:${id}`);
     const def = ENTRENADORES_ISLA1[id];
     if (!def) return { premio: 0 };
     this.dinero += def.premio;
     if (def.condicion) cumplir(this.estado, def.condicion);
+    if (def.alVencer?.length) this.trasCombate = { lineas: [...def.alVencer], medalla: def.medalla };
     return { premio: def.premio };
   }
 
@@ -420,6 +426,15 @@ export class Partida implements Subsistema {
         this.abrir(dialogo, ev.personaje);
         break;
       }
+      case 'palanca':
+        if (ev.ya) this.abrir({ lineas: [{ texto: 'La palanca ya está bajada. La compuerta sigue abierta.' }] }, 'palanca');
+        else {
+          cumplir(this.estado, `palanca:${ev.id}`);
+          this.ctx.eventos.emit('sonido:tocar', { nombre: 'puerta' });
+          this.abrir({ lineas: [{ texto: 'Bajas la palanca. Al fondo, la última compuerta de basalto se hunde en la lava.' }] }, 'palanca');
+          this.guardar();
+        }
+        break;
       case 'hierba': {
         this.ctx.eventos.emit('sonido:tocar', { nombre: 'hierba' });
         // Sin una criatura en pie no se lucha: la hierba se cruza sin más.
@@ -462,6 +477,16 @@ export class Partida implements Subsistema {
     this.espera = ESPERA_TRAS_DIALOGO;
     this.entrada.olvidar();
     this.guardar();
+    // Lo que dice el vencido (abrir su compuerta, dar la pintadera), nada más volver.
+    const t = this.trasCombate;
+    this.trasCombate = null;
+    if (t) {
+      this.abrir({ lineas: t.lineas.map((texto) => ({ texto })) }, 'tras-combate');
+      if (t.medalla !== undefined) {
+        this.ctx.eventos.emit('sonido:tocar', { nombre: 'nivel' });
+        this.ctx.eventos.emit('medalla:ganada', { isla: t.medalla });
+      }
+    }
   }
 
   /** Empieza el fundido para entrar en un interior (o salir, con null). */
@@ -508,7 +533,8 @@ export class Partida implements Subsistema {
       this.estado.inicial = p.inicial;
       this.formarEquipo();
     }
-    for (const a of p.anadir ?? []) if (this.equipo.length < 6) this.equipo.push(crearCriatura(DATOS, a.especie, a.nivel, this.ctx.rng));
+    // Delante: así la añadida es la que sale a combatir (para probar combates).
+    for (const a of p.anadir ?? []) if (this.equipo.length < 6) this.equipo.unshift(crearCriatura(DATOS, a.especie, a.nivel, this.ctx.rng));
     if (p.vida !== undefined) for (const c of this.equipo) c.vida = Math.min(c.vida, p.vida);
     if (p.dinero !== undefined) this.dinero = p.dinero;
     if (p.vencidos !== undefined) this.vencidos = [...p.vencidos];

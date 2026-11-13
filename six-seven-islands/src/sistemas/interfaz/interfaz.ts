@@ -5,6 +5,8 @@
 // «partida» en cada fotograma y no lo cambia.
 
 import { completa, lineaActual } from '../../core/guion';
+import { svgPintadera } from '../../arte/pintaderas';
+import { MEDALLAS } from '../../data/medallas';
 import { COLOR_CRIATURA, TIPOS } from '../../data/tipos';
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Partida } from '../partida/partida';
@@ -30,6 +32,9 @@ export class Interfaz implements Subsistema {
   private ultimaZona = '';
   private quitar: (() => void)[] = [];
   private temporizador = 0;
+  /** La pintadera recién ganada, en grande, y lo que le queda en pantalla. */
+  private medalla!: HTMLElement;
+  private tMedalla = 0;
   /** Lo último pintado, para no tocar el DOM si no cambia. */
   private pintado = '';
 
@@ -46,11 +51,13 @@ export class Interfaz implements Subsistema {
         <p class="dialogo-opciones" hidden><span class="opcion">Sí</span><span class="opcion">No</span></p>
         <span class="dialogo-seguir" aria-hidden="true">▼</span>
       </div>
+      <div class="medalla-ganada" hidden><div class="medalla-dibujo"></div><p></p></div>
       <div class="fundido"></div>
       <p class="ayuda">Flechas o WASD: andar · E, Enter o Espacio: hablar y seguir · Esc: menú</p>`;
     document.body.append(raiz);
     this.raiz = raiz;
     this.cartel = raiz.querySelector('.zona-cartel')!;
+    this.medalla = raiz.querySelector('.medalla-ganada')!;
     this.caja = raiz.querySelector('.dialogo')!;
     this.quien = raiz.querySelector('.dialogo-quien')!;
     this.texto = raiz.querySelector('.dialogo-texto')!;
@@ -63,6 +70,17 @@ export class Interfaz implements Subsistema {
 
     this.quitar.push(
       ctx.eventos.on('zona:entrar', ({ zonaId }) => this.anunciar(zonaId)),
+      ctx.eventos.on('medalla:ganada', ({ isla }) => {
+        const m = MEDALLAS.find((x) => x.isla === isla);
+        if (!m) return;
+        this.medalla.querySelector('.medalla-dibujo')!.innerHTML = svgPintadera(isla, true);
+        this.medalla.querySelector('p')!.textContent = `¡Pintadera de ${m.nombre}!`;
+        this.medalla.hidden = false;
+        this.medalla.classList.remove('entra');
+        void this.medalla.offsetWidth; // reinicia la animación
+        this.medalla.classList.add('entra');
+        this.tMedalla = 4;
+      }),
       ctx.eventos.on('inicial:elegida', ({ tipo }) => {
         const nombre = TIPOS.find((t) => t.id === tipo)?.nombre ?? tipo;
         const color = COLOR_CRIATURA[tipo as keyof typeof COLOR_CRIATURA];
@@ -92,6 +110,10 @@ export class Interfaz implements Subsistema {
   }
 
   actualizar(dt: number): void {
+    if (this.tMedalla > 0) {
+      this.tMedalla -= dt;
+      if (this.tMedalla <= 0) this.medalla.hidden = true;
+    }
     if (this.temporizador > 0) {
       this.temporizador -= dt;
       if (this.temporizador <= 0) this.cartel.classList.remove('visible');

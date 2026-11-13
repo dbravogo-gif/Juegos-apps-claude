@@ -170,6 +170,7 @@ export class Sistema implements Subsistema {
 | `jugador:elegido` | `{ nombre, persona }` | `partida` |
 | `sonido:tocar` | `{ nombre }` | `partida`, `combate`, `menu`, `inicio` |
 | `sonido:alternar` | `{}` | `menu` |
+| `medalla:ganada` | `{ isla }` | `partida` (al volver de vencer a un líder) |
 | `calidad:cambio` | `{ nivel }` | `depuracion` |
 | `objeto:recogido` | `{ id, objeto }` | `partida` |
 | `inicial:elegida` | `{ tipo }` | `partida` |
