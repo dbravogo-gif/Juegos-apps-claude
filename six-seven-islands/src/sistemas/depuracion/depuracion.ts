@@ -13,6 +13,8 @@ export interface EstadoVisible {
   modo: string;
   zona: string | null;
   posicion: { x: number; y: number } | null;
+  /** Dónde se dibuja el jugador (en casillas del mundo), para medir lo fluido que va. */
+  jugador: { x: number; z: number } | null;
   condiciones: string[];
   calidad: NivelCalidad;
   backend: string;
@@ -69,6 +71,7 @@ export class Depuracion implements Subsistema {
           modo: p?.modo ?? 'vitrina',
           zona: p?.zona ?? null,
           posicion: p?.posicion ?? null,
+          jugador: ctx.tiene('personaje') ? (({ x, z }) => ({ x, z }))(ctx.get<Subsistema & { posicion: { x: number; z: number } }>('personaje').posicion) : null,
           condiciones: p?.condiciones ?? [],
           calidad: ctx.config.calidad.nivel,
           backend: this.render.backend,

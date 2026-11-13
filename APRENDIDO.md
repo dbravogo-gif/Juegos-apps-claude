@@ -6,11 +6,13 @@ nivel: de nota a regla, y de regla a prueba o hook.
 
 - **2026-11-13 · Correr se veía a tirones** (Six-seven islands; lo vio el autor). Segunda vez que
   el andar no se ve fluido: el 2026-11-10 fue la animación.
-  - Causa: entre casilla y casilla el jugador se quedaba quieto un paso fijo de cada doce. Se
-    tapó en la animación, pero no en la posición.
-  - Barrera: «partida» encadena el paso siguiente al llegar, y `estado()` dice `paso`. Para
-    comprobarlo, se cuentan los fotogramas con `paso` 0 mientras se mantiene una flecha en un
-    tramo libre: tienen que ser 0.
+  - Causa: se dibujaba adelantando la posición con la fracción del paso siguiente, salvo al
+    llegar a cada casilla (paso 0): un instante congelado por casilla. El primer arreglo
+    (encadenar el paso siguiente) lo cambió por un salto, porque acortaba cada casilla un paso
+    fijo; contar fotogramas con `paso` 0 no lo detectaba.
+  - Barrera: el jugador se dibuja entre los dos últimos pasos fijos (`personaje/suavizado.ts`) y
+    `tests/suavizado.test.ts` simula fotogramas irregulares: exige velocidad constante y que el
+    dibujo de antes falle. La fluidez se mide así, no en el Chromium de aquí, que va lento.
 - **2026-11-13 · La inicial de fuego salía casi negra** (lo vio el autor).
   - Causa: la textura de Meshy salió más oscura que su dibujo (gris 53 frente a 65), y en
     pantalla, sin luz del juego, el cuerpo quedaba en 23.

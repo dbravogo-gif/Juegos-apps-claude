@@ -37,19 +37,22 @@ preguntas sobre lo que no tengas claro. Después, escribe por partes y espera a 
 
 ## Lo que ya está decidido
 
-- **El museo y las cuatro leyendas.** La partida empieza en casa; tu madre te manda al museo. Allí
-  hay cuatro estatuas, una por cada criatura inicial, y cada una cuenta una leyenda. El jugador
+- **El museo y las cinco leyendas.** La partida empieza en casa; tu madre te manda al museo. Allí
+  hay cinco estatuas, una por cada criatura inicial, y cada una cuenta una leyenda. El jugador
   elige la inicial cuya historia le llega más:
   - **Agua:** un caimán con una burbuja de agua en la cabeza.
   - **Planta:** un lagarto con hojas y musgo que acaba siendo un chamán (Planta/Mental).
   - **Infernal** (fuego): un elefante con orejas de fuego que acaba en mamut acorazado.
   - **Roca:** un armadillo de piedra. Desde su segunda forma, también es de tipo Veneno.
-  - Ciclo de las cuatro: el agua gana a la roca, la roca al fuego, el fuego a la planta y la
-    planta al agua.
-- **Cuatro naciones enfrentadas** (idea del autor, 2026-11-13). En la antigüedad, cada leyenda
-  guiaba a un pueblo, y cada pueblo tiene como enemigo máximo al que le gana en el ciclo:
+  - **Tierra** (quinta inicial, de otro amigo; 2026-11-13): acaba siendo Tierra/Espectral, una
+    criatura de tierra con algo de fantasma.
+  - Ciclo de tipos de las cuatro primeras: el agua gana a la roca, la roca al fuego, el fuego a
+    la planta y la planta al agua. La Tierra entra entre la Roca y el Agua.
+- **Cinco naciones enfrentadas** (idea del autor, 2026-11-13). En la antigüedad, cada leyenda
+  guiaba a un pueblo, y cada pueblo tiene un enemigo máximo, en círculo:
   - **el Fuego**, agresivo, ataca a la Roca;
-  - **la Roca** avanza sin parar sobre el Agua: la lava que se enfría gana terreno al mar;
+  - **la Roca** avanza sin parar sobre la Tierra: cada colada que se enfría cubre sus campos;
+  - **la Tierra** lucha con el Agua, que con cada tormenta arrastra su tierra al mar;
   - **el Agua** se enfrenta a la Planta, que le roba la poca agua de la isla con sus raíces;
   - **la Planta** odia al Fuego, que quema sus campos.
 
@@ -59,7 +62,7 @@ preguntas sobre lo que no tengas claro. Después, escribe por partes y espera a 
   ninguna serie o película.
 - **La inicial es rebelde:** no obedece siempre hasta que un anciano del pueblo (La Geria) te
   cuenta su historia.
-- **El equipo enemigo cambia según la inicial elegida:** hay cuatro variantes, con su propia
+- **El equipo enemigo cambia según la inicial elegida:** hay cinco variantes, con su propia
   historia, objetivo y uniformes. Todas tienen que ver con la isla desaparecida.
 - **Pistas ya puestas en Lanzarote:** en la capital, una vecina dice que «unos tipos raros
   preguntaban en el puerto por la isla que desapareció». Un vecino dice que desde el faro, de
@@ -86,9 +89,9 @@ preguntas sobre lo que no tengas claro. Después, escribe por partes y espera a 
 
 1. **Premisa** en 5 líneas: de qué va la aventura y por qué desapareció El Hierro (puede quedar
    en misterio, pero tú dime la respuesta).
-2. **Las cuatro leyendas del museo**, unas 6 líneas cada una, contando la guerra de las cuatro
+2. **Las cinco leyendas del museo**, unas 6 líneas cada una, contando la guerra de las cinco
    naciones desde el lado de cada una.
-3. **Las cuatro variantes del equipo enemigo:** nombre, qué quieren, cómo visten, quién manda y
+3. **Las cinco variantes del equipo enemigo:** nombre, qué quieren, cómo visten, quién manda y
    cómo se relaciona con su inicial.
 4. **El arco de las 7 islas**, un párrafo por isla: qué pasa, qué descubres y qué hace el
    equipo enemigo.

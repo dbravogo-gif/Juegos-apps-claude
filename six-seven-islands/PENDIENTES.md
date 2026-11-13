@@ -119,7 +119,12 @@ propuesta de Claude y qué frena mientras siga abierto.
 
 Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
 
-- **Aprobar Fuerteventura** (`ISLA-2.md`): tipo del gimnasio, zona de agua, calima y recorrido.
+- **Aprobar Fuerteventura** (`ISLA-2.md`, boceto en `conceptos/isla-2-boceto.png`): la calima y
+  el recorrido. El gimnasio será de Aire y no hay zona de agua (decidido).
+- **Tabla de tipos:** elegir a quién más hace ×2 el Veneno (opciones en el punto 11b), si se le
+  da algo a Bicho y si la Tierra hace ×2 a la Roca (para el círculo de cinco).
+- **Quinta inicial (Tierra):** sus estadísticas, su lámina y su GLB, y su nombre. Decir si el
+  total pasa a 203 criaturas o se quita una línea de 3 formas de la lista.
 - **Criaturas:** decir si vale la lista 2 de Lanzarote (`CRIATURAS.md`); pasar las láminas de
   Lucha y las demás, y los nombres de la civeta y de Dragosil.
 - **Entrenadores y zonas de captura de Lanzarote** que hay que mejorar: decir cuáles.

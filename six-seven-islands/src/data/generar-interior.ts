@@ -110,10 +110,11 @@ export function generarInterior(op: OpcionesInterior): InteriorGenerado {
       break;
     }
     case 'museo': {
-      // Cuatro pedestales repartidos por el fondo, sin tapar el pasillo de la alfombra.
-      for (let i = 0; i < 4; i++) {
-        let x = Math.round(((i + 1) * (w + 1)) / 5);
-        if (x === cx) x += i < 2 ? -1 : 1;
+      // Cinco pedestales repartidos por el fondo (autor, 2026-11-13: se une una quinta inicial).
+      // El del medio queda al final de la alfombra; los demás, fuera de su pasillo.
+      for (let i = 0; i < 5; i++) {
+        let x = Math.round(((i + 1) * (w + 1)) / 6);
+        if (x === cx && i !== 2) x += i < 2 ? -1 : 1;
         res.estatuas.push({ x, y: 2 });
       }
       g[Math.min(4, d - 1)][1] = 'k';

@@ -21,10 +21,11 @@ const vive = (id: string, frase?: string) => (s: InteriorGenerado): Personaje[] 
 
 const SALAS: Record<string, DefSala> = {
   museo: {
-    nombre: 'Museo de las cuatro leyendas',
+    nombre: 'Museo de las cinco leyendas',
     gente: (s) => [
-      // Cuatro pedestales, uno por inicial (autor, 2026-11-10).
-      ...['planta', 'agua', 'infernal', 'roca'].map((t, i) => ({ id: `estatua-${t}`, x: s.estatuas[i].x, y: s.estatuas[i].y, mira: 's' as const })),
+      // Cinco pedestales, uno por inicial, en el orden del círculo de las naciones: cada una
+      // lucha contra la de su derecha y la última contra la primera (autor, 2026-11-13).
+      ...['planta', 'infernal', 'roca', 'tierra', 'agua'].map((t, i) => ({ id: `estatua-${t}`, x: s.estatuas[i].x, y: s.estatuas[i].y, mira: 's' as const })),
       { id: 'doctora', x: s.residente.x, y: s.residente.y, mira: 's' },
       { id: 'informatico', x: s.ordenador!.x, y: s.ordenador!.y, mira: 'o' },
     ],

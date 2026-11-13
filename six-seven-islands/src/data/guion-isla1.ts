@@ -1,9 +1,8 @@
 // Diálogos de la isla 1, Lanzarote, por id de personaje (src/core/guion.ts). Contenido propio.
-// Las cuatro leyendas guiaban cuatro naciones enfrentadas (autor, 2026-11-13). Cada una tiene
-// como enemiga a la que le gana en el ciclo de tipos: el fuego ataca a la roca, la roca avanza
-// sobre el agua, el agua lucha con la planta y la planta odia al fuego. Textos provisionales hasta
-// la historia del autor (PROMPT-HISTORIA.md). Los personajes sin diálogo aquí dicen su `frase`
-// del mapa.
+// Las cinco leyendas guiaban cinco naciones enfrentadas en círculo (autor, 2026-11-13): el fuego
+// ataca a la roca, la roca avanza sobre la tierra, la tierra lucha con el agua, el agua con la
+// planta y la planta odia al fuego. Textos provisionales hasta la historia del autor
+// (PROMPT-HISTORIA.md). Los personajes sin diálogo aquí dicen su `frase` del mapa.
 
 import type { Dialogo, Guion, Linea } from '../core/guion';
 
@@ -29,11 +28,17 @@ const HISTORIA: Record<string, readonly Linea[]> = {
   roca: [
     { texto: 'Una placa dice: «La leyenda de roca dormía en el risco del norte, el acantilado más alto de la isla».' },
     { texto: '«Cuando una colada bajaba hacia los pueblos, se ponía delante y la sepultaba bajo su caparazón de piedra».' },
-    { texto: '«Su pueblo avanzaba sobre el mar: cada colada enfriada era tierra ganada al pueblo de la leyenda del agua».' },
+    { texto: '«Su pueblo avanzaba sin descanso: cada colada enfriada cubría los campos del pueblo de la leyenda de tierra».' },
+  ],
+  // La quinta (autor, 2026-11-13): de tierra, y al evolucionar también espectral.
+  tierra: [
+    { texto: 'Una placa dice: «La leyenda de tierra vivía bajo los campos y las aldeas que sepultó el volcán».' },
+    { texto: '«Cuando la lava enterró los pueblos, se quedó con ellos. Dicen que aún se oyen sus pasos bajo el picón».' },
+    { texto: '«Su pueblo luchó contra el de la leyenda del agua, que con cada tormenta arrastraba su tierra al mar».' },
   ],
 };
 
-const NOMBRE_TIPO: Record<string, string> = { planta: 'Planta', agua: 'Agua', infernal: 'Infernal', roca: 'Roca' };
+const NOMBRE_TIPO: Record<string, string> = { planta: 'Planta', agua: 'Agua', infernal: 'Infernal', roca: 'Roca', tierra: 'Tierra' };
 
 /** La estatua: su historia y, mientras no se haya elegido, la pregunta para elegirla. */
 function estatua(tipo: string): Guion[string] {
@@ -56,13 +61,14 @@ const ABUELA: Record<string, string> = {
   agua: 'Su abuela, la leyenda del agua, solo visitaba a quien cuidaba cada gota. A quien la malgastaba, no le volvía a hablar.',
   infernal: 'Su abuela, la leyenda infernal, era orgullosa como el volcán. Solo respetaba a quien no huía cuando la tierra temblaba.',
   roca: 'Su abuela, la leyenda de roca, era terca como el risco. Solo se movía por quien tenía paciencia para esperarla.',
+  tierra: 'Su abuela, la leyenda de tierra, era callada como un campo en invierno. Solo se dejaba ver por quien sabía escuchar el suelo.',
 };
 
 function anciano(tipo: string | undefined): Dialogo {
   return {
     lineas: [
       { quien: 'Anciano', texto: 'Esa criatura no te hace caso, ¿verdad? Siéntate, que te cuento su historia.' },
-      { quien: 'Anciano', texto: tipo ? ABUELA[tipo] : 'Las cuatro leyendas eran orgullosas. Ninguna obedecía a quien no la conocía.' },
+      { quien: 'Anciano', texto: tipo ? ABUELA[tipo] : 'Las cinco leyendas eran orgullosas. Ninguna obedecía a quien no la conocía.' },
       { quien: 'Anciano', texto: 'Háblale de lo que te importa. Verás como poco a poco te escucha.' },
       { texto: 'Tu compañera te mira de otra manera. Ahora sí te hace caso.' },
     ],
@@ -76,8 +82,8 @@ export const GUION_ISLA1: Guion = {
       sin: 'inicial-elegida',
       dialogo: {
         lineas: [
-          { quien: DOCTORA, texto: '¡Por fin llegas! Soy la doctora del museo de las cuatro leyendas.' },
-          { quien: DOCTORA, texto: 'Hace siglos, cuatro criaturas protegieron esta isla. Hoy sus descendientes esperan a alguien que las acompañe.' },
+          { quien: DOCTORA, texto: '¡Por fin llegas! Soy la doctora del museo de las cinco leyendas.' },
+          { quien: DOCTORA, texto: 'Hace siglos, cinco criaturas protegieron esta isla. Hoy sus descendientes esperan a alguien que las acompañe.' },
           { quien: DOCTORA, texto: 'Acércate a las estatuas, lee su historia y elige con cuál quieres empezar. Tómate tu tiempo.' },
         ],
       },
@@ -92,6 +98,7 @@ export const GUION_ISLA1: Guion = {
   'estatua-agua': estatua('agua'),
   'estatua-infernal': estatua('infernal'),
   'estatua-roca': estatua('roca'),
+  'estatua-tierra': estatua('tierra'),
   informatico: [
     {
       sin: 'inicial-elegida',

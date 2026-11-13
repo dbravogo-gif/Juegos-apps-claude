@@ -44,7 +44,8 @@ export class Companera implements Subsistema {
   private preparar(inicial: string): void {
     if (this.pedida === inicial) return;
     this.pedida = inicial;
-    const modelo = MODELO_INICIAL[inicial];
+    // La de Tierra aún no tiene modelo: mientras, el de Roca (autor, 2026-11-13).
+    const modelo = MODELO_INICIAL[inicial] ?? (inicial === 'tierra' ? MODELO_INICIAL.roca : undefined);
     if (!modelo) return;
     void figuraCriatura(modelo, 'color', TAMANO_COMPANERA).then((f) => {
       if (this.pedida !== inicial) return;

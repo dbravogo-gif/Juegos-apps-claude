@@ -29,6 +29,9 @@ const movimientos: Movimiento[] = [
   { id: 'barrito', nombre: 'Barrito', tipo: 'comun', categoria: 'estado', poder: 0, precision: 100, pp: 30, objetivo: 'rivales', efectos: [{ tipo: 'etapa', a: 'objetivo', estadistica: 'fuerza', cambio: -1, prob: 100 }] },
   { id: 'rodada-de-piedra', nombre: 'Rodada de piedra', tipo: 'roca', categoria: 'fisico', poder: 50, precision: 95, pp: 20 },
   { id: 'polvo-de-picon', nombre: 'Polvo de picón', tipo: 'roca', categoria: 'magico', poder: 40, precision: 100, pp: 25 },
+  // La quinta inicial, de Tierra (autor, 2026-11-13).
+  { id: 'pisoton', nombre: 'Pisotón', tipo: 'tierra', categoria: 'fisico', poder: 50, precision: 95, pp: 20 },
+  { id: 'arenazo', nombre: 'Arenazo', tipo: 'tierra', categoria: 'magico', poder: 40, precision: 100, pp: 25 },
   { id: 'caparazon', nombre: 'Caparazón', tipo: 'comun', categoria: 'estado', poder: 0, precision: null, pp: 20, objetivo: 'propio', efectos: [{ tipo: 'etapa', a: 'propio', estadistica: 'escudo', cambio: 1, prob: 100 }] },
 ];
 
@@ -44,6 +47,8 @@ const especies: Especie[] = [
   { id: 'inicial-agua', nombre: 'Inicial de Agua', tipos: ['agua'], base: base(50, 50, 55, 55, 55, 45), expBase: 60, ratioCaptura: 45, aprende: aprende('remojon', 'ola-de-cresta', 'topetazo', 'mirada-fija'), descripcion: '' },
   { id: 'inicial-planta', nombre: 'Inicial de Planta', tipos: ['planta'], base: base(50, 50, 50, 55, 55, 50), expBase: 60, ratioCaptura: 45, aprende: aprende('latigazo-de-musgo', 'esporas-de-hoja', 'topetazo', 'mirada-fija'), descripcion: '' },
   { id: 'inicial-infernal', nombre: 'Inicial Infernal', tipos: ['infernal'], base: base(50, 55, 50, 55, 45, 55), expBase: 60, ratioCaptura: 45, aprende: aprende('soplo-de-brasas', 'orejazo-ardiente', 'topetazo', 'barrito'), descripcion: '' },
+  // Estadísticas provisionales: las de verdad las pasa el autor, como las de las otras iniciales.
+  { id: 'inicial-tierra', nombre: 'Inicial de Tierra', tipos: ['tierra'], base: base(55, 60, 50, 40, 45, 50), expBase: 60, ratioCaptura: 45, aprende: aprende('pisoton', 'arenazo', 'topetazo', 'mirada-fija'), descripcion: '' },
   { id: 'inicial-roca', nombre: 'Inicial de Roca', tipos: ['roca'], base: base(55, 55, 60, 40, 50, 40), expBase: 60, ratioCaptura: 45, aprende: aprende('rodada-de-piedra', 'polvo-de-picon', 'topetazo', 'caparazon'), descripcion: '' },
 ];
 
@@ -65,6 +70,8 @@ export const MODELO_DE: Readonly<Record<string, string>> = {
   'inicial-planta': 'iniciales/inicial-planta-1.glb',
   'inicial-infernal': 'iniciales/inicial-infernal-1.glb',
   'inicial-roca': 'iniciales/inicial-roca-1.glb',
+  // Hasta que llegue su modelo de Meshy, la de Tierra se ve con el de Roca.
+  'inicial-tierra': 'iniciales/inicial-roca-1.glb',
   'cangrejo-de-charco': 'iniciales/inicial-agua-1.glb',
   'lagartija-de-picon': 'iniciales/inicial-roca-1.glb',
   'tabaiba-andante': 'iniciales/inicial-planta-1.glb',
@@ -80,6 +87,7 @@ export const ESPECIE_INICIAL: Readonly<Record<string, string>> = {
   planta: 'inicial-planta',
   infernal: 'inicial-infernal',
   roca: 'inicial-roca',
+  tierra: 'inicial-tierra',
 };
 
 /**
@@ -87,7 +95,7 @@ export const ESPECIE_INICIAL: Readonly<Record<string, string>> = {
  * desgasta la roca, la roca sepulta el fuego, el fuego quema lo verde y lo verde bebe el agua),
  * para que el primer combate enseñe un «¡Es muy eficaz!».
  */
-export const RIVAL_DE: Readonly<Record<string, string>> = { agua: 'roca', roca: 'infernal', infernal: 'planta', planta: 'agua' };
+export const RIVAL_DE: Readonly<Record<string, string>> = { agua: 'roca', roca: 'infernal', infernal: 'planta', planta: 'agua', tierra: 'infernal' };
 
 /** Quién lanza el combate de prueba: el primer entrenador de El Golfo, el de la barrera. */
 export const ENTRENADOR_PRUEBA = 'entrenador-barrera';

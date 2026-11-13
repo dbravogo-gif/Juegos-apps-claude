@@ -5,13 +5,14 @@ import { describe, expect, it } from 'vitest';
 import { iniciarCombate, resolverTurno, type Evento } from '../src/core/combate';
 import { crearCriatura } from '../src/core/criatura';
 import { crearRng } from '../src/core/rng';
-import { DATOS_COMBATE_PRUEBA as DATOS, ESPECIE_INICIAL, RIVAL_DE } from '../src/data/combate-prueba';
+import { DATOS_COMBATE_PRUEBA as DATOS, ESPECIE_INICIAL, MODELO_DE, RIVAL_DE } from '../src/data/combate-prueba';
 import { MODELO_INICIAL } from '../src/arte/criaturas3d';
 
 describe('combate de prueba', () => {
   for (const inicial of Object.keys(ESPECIE_INICIAL)) {
     it(`${inicial} contra ${RIVAL_DE[inicial]}: termina, y su ataque de tipo es muy eficaz`, () => {
-      expect(MODELO_INICIAL[inicial]).toBeDefined();
+      // Cada inicial tiene modelo; la de Tierra, provisional en combate hasta que llegue el suyo.
+      expect(MODELO_INICIAL[inicial] ?? (inicial === 'tierra' ? MODELO_DE[ESPECIE_INICIAL[inicial]] : undefined)).toBeDefined();
       const rng = crearRng(`prueba-${inicial}`);
       const a = crearCriatura(DATOS, ESPECIE_INICIAL[inicial], 5, rng);
       const b = crearCriatura(DATOS, ESPECIE_INICIAL[RIVAL_DE[inicial]], 5, rng);
