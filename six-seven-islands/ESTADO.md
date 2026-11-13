@@ -29,8 +29,9 @@ Tanda 1: Lanzarote es la isla 1 (`ISLA-1.md`), con kit por código y la tabla de
 
 ## Pendiente del autor
 
-Probar Fuerteventura (`ISLA-2.md`) y lo demás de la lista viva de `PENDIENTES.md`
-(«Tareas del autor»): criaturas, historia, personas de los amigos y puntuar lo publicado.
+Probar Fuerteventura (`ISLA-2.md`), aprobar Gran Canaria (`ISLA-3.md`) y lo demás de la lista
+viva de `PENDIENTES.md` («Tareas del autor»): criaturas, historia, personas de los amigos y
+puntuar lo publicado.
 
 ## Defectos conocidos
 
