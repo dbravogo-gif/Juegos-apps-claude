@@ -36,6 +36,5 @@ Aprobar Fuerteventura (`ISLA-2.md`) y lo demás de la lista viva de `PENDIENTES.
 ## Defectos conocidos
 
 - Solo ordenador desde 2026-11-08: falta medir los FPS en los PC del autor y sus amigos.
-- En la caldera de las Montañas del Fuego, `mundo` gasta más de su reparto de llamadas
-  (`ARCHITECTURE.md`).
+- En la caldera del Fuego, `mundo` gasta más llamadas de dibujo de su reparto (`ARCHITECTURE.md`).
 - Las estatuas del museo y los personajes de KayKit son provisionales.
