@@ -71,6 +71,13 @@ describe('tipos', () => {
     }
   });
 
+  it('ajuste del autor (2026-11-13): Acero resiste menos, Bicho no gana a Planta e Infernal no resiste a Acero', () => {
+    const e = (a: string, d: string) => eficacia(TABLA_TIPOS, a, [d]);
+    expect([e('planta', 'acero'), e('aire', 'acero'), e('mental', 'acero')]).toEqual([1, 1, 1]);
+    expect(e('bicho', 'planta')).toBe(1);
+    expect(e('acero', 'infernal')).toBe(1);
+  });
+
   it('el ciclo de las iniciales: el agua gana a la roca, la roca al fuego, el fuego a la planta y la planta al agua', () => {
     const e = (a: string, d: string) => eficacia(TABLA_TIPOS, a, [d]);
     expect([e('agua', 'roca'), e('roca', 'infernal'), e('infernal', 'planta'), e('planta', 'agua')]).toEqual([2, 2, 2, 2]);

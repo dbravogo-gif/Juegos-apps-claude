@@ -1,9 +1,14 @@
 # Isla 2: Fuerteventura (propuesta, por aprobar)
 
 2026-11-13. Pedido del autor: Fuerteventura será algo más larga que Lanzarote, con una zona de
-agua y una zona de desierto en las dunas, y con un gimnasio hecho «bien bien». En esta isla la
-historia no cierra el gimnasio; en las siguientes, a menudo sí («ya veremos qué cosas en
-concreto»). **Nada de esto se construye hasta que el autor lo apruebe.**
+desierto en las dunas y con un gimnasio hecho «bien bien». En esta isla la historia no cierra el
+gimnasio; en las siguientes, a menudo sí («ya veremos qué cosas en concreto»). **Nada de esto se
+construye hasta que el autor apruebe el recorrido.** Boceto del mapa: `conceptos/isla-2-boceto.png`.
+
+**Decidido por el autor (2026-11-13):**
+- **Gimnasio de Aire.** Así la inicial de Roca, que lo pasa peor en el primero, tiene un segundo
+  gimnasio fácil, y a la de fuego no le afecta tanto.
+- **Sin zona de agua:** solo hacía falta si el gimnasio era de Tierra.
 
 Lo geográfico es de memoria (confianza media-alta) y, como en Lanzarote, simplificado: se toman
 paisajes y nombres de lugares reales, no obras.
@@ -37,10 +42,9 @@ barco a Gran Canaria. Son 7 zonas en el camino y 2 opcionales: 9, frente a las 7
 5. **Ajuy** (la costa de las cuevas): playa de arena negra, acantilados y las cuevas marinas,
    las rocas más antiguas de Canarias.
    - Un camino por el acantilado hasta la boca de la cueva y, dentro, la cueva con pozas.
-6. **Sotavento** (la zona de agua): una laguna enorme de agua poco profunda.
-   - **Se vadea**: el agua somera es terreno de encuentros, con criaturas de agua, y entre medias
-     quedan bancos de arena.
-   - Entrenadores que hacen kitesurf y el viento de siempre.
+6. **Sotavento** (la playa del viento): el istmo de jable y la playa larga del kitesurf.
+   - Arena con aulagas y hierba seca, viento que no para y cometas de colores en el cielo.
+   - Entrenadores que hacen kitesurf, que anuncian el gimnasio de Aire.
 7. **Morro Jable** (el puerto del sur): el gimnasio, el faro y el barco a Gran Canaria.
 8. **Tindaya** (opcional, al oeste de las Dunas): la montaña sagrada, con sus grabados de pies
    en la roca. Buen sitio para una pista de la historia de la isla que desaparece.
@@ -56,14 +60,14 @@ barco a Gran Canaria. Son 7 zonas en el camino y 2 opcionales: 9, frente a las 7
 | 3. Puerto del Rosario | 32 × 26 |
 | 4. Betancuria | 34 × 30 |
 | 5. Ajuy | 24 × 30, más la cueva |
-| 6. Sotavento | 36 × 28 |
+| 6. Sotavento (playa del viento) | 36 × 28 |
 | 7. Morro Jable | 34 × 28 |
 | 8. Tindaya (opcional) | 26 × 20 |
 | 9. Cofete (opcional) | 30 × 18 |
 
 ## El gimnasio
 
-**Propuesta: gimnasio de Aire.** Fuerteventura es la isla del viento: se ha llegado a decir que su
+**Gimnasio de Aire** (decidido). Fuerteventura es la isla del viento: se ha llegado a decir que su
 nombre viene de ahí, y es la meca del kitesurf.
 
 - **Por dentro, un molino:** una nave con **corrientes de viento** en el suelo. Al pisarlas, te
@@ -72,8 +76,6 @@ nombre viene de ahí, y es la meca del kitesurf.
   una corriente. Hay que elegir bien cuáles girar para llegar a la líder.
 - **Tres o cuatro aprendices** colocados en las corrientes: si te empuja contra uno, te ve.
 - **Ceremonia de la pintadera**, como en Lanzarote. La historia no lo cierra.
-
-Las alternativas son Tierra (el desierto) o Agua (las playas).
 
 ## Niveles
 
@@ -94,9 +96,7 @@ Lo juzga el autor al probarlo.
    aulagas, cabras, la iglesia de Betancuria y el faro de Morro Jable.
 4. **Terrenos nuevos:**
    - arena de duna, que es terreno de encuentros;
-   - cresta de duna, que no se pisa;
-   - agua somera, que se vadea y también es terreno de encuentros;
-   - banco de arena.
+   - cresta de duna, que no se pisa.
 5. **La calima:** neblina ocre y partículas de arena en Las Dunas.
 6. **Corrientes de viento y aspas que giran** (el gimnasio): un movimiento forzado nuevo en el
    núcleo, con sus pruebas.
@@ -113,12 +113,7 @@ Lo juzga el autor al probarlo.
 
 ## Preguntas para el autor
 
-1. **Tipo del gimnasio:** Aire (recomendado), Tierra o Agua.
-2. **La zona de agua:**
-   - agua somera que se vadea (recomendado: no necesita nada nuevo);
-   - o una tabla de surf para cruzar el mar de verdad, más cara. Podría abrir Lobos más adelante
-     y ser de esas cosas de la historia que abren caminos.
-3. **La calima:**
+1. **La calima:**
    - solo se ve (recomendado);
    - o además acorta la vista de los entrenadores y esconde objetos.
-4. **¿Te vale el recorrido y los tamaños,** o quieres cambiar alguna zona?
+2. **¿Te vale el recorrido y los tamaños** (mira el boceto), o quieres cambiar alguna zona?

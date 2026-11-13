@@ -323,18 +323,6 @@ export class Partida implements Subsistema {
         this.ctx.eventos.emit('entrenador:visto', { id: quien.personaje });
       }
     }
-    // Si se sigue andando, el paso siguiente empieza ya, en este mismo paso fijo. Antes se quedaba
-    // quieto uno de cada doce pasos fijos, entre casilla y casilla, y al correr se notaba un tirón
-    // en cada casilla (autor, 2026-11-13). Lo de llegar (hierba, entrenadores, Esc) ya ha pasado.
-    if (this.modo === 'explorar' && !this.alerta && !this.menuPendiente && antes > 0 && this.estado.paso === 0) {
-      const dir = this.entrada.direccion(true);
-      if (dir) {
-        for (const ev of avanzar(this.activo(), this.estado, dir)) {
-          this.atender(ev);
-          if (this.modo !== 'explorar') break;
-        }
-      }
-    }
   }
 
   /** Tras vencer a un entrenador: su premio y, si lo da, su condición (la líder abre el barco). */

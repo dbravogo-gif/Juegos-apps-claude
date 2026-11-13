@@ -43,19 +43,20 @@ propuesta de Claude y qué frena mientras siga abierto.
     - **Propuesta:** los del juego. Parpadean, se cierran al debilitarse y son iguales en
       todas (`prompts-meshy.md`).
 
-11b. **Equilibrio de la tabla nueva** (2026-11-12). Está metida tal cual la mandó el autor.
-    Lo que más se sale:
-    - Acero resiste 8 tipos y es inmune a Veneno.
-    - Planta tiene 5 debilidades y a su ataque le resisten 6.
-    - Infernal resiste 5.
-    - A Bicho le resisten 6 y a Veneno 5. Veneno solo es ×2 contra Planta y Ancestral.
-
-    **Propuestas mínimas**, si el autor quiere retocar:
-    - quitar 3 resistencias a Acero (por ejemplo, ante Planta, Aire y Mental);
-    - quitar a Planta la debilidad ante Bicho o ante Veneno;
-    - quitar a Infernal la resistencia ante Acero.
-
-    Hasta que diga algo, se queda como está. Lucha lleva 9 criaturas (autor, 2026-11-12).
+11b. **Equilibrio de la tabla** (2026-11-13). Hecho lo que pidió el autor: Acero ya no resiste
+    Planta, Aire ni Mental (de 9 resistencias a 6); Bicho ya no es ×2 contra Planta, e Infernal
+    ya no resiste a Acero. Lucha lleva 9 criaturas.
+    - **Veneno, ×2 contra algún tipo más** (lo pide el autor; le resisten 5 y solo gana a Planta
+      y Ancestral). Opciones, a elegir:
+      - **A (recomendada): Común y Agua.** Común solo tiene una debilidad (Lucha) y Agua, dos; el
+        veneno que ensucia el agua tiene sentido.
+      - B: Común y Eléctrico, los dos tipos con una sola debilidad. Equilibra mejor, pero tiene
+        menos sentido.
+      - C: Agua y Bicho, el veneno contra las plagas.
+    - **Bicho** se queda con solo 2 ataques ×2 (Mental y Oscuridad) y le resisten 6: es el más
+      flojo atacando. Conviene darle uno (por ejemplo, ×2 contra Veneno o contra Tierra).
+    - **Tierra contra Roca:** con la quinta inicial (Tierra entre Roca y Agua), la Tierra debería
+      hacer ×2 a la Roca para que el círculo funcione también en combate. Ahora hace ×1.
 
 ## Islas y mundo
 
@@ -118,7 +119,12 @@ propuesta de Claude y qué frena mientras siga abierto.
 
 Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
 
-- **Aprobar Fuerteventura** (`ISLA-2.md`): tipo del gimnasio, zona de agua, calima y recorrido.
+- **Aprobar Fuerteventura** (`ISLA-2.md`, boceto en `conceptos/isla-2-boceto.png`): la calima y
+  el recorrido. El gimnasio será de Aire y no hay zona de agua (decidido).
+- **Tabla de tipos:** elegir a quién más hace ×2 el Veneno (opciones en el punto 11b), si se le
+  da algo a Bicho y si la Tierra hace ×2 a la Roca (para el círculo de cinco).
+- **Quinta inicial (Tierra):** sus estadísticas, su lámina y su GLB, y su nombre. Decir si el
+  total pasa a 203 criaturas o se quita una línea de 3 formas de la lista.
 - **Criaturas:** decir si vale la lista 2 de Lanzarote (`CRIATURAS.md`); pasar las láminas de
   Lucha y las demás, y los nombres de la civeta y de Dragosil.
 - **Entrenadores y zonas de captura de Lanzarote** que hay que mejorar: decir cuáles.

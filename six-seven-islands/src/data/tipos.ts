@@ -1,7 +1,9 @@
 // Los 17 tipos y su tabla. Parten de los 15 de Leyendas de Iberia (decisión del autor); el
 // 2026-11-08 Plasma se fundió en Eléctrico y entraron Bicho y Veneno; el 2026-11-10 Roca sustituyó
 // a Luz, y el 2026-11-12 el autor rehízo la tabla, porque estaba descompensada, y añadió Lucha. Es
-// su tabla tal cual (fotos en conceptos/tipos/). Las pruebas de tests/nucleo.test.ts la vigilan.
+// su tabla (fotos en conceptos/tipos/) con el ajuste del 2026-11-13: Acero ya no resiste Planta,
+// Aire ni Mental; Bicho ya no es eficaz contra Planta, e Infernal ya no resiste a Acero. Las
+// pruebas de tests/nucleo.test.ts la vigilan.
 import type { DefTablaTipos } from '../core/modelo';
 
 export const TIPOS = [
@@ -38,19 +40,19 @@ const RELACIONES: Record<TipoId, Relacion> = {
   comun: { eficaz: [], pocoEficaz: ['roca', 'acero'], sinEfecto: ['espectral'] },
   agua: { eficaz: ['infernal', 'tierra', 'roca', 'ancestral'], pocoEficaz: ['agua', 'planta'], sinEfecto: [] },
   tierra: { eficaz: ['infernal', 'electrico', 'veneno', 'acero'], pocoEficaz: ['planta', 'bicho'], sinEfecto: ['aire'] },
-  planta: { eficaz: ['agua', 'tierra', 'roca'], pocoEficaz: ['infernal', 'planta', 'veneno', 'aire', 'bicho', 'acero'], sinEfecto: [] },
-  aire: { eficaz: ['planta', 'lucha', 'bicho'], pocoEficaz: ['electrico', 'roca', 'acero'], sinEfecto: [] },
+  planta: { eficaz: ['agua', 'tierra', 'roca'], pocoEficaz: ['infernal', 'planta', 'veneno', 'aire', 'bicho'], sinEfecto: [] },
+  aire: { eficaz: ['planta', 'lucha', 'bicho'], pocoEficaz: ['electrico', 'roca'], sinEfecto: [] },
   electrico: { eficaz: ['agua', 'aire'], pocoEficaz: ['electrico', 'planta', 'ancestral'], sinEfecto: ['tierra'] },
   hielo: { eficaz: ['planta', 'tierra', 'aire', 'ancestral'], pocoEficaz: ['infernal', 'agua', 'hielo', 'acero'], sinEfecto: [] },
   infernal: { eficaz: ['planta', 'hielo', 'bicho', 'acero'], pocoEficaz: ['infernal', 'agua', 'roca', 'ancestral'], sinEfecto: [] },
   lucha: { eficaz: ['comun', 'hielo', 'roca', 'oscuridad', 'acero'], pocoEficaz: ['veneno', 'aire', 'mental', 'bicho'], sinEfecto: ['espectral'] },
-  mental: { eficaz: ['lucha', 'veneno'], pocoEficaz: ['mental', 'acero'], sinEfecto: ['oscuridad'] },
+  mental: { eficaz: ['lucha', 'veneno'], pocoEficaz: ['mental'], sinEfecto: ['oscuridad'] },
   oscuridad: { eficaz: ['mental', 'espectral'], pocoEficaz: ['lucha', 'oscuridad'], sinEfecto: [] },
   espectral: { eficaz: ['mental', 'espectral'], pocoEficaz: ['oscuridad'], sinEfecto: ['comun'] },
-  acero: { eficaz: ['hielo', 'roca'], pocoEficaz: ['infernal', 'agua', 'electrico', 'acero'], sinEfecto: [] },
+  acero: { eficaz: ['hielo', 'roca'], pocoEficaz: ['agua', 'electrico', 'acero'], sinEfecto: [] },
   roca: { eficaz: ['infernal', 'hielo', 'aire', 'bicho'], pocoEficaz: ['tierra', 'acero', 'lucha'], sinEfecto: [] },
   ancestral: { eficaz: ['acero'], pocoEficaz: ['ancestral'], sinEfecto: [] },
-  bicho: { eficaz: ['planta', 'mental', 'oscuridad'], pocoEficaz: ['infernal', 'lucha', 'veneno', 'aire', 'espectral', 'acero'], sinEfecto: [] },
+  bicho: { eficaz: ['mental', 'oscuridad'], pocoEficaz: ['infernal', 'lucha', 'veneno', 'aire', 'espectral', 'acero'], sinEfecto: [] },
   veneno: { eficaz: ['planta', 'ancestral'], pocoEficaz: ['veneno', 'tierra', 'roca', 'espectral'], sinEfecto: ['acero'] },
 };
 

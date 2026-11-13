@@ -23,8 +23,9 @@ Del autor, 2026-11-10. Es la «lista de reglas» a la que nos referimos al dise�
 
 ## Cuántas hay
 
-- **200 criaturas en 102 especies:**
-  - las 4 iniciales, de 3 formas: 12 criaturas, con estadísticas propias que pasa el autor;
+- **203 criaturas en 103 especies** (200 y 102 hasta el 2026-11-13, cuando se unió la quinta
+  inicial; falta que el autor diga si se quita una línea de la lista para volver a 200):
+  - las 5 iniciales, de 3 formas: 15 criaturas, con estadísticas propias que pasa el autor;
   - 24 especies de 3 formas de la lista;
   - 42 de 2 formas;
   - 20 sin evolución;
@@ -49,7 +50,7 @@ son de Lucha.
 | Infernal | 16 | Veneno | 12 |
 | Lucha | 9 | | |
 
-Las iniciales suman aparte, por tipo principal: Agua 3, Planta 3, Infernal 3 y Roca 3
+Las iniciales suman aparte, por tipo principal: Agua 3, Planta 3, Infernal 3, Roca 3 y Tierra 3
 (autor, 2026-11-10).
 
 **Enfrentamientos de las iniciales** (mejor ataque de su tipo). El ciclo del autor: el agua
@@ -107,6 +108,7 @@ se usa otra palabra (R8).
 | --- | --- | --- | --- |
 | Cronti → Chicront → Krantacor | Agua · Agua · Agua | Propias (inicial) | Nombre |
 | Armalito → Uralito → Reactolito | Roca · Roca/Veneno · Roca/Veneno | Propias (inicial) | Lámina |
+| Inicial de Tierra (sin nombre, 3), de otro amigo | Tierra · Tierra/Espectral · Tierra/Espectral | Propias (inicial), por llegar | Por diseñar |
 | Caprún → Roquén → Terracorn | Tierra | Shinx → Luxio → Luxray (Q1) | Lámina |
 | Melaní → Favenir → Reginis | Bicho · Bicho/Veneno · Bicho/Veneno | Venipede → Whirlipede → Scolipede (Q1) | Lámina |
 | Magmín → Lavtún → Teidrón | Infernal | Litwick → Lampent → Chandelure (Q1) | Lámina |

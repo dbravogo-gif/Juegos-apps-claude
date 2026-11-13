@@ -34,6 +34,7 @@ import {
 import { clone as clonarConEsqueleto } from 'three/addons/utils/SkeletonUtils.js';
 import type { GLTF } from 'three/addons/loaders/GLTFLoader.js';
 import { PASOS_POR_CASILLA, posicionVisual } from '../../core/explorar';
+import { Suavizado } from './suavizado';
 import { clave, deClave, enIsla, vision, type Direccion, type Personaje as DefPersonaje } from '../../core/mundo';
 import { COLORES } from '../../arte/paleta';
 import { alturaSuelo } from '../../arte/escala';
@@ -98,6 +99,8 @@ export class Personaje implements Subsistema {
   private giro = 0;
   /** Segundos que lleva el jugador sin moverse: entre casilla y casilla hay un instante parado. */
   private quieto = 0;
+  /** Dónde quedó el jugador en los dos últimos pasos fijos, para dibujarlo entre ellos (suavizado.ts). */
+  private readonly suave = new Suavizado();
   private geometrias: BufferGeometry[] = [];
   private materiales: Material[] = [];
   private objetos: Object3D[] = [];
@@ -371,18 +374,31 @@ export class Personaje implements Subsistema {
     f.actual = nombre;
   }
 
-  private colocar(dt: number, alfa: number): void {
+  /** Dónde está el jugador justo al acabar el paso fijo: casilla, fracción del paso y altura. */
+  private exacta(): { x: number; y: number; z: number } {
     const m = this.partida.activo();
     const e = this.partida.estado;
-    const p = posicionVisual(e, alfa);
+    const p = posicionVisual(e, 0);
     const h0 = alturaSuelo(m.casillas.get(clave(e.desdeX, e.desdeY))?.h ?? 0);
     const h1 = alturaSuelo(m.casillas.get(clave(e.x, e.y))?.h ?? 0);
-    const t = e.paso === 0 ? 1 : Math.min(1, (e.paso + alfa) / PASOS_POR_CASILLA);
-    this.posicion.set(p.x, h0 + (h1 - h0) * t, p.y);
+    const t = e.paso === 0 ? 1 : Math.min(1, e.paso / PASOS_POR_CASILLA);
+    return { x: p.x, y: h0 + (h1 - h0) * t, z: p.y };
+  }
+
+  /** Tras cada paso fijo (después de «partida»): se guarda dónde ha quedado el jugador. */
+  pasoFijo(): void {
+    this.suave.paso(this.exacta());
+  }
+
+  private colocar(dt: number, alfa: number): void {
+    const e = this.partida.estado;
+    // Se dibuja entre los dos últimos pasos fijos: a velocidad constante, sin congelarse al
+    // llegar a cada casilla (autor, 2026-11-13).
+    const p = this.suave.en(alfa) ?? this.exacta();
+    this.posicion.set(p.x, p.y, p.z);
     this.jugador.raiz.position.copy(this.posicion);
-    // Al andar seguido ya no se pasa por paso 0 entre casillas («partida» encadena los pasos), pero
-    // al chocar con algo o al soltar y volver a pulsar sí: cambiar a «parado» al instante hacía que
-    // la animación tropezara (el autor veía el andar raro, 2026-11-10).
+    // Andando se pasa un paso fijo por paso 0 al llegar a cada casilla: cambiar a «parado» ahí
+    // hacía que la animación tropezara (el autor veía el andar raro, 2026-11-10).
     this.quieto = e.paso > 0 ? 0 : this.quieto + dt;
     this.animar(this.jugador, this.quieto < 0.12 ? this.jugador.andar : this.jugador.parado);
     let objetivo = GIRO[e.mira];
@@ -391,7 +407,7 @@ export class Personaje implements Subsistema {
     this.giro += (objetivo - this.giro) * Math.min(1, dt * 18 || 1);
     this.jugador.raiz.rotation.y = this.giro;
 
-    const tapado = !e.dentro && this.tapado(Math.round(p.x), Math.round(p.y), this.posicion.y);
+    const tapado = !e.dentro && this.tapado(Math.round(p.x), Math.round(p.z), this.posicion.y);
     this.opacidad += ((tapado ? OPACIDAD_SILUETA : 0) - this.opacidad) * Math.min(1, dt * 10 || 1);
     this.silueta.opacity = this.opacidad;
     for (const malla of this.mallasSilueta) malla.visible = this.opacidad > 0.02;
