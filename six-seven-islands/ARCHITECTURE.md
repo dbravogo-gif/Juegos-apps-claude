@@ -216,6 +216,9 @@ Todo en el núcleo (`core/mundo.ts` y `core/explorar.ts`), igual en zonas e inte
   `alterna` y `aspas`, la dirección cambia mientras se cumple `aspas:<id>`.
 - **Aspas de molino** (`H`, `aspas`): no se pisan; usarlas pone o quita `aspas:<id>`.
 - Vencer a cualquiera cumple `vencido:<id>`. Las salas los dibujan en vivo (`salas.ts`).
+- **Rocas grabadas** (`g`, `letreros`): no se pisan; al mirarlas se lee su texto (cada línea, una
+  caja). Sirven de letreros en cualquier zona (los pies grabados de Tindaya).
+- **Islotes** (`islotes` de la isla, como la silueta): tierra que se ve y no se pisa (Lobos).
 
 ## Guardado
 
@@ -223,8 +226,10 @@ Todo en el núcleo (`core/mundo.ts` y `core/explorar.ts`), igual en zonas e inte
   combate, cada 5 segundos explorando y al cerrar u ocultar la pestaña (`pagehide` y
   `visibilitychange`; en combate no). «Nueva partida», en el menú de pausa, lo borra y vuelve a la
   portada. Cada partida nueva tiene su propio azar; `?semilla=N` lo fija para las pruebas. Va en `localStorage` (`six-seven-islands:partida`), con
-  versión de formato (`core/guardado.ts`). Si el mapa cambia y la casilla guardada ya no se pisa,
-  se vuelve a casa conservando el equipo y los avances. `?nueva` empieza sin cargar.
+  versión de formato (`core/guardado.ts`). Guarda también dónde empezaban la zona actual y la de
+  la puerta (`origenes`, desde el 2026-11-13): si después se mueve una zona o un interior, la
+  posición se mueve con ella (`reubicar`). Si aun así la casilla no se pisa o es de otra zona, se
+  vuelve a casa conservando el equipo y los avances. `?nueva` empieza sin cargar.
 - **Registro de partidas completadas:** con qué iniciales se ha terminado el juego. Va en una
   clave aparte, que sobrevive al empezar una partida nueva, porque lo necesita el regalo por
   rejugar (`DISENO.md`).

@@ -39,7 +39,7 @@ function tierraDeSilueta(m: Mundo, silueta: readonly (readonly [number, number])
   for (let y = 0; y < m.alto; y++) {
     for (let x = 0; x < m.ancho; x++) {
       const k = clave(x, y);
-      if (!m.casillas.has(k) && dentroDe(silueta, x, y)) tierra.add(k);
+      if (!m.casillas.has(k) && (dentroDe(silueta, x, y) || (m.isla.islotes ?? []).some((i) => dentroDe(i, x, y)))) tierra.add(k);
     }
   }
   // Distancia a lo que no es esta tierra (el mar o una zona), por anchura.
@@ -164,6 +164,7 @@ const COLOR_ARRIBA: Partial<Record<Casilla, string>> = {
   D: COLORES.arenaDuna,
   K: COLORES.crestaDuna,
   E: COLORES.arenaDuna,
+  g: COLORES.tierra,
 };
 
 type ColoresIsla = Mundo['isla']['colores'];

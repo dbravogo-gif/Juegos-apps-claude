@@ -19,7 +19,7 @@ import { crearCriatura, curarDelTodo } from '../../core/criatura';
 import { sortearEncuentro } from '../../core/encuentros';
 import { perdidaPorDerrota } from '../../core/economia';
 import { crearRng } from '../../core/rng';
-import { VERSION_GUARDADO, deserializar, serializar, type Guardado } from '../../core/guardado';
+import { VERSION_GUARDADO, deserializar, reubicar, serializar, type Guardado, type Origenes } from '../../core/guardado';
 import type { Criatura } from '../../core/modelo';
 import { DATOS_COMBATE_PRUEBA as DATOS, ESPECIE_INICIAL, MOCHILA_INICIAL } from '../../data/combate-prueba';
 import type { Ctx, Subsistema } from '../../motor/motor';
@@ -177,7 +177,17 @@ export class Partida implements Subsistema {
       dinero: this.dinero,
       nombre: this.nombre,
       persona: this.persona,
+      origenes: this.origenesDe(this.estado, this.activo()) ?? undefined,
     };
+  }
+
+  /** Dónde empiezan la zona actual y la de la puerta (si se está dentro), para el guardado. */
+  private origenesDe(e: EstadoExplorar, mapa: Mundo | undefined): Origenes | null {
+    const z = mapa?.zonas.get(e.zona);
+    if (!z) return null;
+    const f = e.fuera ? this.mundo.zonas.get(e.fuera.zona) : undefined;
+    if (e.fuera && !f) return null;
+    return { actual: { ...z.origen }, ...(f ? { fuera: { ...f.origen } } : {}) };
   }
 
   /** Tras la pantalla del final: se sigue explorando Lanzarote. */
@@ -261,7 +271,7 @@ export class Partida implements Subsistema {
     e.y = e.desdeY = z.origen.y + destino.llegada.y;
     e.zona = destino.llegada.zona;
     e.mira = 's';
-    return { ...this.guardado(), isla: n, explorar: e, ultimoRefugio: destino.refugio };
+    return { ...this.guardado(), isla: n, explorar: e, ultimoRefugio: destino.refugio, origenes: { actual: { ...z.origen } } };
   }
 
   /** Borra la partida guardada y vuelve a la portada (desde el menú, con confirmación). */
@@ -290,9 +300,15 @@ export class Partida implements Subsistema {
    * interior ya no existe), se queda en casa, pero con su equipo, su mochila y sus avances.
    */
   aplicarGuardado(g: Guardado): void {
-    const e = g.explorar;
-    const mapa = e.dentro ? this.interiores.get(e.dentro) : this.mundo;
-    const valido = !!mapa && transitable(mapa, e.x, e.y, { condiciones: new Set(e.condiciones) }) && (!e.fuera || this.mundo.casillas.has(clave(e.fuera.x, e.fuera.y)));
+    const mapa = g.explorar.dentro ? this.interiores.get(g.explorar.dentro) : this.mundo;
+    // Si sus zonas se han movido desde que se guardó, la posición se mueve con ellas.
+    const ahora = this.origenesDe(g.explorar, mapa);
+    const e = g.origenes && ahora ? reubicar(g.explorar, g.origenes, ahora) : g.explorar;
+    const valido =
+      !!mapa &&
+      transitable(mapa, e.x, e.y, { condiciones: new Set(e.condiciones) }) &&
+      mapa.casillas.get(clave(e.x, e.y))?.zona === e.zona &&
+      (!e.fuera || this.mundo.casillas.get(clave(e.fuera.x, e.fuera.y))?.zona === e.fuera.zona);
     if (valido) this.estado = e;
     else {
       this.estado.condiciones = [...e.condiciones];
@@ -487,6 +503,10 @@ export class Partida implements Subsistema {
         this.guardar();
         break;
       }
+      case 'letrero':
+        // Cada línea del texto, una caja del diálogo.
+        this.abrir({ lineas: ev.texto.split('\n').map((texto) => ({ texto })) }, 'letrero');
+        break;
       case 'palanca':
         if (ev.ya) this.abrir({ lineas: [{ texto: 'La palanca ya está bajada. La compuerta sigue abierta.' }] }, 'palanca');
         else {

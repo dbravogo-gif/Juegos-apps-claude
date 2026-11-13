@@ -31,4 +31,17 @@ export const ENCUENTROS_ISLA2: TablaEncuentros = {
     { especie: 'lagartija-de-picon', nivel: [13, 15], peso: 20 },
     { especie: 'chispa-de-colada', nivel: [14, 15], peso: 10 },
   ],
+  // Fase 4, las opcionales: la hierba seca de Tindaya y la hierba alta de Cofete, más fuertes.
+  tindaya: [
+    { especie: 'tabaiba-andante', nivel: [14, 16], peso: 35 },
+    { especie: 'lagartija-de-picon', nivel: [14, 16], peso: 30 },
+    { especie: 'chispa-de-colada', nivel: [15, 16], peso: 25 },
+    { especie: 'cangrejo-de-charco', nivel: [15, 16], peso: 10 },
+  ],
+  cofete: [
+    { especie: 'cangrejo-de-charco', nivel: [17, 19], peso: 35 },
+    { especie: 'lagartija-de-picon', nivel: [17, 19], peso: 30 },
+    { especie: 'tabaiba-andante', nivel: [18, 19], peso: 20 },
+    { especie: 'chispa-de-colada', nivel: [18, 19], peso: 15 },
+  ],
 };

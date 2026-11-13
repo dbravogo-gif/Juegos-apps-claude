@@ -13,4 +13,6 @@ export const OBJETIVOS: readonly { hasta: Condicion; texto: string }[] = [
 /** Nombre con artículo de cada objeto, para «Has encontrado…». */
 export const NOMBRE_OBJETO: Record<string, string> = {
   pocion: 'una Poción',
+  superpocion: 'una Superpoción',
+  'cubo-blanco': 'un Cubo blanco',
 };

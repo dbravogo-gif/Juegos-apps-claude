@@ -4,6 +4,16 @@ Errores ya pagados y la barrera que evita repetirlos (regla R6). Formato: fecha 
 causa · barrera. Lo más reciente va arriba. Si un error vuelve a pasar, su barrera sube de
 nivel: de nota a regla, y de regla a prueba o hook.
 
+- **2026-11-13 · Mover zonas descolocaba las partidas guardadas** (Six-seven islands; visto al
+  ampliar Fuerteventura dos veces).
+  - Causa: el guardado apunta la posición en casillas de la isla entera; al desplazar la isla para
+    que cupieran zonas nuevas, la misma casilla era otro sitio.
+  - Barrera: el guardado lleva también dónde empezaban sus zonas (`origenes`) y, al cargar, la
+    posición se mueve con ellas (`reubicar`, con prueba). Si aun así no cuadra la zona, se vuelve
+    a casa con los avances.
+- **2026-11-13 · Recoger un cubo decía «Has encontrado cubo-blanco.»** (Six-seven islands).
+  - Causa: los nombres al recoger iban en una lista aparte que nadie revisaba al añadir objetos.
+  - Barrera: una prueba exige que todo objeto del suelo, en cualquier isla, exista y tenga nombre.
 - **2026-11-13 · Correr se veía a tirones** (Six-seven islands; lo vio el autor). Segunda vez que
   el andar no se ve fluido: el 2026-11-10 fue la animación.
   - Causa: se dibujaba adelantando la posición con la fracción del paso siguiente, salvo al

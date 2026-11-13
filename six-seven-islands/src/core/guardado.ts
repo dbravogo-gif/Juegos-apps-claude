@@ -27,6 +27,43 @@ export interface Guardado {
   /** El nombre y la persona elegidos al empezar (desde el 2026-11-12). */
   nombre?: string;
   persona?: string;
+  /**
+   * Dónde empezaban, al guardar, la zona actual y la de la puerta por la que se entró (desde el
+   * 2026-11-13). Si después se mueve una zona o un interior, la posición se corrige con ellos.
+   */
+  origenes?: Origenes;
+}
+
+export interface Punto {
+  x: number;
+  y: number;
+}
+
+export interface Origenes {
+  /** El origen de la zona actual (de la isla o del interior). */
+  actual: Punto;
+  /** El de la zona de la puerta, si se está dentro de un interior. */
+  fuera?: Punto;
+}
+
+/**
+ * La exploración guardada, movida lo mismo que se hayan movido sus zonas desde que se guardó
+ * (`antes`) hasta ahora (`ahora`). Las posiciones son de la isla entera: sin esto, mover una zona
+ * dejaría al jugador en otra casilla (APRENDIDO.md).
+ */
+export function reubicar(e: EstadoExplorar, antes: Origenes, ahora: Origenes): EstadoExplorar {
+  const r = structuredClone(e);
+  const dx = ahora.actual.x - antes.actual.x;
+  const dy = ahora.actual.y - antes.actual.y;
+  r.x += dx;
+  r.desdeX += dx;
+  r.y += dy;
+  r.desdeY += dy;
+  if (r.fuera && antes.fuera && ahora.fuera) {
+    r.fuera.x += ahora.fuera.x - antes.fuera.x;
+    r.fuera.y += ahora.fuera.y - antes.fuera.y;
+  }
+  return r;
 }
 
 export function serializar(g: Guardado): string {
