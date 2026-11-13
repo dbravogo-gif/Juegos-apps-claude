@@ -1,8 +1,9 @@
 // Diálogos de la isla 1, Lanzarote, por id de personaje (src/core/guion.ts). Contenido propio.
-// Las cuatro leyendas tienen su rival (autor, 2026-11-10): la verde, la infernal; la del agua, la
-// verde; la infernal, la del agua; y la de roca, la verde, cuyas raíces parten la piedra. La
-// historia de la leyenda de roca es provisional: se escribe con el autor. Los personajes sin
-// diálogo aquí dicen su `frase` del mapa.
+// Las cuatro leyendas guiaban cuatro naciones enfrentadas (autor, 2026-11-13). Cada una tiene
+// como enemiga a la que le gana en el ciclo de tipos: el fuego ataca a la roca, la roca avanza
+// sobre el agua, el agua lucha con la planta y la planta odia al fuego. Textos provisionales hasta
+// la historia del autor (PROMPT-HISTORIA.md). Los personajes sin diálogo aquí dicen su `frase`
+// del mapa.
 
 import type { Dialogo, Guion, Linea } from '../core/guion';
 
@@ -13,22 +14,22 @@ const HISTORIA: Record<string, readonly Linea[]> = {
   planta: [
     { texto: 'Una placa dice: «La leyenda verde vivía en los hoyos de picón, donde la vid crece sin apenas lluvia».' },
     { texto: '«Cuando el volcán cubrió la isla de ceniza, hizo brotar la vida otra vez entre la lava».' },
-    { texto: '«Su eterna rival fue la leyenda infernal, que sepultó sus campos bajo el fuego».' },
+    { texto: '«Su pueblo odiaba al de la leyenda infernal, que sepultó sus campos bajo el fuego».' },
   ],
   agua: [
     { texto: 'Una placa dice: «La leyenda del agua dormía en los jameos, las cuevas de lava donde entra el mar».' },
     { texto: '«Traía la humedad del océano a una isla casi sin lluvia, y apagaba las coladas al llegar a la costa».' },
-    { texto: '«Luchó contra la vida verde, que le robaba con sus raíces la poca agua de la isla».' },
+    { texto: '«Su pueblo luchó contra el de la leyenda verde, que le robaba con sus raíces la poca agua de la isla».' },
   ],
   infernal: [
     { texto: 'Una placa dice: «La leyenda infernal nació bajo las Montañas del Fuego, donde la tierra aún quema».' },
     { texto: '«Durante seis años hizo arder la isla y la hizo crecer hacia el mar».' },
-    { texto: '«Su enemiga fue la leyenda del agua, que enfriaba su lava antes de llegar a la costa».' },
+    { texto: '«Su pueblo, el más agresivo, atacó sin descanso al de la leyenda de roca, que sepultaba sus coladas».' },
   ],
   roca: [
     { texto: 'Una placa dice: «La leyenda de roca dormía en el risco del norte, el acantilado más alto de la isla».' },
     { texto: '«Cuando una colada bajaba hacia los pueblos, se ponía delante y la sepultaba bajo su caparazón de piedra».' },
-    { texto: '«Su rival fue la leyenda verde, que metía sus raíces en las grietas de la roca hasta partirla».' },
+    { texto: '«Su pueblo avanzaba sobre el mar: cada colada enfriada era tierra ganada al pueblo de la leyenda del agua».' },
   ],
 };
 

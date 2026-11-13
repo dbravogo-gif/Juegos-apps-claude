@@ -4,6 +4,19 @@ Errores ya pagados y la barrera que evita repetirlos (regla R6). Formato: fecha 
 causa · barrera. Lo más reciente va arriba. Si un error vuelve a pasar, su barrera sube de
 nivel: de nota a regla, y de regla a prueba o hook.
 
+- **2026-11-13 · Correr se veía a tirones** (Six-seven islands; lo vio el autor). Segunda vez que
+  el andar no se ve fluido: el 2026-11-10 fue la animación.
+  - Causa: entre casilla y casilla el jugador se quedaba quieto un paso fijo de cada doce. Se
+    tapó en la animación, pero no en la posición.
+  - Barrera: «partida» encadena el paso siguiente al llegar, y `estado()` dice `paso`. Para
+    comprobarlo, se cuentan los fotogramas con `paso` 0 mientras se mantiene una flecha en un
+    tramo libre: tienen que ser 0.
+- **2026-11-13 · La inicial de fuego salía casi negra** (lo vio el autor).
+  - Causa: la textura de Meshy salió más oscura que su dibujo (gris 53 frente a 65), y en
+    pantalla, sin luz del juego, el cuerpo quedaba en 23.
+  - Barrera: al meter un modelo de Meshy, se compara el gris o el color medio de su cuerpo en
+    pantalla con el de su dibujo. Si se va mucho, se corrige con `RETOQUE` en
+    `arte/criaturas3d.ts`, o se rehace la textura.
 - **2026-11-11 · Entrenadores opcionales que no veían el camino** (Six-seven islands; lo vio el
   autor). Uno miraba a tres casillas que se quedaban a una del camino; otro estaba en una salita
   aparte.

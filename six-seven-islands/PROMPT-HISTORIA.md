@@ -45,7 +45,18 @@ preguntas sobre lo que no tengas claro. Después, escribe por partes y espera a 
   - **Infernal** (fuego): un elefante con orejas de fuego que acaba en mamut acorazado.
   - **Roca:** un armadillo de piedra. Desde su segunda forma, también es de tipo Veneno.
   - Ciclo de las cuatro: el agua gana a la roca, la roca al fuego, el fuego a la planta y la
-    planta al agua. Las leyendas pueden reflejar esas rivalidades.
+    planta al agua.
+- **Cuatro naciones enfrentadas** (idea del autor, 2026-11-13). En la antigüedad, cada leyenda
+  guiaba a un pueblo, y cada pueblo tiene como enemigo máximo al que le gana en el ciclo:
+  - **el Fuego**, agresivo, ataca a la Roca;
+  - **la Roca** avanza sin parar sobre el Agua: la lava que se enfría gana terreno al mar;
+  - **el Agua** se enfrenta a la Planta, que le roba la poca agua de la isla con sus raíces;
+  - **la Planta** odia al Fuego, que quema sus campos.
+
+  Es un círculo: nadie gana a todos y todos tienen a quien temer. Las leyendas del museo y la
+  historia deben contar esa guerra antigua y qué queda de ella hoy. Que la idea de pueblos
+  elementales enfrentados sea solo eso, una idea: nada de nombres, personajes ni elementos de
+  ninguna serie o película.
 - **La inicial es rebelde:** no obedece siempre hasta que un anciano del pueblo (La Geria) te
   cuenta su historia.
 - **El equipo enemigo cambia según la inicial elegida:** hay cuatro variantes, con su propia
@@ -75,7 +86,8 @@ preguntas sobre lo que no tengas claro. Después, escribe por partes y espera a 
 
 1. **Premisa** en 5 líneas: de qué va la aventura y por qué desapareció El Hierro (puede quedar
    en misterio, pero tú dime la respuesta).
-2. **Las cuatro leyendas del museo**, unas 6 líneas cada una.
+2. **Las cuatro leyendas del museo**, unas 6 líneas cada una, contando la guerra de las cuatro
+   naciones desde el lado de cada una.
 3. **Las cuatro variantes del equipo enemigo:** nombre, qué quieren, cómo visten, quién manda y
    cómo se relaciona con su inicial.
 4. **El arco de las 7 islas**, un párrafo por isla: qué pasa, qué descubres y qué hace el

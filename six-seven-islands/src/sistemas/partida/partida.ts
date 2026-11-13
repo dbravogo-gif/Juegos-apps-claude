@@ -323,6 +323,18 @@ export class Partida implements Subsistema {
         this.ctx.eventos.emit('entrenador:visto', { id: quien.personaje });
       }
     }
+    // Si se sigue andando, el paso siguiente empieza ya, en este mismo paso fijo. Antes se quedaba
+    // quieto uno de cada doce pasos fijos, entre casilla y casilla, y al correr se notaba un tirón
+    // en cada casilla (autor, 2026-11-13). Lo de llegar (hierba, entrenadores, Esc) ya ha pasado.
+    if (this.modo === 'explorar' && !this.alerta && !this.menuPendiente && antes > 0 && this.estado.paso === 0) {
+      const dir = this.entrada.direccion(true);
+      if (dir) {
+        for (const ev of avanzar(this.activo(), this.estado, dir)) {
+          this.atender(ev);
+          if (this.modo !== 'explorar') break;
+        }
+      }
+    }
   }
 
   /** Tras vencer a un entrenador: su premio y, si lo da, su condición (la líder abre el barco). */
@@ -574,6 +586,8 @@ export class Partida implements Subsistema {
     zona: string;
     dentro: string | null;
     posicion: { x: number; y: number };
+    /** Por dónde va el paso en curso (0: parado o recién llegado). */
+    paso: number;
     condiciones: Condicion[];
     inicial: string | null;
     dialogo: string | null;
@@ -588,6 +602,7 @@ export class Partida implements Subsistema {
       zona: this.estado.zona,
       dentro: this.estado.dentro,
       posicion: { x: this.estado.x - z.origen.x, y: this.estado.y - z.origen.y },
+      paso: this.estado.paso,
       condiciones: [...this.estado.condiciones],
       inicial: this.estado.inicial,
       dialogo: this.dialogo ? lineaActual(this.dialogo).texto : null,
