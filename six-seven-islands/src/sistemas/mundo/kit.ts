@@ -487,6 +487,18 @@ export function estatuaEnterrada(semilla: number): BufferGeometry {
 }
 
 /**
+ * Un lomo de duna (Las Dunas, Fuerteventura; 2026-11-13): una cúpula de arena baja y ancha, que se
+ * sale un poco de su casilla para fundirse con las de al lado. Puestos en fila, las crestas que no
+ * se pisan quedan redondeadas en vez de en bloques.
+ */
+export function lomoDuna(semilla: number): BufferGeometry {
+  const M = new Montaje();
+  const cupula = new SphereGeometry(0.5, 12, 5, 0, Math.PI * 2, 0, Math.PI / 2).scale(1.55, 1.25, 1.55);
+  M.pon(abollar(cupula, 0.03, semilla), COLORES.crestaDuna);
+  return M.fusionar();
+}
+
+/**
  * Una roca con grabados de pies (Tindaya, Fuerteventura; 2026-11-13): una laja clara y casi plana,
  * con pares de huellas oscuras talladas encima, todas mirando hacia el mismo lado. Las de verdad son
  * de los antiguos majoreros; aquí solo se toma la idea de pies tallados en la roca.
@@ -554,6 +566,7 @@ export const KIT = {
   toalla,
   estatua: estatuaEnterrada,
   grabado: rocaGrabada,
+  duna: lomoDuna,
 } satisfies Record<string, (semilla: number) => BufferGeometry>;
 
 export type PiezaKit = keyof typeof KIT;
@@ -585,6 +598,7 @@ export const VARIANTES: Record<PiezaKit, number> = {
   toalla: 3,
   estatua: 1,
   grabado: 1,
+  duna: 2,
 };
 
 /** La geometría de una variante de una pieza del kit. */

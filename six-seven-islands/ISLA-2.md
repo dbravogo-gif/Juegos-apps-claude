@@ -114,8 +114,7 @@ Lo juzga el autor al probarlo.
 - Las Dunas tienen las crestas en zigzag, la calima, el horno de cal, la arqueóloga con su estatua
   y tres entrenadores perdidos.
 - El camino del sur queda tapado por una duna hasta la fase 2.
-- Provisional: las crestas son bloques de arena (se pueden redondear), las salvajes son de
-  relleno y Lobos aún no se ve en el mar.
+- Provisional: las salvajes son de relleno.
 
 **Fase 2, hecha (2026-11-13).**
 - **Puerto del Rosario:** refugio, tienda, tres casas, el muelle, el paseo de palmeras y una
@@ -152,14 +151,15 @@ Lo juzga el autor al probarlo.
 - **Lobos** se ve desde el muelle de Corralejo, con su volcán, y no se pisa.
 - La isla se desplazó otra vez (60 al este y 10 al sur) para que quepan Cofete y Lobos. Las
   partidas guardadas ya sobreviven a estos cambios (`origenes` del guardado).
-- Falta: redondear las crestas de las dunas y la revisión del probador (fases 2 a 4).
+- Las crestas de las dunas ya son lomos redondos (kit `duna`), estirados hacia sus vecinas.
+- Falta: la revisión del probador (fases 2 a 4).
 
 | Fase | Qué | Coste |
 | --- | --- | --- |
 | 1 | Varias islas y viaje en barco; Corralejo y Las Dunas jugables (**hecha**, 2026-11-13) | alto |
 | 2 | Puerto del Rosario, Betancuria y Ajuy con su cueva (**hecha**, 2026-11-13) | alto |
 | 3 | Sotavento y Morro Jable con el gimnasio de Aire (**hecha**, 2026-11-13) | alto |
-| 4 | Tindaya y Cofete, entrenadores, pulido y revisión del probador (**casi hecha**: faltan las crestas y el probador) | medio |
+| 4 | Tindaya y Cofete, entrenadores, pulido y revisión del probador (**casi hecha**: falta el probador) | medio |
 
 ## Decisiones del autor (2026-11-13)
 

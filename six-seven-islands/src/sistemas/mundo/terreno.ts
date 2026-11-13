@@ -124,8 +124,8 @@ export function alturaCara(cm: CasillaMundo | undefined, cumbre: number | undefi
       return alturaSuelo(cm.h) - 0.15;
     case '#':
       return alturaSuelo(cm.h) + 0.9;
-    case 'K': // la cresta de la duna, más alta que la arena que se pisa
-      return alturaSuelo(cm.h) + 0.7;
+    case 'K': // la cresta de la duna: el lomo redondo lo pone «mundo» encima (kit `duna`)
+      return alturaSuelo(cm.h) + 0.1;
     case '"':
     case ';':
       return alturaSuelo(cm.h) + SUBIDA_ENCUENTRO;
