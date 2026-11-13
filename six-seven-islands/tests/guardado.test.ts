@@ -1,7 +1,7 @@
 // El guardado (F10): guardar y cargar da el mismo estado, el código exportado se importa igual y
 // lo que no es un guardado válido no se carga.
 import { describe, expect, it } from 'vitest';
-import { deserializar, exportarCodigo, importarCodigo, serializar, VERSION_GUARDADO, type Guardado } from '../src/core/guardado';
+import { deserializar, exportarCodigo, importarCodigo, reubicar, serializar, VERSION_GUARDADO, type Guardado } from '../src/core/guardado';
 import { crearExploracion } from '../src/core/explorar';
 import { construirMundo } from '../src/core/mundo';
 import { crearCriatura } from '../src/core/criatura';
@@ -45,5 +45,14 @@ describe('guardado', () => {
     expect(deserializar(JSON.stringify({ ...ejemplo(), equipo: 'nada' }))).toBeNull();
     expect(importarCodigo('hola')).toBeNull();
     expect(importarCodigo('SSI1:%%%')).toBeNull();
+  });
+
+  it('si una zona se mueve, la posición guardada se mueve con ella (también la de la puerta)', () => {
+    const e = { ...crearExploracion(construirMundo(ISLA_1)), x: 50, y: 20, desdeX: 49, desdeY: 20, fuera: { x: 70, y: 30, zona: 'capital' } };
+    const r = reubicar(e, { actual: { x: 40, y: 10 }, fuera: { x: 60, y: 25 } }, { actual: { x: 70, y: 12 }, fuera: { x: 90, y: 25 } });
+    expect([r.x, r.desdeX, r.y, r.desdeY]).toEqual([80, 79, 22, 22]);
+    expect(r.fuera).toEqual({ x: 100, y: 30, zona: 'capital' });
+    // Sin tocar el original.
+    expect(e.x).toBe(50);
   });
 });

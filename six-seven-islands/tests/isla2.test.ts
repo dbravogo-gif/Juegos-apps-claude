@@ -1,5 +1,5 @@
-// Fuerteventura, fase 1 (2026-11-13; ISLA-2.md): Corralejo y Las Dunas. Desde el muelle se llega a
-// todo; las zonas se tocan; los entrenadores ven por donde se pasa; el camino del sur, cerrado.
+// Fuerteventura (2026-11-13; ISLA-2.md): de Corralejo a Morro Jable, con Tindaya y Cofete. Desde el
+// muelle se llega a todo; las zonas se tocan; los entrenadores ven por donde se pasa.
 import { describe, expect, it } from 'vitest';
 import { alcanzables, clave, construirInterior, construirMundo, deClave, transitable, vision, DE_ENCUENTROS } from '../src/core/mundo';
 import { interactuar, crearExploracion } from '../src/core/explorar';
@@ -16,6 +16,9 @@ const vecinas = (k: number) => {
   const [x, y] = deClave(k);
   return [clave(x + 1, y), clave(x - 1, y), clave(x, y + 1), clave(x, y - 1)];
 };
+
+/** Las zonas que no están en el camino al gimnasio (ISLA-2.md). */
+const OPCIONALES = ['tindaya', 'cofete'];
 
 describe('Fuerteventura (isla 2)', () => {
   it('está registrada con su número y su llegada se pisa en las dos islas', () => {
@@ -77,6 +80,36 @@ describe('Fuerteventura (isla 2)', () => {
     expect([...sinVer].some((k) => m.casillas.get(k)?.zona === 'ajuy')).toBe(false);
   });
 
+  it('a Tindaya se llega desde Las Dunas y a Cofete desde Morro Jable, y sin ellas se cruza igual', () => {
+    for (const z of OPCIONALES) expect([...r].some((k) => m.casillas.get(k)?.zona === z), z).toBe(true);
+    // Las opcionales no son de paso: sin pisarlas, se llega igual al gimnasio.
+    const prohibidas = new Set([...m.casillas].filter(([, c]) => OPCIONALES.includes(c.zona)).map(([k]) => k));
+    const sin = alcanzables(m, [llegada], { prohibidas });
+    const [xy] = Object.entries(PUERTAS_ISLA2.morro).find(([, sala]) => sala === 'gimnasio-aire')!;
+    const [x, y] = xy.split(',').map(Number);
+    expect(vecinas(enIsla('morro', x, y)).some((v) => sin.has(v))).toBe(true);
+  });
+
+  it('en la cima de Tindaya y en el paso de Cofete, el entrenador no se esquiva', () => {
+    const casos: [string, string, (k: number) => boolean][] = [
+      ['tindaya', 'peregrino-tindaya', (k) => k === enIsla('tindaya', 8, 10)],
+      ['cofete', 'pastor-jandia', (k) => m.casillas.get(k)?.zona === 'cofete' && m.casillas.get(k)?.c === 'a'],
+    ];
+    for (const [z, id, meta] of casos) {
+      const p = zona(z).personajes.find((q) => q.id === id)!;
+      const sinVer = alcanzables(m, [llegada], { prohibidas: new Set(vision(m, z, p)) });
+      expect([...sinVer].some(meta), id).toBe(false);
+      expect([...r].some(meta), id).toBe(true);
+    }
+  });
+
+  it('las rocas grabadas de Tindaya se leen al mirarlas', () => {
+    const e = { ...crearExploracion(m), x: zona('tindaya').origen.x + 7, y: zona('tindaya').origen.y + 10, mira: 'n' as const, zona: 'tindaya' };
+    const [ev] = interactuar(m, e);
+    expect(ev?.tipo).toBe('letrero');
+    expect(ev?.tipo === 'letrero' && ev.texto).toContain('pies');
+  });
+
   it('la cueva de Ajuy se entra por la boca del acantilado y tiene su objeto', () => {
     const cueva = FUERTEVENTURA.interiores.find((d) => d.id === 'cueva-ajuy')!;
     expect(cueva).toBeDefined();
@@ -103,12 +136,13 @@ describe('Fuerteventura (isla 2)', () => {
     expect(FUERTEVENTURA.interiores.some((d) => d.id === FUERTEVENTURA.refugio)).toBe(true);
   });
 
-  it('sus salvajes existen y van del nivel 10 al 17', () => {
-    for (const t of Object.values(FUERTEVENTURA.encuentros)) {
+  it('sus salvajes existen y van del nivel 10 al 17; en las opcionales, hasta el 19', () => {
+    for (const [zona, t] of Object.entries(FUERTEVENTURA.encuentros)) {
+      const tope = OPCIONALES.includes(zona) ? 19 : 17;
       for (const e of t) {
         expect(DATOS.especies[e.especie], e.especie).toBeDefined();
         expect(e.nivel[0]).toBeGreaterThanOrEqual(10);
-        expect(e.nivel[1]).toBeLessThanOrEqual(17);
+        expect(e.nivel[1], zona).toBeLessThanOrEqual(tope);
       }
     }
   });

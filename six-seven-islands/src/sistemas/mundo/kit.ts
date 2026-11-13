@@ -487,6 +487,24 @@ export function estatuaEnterrada(semilla: number): BufferGeometry {
 }
 
 /**
+ * Una roca con grabados de pies (Tindaya, Fuerteventura; 2026-11-13): una laja clara y casi plana,
+ * con pares de huellas oscuras talladas encima, todas mirando hacia el mismo lado. Las de verdad son
+ * de los antiguos majoreros; aquí solo se toma la idea de pies tallados en la roca.
+ */
+export function rocaGrabada(semilla: number): BufferGeometry {
+  const M = new Montaje();
+  M.pon(abollar(new BoxGeometry(0.9, 0.26, 0.8, 3, 1, 3), 0.05, semilla).translate(0, 0.13, 0), '#C9A97E', 0.95);
+  // Las huellas: dos plantas de pie por par, alargadas, con los dedos hacia el norte.
+  const pares: [number, number][] = [[-0.2, -0.15], [0.18, 0.12], [-0.12, 0.22]];
+  for (const [x, z] of pares) {
+    for (const s of [-1, 1]) {
+      M.pon(new CylinderGeometry(0.05, 0.05, 0.02, 8).scale(1, 1, 2.1).translate(x + s * 0.065, 0.265, z), '#6E5238');
+    }
+  }
+  return M.fusionar();
+}
+
+/**
  * La boca de una cueva marina en el acantilado (Ajuy, Fuerteventura; 2026-11-13): un risco de roca
  * oscura del tamaño del solar, con un arco negro donde está la puerta (`puerta`, en casillas desde
  * el centro). Se entra por él como por la puerta de una casa.
@@ -535,6 +553,7 @@ export const KIT = {
   sombrilla,
   toalla,
   estatua: estatuaEnterrada,
+  grabado: rocaGrabada,
 } satisfies Record<string, (semilla: number) => BufferGeometry>;
 
 export type PiezaKit = keyof typeof KIT;
@@ -565,6 +584,7 @@ export const VARIANTES: Record<PiezaKit, number> = {
   sombrilla: 2,
   toalla: 3,
   estatua: 1,
+  grabado: 1,
 };
 
 /** La geometría de una variante de una pieza del kit. */

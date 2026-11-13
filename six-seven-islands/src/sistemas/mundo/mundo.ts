@@ -344,6 +344,8 @@ export class Mundo implements Subsistema {
         colocarKit('toalla', r, x, y, suelo, 1, 0);
       } else if (cm.c === 'E') {
         colocarKit('estatua', r, x, y, suelo, 1, 0);
+      } else if (cm.c === 'g') {
+        colocarKit('grabado', r, x, y, suelo, 1, 0);
       } else if (cm.c === 'U') {
         this.subirTapa(k, colocarKit('tunera', r, x + dx, y + dz, suelo, 1 + ((r >>> 4) & 3) * 0.1, giro));
       } else if (cm.c === 'L' && r % 6 === 0) {

@@ -1,7 +1,6 @@
 # Generador de la isla 2, Fuerteventura (2026-11-13; ISLA-2.md): dibuja cada zona con rectángulos
 # y caminos y escribe src/data/isla2.ts con el mapa, los personajes y a qué sala lleva cada puerta.
-# Fase 1: Corralejo, donde llega el barco de Lanzarote, y Las Dunas, el desierto. El camino del sur
-# queda cerrado por una duna hasta la fase 2.
+# Siete zonas en el camino, de Corralejo a Morro Jable, y dos opcionales: Tindaya y Cofete.
 # Uso, desde six-seven-islands/: python3 herramientas/isla2.py src/data/isla2.ts
 import sys
 
@@ -62,6 +61,7 @@ z.r(17, 1, 5, 4, ':')
 z.r(31, 9, 6, 4, ':')                                           # el horno de cal en ruinas
 z.r(31, 9, 6, 1, '#'); z.r(31, 9, 1, 4, '#'); z.r(36, 9, 1, 4, '#'); z.p(33, 9, ':'); z.p(34, 9, ':')
 z.r(3, 16, 8, 4, ':')                                           # el campamento de la arqueóloga
+z.r(0, 17, 3, 2, ':')                                           # salida al oeste, hacia Tindaya (opcional)
 z.p(6, 17, 'E')                                                 # la estatua medio enterrada
 z.r(22, 23, 6, 3, ':'); z.r(12, 30, 6, 3, ':'); z.r(17, 33, 5, 2, ':')
 zonas['dunas'] = dict(nombre='Las Dunas', origen=(33, 20), z=z, altura=0, hierba=True, clima='calima')
@@ -135,7 +135,7 @@ z = Z(34, 26, ':'); z.borde('#')
 z.r(15, 0, 3, 1, ',')
 z.r(1, 20, 32, 5, '~'); z.r(1, 18, 32, 2, 'a')                  # el mar y la playa
 z.camino([(15,0),(15,17)], ancho=3)
-z.camino([(1,8),(32,8)]); z.camino([(1,14),(32,14)]); z.camino([(1,17),(32,17)])
+z.camino([(0,8),(32,8)]); z.camino([(1,14),(32,14)]); z.camino([(1,17),(32,17)])   # la calle de arriba sale al oeste, a Cofete
 z.edificio(2, 5, 5, 3, 'R', 4, 'refugio-morro')
 z.edificio(9, 5, 4, 3, 'S', 10, 'tienda-morro')
 z.edificio(22, 3, 7, 5, 'G', 25, 'gimnasio-aire')
@@ -146,17 +146,76 @@ z.r(18, 20, 2, 3, 'P'); z.r(20, 21, 2, 2, 'B')                  # el muelle y el
 for x, y in ((8, 11), (13, 11), (19, 11), (30, 10)): z.p(x, y, 'T')
 zonas['morro'] = dict(nombre='Morro Jable', origen=(6-30, 120), z=z, altura=0, casas='lanzarote')
 
-# Toda la isla, 30 casillas al este: así cabe la costa oeste (Ajuy), sin coordenadas negativas.
-DESPLAZAMIENTO = 30
-for v in zonas.values(): v['origen'] = (v['origen'][0] + DESPLAZAMIENTO, v['origen'][1])
+
+# 8. Tindaya (26 × 20, opcional): la montaña sagrada, al oeste de Las Dunas (entrada al este, y
+# 9..10, junto al campamento de la arqueóloga). Un llano seco con hierba y, en medio, la montaña:
+# una senda sube dando la vuelta hasta la cima, con rocas de pies grabados y una guardiana que
+# cuenta la leyenda de la isla que aparece y desaparece (la pista de la isla secreta, DISENO.md).
+z = Z(26, 20, ':'); z.borde('#')
+z.r(25, 9, 1, 2, ',')                                           # entrada desde Las Dunas
+z.r(2, 2, 14, 16, '#')                                          # la montaña
+z.camino([(16,10),(24,10)])                                     # del llano al pie de la montaña
+z.camino([(13,10),(15,10)]); z.camino([(13,10),(13,15)]); z.camino([(4,15),(13,15)])   # la senda, por el sur
+z.camino([(4,4),(4,15)]); z.camino([(4,4),(11,4)]); z.camino([(11,4),(11,6)])         # por el oeste y el norte
+z.r(4, 8, 1, 5, '"')                                            # hierba seca en la subida: no se esquiva
+z.r(6, 7, 6, 6, ':')                                            # la cima
+z.p(7, 9, 'g'); z.p(10, 9, 'g')                                 # rocas con pies grabados
+z.r(18, 2, 6, 4, '"'); z.r(17, 13, 6, 4, '"')                   # hierba seca del llano
+z.r(20, 7, 2, 2, 'U')
+alt = []
+for y in range(20):
+    fila = ''
+    for x in range(26):
+        h = 3 if (6 <= x <= 11 and 7 <= y <= 12) else 2 if (4 <= x <= 13 and 4 <= y <= 15) else 1 if (2 <= x <= 15 and 2 <= y <= 17) else 0
+        fila += str(h)
+    alt.append(fila)
+zonas['tindaya'] = dict(nombre='Tindaya', origen=(7, 28), z=z, alturas=alt, hierba=True)
+
+# 9. Cofete (30 × 18, opcional): la playa salvaje del oeste, detrás de las montañas de Jandía. Se
+# llega desde Morro Jable (entrada al este, y 10) por un paso que sube en zigzag entre las
+# montañas. Playa larga y sin nadie, una casa solitaria en la ladera y criaturas fuertes.
+z = Z(30, 18, ':'); z.borde('#')
+z.p(29, 10, ',')                                                # entrada desde Morro Jable
+z.r(1, 1, 4, 16, '~'); z.r(5, 1, 5, 16, 'a')                    # el mar y la playa larga
+z.r(19, 1, 10, 16, '#')                                         # las montañas de Jandía
+z.camino([(26,10),(28,10)]); z.camino([(26,4),(26,10)]); z.camino([(21,4),(26,4)])    # el paso: sube
+z.camino([(21,4),(21,13)]); z.camino([(18,13),(21,13)])                               # y baja
+z.r(22, 7, 1, 3, ':')                                           # un rellano en la bajada (el pastor)
+z.r(10, 6, 7, 4, '"'); z.r(11, 12, 6, 4, '"')                   # hierba alta, de criaturas fuertes
+z.edificio(13, 1, 4, 3, 'C', 14, 'casa-cofete')                 # la casa solitaria
+z.p(17, 11, 'U'); z.p(18, 6, 'U')
+alt = []
+for y in range(18):
+    fila = ''
+    for x in range(30):
+        c = z.g[y][x]
+        if x < 19: h = 0
+        elif c == '#': h = 3 if 22 <= x <= 25 else 2
+        elif (x == 26 and y <= 6) or (y == 4) or (x == 21 and y <= 8) or (x == 22 and 7 <= y <= 9): h = 2
+        else: h = 1
+        fila += str(h)
+    alt.append(fila)
+zonas['cofete'] = dict(nombre='Cofete', origen=(-54, 118), z=z, alturas=alt, hierba=True)
+
+# Toda la isla, 60 casillas al este y 10 al sur: así caben la costa oeste (Ajuy y Cofete) y Lobos,
+# al norte de Corralejo, sin coordenadas negativas. Las coordenadas de arriba y las de la silueta
+# están sin desplazar. Mover zonas ya no rompe las partidas guardadas (`origenes` del guardado).
+DESPLAZAMIENTO = 60
+DESPLAZAMIENTO_Y = 10
+for v in zonas.values(): v['origen'] = (v['origen'][0] + DESPLAZAMIENTO, v['origen'][1] + DESPLAZAMIENTO_Y)
 
 # La costa de Fuerteventura, aproximada: de la punta de Corralejo por la costa este hasta Puerto
-# del Rosario, y por la oeste, Ajuy, Sotavento y Morro Jable. En casillas, ya con el
-# desplazamiento; los .5 caen entre casillas.
-SILUETA = [(68.5,3.5),(75.5,0.5),(96.5,0.5),(104.5,5.5),(107.5,20.5),(106.5,45.5),(100.5,56.5),
-           (96.5,82.5),(88.5,96.5),(66.5,100.5),(50.5,102.5),(45.5,110.5),(44.5,124.5),(40.5,140.5),
-           (30.5,143.5),(12.5,143.5),(4.5,138.5),(4.5,120.5),(8.5,108.5),(9.5,96.5),(9.5,70.5),
-           (16.5,61.5),(34.5,59.5),(56.5,57.5),(60.5,45.5),(61.5,20.5),(64.5,8.5)]
+# del Rosario, y por la oeste, Morro Jable, Cofete, Sotavento, Ajuy y Tindaya. En casillas, sin
+# desplazar; los .5 caen entre casillas. Entre Cofete y Sotavento, las montañas de Jandía.
+SILUETA = [(38.5,3.5),(45.5,0.5),(66.5,0.5),(74.5,5.5),(77.5,20.5),(76.5,45.5),(70.5,56.5),
+           (66.5,82.5),(58.5,96.5),(36.5,100.5),(20.5,102.5),(15.5,110.5),(14.5,124.5),(10.5,140.5),
+           (0.5,143.5),(-17.5,143.5),(-29.5,138.5),(-54.5,136.5),(-55.5,122.5),(-51.5,114.5),
+           (-33.5,110.5),(-21.5,106.5),(-20.5,96.5),(-20.5,70.5),(-13.5,61.5),(4.5,59.5),(5.5,50.5),
+           (5.5,26.5),(30.5,18.5),(34.5,8.5)]
+# Lobos, el islote al noroeste de Corralejo: se ve desde el pueblo, pero no se pisa.
+LOBOS = [(41.5,-6.5),(44.5,-8.5),(48.5,-7.5),(49.5,-4.5),(45.5,-3.5),(42.5,-4.5)]
+mover = lambda pts: [(x + DESPLAZAMIENTO, y + DESPLAZAMIENTO_Y) for x, y in pts]
+SILUETA = mover(SILUETA); LOBOS = mover(LOBOS)
 
 PERSONAJES = {
  'corralejo': ["{ id: 'marinero-corralejo', x: 11, y: 4, mira: 's', frase: 'Este barco va y viene de Lanzarote todo el día.' }",
@@ -177,11 +236,21 @@ PERSONAJES = {
  'sotavento': ["{ id: 'kite-sotavento-1', x: 27, y: 8, mira: 'o', entrenador: { vision: 7, obligatorio: false }, frase: '¡Hoy sopla de lujo! Si vas al gimnasio de Aire, prepárate para volar.' }",
                "{ id: 'kite-sotavento-2', x: 28, y: 15, mira: 'o', entrenador: { vision: 8, obligatorio: false }, frase: 'Con este viento, mi cometa y mis criaturas no paran quietas. ¡A luchar!' }",
                "{ id: 'corredor-sotavento', x: 5, y: 16, mira: 'e', entrenador: { vision: 7, obligatorio: false }, frase: 'Corro contra el viento todos los días. ¿Te atreves a luchar contra él?' }"],
+ 'tindaya': ["{ id: 'montanera-tindaya', x: 17, y: 7, mira: 's', entrenador: { vision: 3, obligatorio: false }, frase: 'Subo a Tindaya cada semana. Y cada semana entreno aquí abajo. ¡Vamos!' }",
+             "{ id: 'peregrino-tindaya', x: 11, y: 8, mira: 'n', entrenador: { vision: 1, obligatorio: true }, frase: 'Has subido hasta la cima. Antes de mirar los grabados, demuéstrame que lo mereces.' }",
+             "{ id: 'guardiana-tindaya', x: 9, y: 11, mira: 'n', frase: 'Los antiguos subían aquí a mirar al oeste. Decían que algunas mañanas aparecía una isla en el horizonte… y que, al acercarse, desaparecía.' }"],
+ 'cofete': ["{ id: 'pastor-jandia', x: 22, y: 8, mira: 'o', entrenador: { vision: 1, obligatorio: true }, frase: 'Por este paso no cruza nadie sin luchar. Ni las cabras.' }",
+            "{ id: 'surfista-cofete', x: 8, y: 12, mira: 'e', entrenador: { vision: 4, obligatorio: false }, frase: 'Aquí no viene nadie: el mar es demasiado bravo. ¡Justo lo que me gusta!' }"],
  'morro': ["{ id: 'marinero-morro', x: 17, y: 19, mira: 's', frase: 'El barco a Gran Canaria saldrá pronto. Dicen que primero hay que vencer al gimnasio de Aire.' }",
            "{ id: 'vecina-morro', x: 11, y: 15, mira: 'n', frase: 'En el gimnasio de Aire, el viento te lleva de un lado a otro. ¡Fíjate en las aspas!' }"],
 }
 OBJETOS = {'dunas': ["{ id: 'pocion-horno', x: 33, y: 11, objeto: 'pocion' }", "{ id: 'cubo-dunas', x: 37, y: 31, objeto: 'cubo-blanco' }"],
-           'betancuria': ["{ id: 'pocion-presa', x: 4, y: 16, objeto: 'pocion' }"]}
+           'betancuria': ["{ id: 'pocion-presa', x: 4, y: 16, objeto: 'pocion' }"],
+           # Los premios de las zonas opcionales: una Superpoción en cada una, escondida.
+           'tindaya': ["{ id: 'superpocion-tindaya', x: 1, y: 17, objeto: 'superpocion' }"],
+           'cofete': ["{ id: 'superpocion-cofete', x: 5, y: 16, objeto: 'superpocion' }"]}
+LETREROS = {'tindaya': {'7,9': 'Unos pies tallados en la roca, de hace muchísimo tiempo.\nTodos miran hacia el oeste, hacia el mar.',
+                        '10,9': 'Más pies grabados. Junto a ellos, el dibujo de una isla con una nube encima.\nAlguien quiso dejar dicho algo que vio.'}}
 CIERRES = {}
 
 def bloque(lista, nombre):
@@ -197,9 +266,12 @@ for zid, v in zonas.items():
     if v.get('casas'): t+=f"      casas: '{v['casas']}',\n"
     if v.get('suelo'): t+=f"      // Arena negra, como la playa de Ajuy.\n      suelo: {v['suelo']},\n"
     if v.get('clima'): t+=f"      clima: '{v['clima']}',\n"
+    if zid in LETREROS:
+        t+="      letreros: {\n"+''.join(f"        '{k}': '{txt.replace(chr(10), chr(92)+'n')}',\n" for k, txt in LETREROS[zid].items())+"      },\n"
     t+=bloque(PERSONAJES.get(zid,[]),'personajes') if PERSONAJES.get(zid) else "      personajes: [],\n"
     t+=bloque(OBJETOS.get(zid,[]),'objetos')
-    t+=f"      altura: {v['altura']},\n"
+    if v.get('alturas'): t+="      alturas: [\n"+''.join(f"        '{f}',\n" for f in v['alturas'])+"      ],\n"
+    else: t+=f"      altura: {v['altura']},\n"
     t+="      mapa: [\n"+''.join(f"        '{f}',\n" for f in z.filas())+"      ],\n    },\n"
     partes.append(t)
     if z.puertas: puertas[zid]={f"{x},{y}": sala for (x,y,sala) in z.puertas}
@@ -211,7 +283,7 @@ def pu(d):
     return s+"}"
 
 ts=("// Isla 2, inspirada en Fuerteventura (2026-11-13): el mapa por casillas (ISLA-2.md). Lo genera\n"
-"// herramientas/isla2.py; las pruebas lo vigilan. Fase 1: Corralejo y Las Dunas.\n"
+"// herramientas/isla2.py; las pruebas lo vigilan. De Corralejo a Morro Jable, con Tindaya y Cofete.\n"
 "// Una letra por casilla, con la leyenda de src/core/mundo.ts. Las coordenadas de personajes y\n"
 "// objetos son de su zona: x hacia el este, y hacia el sur. Los interiores van aparte.\n"
 "import type { DefIsla } from '../core/mundo';\n\n"
@@ -220,8 +292,10 @@ ts=("// Isla 2, inspirada en Fuerteventura (2026-11-13): el mapa por casillas (I
 "  // El gimnasio es de Aire: la isla del viento.\n"
 "  gimnasio: 'aire',\n"
 "  colores: {\n    suelo: { ':': '#D8BE8E', '.': '#D9C59A' },\n    cumbre: '#B0835A',\n    ladoCumbre: '#8E6644',\n    matas: '#8C8A4A',\n  },\n"
-"  // La costa del norte de Fuerteventura, aproximada (herramientas/isla2.py).\n"
+"  // La costa de Fuerteventura, aproximada (herramientas/isla2.py).\n"
 "  silueta: [\n"+''.join(f"    [{x}, {y}],\n" for x, y in SILUETA)+"  ],\n"
+"  // Lobos, al noroeste de Corralejo: se ve, pero no se pisa.\n"
+"  islotes: [\n    [\n"+''.join(f"      [{x}, {y}],\n" for x, y in LOBOS)+"    ],\n  ],\n"
 "  zonas: [\n"+''.join(partes)+"  ],\n};\n\n"
 "/** A qué sala lleva cada puerta, por zona y casilla de la puerta (en coordenadas de la zona). */\n"
 "export const PUERTAS_ISLA2: Readonly<Record<string, Readonly<Record<string, string>>>> = "+pu(puertas)+";\n")

@@ -49,6 +49,7 @@ export const LEYENDA = {
   // que, al girarlas, cambian hacia dónde sopla una corriente.
   W: 'corriente de viento',
   H: 'aspas de molino',
+  g: 'roca grabada',
   // Interiores: salas pequeñas aparte (ISLA-1.md, «Decisiones técnicas»).
   m: 'suelo',
   '|': 'pared',
@@ -139,6 +140,8 @@ export interface DefZona {
   corrientes?: Readonly<Record<string, Corriente>>;
   /** Aspas de molino (`H`), por casilla: girarlas activa o desactiva `aspas:<id>`. */
   aspas?: Readonly<Record<string, string>>;
+  /** Lo que se lee al mirar una roca grabada (`g`), por casilla. */
+  letreros?: Readonly<Record<string, string>>;
   personajes: readonly Personaje[];
   /** Cómo se dibujan sus casas (por defecto, rurales; en la capital, de balcones). */
   casas?: EstiloCasas;
@@ -185,6 +188,8 @@ export interface DefIsla {
    * zona es tierra que no se pisa. Sin silueta, la tierra solo rellena los huecos entre zonas.
    */
   silueta?: readonly (readonly [number, number])[];
+  /** Islotes que se ven desde la costa y no se pisan (Lobos), con polígonos como la silueta. */
+  islotes?: readonly (readonly (readonly [number, number])[])[];
 }
 
 export interface CasillaMundo {
@@ -255,6 +260,7 @@ export function construirMundo(isla: DefIsla): Mundo {
         if (c === 'p' && !z.palancas?.[`${x},${y}`]) throw new Error(`Zona «${z.id}»: la palanca de ${x},${y} no tiene id`);
         if (c === 'W' && !z.corrientes?.[`${x},${y}`]) throw new Error(`Zona «${z.id}»: la corriente de ${x},${y} no dice hacia dónde sopla`);
         if (c === 'H' && !z.aspas?.[`${x},${y}`]) throw new Error(`Zona «${z.id}»: las aspas de ${x},${y} no tienen id`);
+        if (c === 'g' && !z.letreros?.[`${x},${y}`]) throw new Error(`Zona «${z.id}»: la roca grabada de ${x},${y} no tiene texto`);
       }),
     );
     for (const p of z.personajes) {
@@ -276,7 +282,7 @@ export function construirMundo(isla: DefIsla): Mundo {
     }
   }
   // La silueta puede salirse de las zonas: el mundo llega hasta ella.
-  for (const [x, y] of isla.silueta ?? []) {
+  for (const [x, y] of [...(isla.silueta ?? []), ...(isla.islotes ?? []).flat()]) {
     ancho = Math.max(ancho, Math.ceil(x) + 1);
     alto = Math.max(alto, Math.ceil(y) + 1);
   }
@@ -355,6 +361,15 @@ export function corrienteEn(m: Mundo, k: number, condiciones: readonly string[])
   const c = z.corrientes?.[`${x - z.origen.x},${y - z.origen.y}`];
   if (!c) return null;
   return c.aspas && c.alterna && condiciones.includes(`aspas:${c.aspas}`) ? c.alterna : c.dir;
+}
+
+/** El texto de la roca grabada de la casilla `k`, si la hay. */
+export function letreroEn(m: Mundo, k: number): string | undefined {
+  const cm = m.casillas.get(k);
+  const z = cm?.c === 'g' ? m.zonas.get(cm.zona) : undefined;
+  if (!z) return undefined;
+  const [x, y] = deClave(k);
+  return z.letreros?.[`${x - z.origen.x},${y - z.origen.y}`];
 }
 
 /** El id de las aspas de la casilla `k`, si las hay. */

@@ -28,6 +28,7 @@ const PRESUPUESTO: Record<PiezaKit, number> = {
   sombrilla: 300,
   toalla: 200,
   estatua: 600,
+  grabado: 300,
 };
 /** Lo que puede salirse de su casilla cada pieza, desde el centro: las copas grandes se salen. */
 const RADIO: Record<PiezaKit, number> = {
@@ -53,6 +54,7 @@ const RADIO: Record<PiezaKit, number> = {
   sombrilla: 0.8,
   toalla: 0.85,
   estatua: 0.7,
+  grabado: 0.55,
 };
 
 describe('kit canario de naturaleza', () => {

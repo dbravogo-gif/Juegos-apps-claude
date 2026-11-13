@@ -26,6 +26,7 @@ const SALAS: Record<string, DefSala> = {
   'tienda-morro': { nombre: 'Tienda de Morro Jable', gente: vive('tendero-morro') },
   'casa-morro-1': { nombre: 'Casa de Morro Jable', gente: vive('vecino-morro-1', 'Desde el faro se ve Gran Canaria los días claros. Hoy, con tanta calima, no.') },
   'casa-morro-2': { nombre: 'Casa de Morro Jable', gente: vive('vecina-morro-2', 'Al oeste, detrás de las montañas, está Cofete: una playa sin nadie y una casa con muchas historias.') },
+  'casa-cofete': { nombre: 'La casa solitaria', gente: vive('vecino-cofete', 'Esta casa la levantó alguien que vino de lejos, hace mucho. Nadie sabe por qué la quiso tan apartada de todo.') },
 };
 
 export const INTERIORES_ISLA2: readonly DefInterior[] = generarInteriores(ISLA_2, PUERTAS_ISLA2, SALAS, [CUEVA_AJUY, GIMNASIO_AIRE]);

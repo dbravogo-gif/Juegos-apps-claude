@@ -86,6 +86,7 @@ Fuerteventura:
 - salvajes del 10 al 17;
 - entrenadores del 12 al 19;
 - líder del 19 al 21.
+- En las opcionales, algo más: Tindaya del 14 al 16 y Cofete del 17 al 19.
 
 Lo juzga el autor al probarlo.
 
@@ -138,12 +139,27 @@ Lo juzga el autor al probarlo.
   ninguna trampa sin salida.
 - El barco de Morro Jable a Gran Canaria aún no sale: la isla 3 no existe.
 
+**Fase 4, casi hecha (2026-11-13).**
+- **Tindaya** (opcional, al oeste de Las Dunas, junto al campamento de la arqueóloga): un llano
+  seco y la montaña, con una senda que sube dando la vuelta hasta la cima. Arriba, dos rocas con
+  pies grabados que se leen al mirarlas (pista de la isla que aparece y desaparece), una
+  guardiana que cuenta la leyenda y un peregrino que no se esquiva. Salvajes del 14 al 16 y una
+  Superpoción escondida detrás de la montaña.
+- **Cofete** (opcional, al oeste de Morro Jable): un paso en zigzag entre las montañas de Jandía,
+  con un pastor que no se esquiva; la playa salvaje, una surfista, la casa solitaria (con
+  interior) y hierba alta con salvajes del 17 al 19, las más fuertes de la isla. Otra Superpoción
+  al fondo de la playa.
+- **Lobos** se ve desde el muelle de Corralejo, con su volcán, y no se pisa.
+- La isla se desplazó otra vez (60 al este y 10 al sur) para que quepan Cofete y Lobos. Las
+  partidas guardadas ya sobreviven a estos cambios (`origenes` del guardado).
+- Falta: redondear las crestas de las dunas y la revisión del probador (fases 2 a 4).
+
 | Fase | Qué | Coste |
 | --- | --- | --- |
 | 1 | Varias islas y viaje en barco; Corralejo y Las Dunas jugables (**hecha**, 2026-11-13) | alto |
 | 2 | Puerto del Rosario, Betancuria y Ajuy con su cueva (**hecha**, 2026-11-13) | alto |
 | 3 | Sotavento y Morro Jable con el gimnasio de Aire (**hecha**, 2026-11-13) | alto |
-| 4 | Tindaya y Cofete, entrenadores, pulido y revisión del probador | medio |
+| 4 | Tindaya y Cofete, entrenadores, pulido y revisión del probador (**casi hecha**: faltan las crestas y el probador) | medio |
 
 ## Decisiones del autor (2026-11-13)
 

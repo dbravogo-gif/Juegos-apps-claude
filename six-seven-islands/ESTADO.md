@@ -22,9 +22,9 @@ Tanda 1: Lanzarote es la isla 1 (`ISLA-1.md`), con kit por código y la tabla de
    la partida), tienda en La Geria, inicial rebelde hasta el anciano, portada (persona y
    nombre), sonido por código y final de la isla 1 (el barco, tras la líder). Tabla de tipos del
    autor, con Lucha (9 criaturas). Menús nuevos con medallero de pintaderas, equipo y mochila
-   por bolsillos, y un gimnasio de Roca de verdad. Fuerteventura (`ISLA-2.md`): fases 1 a 3
-   hechas (de Corralejo al gimnasio de Aire); sigue la 4 (Tindaya, Cofete y pulido). Con las criaturas del
-   autor, la evolución.
+   por bolsillos, y un gimnasio de Roca de verdad. Fuerteventura (`ISLA-2.md`): fases 1 a 4
+   hechas (de Corralejo al gimnasio de Aire, Tindaya, Cofete y Lobos); faltan las crestas y el
+   probador. Con las criaturas del autor, la evolución.
 2. En paralelo, arte con Meshy (`prompts-meshy.md`): criaturas y edificios singulares.
 3. Criaturas: reparto, lista de referencia y lista de Lanzarote en `CRIATURAS.md`.
 
