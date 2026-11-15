@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest';
 import { iniciarCombate, resolverTurno, type Evento } from '../src/core/combate';
 import { crearCriatura } from '../src/core/criatura';
 import { crearRng } from '../src/core/rng';
+import { eficacia } from '../src/core/tipos';
 import { DATOS_COMBATE_PRUEBA as DATOS, ESPECIE_INICIAL, MODELO_DE, RIVAL_DE } from '../src/data/combate-prueba';
 import { MODELO_INICIAL } from '../src/arte/criaturas3d';
 
@@ -29,4 +30,11 @@ describe('combate de prueba', () => {
       expect(eventos.some((e) => e.tipo === 'danio' && e.ref.lado === 1 && e.eficacia > 1)).toBe(true);
     });
   }
+
+  it('la inicial de fuego tiene algo que hace ×2 a la Roca (un ataque flojo de Acero)', () => {
+    const c = crearCriatura(DATOS, ESPECIE_INICIAL.infernal, 5, crearRng(1));
+    const contraRoca = c.movimientos.map((m) => DATOS.movimientos[m.id]).filter((m) => eficacia(DATOS.tipos, m.tipo, ['roca']) > 1);
+    expect(contraRoca.map((m) => m.tipo)).toEqual(['acero']);
+    expect(contraRoca[0].poder).toBeLessThanOrEqual(40);
+  });
 });

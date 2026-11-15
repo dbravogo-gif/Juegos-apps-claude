@@ -91,11 +91,13 @@ propuesta de Claude y qué frena mientras siga abierto.
   propia (M).
 
 11. **Tipo de cada gimnasio.**
-    - Lanzarote es de Roca y Fuerteventura, de Aire. Para Gran Canaria, propuesta en
-      `ISLA-3.md` (Lucha recomendado). Faltan Tenerife, La Gomera y La Palma.
+    - Lanzarote es de Roca y Fuerteventura, de Aire. Gran Canaria tiene dos (propuesta en
+      `ISLA-3.md`). Faltan Tenerife (uno o dos), La Gomera, La Palma y El Hierro.
+    - **Técnico, al hacer Gran Canaria:** el medallero va por isla (una pintadera por isla); hay
+      que pasarlo a una por gimnasio, con dos pintaderas para Gran Canaria y la de El Hierro.
     - El emblema del gimnasio de La Palma era un sol, del tipo Luz, que ya no existe.
     - **Frena:** dónde dar las criaturas que les hacen frente (punto 6).
-12. **Formato de la Liga** (en El Hierro, la isla que reaparece).
+12. **Formato de la Liga** (en Tenerife, dentro del Teide; autor, 2026-11-15).
 13. **Nombres:** de los cubos de captura (ahora, por su color), del equipo enemigo (uno por
     variante), de las islas y sus lugares, de los personajes y de las criaturas. Claude los
     propone antes de la tanda 3.
@@ -114,11 +116,9 @@ propuesta de Claude y qué frena mientras siga abierto.
 
 Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
 
-- **Inicial de fuego en el gimnasio de Roca:** todos sus ataques están resistidos y, a nivel 12,
-  pierde contra el primer aprendiz (probador). ¿Se deja así de difícil o se le da algo?
-- **Gran Canaria (`ISLA-3.md`):** aprobar el recorrido y elegir el tipo del gimnasio (Lucha,
-  recomendado; Planta o Eléctrico), si la historia lo abre (el líder en el Roque Nublo) y los
-  niveles.
+- **Gran Canaria (`ISLA-3.md`):** aprobar el recorrido y elegir el tipo de sus dos gimnasios
+  (Eléctrico en Las Palmas y Lucha en Agaete, recomendado), si la historia abre el segundo (el líder
+  en el Roque Nublo) y los niveles.
 - **Tabla de tipos:** si se le da algo a Bicho y si la Tierra hace ×2 a la Roca (para el
   círculo de cinco).
 - **Quinta inicial (Tierra):** sus estadísticas, su lámina y su GLB, y su nombre.
@@ -126,9 +126,13 @@ Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
 - **Criaturas:** decir si vale la lista 2 de Lanzarote (`CRIATURAS.md`); pasar las láminas de
   Lucha y las demás, y los nombres de la civeta y de Dragosil.
 - **Entrenadores y zonas de captura de Lanzarote** que hay que mejorar: decir cuáles.
-- **La historia (`HISTORIA.md`):** elegir en las cuatro decisiones del final (quién te persigue,
-  quién manda, tu rival y el tono de los malos) y, cuando pueda, los nombres de los pueblos, las
-  ramas, sus jefes y sus amigos.
+- **La historia (`HISTORIA.md`, borrador 2):** elegir en las cuatro decisiones del final:
+  - quién es el compañero que acaba siendo el jefe;
+  - quién te muestra El Hierro;
+  - cuántos gimnasios tiene Tenerife;
+  - cómo entra la Bajada de la Virgen de los Reyes.
+
+  Y, cuando pueda, los nombres de los pueblos, de las ramas y del aparato.
 - **Amigos:** sus fotos y GLB de Meshy para las personas jugables, y sus 2 o 3 poses para los
   retratos de diálogo.
 - **Dani con `Idle`** en el GLB (opcional).

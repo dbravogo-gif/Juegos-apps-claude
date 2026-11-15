@@ -30,6 +30,9 @@ const movimientos: Movimiento[] = [
   { id: 'rodada-de-piedra', nombre: 'Rodada de piedra', tipo: 'roca', categoria: 'fisico', poder: 50, precision: 95, pp: 20 },
   { id: 'polvo-de-picon', nombre: 'Polvo de picón', tipo: 'roca', categoria: 'magico', poder: 40, precision: 100, pp: 25 },
   // La quinta inicial, de Tierra (autor, 2026-11-13).
+  // De Acero, flojo: para que la inicial de fuego no se quede sin nada contra el gimnasio de Roca,
+  // donde todos sus otros ataques están resistidos (autor, 2026-11-15).
+  { id: 'trompazo-de-hierro', nombre: 'Trompazo de hierro', tipo: 'acero', categoria: 'fisico', poder: 35, precision: 100, pp: 30 },
   // De Aire, para las de relleno del gimnasio de Aire (probador, 2026-11-13).
   { id: 'rafaga', nombre: 'Ráfaga', tipo: 'aire', categoria: 'magico', poder: 40, precision: 100, pp: 25 },
   { id: 'picado', nombre: 'Picado', tipo: 'aire', categoria: 'fisico', poder: 55, precision: 95, pp: 15 },
@@ -53,7 +56,7 @@ const especies: Especie[] = [
   { id: 'chispa-de-colada', nombre: 'Chispa de colada', tipos: ['infernal'], base: base(35, 40, 35, 55, 40, 60), expBase: 55, ratioCaptura: 190, aprende: aprende('mirada-fija', 'soplo-de-brasas'), descripcion: '' },
   { id: 'inicial-agua', nombre: 'Inicial de Agua', tipos: ['agua'], base: base(50, 50, 55, 55, 55, 45), expBase: 60, ratioCaptura: 45, aprende: aprende('remojon', 'ola-de-cresta', 'topetazo', 'mirada-fija'), descripcion: '' },
   { id: 'inicial-planta', nombre: 'Inicial de Planta', tipos: ['planta'], base: base(50, 50, 50, 55, 55, 50), expBase: 60, ratioCaptura: 45, aprende: aprende('latigazo-de-musgo', 'esporas-de-hoja', 'topetazo', 'mirada-fija'), descripcion: '' },
-  { id: 'inicial-infernal', nombre: 'Inicial Infernal', tipos: ['infernal'], base: base(50, 55, 50, 55, 45, 55), expBase: 60, ratioCaptura: 45, aprende: aprende('soplo-de-brasas', 'orejazo-ardiente', 'topetazo', 'barrito'), descripcion: '' },
+  { id: 'inicial-infernal', nombre: 'Inicial Infernal', tipos: ['infernal'], base: base(50, 55, 50, 55, 45, 55), expBase: 60, ratioCaptura: 45, aprende: aprende('soplo-de-brasas', 'orejazo-ardiente', 'trompazo-de-hierro', 'barrito'), descripcion: '' },
   // Estadísticas provisionales: las de verdad las pasa el autor, como las de las otras iniciales.
   { id: 'inicial-tierra', nombre: 'Inicial de Tierra', tipos: ['tierra'], base: base(55, 60, 50, 40, 45, 50), expBase: 60, ratioCaptura: 45, aprende: aprende('pisoton', 'arenazo', 'topetazo', 'mirada-fija'), descripcion: '' },
   { id: 'inicial-roca', nombre: 'Inicial de Roca', tipos: ['roca'], base: base(55, 55, 60, 40, 50, 40), expBase: 60, ratioCaptura: 45, aprende: aprende('rodada-de-piedra', 'polvo-de-picon', 'topetazo', 'caparazon'), descripcion: '' },
