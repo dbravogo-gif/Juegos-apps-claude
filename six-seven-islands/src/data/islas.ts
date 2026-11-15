@@ -3,6 +3,8 @@
 // ellas en barco: se guarda la partida en la isla de destino y se recarga la página.
 
 import type { Campo } from '../core/combate';
+import { RECADOS_ISLA1 } from './recados-isla1';
+import type { DefRecado } from '../core/recados';
 import type { Condicion, DefInterior, DefIsla } from '../core/mundo';
 import type { Guion } from '../core/guion';
 import type { TablaEncuentros } from '../core/encuentros';
@@ -43,6 +45,8 @@ export interface DatosIsla {
   salaInicial?: string;
   /** El campo de cada gimnasio, por su sala (autor, 2026-11-15): dura todos sus combates. */
   campos?: Readonly<Record<string, Campo>>;
+  /** Los recados, por el id del personaje que los da (HISTORIA.md). */
+  recados?: Readonly<Record<string, DefRecado>>;
 }
 
 export const LANZAROTE: DatosIsla = {
@@ -62,6 +66,7 @@ export const LANZAROTE: DatosIsla = {
   salaInicial: SALA_INICIAL,
   // El gimnasio de Roca, con tormenta de arena permanente.
   campos: { gimnasio: { clima: 'arena' } },
+  recados: RECADOS_ISLA1,
 };
 
 /** Fuerteventura (ISLA-2.md). Fases 1 a 3: de Corralejo a Morro Jable, con el gimnasio de Aire. */

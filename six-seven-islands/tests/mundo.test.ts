@@ -376,7 +376,9 @@ function probarIsla(c: Isla): void {
 
     it('los entrenadores opcionales sí se pueden esquivar', () => {
       for (const z of ISLA.zonas.filter((q) => !(q.id in opcionales))) {
-        for (const p of z.personajes.filter((q) => q.entrenador && !q.entrenador.obligatorio)) {
+        // Los de la historia (con condición, como tu rival en el muelle) no son del recorrido: salen
+        // en su momento y cortan el paso a propósito (HISTORIA.md).
+        for (const p of z.personajes.filter((q) => q.entrenador && !q.entrenador.obligatorio && !q.con)) {
           const [entrada, salida] = entradaYSalida(z.id);
           const prohibidas = new Set([enIsla(m, z.id, p.x, p.y), ...vision(m, z.id, p)]);
           const r = alcanzables(m, entrada, { condiciones: TODAS_LAS_CONDICIONES, prohibidas });

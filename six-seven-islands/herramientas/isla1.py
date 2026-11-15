@@ -214,10 +214,16 @@ PERSONAJES = {
            "{ id: 'agricultor-jable', x: 13, y: 3, mira: 's', frase: 'Aquí se siembra en la arena: guarda la humedad de la noche. ¡Las batatas salen dulcísimas!' }"],
  'famara': ["{ id: 'pescador-famara', x: 20, y: 6, mira: 'o', entrenador: { vision: 4, obligatorio: false }, frase: 'Aquí pican las viejas. ¿Tú qué buscas, criaturas o pescado?' }",
             "{ id: 'pulpero-famara', x: 2, y: 6, mira: 'e', entrenador: { vision: 4, obligatorio: false }, frase: 'Los pulpos se esconden entre las rocas. Igual que algunas criaturas, ¿eh?' }",
+            "{ id: 'redera-famara', x: 16, y: 12, mira: 'o' }",
             "{ id: 'banista-famara', x: 6, y: 10, mira: 's', postura: 'tumbado', frase: 'Aquí se viene a no hacer nada. Y a ver cómo se pone el sol detrás del risco.' }",
             "{ id: 'guiri-famara', x: 18, y: 10, mira: 's', postura: 'tumbado', quemado: true, frase: '¡Hola, amigo! En mi país ahora nieva... Creo que me he quemado un poquito.' }"],
  'capital': ["{ id: 'vecina-rivales', x: 9, y: 11, mira: 's', frase: 'Unos tipos raros preguntaban en el puerto por la isla que desapareció...' }",
-             "{ id: 'marinero', x: 25, y: 13, mira: 'n', frase: 'El barco va a la isla siguiente, pero solo con quien ha vencido al gimnasio.' }"],
+             "{ id: 'marinero', x: 25, y: 13, mira: 'n', frase: 'El barco va a la isla siguiente, pero solo con quien ha vencido al gimnasio.' }",
+             # La historia (HISTORIA.md, parte 3): el señor que te vigila, pescando junto al mar; tu
+             # amigo, que te espera para la revancha al vencer al gimnasio; y el farero del recado.
+             "{ id: 'viejo-muelle', x: 25, y: 9, mira: 'e' }",
+             "{ id: 'amigo-muelle', x: 24, y: 10, mira: 's', entrenador: { vision: 2, obligatorio: false }, con: 'gimnasio-vencido' }",
+             "{ id: 'farero', x: 21, y: 13, mira: 'e' }"],
 }
 OBJETOS = {'fuego': ["{ id: 'pocion-caldera', x: 25, y: 22, objeto: 'pocion' }"], 'jable': ["{ id: 'pocion-jable', x: 21, y: 6, objeto: 'pocion' }"]}
 CIERRES = {

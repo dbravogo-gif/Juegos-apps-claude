@@ -31,6 +31,7 @@ import { perdidaPorDerrota } from '../../core/economia';
 import { BOLSILLOS, bolsilloDe, type IdBolsillo } from '../../data/bolsillos';
 import { vidaMaxima } from '../../core/estadisticas';
 import { gruposContra } from '../../core/tipos';
+import { inicialDelRival, type TipoInicial } from '../../data/pueblos';
 import { MaterialDiorama } from '../../arte/material';
 import { figuraCriatura } from '../../arte/criaturas3d';
 import { RADIO_CUBO, figuraCubo, girarCubo } from '../../arte/cubos';
@@ -158,6 +159,8 @@ export class Combate implements Subsistema {
   private velo!: HTMLDivElement;
   /** La tabla de tipos (tecla T): qué le hace daño a la rival y qué a la tuya. */
   private panelTipos!: HTMLDivElement;
+  /** La arena o el viento del campo del gimnasio, en pantalla. */
+  private clima!: HTMLDivElement;
 
   init(ctx: Ctx): void {
     this.ctx = ctx;
@@ -188,10 +191,13 @@ export class Combate implements Subsistema {
       if (!def || !inicial || this.partida.vencidos.includes(guionId)) return;
       const rng = crearRng(`rival-${guionId}`);
       // El primer entrenador saca la inicial que pierde contra la tuya.
+      // Tu rival (el amigo) saca la inicial del pueblo al que ataca el tuyo (HISTORIA.md).
       const equipo =
         guionId === ENTRENADOR_PRUEBA
           ? [crearCriatura(DATOS, ESPECIE_INICIAL[RIVAL_DE[inicial] ?? 'roca'], 5, rng)]
-          : def.equipo.map((e) => crearCriatura(DATOS, e.especie, e.nivel, rng));
+          : def.rival
+            ? [crearCriatura(DATOS, ESPECIE_INICIAL[inicialDelRival(inicial as TipoInicial)], def.rival.nivel, rng), ...(def.rival.extra ?? []).map((e) => crearCriatura(DATOS, e.especie, e.nivel, rng))]
+            : def.equipo.map((e) => crearCriatura(DATOS, e.especie, e.nivel, rng));
       void this.empezar(equipo, guionId);
     });
     ctx.eventos.on('encuentro:inicio', ({ salvajes }) => void this.empezar(salvajes as Criatura[], null));
@@ -223,6 +229,7 @@ export class Combate implements Subsistema {
     raiz.className = 'combate';
     raiz.hidden = true;
     raiz.innerHTML = `
+      <div class="calima combate-clima" hidden aria-hidden="true"></div>
       <div class="combate-ficha rival"><p class="combate-nombre"></p><p class="combate-nivel"></p><div class="combate-vida"><div class="combate-relleno"></div></div></div>
       <div class="combate-ficha propia"><p class="combate-nombre"></p><p class="combate-nivel"></p><div class="combate-vida"><div class="combate-relleno"></div></div><p class="combate-numeros"></p></div>
       <div class="combate-caja"><p class="combate-texto" aria-live="assertive"></p><div class="combate-menu" hidden></div></div>
@@ -235,6 +242,16 @@ export class Combate implements Subsistema {
     this.menu = raiz.querySelector('.combate-menu')!;
     this.velo = raiz.querySelector('.combate-velo')!;
     this.panelTipos = raiz.querySelector('.combate-tipos')!;
+    // La arena o el viento del gimnasio, en pantalla durante el combate: las motas de la calima, más.
+    this.clima = raiz.querySelector('.combate-clima')!;
+    for (let i = 0; i < 26; i++) {
+      const mota = document.createElement('i');
+      mota.style.top = `${4 + ((i * 29) % 92)}%`;
+      mota.style.setProperty('--d', `${4 + ((i * 3) % 5)}s`);
+      mota.style.animationDelay = `${-((i * 1.7) % 6)}s`;
+      mota.style.transform = `scale(${0.7 + ((i * 3) % 5) * 0.15})`;
+      this.clima.append(mota);
+    }
     this.barra = raiz.querySelector('.combate-barra')!;
     this.flecha = raiz.querySelector('.combate-barra .flecha')!;
     // Las zonas, con los anchos del núcleo: así lo que se ve es lo que cuenta.
@@ -304,9 +321,14 @@ export class Combate implements Subsistema {
     const escena = this.ctx.escena;
     this.arena.visible = si;
     this.raiz.hidden = !si;
+    if (!si) this.clima.hidden = true;
     if (si) {
       this.guardado = { fondo: escena.background as Color | Texture | null, niebla: escena.fog as Fog | null };
       const enGimnasio = this.partida.estado.dentro?.startsWith('gimnasio') ?? false;
+      // La arena (ocre) o el viento (rachas blancas) del campo, mientras dure el combate.
+      const campo = this.estado?.campo;
+      this.clima.hidden = !(campo?.clima === 'arena' || campo?.vientoAFavor !== undefined);
+      this.clima.classList.toggle('viento', campo?.vientoAFavor !== undefined && campo.clima !== 'arena');
       escena.background = (enGimnasio ? this.fondoGimnasio : null) ?? this.fondoPintado ?? this.fondoProvisional;
       escena.fog = null;
       this.ajustarFondo();

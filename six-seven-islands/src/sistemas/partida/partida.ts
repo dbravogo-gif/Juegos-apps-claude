@@ -16,6 +16,7 @@ import { PERSONA_JUGADOR, PERSONAS } from '../../arte/personas';
 import { ISLAS, LANZAROTE, type DatosIsla } from '../../data/islas';
 import { NOMBRE_OBJETO } from '../../data/textos-isla1';
 import { quienEs } from '../../data/entrenadores-isla1';
+import { puntoRecado } from '../../core/recados';
 import { AMIGOS, NOMBRE_TIPO_INICIAL } from '../../data/textos-isla1';
 import { PUEBLOS, inicialDelRival, puebloQueTePersigue, type TipoInicial } from '../../data/pueblos';
 import { crearCriatura, curarDelTodo } from '../../core/criatura';
@@ -509,11 +510,28 @@ export class Partida implements Subsistema {
         break;
       case 'hablar': {
         // A un amigo se le pone nombre la primera vez que se le habla (autor, 2026-11-15).
-        if (AMIGOS.has(ev.personaje) && !this.amigos[ev.personaje]) {
+        const amigo = AMIGOS.get(ev.personaje);
+        if (amigo && !this.amigos[amigo]) {
           this.porNombrar = ev;
           this.modo = 'nombrar';
           this.entrada.olvidar();
           this.ctx.eventos.emit('amigo:nombrar', { id: ev.personaje });
+          break;
+        }
+        // Un recado (HISTORIA.md): pide, da el premio al cumplirlo y luego da las gracias.
+        const recado = this.datos.recados?.[ev.personaje];
+        const punto = recado ? puntoRecado(recado, this.estado.condiciones, this.equipo.map((c) => c.especie), this.vencidos) : 'cerrado';
+        if (recado && punto !== 'cerrado') {
+          const lineas: Dialogo['lineas'][number][] = (punto === 'hecho' ? recado.hecho : punto === 'cumplible' ? recado.cumplido : recado.pedir).map((texto) => ({ quien: recado.quien, texto }));
+          if (punto === 'cumplible') {
+            const { objeto, cantidad } = recado.da;
+            this.mochila[objeto] = (this.mochila[objeto] ?? 0) + cantidad;
+            cumplir(this.estado, `recado:${recado.id}`);
+            lineas.push({ texto: `Recibes ${cantidad > 1 ? `${cantidad} × ` : ''}${DATOS.objetos[objeto]?.nombre ?? objeto}.` });
+            this.ctx.eventos.emit('sonido:tocar', { nombre: 'nivel' });
+            this.guardar();
+          }
+          this.abrir({ lineas }, ev.personaje);
           break;
         }
         const d = elegirDialogo(this.datos.guion, ev.personaje, this.estado.condiciones, this.estado.inicial);
@@ -594,7 +612,7 @@ export class Partida implements Subsistema {
     this.espera = ESPERA_TRAS_DIALOGO;
     this.entrada.olvidar();
     if (!ev || ev.tipo !== 'hablar' || nombre === null) return;
-    this.amigos[ev.personaje] = nombre.trim().slice(0, 16) || 'Amigo';
+    this.amigos[AMIGOS.get(ev.personaje) ?? ev.personaje] = nombre.trim().slice(0, 16) || 'Amigo';
     this.guardar();
     this.atender(ev);
   }

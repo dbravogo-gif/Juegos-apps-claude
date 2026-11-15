@@ -98,7 +98,11 @@ export type Condicion =
   | 'gimnasio2-vencido'
   | `vencido:${string}`
   | `palanca:${string}`
-  | `aspas:${string}`;
+  | `aspas:${string}`
+  /** Un recado cumplido (HISTORIA.md): `recado:<id>`. */
+  | `recado:${string}`
+  /** Has subido al faro con el farero y has visto la isla que no sale en los mapas. */
+  | 'faro-visto';
 export const TODAS_LAS_CONDICIONES: ReadonlySet<Condicion> = new Set(['inicial-elegida', 'anciano', 'gimnasio-vencido', 'mensaje-rival', 'soldados-fuego']);
 
 export interface Personaje {

@@ -236,6 +236,10 @@ Todo en el núcleo (`core/mundo.ts` y `core/explorar.ts`), igual en zonas e inte
   persigue (`data/pueblos.ts`), con la cabeza sin teñir. Se hace al conocer tu inicial.
 - **Silueta** (`silueta: true`): la figura en negro (el jefe, antes de descubrirse).
 - En los textos: `{nombre}`, `{amigo}`, `{inicial}`, `{inicialRival}` y `{rama}`.
+- **Tu rival** (`rival` del entrenador): saca la inicial del pueblo al que ataca el tuyo, al nivel que
+  diga. El amigo del bar y el del muelle comparten nombre (`AMIGOS`, en `data/textos-isla1.ts`).
+- **Recados** (`core/recados.ts`, puro; `recados` de cada isla): un personaje pide una especie en el
+  equipo o vencer a unos entrenadores, da un premio y cumple `recado:<id>`.
 
 ## Combate: el campo de los gimnasios
 

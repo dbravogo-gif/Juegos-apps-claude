@@ -17,6 +17,11 @@ export interface DefEntrenador {
   alVencer?: readonly string[];
   /** La isla cuya pintadera da (los líderes de gimnasio). */
   medalla?: number;
+  /**
+   * Tu rival (el amigo): saca la inicial del pueblo al que ataca el tuyo, a este nivel, y después las
+   * de `extra` (HISTORIA.md). Su `equipo` va vacío: depende de tu inicial.
+   */
+  rival?: { nivel: number; extra?: readonly { especie: string; nivel: number }[] };
 }
 
 /** Cómo se presenta cada clase de entrenador en el diálogo, por el principio de su id. */
@@ -39,6 +44,8 @@ const OFICIO: Readonly<Record<string, string>> = {
   pescador: 'Pescador',
   pulpero: 'Pulpero',
   surfista: 'Surfista',
+  // Tu amigo habla con el nombre que le pusiste.
+  amigo: '{amigo}',
 };
 
 /** El nombre con que habla un entrenador (probador, 2026-11-13: sus frases no decían quién hablaba). */
@@ -74,6 +81,13 @@ export const ENTRENADORES_ISLA1: Readonly<Record<string, DefEntrenador>> = {
     premio: 320,
     tras: 'La palanca está ahí al lado. Bájala, que la líder te espera.',
   },
+  // La revancha en el muelle, al vencer al gimnasio (HISTORIA.md, parte 3).
+  'amigo-muelle': {
+    equipo: [],
+    rival: { nivel: 13, extra: [{ especie: 'lagartija-de-picon', nivel: 11 }] },
+    premio: 400,
+    tras: 'Vale, vale: la ventana es tuya. ¡Nos vemos en Fuerteventura!',
+  },
   'lider-gimnasio': {
     equipo: [{ especie: 'lagartija-de-picon', nivel: 11 }, { especie: 'inicial-roca', nivel: 12 }],
     premio: 600,
@@ -82,6 +96,7 @@ export const ENTRENADORES_ISLA1: Readonly<Record<string, DefEntrenador>> = {
     alVencer: [
       '¡Qué combate! Tienes la cabeza tan dura como el basalto.',
       'Toma: la pintadera de Lanzarote. Con ella, todo el archipiélago sabrá que has vencido al gimnasio de Roca.',
+      'Esta pintadera es una pieza de algo más grande. Guárdala bien: hay quien lleva años buscándolas.',
       '{nombre} recibe la pintadera de Lanzarote.',
       'Ve al puerto: con la pintadera, el marinero te llevará a Fuerteventura.',
     ],
