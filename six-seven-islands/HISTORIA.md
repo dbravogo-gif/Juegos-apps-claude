@@ -1,222 +1,242 @@
-# La historia (borrador 1, por aprobar)
+# La historia (borrador 2)
 
-2026-11-15. La escribe Claude a petición del autor, siguiendo lo decidido en `PROMPT-HISTORIA.md`.
-**Nada de esto entra en el juego hasta que el autor elija en las decisiones del final.** Donde
-dice «(recomendado)», es lo que se ha usado para escribir el resto; si el autor elige otra cosa,
-se reescribe esa parte.
+2026-11-15. La escribe Claude con las decisiones del autor. Lo marcado **(decidido)** es del
+autor; lo demás es propuesta. Las decisiones que faltan están al final, con opciones. Nada entra en
+el juego hasta cerrarlas.
 
-La idea de pueblos elementales enfrentados es solo eso, una idea: aquí no hay nombres, personajes,
-poderes ni frases de ninguna serie. Los lugares son reales; las personas, inventadas.
+La idea de pueblos elementales enfrentados es solo una idea: aquí no hay nombres, personajes,
+poderes ni frases de ninguna serie. Los lugares y las fiestas son reales; las personas, inventadas.
+No salen marcas: el móvil tiene una aplicación de mensajes sin nombre.
+
+## Decidido por el autor (2026-11-15)
+
+- **Te persigue la rama del pueblo que ataca al tuyo.**
+- **Eres el nuevo elegido de tu pueblo.** Por el camino conoces a antiguos elegidos y a gente que
+  defiende hoy a tu pueblo.
+- **El jefe enemigo te acompaña.** Es alguien que viaja contigo y al que ves varias veces. Antes
+  de descubrirlo, sale alguna escena con su silueta en negro.
+- **Tu rival es el amigo que elige la inicial que gana a la tuya,** porque sus antepasados también
+  la eligieron.
+  - Antes de elegir, hablas con él como amigo en un bar, con un barraquito y un sándwich de pollo
+    desmenuzado.
+  - Después te escribe al móvil: ha elegido tu contraria por la historia de su familia. No te
+    guarda rencor, pero tendréis que enfrentaros.
+- **Tono:** soldados cómicos y jefes algo más serios.
+- **Nombres:** los jefes llevan nombres normales, alguno canario. El nombre de cada amigo lo
+  decides tú al hablar con él la primera vez.
+- **El Garoé** y **la Bajada de la Virgen de los Reyes** son partes importantes de la historia.
+- **La Liga está en Tenerife, dentro del Teide.**
+  - Las medallas son piezas de un aparato antiguo, relacionado con el cubo de Metatrón.
+  - Hace años que nadie entra en el Teide, porque hacen falta todas las piezas y la de El Hierro
+    era imposible de conseguir: la isla estaba escondida.
+- **El Hierro** tiene criaturas muy fuertes y ancestrales que se creían extinguidas. Tras la
+  penúltima medalla, un señor te la muestra y te lleva allí a por la última.
+- **Medallas:** 1 gimnasio en cada isla pequeña y 2 en Gran Canaria. Falta decidir Tenerife.
+- **Inicial de fuego:** un ataque flojo de Acero (Trompazo de hierro, ya puesto en el juego).
 
 ## 1. La premisa
 
-Hace siglos, cinco pueblos vivían en Lanzarote, cada uno guiado por una leyenda: la verde, la del
-agua, la infernal, la de roca y la de tierra. Peleaban en círculo y nadie ganaba nunca. La guerra
-saltó de isla en isla hacia el oeste hasta llegar a El Hierro, donde crecía **el Árbol de la
-Niebla**, que sacaba agua de las nubes para todo el archipiélago. Cada pueblo quiso el árbol para
-sí. Hoy, los herederos más radicales de cada pueblo quieren volver a encontrarlo para ganar por fin
-la vieja guerra. Tú y tus amigos, uno de cada pueblo, sois los primeros en siglos que viajáis
-juntos.
+Hace siglos, cinco pueblos peleaban en círculo por las islas, cada uno guiado por una leyenda.
+Para acabar con la guerra, las leyendas y las ancestrales hicieron **el Sello** (nombre
+provisional), un aparato de piedra y metal con la figura del cubo de Metatrón, que tiene trece
+círculos:
+- **ocho círculos** son las pintaderas, una por gimnasio, que custodian los líderes;
+- **cinco círculos** son las cinco leyendas: solo se encienden con un descendiente de cada una y
+  su elegido, juntos y en paz.
 
-**La respuesta secreta** (el jugador la descubre poco a poco):
-- Antes de los cinco pueblos, las criaturas **ancestrales** cuidaban las islas desde El Hierro.
-- Cuando la guerra llegó al árbol, las ancestrales y las cinco leyendas hicieron un pacto:
-  - escondieron El Hierro tras un mar de nubes, para que nadie se quedara el árbol;
-  - partieron la llave en **seis pintaderas**, una por isla, y se las dieron a guardianes, que hoy
-    son los líderes de los gimnasios. Por eso la medalla de cada isla es su pintadera.
-- El árbol solo se deja ver si se juntan las seis pintaderas **y** los descendientes de las cinco
-  leyendas, en paz. El equipo enemigo tiene las pintaderas a su alcance, pero le faltan las
-  criaturas… y la paz.
-- La isla que se ve a veces desde el faro es El Hierro: el velo se debilita porque los guardianes
-  envejecen y nadie recuerda ya el pacto.
+Con el Sello completo se abre el corazón del Teide, donde se celebra la Liga y se renueva el pacto.
+Cada generación, cinco elegidos lo intentan.
 
-## 2. Los cinco pueblos y el círculo
+**La respuesta secreta:**
+- Hace unos cincuenta años, la generación anterior lo intentó. Entre esos elegidos estaba **tu
+  abuelo**, por tu pueblo.
+- Uno de ellos los traicionó para quedarse el Sello. Para protegerlo, las ancestrales escondieron
+  El Hierro, con su pintadera y con el Garoé, tras un mar de nubes.
+- Desde entonces nadie completa el Sello ni entra en el Teide, y el pacto se debilita. Por eso han
+  vuelto las ramas radicales.
+- El traidor fue **el compañero que te acompaña**, que hoy es el jefe de la rama que te persigue.
 
-El viaje del jugador, de este a oeste, sigue el rastro de la vieja guerra: cada isla guarda un
-capítulo.
+## 2. Los pueblos y el círculo
 
-| Pueblo (nombre provisional) | Leyenda | Vivía en | Ataca a | Por qué |
+| Pueblo (provisional) | Leyenda | Vivía en | Ataca a |
+| --- | --- | --- | --- |
+| Los del Hoyo | verde (Planta) | los hoyos de picón de La Geria | Fuego |
+| Los de la Colada | infernal (Fuego) | bajo las Montañas del Fuego | Roca |
+| Los del Risco | de roca (Roca) | el risco del norte | Tierra |
+| Los del Llano | de tierra (Tierra) | los pueblos sepultados por el volcán | Agua |
+| Los del Jameo | del agua (Agua) | los jameos, donde entra el mar | Planta |
+
+**Para quien elige [X]:**
+- **Tu rival** lleva la inicial del pueblo al que ataca el tuyo, que te gana en tipos.
+- **Te persigue** la rama del pueblo que ataca al tuyo.
+- **Los otros tres amigos** llevan las tres iniciales que quedan. Al final, las cinco juntas
+  encienden los cinco círculos del Sello.
+
+## 3. Las cinco ramas
+
+Todas llevan el mismo uniforme, con el color y los detalles de su pueblo. En el juego, primero
+será la figura de siempre teñida (la ropa, no la cara); después, con Meshy, cinco versiones.
+Sus campamentos tienen banderas y puertas de su color.
+
+| Rama (provisional) | Pueblo | Qué quieren | Uniforme | Su comandante (la cara visible) |
 | --- | --- | --- | --- | --- |
-| Los del Hoyo | verde (Planta) | los hoyos de picón de La Geria | Fuego | sus coladas queman los campos |
-| Los de la Colada | infernal (Fuego) | bajo las Montañas del Fuego | Roca | la roca sepulta sus coladas |
-| Los del Risco | de roca (Roca) | el risco del norte | Tierra | cada colada enfriada cubre sus campos |
-| Los del Llano | de tierra (Tierra) | los pueblos sepultados por el volcán | Agua | las tormentas arrastran su tierra al mar |
-| Los del Jameo | del agua (Agua) | los jameos, cuevas donde entra el mar | Planta | las raíces le roban el agua |
+| La Raíz | Planta | que el verde lo cubra todo | verde musgo y hojas cosidas | Domingo, jardinero que habla con sus macetas |
+| La Brasa | Fuego | que el fuego no se apague nunca | rojo y naranja, chispas bordadas | Yeray, que todo lo grita |
+| El Basalto | Roca | que nada cambie jamás | gris oscuro y hombreras de laja | Candelaria, que tarda una eternidad en decidir |
+| Los Sepultados | Tierra | recuperar lo que el volcán se tragó | ocre, faroles y palas | Isidro, que habla susurrando |
+| La Marea | Agua | que el agua sea solo suya | turquesa con espuma blanca | Guacimara, que no desperdicia ni una gota |
 
-**Dato de juego:** el pueblo al que atacas es el que tiene ventaja de tipo contra ti (la Roca
-resiste al Fuego, el Agua gana a la Tierra…), y el que te ataca es débil contra ti. La historia lo
-usa así (recomendado):
-- **Tu rival** (el amigo 1) lleva la inicial del pueblo al que ataca el tuyo: te gana en tipos y
-  te obliga a pensar, como en los juegos del género.
-- **El equipo enemigo** que te persigue es el del pueblo que ataca al tuyo: tu inicial es su
-  rival natural y por eso la quieren.
-- Mensaje de fondo: tu mejor amigo es de un pueblo «enemigo» y los malos no son un pueblo, sino
-  sus radicales.
+Los comandantes son la cara visible de cada rama. **El jefe de verdad** de la rama que te persigue
+es el compañero (ver la decisión 1).
 
-## 3. El equipo enemigo: cinco ramas
+## 4. Los personajes principales
 
-Todas las ramas buscan lo mismo: las seis pintaderas y los cinco descendientes, para levantar El
-Hierro y quedarse el árbol. Cada una lo quiere para su pueblo, así que también se pelean entre
-ellas. Es el chiste que se repite: chocan unas con otras.
+- **Tú,** el nuevo elegido de tu pueblo. Tu compañera te elige en el museo.
+- **Tu rival,** amigo de toda la vida y elegido del pueblo al que ataca el tuyo.
+- **Los otros tres amigos.** Les pones el nombre al conocerlos. Cada uno es el elegido de su
+  pueblo y te los encuentras en distintas islas.
+- **El compañero** (Chano, provisional): un señor mayor y simpático que dice que luchó junto a tu
+  abuelo y que defiende a tu pueblo.
+  - Aparece en varias islas: te cura el equipo, te da consejos y te habla de tu abuelo.
+  - Lleva la ropa de tu color hasta que se descubre.
+- **Los defensores de tu pueblo:** uno en cada isla, a veces un antiguo elegido. Te enseñan
+  algo de tu leyenda y, a veces, te dan una pista o un objeto. Por ejemplo, el anciano de La Geria
+  defendió a tu pueblo de joven.
+- **Tu abuelo:** el elegido de hace cincuenta años. Tu madre dice que sus historias son cuentos.
+  Vive retirado en La Palma y es el señor que te muestra El Hierro (ver la decisión 2).
+- **La arqueóloga** (Fuerteventura) estudia a las ancestrales. Es una aliada que sabe mucho y la
+  ves de vez en cuando.
 
-**Uniformes:** la misma ropa para todos, con el color y los detalles de su pueblo. En el juego,
-primero será la figura de siempre teñida; después, con Meshy, cinco versiones del mismo uniforme.
-Sus campamentos llevan banderas y puertas de su color.
+## 5. El viaje: ocho medallas
 
-| Rama (provisional) | Pueblo | Qué quieren | Uniforme | Quién manda | Persigue a quien elige |
-| --- | --- | --- | --- | --- | --- |
-| La Raíz | Planta | que el verde lo cubra todo, aunque ahogue lo demás | verde musgo, hojas cosidas, sandalias | el Injerto, un jardinero que habla con sus macetas | Fuego |
-| La Brasa | Fuego | que el fuego no vuelva a apagarse nunca | rojo y naranja, chispas bordadas, gafas de soldador | el Tizón, dramático, todo lo grita | Roca |
-| El Basalto | Roca | que nada cambie jamás: todo bajo piedra | gris oscuro, hombreras de laja, casco | la Losa, que tarda una eternidad en decidirse | Tierra |
-| Los Sepultados | Tierra | que el árbol les devuelva lo que el volcán se tragó | ocre con polvo, faroles, palas al hombro | el Sacristán, que susurra como un fantasma | Agua |
-| La Marea | Agua | que el agua del árbol sea solo suya | azul turquesa con espuma blanca, chanclas | la Bajamar, obsesionada con no desperdiciar ni una gota | Planta |
+| Orden | Isla | Medallas | Qué pasa |
+| --- | --- | --- | --- |
+| 1 | Lanzarote | 1 (Roca) | el bar, el museo, el mensaje del rival y la silueta |
+| 2 | Fuerteventura | 1 (Aire) | la estatua ancestral, Tindaya y el compañero |
+| 3 | Gran Canaria | 2 | el Roque Nublo y el primer comandante |
+| 4 | Tenerife | 1 (o 2) | el Teide cerrado: ves la puerta del Sello |
+| 5 | La Gomera | 1 | el silbo y el amigo que duda |
+| 6 | La Palma | 1 (la penúltima) | la traición y tu abuelo |
+| 7 | El Hierro | 1 (la última) | la Bajada, el Garoé y las ancestrales |
+| 8 | Tenerife | la Liga | el Sello completo abre el Teide |
 
-**Por encima de todas:** alguien las coordina en secreto. Recomendado: **la arqueóloga de
-Fuerteventura**.
-- No es malvada: cree que las islas estaban mejor cuando las cuidaban las ancestrales, porque la
-  gente no sabe dejar de pelear.
-- Por eso desentierra la estatua ancestral que mira al oeste: quiere despertarlas.
-- Al final se da cuenta de que tú y tus amigos sois la prueba de lo contrario. Es el momento
-  emotivo y se redime.
-
-## 4. Las siete islas
-
-1. **Lanzarote (Roca).**
-   - Eliges a tu compañera en el museo. Es rebelde hasta que el anciano te cuenta su historia.
-   - Tu rival elige la inicial que gana a la tuya.
-   - En las Montañas del Fuego ves por primera vez a dos soldados de tu rama enemiga, buscando
-     algo en la lava. Se van al verte.
-   - La líder te da la primera pintadera: «No es solo una medalla. Guárdala bien».
-2. **Fuerteventura (Aire).**
-   - La arqueóloga te cuenta lo de las ancestrales y te cae bien: es la pista falsa perfecta.
-   - Tu rama enemiga intenta llevarse la estatua y tú se lo impides.
-   - Los grabados de Tindaya miran al oeste: alguien vio aparecer una isla.
-   - Conoces al amigo 2.
-   - La líder de Aire te avisa: «Ya han venido dos veces a pedirme la pintadera».
-3. **Gran Canaria (Lucha, si se aprueba).**
-   - El líder está en el Roque Nublo, vigilando el oeste, y hay que subir a buscarlo.
-   - Desde arriba se ve el mar de nubes donde estaba El Hierro.
-   - El jefe de tu rama enemiga aparece por primera vez y te enteras de que quieren a las
-     criaturas iniciales, no solo las pintaderas.
-   - Intentan llevarse a la compañera del amigo 2 y la rescatáis juntos.
+1. **Lanzarote.**
+   - Desayunas con tu amigo en el bar y lo nombras tú.
+   - Eliges a tu compañera en el museo. Al salir, tu amigo te escribe.
+   - En las Montañas del Fuego, dos soldados de tu rama enemiga hablan con **una silueta negra**:
+     «Jefe, hay un nuevo elegido». «Lo sé. Dejadlo crecer.»
+   - La líder de Roca te da la primera pintadera: «Es una pieza de algo mucho más grande».
+2. **Fuerteventura.**
+   - Conoces al compañero en Corralejo: «¡Eres clavado a tu abuelo!».
+   - La arqueóloga te cuenta lo del Sello.
+   - Tu rama enemiga intenta llevarse la estatua ancestral, y el compañero «llega tarde» a
+     ayudarte.
+   - En Tindaya, los pies grabados miran al oeste.
+3. **Gran Canaria** (dos gimnasios).
+   - El líder del segundo gimnasio está en el Roque Nublo y hay que subir a buscarlo.
+   - Desde arriba se ve el mar de nubes.
+   - Aparece el comandante de tu rama y quieren tu compañera, no solo tu pintadera.
+   - Conoces al segundo amigo.
 4. **Tenerife.**
-   - En Las Cañadas del Teide está la base de tu rama enemiga.
-   - Encuentras a la primera criatura ancestral despierta, que te cuenta el pacto.
-   - Las cinco ramas se pelean entre ellas por llegar antes, el momento cómico grande.
-   - Conoces al amigo 3.
+   - En Las Cañadas está la puerta del Sello, sellada. El líder de Tenerife te explica que
+     hace años que nadie entra, porque falta la pieza de El Hierro.
+   - La silueta vuelve a aparecer junto a la puerta.
+   - Conoces al tercer amigo.
 5. **La Gomera.**
-   - En el bosque de niebla (Garajonay) os perdéis. Los gomeros se entienden silbando (el silbo,
-     de verdad).
-   - Aprendes a silbar para encontrar a tus amigos: un recado y un pequeño mecanismo.
-   - El amigo 4, el del pueblo que persigue a tu rama enemiga, duda: su propio pueblo le pide que
-     se una a ellos. Al final se queda con vosotros.
+   - En el bosque de niebla del Garajonay los amigos os perdéis y os encontráis silbando, con el
+     silbo de verdad.
+   - El amigo del pueblo que te ataca duda: su rama le pide que se una a ellos. Al final se queda
+     con vosotros.
 6. **La Palma.**
-   - En la Caldera de Taburiente fue la última batalla de la vieja guerra.
-   - Las cinco ramas se unen por primera vez, a la fuerza, y descubres que la arqueóloga las
-     manda.
-   - Tras el último gimnasio tienes cinco pintaderas, y la sexta te la da el líder de La Palma.
-     Desde el observatorio del Roque de los Muchachos se ve el contorno de El Hierro.
+   - Ganas la penúltima pintadera.
+   - El compañero se quita la chaqueta: lleva el uniforme de tu rama enemiga y es su jefe. Se
+     lleva tus pintaderas, o lo intenta, y se escapa hacia El Hierro.
+   - Aparece tu abuelo: «Te lo tenía que haber contado. Yo estuve allí». Te enseña El Hierro
+     desde el Roque de los Muchachos y te lleva en su barca.
 7. **El Hierro.**
-   - Los cinco amigos, con las cinco iniciales y las seis pintaderas, abren el velo.
-   - Junto al Árbol de la Niebla, la arqueóloga intenta despertar a las ancestrales y la vencéis
-     juntos. Ella entiende y se redime.
-   - El Hierro vuelve al mapa y en él se celebra la Liga.
+   - Es el día de **la Bajada de la Virgen de los Reyes**, y la isla reaparece con ella.
+   - El camino de la Bajada cruza la isla, con bailarines y música, y es tu recorrido.
+   - Por el monte hay criaturas muy fuertes y ancestrales que se creían extinguidas.
+   - Junto al **Garoé**, que bebe de la niebla, está la última pintadera. Allí te espera el
+     compañero, con las cinco ramas unidas.
+   - Lo vences con tus amigos y entiende o huye (ver la decisión 1).
+8. **Tenerife, la Liga.**
+   - Con las ocho pintaderas y las cinco iniciales, el Sello dibuja el cubo de Metatrón y la
+     puerta del Teide se abre.
+   - Dentro está la Liga.
 
-## 5. Lanzarote, escena a escena
+## 6. Lanzarote, escena a escena
 
-Cada cuadro tiene dos líneas de unos 60 caracteres como mucho. `[X]` es la inicial elegida;
-`[R]` es la de tu rival; `[rama]` es tu rama enemiga. Las frases con 🆕 son nuevas; las demás ya
-están en el juego o casi.
+Cada cuadro tiene dos líneas de unos 60 caracteres como mucho. `[X]` es tu inicial; `[R]`, la del
+rival; `{amigo}`, el nombre que le pones.
 
-### Casa
+**Casa**
+- **Mamá:** «¡Hoy es el día! Pero desayuna antes, que no se elige / compañera con el estómago
+  vacío. Tu amigo está en el bar.»
+- **Mamá:** «Y no hagas caso de las historias de tu abuelo. / Pueblos, elegidos… ¡Cuentos!»
 
-- **Mamá:** «¡{nombre}! ¿Hoy es el día? La doctora te espera / en el museo, aquí al lado.»
-- 🆕 **Mamá:** «Y no hagas caso de lo que diga tu abuelo / de los pueblos de antes. Son cuentos.»
+**El bar** (nuevo, en la zona inicial)
+- **Camarero:** «Lo de siempre: barraquito y sándwich de pollo desmenuzado.»
+- Tu amigo, al hablarle por primera vez, abre la pantalla para ponerle nombre:
+  - «¡Por fin! ¿Nervioso? Yo no he dormido nada.»
+  - «Mi abuela dice que mi familia siempre elige la misma leyenda. / Ya veremos. Yo elijo lo que
+    me dé la gana.»
+  - «Venga, termina el barraquito, que la doctora nos espera.»
 
-### Museo
+**Museo**
+- **Doctora:** «Cada leyenda escoge a un elegido por generación. / Hoy, alguna os escogerá a
+  vosotros.»
+- Las cinco placas, como en el borrador 1, y debajo: «Ocho piezas y cinco leyendas: / así se
+  abre la montaña.»
+- Eliges. Tu amigo se queda mirando las estatuas: «Ve tú delante. Yo… tengo que pensarlo.»
 
-- **Doctora:** «Hace siglos, cinco criaturas guiaban a cinco pueblos. / Hoy sus descendientes
-  esperan compañía.»
-- 🆕 **Placas** (una por estatua; contadas desde su pueblo):
-  - **Verde:** «Su pueblo vivía en los hoyos de picón de La Geria. / Odiaba a la infernal, que
-    quemaba sus vides.»
-  - **Agua:** «Su pueblo dormía en los jameos, donde entra el mar. / Luchaba con la verde, que le
-    robaba el agua.»
-  - **Infernal:** «Su pueblo nació bajo las Montañas del Fuego. / Atacaba a la de roca, que
-    sepultaba sus coladas.»
-  - **Roca:** «Su pueblo vivía en el risco del norte. / Cada colada enfriada cubría los campos de
-    la de tierra.»
-  - **Tierra:** «Su pueblo eran las aldeas que sepultó el volcán. / Luchaba con el agua, que
-    arrastraba su tierra.»
-  - Debajo de todas: «Nadie ganó la guerra. Dicen que acabó en una isla / que ya no sale en los
-    mapas.»
-- 🆕 **El rival** (el amigo 1) entra corriendo cuando ya has elegido: «¡Llego tarde! ¿Ya has
-  elegido? / Pues yo me quedo con [R]. ¡Te va a ganar!»
-- 🆕 **El rival:** «Mi abuela dice que tu pueblo y el mío se odiaban. / ¡Qué tontería! Venga,
-  ¡a luchar!» Es el primer combate, que no se puede perder del todo, como en el género.
+**Al salir del museo:** un mensaje al móvil.
+- **{amigo}:** «He elegido a [R]. Mi familia siempre lo ha hecho. / Tu leyenda y la mía no se
+  llevaban bien…»
+- **{amigo}:** «No te guardo rencor, ¿eh? Pero alguna vez / tendremos que luchar. ¡Prepárate!»
 
-### El Golfo
+**La Geria**
+- **Anciano** (defensor de tu pueblo): «Yo defendí a tu pueblo cuando era joven. / Igual que tu
+  abuelo… pero eso te lo contará él.»
 
-- 🆕 **Entrenador de la barrera:** «Esta playa negra es de mi pandilla. / Bueno, de mí solo.
-  ¡Pero lucha!»
+**Montañas del Fuego** (la silueta)
+- **Soldado 1:** «Jefe, ha salido un nuevo elegido de [X]. / Con una cría preciosa, por cierto.»
+- **Silueta:** «Lo sé. Dejadlo crecer. / Necesitaremos sus pintaderas… y a su compañera.»
+- Te ven: «¡Es él! …El jefe ha dicho que lo dejemos crecer. / ¡Retirada, que todavía es
+  pequeño!»
 
-### La Geria
+**La capital**
+- **Líder de Roca**, al vencerla: «Esta pintadera es una pieza de algo más grande. / Guárdala:
+  hay quien lleva años buscándolas.»
+- **{amigo}**, en el muelle: «Revancha antes del barco. Si gano, / me pido la ventana.»
 
-- **Anciano:** cuenta la historia de la abuela de tu inicial, como ahora, y añade:
-- 🆕 «Las cinco abuelas acabaron haciendo un pacto. / Nadie sabe cuál. Ni yo, y mira que soy
-  viejo.»
+**Recados:** los del borrador 1 (la vid del anciano, la red del pescador y el faro).
 
-### Montañas del Fuego (primera aparición de tu rama enemiga)
+## Lo que falta decidir
 
-- 🆕 Dos soldados con el uniforme de su color, junto a una colada:
-  - **Soldado 1:** «¿Seguro que la pintadera no está en este volcán? / Llevamos tres días
-    cavando, chacho.»
-  - **Soldado 2:** «El jefe dijo "busca donde quema". ¡Aquí quema todo!»
-  - Te ven: «¡Una cría de [X]! ¡Eso le encantaría al jefe! / …Pero hoy no toca. ¡Retirada!»
-
-### El Jable
-
-- 🆕 **Agricultor:** «Planto batatas en la arena. Mi abuelo, en cambio, / decía que plantaba en
-  la isla que desapareció.»
-
-### La capital
-
-- **Vecina:** «Unos tipos raros preguntaban en el puerto / por la isla que desapareció.» (ya
-  está). 🆕 Añadir: «Llevaban ropa de [color de tu rama]. Muy hortera.»
-- **Líder de Roca**, al vencerla: 🆕 «Esta pintadera no es solo una medalla. / Guárdala bien:
-  hay quien la busca.»
-- 🆕 **El rival**, en el muelle: «¡Te he estado esperando! Revancha antes del barco. / Si gano,
-  me dejas ir delante.»
-
-### Recados (2 o 3, con premios modestos)
-
-1. **La vid del anciano** (La Geria): llevarle una tabaiba andante capturada. Da una poción.
-2. **La red del pescador** (Famara): vencer a los dos pescadores. Da tres cubos blancos.
-3. **El faro** (la capital): subir de noche y ver la isla que no sale en los mapas. Es solo
-   historia y da una pista para Fuerteventura.
-
-## Lo que decide el autor
-
-1. **Quién te persigue:**
-   - **A, recomendado:** la rama del pueblo que ataca al tuyo. Tu inicial les gana y tu rival es
-     otro amigo.
-   - **B:** la del pueblo al que ataca el tuyo. Te ganan en tipos y es más difícil.
-   - **C:** un solo equipo, con soldados de las cinco ramas mezclados.
-2. **Quién manda por encima de las ramas:**
-   - **A, recomendado:** la arqueóloga, que se redime al final.
-   - **B:** nadie; los cinco jefes de rama, cada uno por su lado.
-   - **C:** una criatura ancestral que despierta y engaña a todos.
-3. **Tu rival:**
-   - **A, recomendado:** el amigo 1, con la inicial que gana a la tuya.
-   - **B:** con la del pueblo que te persigue.
-   - **C:** al azar entre las que quedan.
-4. **El tono de los malos:**
-   - **A, recomendado:** soldados cómicos con jefes algo más serios.
-   - **B:** todos serios.
-   - **C:** todos cómicos.
+1. **¿Quién es el compañero que acaba siendo el jefe?**
+   - **A, recomendado:** Chano, un señor que dice ser compañero de tu abuelo y defensor de tu
+     pueblo. Fue el traidor de hace cincuenta años. Al final se arrepiente y ayuda a abrir el
+     Teide.
+   - **B:** el amigo del pueblo que te ataca. Duele más, pero el malo sería uno de tus amigos de
+     verdad.
+   - **C:** la arqueóloga.
+2. **¿Quién es el señor que te muestra El Hierro?**
+   - **A, recomendado:** tu abuelo, el elegido de hace cincuenta años.
+   - **B:** un pescador herreño, que se fue de niño la noche en que desapareció la isla.
+   - **C:** el anciano de La Geria.
+3. **Tenerife:**
+   - **A, recomendado:** un gimnasio, y la Liga en el Teide. Son ocho medallas: Gran Canaria,
+     con dos, es el gran cambio de mitad de viaje, y Tenerife no queda cargada.
+   - **B:** dos gimnasios, nueve medallas.
+4. **La Bajada de la Virgen de los Reyes:**
+   - **A, recomendado:** la fiesta en la que El Hierro reaparece. Su camino es tu recorrido, con
+     gente, bailarines y música, y el líder del gimnasio herreño baila en ella. La imagen de la
+     Virgen no se usa nunca como objeto del juego: se respeta como lo que es.
+   - **B:** solo de fondo, con la fiesta en Valverde.
+   - **C:** en el centro de la trama: la procesión abre el camino al Garoé.
 
 **Además, cuando puedas:**
-- los nombres de los pueblos, de las ramas y de sus jefes (los de arriba son provisionales);
-- los nombres de tus amigos y qué inicial lleva cada uno;
-- si te vale que el Árbol de la Niebla se inspire en el Garoé de El Hierro, el árbol que daba
-  agua de las nubes (es una leyenda canaria, de dominio público).
+- los nombres de los pueblos, las ramas y el aparato (ahora «el Sello»);
+- si te valen los comandantes Domingo, Yeray, Candelaria, Isidro y Guacimara;
+- si te vale Chano para el compañero.

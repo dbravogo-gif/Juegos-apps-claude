@@ -35,7 +35,14 @@ camino y 2 opcionales: 10, frente a las 9 de Fuerteventura.
 10. **Maspalomas** (opcional, en el sur): la playa, el faro y la charca del oasis. Las dunas,
     pequeñas, para no repetir las de Fuerteventura.
 
-## El gimnasio (lo decide el autor)
+## Los gimnasios: dos en esta isla (autor, 2026-11-15)
+
+Gran Canaria tiene **dos gimnasios**. Propuesta: uno en Las Palmas, al llegar, y otro en Agaete,
+al final. Con dos, caben dos tipos de la tabla de abajo. **Recomendado:** Eléctrico en Las Palmas,
+la ciudad, y Lucha en Agaete, el terrero. Así la de Tierra tiene uno fácil y la de Roca, uno
+difícil, y queda compensado.
+
+Lo de abajo sigue valiendo para elegir los dos tipos.
 
 | Opción | Por qué | Para las iniciales |
 | --- | --- | --- |
@@ -47,11 +54,11 @@ Con Lucha, el gimnasio iría en Agaete, al final, como en Fuerteventura. **El me
 el terrero tiene zonas de arena que te deslizan o te frenan, y los aprendices te retan a una
 «agarrada» antes del combate. Se concreta tras aprobar.
 
-## La historia abre el gimnasio (propuesta)
+## La historia abre el segundo gimnasio (propuesta)
 
 El autor quería que, en las siguientes islas, la historia abriera a menudo el gimnasio. Aquí, por
 ejemplo: **el líder no está en su gimnasio, sino en el Roque Nublo**, investigando algo que se ve
-desde arriba hacia el oeste. Hay que subir a buscarlo y, al hablar con él, baja a Agaete y abre.
+desde arriba hacia el oeste. Hay que subir a buscarlo y, al hablar con él, baja a Agaete y abre. El de Las Palmas está abierto desde el principio.
 Así la subida a las cumbres tiene sentido y la historia de la isla secreta avanza.
 
 ## Niveles (propuesta)
@@ -84,6 +91,7 @@ Así la subida a las cumbres tiene sentido y la historia de la isla secreta avan
 ## Lo que tiene que decidir el autor
 
 1. Si vale el recorrido.
-2. El tipo del gimnasio: Lucha (recomendado), Planta o Eléctrico.
-3. Si la historia abre el gimnasio con el líder en el Roque Nublo.
+2. Los tipos de los dos gimnasios: Eléctrico en Las Palmas y Lucha en Agaete (recomendado), o
+   dos de Lucha, Planta y Eléctrico.
+3. Si la historia abre el segundo gimnasio, con el líder en el Roque Nublo.
 4. Si los niveles valen.

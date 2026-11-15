@@ -1,6 +1,6 @@
 # Estado de Six-seven islands
 
-Actualizado: 2026-11-13. Solo el presente; el historial está en git. Máximo 40 líneas.
+Actualizado: 2026-11-15. Solo el presente; el historial está en git. Máximo 40 líneas.
 
 ## Fase actual
 
@@ -30,8 +30,8 @@ Tanda 1: Lanzarote es la isla 1 (`ISLA-1.md`), con kit por código y la tabla de
 
 ## Pendiente del autor
 
-Probar Fuerteventura, aprobar Gran Canaria (`ISLA-3.md`) y lo demás de la lista viva de
-`PENDIENTES.md` («Tareas del autor»).
+Probar Fuerteventura, cerrar la historia (`HISTORIA.md`), aprobar Gran Canaria (`ISLA-3.md`) y
+lo demás de la lista viva de `PENDIENTES.md` («Tareas del autor»).
 
 ## Defectos conocidos
 

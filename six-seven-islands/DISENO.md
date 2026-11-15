@@ -67,9 +67,16 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
     recorridas de este a oeste, sin saltos (autor, 2026-11-10): 1 Lanzarote, 2 Fuerteventura,
     3 Gran Canaria, 4 Tenerife, 5 La Gomera y 6 La Palma.
   - Una séptima isla secreta, desaparecida, que se descubre siguiendo el hilo del misterio:
-    El Hierro. Reaparece al final y en ella está la Liga.
+    El Hierro. Es la última isla, con criaturas muy fuertes y ancestrales que se creían extinguidas.
+  - **La Liga está en Tenerife, dentro del Teide** (autor, 2026-11-15). Las medallas son piezas de
+    un aparato antiguo (el cubo de Metatrón) que abre el Teide. Hace años que nadie entra, porque
+    la pieza de El Hierro era imposible de conseguir. Tras la penúltima medalla, un señor te lleva
+    a El Hierro a por la última, y desde allí vuelves a Tenerife.
+  - **Medallas** (autor, 2026-11-15): un gimnasio en cada isla, dos en Gran Canaria. Tenerife,
+    uno o dos, está por decidir: 8 o 9 medallas. La historia, en `HISTORIA.md`.
 - **Tono de la historia:** ligero y con humor. Se vence al campeón de cada isla para avanzar,
-  mientras se investiga por qué desapareció la séptima.
+  mientras se investiga por qué desapareció la séptima. Eres el nuevo elegido de tu pueblo; te
+  persigue la rama del pueblo que ataca al tuyo, y tu rival es tu mejor amigo (`HISTORIA.md`).
 - **Contenido:**
   - 200 criaturas en 102 especies, con el reparto por tipos, quintiles de fuerza y papeles
     de `CRIATURAS.md` (autor, 2026-11-10). Cada criatura toma las estadísticas base de un
