@@ -89,3 +89,47 @@ describe('historia: los soldados y la silueta de las Montañas del Fuego (parte 
     expect(d.lineas.some((l) => l.quien === 'Silueta')).toBe(true);
   });
 });
+
+describe('historia: el resto de Lanzarote (parte 3)', () => {
+  it('los recados: quien los da existe, lo que piden existe y el premio también', async () => {
+    const { RECADOS_ISLA1 } = await import('../src/data/recados-isla1');
+    const { ISLA_1 } = await import('../src/data/isla1');
+    const { ENTRENADORES_ISLA1 } = await import('../src/data/entrenadores-isla1');
+    const { DATOS_COMBATE_PRUEBA: DATOS } = await import('../src/data/combate-prueba');
+    const personajes = new Set(ISLA_1.zonas.flatMap((z) => z.personajes.map((p) => p.id)));
+    expect(Object.keys(RECADOS_ISLA1).length).toBeGreaterThanOrEqual(2);
+    for (const [quien, r] of Object.entries(RECADOS_ISLA1)) {
+      expect(personajes.has(quien), quien).toBe(true);
+      if (r.pide.especie) expect(DATOS.especies[r.pide.especie], r.id).toBeDefined();
+      for (const id of r.pide.vencidos ?? []) expect(ENTRENADORES_ISLA1[id], id).toBeDefined();
+      expect(DATOS.objetos[r.da.objeto], r.id).toBeDefined();
+      // Premios modestos (autor, 2026-11-11: pocos objetos y flojos al principio).
+      expect(r.da.cantidad).toBeLessThanOrEqual(3);
+    }
+  });
+
+  it('un recado pasa de cerrado a pendiente, a cumplible y a hecho', async () => {
+    const { puntoRecado } = await import('../src/core/recados');
+    const { RECADOS_ISLA1 } = await import('../src/data/recados-isla1');
+    const vid = RECADOS_ISLA1.anciano;
+    expect(puntoRecado(vid, [], [], [])).toBe('cerrado');
+    expect(puntoRecado(vid, ['anciano'], ['inicial-agua'], [])).toBe('pendiente');
+    expect(puntoRecado(vid, ['anciano'], ['inicial-agua', 'tabaiba-andante'], [])).toBe('cumplible');
+    expect(puntoRecado(vid, ['anciano', 'recado:vid-anciano'], [], [])).toBe('hecho');
+    const red = RECADOS_ISLA1['redera-famara'];
+    expect(puntoRecado(red, [], [], ['pescador-famara'])).toBe('pendiente');
+    expect(puntoRecado(red, [], [], ['pescador-famara', 'pulpero-famara'])).toBe('cumplible');
+  });
+
+  it('tu amigo te espera en el muelle al vencer al gimnasio, con la inicial que gana a la tuya', async () => {
+    const { ISLA_1 } = await import('../src/data/isla1');
+    const { ENTRENADORES_ISLA1, quienEs } = await import('../src/data/entrenadores-isla1');
+    const { ESPECIE_INICIAL, DATOS_COMBATE_PRUEBA: DATOS } = await import('../src/data/combate-prueba');
+    const amigo = ISLA_1.zonas.find((z) => z.id === 'capital')!.personajes.find((p) => p.id === 'amigo-muelle')!;
+    expect(amigo.con).toBe('gimnasio-vencido');
+    expect(ENTRENADORES_ISLA1['amigo-muelle'].rival?.nivel).toBeGreaterThan(10);
+    expect(quienEs('amigo-muelle')).toBe('{amigo}');
+    for (const x of INICIALES) expect(DATOS.especies[ESPECIE_INICIAL[inicialDelRival(x)]], x).toBeDefined();
+    expect(AMIGOS.get('amigo-muelle')).toBe(AMIGOS.get('amigo'));
+  });
+});

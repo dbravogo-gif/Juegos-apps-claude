@@ -70,6 +70,7 @@ function anciano(tipo: string | undefined): Dialogo {
       { quien: 'Anciano', texto: 'Esa criatura no te hace caso, ¿verdad? Siéntate, que te cuento su historia.' },
       { quien: 'Anciano', texto: tipo ? ABUELA[tipo] : 'Las cinco leyendas eran orgullosas. Ninguna obedecía a quien no la conocía.' },
       { quien: 'Anciano', texto: 'Háblale de lo que te importa. Verás como poco a poco te escucha.' },
+      { quien: 'Anciano', texto: 'Yo defendí a tu pueblo cuando era joven. Hubo otros elegidos antes que tú… y uno sigue vivo.' },
       { texto: 'Tu compañera te mira de otra manera. Ahora sí te hace caso.' },
     ],
     efecto: { condicion: 'anciano' },
@@ -150,6 +151,46 @@ export const GUION_ISLA1: Guion = {
   'soldado-fuego-1': ESCENA_SOLDADOS,
   'soldado-fuego-2': ESCENA_SOLDADOS,
   'silueta-fuego': ESCENA_SOLDADOS,
+  // La capital (HISTORIA.md, parte 3). El señor que te vigila no dice quién es: pesca y mira.
+  'viejo-muelle': [
+    {
+      sin: 'gimnasio-vencido',
+      dialogo: {
+        lineas: [
+          { quien: 'Pescador', texto: 'Bonita cría. ¿Sabes de quién desciende?' },
+          { quien: 'Pescador', texto: '…Ya lo sabrás. Las leyendas no eligen a cualquiera.' },
+        ],
+      },
+    },
+    { dialogo: { lineas: [{ quien: 'Pescador', texto: 'Esa pintadera te queda bien. Cuídala: hay quien la quiere más que tú.' }] } },
+  ],
+  // Tu amigo te espera en el muelle al vencer al gimnasio: la revancha.
+  'amigo-muelle': [
+    {
+      dialogo: {
+        lineas: [
+          { quien: '{amigo}', texto: '¡{nombre}! Te estaba esperando. Has vencido a la líder, ¿eh? Yo también.' },
+          { quien: '{amigo}', texto: 'Revancha antes del barco. Si gano, me pido la ventana. ¡Vamos!' },
+        ],
+      },
+    },
+  ],
+  // El recado del faro: subir con el farero y ver la isla que no sale en los mapas.
+  farero: [
+    {
+      sin: 'faro-visto',
+      dialogo: {
+        lineas: [
+          { quien: 'Farero', texto: 'Esta noche está despejado. ¿Subes conmigo al faro? Desde arriba se ve todo el mar.' },
+          { texto: 'Subís por la escalera de caracol. Al oeste, muy lejos, la bruma dibuja una isla.' },
+          { quien: 'Farero', texto: 'Esa isla no sale en ningún mapa. Mi abuelo la llamaba «la que se esconde».' },
+          { quien: 'Farero', texto: 'Dicen que en Fuerteventura hay una arqueóloga que sabe algo de esas cosas.' },
+        ],
+        efecto: { condicion: 'faro-visto' },
+      },
+    },
+    { dialogo: { lineas: [{ quien: 'Farero', texto: 'Algunas noches vuelvo a verla. Otras, nada. Como si supiera que la miro.' }] } },
+  ],
   // El bar del principio (HISTORIA.md, decidido por el autor el 2026-11-15): tu amigo desayuna un
   // barraquito con un sándwich de pollo desmenuzado. Su nombre lo pones tú al hablarle.
   camarero: [

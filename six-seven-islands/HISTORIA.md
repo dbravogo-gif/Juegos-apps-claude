@@ -256,8 +256,16 @@ rival; `{amigo}`, el nombre que le pones.
     (la cabeza, sin teñir), y la silueta negra de su jefe en las Montañas del Fuego;
   - al verte, su escena, y se van.
   - Faltan las banderas y las puertas de color de sus campamentos, para cuando haya campamentos.
-- **Parte 3:** el resto de Lanzarote (el anciano, el pescador que te vigila, la líder, la revancha y
-  los recados).
+- **Parte 3, hecha (2026-11-15):**
+  - el anciano dice que defendió a tu pueblo y que un antiguo elegido sigue vivo;
+  - el pescador que te vigila, en el muelle de la capital;
+  - la líder de Roca dice que la pintadera es una pieza de algo más grande;
+  - tu amigo te espera en el muelle al vencer al gimnasio, con la inicial que gana a la tuya (si no
+    le habías puesto nombre, se lo pones ahí);
+  - los recados: la vid del anciano (una tabaiba andante, por una poción), la red de la redera de
+    Famara (vencer a los dos pescadores, por tres cubos) y el faro (subir con el farero y ver la isla
+    que se esconde).
+- **El campo en pantalla:** arena o viento durante los combates del gimnasio.
 
 ## Lo que falta decidir
 

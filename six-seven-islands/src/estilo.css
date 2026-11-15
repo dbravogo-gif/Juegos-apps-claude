@@ -457,6 +457,30 @@ body {
   pointer-events: none;
 }
 
+/* La arena o el viento del gimnasio durante el combate: detrás de las fichas y del menú. Más fuerte
+   que la calima de Las Dunas: aquí es una tormenta, con una bruma ocre leve. Con «.calima» delante,
+   para ganar a sus reglas, que van después. */
+.calima.combate-clima {
+  z-index: 0;
+  background: rgb(196 150 84 / 0.2);
+}
+
+.calima.combate-clima i {
+  width: 90px;
+  height: 6px;
+  background: linear-gradient(90deg, rgb(120 78 34 / 0), rgb(120 78 34 / 0.95));
+}
+
+.calima.combate-clima.viento {
+  background: none;
+}
+
+.calima.combate-clima.viento i {
+  width: 90px;
+  height: 3px;
+  background: linear-gradient(90deg, rgb(255 255 255 / 0), rgb(255 255 255 / 0.9));
+}
+
 .calima[hidden] {
   display: none;
 }

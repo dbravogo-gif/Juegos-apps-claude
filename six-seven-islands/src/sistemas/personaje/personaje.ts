@@ -37,6 +37,7 @@ import { PASOS_POR_CASILLA, posicionVisual } from '../../core/explorar';
 import { Suavizado } from './suavizado';
 import { DE_ENCUENTROS, clave, deClave, enIsla, presente, vision, type Direccion, type Mundo as MundoLogico, type Personaje as DefPersonaje } from '../../core/mundo';
 import { colorUniforme, puebloQueTePersigue, type TipoInicial } from '../../data/pueblos';
+import { AMIGOS } from '../../data/textos-isla1';
 import { COLORES } from '../../arte/paleta';
 import { alturaSuelo } from '../../arte/escala';
 import { aMaterialDelJuego, cargarModelo, rutaModelo } from '../../arte/modelos';
@@ -85,6 +86,8 @@ function modeloDe(p: DefPersonaje): string {
   // Las líderes, con la figura de maga y más grandes (abajo): antes llevaban la misma que sus
   // aprendices o que el vigilante y no se distinguían (probador, 2026-11-13).
   if (esLider(p)) return 'Mage';
+  // Tu amigo, el mismo en el bar y en el muelle: así se reconoce.
+  if (AMIGOS.has(p.id)) return 'Rogue';
   // Los soldados de uniforme, con la armadura gris: se tiñe bien del color de su pueblo (con la capa
   // verde de otras figuras, el tinte salía verdoso).
   if (p.uniforme) return 'Knight';

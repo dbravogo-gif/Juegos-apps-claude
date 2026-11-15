@@ -18,8 +18,14 @@ export const NOMBRE_OBJETO: Record<string, string> = {
   'cubo-blanco': 'un Cubo blanco',
 };
 
-/** Los amigos a los que el jugador pone nombre al conocerlos (HISTORIA.md). De momento, el rival. */
-export const AMIGOS: ReadonlySet<string> = new Set(['amigo']);
+/**
+ * Los amigos a los que el jugador pone nombre al conocerlos (HISTORIA.md), por el id de cada
+ * personaje que es ese amigo: el del bar y el del muelle son el mismo, tu rival.
+ */
+export const AMIGOS: ReadonlyMap<string, string> = new Map([
+  ['amigo', 'amigo'],
+  ['amigo-muelle', 'amigo'],
+]);
 
 /** El nombre del tipo de cada inicial, para los textos («la de Roca»). */
 export const NOMBRE_TIPO_INICIAL: Readonly<Record<string, string>> = { planta: 'Planta', infernal: 'Infernal', roca: 'Roca', tierra: 'Tierra', agua: 'Agua' };
