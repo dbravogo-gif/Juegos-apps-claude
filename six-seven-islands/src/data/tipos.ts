@@ -3,7 +3,9 @@
 // a Luz, y el 2026-11-12 el autor rehízo la tabla, porque estaba descompensada, y añadió Lucha. Es
 // su tabla (fotos en conceptos/tipos/) con el ajuste del 2026-11-13: Acero ya no resiste Planta,
 // Aire ni Mental; Bicho ya no es eficaz contra Planta, e Infernal ya no resiste a Acero, y Veneno
-// hace ×2 a Común (solo a ese, autor). Las pruebas de tests/nucleo.test.ts la vigilan.
+// hace ×2 a Común (solo a ese, autor). El 2026-11-15, «como quede más compensado» (autor): la
+// Tierra hace ×2 a la Roca, para cerrar el círculo de los cinco pueblos, y Espectral y Acero ya no
+// resisten a Bicho, que era el tipo más flojo. Las pruebas de tests/nucleo.test.ts la vigilan.
 import type { DefTablaTipos } from '../core/modelo';
 
 export const TIPOS = [
@@ -39,7 +41,7 @@ type Relacion = { eficaz: TipoId[]; pocoEficaz: TipoId[]; sinEfecto: TipoId[] };
 const RELACIONES: Record<TipoId, Relacion> = {
   comun: { eficaz: [], pocoEficaz: ['roca', 'acero'], sinEfecto: ['espectral'] },
   agua: { eficaz: ['infernal', 'tierra', 'roca', 'ancestral'], pocoEficaz: ['agua', 'planta'], sinEfecto: [] },
-  tierra: { eficaz: ['infernal', 'electrico', 'veneno', 'acero'], pocoEficaz: ['planta', 'bicho'], sinEfecto: ['aire'] },
+  tierra: { eficaz: ['infernal', 'electrico', 'veneno', 'acero', 'roca'], pocoEficaz: ['planta', 'bicho'], sinEfecto: ['aire'] },
   planta: { eficaz: ['agua', 'tierra', 'roca'], pocoEficaz: ['infernal', 'planta', 'veneno', 'aire', 'bicho'], sinEfecto: [] },
   aire: { eficaz: ['planta', 'lucha', 'bicho'], pocoEficaz: ['electrico', 'roca'], sinEfecto: [] },
   electrico: { eficaz: ['agua', 'aire'], pocoEficaz: ['electrico', 'planta', 'ancestral'], sinEfecto: ['tierra'] },
@@ -52,7 +54,7 @@ const RELACIONES: Record<TipoId, Relacion> = {
   acero: { eficaz: ['hielo', 'roca'], pocoEficaz: ['agua', 'electrico', 'acero'], sinEfecto: [] },
   roca: { eficaz: ['infernal', 'hielo', 'aire', 'bicho'], pocoEficaz: ['tierra', 'acero', 'lucha'], sinEfecto: [] },
   ancestral: { eficaz: ['acero'], pocoEficaz: ['ancestral'], sinEfecto: [] },
-  bicho: { eficaz: ['mental', 'oscuridad'], pocoEficaz: ['infernal', 'lucha', 'veneno', 'aire', 'espectral', 'acero'], sinEfecto: [] },
+  bicho: { eficaz: ['mental', 'oscuridad'], pocoEficaz: ['infernal', 'lucha', 'veneno', 'aire'], sinEfecto: [] },
   veneno: { eficaz: ['planta', 'ancestral', 'comun'], pocoEficaz: ['veneno', 'tierra', 'roca', 'espectral'], sinEfecto: ['acero'] },
 };
 

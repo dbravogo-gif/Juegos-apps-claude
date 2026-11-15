@@ -4,8 +4,9 @@ import { ISLAS_CON_PINTADERA, svgPintadera } from '../src/arte/pintaderas';
 import { MEDALLAS, medallasGanadas } from '../src/data/medallas';
 
 describe('medallero', () => {
-  it('hay una medalla por cada una de las 6 islas, en orden, y cada una tiene su pintadera', () => {
-    expect(MEDALLAS.map((m) => m.isla)).toEqual([1, 2, 3, 4, 5, 6]);
+  it('hay una medalla por cada una de las 7 islas, El Hierro la última, y cada una tiene su pintadera', () => {
+    expect(MEDALLAS.map((m) => m.isla)).toEqual([1, 2, 3, 4, 5, 6, 7]);
+    expect(MEDALLAS.at(-1)!.nombre).toBe('El Hierro');
     for (const m of MEDALLAS) expect(ISLAS_CON_PINTADERA).toContain(m.isla);
   });
 

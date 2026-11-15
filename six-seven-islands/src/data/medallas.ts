@@ -1,4 +1,6 @@
-// El medallero (autor, 2026-11-12): una medalla por isla, que se gana al vencer a su gimnasio.
+// El medallero (autor, 2026-11-12): una medalla por isla, que se gana al vencer a su gimnasio. Son
+// siete (2026-11-15): las seis islas y El Hierro; las pintaderas son piezas del Sello que abre el
+// Teide (HISTORIA.md).
 // Cada medalla es la pintadera de su isla (src/arte/pintaderas.ts). Solo la isla 1 tiene
 // gimnasio por ahora; las demás salen como hueco hasta que existan.
 
@@ -22,6 +24,9 @@ export const MEDALLAS: readonly DefMedalla[] = [
   { isla: 4, nombre: 'Tenerife', gimnasio: null, condicion: null },
   { isla: 5, nombre: 'La Gomera', gimnasio: null, condicion: null },
   { isla: 6, nombre: 'La Palma', gimnasio: null, condicion: null },
+  // La última, en la isla escondida (autor, 2026-11-15): siete en total. La de Gran Canaria es una
+  // sola pintadera partida a la mitad, una por cada uno de sus dos gimnasios.
+  { isla: 7, nombre: 'El Hierro', gimnasio: null, condicion: null },
 ];
 
 /** Las medallas ganadas con estas condiciones cumplidas. */

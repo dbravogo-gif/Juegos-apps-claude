@@ -7,7 +7,8 @@
 import type { Direccion } from '../../core/mundo';
 import type { Ctx, Subsistema } from '../../motor/motor';
 
-export type Accion = 'confirmar' | 'cancelar';
+/** `tabla`: la T, que en combate abre la ayuda de tipos (autor, 2026-11-15). */
+export type Accion = 'confirmar' | 'cancelar' | 'tabla';
 
 const DIRECCIONES: Record<string, Direccion> = {
   ArrowUp: 'n',
@@ -26,6 +27,7 @@ const ACCIONES: Record<string, Accion> = {
   Space: 'confirmar',
   Escape: 'cancelar',
   Backspace: 'cancelar',
+  KeyT: 'tabla',
 };
 
 export class Entrada implements Subsistema {

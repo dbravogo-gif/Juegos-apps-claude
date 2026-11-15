@@ -30,6 +30,7 @@ import { crearRng } from '../../core/rng';
 import { perdidaPorDerrota } from '../../core/economia';
 import { BOLSILLOS, bolsilloDe, type IdBolsillo } from '../../data/bolsillos';
 import { vidaMaxima } from '../../core/estadisticas';
+import { eficacia, etiquetaEficacia, gruposContra } from '../../core/tipos';
 import { MaterialDiorama } from '../../arte/material';
 import { figuraCriatura } from '../../arte/criaturas3d';
 import { RADIO_CUBO, figuraCubo, girarCubo } from '../../arte/cubos';
@@ -155,6 +156,8 @@ export class Combate implements Subsistema {
   private botones: HTMLSpanElement[] = [];
   private fichas: { nombre: HTMLElement; nivel: HTMLElement; relleno: HTMLElement; numeros: HTMLElement | null }[] = [];
   private velo!: HTMLDivElement;
+  /** La ayuda de tipos (tecla T): qué le hace daño a la rival y qué a la tuya. */
+  private panelTipos!: HTMLDivElement;
 
   init(ctx: Ctx): void {
     this.ctx = ctx;
@@ -223,6 +226,7 @@ export class Combate implements Subsistema {
       <div class="combate-ficha rival"><p class="combate-nombre"></p><p class="combate-nivel"></p><div class="combate-vida"><div class="combate-relleno"></div></div></div>
       <div class="combate-ficha propia"><p class="combate-nombre"></p><p class="combate-nivel"></p><div class="combate-vida"><div class="combate-relleno"></div></div><p class="combate-numeros"></p></div>
       <div class="combate-caja"><p class="combate-texto" aria-live="assertive"></p><div class="combate-menu" hidden></div></div>
+      <div class="combate-tipos" hidden></div>
       <div class="combate-barra" hidden><i class="blanca"></i><i class="verde"></i><b class="flecha"></b></div>
       <div class="combate-velo"></div>`;
     document.body.append(raiz);
@@ -230,6 +234,7 @@ export class Combate implements Subsistema {
     this.texto = raiz.querySelector('.combate-texto')!;
     this.menu = raiz.querySelector('.combate-menu')!;
     this.velo = raiz.querySelector('.combate-velo')!;
+    this.panelTipos = raiz.querySelector('.combate-tipos')!;
     this.barra = raiz.querySelector('.combate-barra')!;
     this.flecha = raiz.querySelector('.combate-barra .flecha')!;
     // Las zonas, con los anchos del núcleo: así lo que se ve es lo que cuenta.
@@ -675,6 +680,13 @@ export class Combate implements Subsistema {
       else if (cancelar) this.pararBarra(false);
       return;
     }
+    // La T abre o cierra la ayuda de tipos; con ella abierta, Esc solo la cierra.
+    const tabla = this.entrada.consumir('tabla');
+    if (this.fase === 'menu' && tabla) this.alternarTipos();
+    if (!this.panelTipos.hidden && (cancelar || this.fase !== 'menu')) {
+      this.panelTipos.hidden = true;
+      if (cancelar) return;
+    }
     if (this.fase === 'menu') {
       const dir = this.entrada.pulsacion();
       if (dir && this.menuActual === 'mochila' && (dir === 'e' || dir === 'o')) {
@@ -763,17 +775,24 @@ export class Combate implements Subsistema {
           { html: boton('Huir'), activa: e.salvaje, elegir: () => this.enviar({ tipo: 'huir' }) },
         ];
         break;
-      case 'ataques':
+      case 'ataques': {
+        // Cada ataque dice lo que le hace a la rival (×2, ×½, ×0): la tabla de tipos, a la vista.
+        const rival = this.activa(1);
+        const tiposRival = rival ? DATOS.especies[rival.especie].tipos : [];
+        texto = `¿Qué hará ${nombre}? (T: tabla de tipos · Esc: volver)`;
         this.opciones = c.movimientos.map((m, indice) => {
           const mov = DATOS.movimientos[m.id];
           const color = `#${(COLOR_TIPO.get(mov.tipo) ?? 0xa8a29e).toString(16).padStart(6, '0')}`;
+          const ef = mov.categoria === 'estado' || !rival ? null : etiquetaEficacia(eficacia(DATOS.tipos, mov.tipo, tiposRival));
+          const marca = ef && ef.clase !== 'normal' ? ` <em class="ef-${ef.clase}">${ef.texto}</em>` : '';
           return {
-            html: boton(mov.nombre, `<i style="background:${color}">${NOMBRE_TIPO.get(mov.tipo) ?? 'Común'}</i> PP ${m.pp}/${mov.pp}`),
+            html: boton(mov.nombre, `<i style="background:${color}">${NOMBRE_TIPO.get(mov.tipo) ?? 'Común'}</i> PP ${m.pp}/${mov.pp}${marca}`),
             activa: m.pp > 0,
             elegir: () => this.enviar({ tipo: 'movimiento', indice, objetivo: { lado: 1, hueco: 0 } }),
           };
         });
         break;
+      }
       case 'mochila': {
         // Por bolsillos, como fuera del combate: ← y → cambian entre el botiquín y los cubos.
         const b = BOLSILLOS.find((x) => x.id === BOLSILLOS_COMBATE[this.bolsillo])!;
@@ -819,6 +838,26 @@ export class Combate implements Subsistema {
     // Se empieza en la primera opción que se puede elegir.
     this.eleccion = Math.max(0, this.opciones.findIndex((o) => o.activa));
     this.pintarMenu();
+  }
+
+  /** Abre o cierra la ayuda de tipos para las dos criaturas que están luchando ahora. */
+  private alternarTipos(): void {
+    if (!this.panelTipos.hidden) {
+      this.panelTipos.hidden = true;
+      return;
+    }
+    const rival = this.activa(1);
+    const propia = this.activa(0);
+    if (!rival || !propia) return;
+    const chip = (t: string) => `<i style="background:#${(COLOR_TIPO.get(t) ?? 0xa8a29e).toString(16).padStart(6, '0')}">${NOMBRE_TIPO.get(t) ?? t}</i>`;
+    const fila = (titulo: string, tipos: string[]) => (tipos.length ? `<p><b>${titulo}</b> ${tipos.map(chip).join(' ')}</p>` : '');
+    const bloque = (quien: string, tipos: readonly string[]) => {
+      const g = gruposContra(DATOS.tipos, tipos);
+      return `<h3>${quien} ${tipos.map(chip).join(' ')}</h3>${fila('Le hacen mucho daño:', g.mucho)}${fila('Le hacen poco:', g.poco)}${fila('No le afectan:', g.nada)}`;
+    };
+    this.panelTipos.innerHTML = `${bloque(nombreDe(rival, DATOS), DATOS.especies[rival.especie].tipos)}${bloque(`Tu ${nombreDe(propia, DATOS)}`, DATOS.especies[propia.especie].tipos)}<p class="combate-tipos-ayuda">T o Esc: cerrar</p>`;
+    this.panelTipos.hidden = false;
+    this.ctx.eventos.emit('sonido:tocar', { nombre: 'seleccion' });
   }
 
   private pintarMenu(): void {

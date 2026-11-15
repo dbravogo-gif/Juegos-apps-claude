@@ -1283,6 +1283,71 @@ body {
   gap: 5px;
 }
 
+/* La eficacia de cada ataque contra la rival (autor, 2026-11-15: la tabla de tipos, a la vista). */
+.combate-ataque small em {
+  margin-left: 6px;
+  white-space: nowrap;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.combate-ataque small .ef-mucho {
+  color: #1f8a46;
+}
+
+.combate-ataque small .ef-poco {
+  color: #b5651d;
+}
+
+.combate-ataque small .ef-nada {
+  color: #7a6f68;
+}
+
+/* La ayuda de tipos (tecla T): un panel claro arriba, con lo que daña a cada criatura. */
+.combate-tipos {
+  position: absolute;
+  left: 50%;
+  top: 92px;
+  width: min(620px, calc(100% - 48px));
+  box-sizing: border-box;
+  padding: 14px 20px;
+  transform: translateX(-50%);
+  border-radius: 16px;
+  background: rgb(255 250 243 / 0.97);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.3);
+  color: #3a2e27;
+  font: 500 14px/1.45 system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+.combate-tipos[hidden] {
+  display: none;
+}
+
+.combate-tipos h3 {
+  margin: 6px 0 4px;
+  font-size: 16px;
+}
+
+.combate-tipos p {
+  margin: 3px 0;
+}
+
+.combate-tipos i {
+  display: inline-block;
+  margin: 2px 2px 2px 0;
+  padding: 1px 8px;
+  border-radius: 999px;
+  color: #fff;
+  font-style: normal;
+  font-size: 13px;
+}
+
+.combate-tipos-ayuda {
+  margin-top: 8px !important;
+  color: #8a7b70;
+  font-size: 12px;
+}
+
 .combate-menu.lista .combate-ataque {
   padding: 5px 12px;
 }

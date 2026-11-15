@@ -72,8 +72,11 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
     un aparato antiguo (el cubo de Metatrón) que abre el Teide. Hace años que nadie entra, porque
     la pieza de El Hierro era imposible de conseguir. Tras la penúltima medalla, un señor te lleva
     a El Hierro a por la última, y desde allí vuelves a Tenerife.
-  - **Medallas** (autor, 2026-11-15): un gimnasio en cada isla, dos en Gran Canaria. Tenerife,
-    uno o dos, está por decidir: 8 o 9 medallas. La historia, en `HISTORIA.md`.
+  - **Medallas** (autor, 2026-11-15): siete, una por isla. Gran Canaria tiene dos gimnasios
+    (Eléctrico y Lucha) y cada uno da media pintadera; Tenerife, uno. Ocho piezas más las cinco
+    leyendas son los trece círculos del cubo de Metatrón. La historia, en `HISTORIA.md`.
+  - **Ayuda de tipos en combate** (autor, 2026-11-15): cada ataque dice si hace ×2, ×½ o ×0 a la
+    rival, y la T abre lo que daña a cada criatura.
 - **Tono de la historia:** ligero y con humor. Se vence al campeón de cada isla para avanzar,
   mientras se investiga por qué desapareció la séptima. Eres el nuevo elegido de tu pueblo; te
   persigue la rama del pueblo que ataca al tuyo, y tu rival es tu mejor amigo (`HISTORIA.md`).
