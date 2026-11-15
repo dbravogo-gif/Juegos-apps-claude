@@ -92,12 +92,14 @@ export type Condicion =
   | 'isla2-completada'
   /** Ya te ha llegado el mensaje del rival al salir del museo (HISTORIA.md). */
   | 'mensaje-rival'
+  /** Ya has visto a los soldados y a la silueta en las Montañas del Fuego (HISTORIA.md). */
+  | 'soldados-fuego'
   | 'isla1-completada'
   | 'gimnasio2-vencido'
   | `vencido:${string}`
   | `palanca:${string}`
   | `aspas:${string}`;
-export const TODAS_LAS_CONDICIONES: ReadonlySet<Condicion> = new Set(['inicial-elegida', 'anciano', 'gimnasio-vencido']);
+export const TODAS_LAS_CONDICIONES: ReadonlySet<Condicion> = new Set(['inicial-elegida', 'anciano', 'gimnasio-vencido', 'mensaje-rival', 'soldados-fuego']);
 
 export interface Personaje {
   id: string;
@@ -106,11 +108,34 @@ export interface Personaje {
   y: number;
   mira: Direccion;
   entrenador?: { vision: number; obligatorio: boolean };
+  /**
+   * Quien no lucha pero, al verte, empieza su escena (los soldados de la rama que te persigue): ve
+   * como un entrenador y te habla, sin combate.
+   */
+  escena?: { vision: number };
   /** Tumbado en el suelo (los bañistas de Famara), y con la piel quemada por el sol. */
   postura?: 'tumbado';
   quemado?: boolean;
   /** Lo que dice al hablarle, mientras no lleguen los diálogos de verdad (F15). */
   frase?: string;
+  /**
+   * Solo está si se cumple `con` y no se cumple `sin` (2026-11-15: los soldados de las Montañas
+   * del Fuego aparecen al elegir inicial y se van al verte). Si no está, ni ocupa su casilla, ni ve,
+   * ni habla, ni se dibuja.
+   */
+  con?: Condicion;
+  sin?: Condicion;
+  /** Lleva el uniforme de la rama que te persigue, teñido del color de su pueblo (HISTORIA.md). */
+  uniforme?: 'perseguidor';
+  /** Se dibuja en negro, sin dejar ver quién es (el jefe, antes de descubrirse). */
+  silueta?: boolean;
+}
+
+/** ¿Está el personaje, con estas condiciones cumplidas? Sin condiciones, se da por presente. */
+export function presente(p: Personaje, condiciones?: ReadonlySet<string> | readonly string[]): boolean {
+  if (!condiciones) return true;
+  const tiene = (c: string) => ('has' in condiciones ? condiciones.has(c) : condiciones.includes(c));
+  return (!p.con || tiene(p.con)) && (!p.sin || !tiene(p.sin));
 }
 
 /** Un objeto en el suelo, que se recoge al pisarlo. */
@@ -331,6 +356,11 @@ export interface OpcionesPaso {
   sinEncuentros?: boolean;
   /** No pisar estas letras (para comprobar cada mancha obligatoria por separado). */
   evitar?: ReadonlySet<string>;
+  /**
+   * Los personajes que se van (con `sin`, como los soldados de una escena) no cortan el paso: su
+   * escena los quita al verte. Lo usa `alcanzables`, que solo sirve para revisar los mapas.
+   */
+  sinTemporales?: boolean;
 }
 
 /** ¿Se puede pisar la casilla x,y de la isla? */
@@ -338,7 +368,9 @@ export function transitable(m: Mundo, x: number, y: number, op: OpcionesPaso = {
   const k = clave(x, y);
   const cm = m.casillas.get(k);
   if (!cm) return false;
-  if (m.ocupadas.has(k) || op.prohibidas?.has(k)) return false;
+  const ocupada = m.ocupadas.get(k);
+  const corta = ocupada && presente(ocupada.personaje, op.condiciones) && !(op.sinTemporales && ocupada.personaje.sin);
+  if (corta || op.prohibidas?.has(k)) return false;
   if (cm.c === 'X') {
     const cierre = cierreEn(m, k);
     return Boolean(cierre && op.condiciones?.has(cierre.condicion));
@@ -396,7 +428,8 @@ export function palancaEn(m: Mundo, k: number): string | undefined {
 }
 
 /** Todas las casillas a las que se llega andando desde las de partida. */
-export function alcanzables(m: Mundo, desde: readonly number[], op: OpcionesPaso = {}): Set<number> {
+export function alcanzables(m: Mundo, desde: readonly number[], opciones: OpcionesPaso = {}): Set<number> {
+  const op = { ...opciones, sinTemporales: opciones.sinTemporales ?? true };
   const vistas = new Set<number>();
   const cola: number[] = [];
   for (const k of desde) {
@@ -430,8 +463,8 @@ export function enIsla(m: Mundo, zona: string, x: number, y: number): number {
  * Lo que ve un entrenador: las casillas en línea recta hacia donde mira, hasta su alcance o
  * hasta la primera que no se puede pisar (una pared o un árbol tapan la vista).
  */
-export function vision(m: Mundo, zona: string, p: Personaje): number[] {
-  const alcance = p.entrenador?.vision ?? 0;
+export function vision(m: Mundo, zona: string, p: Personaje, condiciones?: ReadonlySet<string> | readonly string[]): number[] {
+  const alcance = p.entrenador?.vision ?? p.escena?.vision ?? 0;
   const z = m.zonas.get(zona)!;
   const [dx, dy] = PASOS[p.mira];
   const vistas: number[] = [];
@@ -439,20 +472,21 @@ export function vision(m: Mundo, zona: string, p: Personaje): number[] {
     const x = z.origen.x + p.x + dx * i;
     const y = z.origen.y + p.y + dy * i;
     const cm = m.casillas.get(clave(x, y));
-    if (!cm || !(TRANSITABLES.has(cm.c) || cm.c === 'X') || m.ocupadas.has(clave(x, y))) break;
+    const otro = m.ocupadas.get(clave(x, y));
+    if (!cm || !(TRANSITABLES.has(cm.c) || cm.c === 'X') || (otro && presente(otro.personaje, condiciones))) break;
     vistas.push(clave(x, y));
   }
   return vistas;
 }
 
 /** El primer entrenador no vencido de la zona que ve la casilla x, y, o null (F16). */
-export function entrenadorQueVe(m: Mundo, x: number, y: number, vencidos: readonly string[]): { zona: string; personaje: string } | null {
+export function entrenadorQueVe(m: Mundo, x: number, y: number, vencidos: readonly string[], condiciones?: readonly string[]): { zona: string; personaje: string } | null {
   const k = clave(x, y);
   const zona = m.casillas.get(k)?.zona;
   const z = zona ? m.zonas.get(zona) : undefined;
   if (!z || !zona) return null;
   for (const p of z.personajes) {
-    if (p.entrenador && !vencidos.includes(p.id) && vision(m, zona, p).includes(k)) return { zona, personaje: p.id };
+    if ((p.entrenador || p.escena) && !vencidos.includes(p.id) && presente(p, condiciones) && vision(m, zona, p, condiciones).includes(k)) return { zona, personaje: p.id };
   }
   return null;
 }

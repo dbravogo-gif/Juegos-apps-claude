@@ -250,8 +250,12 @@ rival; `{amigo}`, el nombre que le pones.
   - la caja para ponerle nombre a tu amigo la primera vez que le hablas;
   - lo nuevo de tu madre y de la doctora (la inscripción de las ocho piezas);
   - el mensaje al móvil de tu amigo al salir del museo, con su nombre y su inicial.
-- **Parte 2:** los pueblos enemigos (uniformes teñidos, soldados y silueta en las Montañas del
-  Fuego, banderas).
+- **Parte 2, hecha (2026-11-15):**
+  - personajes que aparecen y desaparecen según la historia;
+  - los dos soldados de la rama que te persigue, con su uniforme teñido del color de su pueblo
+    (la cabeza, sin teñir), y la silueta negra de su jefe en las Montañas del Fuego;
+  - al verte, su escena, y se van.
+  - Faltan las banderas y las puertas de color de sus campamentos, para cuando haya campamentos.
 - **Parte 3:** el resto de Lanzarote (el anciano, el pescador que te vigila, la líder, la revancha y
   los recados).
 

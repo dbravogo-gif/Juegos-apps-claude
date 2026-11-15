@@ -17,7 +17,7 @@ import { ISLAS, LANZAROTE, type DatosIsla } from '../../data/islas';
 import { NOMBRE_OBJETO } from '../../data/textos-isla1';
 import { quienEs } from '../../data/entrenadores-isla1';
 import { AMIGOS, NOMBRE_TIPO_INICIAL } from '../../data/textos-isla1';
-import { inicialDelRival, type TipoInicial } from '../../data/pueblos';
+import { PUEBLOS, inicialDelRival, puebloQueTePersigue, type TipoInicial } from '../../data/pueblos';
 import { crearCriatura, curarDelTodo } from '../../core/criatura';
 import { sortearEncuentro } from '../../core/encuentros';
 import { perdidaPorDerrota } from '../../core/economia';
@@ -398,7 +398,7 @@ export class Partida implements Subsistema {
     // Al terminar un paso, ¿le ve algún entrenador? También dentro (los aprendices del gimnasio).
     // Sin criaturas en pie, no retan.
     if (this.modo === 'explorar' && antes > 0 && this.estado.paso === 0 && this.equipo.some((c) => c.vida > 0)) {
-      const quien = entrenadorQueVe(this.activo(), this.estado.x, this.estado.y, this.vencidos);
+      const quien = entrenadorQueVe(this.activo(), this.estado.x, this.estado.y, this.vencidos, this.estado.condiciones);
       if (quien) {
         this.alerta = { ...quien, pasos: PASOS_ALERTA };
         this.ctx.eventos.emit('entrenador:visto', { id: quien.personaje });
@@ -574,7 +574,8 @@ export class Partida implements Subsistema {
         .replaceAll('{nombre}', this.nombre)
         .replaceAll('{amigo}', this.amigos.amigo ?? 'tu amigo')
         .replaceAll('{inicial}', tuya ? NOMBRE_TIPO_INICIAL[tuya] : '')
-        .replaceAll('{inicialRival}', tuya ? NOMBRE_TIPO_INICIAL[inicialDelRival(tuya)] : '');
+        .replaceAll('{inicialRival}', tuya ? NOMBRE_TIPO_INICIAL[inicialDelRival(tuya)] : '')
+        .replaceAll('{rama}', tuya ? PUEBLOS[puebloQueTePersigue(tuya)].rama : 'la rama');
     const conNombre = (l: Dialogo['lineas'][number]) => ({ ...l, texto: cambiar(l.texto), ...(l.quien ? { quien: cambiar(l.quien) } : {}) });
     d = { ...d, lineas: d.lineas.map(conNombre), ...(d.pregunta ? { pregunta: conNombre(d.pregunta) } : {}), ...(d.tras ? { tras: d.tras.map(conNombre) } : {}) };
     this.dialogo = abrirDialogo(d);

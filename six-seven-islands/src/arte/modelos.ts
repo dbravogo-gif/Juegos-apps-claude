@@ -30,20 +30,29 @@ export function materialConTextura(mapa: Texture | null, op: OpcionesMaterial = 
 }
 
 /** Cambia los materiales de un objeto (por ejemplo, un personaje) por MaterialDiorama con su textura. */
-export function aMaterialDelJuego(raiz: Object3D, op: OpcionesMaterial = {}, tinte?: readonly [number, number, number]): MaterialDiorama[] {
+export function aMaterialDelJuego(
+  raiz: Object3D,
+  op: OpcionesMaterial = {},
+  tinte?: readonly [number, number, number],
+  /** Las mallas que no se tiñen (la cabeza de un uniforme: se tiñe la ropa, no la cara). */
+  sinTinte?: (m: Mesh) => boolean,
+): MaterialDiorama[] {
   const hechos = new Map<Material, MaterialDiorama>();
+  const libres = new Map<Material, MaterialDiorama>();
   raiz.traverse((o) => {
     const m = o as Mesh;
     if (!m.isMesh) return;
     const viejo = (Array.isArray(m.material) ? m.material[0] : m.material) as Material & { map?: Texture | null };
-    let nuevo = hechos.get(viejo);
+    const libre = !!tinte && !!sinTinte?.(m);
+    const cache = libre ? libres : hechos;
+    let nuevo = cache.get(viejo);
     if (!nuevo) {
-      nuevo = materialConTextura(viejo.map ?? null, op, tinte);
-      hechos.set(viejo, nuevo);
+      nuevo = materialConTextura(viejo.map ?? null, op, libre ? undefined : tinte);
+      cache.set(viejo, nuevo);
     }
     m.material = nuevo;
     m.castShadow = true;
     m.receiveShadow = true;
   });
-  return [...hechos.values()];
+  return [...hechos.values(), ...libres.values()];
 }

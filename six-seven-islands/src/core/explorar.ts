@@ -5,7 +5,7 @@
 //
 // Las funciones reciben el mapa activo: la isla o el interior donde está el jugador.
 
-import { DE_ENCUENTROS, EDIFICIOS, aspasEn, cierreEn, clave, corrienteEn, letreroEn, palancaEn, transitable, type Condicion, type Direccion, type Mundo } from './mundo';
+import { DE_ENCUENTROS, EDIFICIOS, aspasEn, cierreEn, clave, corrienteEn, letreroEn, palancaEn, presente, transitable, type Condicion, type Direccion, type Mundo } from './mundo';
 
 /** Pasos fijos que se tarda en cruzar una casilla: 11 a 60 Hz, unos 0,18 s. */
 export const PASOS_POR_CASILLA = 11;
@@ -195,7 +195,7 @@ export function interactuar(m: Mundo, e: EstadoExplorar): EventoExplorar[] {
   if (palanca) return [{ tipo: 'palanca', id: palanca, ya: e.condiciones.includes(`palanca:${palanca}`) }];
   const mostrador = m.casillas.get(clave(e.x + dx, e.y + dy))?.c === 'c';
   const p = m.ocupadas.get(mostrador ? clave(e.x + 2 * dx, e.y + 2 * dy) : clave(e.x + dx, e.y + dy));
-  return p ? [{ tipo: 'hablar', zona: p.zona, personaje: p.personaje.id }] : [];
+  return p && presente(p.personaje, e.condiciones) ? [{ tipo: 'hablar', zona: p.zona, personaje: p.personaje.id }] : [];
 }
 
 /** Cumple una condición (elegir la inicial, el anciano, el gimnasio): abre sus pasos. */

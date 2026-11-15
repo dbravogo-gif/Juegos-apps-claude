@@ -204,7 +204,12 @@ PERSONAJES = {
  'fuego': ["{ id: 'entrenador-salida-fuego', x: 37, y: 21, mira: 'o', entrenador: { vision: 3, obligatorio: true }, frase: 'Si quieres llegar a la capital, antes tendrás que vencerme.' }",
            "{ id: 'excursionista', x: 10, y: 10, mira: 'o', entrenador: { vision: 5, obligatorio: false }, frase: 'Aquí la tierra quema: un palmo bajo el suelo, se podría asar pescado.' }",
            "{ id: 'entrenador-centro', x: 26, y: 14, mira: 'n', entrenador: { vision: 2, obligatorio: false }, frase: 'Entreno entre los volcanes. El calor me hace más fuerte.' }",
-           "{ id: 'entrenador-caldera', x: 19, y: 20, mira: 'e', entrenador: { vision: 5, obligatorio: false }, frase: 'Esta caldera es mi escondite. ¿Cómo la has encontrado?' }"],
+           "{ id: 'entrenador-caldera', x: 19, y: 20, mira: 'e', entrenador: { vision: 5, obligatorio: false }, frase: 'Esta caldera es mi escondite. ¿Cómo la has encontrado?' }",
+           # La primera aparición de la rama que te persigue (HISTORIA.md): dos soldados con su
+           # uniforme y la silueta de su jefe cortan el camino; al verte se retiran y desaparecen.
+           "{ id: 'soldado-fuego-1', x: 29, y: 11, mira: 'o', escena: { vision: 4 }, con: 'inicial-elegida', sin: 'soldados-fuego', uniforme: 'perseguidor' }",
+           "{ id: 'soldado-fuego-2', x: 29, y: 13, mira: 'o', escena: { vision: 4 }, con: 'inicial-elegida', sin: 'soldados-fuego', uniforme: 'perseguidor' }",
+           "{ id: 'silueta-fuego', x: 30, y: 12, mira: 'o', con: 'inicial-elegida', sin: 'soldados-fuego', silueta: true }"],
  'jable': ["{ id: 'entrenador-jable', x: 8, y: 17, mira: 's', entrenador: { vision: 3, obligatorio: false }, frase: 'En el jable, la arena se mueve con el viento: hoy hay un camino y mañana otro.' }",
            "{ id: 'agricultor-jable', x: 13, y: 3, mira: 's', frase: 'Aquí se siembra en la arena: guarda la humedad de la noche. ¡Las batatas salen dulcísimas!' }"],
  'famara': ["{ id: 'pescador-famara', x: 20, y: 6, mira: 'o', entrenador: { vision: 4, obligatorio: false }, frase: 'Aquí pican las viejas. ¿Tú qué buscas, criaturas o pescado?' }",

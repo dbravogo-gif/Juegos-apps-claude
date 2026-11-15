@@ -35,7 +35,8 @@ import { clone as clonarConEsqueleto } from 'three/addons/utils/SkeletonUtils.js
 import type { GLTF } from 'three/addons/loaders/GLTFLoader.js';
 import { PASOS_POR_CASILLA, posicionVisual } from '../../core/explorar';
 import { Suavizado } from './suavizado';
-import { DE_ENCUENTROS, clave, deClave, enIsla, vision, type Direccion, type Personaje as DefPersonaje } from '../../core/mundo';
+import { DE_ENCUENTROS, clave, deClave, enIsla, presente, vision, type Direccion, type Mundo as MundoLogico, type Personaje as DefPersonaje } from '../../core/mundo';
+import { colorUniforme, puebloQueTePersigue, type TipoInicial } from '../../data/pueblos';
 import { COLORES } from '../../arte/paleta';
 import { alturaSuelo } from '../../arte/escala';
 import { aMaterialDelJuego, cargarModelo, rutaModelo } from '../../arte/modelos';
@@ -71,6 +72,8 @@ const VELOCIDAD = 60 / PASOS_POR_CASILLA;
 
 /** Tinte de la piel quemada por el sol (el guiri de Famara). */
 const QUEMADO = [1, 0.66, 0.58] as const;
+/** La silueta negra del jefe, antes de descubrirse (HISTORIA.md). */
+const SILUETA = [0.05, 0.05, 0.07] as const;
 
 /** Los líderes de gimnasio: `lider-gimnasio` (Lanzarote) y `lider-<tipo>` en las demás islas. */
 const esLider = (p: DefPersonaje): boolean => p.id.startsWith('lider-');
@@ -82,6 +85,9 @@ function modeloDe(p: DefPersonaje): string {
   // Las líderes, con la figura de maga y más grandes (abajo): antes llevaban la misma que sus
   // aprendices o que el vigilante y no se distinguían (probador, 2026-11-13).
   if (esLider(p)) return 'Mage';
+  // Los soldados de uniforme, con la armadura gris: se tiñe bien del color de su pueblo (con la capa
+  // verde de otras figuras, el tinte salía verdoso).
+  if (p.uniforme) return 'Knight';
   if (p.entrenador) return p.entrenador.obligatorio ? 'Knight' : 'Barbarian';
   return 'Rogue_Hooded';
 }
@@ -101,6 +107,10 @@ export class Personaje implements Subsistema {
   private figuras: Figura[] = [];
   /** Los personajes por id, con hacia dónde miran normalmente, para girarlos al hablar. */
   private porId = new Map<string, { figura: Figura; giro: number; tumbado?: boolean }>();
+  /** Los que solo están con ciertas condiciones (soldados, siluetas): se enseñan o se esconden. */
+  private condicionados: { p: DefPersonaje; raiz: Object3D }[] = [];
+  /** Los de uniforme, por hacer hasta saber de qué color va (el del pueblo que te persigue). */
+  private uniformados: { p: DefPersonaje; mapa: MundoLogico; zona: string; hecho?: boolean }[] = [];
   private giro = 0;
   /** Segundos que lleva el jugador sin moverse: entre casilla y casilla hay un instante parado. */
   private quieto = 0;
@@ -161,9 +171,16 @@ export class Personaje implements Subsistema {
       for (const z of mapa.zonas.values()) {
         for (const p of z.personajes) {
           if (p.id.startsWith('estatua-')) continue;
+          // Los de uniforme se hacen al saber qué pueblo te persigue (al elegir inicial).
+          if (p.uniforme) {
+            this.uniformados.push({ p, mapa, zona: z.id });
+            continue;
+          }
           const persona = PERSONA_DE[p.id];
           const nombre = modeloDe(p);
-          const f = persona ? await this.figuraPersona(persona) : this.figura(await cargar(nombre), nombre, p.quemado ? QUEMADO : undefined);
+          const tinte = p.silueta ? SILUETA : p.quemado ? QUEMADO : undefined;
+          const f = persona ? await this.figuraPersona(persona) : this.figura(await cargar(nombre), nombre, tinte);
+          if (p.con || p.sin) this.condicionados.push({ p, raiz: f.raiz });
           const k = enIsla(mapa, z.id, p.x, p.y);
           const [x, y] = deClave(k);
           f.raiz.position.set(x, alturaSuelo(mapa.casillas.get(k)!.h), y);
@@ -288,7 +305,7 @@ export class Personaje implements Subsistema {
   }
 
   /** Una figurita: copia del modelo con su esqueleto, sin armas, a escala y con sus animaciones. */
-  private figura(gltf: GLTF, nombre: string, tinte?: readonly [number, number, number]): Figura {
+  private figura(gltf: GLTF, nombre: string, tinte?: readonly [number, number, number], cabezaSinTinte = false): Figura {
     const base = nombre.split('_')[0];
     const copia = clonarConEsqueleto(gltf.scene);
     copia.traverse((o) => {
@@ -296,7 +313,7 @@ export class Personaje implements Subsistema {
       // Solo las piezas del cuerpo («Rogue_Body», «Mage_Hat»…); fuera armas, escudos y libros.
       o.visible = o.name.startsWith(`${base}_`) && !o.name.includes('Shield');
     });
-    this.materiales.push(...aMaterialDelJuego(copia, { bordes: [-0.25, 0.5], especular: 0.1, dureza: 16, contraluz: 0.35 }, tinte));
+    this.materiales.push(...aMaterialDelJuego(copia, { bordes: [-0.25, 0.5], especular: 0.1, dureza: 16, contraluz: 0.35 }, tinte, cabezaSinTinte ? (m) => /head/i.test(m.name) : undefined));
     const caja = new Box3();
     copia.updateWorldMatrix(true, true);
     copia.traverse((o) => {
@@ -432,6 +449,36 @@ export class Personaje implements Subsistema {
   }
 
   /** Oculta lo que ven los entrenadores vencidos (al vencerlos, al cargar o al importar). */
+  /**
+   * Enseña o esconde a los que dependen de la historia y, al elegir inicial, hace los uniformados
+   * con el color del pueblo que te persigue (la ropa; la cabeza, sin teñir).
+   */
+  private presentes(ctx: Ctx): void {
+    const cond = this.partida.estado.condiciones;
+    for (const c of this.condicionados) c.raiz.visible = presente(c.p, cond);
+    const inicial = this.partida.estado.inicial as TipoInicial | null;
+    if (!inicial) return;
+    for (const u of this.uniformados) {
+      if (u.hecho) continue;
+      u.hecho = true;
+      void this.hacerUniformado(u, colorUniforme(puebloQueTePersigue(inicial)), ctx);
+    }
+  }
+
+  private async hacerUniformado(u: { p: DefPersonaje; mapa: MundoLogico; zona: string }, tinte: readonly [number, number, number], ctx: Ctx): Promise<void> {
+    const nombre = modeloDe(u.p);
+    const f = this.figura(await cargarModelo(rutaModelo(`kaykit/${nombre}.glb`)), nombre, tinte, true);
+    const k = enIsla(u.mapa, u.zona, u.p.x, u.p.y);
+    const [x, y] = deClave(k);
+    f.raiz.position.set(x, alturaSuelo(u.mapa.casillas.get(k)!.h), y);
+    f.raiz.rotation.y = GIRO[u.p.mira];
+    this.porId.set(u.p.id, { figura: f, giro: GIRO[u.p.mira] });
+    ctx.escena.add(f.raiz);
+    this.objetos.push(f.raiz);
+    this.condicionados.push({ p: u.p, raiz: f.raiz });
+    f.raiz.visible = presente(u.p, this.partida.estado.condiciones);
+  }
+
   private ocultarVisionesVencidas(): void {
     const v = this.visiones;
     const vencidos = this.partida.vencidos;
@@ -449,6 +496,7 @@ export class Personaje implements Subsistema {
   actualizar(dt: number, ctx: Ctx): void {
     this.colocar(dt, ctx.tiempo.alfa);
     this.ocultarVisionesVencidas();
+    this.presentes(ctx);
     this.reloj += dt;
     if (this.tExclamacion >= 0) {
       // Salta y se queda un momento; dura lo mismo que la espera de «partida» (0,75 s).

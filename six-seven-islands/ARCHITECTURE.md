@@ -225,6 +225,18 @@ Todo en el núcleo (`core/mundo.ts` y `core/explorar.ts`), igual en zonas e inte
   fuera de la isla. Las barcas, boyas y rocas solo van ahí; una prueba vigila que el mar de cada
   zona de costa lo sea.
 
+## Personajes de la historia
+
+- **Con condiciones** (`con` y `sin` del personaje, `presente()` en `core/mundo.ts`): solo está si se
+  cumple `con` y no `sin`. Si no está, no ocupa su casilla, no ve, no habla y «personaje» lo esconde.
+  `alcanzables`, que solo revisa mapas, no cuenta como bloqueo a los que se van (`sin`): su escena
+  los quita al verte.
+- **Escena** (`escena: { vision }`): ve como un entrenador y, al verte, habla; sin combate.
+- **Uniforme** (`uniforme: 'perseguidor'`): la figura de armadura, teñida del color del pueblo que te
+  persigue (`data/pueblos.ts`), con la cabeza sin teñir. Se hace al conocer tu inicial.
+- **Silueta** (`silueta: true`): la figura en negro (el jefe, antes de descubrirse).
+- En los textos: `{nombre}`, `{amigo}`, `{inicial}`, `{inicialRival}` y `{rama}`.
+
 ## Combate: tabla de tipos
 
 La T (acción `tabla` de «entrada») abre un panel con lo que le hace mucho, poco o nada a cada una de
