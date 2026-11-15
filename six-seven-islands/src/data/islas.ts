@@ -2,6 +2,7 @@
 // sitio, para que «partida», «combate» y el mapa no conozcan una isla concreta. Se viaja entre
 // ellas en barco: se guarda la partida en la isla de destino y se recarga la página.
 
+import type { Campo } from '../core/combate';
 import type { Condicion, DefInterior, DefIsla } from '../core/mundo';
 import type { Guion } from '../core/guion';
 import type { TablaEncuentros } from '../core/encuentros';
@@ -40,6 +41,8 @@ export interface DatosIsla {
   llegada: { zona: string; x: number; y: number };
   /** Solo la isla 1: la sala donde empieza la partida. */
   salaInicial?: string;
+  /** El campo de cada gimnasio, por su sala (autor, 2026-11-15): dura todos sus combates. */
+  campos?: Readonly<Record<string, Campo>>;
 }
 
 export const LANZAROTE: DatosIsla = {
@@ -57,6 +60,8 @@ export const LANZAROTE: DatosIsla = {
   refugio: SALA_INICIAL,
   llegada: { zona: 'capital', x: 24, y: 13 },
   salaInicial: SALA_INICIAL,
+  // El gimnasio de Roca, con tormenta de arena permanente.
+  campos: { gimnasio: { clima: 'arena' } },
 };
 
 /** Fuerteventura (ISLA-2.md). Fases 1 a 3: de Corralejo a Morro Jable, con el gimnasio de Aire. */
@@ -78,6 +83,8 @@ export const FUERTEVENTURA: DatosIsla = {
   tenderos: new Set(['tendero-corralejo', 'tendero-puerto', 'tendero-morro']),
   refugio: 'refugio-corralejo',
   llegada: { zona: 'corralejo', x: 12, y: 5 },
+  // El gimnasio de Aire, con el viento a favor de sus entrenadores (el lado 1).
+  campos: { 'gimnasio-aire': { vientoAFavor: 1 } },
 };
 
 /** Las islas por su número, de este a oeste. */

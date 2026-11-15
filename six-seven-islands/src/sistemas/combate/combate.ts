@@ -268,8 +268,11 @@ export class Combate implements Subsistema {
     // La inicial no hace caso hasta que el anciano cuenta su historia (F25).
     const especieInicial = ESPECIE_INICIAL[this.partida.estado.inicial ?? ''];
     const rebeldes = this.partida.estado.condiciones.includes('anciano') ? [] : this.partida.equipo.filter((c) => c.especie === especieInicial).map((c) => c.uid);
+    // Dentro de un gimnasio, su campo (tormenta de arena, viento…) en los combates contra entrenadores.
+    const sala = this.partida.estado.dentro;
+    const campo = entrenador && sala ? this.partida.datos.campos?.[sala] : undefined;
     const r = iniciarCombate(
-      { equipos: [structuredClone(this.partida.equipo), rival], formato: 1, salvaje: entrenador === null, control: ['jugador', 'ia'], rng, experiencia: true, rebeldes },
+      { equipos: [structuredClone(this.partida.equipo), rival], formato: 1, salvaje: entrenador === null, control: ['jugador', 'ia'], rng, experiencia: true, rebeldes, ...(campo ? { campo } : {}) },
       DATOS,
     );
     this.estado = r.estado;
@@ -526,7 +529,12 @@ export class Combate implements Subsistema {
         }
         case 'danio': {
           if (ev.causa !== 'golpe') {
-            this.encolar({ texto: ev.causa === 'quemadura' ? 'La quemadura le hace daño.' : 'Le hace daño.', duracion: 0.9, saltable: true, empezar: () => this.pintarVida(ev.ref.lado, ev.vida, ev.vidaMax) });
+            const textos: Partial<Record<typeof ev.causa, string>> = {
+              quemadura: 'La quemadura le hace daño.',
+              arena: 'La tormenta de arena le hace daño.',
+              confusion: 'Se golpea a sí misma.',
+            };
+            this.encolar({ texto: textos[ev.causa] ?? 'Le hace daño.', duracion: 0.9, saltable: true, empezar: () => this.pintarVida(ev.ref.lado, ev.vida, ev.vidaMax) });
             break;
           }
           const lado = ev.ref.lado;
@@ -572,6 +580,24 @@ export class Combate implements Subsistema {
           break;
         case 'noSeMueve':
           this.encolar({ texto: `${ev.nombre} no se puede mover.`, duracion: 1, saltable: true });
+          break;
+        // El campo del gimnasio (autor, 2026-11-15), al empezar.
+        case 'campo': {
+          const c = ev.campo;
+          if (c.clima === 'arena') this.encolar({ texto: '¡Una tormenta de arena azota el gimnasio!', duracion: 1.2, saltable: true });
+          if (c.terreno === 'electrico') this.encolar({ texto: '¡El suelo se llena de electricidad! Los ataques eléctricos pegan más.', duracion: 1.4, saltable: true });
+          if (c.vientoAFavor !== undefined) this.encolar({ texto: c.vientoAFavor === 1 ? '¡Sopla un viento a favor del rival! Sus criaturas van más rápido.' : '¡Sopla el viento a tu favor!', duracion: 1.4, saltable: true });
+          if (c.agarre) this.encolar({ texto: '¡El luchador te ha hecho un agarre antes de empezar!', duracion: 1.2, saltable: true });
+          break;
+        }
+        case 'confuso':
+          this.encolar({ texto: ev.inicio ? `¡${ev.nombre} se ha quedado confusa!` : `${ev.nombre} está confusa…`, duracion: 1, saltable: true });
+          break;
+        case 'seHiere':
+          this.encolar({ texto: `¡Está tan confusa que se ha hecho daño!`, duracion: 1, saltable: true });
+          break;
+        case 'desconfusa':
+          this.encolar({ texto: `${ev.nombre} ya no está confusa.`, duracion: 1, saltable: true });
           break;
         case 'debilitado': {
           const lado = ev.ref.lado;

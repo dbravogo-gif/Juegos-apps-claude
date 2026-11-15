@@ -99,7 +99,9 @@ propuesta de Claude y qué frena mientras siga abierto.
       - Aire: viento a favor.
       - Eléctrico: campo eléctrico.
       - Lucha: confusión por el agarre.
-      - Hay que añadirlos al núcleo del combate.
+      - **Hechos en el núcleo** (2026-11-15, `Campo` en `core/combate.ts`). Ya los tienen el gimnasio
+        de Roca (arena) y el de Aire (viento); los de Eléctrico y Lucha, al hacer Gran Canaria.
+      - Falta el efecto visual: arena o viento en pantalla durante el combate.
     - Siete medallas (autor, 2026-11-15): la de Gran Canaria es una pintadera partida en dos
       mitades, una por gimnasio. El medallero ya muestra las siete; las mitades se pintan al hacer
       Gran Canaria.
