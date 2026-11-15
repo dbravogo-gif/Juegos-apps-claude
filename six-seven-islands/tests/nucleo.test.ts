@@ -80,6 +80,20 @@ describe('tipos', () => {
     expect(ids.filter((d) => e('veneno', d) === 2).sort()).toEqual(['ancestral', 'comun', 'planta']);
   });
 
+  it('ajuste del 2026-11-15: la Tierra gana a la Roca y Espectral y Acero ya no resisten a Bicho', () => {
+    const e = (a: string, d: string) => eficacia(TABLA_TIPOS, a, [d]);
+    expect(e('tierra', 'roca')).toBe(2);
+    expect([e('bicho', 'espectral'), e('bicho', 'acero')]).toEqual([1, 1]);
+  });
+
+  it('el círculo de los cinco pueblos: cada uno pierde contra el pueblo al que ataca (HISTORIA.md)', () => {
+    // El Fuego ataca a la Roca, la Roca a la Tierra, la Tierra al Agua, el Agua a la Planta y la
+    // Planta al Fuego: el atacado gana al atacante en tipos.
+    const e = (a: string, d: string) => eficacia(TABLA_TIPOS, a, [d]);
+    const circulo: [string, string][] = [['infernal', 'roca'], ['roca', 'tierra'], ['tierra', 'agua'], ['agua', 'planta'], ['planta', 'infernal']];
+    for (const [atacante, atacado] of circulo) expect(e(atacado, atacante), `${atacado} contra ${atacante}`).toBe(2);
+  });
+
   it('el ciclo de las iniciales: el agua gana a la roca, la roca al fuego, el fuego a la planta y la planta al agua', () => {
     const e = (a: string, d: string) => eficacia(TABLA_TIPOS, a, [d]);
     expect([e('agua', 'roca'), e('roca', 'infernal'), e('infernal', 'planta'), e('planta', 'agua')]).toEqual([2, 2, 2, 2]);
@@ -222,5 +236,18 @@ describe('criaturas y progreso', () => {
     expect(objetoUtil(c, 'paquete', D)).toBe(false);
     expect(() => usarObjeto(c, 'revivir', D)).toThrow();
     expect(curarDelTodo({ ...c, vida: 1, estado: { tipo: 'quemado' } }, D)).toMatchObject({ vida: max, estado: null });
+  });
+});
+
+describe('ayuda de tipos en combate (autor, 2026-11-15)', () => {
+  it('agrupa lo que daña mucho, poco o nada, y etiqueta cada multiplicador', async () => {
+    const { gruposContra, etiquetaEficacia } = await import('../src/core/tipos');
+    const { TABLA_TIPOS } = await import('../src/data/tipos');
+    const g = gruposContra(TABLA_TIPOS, ['roca']);
+    expect(g.mucho).toEqual(expect.arrayContaining(['agua', 'planta', 'tierra', 'lucha', 'acero']));
+    expect(g.mucho).not.toContain('infernal');
+    expect(gruposContra(TABLA_TIPOS, ['comun']).nada).toEqual(['espectral']);
+    expect([etiquetaEficacia(2).clase, etiquetaEficacia(0.5).clase, etiquetaEficacia(0).clase, etiquetaEficacia(1).clase]).toEqual(['mucho', 'poco', 'nada', 'normal']);
+    expect(etiquetaEficacia(4).texto).toBe('×4 Muy eficaz');
   });
 });

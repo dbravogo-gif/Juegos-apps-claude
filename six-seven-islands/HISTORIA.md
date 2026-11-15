@@ -1,38 +1,52 @@
-# La historia (borrador 2)
+# La historia (borrador 3)
 
 2026-11-15. La escribe Claude con las decisiones del autor. Lo marcado **(decidido)** es del
-autor; lo demás es propuesta. Las decisiones que faltan están al final, con opciones. Nada entra en
-el juego hasta cerrarlas.
+autor; lo demás es propuesta. Lo que falta está al final, con opciones. Nada entra en el juego
+hasta cerrarlo.
 
 La idea de pueblos elementales enfrentados es solo una idea: aquí no hay nombres, personajes,
 poderes ni frases de ninguna serie. Los lugares y las fiestas son reales; las personas, inventadas.
 No salen marcas: el móvil tiene una aplicación de mensajes sin nombre.
 
-## Decidido por el autor (2026-11-15)
+## Decidido por el autor
 
-- **Te persigue la rama del pueblo que ataca al tuyo.**
-- **Eres el nuevo elegido de tu pueblo.** Por el camino conoces a antiguos elegidos y a gente que
-  defiende hoy a tu pueblo.
-- **El jefe enemigo te acompaña.** Es alguien que viaja contigo y al que ves varias veces. Antes
-  de descubrirlo, sale alguna escena con su silueta en negro.
-- **Tu rival es el amigo que elige la inicial que gana a la tuya,** porque sus antepasados también
-  la eligieron.
-  - Antes de elegir, hablas con él como amigo en un bar, con un barraquito y un sándwich de pollo
-    desmenuzado.
-  - Después te escribe al móvil: ha elegido tu contraria por la historia de su familia. No te
-    guarda rencor, pero tendréis que enfrentaros.
-- **Tono:** soldados cómicos y jefes algo más serios.
-- **Nombres:** los jefes llevan nombres normales, alguno canario. El nombre de cada amigo lo
-  decides tú al hablar con él la primera vez.
-- **El Garoé** y **la Bajada de la Virgen de los Reyes** son partes importantes de la historia.
-- **La Liga está en Tenerife, dentro del Teide.**
-  - Las medallas son piezas de un aparato antiguo, relacionado con el cubo de Metatrón.
-  - Hace años que nadie entra en el Teide, porque hacen falta todas las piezas y la de El Hierro
-    era imposible de conseguir: la isla estaba escondida.
-- **El Hierro** tiene criaturas muy fuertes y ancestrales que se creían extinguidas. Tras la
-  penúltima medalla, un señor te la muestra y te lleva allí a por la última.
-- **Medallas:** 1 gimnasio en cada isla pequeña y 2 en Gran Canaria. Falta decidir Tenerife.
-- **Inicial de fuego:** un ataque flojo de Acero (Trompazo de hierro, ya puesto en el juego).
+**El 2026-11-15, en la primera tanda:**
+- Te persigue la rama del pueblo que ataca al tuyo.
+- Eres el nuevo elegido de tu pueblo y conoces a antiguos elegidos y defensores.
+- **Tu rival:**
+  - es tu mejor amigo y elige la inicial que gana a la tuya, por su familia;
+  - primero quedáis en el bar, con un barraquito y un sándwich de pollo desmenuzado;
+  - después de elegir, te escribe al móvil.
+- **El tono:** soldados cómicos y jefes algo más serios.
+- **Los nombres:**
+  - los jefes llevan nombres normales, alguno canario;
+  - el nombre de cada amigo lo pones tú.
+- **La Liga** está en Tenerife, dentro del Teide. Las medallas son piezas de un aparato antiguo
+  con el cubo de Metatrón. El Hierro, escondido, tenía la pieza que faltaba. Es la última isla,
+  con criaturas muy fuertes y ancestrales que se creían extinguidas.
+
+**En la segunda tanda:**
+- **El jefe enemigo es Chano,** el compañero que te acompaña. Antes sale su silueta en negro.
+- **Siete medallas,** una por isla. La de Gran Canaria es una sola pintadera partida a la mitad:
+  cada uno de sus dos gimnasios da una mitad. Tenerife tiene un solo gimnasio.
+- **El señor que te muestra El Hierro** es un hombre mayor de tu pueblo que lleva tiempo
+  vigilándote, para saber si de verdad eres el elegido. Al ganar la penúltima medalla te lo
+  confirma y te lleva.
+- **La Bajada de la Virgen de los Reyes** entra de lleno, con todo el respeto. El autor es de El
+  Hierro y la quiere en el juego.
+- **El Hierro, en orden:**
+  1. Llegas y empieza la Bajada. Te cuentan su historia y la de la isla.
+  2. Vas al Garoé.
+  3. El líder del gimnasio te cuenta la historia de los pueblos y qué pasó en El Hierro mientras
+     estuvo escondida.
+  4. Decide que eres digno, reabre el gimnasio, que llevaba años cerrado, y lucha contigo.
+- **Los nombres de los comandantes valen,** y uno se llama Kevin.
+- **Gran Canaria:** Eléctrico en Las Palmas y Lucha en Agaete, con algo especial (ver la decisión
+  1).
+- **La tabla de tipos se compensa:** la Tierra hace ×2 a la Roca, y Espectral y Acero ya no
+  resisten a Bicho. Ya está en el juego.
+- **La tabla de tipos, a la vista en combate:** cada ataque dice si hace ×2, ×½ o ×0, y la T abre
+  la ayuda de tipos. Ya está en el juego.
 
 ## 1. La premisa
 
@@ -40,21 +54,21 @@ Hace siglos, cinco pueblos peleaban en círculo por las islas, cada uno guiado p
 Para acabar con la guerra, las leyendas y las ancestrales hicieron **el Sello** (nombre
 provisional), un aparato de piedra y metal con la figura del cubo de Metatrón, que tiene trece
 círculos:
-- **ocho círculos** son las pintaderas, una por gimnasio, que custodian los líderes;
-- **cinco círculos** son las cinco leyendas: solo se encienden con un descendiente de cada una y
-  su elegido, juntos y en paz.
+- **ocho círculos** son las ocho piezas de las siete pintaderas, porque la de Gran Canaria está
+  partida en dos;
+- **cinco círculos** son las cinco leyendas, que solo se encienden con un descendiente de cada
+  una y su elegido, juntos y en paz.
 
 Con el Sello completo se abre el corazón del Teide, donde se celebra la Liga y se renueva el pacto.
-Cada generación, cinco elegidos lo intentan.
 
 **La respuesta secreta:**
-- Hace unos cincuenta años, la generación anterior lo intentó. Entre esos elegidos estaba **tu
-  abuelo**, por tu pueblo.
-- Uno de ellos los traicionó para quedarse el Sello. Para protegerlo, las ancestrales escondieron
-  El Hierro, con su pintadera y con el Garoé, tras un mar de nubes.
-- Desde entonces nadie completa el Sello ni entra en el Teide, y el pacto se debilita. Por eso han
-  vuelto las ramas radicales.
-- El traidor fue **el compañero que te acompaña**, que hoy es el jefe de la rama que te persigue.
+- Hace unos cincuenta años, los cinco elegidos de entonces estuvieron a punto de conseguirlo.
+- Uno de ellos los traicionó para quedarse el Sello: Chano.
+- Para protegerlo, las ancestrales escondieron El Hierro, con su pintadera y con el Garoé, tras
+  un mar de nubes.
+- Desde entonces nadie entra en el Teide, el pacto se debilita y han vuelto las ramas radicales.
+- **El señor que te vigila** fue el elegido de tu pueblo en aquella generación (propuesta). Nunca
+  supo quién los traicionó.
 
 ## 2. Los pueblos y el círculo
 
@@ -66,11 +80,10 @@ Cada generación, cinco elegidos lo intentan.
 | Los del Llano | de tierra (Tierra) | los pueblos sepultados por el volcán | Agua |
 | Los del Jameo | del agua (Agua) | los jameos, donde entra el mar | Planta |
 
-**Para quien elige [X]:**
+En la tabla de tipos, cada pueblo pierde contra el pueblo al que ataca. Una prueba lo vigila.
 - **Tu rival** lleva la inicial del pueblo al que ataca el tuyo, que te gana en tipos.
 - **Te persigue** la rama del pueblo que ataca al tuyo.
-- **Los otros tres amigos** llevan las tres iniciales que quedan. Al final, las cinco juntas
-  encienden los cinco círculos del Sello.
+- **Los otros tres amigos** llevan las tres iniciales que quedan.
 
 ## 3. Las cinco ramas
 
@@ -78,92 +91,88 @@ Todas llevan el mismo uniforme, con el color y los detalles de su pueblo. En el 
 será la figura de siempre teñida (la ropa, no la cara); después, con Meshy, cinco versiones.
 Sus campamentos tienen banderas y puertas de su color.
 
-| Rama (provisional) | Pueblo | Qué quieren | Uniforme | Su comandante (la cara visible) |
+| Rama (provisional) | Pueblo | Qué quieren | Uniforme | Comandante |
 | --- | --- | --- | --- | --- |
 | La Raíz | Planta | que el verde lo cubra todo | verde musgo y hojas cosidas | Domingo, jardinero que habla con sus macetas |
 | La Brasa | Fuego | que el fuego no se apague nunca | rojo y naranja, chispas bordadas | Yeray, que todo lo grita |
 | El Basalto | Roca | que nada cambie jamás | gris oscuro y hombreras de laja | Candelaria, que tarda una eternidad en decidir |
-| Los Sepultados | Tierra | recuperar lo que el volcán se tragó | ocre, faroles y palas | Isidro, que habla susurrando |
+| Los Sepultados | Tierra | recuperar lo que el volcán se tragó | ocre, faroles y palas | Kevin, que habla susurrando como un fantasma |
 | La Marea | Agua | que el agua sea solo suya | turquesa con espuma blanca | Guacimara, que no desperdicia ni una gota |
 
-Los comandantes son la cara visible de cada rama. **El jefe de verdad** de la rama que te persigue
-es el compañero (ver la decisión 1).
+Los comandantes son la cara visible de cada rama. El jefe de la rama que te persigue es Chano.
 
 ## 4. Los personajes principales
 
 - **Tú,** el nuevo elegido de tu pueblo. Tu compañera te elige en el museo.
 - **Tu rival,** amigo de toda la vida y elegido del pueblo al que ataca el tuyo.
-- **Los otros tres amigos.** Les pones el nombre al conocerlos. Cada uno es el elegido de su
-  pueblo y te los encuentras en distintas islas.
-- **El compañero** (Chano, provisional): un señor mayor y simpático que dice que luchó junto a tu
-  abuelo y que defiende a tu pueblo.
-  - Aparece en varias islas: te cura el equipo, te da consejos y te habla de tu abuelo.
-  - Lleva la ropa de tu color hasta que se descubre.
-- **Los defensores de tu pueblo:** uno en cada isla, a veces un antiguo elegido. Te enseñan
-  algo de tu leyenda y, a veces, te dan una pista o un objeto. Por ejemplo, el anciano de La Geria
-  defendió a tu pueblo de joven.
-- **Tu abuelo:** el elegido de hace cincuenta años. Tu madre dice que sus historias son cuentos.
-  Vive retirado en La Palma y es el señor que te muestra El Hierro (ver la decisión 2).
-- **La arqueóloga** (Fuerteventura) estudia a las ancestrales. Es una aliada que sabe mucho y la
-  ves de vez en cuando.
+- **Los otros tres amigos.** Les pones el nombre al conocerlos y te los encuentras en distintas
+  islas.
+- **Chano,** el jefe secreto. Es un señor simpático que dice defender a tu pueblo.
+  - Aparece en varias islas: te cura, te aconseja y te anima.
+  - Lleva ropa de tu color hasta que se descubre (ver la decisión 2).
+- **El señor que te vigila.** Un hombre mayor de tu pueblo que se cruza contigo sin presentarse:
+  un pescador en el muelle, un viejo en una plaza, alguien en un mirador.
+  - Te dice frases sueltas: «¿Tú crees en las leyendas?».
+  - Tras la penúltima medalla se presenta, te confirma que eres el elegido y te lleva a El Hierro.
+- **Los defensores de tu pueblo:** uno en cada isla, a veces un antiguo elegido. Por ejemplo, el
+  anciano de La Geria defendió a tu pueblo de joven.
+- **La arqueóloga** (Fuerteventura) estudia a las ancestrales. Es una aliada y la ves de vez en
+  cuando.
 
-## 5. El viaje: ocho medallas
+## 5. El viaje: siete medallas
 
-| Orden | Isla | Medallas | Qué pasa |
+| Orden | Isla | Medalla | Qué pasa |
 | --- | --- | --- | --- |
-| 1 | Lanzarote | 1 (Roca) | el bar, el museo, el mensaje del rival y la silueta |
-| 2 | Fuerteventura | 1 (Aire) | la estatua ancestral, Tindaya y el compañero |
-| 3 | Gran Canaria | 2 | el Roque Nublo y el primer comandante |
-| 4 | Tenerife | 1 (o 2) | el Teide cerrado: ves la puerta del Sello |
-| 5 | La Gomera | 1 | el silbo y el amigo que duda |
-| 6 | La Palma | 1 (la penúltima) | la traición y tu abuelo |
-| 7 | El Hierro | 1 (la última) | la Bajada, el Garoé y las ancestrales |
-| 8 | Tenerife | la Liga | el Sello completo abre el Teide |
+| 1 | Lanzarote | Roca | el bar, el museo, el mensaje del rival y la primera silueta |
+| 2 | Fuerteventura | Aire | la estatua ancestral, Tindaya y Chano |
+| 3 | Gran Canaria | Eléctrico y Lucha: una pintadera en dos mitades | el Roque Nublo y el segundo amigo |
+| 4 | Tenerife | una | el Teide cerrado: ves la puerta del Sello |
+| 5 | La Gomera | una | el silbo y el amigo que duda |
+| 6 | La Palma | la penúltima | el señor se presenta y te lleva a El Hierro |
+| 7 | El Hierro | la última | la Bajada, el Garoé y el gimnasio que reabre |
+| — | Tenerife | la Liga | el Sello completo abre el Teide |
 
 1. **Lanzarote.**
-   - Desayunas con tu amigo en el bar y lo nombras tú.
-   - Eliges a tu compañera en el museo. Al salir, tu amigo te escribe.
-   - En las Montañas del Fuego, dos soldados de tu rama enemiga hablan con **una silueta negra**:
-     «Jefe, hay un nuevo elegido». «Lo sé. Dejadlo crecer.»
-   - La líder de Roca te da la primera pintadera: «Es una pieza de algo mucho más grande».
+   - Desayunas con tu amigo en el bar y le pones nombre.
+   - Eliges a tu compañera en el museo. Al salir, tu amigo te escribe al móvil.
+   - En las Montañas del Fuego, dos soldados hablan con **una silueta negra**: «Jefe, hay un nuevo
+     elegido». «Lo sé. Dejadlo crecer.»
+   - El señor que te vigila está pescando en el muelle de la capital: «Bonita cría. ¿Sabes de
+     quién desciende?».
 2. **Fuerteventura.**
-   - Conoces al compañero en Corralejo: «¡Eres clavado a tu abuelo!».
+   - Conoces a Chano en Corralejo: «¡Por fin un elegido de los nuestros!».
    - La arqueóloga te cuenta lo del Sello.
-   - Tu rama enemiga intenta llevarse la estatua ancestral, y el compañero «llega tarde» a
-     ayudarte.
-   - En Tindaya, los pies grabados miran al oeste.
-3. **Gran Canaria** (dos gimnasios).
-   - El líder del segundo gimnasio está en el Roque Nublo y hay que subir a buscarlo.
-   - Desde arriba se ve el mar de nubes.
-   - Aparece el comandante de tu rama y quieren tu compañera, no solo tu pintadera.
+   - Tu rama enemiga intenta llevarse la estatua ancestral, y Chano «llega tarde» a ayudarte.
+3. **Gran Canaria.**
+   - Los dos gimnasios y la pintadera partida (ver la decisión 1).
+   - En el Roque Nublo se ve el mar de nubes y aparece el comandante de tu rama.
    - Conoces al segundo amigo.
 4. **Tenerife.**
-   - En Las Cañadas está la puerta del Sello, sellada. El líder de Tenerife te explica que
-     hace años que nadie entra, porque falta la pieza de El Hierro.
+   - En Las Cañadas está la puerta del Sello, sellada. El líder te explica que hace años que nadie
+     entra, porque falta la pieza de El Hierro.
    - La silueta vuelve a aparecer junto a la puerta.
    - Conoces al tercer amigo.
 5. **La Gomera.**
-   - En el bosque de niebla del Garajonay los amigos os perdéis y os encontráis silbando, con el
-     silbo de verdad.
-   - El amigo del pueblo que te ataca duda: su rama le pide que se una a ellos. Al final se queda
-     con vosotros.
+   - En el Garajonay os perdéis entre la niebla y os encontráis silbando, con el silbo de verdad.
+   - El amigo del pueblo que te ataca duda, porque su rama le pide que se una a ellos. Al final se
+     queda con vosotros.
 6. **La Palma.**
-   - Ganas la penúltima pintadera.
-   - El compañero se quita la chaqueta: lleva el uniforme de tu rama enemiga y es su jefe. Se
-     lleva tus pintaderas, o lo intenta, y se escapa hacia El Hierro.
-   - Aparece tu abuelo: «Te lo tenía que haber contado. Yo estuve allí». Te enseña El Hierro
-     desde el Roque de los Muchachos y te lleva en su barca.
-7. **El Hierro.**
-   - Es el día de **la Bajada de la Virgen de los Reyes**, y la isla reaparece con ella.
-   - El camino de la Bajada cruza la isla, con bailarines y música, y es tu recorrido.
+   - Ganas la penúltima medalla.
+   - El señor se presenta: «Llevo tiempo siguiéndote. Ahora ya lo sé: eres el elegido».
+   - Desde el Roque de los Muchachos, entre las nubes, te enseña El Hierro y te lleva en su barca.
+7. **El Hierro** (decidido por el autor):
+   - Llegas el día de **la Bajada de la Virgen de los Reyes**, que empieza en ese momento.
+   - Los herreños te cuentan la historia de la Bajada y de la isla, y sigues el camino con ellos,
+     entre bailarines y música.
    - Por el monte hay criaturas muy fuertes y ancestrales que se creían extinguidas.
-   - Junto al **Garoé**, que bebe de la niebla, está la última pintadera. Allí te espera el
-     compañero, con las cinco ramas unidas.
-   - Lo vences con tus amigos y entiende o huye (ver la decisión 1).
+   - En el **Garoé**, el líder del gimnasio te cuenta la historia de los pueblos y qué pasó en la
+     isla los años que estuvo escondida. Decide que eres digno, reabre el gimnasio, cerrado desde
+     entonces, y lucha contigo.
 8. **Tenerife, la Liga.**
-   - Con las ocho pintaderas y las cinco iniciales, el Sello dibuja el cubo de Metatrón y la
-     puerta del Teide se abre.
-   - Dentro está la Liga.
+   - Con las siete pintaderas (ocho piezas) y las cinco iniciales, el Sello dibuja el cubo de
+     Metatrón y la puerta del Teide se abre.
+   - Ahí se descubre Chano (ver la decisión 2): «Gracias por juntarlas todas». Lo vencéis entre
+     todos y entráis en el Teide, donde está la Liga.
 
 ## 6. Lanzarote, escena a escena
 
@@ -173,11 +182,12 @@ rival; `{amigo}`, el nombre que le pones.
 **Casa**
 - **Mamá:** «¡Hoy es el día! Pero desayuna antes, que no se elige / compañera con el estómago
   vacío. Tu amigo está en el bar.»
-- **Mamá:** «Y no hagas caso de las historias de tu abuelo. / Pueblos, elegidos… ¡Cuentos!»
+- **Mamá:** «Y no hagas caso de lo que cuentan los viejos del muelle. / Pueblos, elegidos…
+  ¡Cuentos!»
 
 **El bar** (nuevo, en la zona inicial)
 - **Camarero:** «Lo de siempre: barraquito y sándwich de pollo desmenuzado.»
-- Tu amigo, al hablarle por primera vez, abre la pantalla para ponerle nombre:
+- Tu amigo: al hablarle por primera vez, sale la pantalla para ponerle nombre.
   - «¡Por fin! ¿Nervioso? Yo no he dormido nada.»
   - «Mi abuela dice que mi familia siempre elige la misma leyenda. / Ya veremos. Yo elijo lo que
     me dé la gana.»
@@ -186,8 +196,8 @@ rival; `{amigo}`, el nombre que le pones.
 **Museo**
 - **Doctora:** «Cada leyenda escoge a un elegido por generación. / Hoy, alguna os escogerá a
   vosotros.»
-- Las cinco placas, como en el borrador 1, y debajo: «Ocho piezas y cinco leyendas: / así se
-  abre la montaña.»
+- Las cinco placas (borrador 1) y, debajo: «Ocho piezas y cinco leyendas: / así se abre la
+  montaña.»
 - Eliges. Tu amigo se queda mirando las estatuas: «Ve tú delante. Yo… tengo que pensarlo.»
 
 **Al salir del museo:** un mensaje al móvil.
@@ -196,8 +206,8 @@ rival; `{amigo}`, el nombre que le pones.
 - **{amigo}:** «No te guardo rencor, ¿eh? Pero alguna vez / tendremos que luchar. ¡Prepárate!»
 
 **La Geria**
-- **Anciano** (defensor de tu pueblo): «Yo defendí a tu pueblo cuando era joven. / Igual que tu
-  abuelo… pero eso te lo contará él.»
+- **Anciano** (defensor de tu pueblo): «Yo defendí a tu pueblo cuando era joven. / Hubo otros
+  elegidos antes que tú. Uno sigue vivo.»
 
 **Montañas del Fuego** (la silueta)
 - **Soldado 1:** «Jefe, ha salido un nuevo elegido de [X]. / Con una cría preciosa, por cierto.»
@@ -206,37 +216,35 @@ rival; `{amigo}`, el nombre que le pones.
   pequeño!»
 
 **La capital**
+- **Pescador** (el señor que te vigila, sin decir quién es): «Bonita cría. ¿Sabes de quién
+  desciende? / …Ya lo sabrás.»
 - **Líder de Roca**, al vencerla: «Esta pintadera es una pieza de algo más grande. / Guárdala:
   hay quien lleva años buscándolas.»
 - **{amigo}**, en el muelle: «Revancha antes del barco. Si gano, / me pido la ventana.»
 
-**Recados:** los del borrador 1 (la vid del anciano, la red del pescador y el faro).
+**Recados:** los del borrador 1: la vid del anciano, la red del pescador y el faro.
 
 ## Lo que falta decidir
 
-1. **¿Quién es el compañero que acaba siendo el jefe?**
-   - **A, recomendado:** Chano, un señor que dice ser compañero de tu abuelo y defensor de tu
-     pueblo. Fue el traidor de hace cincuenta años. Al final se arrepiente y ayuda a abrir el
-     Teide.
-   - **B:** el amigo del pueblo que te ataca. Duele más, pero el malo sería uno de tus amigos de
-     verdad.
-   - **C:** la arqueóloga.
-2. **¿Quién es el señor que te muestra El Hierro?**
-   - **A, recomendado:** tu abuelo, el elegido de hace cincuenta años.
-   - **B:** un pescador herreño, que se fue de niño la noche en que desapareció la isla.
-   - **C:** el anciano de La Geria.
-3. **Tenerife:**
-   - **A, recomendado:** un gimnasio, y la Liga en el Teide. Son ocho medallas: Gran Canaria,
-     con dos, es el gran cambio de mitad de viaje, y Tenerife no queda cargada.
-   - **B:** dos gimnasios, nueve medallas.
-4. **La Bajada de la Virgen de los Reyes:**
-   - **A, recomendado:** la fiesta en la que El Hierro reaparece. Su camino es tu recorrido, con
-     gente, bailarines y música, y el líder del gimnasio herreño baila en ella. La imagen de la
-     Virgen no se usa nunca como objeto del juego: se respeta como lo que es.
-   - **B:** solo de fondo, con la fiesta en Valverde.
-   - **C:** en el centro de la trama: la procesión abre el camino al Garoé.
+1. **¿Qué tiene de especial Gran Canaria?** Detalle en `ISLA-3.md`.
+   - **A, recomendado: la pintadera partida.**
+     - Los dos gimnasios se hacen en el orden que quieras.
+     - Cada uno da una mitad.
+     - Para unirlas, los dos líderes te esperan juntos en el Roque Nublo, en un combate 2 contra 2:
+       tú y tu segundo amigo contra los dos.
+     - Es el primer combate en equipo de la historia y un ensayo de jugar con amigos.
+   - **B: un solo líder con dos sedes,** como en tu ejemplo. Te enfrentas a sus dos equipos, uno
+     en cada gimnasio, y al final a los dos mezclados.
+   - **C, se suma a A o a B: la agarrada.** En el terrero de Lucha, antes de cada combate, una
+     agarrada rápida de lucha canaria, con una barra como la de captura, decide quién empieza.
+2. **¿Cuándo se descubre Chano?**
+   - **A, recomendado:** en la puerta del Teide, al final, cuando el Sello ya está completo. Hasta
+     entonces, siluetas.
+   - **B:** en La Palma, antes de ir a El Hierro.
+3. **¿El señor que te vigila fue el elegido de tu pueblo hace cincuenta años?**
+   - **A, recomendado:** sí. Conoció a Chano, pero nunca supo que fue él.
+   - **B:** no, es un defensor de tu pueblo sin más historia.
 
 **Además, cuando puedas:**
-- los nombres de los pueblos, las ramas y el aparato (ahora «el Sello»);
-- si te valen los comandantes Domingo, Yeray, Candelaria, Isidro y Guacimara;
-- si te vale Chano para el compañero.
+- los nombres de los pueblos, de las ramas y del aparato (ahora «el Sello»);
+- los tipos de los gimnasios de Tenerife, La Gomera, La Palma y El Hierro.

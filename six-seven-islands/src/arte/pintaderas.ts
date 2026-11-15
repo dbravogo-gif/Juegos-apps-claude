@@ -41,7 +41,9 @@ const DISENOS: Record<number, (c: Colores) => string> = {
     for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) if ((i + j) % 2 === 0) casillas.push(`<rect x="${22 + i * 14}" y="${22 + j * 14}" width="14" height="14" fill="${c.dibujo}" />`);
     return `<rect x="6" y="6" width="88" height="88" rx="10" fill="${c.fondo}" stroke="${c.borde}" stroke-width="4" /><rect x="16" y="16" width="68" height="68" rx="4" fill="none" stroke="${c.dibujo}" stroke-width="3" />${casillas.join('')}`;
   },
-  // Gran Canaria: círculos que se repiten y una cruz con un punto en cada cuarto.
+  // Gran Canaria: círculos que se repiten y una cruz con un punto en cada cuarto. Está partida a
+  // la mitad, con una grieta en zigzag: cada uno de sus dos gimnasios da una mitad (autor,
+  // 2026-11-15).
   3: (c) => {
     const puntos = [
       [32, 32],
@@ -51,7 +53,7 @@ const DISENOS: Record<number, (c: Colores) => string> = {
     ]
       .map(([x, y]) => `<circle cx="${x}" cy="${y}" r="5" fill="${c.dibujo}" />`)
       .join('');
-    return `<circle cx="50" cy="50" r="46" fill="${c.fondo}" stroke="${c.borde}" stroke-width="4" /><g fill="none" stroke="${c.dibujo}" stroke-width="3.5"><circle cx="50" cy="50" r="37" /><circle cx="50" cy="50" r="11" /><line x1="50" y1="13" x2="50" y2="39" /><line x1="50" y1="61" x2="50" y2="87" /><line x1="13" y1="50" x2="39" y2="50" /><line x1="61" y1="50" x2="87" y2="50" /></g>${puntos}`;
+    return `<circle cx="50" cy="50" r="46" fill="${c.fondo}" stroke="${c.borde}" stroke-width="4" /><g fill="none" stroke="${c.dibujo}" stroke-width="3.5"><circle cx="50" cy="50" r="37" /><circle cx="50" cy="50" r="11" /><line x1="50" y1="13" x2="50" y2="39" /><line x1="50" y1="61" x2="50" y2="87" /><line x1="13" y1="50" x2="39" y2="50" /><line x1="61" y1="50" x2="87" y2="50" /></g>${puntos}<polyline points="22,14 34,30 28,44 42,58 36,72 50,88" fill="none" stroke="${c.borde}" stroke-width="3" stroke-linejoin="round" />`;
   },
   // Tenerife: un sello triangular, como el Teide, con bandas en zigzag.
   4: (c) =>
@@ -70,6 +72,16 @@ const DISENOS: Record<number, (c: Colores) => string> = {
       pts.push(`${(50 + r * Math.cos(a)).toFixed(1)},${(50 + r * Math.sin(a)).toFixed(1)}`);
     }
     return `<polygon points="${poligono(12, 47)}" fill="${c.fondo}" stroke="${c.borde}" stroke-width="4" stroke-linejoin="round" /><polyline points="${pts.join(' ')}" fill="none" stroke="${c.dibujo}" stroke-width="4" stroke-linecap="round" />`;
+  },
+  // El Hierro: un árbol que bebe de la niebla, como el Garoé, con gotas alrededor. Es la última:
+  // la isla escondida (HISTORIA.md).
+  7: (c) => {
+    const gotas = Array.from({ length: 10 }, (_, i) => {
+      const a = (i / 10) * Math.PI * 2;
+      return `<circle cx="${(50 + 38 * Math.cos(a)).toFixed(1)}" cy="${(50 + 38 * Math.sin(a)).toFixed(1)}" r="3" fill="${c.dibujo}" />`;
+    }).join('');
+    const ramas = [30, 42, 54].map((y, i) => `<polyline points="${36 + i * 3},${y + 10} 50,${y} ${64 - i * 3},${y + 10}" />`).join('');
+    return `<polygon points="${poligono(7, 47)}" fill="${c.fondo}" stroke="${c.borde}" stroke-width="4" stroke-linejoin="round" />${gotas}<g fill="none" stroke="${c.dibujo}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><line x1="50" y1="24" x2="50" y2="78" />${ramas}<line x1="40" y1="78" x2="60" y2="78" /></g>`;
   },
 };
 

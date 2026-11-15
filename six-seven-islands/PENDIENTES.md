@@ -47,10 +47,9 @@ propuesta de Claude y qué frena mientras siga abierto.
     Planta, Aire ni Mental (de 9 resistencias a 6); Bicho ya no es ×2 contra Planta, e Infernal
     ya no resiste a Acero. Lucha lleva 9 criaturas.
     - **Veneno** hace ×2 también a Común, y a ningún tipo más (autor, 2026-11-13).
-    - **Bicho** se queda con solo 2 ataques ×2 (Mental y Oscuridad) y le resisten 6: es el más
-      flojo atacando. Conviene darle uno (por ejemplo, ×2 contra Veneno o contra Tierra).
-    - **Tierra contra Roca:** con la quinta inicial (Tierra entre Roca y Agua), la Tierra debería
-      hacer ×2 a la Roca para que el círculo funcione también en combate. Ahora hace ×1.
+    - **Hecho el 2026-11-15** («como quede más compensado», autor): la Tierra hace ×2 a la Roca, que
+      cierra el círculo de los cinco pueblos, y Espectral y Acero ya no resisten a Bicho, el tipo
+      más flojo (su saldo pasa de −4 a −2). Las pruebas vigilan el círculo.
 
 ## Islas y mundo
 
@@ -91,10 +90,11 @@ propuesta de Claude y qué frena mientras siga abierto.
   propia (M).
 
 11. **Tipo de cada gimnasio.**
-    - Lanzarote es de Roca y Fuerteventura, de Aire. Gran Canaria tiene dos (propuesta en
-      `ISLA-3.md`). Faltan Tenerife (uno o dos), La Gomera, La Palma y El Hierro.
-    - **Técnico, al hacer Gran Canaria:** el medallero va por isla (una pintadera por isla); hay
-      que pasarlo a una por gimnasio, con dos pintaderas para Gran Canaria y la de El Hierro.
+    - Lanzarote es de Roca y Fuerteventura, de Aire. Gran Canaria, Eléctrico y Lucha (autor,
+      2026-11-15). Faltan Tenerife (uno solo), La Gomera, La Palma y El Hierro.
+    - Siete medallas (autor, 2026-11-15): la de Gran Canaria es una pintadera partida en dos
+      mitades, una por gimnasio. El medallero ya muestra las siete; las mitades se pintan al hacer
+      Gran Canaria.
     - El emblema del gimnasio de La Palma era un sol, del tipo Luz, que ya no existe.
     - **Frena:** dónde dar las criaturas que les hacen frente (punto 6).
 12. **Formato de la Liga** (en Tenerife, dentro del Teide; autor, 2026-11-15).
@@ -116,23 +116,21 @@ propuesta de Claude y qué frena mientras siga abierto.
 
 Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
 
-- **Gran Canaria (`ISLA-3.md`):** aprobar el recorrido y elegir el tipo de sus dos gimnasios
-  (Eléctrico en Las Palmas y Lucha en Agaete, recomendado), si la historia abre el segundo (el líder
-  en el Roque Nublo) y los niveles.
-- **Tabla de tipos:** si se le da algo a Bicho y si la Tierra hace ×2 a la Roca (para el
-  círculo de cinco).
+- **Gran Canaria (`ISLA-3.md`):** aprobar el recorrido y los niveles, y elegir su dinámica
+  especial: la pintadera partida con un combate 2 contra 2 en el Roque Nublo (recomendada), un
+  solo líder con dos sedes, y si se suma la agarrada de lucha canaria.
 - **Quinta inicial (Tierra):** sus estadísticas, su lámina y su GLB, y su nombre.
 - **Criaturas de Lanzarote:** subirlas a `conceptos/criaturas/lanzarote/`.
 - **Criaturas:** decir si vale la lista 2 de Lanzarote (`CRIATURAS.md`); pasar las láminas de
   Lucha y las demás, y los nombres de la civeta y de Dragosil.
 - **Entrenadores y zonas de captura de Lanzarote** que hay que mejorar: decir cuáles.
-- **La historia (`HISTORIA.md`, borrador 2):** elegir en las cuatro decisiones del final:
-  - quién es el compañero que acaba siendo el jefe;
-  - quién te muestra El Hierro;
-  - cuántos gimnasios tiene Tenerife;
-  - cómo entra la Bajada de la Virgen de los Reyes.
+- **La historia (`HISTORIA.md`, borrador 3):** elegir en las tres decisiones del final:
+  - la dinámica de Gran Canaria;
+  - cuándo se descubre Chano;
+  - si el señor que te vigila fue el elegido de hace cincuenta años.
 
-  Y, cuando pueda, los nombres de los pueblos, de las ramas y del aparato.
+  Y, cuando pueda, los nombres de los pueblos, de las ramas y del aparato, y los tipos de los
+  gimnasios de Tenerife, La Gomera, La Palma y El Hierro.
 - **Amigos:** sus fotos y GLB de Meshy para las personas jugables, y sus 2 o 3 poses para los
   retratos de diálogo.
 - **Dani con `Idle`** en el GLB (opcional).

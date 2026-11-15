@@ -37,12 +37,25 @@ camino y 2 opcionales: 10, frente a las 9 de Fuerteventura.
 
 ## Los gimnasios: dos en esta isla (autor, 2026-11-15)
 
-Gran Canaria tiene **dos gimnasios**. Propuesta: uno en Las Palmas, al llegar, y otro en Agaete,
-al final. Con dos, caben dos tipos de la tabla de abajo. **Recomendado:** Eléctrico en Las Palmas,
-la ciudad, y Lucha en Agaete, el terrero. Así la de Tierra tiene uno fácil y la de Roca, uno
-difícil, y queda compensado.
+**Decidido:** Eléctrico en Las Palmas, la ciudad, y Lucha en Agaete, el terrero. Cada uno da
+**media pintadera**: la de Gran Canaria es una sola, partida a la mitad. Así la de Tierra tiene uno
+fácil y la de Roca, uno difícil, y queda compensado.
 
-Lo de abajo sigue valiendo para elegir los dos tipos.
+**Algo especial (lo decide el autor):**
+- **A, recomendado: la pintadera partida.**
+  - Los dos gimnasios se hacen en el orden que quieras, la primera vez que eliges ruta. El primero
+    que hagas tiene el equipo algo más flojo.
+  - Para unir las dos mitades, los dos líderes te esperan juntos en el Roque Nublo: un combate
+    2 contra 2, tú y tu segundo amigo contra los dos.
+  - Es el primer combate en equipo de la historia y un ensayo de jugar con amigos. El motor ya
+    admite 2 contra 2.
+- **B: un solo líder con dos sedes.** Te enfrentas a sus dos equipos, uno en cada gimnasio, y al
+  final, en el Roque Nublo, a los dos mezclados.
+- **C, se suma a A o a B: la agarrada.** En el terrero de Lucha, antes de cada combate, una
+  agarrada rápida de lucha canaria decide quién empieza. Es una barra con punto justo, como la de
+  captura.
+
+Lo de abajo, las opciones de tipo con las que se eligió.
 
 | Opción | Por qué | Para las iniciales |
 | --- | --- | --- |
