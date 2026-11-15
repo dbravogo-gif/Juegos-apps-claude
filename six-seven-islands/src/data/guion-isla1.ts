@@ -76,6 +76,21 @@ function anciano(tipo: string | undefined): Dialogo {
   };
 }
 
+/** La primera aparición de tu rama enemiga y de la silueta de su jefe (HISTORIA.md). */
+const ESCENA_SOLDADOS = [
+  {
+    dialogo: {
+      lineas: [
+        { quien: 'Soldado de {rama}', texto: 'Jefe, ha salido un nuevo elegido de {inicial}. Con una cría preciosa, por cierto.' },
+        { quien: 'Silueta', texto: 'Lo sé. Dejadlo crecer. Necesitaremos sus pintaderas… y a su compañera.' },
+        { quien: 'Soldado de {rama}', texto: '¡Es él! …El jefe ha dicho que lo dejemos crecer. ¡Retirada, que todavía es pequeño!' },
+        { texto: 'Los tres desaparecen entre las coladas.' },
+      ],
+      efecto: { condicion: 'soldados-fuego' as const },
+    },
+  },
+];
+
 export const GUION_ISLA1: Guion = {
   doctora: [
     {
@@ -130,6 +145,11 @@ export const GUION_ISLA1: Guion = {
       },
     },
   ],
+  // Montañas del Fuego (HISTORIA.md, parte 2): dos soldados de la rama que te persigue informan a
+  // la silueta de su jefe. Al acabar, se retiran y ya no están.
+  'soldado-fuego-1': ESCENA_SOLDADOS,
+  'soldado-fuego-2': ESCENA_SOLDADOS,
+  'silueta-fuego': ESCENA_SOLDADOS,
   // El bar del principio (HISTORIA.md, decidido por el autor el 2026-11-15): tu amigo desayuna un
   // barraquito con un sándwich de pollo desmenuzado. Su nombre lo pones tú al hablarle.
   camarero: [

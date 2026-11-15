@@ -87,8 +87,11 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
     - Eléctrico: campo eléctrico (sus ataques eléctricos pegan más).
     - Lucha: tus criaturas empiezan confusas, por el agarre.
     - El resto, más adelante.
-  - **Tipos de gimnasio:** Roca (Lanzarote), Aire (Fuerteventura), Eléctrico y Lucha (Gran Canaria) y
-    Planta (La Palma). Tenerife, La Gomera y El Hierro, por decidir.
+  - **Tipos de gimnasio** (autor, 2026-11-15):
+    - Lanzarote, Roca; Fuerteventura, Aire; Gran Canaria, Eléctrico y Lucha.
+    - Tenerife, Agua; La Gomera, Mental; La Palma, Planta.
+    - El Hierro, **Fuego/Ancestral**: no hay criaturas de Ancestral suficientes para un gimnasio
+      entero, y así entran dragones.
 - **Tono de la historia:** ligero y con humor. Se vence al campeón de cada isla para avanzar,
   mientras se investiga por qué desapareció la séptima. Eres el nuevo elegido de tu pueblo; te
   persigue la rama del pueblo que ataca al tuyo, y tu rival es tu mejor amigo (`HISTORIA.md`).

@@ -3,6 +3,8 @@
 // inicial: su rival (el amigo) lleva la del pueblo al que ataca el suyo, y le persigue la rama del
 // pueblo que ataca al suyo. Los nombres los propuso Claude; el autor puede cambiarlos.
 
+import { TIPOS } from './tipos';
+
 export type TipoInicial = 'planta' | 'infernal' | 'roca' | 'tierra' | 'agua';
 
 export interface DefPueblo {
@@ -31,4 +33,13 @@ export function inicialDelRival(tuya: TipoInicial): TipoInicial {
 /** El pueblo cuya rama te persigue: el que ataca al tuyo. */
 export function puebloQueTePersigue(tuya: TipoInicial): TipoInicial {
   return (Object.keys(PUEBLOS) as TipoInicial[]).find((p) => PUEBLOS[p].ataca === tuya)!;
+}
+
+/**
+ * El tinte del uniforme de la rama de un pueblo: el color de su tipo (data/tipos.ts), en 0..1, para
+ * multiplicar la ropa de la figura (la cabeza no se tiñe).
+ */
+export function colorUniforme(pueblo: TipoInicial): [number, number, number] {
+  const hex = TIPOS.find((t) => t.id === pueblo)!.color;
+  return [((hex >> 16) & 255) / 255, ((hex >> 8) & 255) / 255, (hex & 255) / 255];
 }

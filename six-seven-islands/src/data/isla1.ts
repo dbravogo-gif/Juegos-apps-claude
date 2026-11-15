@@ -252,6 +252,9 @@ export const ISLA_1: DefIsla = {
         { id: 'excursionista', x: 10, y: 10, mira: 'o', entrenador: { vision: 5, obligatorio: false }, frase: 'Aquí la tierra quema: un palmo bajo el suelo, se podría asar pescado.' },
         { id: 'entrenador-centro', x: 26, y: 14, mira: 'n', entrenador: { vision: 2, obligatorio: false }, frase: 'Entreno entre los volcanes. El calor me hace más fuerte.' },
         { id: 'entrenador-caldera', x: 19, y: 20, mira: 'e', entrenador: { vision: 5, obligatorio: false }, frase: 'Esta caldera es mi escondite. ¿Cómo la has encontrado?' },
+        { id: 'soldado-fuego-1', x: 29, y: 11, mira: 'o', escena: { vision: 4 }, con: 'inicial-elegida', sin: 'soldados-fuego', uniforme: 'perseguidor' },
+        { id: 'soldado-fuego-2', x: 29, y: 13, mira: 'o', escena: { vision: 4 }, con: 'inicial-elegida', sin: 'soldados-fuego', uniforme: 'perseguidor' },
+        { id: 'silueta-fuego', x: 30, y: 12, mira: 'o', con: 'inicial-elegida', sin: 'soldados-fuego', silueta: true },
       ],
       objetos: [{ id: 'pocion-caldera', x: 25, y: 22, objeto: 'pocion' }],
       alturas: [

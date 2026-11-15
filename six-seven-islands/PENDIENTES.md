@@ -92,11 +92,8 @@ propuesta de Claude y qué frena mientras siga abierto.
 11. **Tipo de cada gimnasio.**
     - Lanzarote es de Roca y Fuerteventura, de Aire. Gran Canaria, Eléctrico y Lucha, y La Palma,
       Planta (autor, 2026-11-15).
-    - **Propuesta de Claude para el resto:**
-      - Tenerife: **Infernal** (el Teide), o Hielo (la nieve del Teide).
-      - La Gomera: **Espectral** (la niebla del Garajonay y la leyenda de Gara y Jonay), o Mental (el
-        silbo).
-      - El Hierro: **Ancestral** (las criaturas que se creían extinguidas), o Agua (el Garoé).
+    - Tenerife, Agua; La Gomera, Mental; El Hierro, Fuego/Ancestral, con dragones (autor,
+      2026-11-15).
     - **Efectos de campo** (autor, 2026-11-15):
       - Roca: tormenta de arena permanente.
       - Aire: viento a favor.
@@ -135,8 +132,7 @@ Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
   Lucha y las demás, y los nombres de la civeta y de Dragosil.
 - **Entrenadores y zonas de captura de Lanzarote** que hay que mejorar: decir cuáles.
 - **La historia (`HISTORIA.md`, borrador 4):** está cerrada. Cuando pueda: si le valen los nombres
-  de los pueblos, de las ramas y del aparato, y los tipos de los gimnasios de Tenerife, La Gomera y
-  El Hierro (propuesta en «Tipo de cada gimnasio»).
+  de los pueblos, de las ramas y del aparato.
 - **Amigos:** sus fotos y GLB de Meshy para las personas jugables, y sus 2 o 3 poses para los
   retratos de diálogo.
 - **Dani con `Idle`** en el GLB (opcional).
