@@ -1283,27 +1283,7 @@ body {
   gap: 5px;
 }
 
-/* La eficacia de cada ataque contra la rival (autor, 2026-11-15: la tabla de tipos, a la vista). */
-.combate-ataque small em {
-  margin-left: 6px;
-  white-space: nowrap;
-  font-style: normal;
-  font-weight: 700;
-}
-
-.combate-ataque small .ef-mucho {
-  color: #1f8a46;
-}
-
-.combate-ataque small .ef-poco {
-  color: #b5651d;
-}
-
-.combate-ataque small .ef-nada {
-  color: #7a6f68;
-}
-
-/* La ayuda de tipos (tecla T): un panel claro arriba, con lo que daña a cada criatura. */
+/* La tabla de tipos (tecla T): un panel claro arriba, con lo que daña a cada criatura. */
 .combate-tipos {
   position: absolute;
   left: 50%;

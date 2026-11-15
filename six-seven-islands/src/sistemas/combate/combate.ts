@@ -30,7 +30,7 @@ import { crearRng } from '../../core/rng';
 import { perdidaPorDerrota } from '../../core/economia';
 import { BOLSILLOS, bolsilloDe, type IdBolsillo } from '../../data/bolsillos';
 import { vidaMaxima } from '../../core/estadisticas';
-import { eficacia, etiquetaEficacia, gruposContra } from '../../core/tipos';
+import { gruposContra } from '../../core/tipos';
 import { MaterialDiorama } from '../../arte/material';
 import { figuraCriatura } from '../../arte/criaturas3d';
 import { RADIO_CUBO, figuraCubo, girarCubo } from '../../arte/cubos';
@@ -156,7 +156,7 @@ export class Combate implements Subsistema {
   private botones: HTMLSpanElement[] = [];
   private fichas: { nombre: HTMLElement; nivel: HTMLElement; relleno: HTMLElement; numeros: HTMLElement | null }[] = [];
   private velo!: HTMLDivElement;
-  /** La ayuda de tipos (tecla T): qué le hace daño a la rival y qué a la tuya. */
+  /** La tabla de tipos (tecla T): qué le hace daño a la rival y qué a la tuya. */
   private panelTipos!: HTMLDivElement;
 
   init(ctx: Ctx): void {
@@ -680,7 +680,7 @@ export class Combate implements Subsistema {
       else if (cancelar) this.pararBarra(false);
       return;
     }
-    // La T abre o cierra la ayuda de tipos; con ella abierta, Esc solo la cierra.
+    // La T abre o cierra la tabla de tipos; con ella abierta, Esc solo la cierra.
     const tabla = this.entrada.consumir('tabla');
     if (this.fase === 'menu' && tabla) this.alternarTipos();
     if (!this.panelTipos.hidden && (cancelar || this.fase !== 'menu')) {
@@ -776,17 +776,13 @@ export class Combate implements Subsistema {
         ];
         break;
       case 'ataques': {
-        // Cada ataque dice lo que le hace a la rival (×2, ×½, ×0): la tabla de tipos, a la vista.
-        const rival = this.activa(1);
-        const tiposRival = rival ? DATOS.especies[rival.especie].tipos : [];
+        // Sin pistas en los botones (al autor no le gustaron, 2026-11-15): la tabla, con la T.
         texto = `¿Qué hará ${nombre}? (T: tabla de tipos · Esc: volver)`;
         this.opciones = c.movimientos.map((m, indice) => {
           const mov = DATOS.movimientos[m.id];
           const color = `#${(COLOR_TIPO.get(mov.tipo) ?? 0xa8a29e).toString(16).padStart(6, '0')}`;
-          const ef = mov.categoria === 'estado' || !rival ? null : etiquetaEficacia(eficacia(DATOS.tipos, mov.tipo, tiposRival));
-          const marca = ef && ef.clase !== 'normal' ? ` <em class="ef-${ef.clase}">${ef.texto}</em>` : '';
           return {
-            html: boton(mov.nombre, `<i style="background:${color}">${NOMBRE_TIPO.get(mov.tipo) ?? 'Común'}</i> PP ${m.pp}/${mov.pp}${marca}`),
+            html: boton(mov.nombre, `<i style="background:${color}">${NOMBRE_TIPO.get(mov.tipo) ?? 'Común'}</i> PP ${m.pp}/${mov.pp}`),
             activa: m.pp > 0,
             elegir: () => this.enviar({ tipo: 'movimiento', indice, objetivo: { lado: 1, hueco: 0 } }),
           };
@@ -840,7 +836,7 @@ export class Combate implements Subsistema {
     this.pintarMenu();
   }
 
-  /** Abre o cierra la ayuda de tipos para las dos criaturas que están luchando ahora. */
+  /** Abre o cierra la tabla de tipos para las dos criaturas que están luchando ahora. */
   private alternarTipos(): void {
     if (!this.panelTipos.hidden) {
       this.panelTipos.hidden = true;

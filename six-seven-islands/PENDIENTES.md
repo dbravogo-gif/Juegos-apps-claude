@@ -116,27 +116,21 @@ propuesta de Claude y qué frena mientras siga abierto.
 
 Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
 
-- **Gran Canaria (`ISLA-3.md`):** aprobar el recorrido y los niveles, y elegir su dinámica
-  especial: la pintadera partida con un combate 2 contra 2 en el Roque Nublo (recomendada), un
-  solo líder con dos sedes, y si se suma la agarrada de lucha canaria.
+- **Gran Canaria (`ISLA-3.md`):** aprobar el recorrido y los niveles, y decir si se suma la
+  agarrada de lucha canaria antes de los combates del terrero.
 - **Quinta inicial (Tierra):** sus estadísticas, su lámina y su GLB, y su nombre.
 - **Criaturas de Lanzarote:** subirlas a `conceptos/criaturas/lanzarote/`.
 - **Criaturas:** decir si vale la lista 2 de Lanzarote (`CRIATURAS.md`); pasar las láminas de
   Lucha y las demás, y los nombres de la civeta y de Dragosil.
 - **Entrenadores y zonas de captura de Lanzarote** que hay que mejorar: decir cuáles.
-- **La historia (`HISTORIA.md`, borrador 3):** elegir en las tres decisiones del final:
-  - la dinámica de Gran Canaria;
-  - cuándo se descubre Chano;
-  - si el señor que te vigila fue el elegido de hace cincuenta años.
-
-  Y, cuando pueda, los nombres de los pueblos, de las ramas y del aparato, y los tipos de los
-  gimnasios de Tenerife, La Gomera, La Palma y El Hierro.
+- **La historia (`HISTORIA.md`, borrador 4):** está cerrada. Cuando pueda: si le valen los nombres
+  de los pueblos, de las ramas y del aparato, y los tipos de los gimnasios de Tenerife, La Gomera,
+  La Palma y El Hierro.
 - **Amigos:** sus fotos y GLB de Meshy para las personas jugables, y sus 2 o 3 poses para los
   retratos de diálogo.
 - **Dani con `Idle`** en el GLB (opcional).
 - **Puntuar de 1 a 5** lo último publicado: menús, equipo, mochila, medallero, el gimnasio de
   Roca y Fuerteventura entera (sobre todo el gimnasio de Aire).
-- **Decir si vale «Técnicas»** como nombre del bolsillo de las máquinas.
 
 - Medir los FPS en los ordenadores del autor y de sus amigos.
 - Prueba de Meshy: pagar Pro el primer mes (~10 $), y descargar y subir `planta-2.glb`

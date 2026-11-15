@@ -1,4 +1,4 @@
-# La historia (borrador 3)
+# La historia (borrador 4)
 
 2026-11-15. La escribe Claude con las decisiones del autor. Lo marcado **(decidido)** es del
 autor; lo demás es propuesta. Lo que falta está al final, con opciones. Nada entra en el juego
@@ -45,8 +45,18 @@ No salen marcas: el móvil tiene una aplicación de mensajes sin nombre.
   1).
 - **La tabla de tipos se compensa:** la Tierra hace ×2 a la Roca, y Espectral y Acero ya no
   resisten a Bicho. Ya está en el juego.
-- **La tabla de tipos, a la vista en combate:** cada ataque dice si hace ×2, ×½ o ×0, y la T abre
-  la ayuda de tipos. Ya está en el juego.
+- **La tabla de tipos, a la vista en combate:** con la T. Las pistas en cada ataque se quitaron,
+  porque al autor no le gustaron. El Agua también se ajustó.
+
+**En la tercera tanda:**
+- **Gran Canaria:** para pasarte el gimnasio, un combate 2 contra 2 difícil. Eliges compañero:
+  uno de tus amigos del juego, que no sea el rival, o un colega en línea. Es difícil a propósito:
+  un colega juega mejor que el amigo del juego, así que o subes de nivel o juegas con un colega.
+- **El señor que te vigila fue el elegido de tu pueblo hace años.** Antes de llevarte a El Hierro
+  te cuenta la leyenda del Sello y dice que no sabe si será cierta, aunque él sabe que lo es.
+- **Chano se descubre en la puerta del Teide,** al final.
+- **El gimnasio de Lucha** es un terrero de lucha canaria.
+- **Los nombres de los pueblos** los propone Claude; si alguno no le gusta, lo cambia.
 
 ## 1. La premisa
 
@@ -67,18 +77,20 @@ Con el Sello completo se abre el corazón del Teide, donde se celebra la Liga y 
 - Para protegerlo, las ancestrales escondieron El Hierro, con su pintadera y con el Garoé, tras
   un mar de nubes.
 - Desde entonces nadie entra en el Teide, el pacto se debilita y han vuelto las ramas radicales.
-- **El señor que te vigila** fue el elegido de tu pueblo en aquella generación (propuesta). Nunca
+- **El señor que te vigila** fue el elegido de tu pueblo en aquella generación (decidido). Nunca
   supo quién los traicionó.
 
 ## 2. Los pueblos y el círculo
 
-| Pueblo (provisional) | Leyenda | Vivía en | Ataca a |
+| Pueblo (propuesto por Claude) | Leyenda | Vivía en | Ataca a |
 | --- | --- | --- | --- |
-| Los del Hoyo | verde (Planta) | los hoyos de picón de La Geria | Fuego |
-| Los de la Colada | infernal (Fuego) | bajo las Montañas del Fuego | Roca |
-| Los del Risco | de roca (Roca) | el risco del norte | Tierra |
-| Los del Llano | de tierra (Tierra) | los pueblos sepultados por el volcán | Agua |
-| Los del Jameo | del agua (Agua) | los jameos, donde entra el mar | Planta |
+| El pueblo del Hoyo | verde (Planta) | los hoyos de picón de La Geria | Fuego |
+| El pueblo de la Colada | infernal (Fuego) | bajo las Montañas del Fuego | Roca |
+| El pueblo del Risco | de roca (Roca) | el risco del norte | Tierra |
+| El pueblo del Llano | de tierra (Tierra) | los pueblos sepultados por el volcán | Agua |
+| El pueblo del Jameo | del agua (Agua) | los jameos, donde entra el mar | Planta |
+
+En la calle se dice «los del Hoyo», «los de la Colada»…, como se habla en los pueblos.
 
 En la tabla de tipos, cada pueblo pierde contra el pueblo al que ataca. Una prueba lo vigila.
 - **Tu rival** lleva la inicial del pueblo al que ataca el tuyo, que te gana en tipos.
@@ -113,7 +125,9 @@ Los comandantes son la cara visible de cada rama. El jefe de la rama que te pers
 - **El señor que te vigila.** Un hombre mayor de tu pueblo que se cruza contigo sin presentarse:
   un pescador en el muelle, un viejo en una plaza, alguien en un mirador.
   - Te dice frases sueltas: «¿Tú crees en las leyendas?».
-  - Tras la penúltima medalla se presenta, te confirma que eres el elegido y te lleva a El Hierro.
+  - Tras la penúltima medalla se presenta y te cuenta la leyenda del Sello: «No sé si será
+    verdad…», aunque él sabe que lo es, porque fue el elegido de tu pueblo. Te confirma que eres el
+    elegido y te lleva a El Hierro.
 - **Los defensores de tu pueblo:** uno en cada isla, a veces un antiguo elegido. Por ejemplo, el
   anciano de La Geria defendió a tu pueblo de joven.
 - **La arqueóloga** (Fuerteventura) estudia a las ancestrales. Es una aliada y la ves de vez en
@@ -144,7 +158,10 @@ Los comandantes son la cara visible de cada rama. El jefe de la rama que te pers
    - La arqueóloga te cuenta lo del Sello.
    - Tu rama enemiga intenta llevarse la estatua ancestral, y Chano «llega tarde» a ayudarte.
 3. **Gran Canaria.**
-   - Los dos gimnasios y la pintadera partida (ver la decisión 1).
+   - Dos gimnasios: Eléctrico en Las Palmas y Lucha en Agaete, un terrero de lucha canaria. Cada
+     uno da media pintadera.
+   - Para unirlas, un combate 2 contra 2 difícil contra los dos líderes. Eliges compañero: un
+     amigo del juego que no sea el rival, o un colega en línea.
    - En el Roque Nublo se ve el mar de nubes y aparece el comandante de tu rama.
    - Conoces al segundo amigo.
 4. **Tenerife.**
@@ -158,7 +175,9 @@ Los comandantes son la cara visible de cada rama. El jefe de la rama que te pers
      queda con vosotros.
 6. **La Palma.**
    - Ganas la penúltima medalla.
-   - El señor se presenta: «Llevo tiempo siguiéndote. Ahora ya lo sé: eres el elegido».
+   - El señor se presenta: «Llevo tiempo siguiéndote. Te voy a contar una leyenda / que me
+     contaron de niño. No sé si será verdad…». Te cuenta la del Sello. «Ahora ya lo sé: eres el
+     elegido.»
    - Desde el Roque de los Muchachos, entre las nubes, te enseña El Hierro y te lleva en su barca.
 7. **El Hierro** (decidido por el autor):
    - Llegas el día de **la Bajada de la Virgen de los Reyes**, que empieza en ese momento.
@@ -171,8 +190,8 @@ Los comandantes son la cara visible de cada rama. El jefe de la rama que te pers
 8. **Tenerife, la Liga.**
    - Con las siete pintaderas (ocho piezas) y las cinco iniciales, el Sello dibuja el cubo de
      Metatrón y la puerta del Teide se abre.
-   - Ahí se descubre Chano (ver la decisión 2): «Gracias por juntarlas todas». Lo vencéis entre
-     todos y entráis en el Teide, donde está la Liga.
+   - Ahí se descubre Chano (decidido): «Gracias por juntarlas todas». Lo vencéis entre todos y
+     entráis en el Teide, donde está la Liga.
 
 ## 6. Lanzarote, escena a escena
 
@@ -226,25 +245,6 @@ rival; `{amigo}`, el nombre que le pones.
 
 ## Lo que falta decidir
 
-1. **¿Qué tiene de especial Gran Canaria?** Detalle en `ISLA-3.md`.
-   - **A, recomendado: la pintadera partida.**
-     - Los dos gimnasios se hacen en el orden que quieras.
-     - Cada uno da una mitad.
-     - Para unirlas, los dos líderes te esperan juntos en el Roque Nublo, en un combate 2 contra 2:
-       tú y tu segundo amigo contra los dos.
-     - Es el primer combate en equipo de la historia y un ensayo de jugar con amigos.
-   - **B: un solo líder con dos sedes,** como en tu ejemplo. Te enfrentas a sus dos equipos, uno
-     en cada gimnasio, y al final a los dos mezclados.
-   - **C, se suma a A o a B: la agarrada.** En el terrero de Lucha, antes de cada combate, una
-     agarrada rápida de lucha canaria, con una barra como la de captura, decide quién empieza.
-2. **¿Cuándo se descubre Chano?**
-   - **A, recomendado:** en la puerta del Teide, al final, cuando el Sello ya está completo. Hasta
-     entonces, siluetas.
-   - **B:** en La Palma, antes de ir a El Hierro.
-3. **¿El señor que te vigila fue el elegido de tu pueblo hace cincuenta años?**
-   - **A, recomendado:** sí. Conoció a Chano, pero nunca supo que fue él.
-   - **B:** no, es un defensor de tu pueblo sin más historia.
-
-**Además, cuando puedas:**
-- los nombres de los pueblos, de las ramas y del aparato (ahora «el Sello»);
+Nada de la historia. Solo, cuando el autor pueda:
+- si le valen los nombres de los pueblos, de las ramas y del aparato (ahora «el Sello»);
 - los tipos de los gimnasios de Tenerife, La Gomera, La Palma y El Hierro.

@@ -41,7 +41,13 @@ camino y 2 opcionales: 10, frente a las 9 de Fuerteventura.
 **media pintadera**: la de Gran Canaria es una sola, partida a la mitad. Así la de Tierra tiene uno
 fácil y la de Roca, uno difícil, y queda compensado.
 
-**Algo especial (lo decide el autor):**
+**Lo especial (decidido por el autor, 2026-11-15):** para pasarte el gimnasio, un combate 2 contra 2
+**difícil** contra los dos líderes juntos. Eliges compañero: uno de tus amigos del juego, que no sea
+el rival, o un colega en línea, cuando exista. Es difícil a propósito: con el amigo del juego, o
+vas con más nivel o te cuesta; con un colega de verdad, que juega mejor, sale. El terrero de Lucha es
+un terrero de lucha canaria. Falta decidir si se suma la agarrada (abajo, C).
+
+Las opciones que se propusieron:
 - **A, recomendado: la pintadera partida.**
   - Los dos gimnasios se hacen en el orden que quieras, la primera vez que eliges ruta. El primero
     que hagas tiene el equipo algo más flojo.

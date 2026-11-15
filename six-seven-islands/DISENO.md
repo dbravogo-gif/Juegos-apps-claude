@@ -75,8 +75,10 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
   - **Medallas** (autor, 2026-11-15): siete, una por isla. Gran Canaria tiene dos gimnasios
     (Eléctrico y Lucha) y cada uno da media pintadera; Tenerife, uno. Ocho piezas más las cinco
     leyendas son los trece círculos del cubo de Metatrón. La historia, en `HISTORIA.md`.
-  - **Ayuda de tipos en combate** (autor, 2026-11-15): cada ataque dice si hace ×2, ×½ o ×0 a la
-    rival, y la T abre lo que daña a cada criatura.
+  - **Tabla de tipos en combate** (autor, 2026-11-15): la T abre lo que daña a cada criatura. Sin
+    pistas en los botones de ataque: al autor no le gustaron.
+  - **Gran Canaria** (autor, 2026-11-15): el gimnasio se pasa con un combate 2 contra 2 difícil,
+    con un amigo del juego que no sea el rival o con un colega en línea.
 - **Tono de la historia:** ligero y con humor. Se vence al campeón de cada isla para avanzar,
   mientras se investiga por qué desapareció la séptima. Eres el nuevo elegido de tu pueblo; te
   persigue la rama del pueblo que ataca al tuyo, y tu rival es tu mejor amigo (`HISTORIA.md`).

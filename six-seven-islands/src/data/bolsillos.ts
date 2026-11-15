@@ -1,7 +1,7 @@
 // Los bolsillos de la mochila (autor, 2026-11-12): cada clase de objeto va en su bolsillo, y la
 // pantalla de la mochila los enseña como partes de una mochila dibujada (src/arte/mochila.ts).
-// «Técnicas» es un nombre provisional: el bolsillo de las máquinas que enseñan movimientos, que
-// aún no existen.
+// «Técnicas» es el bolsillo de las máquinas que enseñan movimientos, que aún no existen (nombre
+// aprobado por el autor, 2026-11-15).
 
 import type { Objeto } from '../core/modelo';
 

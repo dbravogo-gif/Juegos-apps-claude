@@ -41,13 +41,3 @@ export function gruposContra(def: DefTablaTipos, tiposDefensor: readonly string[
   }
   return g;
 }
-
-/** La etiqueta corta de un multiplicador, para el botón de cada ataque. */
-export function etiquetaEficacia(e: number): { texto: string; clase: 'mucho' | 'poco' | 'nada' | 'normal' } {
-  if (e === 0) return { texto: '×0 No le afecta', clase: 'nada' };
-  if (e >= 4) return { texto: '×4 Muy eficaz', clase: 'mucho' };
-  if (e > 1) return { texto: '×2 Muy eficaz', clase: 'mucho' };
-  if (e <= 0.25) return { texto: '×¼ Poco eficaz', clase: 'poco' };
-  if (e < 1) return { texto: '×½ Poco eficaz', clase: 'poco' };
-  return { texto: '×1', clase: 'normal' };
-}
