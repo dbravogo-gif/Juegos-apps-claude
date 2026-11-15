@@ -80,10 +80,11 @@ describe('tipos', () => {
     expect(ids.filter((d) => e('veneno', d) === 2).sort()).toEqual(['ancestral', 'comun', 'planta']);
   });
 
-  it('ajuste del 2026-11-15: la Tierra gana a la Roca y Espectral y Acero ya no resisten a Bicho', () => {
+  it('ajuste del 2026-11-15: la Tierra gana a la Roca, Bicho sube y el Agua baja un poco', () => {
     const e = (a: string, d: string) => eficacia(TABLA_TIPOS, a, [d]);
     expect(e('tierra', 'roca')).toBe(2);
     expect([e('bicho', 'espectral'), e('bicho', 'acero')]).toEqual([1, 1]);
+    expect([e('acero', 'agua'), e('hielo', 'agua')]).toEqual([1, 1]);
   });
 
   it('el círculo de los cinco pueblos: cada uno pierde contra el pueblo al que ataca (HISTORIA.md)', () => {
@@ -239,15 +240,13 @@ describe('criaturas y progreso', () => {
   });
 });
 
-describe('ayuda de tipos en combate (autor, 2026-11-15)', () => {
-  it('agrupa lo que daña mucho, poco o nada, y etiqueta cada multiplicador', async () => {
-    const { gruposContra, etiquetaEficacia } = await import('../src/core/tipos');
+describe('tabla de tipos en combate, con la T (autor, 2026-11-15)', () => {
+  it('agrupa lo que daña mucho, poco o nada (el panel de la T)', async () => {
+    const { gruposContra } = await import('../src/core/tipos');
     const { TABLA_TIPOS } = await import('../src/data/tipos');
     const g = gruposContra(TABLA_TIPOS, ['roca']);
     expect(g.mucho).toEqual(expect.arrayContaining(['agua', 'planta', 'tierra', 'lucha', 'acero']));
     expect(g.mucho).not.toContain('infernal');
     expect(gruposContra(TABLA_TIPOS, ['comun']).nada).toEqual(['espectral']);
-    expect([etiquetaEficacia(2).clase, etiquetaEficacia(0.5).clase, etiquetaEficacia(0).clase, etiquetaEficacia(1).clase]).toEqual(['mucho', 'poco', 'nada', 'normal']);
-    expect(etiquetaEficacia(4).texto).toBe('×4 Muy eficaz');
   });
 });

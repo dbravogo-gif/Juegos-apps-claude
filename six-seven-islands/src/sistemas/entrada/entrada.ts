@@ -7,7 +7,7 @@
 import type { Direccion } from '../../core/mundo';
 import type { Ctx, Subsistema } from '../../motor/motor';
 
-/** `tabla`: la T, que en combate abre la ayuda de tipos (autor, 2026-11-15). */
+/** `tabla`: la T, que en combate abre la tabla de tipos (autor, 2026-11-15). */
 export type Accion = 'confirmar' | 'cancelar' | 'tabla';
 
 const DIRECCIONES: Record<string, Direccion> = {

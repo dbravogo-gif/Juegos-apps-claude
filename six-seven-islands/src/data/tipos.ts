@@ -5,7 +5,9 @@
 // Aire ni Mental; Bicho ya no es eficaz contra Planta, e Infernal ya no resiste a Acero, y Veneno
 // hace ×2 a Común (solo a ese, autor). El 2026-11-15, «como quede más compensado» (autor): la
 // Tierra hace ×2 a la Roca, para cerrar el círculo de los cinco pueblos, y Espectral y Acero ya no
-// resisten a Bicho, que era el tipo más flojo. Las pruebas de tests/nucleo.test.ts la vigilan.
+// resisten a Bicho, que era el tipo más flojo. Después (autor: «ajustar un poco el agua») el Agua,
+// el tipo más fuerte, ya no resiste al Acero ni al Hielo (lo de su foto, ×2 a Ancestral, se queda).
+// Las pruebas de tests/nucleo.test.ts la vigilan.
 import type { DefTablaTipos } from '../core/modelo';
 
 export const TIPOS = [
@@ -45,13 +47,13 @@ const RELACIONES: Record<TipoId, Relacion> = {
   planta: { eficaz: ['agua', 'tierra', 'roca'], pocoEficaz: ['infernal', 'planta', 'veneno', 'aire', 'bicho'], sinEfecto: [] },
   aire: { eficaz: ['planta', 'lucha', 'bicho'], pocoEficaz: ['electrico', 'roca'], sinEfecto: [] },
   electrico: { eficaz: ['agua', 'aire'], pocoEficaz: ['electrico', 'planta', 'ancestral'], sinEfecto: ['tierra'] },
-  hielo: { eficaz: ['planta', 'tierra', 'aire', 'ancestral'], pocoEficaz: ['infernal', 'agua', 'hielo', 'acero'], sinEfecto: [] },
+  hielo: { eficaz: ['planta', 'tierra', 'aire', 'ancestral'], pocoEficaz: ['infernal', 'hielo', 'acero'], sinEfecto: [] },
   infernal: { eficaz: ['planta', 'hielo', 'bicho', 'acero'], pocoEficaz: ['infernal', 'agua', 'roca', 'ancestral'], sinEfecto: [] },
   lucha: { eficaz: ['comun', 'hielo', 'roca', 'oscuridad', 'acero'], pocoEficaz: ['veneno', 'aire', 'mental', 'bicho'], sinEfecto: ['espectral'] },
   mental: { eficaz: ['lucha', 'veneno'], pocoEficaz: ['mental'], sinEfecto: ['oscuridad'] },
   oscuridad: { eficaz: ['mental', 'espectral'], pocoEficaz: ['lucha', 'oscuridad'], sinEfecto: [] },
   espectral: { eficaz: ['mental', 'espectral'], pocoEficaz: ['oscuridad'], sinEfecto: ['comun'] },
-  acero: { eficaz: ['hielo', 'roca'], pocoEficaz: ['agua', 'electrico', 'acero'], sinEfecto: [] },
+  acero: { eficaz: ['hielo', 'roca'], pocoEficaz: ['electrico', 'acero'], sinEfecto: [] },
   roca: { eficaz: ['infernal', 'hielo', 'aire', 'bicho'], pocoEficaz: ['tierra', 'acero', 'lucha'], sinEfecto: [] },
   ancestral: { eficaz: ['acero'], pocoEficaz: ['ancestral'], sinEfecto: [] },
   bicho: { eficaz: ['mental', 'oscuridad'], pocoEficaz: ['infernal', 'lucha', 'veneno', 'aire'], sinEfecto: [] },

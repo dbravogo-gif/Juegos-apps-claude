@@ -225,12 +225,11 @@ Todo en el núcleo (`core/mundo.ts` y `core/explorar.ts`), igual en zonas e inte
   fuera de la isla. Las barcas, boyas y rocas solo van ahí; una prueba vigila que el mar de cada
   zona de costa lo sea.
 
-## Combate: ayuda de tipos
+## Combate: tabla de tipos
 
-Cada ataque del menú dice si hace ×2, ×½ o ×0 a la rival (`etiquetaEficacia`), y la T (acción
-`tabla` de «entrada») abre un panel con lo que le hace mucho, poco o nada a cada una de las dos
-criaturas (`gruposContra`, en `core/tipos.ts`, puro y con pruebas). Con el panel abierto, Esc solo
-lo cierra.
+La T (acción `tabla` de «entrada») abre un panel con lo que le hace mucho, poco o nada a cada una de
+las dos criaturas (`gruposContra`, en `core/tipos.ts`, puro y con pruebas). Con el panel abierto, Esc
+solo lo cierra. Los botones de ataque no llevan pistas: el autor no las quiso.
 
 ## Guardado
 
