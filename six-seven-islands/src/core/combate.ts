@@ -37,7 +37,30 @@ export interface Volatil {
   usosProteger: number;
   retrocede: boolean;
   actuado: boolean;
+  /** Turnos de confusión que le quedan (el agarre del gimnasio de Lucha); se quita al cambiarla. */
+  confusion?: number;
 }
+
+/**
+ * El campo de un gimnasio (autor, 2026-11-15): lo pone el gimnasio y dura todo el combate.
+ * - `clima: 'arena'` (Roca): al final de cada turno, 1/16 de vida a quien no sea Roca, Tierra ni Acero.
+ * - `terreno: 'electrico'` (Eléctrico): los ataques eléctricos pegan ×1,3.
+ * - `vientoAFavor` (Aire): ese lado va el doble de rápido.
+ * - `agarre` (Lucha): las criaturas del jugador (lado 0) empiezan confusas, de 2 a 4 turnos.
+ */
+export interface Campo {
+  clima?: 'arena';
+  terreno?: 'electrico';
+  vientoAFavor?: IdLado;
+  agarre?: boolean;
+}
+
+/** Los tipos a los que no daña la tormenta de arena. */
+export const INMUNES_ARENA: readonly string[] = ['roca', 'tierra', 'acero'];
+/** El campo eléctrico, sobre los ataques eléctricos. */
+export const MULT_CAMPO_ELECTRICO = 1.3;
+/** Probabilidad (sobre 100) de que una criatura confusa se haga daño a sí misma. */
+export const PROB_CONFUSION = 33;
 
 export interface LadoCombate {
   equipo: Criatura[];
@@ -68,6 +91,8 @@ export interface EstadoCombate {
   ultimaCaida: IdLado | null;
   /** Uids de las criaturas que pueden desobedecer (la inicial, hasta hablar con el anciano). */
   rebeldes: string[];
+  /** El campo del gimnasio, si lo hay. */
+  campo?: Campo;
 }
 
 export type Accion =
@@ -91,6 +116,8 @@ export interface FichaCombate {
   estado: EstadoAlterado | null;
 }
 
+export type CausaDanio = 'golpe' | 'retroceso' | 'quemadura' | 'veneno' | 'arena' | 'confusion';
+
 export type Evento =
   | { tipo: 'entrada'; ref: Ref; ficha: FichaCombate }
   | { tipo: 'retirada'; ref: Ref; nombre: string }
@@ -104,7 +131,13 @@ export type Evento =
   | { tipo: 'sinEfecto'; ref: Ref; nombre: string }
   | { tipo: 'protege'; ref: Ref; nombre: string }
   | { tipo: 'protegido'; ref: Ref; nombre: string }
-  | { tipo: 'danio'; ref: Ref; cantidad: number; vida: number; vidaMax: number; eficacia: number; critico: boolean; causa: 'golpe' | 'retroceso' | 'quemadura' | 'veneno' }
+  | { tipo: 'danio'; ref: Ref; cantidad: number; vida: number; vidaMax: number; eficacia: number; critico: boolean; causa: CausaDanio }
+  /** Al empezar, el campo del gimnasio. */
+  | { tipo: 'campo'; campo: Campo }
+  /** Confusa: al empezar (por el agarre) o al ir a moverse. */
+  | { tipo: 'confuso'; ref: Ref; nombre: string; inicio: boolean }
+  | { tipo: 'seHiere'; ref: Ref; nombre: string }
+  | { tipo: 'desconfusa'; ref: Ref; nombre: string }
   | { tipo: 'curacion'; ref: Ref; cantidad: number; vida: number; vidaMax: number }
   | { tipo: 'estado'; ref: Ref; nombre: string; estado: EstadoAlterado }
   | { tipo: 'etapa'; ref: Ref; nombre: string; estadistica: EstadisticaCombate; cambio: number }
@@ -132,6 +165,8 @@ export interface ParametrosCombate {
   experiencia: boolean;
   /** Uids de las criaturas que pueden desobedecer (F25): la inicial, hasta el anciano. */
   rebeldes?: string[];
+  /** El campo del gimnasio donde se lucha. */
+  campo?: Campo;
 }
 
 /** Sin PP en ningún movimiento: golpe sin tipo y retroceso de un cuarto del daño. */
@@ -201,8 +236,12 @@ function celeridadEfectiva(e: EstadoCombate, ref: Ref, datos: DatosJuego): numbe
   const c = criaturaEn(e, ref);
   if (!c) return 0;
   const v = calcularEstadisticas(c, datos).celeridad * multiplicadorEtapa(e.lados[ref.lado].etapas[ref.hueco].celeridad);
-  return c.estado?.tipo === 'paralizado' ? v * 0.5 : v;
+  const viento = e.campo?.vientoAFavor === ref.lado ? 2 : 1;
+  return (c.estado?.tipo === 'paralizado' ? v * 0.5 : v) * viento;
 }
+
+/** El golpe de una criatura confusa contra sí misma: sin tipo, físico, de poder 40. */
+const GOLPE_CONFUSO: Movimiento = { id: 'golpe-confuso', nombre: 'Golpe confuso', tipo: '', categoria: 'fisico', poder: 40, precision: null, pp: 1 };
 
 // ——— Inicio ———
 
@@ -234,10 +273,21 @@ export function iniciarCombate(p: ParametrosCombate, datos: DatosJuego): Resulta
     capturada: null,
     ultimaCaida: null,
     rebeldes: [...(p.rebeldes ?? [])],
+    ...(p.campo ? { campo: structuredClone(p.campo) } : {}),
   };
   const eventos: Evento[] = [];
   for (const lado of [1, 0] as IdLado[]) {
     e.lados[lado].activos.forEach((i, hueco) => eventos.push({ tipo: 'entrada', ref: { lado, hueco }, ficha: fichaDe(e.lados[lado].equipo[i], datos) }));
+  }
+  if (e.campo) {
+    eventos.push({ tipo: 'campo', campo: e.campo });
+    // El agarre del gimnasio de Lucha: tus criaturas en el campo empiezan confusas.
+    if (e.campo.agarre) {
+      e.lados[0].activos.forEach((i, hueco) => {
+        e.lados[0].volatil[hueco].confusion = entero(e.rng, 2, 4) + 1;
+        eventos.push({ tipo: 'confuso', ref: { lado: 0, hueco }, nombre: nombreDe(e.lados[0].equipo[i], datos), inicio: true });
+      });
+    }
   }
   return { estado: e, eventos };
 }
@@ -476,6 +526,22 @@ function ejecutarMovimiento(
     ev.push({ tipo: 'noSeMueve', ref, nombre, motivo: 'paralizado' });
     return;
   }
+  // Confusa (el agarre): un turno menos cada vez; mientras dure, a veces se golpea a sí misma.
+  if (vol.confusion) {
+    vol.confusion -= 1;
+    if (vol.confusion <= 0) {
+      vol.confusion = 0;
+      ev.push({ tipo: 'desconfusa', ref, nombre });
+    } else {
+      ev.push({ tipo: 'confuso', ref, nombre, inicio: false });
+      if (probabilidad(e.rng, PROB_CONFUSION)) {
+        const r = calcularDanio(combatiente(e, ref), combatiente(e, ref), GOLPE_CONFUSO, datos, false, 100);
+        ev.push({ tipo: 'seHiere', ref, nombre });
+        quitarVida(e, ref, r.danio, datos, ev, 'confusion');
+        return;
+      }
+    }
+  }
 
   // La inicial rebelde (F25): la mitad de las veces que no obedece usa otro movimiento; la otra
   // mitad se distrae y pierde el turno.
@@ -550,7 +616,8 @@ function golpear(e: EstadoCombate, ref: Ref, obj: Ref, mov: Movimiento, extra: n
   if (mov.categoria !== 'estado') {
     const critico = probabilidad(e.rng, PROB_CRITICO);
     const tirada = entero(e.rng, 85, 100);
-    const r = calcularDanio(combatiente(e, ref), combatiente(e, obj), mov, datos, critico, tirada, extra);
+    const campo = e.campo?.terreno === 'electrico' && mov.tipo === 'electrico' ? MULT_CAMPO_ELECTRICO : 1;
+    const r = calcularDanio(combatiente(e, ref), combatiente(e, obj), mov, datos, critico, tirada, extra * campo);
     if (r.eficacia === 0) {
       ev.push({ tipo: 'sinEfecto', ref: obj, nombre: nombreDef });
       return false;
@@ -618,7 +685,7 @@ function quitarVida(
   cantidad: number,
   datos: DatosJuego,
   ev: Evento[],
-  causa: 'golpe' | 'retroceso' | 'quemadura' | 'veneno',
+  causa: CausaDanio,
   eficacia = 1,
   critico = false,
 ): number {
@@ -657,8 +724,15 @@ function finDeTurno(e: EstadoCombate, datos: DatosJuego, ev: Evento[]): void {
   const refs = [...refsVivas(e, 0), ...refsVivas(e, 1)].sort((a, b) => celeridadEfectiva(e, b, datos) - celeridadEfectiva(e, a, datos));
   for (const ref of refs) {
     const c = criaturaEn(e, ref);
-    if (!vivo(c) || !c.estado || e.fin) continue;
+    if (!vivo(c) || e.fin) continue;
     const max = vidaMaxima(c, datos);
+    // La tormenta de arena del gimnasio de Roca: a todos menos a Roca, Tierra y Acero.
+    if (e.campo?.clima === 'arena' && !datos.especies[c.especie].tipos.some((t) => INMUNES_ARENA.includes(t))) {
+      quitarVida(e, ref, Math.max(1, Math.floor(max / 16)), datos, ev, 'arena');
+      comprobarFin(e, ev);
+      if (!vivo(c) || e.fin) continue;
+    }
+    if (!c.estado) continue;
     if (c.estado.tipo === 'quemado') quitarVida(e, ref, Math.floor(max / 16), datos, ev, 'quemadura');
     else if (c.estado.tipo === 'envenenado') quitarVida(e, ref, Math.floor(max / 8), datos, ev, 'veneno');
     else if (c.estado.tipo === 'intoxicado') {

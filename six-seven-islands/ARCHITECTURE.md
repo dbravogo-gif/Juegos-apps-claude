@@ -237,6 +237,18 @@ Todo en el núcleo (`core/mundo.ts` y `core/explorar.ts`), igual en zonas e inte
 - **Silueta** (`silueta: true`): la figura en negro (el jefe, antes de descubrirse).
 - En los textos: `{nombre}`, `{amigo}`, `{inicial}`, `{inicialRival}` y `{rama}`.
 
+## Combate: el campo de los gimnasios
+
+`Campo` (`core/combate.ts`), que lo pone el gimnasio donde se lucha (`campos` de cada isla en
+`data/islas.ts`, por sala) y dura todo el combate:
+- tormenta de arena: 1/16 al final del turno, salvo a Roca, Tierra y Acero;
+- campo eléctrico: ×1,3 a los ataques eléctricos;
+- viento a favor de un lado: velocidad ×2;
+- agarre: las criaturas del lado 0 empiezan confusas, de 2 a 4 turnos. Una criatura confusa se
+  golpea a sí misma un 33 % de las veces, y la confusión se quita al cambiarla.
+
+Con pruebas en `tests/campo.test.ts`.
+
 ## Combate: tabla de tipos
 
 La T (acción `tabla` de «entrada») abre un panel con lo que le hace mucho, poco o nada a cada una de

@@ -81,7 +81,8 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
     está. En el terrero de Lucha llegan tres contrincantes de uno en uno, y al final los dos líderes
     juntos, para un 2 contra 2 difícil, con un amigo del juego que no sea el rival o con un colega
     en línea (los dos ganan las mitades). Se puede seguir a Tenerife sin ellas (`ISLA-3.md`).
-  - **Efectos de campo en los gimnasios** (autor, 2026-11-15):
+  - **Efectos de campo en los gimnasios** (autor, 2026-11-15; hechos en el núcleo, con Roca y Aire
+    ya puestos):
     - Roca: tormenta de arena permanente.
     - Aire: viento a favor (más velocidad).
     - Eléctrico: campo eléctrico (sus ataques eléctricos pegan más).
