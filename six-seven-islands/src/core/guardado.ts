@@ -34,6 +34,8 @@ export interface Guardado {
   origenes?: Origenes;
   /** El último refugio de cada isla visitada, por número (desde el 2026-11-13). */
   refugios?: Record<string, string>;
+  /** Los nombres que el jugador ha puesto a sus amigos, por su id (desde el 2026-11-15). */
+  amigos?: Record<string, string>;
 }
 
 /**

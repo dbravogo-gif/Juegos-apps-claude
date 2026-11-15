@@ -17,3 +17,9 @@ export const NOMBRE_OBJETO: Record<string, string> = {
   superpocion: 'una Superpoción',
   'cubo-blanco': 'un Cubo blanco',
 };
+
+/** Los amigos a los que el jugador pone nombre al conocerlos (HISTORIA.md). De momento, el rival. */
+export const AMIGOS: ReadonlySet<string> = new Set(['amigo']);
+
+/** El nombre del tipo de cada inicial, para los textos («la de Roca»). */
+export const NOMBRE_TIPO_INICIAL: Readonly<Record<string, string>> = { planta: 'Planta', infernal: 'Infernal', roca: 'Roca', tierra: 'Tierra', agua: 'Agua' };

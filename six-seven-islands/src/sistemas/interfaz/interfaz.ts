@@ -40,6 +40,33 @@ export class Interfaz implements Subsistema {
   /** Lo último pintado, para no tocar el DOM si no cambia. */
   private pintado = '';
 
+  /** La caja para poner nombre a un amigo, la primera vez que se le habla (HISTORIA.md). */
+  private abrirNombrar(): void {
+    const caja = this.raiz!.querySelector<HTMLElement>('.nombrar')!;
+    const campo = caja.querySelector('input')!;
+    campo.value = 'Amigo';
+    caja.hidden = false;
+    campo.focus();
+    campo.select();
+    const cerrar = (nombre: string | null) => {
+      campo.removeEventListener('keydown', alPulsar);
+      caja.hidden = true;
+      campo.blur();
+      this.partida.nombrarAmigo(nombre);
+    };
+    // Enter acepta y Esc lo deja para otro momento; la entrada del juego no lee lo que se escribe.
+    const alPulsar = (ev: KeyboardEvent) => {
+      if (ev.key === 'Enter') {
+        ev.preventDefault();
+        cerrar(campo.value);
+      } else if (ev.key === 'Escape') {
+        ev.preventDefault();
+        cerrar(null);
+      }
+    };
+    campo.addEventListener('keydown', alPulsar);
+  }
+
   init(ctx: Ctx): void {
     this.partida = ctx.get<Partida>('partida');
     const raiz = document.createElement('div');
@@ -54,6 +81,7 @@ export class Interfaz implements Subsistema {
         <span class="dialogo-seguir" aria-hidden="true">▼</span>
       </div>
       <div class="calima" hidden aria-hidden="true"></div>
+      <label class="nombrar" hidden><span>¿Cómo se llama tu amigo?</span><input maxlength="16" spellcheck="false" autocomplete="off" /><small>Escribe y pulsa Enter · Esc: ahora no</small></label>
       <div class="medalla-ganada" hidden><div class="medalla-dibujo"></div><p></p></div>
       <div class="fundido"></div>
       <p class="ayuda">Flechas o WASD: andar · E, Enter o Espacio: hablar y seguir · Esc: menú</p>`;
@@ -84,6 +112,7 @@ export class Interfaz implements Subsistema {
 
     this.quitar.push(
       ctx.eventos.on('zona:entrar', ({ zonaId }) => this.anunciar(zonaId)),
+      ctx.eventos.on('amigo:nombrar', () => this.abrirNombrar()),
       ctx.eventos.on('medalla:ganada', ({ isla }) => {
         const m = MEDALLAS.find((x) => x.isla === isla);
         if (!m) return;

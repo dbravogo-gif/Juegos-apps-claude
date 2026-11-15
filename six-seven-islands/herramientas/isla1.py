@@ -38,8 +38,9 @@ z.camino([(3,2),(3,7)]); z.camino([(3,7),(21,7)]); z.camino([(9,7),(9,13)]); z.c
 z.edificio(13, 2, 8, 4, 'M', 16, 'museo')                       # museo, arriba a la derecha
 z.edificio(4, 9, 4, 3, 'C', 5, 'casa-jugador')                  # casa del jugador
 z.edificio(11, 9, 4, 3, 'C', 12, 'casa-vecina')                 # casa vecina, igual
-z.p(19, 10, 'T')                                                # la palmera
-z.r(18, 12, 3, 1, 'U')                                          # tuneras
+z.edificio(17, 9, 4, 3, 'S', 18, 'bar')                         # el bar de la plaza, donde espera tu amigo
+z.p(22, 9, 'T')                                                 # la palmera
+z.p(20, 12, 'O'); z.p(21, 12, 'U')                              # la sombrilla de la terraza y una tunera
 z.r(1, 4, 1, 2, 'U'); z.r(7, 3, 4, 2, 'V')                      # unas viñas en hoyos
 zonas['inicial'] = dict(nombre='Zona inicial', origen=(38, 100), z=z, altura=0, casas='lanzarote')
 

@@ -90,6 +90,8 @@ export type Condicion =
   | 'gimnasio-vencido'
   /** Aún no se cumple: llegará con el barco de Morro Jable a Gran Canaria. */
   | 'isla2-completada'
+  /** Ya te ha llegado el mensaje del rival al salir del museo (HISTORIA.md). */
+  | 'mensaje-rival'
   | 'isla1-completada'
   | 'gimnasio2-vencido'
   | `vencido:${string}`

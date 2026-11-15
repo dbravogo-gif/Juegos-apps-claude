@@ -41,6 +41,19 @@ camino y 2 opcionales: 10, frente a las 9 de Fuerteventura.
 **media pintadera**: la de Gran Canaria es una sola, partida a la mitad. Así la de Tierra tiene uno
 fácil y la de Roca, uno difícil, y queda compensado.
 
+**Cómo son (decidido por el autor, 2026-11-15, segunda tanda):**
+- **Están separados.** En el de Eléctrico, al vencer a sus entrenadores te dicen que el líder no
+  está.
+- **El de Lucha es un terrero de lucha canaria.** Los contrincantes llegan de uno en uno, tres en
+  total. Cada uno te saluda y te pregunta si quieres combatir ya o prefieres un momento para curar
+  a tus criaturas.
+- **Al vencer a los tres, llegan los dos líderes,** Eléctrico y Lucha, con una entrada épica, y
+  luchas 2 contra 2 contra ellos.
+- **Se puede ir a Tenerife sin estas medallas,** para esperar a que tus colegas lleguen y luchar
+  juntos. Si luchas con un colega, los dos ganáis las dos mitades.
+- **Efectos de campo:** el de Eléctrico pone un campo eléctrico (sus ataques eléctricos pegan más)
+  y el de Lucha te deja las criaturas confusas, por el agarre del otro luchador.
+
 **Lo especial (decidido por el autor, 2026-11-15):** para pasarte el gimnasio, un combate 2 contra 2
 **difícil** contra los dos líderes juntos. Eliges compañero: uno de tus amigos del juego, que no sea
 el rival, o un colega en línea, cuando exista. Es difícil a propósito: con el amigo del juego, o
