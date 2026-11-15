@@ -145,8 +145,9 @@ function probarIsla(c: Isla): void {
       return r;
     };
 
-    it('zona inicial: dos casas iguales, un árbol y un museo', () => {
-      expect(cuenta('inicial')).toEqual({ C: 2, M: 1 });
+    it('zona inicial: dos casas iguales, un árbol, un museo y el bar de la plaza (2026-11-15)', () => {
+      // En Lanzarote, además, el bar donde espera tu amigo (HISTORIA.md); La Palma, guardada, no lo tiene.
+      expect(cuenta('inicial')).toEqual(ISLA === ISLA_1 ? { C: 2, M: 1, S: 1 } : { C: 2, M: 1 });
       const casas = edificios(m, 'inicial').filter((e) => e.tipo === 'C');
       expect(casas[0].ancho).toBe(casas[1].ancho);
       expect(casas[0].fondo).toBe(casas[1].fondo);

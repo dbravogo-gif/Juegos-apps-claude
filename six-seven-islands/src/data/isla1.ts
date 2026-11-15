@@ -70,10 +70,10 @@ export const ISLA_1: DefIsla = {
         '#..,............d......#',
         '#..,,,,,,,,,,,,,,,,,,,.#',
         '#........,.............#',
-        '#...CCCC.,.CCCC........#',
-        '#...CCCC.,.CCCC....T...#',
-        '#...CCCC.,.CCCC........#',
-        '#....d...,..d.....UUU..#',
+        '#...CCCC.,.CCCC..SSSS.T#',
+        '#...CCCC.,.CCCC..SSSS..#',
+        '#...CCCC.,.CCCC..SSSS..#',
+        '#....d...,..d.....d.OU.#',
         '#..,,,,,,,,,,,,,,,,....#',
         '#aaaaaaaaaaaaaaaaaaaaaa#',
         '#aaaaaaaaaaaaaaaaaaaaaa#',
@@ -447,7 +447,7 @@ export const ISLA_1: DefIsla = {
 
 /** A qué sala lleva cada puerta, por zona y casilla de la puerta (en coordenadas de la zona). */
 export const PUERTAS_ISLA1: Readonly<Record<string, Readonly<Record<string, string>>>> = {
-  inicial: { '16,6': 'museo', '5,12': 'casa-jugador', '12,12': 'casa-vecina' },
+  inicial: { '16,6': 'museo', '5,12': 'casa-jugador', '12,12': 'casa-vecina', '18,12': 'bar' },
   pueblo: { '3,8': 'casa-geria-1', '17,8': 'refugio-geria', '23,8': 'tienda-geria', '21,15': 'casa-geria-2' },
   capital: { '5,9': 'refugio-capital', '14,10': 'gimnasio', '15,10': 'gimnasio', '4,16': 'casa-capital-1', '10,16': 'casa-capital-2', '16,16': 'casa-capital-3', '21,7': 'casa-capital-4' },
 };

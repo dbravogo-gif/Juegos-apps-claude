@@ -3,7 +3,7 @@
 // dejan subir (así no hay que hacer el piso de arriba). Puro y determinista: la misma casa da
 // siempre la misma sala. Las letras de los muebles, en LEYENDA (src/core/mundo.ts).
 
-export type TipoSala = 'casa' | 'refugio' | 'tienda' | 'gimnasio' | 'museo';
+export type TipoSala = 'casa' | 'refugio' | 'tienda' | 'gimnasio' | 'museo' | 'bar';
 
 export interface OpcionesInterior {
   tipo: TipoSala;
@@ -29,6 +29,8 @@ export interface InteriorGenerado {
   /** Solo en el museo: los pedestales, de izquierda a derecha, y su ordenador. */
   estatuas: Punto[];
   ordenador: Punto | null;
+  /** Solo en el bar: el sitio de quien desayuna, junto a una mesa. */
+  cliente: Punto | null;
 }
 
 /** El tamaño de dentro (sin paredes), proporcional al de fuera. */
@@ -51,7 +53,7 @@ export function generarInterior(op: OpcionesInterior): InteriorGenerado {
     if (xx === cx || x < 1 || x > w || y < 1 || y > d) return;
     if (g[y][xx] === 'm') g[y][xx] = c;
   };
-  const res: InteriorGenerado = { mapa: [], entrada: { x: cx, y: d }, residente: { x: cx, y: 2 }, estatuas: [], ordenador: null };
+  const res: InteriorGenerado = { mapa: [], entrada: { x: cx, y: d }, residente: { x: cx, y: 2 }, estatuas: [], ordenador: null, cliente: null };
   const plantas = () => {
     pon(1, d - 1, 'v');
     pon(w, d - 1, 'v');
@@ -107,6 +109,18 @@ export function generarInterior(op: OpcionesInterior): InteriorGenerado {
       pon(1, cy, 'q');
       pon(w, cy, 'q');
       res.residente = { x: cx, y: 2 };
+      break;
+    }
+    case 'bar': {
+      // La barra delante del fondo, con el camarero detrás y botellas en estanterías; dos mesas
+      // junto a las paredes, y en una desayuna tu amigo (HISTORIA.md, el bar del principio).
+      for (let x = cx - 2; x <= cx + 2; x++) if (x >= 1 && x <= w) g[2][x] = 'c';
+      for (let x = 1; x <= w; x++) if (Math.abs(x - cx) > 2) g[1][x] = 'h';
+      const fila = Math.max(3, d - 1);
+      pon(1, fila, 'o');
+      pon(w, fila, 'o');
+      res.cliente = { x: espejo ? w - 1 : 2, y: fila };
+      res.residente = { x: cx, y: 1 };
       break;
     }
     case 'museo': {

@@ -83,8 +83,10 @@ export const GUION_ISLA1: Guion = {
       dialogo: {
         lineas: [
           { quien: DOCTORA, texto: '¡Por fin llegas! Soy la doctora del museo de las cinco leyendas.' },
-          { quien: DOCTORA, texto: 'Hace siglos, cinco criaturas protegieron esta isla. Hoy sus descendientes esperan a alguien que las acompañe.' },
-          { quien: DOCTORA, texto: 'Acércate a las estatuas, lee su historia y elige con cuál quieres empezar. Tómate tu tiempo.' },
+          { quien: DOCTORA, texto: 'Hace siglos, cinco criaturas guiaban a cinco pueblos. Hoy sus descendientes esperan compañía.' },
+          { quien: DOCTORA, texto: 'Dicen que cada leyenda escoge a un elegido por generación. Hoy, alguna te escogerá a ti.' },
+          { quien: DOCTORA, texto: 'Bajo las estatuas hay una inscripción antigua: «Ocho piezas y cinco leyendas: así se abre la montaña».' },
+          { quien: DOCTORA, texto: 'Nadie sabe qué significa. Acércate a las estatuas, lee su historia y elige. Tómate tu tiempo.' },
         ],
       },
     },
@@ -111,13 +113,59 @@ export const GUION_ISLA1: Guion = {
   madre: [
     {
       sin: 'inicial-elegida',
-      dialogo: { lineas: [{ quien: 'Mamá', texto: '¡{nombre}! ¿Hoy es el día? ¡La doctora te espera en el museo, aquí al lado!' }] },
+      dialogo: {
+        lineas: [
+          { quien: 'Mamá', texto: '¡{nombre}! ¡Hoy es el día! Pero desayuna antes, que no se elige compañera con el estómago vacío.' },
+          { quien: 'Mamá', texto: 'Tu amigo te espera en el bar de la plaza. Luego, la doctora, en el museo de aquí al lado.' },
+          { quien: 'Mamá', texto: 'Y no hagas caso de lo que cuentan los viejos del muelle. Pueblos, elegidos… ¡Cuentos!' },
+        ],
+      },
     },
     {
       dialogo: {
         lineas: [
           { quien: 'Mamá', texto: '¡Qué compañera más bonita! Cuídala mucho.' },
           { quien: 'Mamá', texto: 'Si os cansáis por el camino, en el refugio del pueblo os curan sin cobrar nada.' },
+        ],
+      },
+    },
+  ],
+  // El bar del principio (HISTORIA.md, decidido por el autor el 2026-11-15): tu amigo desayuna un
+  // barraquito con un sándwich de pollo desmenuzado. Su nombre lo pones tú al hablarle.
+  camarero: [
+    {
+      sin: 'inicial-elegida',
+      dialogo: { lineas: [{ quien: 'Camarero', texto: '¡Buenas! Lo de siempre: barraquito y sándwich de pollo desmenuzado. Tu amigo ya va por el segundo.' }] },
+    },
+    { dialogo: { lineas: [{ quien: 'Camarero', texto: '¿Ya tienes compañera? ¡Invita la casa! …Es broma. Bueno, el barraquito sí.' }] } },
+  ],
+  amigo: [
+    {
+      sin: 'inicial-elegida',
+      dialogo: {
+        lineas: [
+          { quien: '{amigo}', texto: '¡Por fin, {nombre}! ¿Nervioso? Yo no he dormido nada.' },
+          { quien: '{amigo}', texto: 'Mi abuela dice que en mi familia siempre se elige la misma leyenda. Ya veremos. Yo elijo lo que me dé la gana.' },
+          { quien: '{amigo}', texto: 'Venga, termina el barraquito, que la doctora nos espera. Ve tú delante, que yo pago.' },
+        ],
+      },
+    },
+    {
+      dialogo: {
+        lineas: [
+          { quien: '{amigo}', texto: '¿Viste mi mensaje? Al final elegí a la de {inicialRival}, como en mi familia.' },
+          { quien: '{amigo}', texto: 'Tú entrena, ¿eh? Que la próxima vez que nos veamos, lucharemos.' },
+        ],
+      },
+    },
+  ],
+  // El mensaje al móvil de tu amigo al salir del museo con tu compañera.
+  'mensaje-rival': [
+    {
+      dialogo: {
+        lineas: [
+          { quien: 'Mensaje de {amigo}', texto: 'He elegido a la de {inicialRival}. En mi familia siempre la han elegido. Tu leyenda y la mía no se llevaban bien…' },
+          { quien: 'Mensaje de {amigo}', texto: 'No te guardo rencor, ¿eh? Pero alguna vez tendremos que luchar. ¡Prepárate!' },
         ],
       },
     },

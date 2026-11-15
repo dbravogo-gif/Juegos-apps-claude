@@ -77,8 +77,18 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
     leyendas son los trece círculos del cubo de Metatrón. La historia, en `HISTORIA.md`.
   - **Tabla de tipos en combate** (autor, 2026-11-15): la T abre lo que daña a cada criatura. Sin
     pistas en los botones de ataque: al autor no le gustaron.
-  - **Gran Canaria** (autor, 2026-11-15): el gimnasio se pasa con un combate 2 contra 2 difícil,
-    con un amigo del juego que no sea el rival o con un colega en línea.
+  - **Gran Canaria** (autor, 2026-11-15): dos gimnasios separados. En el de Eléctrico el líder no
+    está. En el terrero de Lucha llegan tres contrincantes de uno en uno, y al final los dos líderes
+    juntos, para un 2 contra 2 difícil, con un amigo del juego que no sea el rival o con un colega
+    en línea (los dos ganan las mitades). Se puede seguir a Tenerife sin ellas (`ISLA-3.md`).
+  - **Efectos de campo en los gimnasios** (autor, 2026-11-15):
+    - Roca: tormenta de arena permanente.
+    - Aire: viento a favor (más velocidad).
+    - Eléctrico: campo eléctrico (sus ataques eléctricos pegan más).
+    - Lucha: tus criaturas empiezan confusas, por el agarre.
+    - El resto, más adelante.
+  - **Tipos de gimnasio:** Roca (Lanzarote), Aire (Fuerteventura), Eléctrico y Lucha (Gran Canaria) y
+    Planta (La Palma). Tenerife, La Gomera y El Hierro, por decidir.
 - **Tono de la historia:** ligero y con humor. Se vence al campeón de cada isla para avanzar,
   mientras se investiga por qué desapareció la séptima. Eres el nuevo elegido de tu pueblo; te
   persigue la rama del pueblo que ataca al tuyo, y tu rival es tu mejor amigo (`HISTORIA.md`).

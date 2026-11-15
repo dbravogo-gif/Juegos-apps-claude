@@ -15,6 +15,8 @@ export const SALA_INICIAL = 'casa-jugador';
 export interface DefSala {
   nombre: string;
   gente: (s: InteriorGenerado) => Personaje[];
+  /** Otro tipo de sala que el de su edificio (el bar es una tienda por fuera). */
+  tipo?: TipoSala;
 }
 
 export const vive = (id: string, frase?: string) => (s: InteriorGenerado): Personaje[] => [{ id, x: s.residente.x, y: s.residente.y, mira: 's', ...(frase ? { frase } : {}) }];
@@ -31,6 +33,15 @@ const SALAS: Record<string, DefSala> = {
     ],
   },
   'casa-jugador': { nombre: 'Tu casa', gente: vive('madre') },
+  // El bar del principio (HISTORIA.md): desayunas con tu amigo antes de ir al museo.
+  bar: {
+    nombre: 'Bar de la plaza',
+    tipo: 'bar',
+    gente: (s) => [
+      { id: 'camarero', x: s.residente.x, y: s.residente.y, mira: 's' },
+      { id: 'amigo', x: s.cliente!.x, y: s.cliente!.y, mira: 'n' },
+    ],
+  },
   'casa-vecina': { nombre: 'Casa de unos vecinos', gente: vive('vecina-casa') },
   'casa-geria-1': { nombre: 'Casa de La Geria', gente: vive('vecino-geria', 'Aquí cada vid tiene su hoyo y su muro de piedra. Sin ellos, el viento se lo llevaría todo.') },
   'casa-geria-2': { nombre: 'Casa de La Geria', gente: vive('vecina-geria', 'Mi abuelo decía que el picón guarda el rocío de la noche para las plantas.') },
@@ -88,7 +99,8 @@ export function generarInteriores(
         continue;
       }
       if (!def || !tipo) continue;
-      const s = generarInterior({ tipo, ancho: e.ancho, fondo: e.fondo, plantas: plantasDe(z, tipo), semilla: semillaDe(id) });
+      const tipoSala = def.tipo ?? tipo;
+      const s = generarInterior({ tipo: tipoSala, ancho: e.ancho, fondo: e.fondo, plantas: plantasDe(z, tipoSala), semilla: semillaDe(id) });
       res.push({ id, nombre: def.nombre, mapa: s.mapa, personajes: def.gente(s), entrada: s.entrada });
     }
   }

@@ -243,6 +243,18 @@ rival; `{amigo}`, el nombre que le pones.
 
 **Recados:** los del borrador 1: la vid del anciano, la red del pescador y el faro.
 
+## En el juego
+
+- **Parte 1, hecha (2026-11-15):**
+  - el bar de la plaza en la zona inicial, con el camarero y tu amigo;
+  - la caja para ponerle nombre a tu amigo la primera vez que le hablas;
+  - lo nuevo de tu madre y de la doctora (la inscripción de las ocho piezas);
+  - el mensaje al móvil de tu amigo al salir del museo, con su nombre y su inicial.
+- **Parte 2:** los pueblos enemigos (uniformes teñidos, soldados y silueta en las Montañas del
+  Fuego, banderas).
+- **Parte 3:** el resto de Lanzarote (el anciano, el pescador que te vigila, la líder, la revancha y
+  los recados).
+
 ## Lo que falta decidir
 
 Nada de la historia. Solo, cuando el autor pueda:

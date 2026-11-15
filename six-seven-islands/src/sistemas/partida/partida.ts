@@ -16,6 +16,8 @@ import { PERSONA_JUGADOR, PERSONAS } from '../../arte/personas';
 import { ISLAS, LANZAROTE, type DatosIsla } from '../../data/islas';
 import { NOMBRE_OBJETO } from '../../data/textos-isla1';
 import { quienEs } from '../../data/entrenadores-isla1';
+import { AMIGOS, NOMBRE_TIPO_INICIAL } from '../../data/textos-isla1';
+import { inicialDelRival, type TipoInicial } from '../../data/pueblos';
 import { crearCriatura, curarDelTodo } from '../../core/criatura';
 import { sortearEncuentro } from '../../core/encuentros';
 import { perdidaPorDerrota } from '../../core/economia';
@@ -26,7 +28,7 @@ import { DATOS_COMBATE_PRUEBA as DATOS, ESPECIE_INICIAL, MOCHILA_INICIAL } from 
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Entrada } from '../entrada/entrada';
 
-export type Modo = 'titulo' | 'explorar' | 'dialogo' | 'fundido' | 'combate' | 'menu' | 'fin' | 'viaje';
+export type Modo = 'titulo' | 'explorar' | 'dialogo' | 'fundido' | 'combate' | 'menu' | 'fin' | 'viaje' | 'nombrar';
 
 /** Pasos fijos de cada mitad del fundido al cruzar una puerta: 0,2 s a negro y 0,2 s de vuelta. */
 export const PASOS_FUNDIDO = 12;
@@ -83,6 +85,10 @@ export class Partida implements Subsistema {
   ultimoRefugio = LANZAROTE.refugio;
   /** El último refugio de cada isla visitada, para volver a él al regresar en barco. */
   private refugios: Record<string, string> = {};
+  /** Los nombres que el jugador ha puesto a sus amigos (HISTORIA.md: se decide al conocerlos). */
+  amigos: Record<string, string> = {};
+  /** A quién se está poniendo nombre: al acabar, se habla con él. */
+  private porNombrar: EventoExplorar | null = null;
   /** Entrenadores vencidos: no vuelven a retar. */
   vencidos: string[] = [];
   dinero = 0;
@@ -112,7 +118,8 @@ export class Partida implements Subsistema {
   private ctx!: Ctx;
   /** A qué interior lleva cada puerta de la isla, por clave de casilla. */
   private puertas = new Map<number, string>();
-  private cruce: { paso: number; destino: string | null } | null = null;
+  /** El fundido de una puerta: a dónde se va y de qué sala se sale (para el mensaje del rival). */
+  private cruce: { paso: number; destino: string | null; desde?: string | null } | null = null;
   private hablando = '';
   private espera = 0;
   private quitar: (() => void) | null = null;
@@ -176,6 +183,7 @@ export class Partida implements Subsistema {
       mochila: { ...this.mochila },
       ultimoRefugio: this.ultimoRefugio,
       refugios: { ...this.refugios },
+      amigos: { ...this.amigos },
       vencidos: [...this.vencidos],
       rng: structuredClone(this.ctx.rng),
       dinero: this.dinero,
@@ -324,6 +332,7 @@ export class Partida implements Subsistema {
     this.mochila = g.mochila;
     this.ultimoRefugio = this.interiores.has(g.ultimoRefugio) ? g.ultimoRefugio : this.datos.refugio;
     this.refugios = { ...g.refugios };
+    this.amigos = { ...g.amigos };
     this.vencidos = g.vencidos;
     this.dinero = g.dinero ?? 0;
     this.nombre = g.nombre ?? 'Dani';
@@ -349,7 +358,8 @@ export class Partida implements Subsistema {
   pasoFijo(): void {
     if (this.modo !== 'explorar') this.menuPendiente = false;
     // En combate manda el subsistema «combate»; en el menú, «menu», y en la portada y el final, «inicio».
-    if (this.modo === 'combate' || this.modo === 'menu' || this.modo === 'titulo' || this.modo === 'fin') return;
+    // Mientras se escribe el nombre de un amigo, manda la «interfaz».
+    if (this.modo === 'combate' || this.modo === 'menu' || this.modo === 'titulo' || this.modo === 'fin' || this.modo === 'nombrar') return;
     if (this.modo === 'viaje') return this.pasoViaje();
     if (this.modo === 'fundido') return this.pasoFundido();
     if (this.modo === 'dialogo') return this.pasoDialogo();
@@ -451,6 +461,7 @@ export class Partida implements Subsistema {
     this.fundido = c.paso <= PASOS_FUNDIDO ? c.paso / PASOS_FUNDIDO : Math.max(0, 2 - c.paso / PASOS_FUNDIDO);
     if (c.paso === PASOS_FUNDIDO) {
       // En negro: se cambia de sitio.
+      c.desde = this.estado.dentro;
       if (c.destino) entrar(this.estado, c.destino, this.interiores.get(c.destino)!);
       else salir(this.estado);
       this.ctx.eventos.emit('zona:entrar', { zonaId: this.estado.zona });
@@ -461,6 +472,15 @@ export class Partida implements Subsistema {
       this.fundido = 0;
       this.modo = 'explorar';
       this.entrada.olvidar();
+      // Al salir del museo con tu compañera, tu amigo te escribe al móvil (HISTORIA.md).
+      const msg = this.datos.guion['mensaje-rival'];
+      if (c.desde === 'museo' && !c.destino && msg && this.estado.condiciones.includes('inicial-elegida') && !this.estado.condiciones.includes('mensaje-rival')) {
+        cumplir(this.estado, 'mensaje-rival');
+        this.ctx.eventos.emit('sonido:tocar', { nombre: 'seleccion' });
+        const d = elegirDialogo(this.datos.guion, 'mensaje-rival', this.estado.condiciones, this.estado.inicial);
+        if (d) this.abrir(d, 'mensaje-rival');
+        this.guardar();
+      }
     }
   }
 
@@ -488,6 +508,14 @@ export class Partida implements Subsistema {
         this.cruzar(null);
         break;
       case 'hablar': {
+        // A un amigo se le pone nombre la primera vez que se le habla (autor, 2026-11-15).
+        if (AMIGOS.has(ev.personaje) && !this.amigos[ev.personaje]) {
+          this.porNombrar = ev;
+          this.modo = 'nombrar';
+          this.entrada.olvidar();
+          this.ctx.eventos.emit('amigo:nombrar', { id: ev.personaje });
+          break;
+        }
         const d = elegirDialogo(this.datos.guion, ev.personaje, this.estado.condiciones, this.estado.inicial);
         const frase = this.activo().zonas.get(ev.zona)?.personajes.find((p) => p.id === ev.personaje)?.frase;
         const vencido = this.vencidos.includes(ev.personaje) ? this.datos.entrenadores[ev.personaje] : undefined;
@@ -538,8 +566,16 @@ export class Partida implements Subsistema {
   }
 
   private abrir(d: Dialogo, guionId: string): void {
-    // {nombre} en un texto se cambia por el nombre del jugador.
-    const conNombre = (l: Dialogo['lineas'][number]) => ({ ...l, texto: l.texto.replaceAll('{nombre}', this.nombre) });
+    // {nombre} en un texto se cambia por el nombre del jugador; {amigo}, por el del rival; y
+    // {inicial} y {inicialRival}, por el tipo de la inicial de cada uno (HISTORIA.md).
+    const tuya = this.estado.inicial as TipoInicial | null;
+    const cambiar = (t: string) =>
+      t
+        .replaceAll('{nombre}', this.nombre)
+        .replaceAll('{amigo}', this.amigos.amigo ?? 'tu amigo')
+        .replaceAll('{inicial}', tuya ? NOMBRE_TIPO_INICIAL[tuya] : '')
+        .replaceAll('{inicialRival}', tuya ? NOMBRE_TIPO_INICIAL[inicialDelRival(tuya)] : '');
+    const conNombre = (l: Dialogo['lineas'][number]) => ({ ...l, texto: cambiar(l.texto), ...(l.quien ? { quien: cambiar(l.quien) } : {}) });
     d = { ...d, lineas: d.lineas.map(conNombre), ...(d.pregunta ? { pregunta: conNombre(d.pregunta) } : {}), ...(d.tras ? { tras: d.tras.map(conNombre) } : {}) };
     this.dialogo = abrirDialogo(d);
     this.ctx.eventos.emit('sonido:tocar', { nombre: 'hablar' });
@@ -547,6 +583,19 @@ export class Partida implements Subsistema {
     this.modo = 'dialogo';
     this.entrada.olvidar();
     this.ctx.eventos.emit('dialogo:abrir', { guionId });
+  }
+
+  /** Lo llama «interfaz» al escribir el nombre de un amigo (o null si se cancela). */
+  nombrarAmigo(nombre: string | null): void {
+    const ev = this.porNombrar;
+    this.porNombrar = null;
+    this.modo = 'explorar';
+    this.espera = ESPERA_TRAS_DIALOGO;
+    this.entrada.olvidar();
+    if (!ev || ev.tipo !== 'hablar' || nombre === null) return;
+    this.amigos[ev.personaje] = nombre.trim().slice(0, 16) || 'Amigo';
+    this.guardar();
+    this.atender(ev);
   }
 
   /** Lo llama «menu» al cerrarse. */
