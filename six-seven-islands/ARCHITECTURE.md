@@ -216,9 +216,14 @@ Todo en el núcleo (`core/mundo.ts` y `core/explorar.ts`), igual en zonas e inte
   `alterna` y `aspas`, la dirección cambia mientras se cumple `aspas:<id>`.
 - **Aspas de molino** (`H`, `aspas`): no se pisan; usarlas pone o quita `aspas:<id>`.
 - Vencer a cualquiera cumple `vencido:<id>`. Las salas los dibujan en vivo (`salas.ts`).
-- **Rocas grabadas** (`g`, `letreros`): no se pisan; al mirarlas se lee su texto (cada línea, una
-  caja). Sirven de letreros en cualquier zona (los pies grabados de Tindaya).
-- **Islotes** (`islotes` de la isla, como la silueta): tierra que se ve y no se pisa (Lobos).
+- **Rocas grabadas y esculturas** (`g` y `f`, `letreros`): no se pisan; al mirarlas se lee su texto
+  (cada línea, una caja). Sirven de letreros en cualquier zona: los pies grabados de Tindaya y
+  las esculturas de Puerto del Rosario.
+- **Islotes** (`islotes` de la isla, como la silueta): tierra que se ve y no se pisa (Lobos), con
+  su volcán en medio.
+- **Mar abierto** (`mundo/mar.ts`, `marAbierto`): el agua unida a lo que está lejos de la costa o
+  fuera de la isla. Las barcas, boyas y rocas solo van ahí; una prueba vigila que el mar de cada
+  zona de costa lo sea.
 
 ## Guardado
 

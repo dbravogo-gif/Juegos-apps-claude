@@ -4,6 +4,12 @@ Errores ya pagados y la barrera que evita repetirlos (regla R6). Formato: fecha 
 causa · barrera. Lo más reciente va arriba. Si un error vuelve a pasar, su barrera sube de
 nivel: de nota a regla, y de regla a prueba o hook.
 
+- **2026-11-15 · El mar de las zonas de costa quedaba encerrado como un canal** (Six-seven
+  islands; lo vio el probador en Puerto del Rosario, y salió también en Sotavento, Morro Jable,
+  Cofete y la capital de Lanzarote).
+  - Causa: el borde de roca de la zona, o la tierra de la silueta detrás, cerraban su mar.
+  - Barrera: una prueba exige que toda agua grande de una zona dé al mar abierto (`marAbierto`).
+    Las barcas, boyas y rocas solo van en mar abierto, así que una presa queda sin barcas.
 - **2026-11-13 · Mover zonas descolocaba las partidas guardadas** (Six-seven islands; visto al
   ampliar Fuerteventura dos veces).
   - Causa: el guardado apunta la posición en casillas de la isla entera; al desplazar la isla para

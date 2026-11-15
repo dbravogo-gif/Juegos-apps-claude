@@ -1,10 +1,11 @@
 // El mar alrededor de Lanzarote (autor, 2026-11-10): la orilla tiene espuma, frente a las playas
 // hay boyas, y nada de lo que flota cae sobre tierra ni sobre lo que se pisa.
 import { describe, expect, it } from 'vitest';
-import { TRANSITABLES, clave, construirMundo } from '../src/core/mundo';
+import { TRANSITABLES, clave, construirMundo, deClave } from '../src/core/mundo';
 import { ISLA_1 } from '../src/data/isla1';
+import { ISLA_2 } from '../src/data/isla2';
 import { cumbres } from '../src/sistemas/mundo/terreno';
-import { DISTANCIA_BOYAS, DISTANCIA_MINIMA, claveMar, distanciasMar, esMar, geometriaEspuma, geometriaPiezasMar, planMar } from '../src/sistemas/mundo/mar';
+import { DISTANCIA_BOYAS, DISTANCIA_MINIMA, claveMar, distanciasMar, esMar, geometriaEspuma, geometriaPiezasMar, marAbierto, planMar } from '../src/sistemas/mundo/mar';
 import { piezaKit, type PiezaKit } from '../src/sistemas/mundo/kit';
 import { carasSolapadas } from './utiles/coplanares';
 
@@ -65,5 +66,44 @@ describe('el mar de Lanzarote', () => {
     const g = geometriaPiezasMar(plan.piezas, (n) => piezaKit(n.split('_')[0] as PiezaKit, Number(n.split('_')[1])));
     expect(g).not.toBeNull();
     expect(g!.getAttribute('color')).toBeDefined();
+  });
+});
+
+describe('el mar de Fuerteventura', () => {
+  it('el mar de cada zona de costa da al mar abierto: ninguno queda encerrado como un canal', () => {
+    // Pasó en Puerto del Rosario, Sotavento y Morro Jable: la silueta ponía tierra detrás de su mar.
+    for (const isla of [ISLA_1, ISLA_2]) {
+      const mm = construirMundo(isla);
+      const abierto = marAbierto(mm, distanciasMar(mm, cumbres(mm)));
+      const agua = new Set([...mm.casillas].filter(([, c]) => c.c === '~').map(([k]) => k));
+      const vistas = new Set<number>();
+      for (const k0 of agua) {
+        if (vistas.has(k0)) continue;
+        const grupo = [k0];
+        vistas.add(k0);
+        for (let i = 0; i < grupo.length; i++) {
+          const [x, y] = deClave(grupo[i]);
+          for (const v of [clave(x + 1, y), clave(x - 1, y), clave(x, y + 1), clave(x, y - 1)]) {
+            if (agua.has(v) && !vistas.has(v)) {
+              vistas.add(v);
+              grupo.push(v);
+            }
+          }
+        }
+        // Las pozas y las presas son pequeñas; el mar de una zona, no.
+        if (grupo.length < 40) continue;
+        const zona = mm.casillas.get(k0)!.zona;
+        expect(grupo.some((k) => abierto.has(claveMar(...deClave(k)))), `${isla.id} ${zona}`).toBe(true);
+      }
+    }
+  });
+
+  it('en la presa de Betancuria no hay barcas, boyas ni rocas: solo van en el mar abierto', () => {
+    const m2 = construirMundo(ISLA_2);
+    const z = m2.zonas.get('betancuria')!;
+    const [ancho, alto] = [z.mapa[0].length, z.mapa.length];
+    const dentro = (x: number, y: number) => x >= z.origen.x && x < z.origen.x + ancho && y >= z.origen.y && y < z.origen.y + alto;
+    expect(z.mapa.some((f) => f.includes('~'))).toBe(true);
+    for (const p of planMar(m2, cumbres(m2)).piezas) expect(dentro(Math.round(p.x), Math.round(p.y)), `${p.tipo} ${p.x},${p.y}`).toBe(false);
   });
 });

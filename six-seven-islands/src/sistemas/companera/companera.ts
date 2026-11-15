@@ -69,7 +69,10 @@ export class Companera implements Subsistema {
     const actual = { x: p.x, y: p.y, z: p.z };
     const u = this.rastro.ultimo();
     if (this.rastro.vacio || !u || Math.hypot(actual.x - u.x, actual.z - u.z) > SALTO) {
-      const [dx, dz] = DETRAS[this.partida.estado.mira];
+      // Al aparecer (al cargar, al cruzar una puerta o al llegar en barco), detrás del jugador; si
+      // mira a la cámara, detrás queda tapada por él: entonces, a su lado (probador, 2026-11-13).
+      const mira = this.partida.estado.mira;
+      const [dx, dz] = mira === 's' ? [0.8, -0.4] : DETRAS[mira];
       this.rastro.reiniciar({ x: actual.x + dx * DISTANCIA, y: actual.y, z: actual.z + dz * DISTANCIA }, actual);
       this.anterior = null;
     }

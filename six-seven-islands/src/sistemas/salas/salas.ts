@@ -200,6 +200,9 @@ export function geometriaSala(sala: Mundo, id: string): BufferGeometry {
   // cal, y lava que brilla en sus coladas (la pone `Salas`, sin luz, para que se vea encendida).
   // También las cuevas (la de Ajuy), con pozas de agua (`~`) en vez de lava.
   const volcanica = [...sala.casillas.values()].some((c) => c.c === 'L' || c.c === '~');
+  // La cueva marina (pozas y sin lava): roca vieja y húmeda, sin cuadros ni paredes lisas, que
+  // parecían tablas de madera (probador, 2026-11-13).
+  const cueva = volcanica && ![...sala.casillas.values()].some((c) => c.c === 'L');
   const suelo = volcanica ? [COLORES.basalto, COLORES.lavaNegra] : [COLORES.maderaSuelo, COLORES.maderaSueloOscura];
   M.caja(maxX - minX + 1, 0.1, maxY - minY + 1, centroX, SUELO - 0.1, centroY, volcanica ? COLORES.lavaNegra : COLORES.maderaSueloOscura, 0.8);
   // Paredes por tramos, lisas: un solo color, sin juntas entre casillas.
@@ -210,6 +213,17 @@ export function geometriaSala(sala: Mundo, id: string): BufferGeometry {
     const cx = (t.x0 + t.x1) / 2;
     const cz = (t.y0 + t.y1) / 2;
     const fila = t.y0 === t.y1;
+    if (cueva) {
+      // Roca abollada, un bloque por casilla, de altura algo distinta: pared de cueva.
+      for (let px = t.x0; px <= t.x1; px++) {
+        for (let pz = t.y0; pz <= t.y1; pz++) {
+          const v = (px * 5 + pz * 11) % 4;
+          const h = alto * (0.85 + v * 0.08);
+          M.pon(abollar(new BoxGeometry(1.08, h, 1.08, 2, 3, 2), 0.14, px * 31 + pz).translate(px, SUELO + h / 2, pz), v % 2 ? COLORES.basalto : '#3E4A4A', 0.9 + v * 0.05);
+        }
+      }
+      continue;
+    }
     M.caja(an, alto, fo, cx, SUELO, cz, volcanica ? COLORES.lavaParda : COLORES.cal);
     // El zócalo sobresale solo hacia los lados de la pared; en las columnas se queda 1 cm corto
     // por cada punta para no solaparse con el de la fila en la esquina.
@@ -240,7 +254,10 @@ export function geometriaSala(sala: Mundo, id: string): BufferGeometry {
       continue;
     }
     // Bajo las compuertas, un puente de basalto más claro sobre la colada.
-    M.pon(new PlaneGeometry(1, 1).rotateX(-Math.PI / 2).translate(x, SUELO + 0.002, y), cm.c === 'X' ? COLORES.basaltoClaro : (x + y) % 2 ? suelo[0] : suelo[1], 0.96 + (n % 3) * 0.03);
+    // En la cueva, arena húmeda y oscura de un solo tono, con alguna piedra: nada de cuadros.
+    const colorSuelo = cueva ? '#3B3836' : cm.c === 'X' ? COLORES.basaltoClaro : (x + y) % 2 ? suelo[0] : suelo[1];
+    M.pon(new PlaneGeometry(1, 1).rotateX(-Math.PI / 2).translate(x, SUELO + 0.002, y), colorSuelo, cueva ? 0.9 + (n % 3) * 0.06 : 0.96 + (n % 3) * 0.03);
+    if (cueva && n === 2) M.pon(abollar(new SphereGeometry(0.5, 7, 4), 0.25, n + x).scale(0.18, 0.07, 0.14).translate(x - 0.25, SUELO, y + 0.2), COLORES.basalto);
     if (cm.c === '#' && volcanica) {
       // Columna de basalto hexagonal, de altura variable, como las de los acantilados.
       const alto = 1.2 + ((x * 5 + y * 3) % 4) * 0.25;

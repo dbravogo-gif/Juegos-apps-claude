@@ -3,7 +3,7 @@
 // semilla y se repite por toda la isla, instanciada (ARTE.md, «Modelos del mundo»). Funciones
 // puras y deterministas, con el origen en la base de la pieza, a ras de suelo.
 
-import { BoxGeometry, ConeGeometry, CylinderGeometry, SphereGeometry, Vector3, type BufferGeometry } from 'three/webgpu';
+import { BoxGeometry, ConeGeometry, CylinderGeometry, SphereGeometry, TorusGeometry, Vector3, type BufferGeometry } from 'three/webgpu';
 import { COLORES } from '../../arte/paleta';
 import { Montaje, abollar, acanalar, apuntar, azar, doblar, elegir, ruido } from '../../arte/montaje';
 
@@ -517,6 +517,43 @@ export function rocaGrabada(semilla: number): BufferGeometry {
 }
 
 /**
+ * Una escultura de calle (Puerto del Rosario, la ciudad de las esculturas; 2026-11-13): una pieza
+ * abstracta sobre un pedestal de cantería, con aros y bloques de colores distintos según la
+ * variante. No copia ninguna obra real: solo la idea de esculturas modernas por las calles.
+ */
+export function escultura(semilla: number): BufferGeometry {
+  const M = new Montaje();
+  M.pon(new BoxGeometry(0.6, 0.3, 0.6).translate(0, 0.15, 0), COLORES.canteria);
+  if (semilla % 2) {
+    // Un aro de hierro oxidado, de pie, atravesado por una barra.
+    M.pon(new TorusGeometry(0.28, 0.06, 6, 16).translate(0, 0.62, 0), '#9A4E2C');
+    M.pon(new CylinderGeometry(0.04, 0.04, 0.8, 6).rotateZ(0.6).translate(0, 0.62, 0), '#4D4B54');
+  } else {
+    // Tres bloques apilados y girados, como piedras en equilibrio, del color de la isla.
+    for (let i = 0; i < 3; i++) M.pon(new BoxGeometry(0.34 - i * 0.06, 0.2, 0.3 - i * 0.05).rotateY(i * 0.7).translate(0, 0.4 + i * 0.2, 0), i === 1 ? COLORES.cal : '#C9A97E', 0.95);
+  }
+  return M.fusionar();
+}
+
+/**
+ * Una cometa de kitesurf sobre el mar (Sotavento; probador, 2026-11-13): la tabla en el agua, dos
+ * líneas finas y el ala en arco, arriba, de un color vivo según la variante.
+ */
+export function cometa(semilla: number): BufferGeometry {
+  const M = new Montaje();
+  const color = ['#E85A4F', '#2BB3B1', '#F2B33D'][semilla % 3];
+  M.pon(new BoxGeometry(0.5, 0.04, 0.16).translate(0, 0.02, 0), COLORES.cal);
+  // Cada variante, a una altura y con una inclinación distintas: el viento no las pone iguales.
+  const alto = 2.3 + (semilla % 3) * 0.25;
+  M.pon(new TorusGeometry(0.62, 0.07, 4, 14, Math.PI).scale(1, 0.55, 1.6).rotateZ(((semilla % 5) - 2) * 0.08).translate(0, alto, 0), color, 0.95);
+  for (const s of [-1, 1]) {
+    const largo = Math.hypot(0.62, alto);
+    M.pon(new CylinderGeometry(0.008, 0.008, largo, 3).rotateZ(-s * Math.atan2(0.62, alto)).translate((s * 0.62) / 2, alto / 2, 0), '#3A3A3A');
+  }
+  return M.fusionar();
+}
+
+/**
  * La boca de una cueva marina en el acantilado (Ajuy, Fuerteventura; 2026-11-13): un risco de roca
  * oscura del tamaño del solar, con un arco negro donde está la puerta (`puerta`, en casillas desde
  * el centro). Se entra por él como por la puerta de una casa.
@@ -567,6 +604,8 @@ export const KIT = {
   estatua: estatuaEnterrada,
   grabado: rocaGrabada,
   duna: lomoDuna,
+  escultura,
+  cometa,
 } satisfies Record<string, (semilla: number) => BufferGeometry>;
 
 export type PiezaKit = keyof typeof KIT;
@@ -599,6 +638,8 @@ export const VARIANTES: Record<PiezaKit, number> = {
   estatua: 1,
   grabado: 1,
   duna: 2,
+  escultura: 2,
+  cometa: 3,
 };
 
 /** La geometría de una variante de una pieza del kit. */

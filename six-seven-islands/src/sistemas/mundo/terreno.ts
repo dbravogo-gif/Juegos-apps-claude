@@ -165,6 +165,7 @@ const COLOR_ARRIBA: Partial<Record<Casilla, string>> = {
   K: COLORES.crestaDuna,
   E: COLORES.arenaDuna,
   g: COLORES.tierra,
+  f: COLORES.canteria,
 };
 
 type ColoresIsla = Mundo['isla']['colores'];
@@ -411,6 +412,10 @@ function decoracionDe(m: Mundo, claves: number[]): Record<NombreDeco, Matrix4[]>
       for (let i = 0; i < 3; i++) {
         matas.push(new Matrix4().compose(v.set(x + j(i * 5) * 2, base + 0.12, y + j(i * 5 + 3) * 2), IDENT, new Vector3(1, 0.8 + ((r >>> i) & 3) * 0.15, 1)));
       }
+    } else if (cm.c === 'D') {
+      // La arena de duna, que es de encuentros, lleva una mata seca y baja por casilla: así se
+      // distingue de la tierra dura, como la hierba alta del resto (probador, 2026-11-13).
+      matas.push(new Matrix4().compose(v.set(x + j(4) * 2, base + 0.04, y + j(12) * 2), IDENT, new Vector3(0.75, 0.5 + ((r >>> 3) & 3) * 0.08, 0.75)));
     } else if (cm.c === ';' || cm.c === 'L' || (cm.c === 'Q' && bordeDe(m, x, y, 'Q'))) {
       // El malpaís (se pisa) y las coladas (no) llevan las mismas lajas de lava; también el borde
       // de los conos, que asoman por su falda como lava a su pie.

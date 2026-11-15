@@ -163,10 +163,19 @@ Lo juzga el autor al probarlo.
 - cada entrenador dice quién es y, nada más vencerle, da su consejo;
 - las líderes son más grandes y con otra figura; la calima se ve más; Tindaya sube en terrazas.
 
-Queda pendiente (visual): la cueva de Ajuy aún parece una sala, la iglesia de Betancuria es el
-modelo del museo, faltan el muelle y las esculturas de Puerto del Rosario y las cometas de
-Sotavento, Lobos son bloques, la arena de encuentros se distingue poco del camino, el cubo del
-suelo se dibuja como una poción y la compañera aparece encima del jugador al llegar en barco.
+**Pulido visual (2026-11-15):**
+- La cueva de Ajuy, con paredes de roca y suelo oscuro.
+- Betancuria tiene iglesia con campanario, y su hierba alta es ahora seca y amarilla, como la de
+  toda la isla.
+- Puerto del Rosario: el muelle entra en el mar, con un barco, y hay dos esculturas que se leen.
+- Sotavento tiene cometas de kitesurf, y Lobos, su volcán.
+- La arena de las dunas lleva matas secas, que avisan de que salen criaturas.
+- El cubo del suelo es un cubo y la compañera aparece a tu lado al llegar.
+- El mar de Puerto del Rosario, Sotavento, Morro Jable y Cofete ya no queda encerrado como un
+  canal, y no hay barcas en la presa.
+
+Queda: el kit majorero (casas bajas de piedra, molinos y cabras). Por ahora se usan las casas de
+Lanzarote.
 
 | Fase | Qué | Coste |
 | --- | --- | --- |

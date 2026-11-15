@@ -81,6 +81,10 @@ z.edificio(18, 9, 4, 2, 'C', 19, 'casa-puerto-2')
 z.edificio(2, 17, 4, 3, 'C', 3, 'casa-puerto-3')
 for y in (3, 6, 16, 19, 23): z.p(24, y, 'T')                    # palmeras del paseo, junto al mar
 z.r(18, 16, 5, 4, '.'); z.p(20, 17, 'Y')                        # la plaza con su árbol
+# El mar se abre al este (sin borde de roca) y el muelle entra en él, con un barco amarrado: antes la
+# calle se comía el muelle y el mar parecía un canal (probador, 2026-11-13).
+z.r(26, 0, 6, 26, '~'); z.r(26, 12, 4, 2, 'P'); z.r(28, 15, 2, 2, 'B')
+z.p(24, 10, 'f'); z.p(22, 18, 'f')                              # esculturas, la ciudad las tiene por las calles
 zonas['puerto'] = dict(nombre='Puerto del Rosario', origen=(38, 56), z=z, altura=0, casas='lanzarote')
 
 # 4. Betancuria (34 × 30): la antigua capital, en un valle entre montañas peladas. Entrada al
@@ -121,7 +125,7 @@ zonas['ajuy'] = dict(nombre='Ajuy', origen=(10-30, 64), z=z, altura=0, hierba=Tr
 # la playa larga y el mar al este; kitesurfistas que anuncian el gimnasio de Aire.
 z = Z(36, 26, '.'); z.borde('#')
 z.r(11, 0, 3, 1, ','); z.r(11, 25, 3, 1, ',')
-z.r(30, 1, 5, 24, '~'); z.r(26, 1, 4, 24, 'a')                  # el mar y la playa
+z.r(30, 0, 6, 26, '~'); z.r(26, 1, 4, 24, 'a')                  # el mar (abierto al este) y la playa
 z.camino([(12,0),(12,8)]); z.camino([(12,8),(20,8)]); z.camino([(20,8),(20,16)]); z.camino([(12,16),(20,16)]); z.camino([(12,16),(12,25)])
 z.r(2, 4, 7, 6, '"'); z.r(16, 10, 3, 4, '"'); z.r(10, 18, 5, 3, '"')     # hierba seca; la de abajo, en el camino
 for x, y, w, h in ((3, 13, 3, 2), (22, 3, 2, 2), (5, 20, 3, 2), (22, 19, 2, 3)): z.r(x, y, w, h, 'U')
@@ -133,7 +137,7 @@ zonas['sotavento'] = dict(nombre='Sotavento', origen=(10-30, 94), z=z, altura=0,
 # muelle y el barco a Gran Canaria, que aún no sale.
 z = Z(34, 26, ':'); z.borde('#')
 z.r(15, 0, 3, 1, ',')
-z.r(1, 20, 32, 5, '~'); z.r(1, 18, 32, 2, 'a')                  # el mar y la playa
+z.r(0, 20, 34, 6, '~'); z.r(1, 18, 32, 2, 'a')                  # el mar (abierto al sur) y la playa
 z.camino([(15,0),(15,17)], ancho=3)
 z.camino([(0,8),(32,8)]); z.camino([(1,14),(32,14)]); z.camino([(1,17),(32,17)])   # la calle de arriba sale al oeste, a Cofete
 z.edificio(2, 5, 5, 3, 'R', 4, 'refugio-morro')
@@ -189,7 +193,7 @@ zonas['tindaya'] = dict(nombre='Tindaya', origen=(7, 28), z=z, alturas=alt, hier
 # montañas. Playa larga y sin nadie, una casa solitaria en la ladera y criaturas fuertes.
 z = Z(30, 18, ':'); z.borde('#')
 z.p(29, 10, ',')                                                # entrada desde Morro Jable
-z.r(1, 1, 4, 16, '~'); z.r(5, 1, 5, 16, 'a')                    # el mar y la playa larga
+z.r(0, 1, 5, 16, '~'); z.r(5, 1, 5, 16, 'a')                    # el mar (abierto al oeste) y la playa larga
 z.r(19, 1, 10, 16, '#')                                         # las montañas de Jandía
 z.camino([(26,10),(28,10)]); z.camino([(26,4),(26,10)]); z.camino([(21,4),(26,4)])    # el paso: sube
 z.camino([(21,4),(21,13)]); z.camino([(18,13),(21,13)])                               # y baja
@@ -219,10 +223,11 @@ for v in zonas.values(): v['origen'] = (v['origen'][0] + DESPLAZAMIENTO, v['orig
 
 # La costa de Fuerteventura, aproximada: de la punta de Corralejo por la costa este hasta Puerto
 # del Rosario, y por la oeste, Morro Jable, Cofete, Sotavento, Ajuy y Tindaya. En casillas, sin
-# desplazar; los .5 caen entre casillas. Entre Cofete y Sotavento, las montañas de Jandía.
-SILUETA = [(38.5,3.5),(45.5,0.5),(66.5,0.5),(74.5,5.5),(77.5,20.5),(76.5,45.5),(70.5,56.5),
-           (66.5,82.5),(58.5,96.5),(36.5,100.5),(20.5,102.5),(15.5,110.5),(14.5,124.5),(10.5,140.5),
-           (0.5,143.5),(-17.5,143.5),(-29.5,138.5),(-54.5,136.5),(-55.5,122.5),(-51.5,114.5),
+# desplazar; los .5 caen entre casillas. Entre Cofete y Sotavento, las montañas de Jandía. El mar de
+# cada zona costera queda fuera de la silueta: si no, la tierra de detrás lo encerraba como un canal.
+SILUETA = [(38.5,3.5),(45.5,0.5),(66.5,0.5),(74.5,5.5),(77.5,20.5),(76.5,45.5),(62.5,57.5),
+           (62.5,82.5),(58.5,94.5),(38.5,94.5),(16.5,95.5),(9.5,99.5),(9.5,121.5),(10.5,140.5),
+           (0.5,143.5),(-17.5,143.5),(-29.5,138.5),(-49.5,137.5),(-49.5,119.5),(-51.5,114.5),
            (-33.5,110.5),(-21.5,106.5),(-20.5,96.5),(-20.5,70.5),(-13.5,61.5),(4.5,59.5),(5.5,50.5),
            (5.5,26.5),(30.5,18.5),(34.5,8.5)]
 # Lobos, el islote al noroeste de Corralejo: se ve desde el pueblo, pero no se pisa.
@@ -262,7 +267,9 @@ OBJETOS = {'dunas': ["{ id: 'pocion-horno', x: 33, y: 11, objeto: 'pocion' }", "
            # Los premios de las zonas opcionales: una Superpoción en cada una, escondida.
            'tindaya': ["{ id: 'superpocion-tindaya', x: 1, y: 17, objeto: 'superpocion' }"],
            'cofete': ["{ id: 'superpocion-cofete', x: 5, y: 16, objeto: 'superpocion' }"]}
-LETREROS = {'tindaya': {'7,9': 'Unos pies tallados en la roca, de hace muchísimo tiempo.\nTodos miran hacia el oeste, hacia el mar.',
+LETREROS = {'puerto': {'24,10': 'Una escultura moderna. La placa dice: «El viento que no se ve».\nPor más vueltas que le das, no sabes qué es.',
+                       '22,18': 'Otra escultura. La placa dice: «Paciencia».\nUn niño dice que es un perro; su madre, que es el mar.'},
+            'tindaya': {'7,9': 'Unos pies tallados en la roca, de hace muchísimo tiempo.\nTodos miran hacia el oeste, hacia el mar.',
                         '10,9': 'Más pies grabados. Junto a ellos, el dibujo de una isla con una nube encima.\nAlguien quiso dejar dicho algo que vio.'}}
 CIERRES = {}
 
@@ -304,7 +311,8 @@ ts=("// Isla 2, inspirada en Fuerteventura (2026-11-13): el mapa por casillas (I
 "  // Fuerteventura es más seca todavía: suelo de tierra clara y cumbres peladas, ocres.\n"
 "  // El gimnasio es de Aire: la isla del viento.\n"
 "  gimnasio: 'aire',\n"
-"  colores: {\n    suelo: { ':': '#D8BE8E', '.': '#D9C59A' },\n    cumbre: '#B0835A',\n    ladoCumbre: '#8E6644',\n    matas: '#8C8A4A',\n  },\n"
+"  // La hierba alta, seca y amarillenta: la verde de Lanzarote no pegaba aquí (probador, 2026-11-13).\n"
+"  colores: {\n    suelo: { ':': '#D8BE8E', '.': '#D9C59A', '\"': '#B8A660' },\n    cumbre: '#B0835A',\n    ladoCumbre: '#8E6644',\n    matas: '#8C8A4A',\n  },\n"
 "  // La costa de Fuerteventura, aproximada (herramientas/isla2.py).\n"
 "  silueta: [\n"+''.join(f"    [{x}, {y}],\n" for x, y in SILUETA)+"  ],\n"
 "  // Lobos, al noroeste de Corralejo: se ve, pero no se pisa.\n"
