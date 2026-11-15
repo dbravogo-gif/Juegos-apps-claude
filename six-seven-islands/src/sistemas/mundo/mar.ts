@@ -119,6 +119,36 @@ export function distanciasMar(m: Mundo, cumbre: Map<number, number>): Map<number
   return res;
 }
 
+/**
+ * El agua de mar abierto: la que está unida a algún sitio lejos de la costa. Una presa o una poza
+ * entre montañas no lo es, y en ella no van barcas, boyas ni rocas (probador, 2026-11-13: había una
+ * barca en la presa de Betancuria).
+ */
+export function marAbierto(m: Mundo, dist: ReadonlyMap<number, { d: number }>): Set<number> {
+  const abierto = new Set<number>();
+  // Es abierto lo que está lejos de la costa y lo que queda fuera del rectángulo de la isla.
+  const fuera = (k: number) => {
+    const [x, y] = deClaveMar(k);
+    return x < 0 || y < 0 || x >= m.ancho || y >= m.alto;
+  };
+  const pendientes = [...dist].filter(([k, v]) => v.d >= LEJOS_DE_LA_COSTA || fuera(k)).map(([k]) => k);
+  for (const k of pendientes) abierto.add(k);
+  while (pendientes.length) {
+    const [x, y] = deClaveMar(pendientes.pop()!);
+    for (const [dx, dy] of VECINOS) {
+      const nk = claveMar(x + dx, y + dy);
+      if (dist.has(nk) && !abierto.has(nk)) {
+        abierto.add(nk);
+        pendientes.push(nk);
+      }
+    }
+  }
+  return abierto;
+}
+
+/** A partir de esta distancia a la costa, el agua ya es mar abierto. */
+const LEJOS_DE_LA_COSTA = 5;
+
 /** Qué hay en el mar y dónde. */
 export function planMar(m: Mundo, cumbre: Map<number, number>): PlanMar {
   const dist = distanciasMar(m, cumbre);
@@ -138,6 +168,7 @@ export function planMar(m: Mundo, cumbre: Map<number, number>): PlanMar {
   // Recorrido en orden fijo (por filas), para que el plan no dependa del orden del mapa.
   // `pseudo` de la clave del mar: la misma casilla da siempre lo mismo.
   const claves = [...dist.keys()].sort((a, b) => a - b);
+  const abierto = marAbierto(m, dist);
 
   for (const k of claves) {
     const { d } = dist.get(k)!;
@@ -166,7 +197,7 @@ export function planMar(m: Mundo, cumbre: Map<number, number>): PlanMar {
   for (const k of claves) {
     const { d, origen } = dist.get(k)!;
     const [x, y] = deClaveMar(k);
-    if (d !== DISTANCIA_BOYAS || !esPlaya(origen) || (((x + y) % 3) + 3) % 3 !== 0) continue;
+    if (d !== DISTANCIA_BOYAS || !esPlaya(origen) || (((x + y) % 3) + 3) % 3 !== 0 || !abierto.has(k)) continue;
     piezas.push({ tipo: 'boya', x, y, altura: NIVEL_MAR - 0.04, escala: 1, giro: 0, semilla: pseudo(k) });
     ocupadas.add(k);
   }
@@ -177,7 +208,7 @@ export function planMar(m: Mundo, cumbre: Map<number, number>): PlanMar {
     const { d, origen } = dist.get(k)!;
     const [x, y] = deClaveMar(k);
     const r = pseudo(k);
-    if (d < DISTANCIA_MINIMA || d > DISTANCIA_MINIMA + 2 || r % 11 !== 0 || ocupadas.has(k) || esMuelle(origen)) continue;
+    if (d < DISTANCIA_MINIMA || d > DISTANCIA_MINIMA + 2 || r % 11 !== 0 || ocupadas.has(k) || esMuelle(origen) || !abierto.has(k)) continue;
     const escala = 1 + ((r >>> 6) % 5) * 0.18;
     piezas.push({ tipo: 'roca', x, y, altura: NIVEL_MAR - 0.12 * escala, escala, giro: ((r >>> 10) % 6) * (Math.PI / 3), semilla: r >>> 3 });
     ocupadas.add(k);
@@ -194,7 +225,7 @@ export function planMar(m: Mundo, cumbre: Map<number, number>): PlanMar {
     const [x, y] = deClaveMar(k);
     const r = pseudo(k);
     const puerto = esMuelle(origen);
-    if (d < (puerto ? 2 : DISTANCIA_MINIMA) || d > (puerto ? 3 : 7) || r % (puerto ? 4 : 29) !== 0 || !libre(x, y, 1)) continue;
+    if (d < (puerto ? 2 : DISTANCIA_MINIMA) || d > (puerto ? 3 : 7) || r % (puerto ? 4 : 29) !== 0 || !libre(x, y, 1) || !abierto.has(k)) continue;
     let cerca = false;
     for (const p of piezas) if (p.tipo === 'barca' && Math.abs(p.x - x) + Math.abs(p.y - y) < (puerto ? 4 : 10)) cerca = true;
     if (cerca) continue;

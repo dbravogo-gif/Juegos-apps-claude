@@ -282,6 +282,42 @@ function plano(puntos: [number, number][], y: number): BufferGeometry {
   return g;
 }
 
+/**
+ * La iglesia de un pueblo (Betancuria; probador, 2026-11-13: antes era el museo con su puerta y no
+ * se podía entrar). Nave blanca con tejado a dos aguas, esquinas de cantería y un campanario
+ * cuadrado en la esquina de delante, con su hueco de campanas. Sin puerta en la fachada que se ve:
+ * no se entra.
+ */
+export function iglesia(ancho: number, fondo: number): BufferGeometry {
+  const M = new Montaje();
+  const alto = 1.7;
+  M.caja(ancho - 0.1, alto, fondo - 0.1, 0, 0, 0, COLORES.cal);
+  M.caja(ancho, 0.25, fondo, 0, 0, 0, COLORES.canteria);
+  // Esquinas de cantería.
+  for (const sx of [-1, 1]) for (const sz of [-1, 1]) M.caja(0.22, alto, 0.22, sx * (ancho / 2 - 0.11), 0, sz * (fondo / 2 - 0.11), COLORES.canteria);
+  // Tejado a dos aguas, con la cumbrera de delante atrás.
+  const ala = ancho / 2 + 0.1;
+  const caida = 0.55;
+  const largo = Math.hypot(ala, caida);
+  const angulo = Math.atan2(caida, ala);
+  for (const s of [-1, 1]) {
+    M.pon(new BoxGeometry(largo, 0.12, fondo + 0.15).rotateZ(s * angulo).translate((s * ala) / 2, alto + caida / 2, 0), COLORES.tejaCanaria, 0.92);
+  }
+  // Una ventana redonda en la fachada y dos alargadas en el lateral que se ve.
+  M.pon(new CylinderGeometry(0.22, 0.22, 0.05, 14).rotateX(Math.PI / 2).translate(0.4, alto - 0.55, fondo / 2 - 0.02), COLORES.carpinteriaVerde);
+  for (const x of [-0.6, 0.9]) M.caja(0.18, 0.6, 0.05, x + 0.4, 0.6, fondo / 2 - 0.03, COLORES.carpinteriaVerde);
+  // El campanario, en la esquina de delante a la izquierda.
+  const tx = -ancho / 2 + 0.65;
+  const tz = fondo / 2 - 0.65;
+  const torre = 3.1;
+  M.caja(1.3, torre, 1.3, tx, 0, tz, COLORES.cal);
+  for (const sx of [-1, 1]) for (const sz of [-1, 1]) M.caja(0.2, torre, 0.2, tx + sx * 0.55, 0, tz + sz * 0.55, COLORES.canteria);
+  M.caja(0.5, 0.65, 0.06, tx, torre - 0.95, tz + 0.64, '#2A2522');
+  M.caja(1.45, 0.14, 1.45, tx, torre, tz, COLORES.canteria);
+  M.pon(new CylinderGeometry(0, 0.95, 0.7, 4).rotateY(Math.PI / 4).translate(tx, torre + 0.14 + 0.35, tz), COLORES.tejaCanaria, 0.9);
+  return M.fusionar();
+}
+
 /** El faro: torre redonda blanca con dos bandas rojas, galería, linterna y cúpula, sobre un zócalo. */
 export function faro(): BufferGeometry {
   const M = new Montaje();

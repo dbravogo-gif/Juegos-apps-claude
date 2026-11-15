@@ -35,7 +35,7 @@ import { clone as clonarConEsqueleto } from 'three/addons/utils/SkeletonUtils.js
 import type { GLTF } from 'three/addons/loaders/GLTFLoader.js';
 import { PASOS_POR_CASILLA, posicionVisual } from '../../core/explorar';
 import { Suavizado } from './suavizado';
-import { clave, deClave, enIsla, vision, type Direccion, type Personaje as DefPersonaje } from '../../core/mundo';
+import { DE_ENCUENTROS, clave, deClave, enIsla, vision, type Direccion, type Personaje as DefPersonaje } from '../../core/mundo';
 import { COLORES } from '../../arte/paleta';
 import { alturaSuelo } from '../../arte/escala';
 import { aMaterialDelJuego, cargarModelo, rutaModelo } from '../../arte/modelos';
@@ -186,7 +186,10 @@ export class Personaje implements Subsistema {
           for (const v of vision(mapa, z.id, p)) {
             const [vx, vy] = deClave(v);
             deQuien.set(p.id, [...(deQuien.get(p.id) ?? []), visiones.length]);
-            visiones.push(new Matrix4().makeTranslation(vx, alturaSuelo(mapa.casillas.get(v)!.h) + 0.14, vy));
+            // Sobre la hierba alta y la arena de duna, algo más alta: si no, las matas la tapaban y
+            // se veía marrón en vez de roja (probador, 2026-11-13).
+            const cv = mapa.casillas.get(v)!;
+            visiones.push(new Matrix4().makeTranslation(vx, alturaSuelo(cv.h) + (DE_ENCUENTROS.has(cv.c) ? 0.24 : 0.14), vy));
           }
         }
       }

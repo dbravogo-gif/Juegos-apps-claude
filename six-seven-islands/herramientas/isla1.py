@@ -154,6 +154,8 @@ z.edificio(20, 4, 3, 3, 'C', 21, 'casa-capital-4')
 z.r(25, 11, 6, 2, 'P'); z.r(31, 9, 2, 2, 'F'); z.r(29, 13, 2, 2, 'B')    # muelle, faro y barco
 z.r(25, 11, 1, 2, 'X')                                                  # paso al muelle, cerrado
 z.r(1, 20, 6, 1, '~')                                                    # el charco, junto a la playa
+# El mar del puerto, abierto al este y al sur: con el borde de roca parecía un canal (2026-11-15).
+z.r(33, 1, 1, 27, '~'); z.r(1, 27, 33, 1, '~')
 for x in (8, 12, 16, 20): z.p(x, 20, 'T')                                # paseo de palmeras
 zonas['capital'] = dict(nombre='Capital', origen=(68, 18), z=z, altura=1, casas='balcones-blanca')
 

@@ -14,10 +14,11 @@ import { Montaje } from '../../arte/montaje';
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Partida } from '../partida/partida';
 import { alturaCara, cumbres, decoracion, geometriaTerreno, pseudo } from './terreno';
-import { casaCanaria, faro, type OpcionesCasa, type UsoCasa } from './canario';
+import { casaCanaria, faro, iglesia, type OpcionesCasa, type UsoCasa } from './canario';
 import { bocaCueva } from './kit';
 import { VARIANTES, piezaKit, type PiezaKit } from './kit';
 import { geometriaEspuma, geometriaPiezasMar, planMar } from './mar';
+import { DATOS_COMBATE_PRUEBA } from '../../data/combate-prueba';
 
 const OCULTA = new Matrix4().makeScale(0, 0, 0);
 const TROZO = 12;
@@ -58,6 +59,18 @@ function frasco(): BufferGeometry {
   M.pon(new CylinderGeometry(0.06, 0.07, 0.12, 10).translate(0, 0.33, 0), COLORES.cristal);
   M.pon(new CylinderGeometry(0.055, 0.05, 0.07, 8).translate(0, 0.42, 0), COLORES.balcon);
   M.pon(new SphereGeometry(0.04, 6, 4).translate(-0.05, 0.21, 0.11), COLORES.cal);
+  return M.fusionar();
+}
+
+/**
+ * Un cubo de captura en el suelo: blanco, con una franja de color y un botón (probador,
+ * 2026-11-13: antes se dibujaba como una poción).
+ */
+function cuboSuelo(): BufferGeometry {
+  const M = new Montaje();
+  M.pon(new BoxGeometry(0.26, 0.26, 0.26).translate(0, 0.15, 0), COLORES.cal);
+  M.pon(new BoxGeometry(0.275, 0.06, 0.275).translate(0, 0.15, 0), COLORES.geranio);
+  M.pon(new CylinderGeometry(0.045, 0.045, 0.03, 10).rotateX(Math.PI / 2).translate(0, 0.15, 0.14), COLORES.balcon);
   return M.fusionar();
 }
 
@@ -123,7 +136,8 @@ export class Mundo implements Subsistema {
   /** Material de todo lo hecho por código con color por vértice: casas, kit y malpaís. */
   private materialColores!: MaterialDiorama;
   private pasos: { malla: InstancedMesh; zonas: string[]; matrices: Matrix4[] } | null = null;
-  private objetos: { malla: InstancedMesh; ids: string[]; matrices: Matrix4[] } | null = null;
+  /** Los objetos del suelo, una malla por forma: frascos (lo que cura) y cubos (los de captura). */
+  private objetos: { malla: InstancedMesh; ids: string[]; matrices: Matrix4[] }[] = [];
   private vistoCondiciones = -1;
   private vistoRecogidos = -1;
   /** Segundos de reloj, solo para el vaivén de los objetos (no toca la lógica). */
@@ -186,13 +200,16 @@ export class Mundo implements Subsistema {
     // el único objeto es la poción). Se ve como algo que se coge, no como una bola sin forma.
     // También los de los interiores (la cueva de Ajuy), que están lejos, con sus propias claves.
     const objs = [m, ...this.partida.interiores.values()].flatMap((mapa) => [...mapa.objetos].map(([k, o]) => [k, o, mapa] as const));
-    if (objs.length) {
-      const matrices = objs.map(([k, , mapa]) => {
+    const esCubo = (id: string) => DATOS_COMBATE_PRUEBA.objetos[id]?.tipo === 'captura';
+    for (const [forma, cubo] of [[frasco(), false], [cuboSuelo(), true]] as const) {
+      const estos = objs.filter(([, o]) => esCubo(o.objeto.objeto) === cubo);
+      if (!estos.length) continue;
+      const matrices = estos.map(([k, , mapa]) => {
         const [x, y] = deClave(k);
         return new Matrix4().makeTranslation(x, alturaSuelo(mapa.casillas.get(k)!.h) + 0.12, y);
       });
-      const im = this.instanciar(frasco(), this.materialColores, matrices);
-      this.objetos = { malla: im, ids: objs.map(([, o]) => o.objeto.id), matrices };
+      const im = this.instanciar(forma, this.materialColores, matrices);
+      this.objetos.push({ malla: im, ids: estos.map(([, o]) => o.objeto.id), matrices });
     }
     this.sincronizar();
   }
@@ -252,6 +269,15 @@ export class Mundo implements Subsistema {
         const cz = (Math.min(...ys) + Math.max(...ys)) / 2;
         const base = alturaSuelo(m.casillas.get(e.casillas[0])!.h);
         const uso = USO_CASA[e.tipo];
+        if (e.tipo === 'M' && !e.puertas.length) {
+          // Un museo sin puerta es la iglesia del pueblo (Betancuria): no se entra.
+          const geometria = iglesia(e.ancho, e.fondo);
+          const templo = new Mesh(geometria, this.materialColores);
+          templo.position.set(cx, base, cz);
+          this.anadir(templo);
+          for (const k of e.casillas) this.subirTapa(k, base + geometria.boundingBox!.max.y);
+          continue;
+        }
         if (uso) {
           const puerta = e.puertas.length ? deClave(e.puertas[0])[0] - cx : 0;
           const deZona = estiloDe(m.zonas.get(zona)!);
@@ -346,6 +372,11 @@ export class Mundo implements Subsistema {
         colocarKit('estatua', r, x, y, suelo, 1, 0);
       } else if (cm.c === 'g') {
         colocarKit('grabado', r, x, y, suelo, 1, 0);
+      } else if (cm.c === '~' && zona.clima === 'viento' && r % 17 === 0) {
+        // Las cometas de kitesurf de Sotavento, sobre el mar: la playa del viento.
+        colocarKit('cometa', r, x, y, NIVEL_MAR - 0.02, 1, (r % 4) * 0.3 - 0.45);
+      } else if (cm.c === 'f') {
+        this.subirTapa(k, colocarKit('escultura', r, x, y, suelo, 1, 0));
       } else if (cm.c === 'K') {
         // Las crestas de las dunas: un lomo redondo por casilla, de altura algo distinta, estirado
         // hacia las crestas vecinas para que la fila se lea como un lomo seguido y no como bolas.
@@ -395,6 +426,15 @@ export class Mundo implements Subsistema {
     // Volcanes sobre las cumbres: pequeños y a más de tres casillas de las zonas, para que no se
     // monten sobre los caminos ni tapen al jugador. Con la silueta de Lanzarote hay mucha tierra:
     // van más separados y todos en una sola malla (por trozos costaban 70 llamadas de dibujo más).
+    // Los islotes (Lobos) llevan su volcán en medio, para que se lean como isla y no como bloques.
+    for (const pol of m.isla.islotes ?? []) {
+      const cx = pol.reduce((a, [x]) => a + x, 0) / pol.length;
+      const cz = pol.reduce((a, [, y]) => a + y, 0) / pol.length;
+      const k = clave(Math.round(cx), Math.round(cz));
+      const h = cumbre.get(k);
+      if (h === undefined) continue;
+      colocarKit('volcan', pseudo(k), cx, cz, alturaSuelo(h), new Vector3(2.2, 1.1, 1.8), 0);
+    }
     const volcanes: BufferGeometry[] = [];
     const cercaDeZona = (x: number, y: number, radio: number): boolean => {
       for (let dy = -radio; dy <= radio; dy++) {
@@ -442,26 +482,30 @@ export class Mundo implements Subsistema {
       });
       this.pasos.malla.instanceMatrix.needsUpdate = true;
     }
-    if (this.objetos && e.recogidos.length !== this.vistoRecogidos) {
+    if (this.objetos.length && e.recogidos.length !== this.vistoRecogidos) {
       this.vistoRecogidos = e.recogidos.length;
-      this.objetos.ids.forEach((id, i) => this.objetos!.malla.setMatrixAt(i, e.recogidos.includes(id) ? OCULTA : this.objetos!.matrices[i]));
-      this.objetos.malla.instanceMatrix.needsUpdate = true;
+      for (const g of this.objetos) {
+        g.ids.forEach((id, i) => g.malla.setMatrixAt(i, e.recogidos.includes(id) ? OCULTA : g.matrices[i]));
+        g.malla.instanceMatrix.needsUpdate = true;
+      }
     }
   }
 
   actualizar(dt: number): void {
     this.sincronizar();
-    if (!this.objetos) return;
+    if (!this.objetos.length) return;
     this.reloj += dt;
     const recogidos = this.partida.estado.recogidos;
-    this.objetos.ids.forEach((id, i) => {
-      if (recogidos.includes(id)) return;
-      const sube = 0.07 + Math.sin(this.reloj * 2.4 + i) * 0.07;
-      this.giroObjeto.makeRotationY(this.reloj * 1.2 + i);
-      this.flota.makeTranslation(0, sube, 0).multiply(this.objetos!.matrices[i]).multiply(this.giroObjeto);
-      this.objetos!.malla.setMatrixAt(i, this.flota);
-    });
-    this.objetos.malla.instanceMatrix.needsUpdate = true;
+    for (const g of this.objetos) {
+      g.ids.forEach((id, i) => {
+        if (recogidos.includes(id)) return;
+        const sube = 0.07 + Math.sin(this.reloj * 2.4 + i) * 0.07;
+        this.giroObjeto.makeRotationY(this.reloj * 1.2 + i);
+        this.flota.makeTranslation(0, sube, 0).multiply(g.matrices[i]).multiply(this.giroObjeto);
+        g.malla.setMatrixAt(i, this.flota);
+      });
+      g.malla.instanceMatrix.needsUpdate = true;
+    }
   }
 
   dispose(): void {

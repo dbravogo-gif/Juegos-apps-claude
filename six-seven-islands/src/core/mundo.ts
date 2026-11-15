@@ -50,6 +50,7 @@ export const LEYENDA = {
   W: 'corriente de viento',
   H: 'aspas de molino',
   g: 'roca grabada',
+  f: 'escultura',
   // Interiores: salas pequeñas aparte (ISLA-1.md, «Decisiones técnicas»).
   m: 'suelo',
   '|': 'pared',
@@ -142,7 +143,7 @@ export interface DefZona {
   corrientes?: Readonly<Record<string, Corriente>>;
   /** Aspas de molino (`H`), por casilla: girarlas activa o desactiva `aspas:<id>`. */
   aspas?: Readonly<Record<string, string>>;
-  /** Lo que se lee al mirar una roca grabada (`g`), por casilla. */
+  /** Lo que se lee al mirar una roca grabada (`g`) o una escultura (`f`), por casilla. */
   letreros?: Readonly<Record<string, string>>;
   personajes: readonly Personaje[];
   /** Cómo se dibujan sus casas (por defecto, rurales; en la capital, de balcones). */
@@ -262,7 +263,7 @@ export function construirMundo(isla: DefIsla): Mundo {
         if (c === 'p' && !z.palancas?.[`${x},${y}`]) throw new Error(`Zona «${z.id}»: la palanca de ${x},${y} no tiene id`);
         if (c === 'W' && !z.corrientes?.[`${x},${y}`]) throw new Error(`Zona «${z.id}»: la corriente de ${x},${y} no dice hacia dónde sopla`);
         if (c === 'H' && !z.aspas?.[`${x},${y}`]) throw new Error(`Zona «${z.id}»: las aspas de ${x},${y} no tienen id`);
-        if (c === 'g' && !z.letreros?.[`${x},${y}`]) throw new Error(`Zona «${z.id}»: la roca grabada de ${x},${y} no tiene texto`);
+        if ((c === 'g' || c === 'f') && !z.letreros?.[`${x},${y}`]) throw new Error(`Zona «${z.id}»: la roca grabada o escultura de ${x},${y} no tiene texto`);
       }),
     );
     for (const p of z.personajes) {
@@ -365,10 +366,10 @@ export function corrienteEn(m: Mundo, k: number, condiciones: readonly string[])
   return c.aspas && c.alterna && condiciones.includes(`aspas:${c.aspas}`) ? c.alterna : c.dir;
 }
 
-/** El texto de la roca grabada de la casilla `k`, si la hay. */
+/** El texto de la roca grabada o la escultura de la casilla `k`, si la hay. */
 export function letreroEn(m: Mundo, k: number): string | undefined {
   const cm = m.casillas.get(k);
-  const z = cm?.c === 'g' ? m.zonas.get(cm.zona) : undefined;
+  const z = cm?.c === 'g' || cm?.c === 'f' ? m.zonas.get(cm.zona) : undefined;
   if (!z) return undefined;
   const [x, y] = deClave(k);
   return z.letreros?.[`${x - z.origen.x},${y - z.origen.y}`];
