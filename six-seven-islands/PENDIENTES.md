@@ -82,8 +82,8 @@ propuesta de Claude y qué frena mientras siga abierto.
   - Falta: quiénes son, dónde está cada uno, y sus fotos o dibujos, con su permiso.
   - **Propuesta:** retratos con el estilo del juego hechos a partir de fotos, con tres poses:
     normal, contento y sorprendido. La caja de diálogo ya existe; solo le falta el retrato.
-- **La historia** (autor, 2026-11-11): la escribe el autor con otra IA a partir de
-  `PROMPT-HISTORIA.md`. Lo que salga va a `HISTORIA.md` y, de ahí, al juego.
+- **La historia** (autor, 2026-11-15): la escribe Claude. Primer borrador en `HISTORIA.md`, con
+  cuatro decisiones del autor al final; no entra en el juego hasta que las tome.
 - **El norte de Lanzarote** queda libre para más adelante (Haría, los Jameos). Para la isla 1
   basta con Famara (autor, 2026-11-11).
 - **Mapa dentro del juego**: está en el menú de pausa (Esc → Mapa), con tu posición. Falta decidir
@@ -126,7 +126,9 @@ Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
 - **Criaturas:** decir si vale la lista 2 de Lanzarote (`CRIATURAS.md`); pasar las láminas de
   Lucha y las demás, y los nombres de la civeta y de Dragosil.
 - **Entrenadores y zonas de captura de Lanzarote** que hay que mejorar: decir cuáles.
-- **La historia,** con otra IA a partir de `PROMPT-HISTORIA.md`.
+- **La historia (`HISTORIA.md`):** elegir en las cuatro decisiones del final (quién te persigue,
+  quién manda, tu rival y el tono de los malos) y, cuando pueda, los nombres de los pueblos, las
+  ramas, sus jefes y sus amigos.
 - **Amigos:** sus fotos y GLB de Meshy para las personas jugables, y sus 2 o 3 poses para los
   retratos de diálogo.
 - **Dani con `Idle`** en el GLB (opcional).
