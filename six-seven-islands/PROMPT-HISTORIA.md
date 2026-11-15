@@ -1,5 +1,8 @@
 # Prompt para escribir la historia
 
+**Ya no se usa** (2026-11-15): la historia la escribe Claude en `HISTORIA.md` a partir de esto.
+Se guarda como encargo: lo decidido aquí sigue valiendo.
+
 El autor lo usa con ChatGPT o Gemini para escribir la historia (2026-11-11). Se copia entero,
 desde la línea de abajo. Lo que salga se pega en `HISTORIA.md` y Claude lo mete en el juego.
 
