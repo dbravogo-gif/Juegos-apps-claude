@@ -129,9 +129,13 @@ Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
 - **Gran Canaria (`ISLA-3.md`):** aprobar el recorrido y los niveles, y decir si se suma la
   agarrada de lucha canaria antes de los combates del terrero.
 - **Quinta inicial (Tierra):** sus estadísticas, su lámina y su GLB, y su nombre.
-- **Criaturas de Lanzarote:** subirlas a `conceptos/criaturas/lanzarote/`.
-- **Criaturas:** decir si vale la lista 2 de Lanzarote (`CRIATURAS.md`); pasar las láminas de
-  Lucha y las demás, y los nombres de la civeta y de Dragosil.
+- **Criaturas con Meshy (`PLAN-CRIATURAS.md`, 2026-11-16):**
+  - repasar el plan: las ideas de aspecto que no le gusten, los segundos tipos y las zonas de
+    Tenerife, La Gomera, La Palma y El Hierro;
+  - decir cuántos créditos al mes trae su plan de Meshy: el plan entero son unos 3.000;
+  - generarlas en el orden de la lista y subir cada `.glb` con su imagen, con el nombre de la
+    columna «Archivo», a `public/modelos/criaturas/`;
+  - poner nombre a las que van con apodo («Cabozo», «Guirre»…).
 - **Entrenadores y zonas de captura de Lanzarote** que hay que mejorar: decir cuáles.
 - **La historia (`HISTORIA.md`, borrador 4):** está cerrada. Cuando pueda: si le valen los nombres
   de los pueblos, de las ramas y del aparato.
