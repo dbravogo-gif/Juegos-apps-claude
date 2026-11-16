@@ -44,10 +44,13 @@ export class Interfaz implements Subsistema {
   private abrirNombrar(): void {
     const caja = this.raiz!.querySelector<HTMLElement>('.nombrar')!;
     const campo = caja.querySelector('input')!;
-    campo.value = 'Amigo';
+    // Vacía y sin aceptar al instante: pasando diálogos con Enter, se quedaba «Amigo» para siempre
+    // (probador). Hay que escribir algo; la tecla mantenida y el primer medio segundo no cuentan.
+    campo.value = '';
+    campo.placeholder = 'Su nombre';
     caja.hidden = false;
     campo.focus();
-    campo.select();
+    const abierta = performance.now();
     const cerrar = (nombre: string | null) => {
       campo.removeEventListener('keydown', alPulsar);
       caja.hidden = true;
@@ -58,6 +61,7 @@ export class Interfaz implements Subsistema {
     const alPulsar = (ev: KeyboardEvent) => {
       if (ev.key === 'Enter') {
         ev.preventDefault();
+        if (ev.repeat || performance.now() - abierta < 500 || !campo.value.trim()) return;
         cerrar(campo.value);
       } else if (ev.key === 'Escape') {
         ev.preventDefault();
@@ -200,6 +204,8 @@ export class Interfaz implements Subsistema {
     this.caja.hidden = false;
     this.quien.hidden = !linea.quien;
     this.quien.textContent = linea.quien ?? '';
+    // Un mensaje al móvil se ve como una burbuja de móvil, no como un diálogo (probador).
+    this.caja.classList.toggle('movil', !!linea.quien?.startsWith('Mensaje de'));
     this.texto.textContent = linea.texto.slice(0, d.revelado);
     this.opciones.hidden = !pregunta;
     this.si.classList.toggle('elegida', d.opcion === 0);

@@ -168,7 +168,7 @@ export const ISLA_2: DefIsla = {
         '22,18': 'Otra escultura. La placa dice: «Paciencia».\nUn niño dice que es un perro; su madre, que es el mar.',
       },
       personajes: [
-        { id: 'viejo-puerto', x: 25, y: 11, mira: 'e' },
+        { id: 'viejo-puerto', x: 25, y: 11, mira: 'e', uniforme: 'tuyo' },
         { id: 'escultor-puerto', x: 17, y: 13, mira: 's', frase: 'Esta ciudad está llena de esculturas por la calle. Algún día pondrán una mía.' },
         { id: 'vecina-puerto', x: 9, y: 21, mira: 'n', frase: 'De aquí salían los barcos de la cal. Hoy salen los de turistas.' },
         { id: 'paseante-puerto', x: 21, y: 22, mira: 'o', entrenador: { vision: 4, obligatorio: false }, frase: 'Paseo cada tarde junto al mar. Y cada tarde reto a alguien. ¡Hoy te toca!' },

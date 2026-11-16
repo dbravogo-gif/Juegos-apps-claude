@@ -246,7 +246,7 @@ export class Combate implements Subsistema {
     this.panelTipos = raiz.querySelector('.combate-tipos')!;
     // La arena o el viento del gimnasio, en pantalla durante el combate: las motas de la calima, más.
     this.clima = raiz.querySelector('.combate-clima')!;
-    for (let i = 0; i < 26; i++) {
+    for (let i = 0; i < 36; i++) {
       const mota = document.createElement('i');
       mota.style.top = `${4 + ((i * 29) % 92)}%`;
       mota.style.setProperty('--d', `${4 + ((i * 3) % 5)}s`);
@@ -553,9 +553,11 @@ export class Combate implements Subsistema {
         }
         case 'danio': {
           if (ev.causa !== 'golpe') {
+            const quien = this.activa(ev.ref.lado as 0 | 1);
+            const nombre = quien ? nombreDe(quien, DATOS) : '';
             const textos: Partial<Record<typeof ev.causa, string>> = {
               quemadura: 'La quemadura le hace daño.',
-              arena: 'La tormenta de arena le hace daño.',
+              arena: `La tormenta de arena golpea a ${nombre}.`,
               confusion: 'Se golpea a sí misma.',
             };
             this.encolar({ texto: textos[ev.causa] ?? 'Le hace daño.', duracion: 0.9, saltable: true, empezar: () => this.pintarVida(ev.ref.lado, ev.vida, ev.vidaMax) });

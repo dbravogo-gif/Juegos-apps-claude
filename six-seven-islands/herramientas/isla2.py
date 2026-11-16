@@ -250,7 +250,7 @@ PERSONAJES = {
            "{ id: 'soldado-dunas-1', x: 10, y: 17, mira: 'o', entrenador: { vision: 3, obligatorio: false }, uniforme: 'perseguidor', sin: 'estatua-defendida' }",
            "{ id: 'soldado-dunas-2', x: 10, y: 18, mira: 'o', escena: { vision: 3 }, uniforme: 'perseguidor', sin: 'estatua-defendida' }",
            "{ id: 'chano-dunas', x: 9, y: 16, mira: 'o', uniforme: 'tuyo', con: 'estatua-defendida' }"],
- 'puerto': ["{ id: 'viejo-puerto', x: 25, y: 11, mira: 'e' }",
+ 'puerto': ["{ id: 'viejo-puerto', x: 25, y: 11, mira: 'e', uniforme: 'tuyo' }",
             "{ id: 'escultor-puerto', x: 17, y: 13, mira: 's', frase: 'Esta ciudad está llena de esculturas por la calle. Algún día pondrán una mía.' }",
             "{ id: 'vecina-puerto', x: 9, y: 21, mira: 'n', frase: 'De aquí salían los barcos de la cal. Hoy salen los de turistas.' }",
             "{ id: 'paseante-puerto', x: 21, y: 22, mira: 'o', entrenador: { vision: 4, obligatorio: false }, frase: 'Paseo cada tarde junto al mar. Y cada tarde reto a alguien. ¡Hoy te toca!' }"],

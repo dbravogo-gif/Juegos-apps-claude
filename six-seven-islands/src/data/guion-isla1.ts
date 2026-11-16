@@ -337,6 +337,8 @@ export const GUION_ISLA1: Guion = {
     { inicial: 'agua', dialogo: anciano('agua') },
     { inicial: 'infernal', dialogo: anciano('infernal') },
     { inicial: 'roca', dialogo: anciano('roca') },
+    // La quinta inicial (2026-11-13) se quedó sin su historia: decía la genérica (probador).
+    { inicial: 'tierra', dialogo: anciano('tierra') },
     { dialogo: anciano(undefined) },
   ],
 };

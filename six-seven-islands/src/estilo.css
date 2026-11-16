@@ -185,6 +185,26 @@ body {
   box-shadow: 0 8px 24px rgb(107 123 184 / 0.3);
 }
 
+/* Un mensaje al móvil (el de tu amigo al salir del museo): una burbuja verde de chat, estrecha y a la
+   derecha, con el móvil delante del nombre (probador: parecía un diálogo cualquiera). */
+.dialogo.movil {
+  left: auto;
+  right: 48px;
+  width: min(440px, calc(100% - 96px));
+  transform: none;
+  border-radius: 18px 18px 4px 18px;
+  background: #dcf8c6;
+  box-shadow: 0 8px 24px rgb(40 90 40 / 0.3);
+}
+
+.dialogo.movil .dialogo-quien {
+  background: #2f6b3a;
+}
+
+.dialogo.movil .dialogo-quien::before {
+  content: '📱 ';
+}
+
 .dialogo[hidden],
 .dialogo [hidden] {
   display: none;
@@ -386,7 +406,7 @@ body {
 .nombrar {
   position: fixed;
   left: 50%;
-  top: 40%;
+  top: 22%;
   z-index: 8;
   display: flex;
   flex-direction: column;
@@ -462,13 +482,14 @@ body {
    para ganar a sus reglas, que van después. */
 .calima.combate-clima {
   z-index: 0;
-  background: rgb(196 150 84 / 0.2);
+  background: rgb(196 150 84 / 0.28);
 }
 
 .calima.combate-clima i {
-  width: 90px;
-  height: 6px;
-  background: linear-gradient(90deg, rgb(120 78 34 / 0), rgb(120 78 34 / 0.95));
+  width: 120px;
+  height: 7px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, rgb(110 70 30 / 0), rgb(110 70 30 / 0.95));
 }
 
 .calima.combate-clima.viento {

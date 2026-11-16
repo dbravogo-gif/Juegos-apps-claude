@@ -209,7 +209,7 @@ PERSONAJES = {
            # uniforme y la silueta de su jefe cortan el camino; al verte se retiran y desaparecen.
            "{ id: 'soldado-fuego-1', x: 29, y: 11, mira: 'o', escena: { vision: 4 }, con: 'inicial-elegida', sin: 'soldados-fuego', uniforme: 'perseguidor' }",
            "{ id: 'soldado-fuego-2', x: 29, y: 13, mira: 'o', escena: { vision: 4 }, con: 'inicial-elegida', sin: 'soldados-fuego', uniforme: 'perseguidor' }",
-           "{ id: 'silueta-fuego', x: 30, y: 12, mira: 'o', con: 'inicial-elegida', sin: 'soldados-fuego', silueta: true }"],
+           "{ id: 'silueta-fuego', x: 30, y: 12, mira: 'o', escena: { vision: 4 }, con: 'inicial-elegida', sin: 'soldados-fuego', silueta: true }"],
  'jable': ["{ id: 'entrenador-jable', x: 8, y: 17, mira: 's', entrenador: { vision: 3, obligatorio: false }, frase: 'En el jable, la arena se mueve con el viento: hoy hay un camino y mañana otro.' }",
            "{ id: 'agricultor-jable', x: 13, y: 3, mira: 's', frase: 'Aquí se siembra en la arena: guarda la humedad de la noche. ¡Las batatas salen dulcísimas!' }"],
  'famara': ["{ id: 'pescador-famara', x: 20, y: 6, mira: 'o', entrenador: { vision: 4, obligatorio: false }, frase: 'Aquí pican las viejas. ¿Tú qué buscas, criaturas o pescado?' }",
@@ -221,7 +221,7 @@ PERSONAJES = {
              "{ id: 'marinero', x: 25, y: 13, mira: 'n', frase: 'El barco va a la isla siguiente, pero solo con quien ha vencido al gimnasio.' }",
              # La historia (HISTORIA.md, parte 3): el señor que te vigila, pescando junto al mar; tu
              # amigo, que te espera para la revancha al vencer al gimnasio; y el farero del recado.
-             "{ id: 'viejo-muelle', x: 25, y: 9, mira: 'e' }",
+             "{ id: 'viejo-muelle', x: 25, y: 9, mira: 'e', uniforme: 'tuyo' }",
              "{ id: 'amigo-muelle', x: 24, y: 10, mira: 's', entrenador: { vision: 2, obligatorio: false }, con: 'gimnasio-vencido' }",
              "{ id: 'farero', x: 21, y: 13, mira: 'e' }"],
 }
