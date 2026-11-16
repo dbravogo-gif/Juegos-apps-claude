@@ -232,8 +232,11 @@ Todo en el núcleo (`core/mundo.ts` y `core/explorar.ts`), igual en zonas e inte
   `alcanzables`, que solo revisa mapas, no cuenta como bloqueo a los que se van (`sin`): su escena
   los quita al verte.
 - **Escena** (`escena: { vision }`): ve como un entrenador y, al verte, habla; sin combate.
-- **Uniforme** (`uniforme: 'perseguidor'`): la figura de armadura, teñida del color del pueblo que te
-  persigue (`data/pueblos.ts`), con la cabeza sin teñir. Se hace al conocer tu inicial.
+- **Uniforme**: el color del pueblo que te persigue (`'perseguidor'`, los soldados, con la figura de
+  armadura) o el tuyo (`'tuyo'`, Chano). La cabeza no se tiñe, y el color se mezcla con la ropa (no
+  se multiplica, que oscurecía la ropa oscura). Se hace al conocer tu inicial.
+- **Soldados de la rama** (`rama` del entrenador): luchan con la especie de su pueblo
+  (`ESPECIE_RAMA`, provisional). Quien tiene `escena` solo te para la primera vez.
 - **Silueta** (`silueta: true`): la figura en negro (el jefe, antes de descubrirse).
 - En los textos: `{nombre}`, `{amigo}`, `{inicial}`, `{inicialRival}` y `{rama}`.
 - **Tu rival** (`rival` del entrenador): saca la inicial del pueblo al que ataca el tuyo, al nivel que

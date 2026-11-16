@@ -31,7 +31,7 @@ import { perdidaPorDerrota } from '../../core/economia';
 import { BOLSILLOS, bolsilloDe, type IdBolsillo } from '../../data/bolsillos';
 import { vidaMaxima } from '../../core/estadisticas';
 import { gruposContra } from '../../core/tipos';
-import { inicialDelRival, type TipoInicial } from '../../data/pueblos';
+import { ESPECIE_RAMA, inicialDelRival, puebloQueTePersigue, type TipoInicial } from '../../data/pueblos';
 import { MaterialDiorama } from '../../arte/material';
 import { figuraCriatura } from '../../arte/criaturas3d';
 import { RADIO_CUBO, figuraCubo, girarCubo } from '../../arte/cubos';
@@ -195,7 +195,9 @@ export class Combate implements Subsistema {
       const equipo =
         guionId === ENTRENADOR_PRUEBA
           ? [crearCriatura(DATOS, ESPECIE_INICIAL[RIVAL_DE[inicial] ?? 'roca'], 5, rng)]
-          : def.rival
+          : def.rama
+            ? def.rama.niveles.map((nivel) => crearCriatura(DATOS, ESPECIE_RAMA[puebloQueTePersigue(inicial as TipoInicial)], nivel, rng))
+            : def.rival
             ? [crearCriatura(DATOS, ESPECIE_INICIAL[inicialDelRival(inicial as TipoInicial)], def.rival.nivel, rng), ...(def.rival.extra ?? []).map((e) => crearCriatura(DATOS, e.especie, e.nivel, rng))]
             : def.equipo.map((e) => crearCriatura(DATOS, e.especie, e.nivel, rng));
       void this.empezar(equipo, guionId);

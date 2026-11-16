@@ -509,6 +509,9 @@ export class Partida implements Subsistema {
         this.cruzar(null);
         break;
       case 'hablar': {
+        // Quien tiene escena (te para al verte) solo te para una vez: luego se le habla sin más.
+        const quienHabla = this.activo().zonas.get(ev.zona)?.personajes.find((p) => p.id === ev.personaje);
+        if (quienHabla?.escena && !this.vencidos.includes(ev.personaje)) this.vencidos.push(ev.personaje);
         // A un amigo se le pone nombre la primera vez que se le habla (autor, 2026-11-15).
         const amigo = AMIGOS.get(ev.personaje);
         if (amigo && !this.amigos[amigo]) {
@@ -593,7 +596,8 @@ export class Partida implements Subsistema {
         .replaceAll('{amigo}', this.amigos.amigo ?? 'tu amigo')
         .replaceAll('{inicial}', tuya ? NOMBRE_TIPO_INICIAL[tuya] : '')
         .replaceAll('{inicialRival}', tuya ? NOMBRE_TIPO_INICIAL[inicialDelRival(tuya)] : '')
-        .replaceAll('{rama}', tuya ? PUEBLOS[puebloQueTePersigue(tuya)].rama : 'la rama');
+        .replaceAll('{rama}', tuya ? PUEBLOS[puebloQueTePersigue(tuya)].rama : 'la rama')
+        .replaceAll('{pueblo}', tuya ? PUEBLOS[tuya].nombre : 'tu pueblo');
     const conNombre = (l: Dialogo['lineas'][number]) => ({ ...l, texto: cambiar(l.texto), ...(l.quien ? { quien: cambiar(l.quien) } : {}) });
     d = { ...d, lineas: d.lineas.map(conNombre), ...(d.pregunta ? { pregunta: conNombre(d.pregunta) } : {}), ...(d.tras ? { tras: d.tras.map(conNombre) } : {}) };
     this.dialogo = abrirDialogo(d);

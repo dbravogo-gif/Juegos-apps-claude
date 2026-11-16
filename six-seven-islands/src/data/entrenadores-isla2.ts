@@ -64,9 +64,20 @@ export const ENTRENADORES_ISLA2: Readonly<Record<string, DefEntrenador>> = {
       '¡Me has dejado sin aliento! Has dominado el viento de mi gimnasio.',
       'Toma: la pintadera de Fuerteventura. Ya llevas dos.',
       '{nombre} recibe la pintadera de Fuerteventura.',
+      'Ya han venido dos veces a pedírmela unos tipos de uniforme. Cuídala bien.',
       'El barco a Gran Canaria aún no sale… pero el viento ya sopla hacia allí.',
     ],
     medalla: 2,
+  },
+  // El soldado de la rama que te persigue, en la excavación de las dunas (HISTORIA.md): lucha con
+  // criaturas de su pueblo y, al vencerlo, huyen sin la estatua.
+  'soldado-dunas-1': {
+    equipo: [],
+    rama: { niveles: [12, 13] },
+    premio: 320,
+    tras: 'El jefe se va a enfadar muchísimo…',
+    condicion: 'estatua-defendida',
+    alVencer: ['¡Otra vez tú! ¡Retirada, que el jefe se va a enfadar!', 'Los soldados de {rama} huyen por las dunas, sin la estatua.'],
   },
   'buscador-dunas': {
     equipo: [{ especie: 'chispa-de-colada', nivel: 12 }, { especie: 'lagartija-de-picon', nivel: 13 }],
