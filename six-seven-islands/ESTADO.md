@@ -1,6 +1,6 @@
 # Estado de Six-seven islands
 
-Actualizado: 2026-11-15. Solo el presente; el historial está en git. Máximo 40 líneas.
+Actualizado: 2026-11-16. Solo el presente; el historial está en git. Máximo 40 líneas.
 
 ## Fase actual
 
@@ -26,7 +26,8 @@ Tanda 1: Lanzarote es la isla 1 (`ISLA-1.md`), con kit por código y la tabla de
    hechas y revisadas (de Corralejo al gimnasio de Aire, Tindaya, Cofete y Lobos). Historia
    cerrada (`HISTORIA.md`); en el juego, la parte 1 (el bar, tu amigo y su mensaje).
 2. En paralelo, arte con Meshy (`prompts-meshy.md`): criaturas y edificios singulares.
-3. Criaturas: reparto, lista de referencia y lista de Lanzarote en `CRIATURAS.md`.
+3. Criaturas: reglas en `CRIATURAS.md`; el plan de las 203 para Meshy (zonas de las 7 islas,
+   tipos y referencia), en `PLAN-CRIATURAS.md`, generado por `herramientas/criaturas/plan.py`.
 
 ## Pendiente del autor
 

@@ -89,6 +89,9 @@ del Q5 son las 12 legendarias y las 4 formas finales más fuertes (líneas 25 a 
   criaturas no tiene. A menudo la primera forma no tiene y las siguientes sí.
 - **Se reutilizan** las especies ya diseñadas (tabla de abajo) donde encajen.
 - Lo asignado se apunta aquí, en «Asignadas», con su zona.
+- **El plan completo** (2026-11-16): las zonas de las 7 islas y las 203 criaturas, con zona, tipos
+  por forma y referencia, en `PLAN-CRIATURAS.md`. Lo genera y lo comprueba
+  `herramientas/criaturas/plan.py`: se cambia allí y se vuelve a generar.
 - **No todas las láminas entran** (autor, 2026-11-12): la que no cuadra, fuera.
 - **Varias especies en cada hierba, nunca una sola** (autor, 2026-11-12). Se pueden repetir
   entre hierbas cercanas. En los juegos de referencia, la primera ruta tiene 2 o 3 especies; las
