@@ -4,7 +4,7 @@
 
 import { type Material, type Mesh, type Object3D, type Texture } from 'three/webgpu';
 import { GLTFLoader, type GLTF } from 'three/addons/loaders/GLTFLoader.js';
-import { texture, vec3 } from 'three/tsl';
+import { mix, texture, vec3 } from 'three/tsl';
 import { MaterialDiorama, type OpcionesMaterial } from './material';
 
 const cache = new Map<string, Promise<GLTF>>();
@@ -22,11 +22,16 @@ export function cargarModelo(ruta: string): Promise<GLTF> {
   return p;
 }
 
-/** Material del juego con la textura del modelo, teñida si se pide (r, g, b de 0 a 1). */
-export function materialConTextura(mapa: Texture | null, op: OpcionesMaterial = {}, tinte?: readonly [number, number, number]): MaterialDiorama {
+/**
+ * Material del juego con la textura del modelo, teñida si se pide (r, g, b de 0 a 1). Con `mezcla`,
+ * el tinte se mezcla en esa proporción en vez de multiplicar: así un uniforme se ve de su color
+ * sobre cualquier ropa, también oscura (multiplicando, la ropa marrón salía casi negra).
+ */
+export function materialConTextura(mapa: Texture | null, op: OpcionesMaterial = {}, tinte?: readonly [number, number, number], mezcla?: number): MaterialDiorama {
   if (!mapa) return new MaterialDiorama(op);
   const color = texture(mapa).rgb;
-  return new MaterialDiorama(op, tinte ? color.mul(vec3(...tinte)) : color);
+  if (!tinte) return new MaterialDiorama(op, color);
+  return new MaterialDiorama(op, mezcla ? mix(color, vec3(...tinte), mezcla) : color.mul(vec3(...tinte)));
 }
 
 /** Cambia los materiales de un objeto (por ejemplo, un personaje) por MaterialDiorama con su textura. */
@@ -36,6 +41,8 @@ export function aMaterialDelJuego(
   tinte?: readonly [number, number, number],
   /** Las mallas que no se tiñen (la cabeza de un uniforme: se tiñe la ropa, no la cara). */
   sinTinte?: (m: Mesh) => boolean,
+  /** Mezclar el tinte en esta proporción en vez de multiplicarlo (los uniformes). */
+  mezcla?: number,
 ): MaterialDiorama[] {
   const hechos = new Map<Material, MaterialDiorama>();
   const libres = new Map<Material, MaterialDiorama>();
@@ -47,7 +54,7 @@ export function aMaterialDelJuego(
     const cache = libre ? libres : hechos;
     let nuevo = cache.get(viejo);
     if (!nuevo) {
-      nuevo = materialConTextura(viejo.map ?? null, op, libre ? undefined : tinte);
+      nuevo = materialConTextura(viejo.map ?? null, op, libre ? undefined : tinte, libre ? undefined : mezcla);
       cache.set(viejo, nuevo);
     }
     m.material = nuevo;

@@ -22,6 +22,8 @@ export interface DefEntrenador {
    * de `extra` (HISTORIA.md). Su `equipo` va vacío: depende de tu inicial.
    */
   rival?: { nivel: number; extra?: readonly { especie: string; nivel: number }[] };
+  /** Un soldado de la rama que te persigue: lucha con criaturas de su pueblo, a estos niveles. */
+  rama?: { niveles: readonly number[] };
 }
 
 /** Cómo se presenta cada clase de entrenador en el diálogo, por el principio de su id. */
@@ -44,6 +46,7 @@ const OFICIO: Readonly<Record<string, string>> = {
   pescador: 'Pescador',
   pulpero: 'Pulpero',
   surfista: 'Surfista',
+  soldado: 'Soldado de {rama}',
   // Tu amigo habla con el nombre que le pusiste.
   amigo: '{amigo}',
 };

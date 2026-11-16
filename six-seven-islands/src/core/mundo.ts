@@ -102,7 +102,11 @@ export type Condicion =
   /** Un recado cumplido (HISTORIA.md): `recado:<id>`. */
   | `recado:${string}`
   /** Has subido al faro con el farero y has visto la isla que no sale en los mapas. */
-  | 'faro-visto';
+  | 'faro-visto'
+  /** Has defendido la estatua ancestral de las dunas de tu rama enemiga (HISTORIA.md, Fuerteventura). */
+  | 'estatua-defendida'
+  /** Ya conoces a Chano, en Corralejo. */
+  | 'chano-conocido';
 export const TODAS_LAS_CONDICIONES: ReadonlySet<Condicion> = new Set(['inicial-elegida', 'anciano', 'gimnasio-vencido', 'mensaje-rival', 'soldados-fuego']);
 
 export interface Personaje {
@@ -129,8 +133,11 @@ export interface Personaje {
    */
   con?: Condicion;
   sin?: Condicion;
-  /** Lleva el uniforme de la rama que te persigue, teñido del color de su pueblo (HISTORIA.md). */
-  uniforme?: 'perseguidor';
+  /**
+   * Va teñido del color de un pueblo (HISTORIA.md): el de la rama que te persigue, o el tuyo (Chano,
+   * que dice defender a tu pueblo).
+   */
+  uniforme?: 'perseguidor' | 'tuyo';
   /** Se dibuja en negro, sin dejar ver quién es (el jefe, antes de descubrirse). */
   silueta?: boolean;
 }

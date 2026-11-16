@@ -133,3 +133,42 @@ describe('historia: el resto de Lanzarote (parte 3)', () => {
     expect(AMIGOS.get('amigo-muelle')).toBe(AMIGOS.get('amigo'));
   });
 });
+
+describe('historia: Fuerteventura (Chano, la estatua y el viejo)', () => {
+  it('Chano te saluda al pasar por Corralejo, con ropa de tu color, y se va tras la estatua', async () => {
+    const { construirMundo, vision, enIsla, presente } = await import('../src/core/mundo');
+    const { ISLA_2 } = await import('../src/data/isla2');
+    const m = construirMundo(ISLA_2);
+    const z = m.zonas.get('corralejo')!;
+    const chano = z.personajes.find((p) => p.id === 'chano-corralejo')!;
+    expect(chano.uniforme).toBe('tuyo');
+    expect(chano.escena).toBeDefined();
+    // Su vista corta el camino a Las Dunas, de lado a lado (x 11 a 13).
+    const ve = new Set(vision(m, 'corralejo', chano, ['inicial-elegida']));
+    for (const x of [11, 12, 13]) expect(ve.has(enIsla(m, 'corralejo', x, chano.y)), `x ${x}`).toBe(true);
+    expect(presente(chano, ['estatua-defendida'])).toBe(false);
+    const dunas = m.zonas.get('dunas')!.personajes;
+    expect(presente(dunas.find((p) => p.id === 'chano-dunas')!, ['estatua-defendida'])).toBe(true);
+  });
+
+  it('los soldados de la estatua: uno lucha con criaturas de su pueblo y, al vencerlo, se van todos', async () => {
+    const { ISLA_2 } = await import('../src/data/isla2');
+    const { FUERTEVENTURA } = await import('../src/data/islas');
+    const { ESPECIE_RAMA } = await import('../src/data/pueblos');
+    const { DATOS_COMBATE_PRUEBA: DATOS } = await import('../src/data/combate-prueba');
+    const dunas = ISLA_2.zonas.find((z) => z.id === 'dunas')!.personajes;
+    const soldados = dunas.filter((p) => p.id.startsWith('soldado-dunas'));
+    expect(soldados).toHaveLength(2);
+    for (const s of soldados) {
+      expect(s.uniforme).toBe('perseguidor');
+      expect(s.sin).toBe('estatua-defendida');
+    }
+    const def = FUERTEVENTURA.entrenadores['soldado-dunas-1'];
+    expect(def.condicion).toBe('estatua-defendida');
+    expect(def.rama?.niveles.length).toBeGreaterThan(0);
+    for (const x of INICIALES) expect(DATOS.especies[ESPECIE_RAMA[x]], x).toBeDefined();
+    // La arqueóloga, tras defender la estatua, cuenta lo del Sello.
+    const d = elegirDialogo(FUERTEVENTURA.guion, 'arqueologa', ['estatua-defendida'], 'agua')!;
+    expect(d.lineas.map((l) => l.texto).join(' ')).toContain('trece círculos');
+  });
+});

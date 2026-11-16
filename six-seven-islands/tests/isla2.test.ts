@@ -64,7 +64,8 @@ describe('Fuerteventura (isla 2)', () => {
       const ve = vision(m, p.zona, p);
       expect(ve.some((k) => r.has(k)), p.id).toBe(true);
       const def = FUERTEVENTURA.entrenadores[p.id];
-      expect(def?.equipo.length, p.id).toBeGreaterThan(0);
+      // Los soldados de la rama que te persigue sacan su equipo según tu inicial (HISTORIA.md).
+      expect((def?.equipo.length ?? 0) + (def?.rama?.niveles.length ?? 0), p.id).toBeGreaterThan(0);
       for (const e of def.equipo) expect(DATOS.especies[e.especie], e.especie).toBeDefined();
     }
   });

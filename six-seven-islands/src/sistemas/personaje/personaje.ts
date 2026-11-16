@@ -90,7 +90,9 @@ function modeloDe(p: DefPersonaje): string {
   if (AMIGOS.has(p.id)) return 'Rogue';
   // Los soldados de uniforme, con la armadura gris: se tiñe bien del color de su pueblo (con la capa
   // verde de otras figuras, el tinte salía verdoso).
-  if (p.uniforme) return 'Knight';
+  if (p.uniforme === 'perseguidor') return 'Knight';
+  // Chano, con ropa de tu color: la figura del bárbaro barbudo, mayor y campechano.
+  if (p.uniforme === 'tuyo') return 'Barbarian';
   if (p.entrenador) return p.entrenador.obligatorio ? 'Knight' : 'Barbarian';
   return 'Rogue_Hooded';
 }
@@ -316,7 +318,8 @@ export class Personaje implements Subsistema {
       // Solo las piezas del cuerpo («Rogue_Body», «Mage_Hat»…); fuera armas, escudos y libros.
       o.visible = o.name.startsWith(`${base}_`) && !o.name.includes('Shield');
     });
-    this.materiales.push(...aMaterialDelJuego(copia, { bordes: [-0.25, 0.5], especular: 0.1, dureza: 16, contraluz: 0.35 }, tinte, cabezaSinTinte ? (m) => /head/i.test(m.name) : undefined));
+    // Los uniformes (cabeza sin teñir) mezclan su color con la ropa; el resto de tintes multiplican.
+    this.materiales.push(...aMaterialDelJuego(copia, { bordes: [-0.25, 0.5], especular: 0.1, dureza: 16, contraluz: 0.35 }, tinte, cabezaSinTinte ? (m) => /head/i.test(m.name) : undefined, cabezaSinTinte ? 0.55 : undefined));
     const caja = new Box3();
     copia.updateWorldMatrix(true, true);
     copia.traverse((o) => {
@@ -464,7 +467,7 @@ export class Personaje implements Subsistema {
     for (const u of this.uniformados) {
       if (u.hecho) continue;
       u.hecho = true;
-      void this.hacerUniformado(u, colorUniforme(puebloQueTePersigue(inicial)), ctx);
+      void this.hacerUniformado(u, colorUniforme(u.p.uniforme === 'tuyo' ? inicial : puebloQueTePersigue(inicial)), ctx);
     }
   }
 

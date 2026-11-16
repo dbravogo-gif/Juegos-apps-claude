@@ -43,3 +43,15 @@ export function colorUniforme(pueblo: TipoInicial): [number, number, number] {
   const hex = TIPOS.find((t) => t.id === pueblo)!.color;
   return [((hex >> 16) & 255) / 255, ((hex >> 8) & 255) / 255, (hex & 255) / 255];
 }
+
+/**
+ * La especie con la que luchan los soldados de cada rama (provisional: las de relleno, hasta que
+ * lleguen las criaturas del autor). La de Tierra no tiene de relleno: usa su inicial.
+ */
+export const ESPECIE_RAMA: Readonly<Record<TipoInicial, string>> = {
+  planta: 'tabaiba-andante',
+  infernal: 'chispa-de-colada',
+  roca: 'lagartija-de-picon',
+  tierra: 'inicial-tierra',
+  agua: 'cangrejo-de-charco',
+};

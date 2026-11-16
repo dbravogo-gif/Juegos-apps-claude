@@ -71,6 +71,7 @@ export const ISLA_2: DefIsla = {
       personajes: [
         { id: 'marinero-corralejo', x: 11, y: 4, mira: 's', frase: 'Este barco va y viene de Lanzarote todo el día.' },
         { id: 'vecina-corralejo', x: 20, y: 9, mira: 'n', frase: '¿Ves aquel islote? Es Lobos. Dicen que solo se llega con buen viento.' },
+        { id: 'chano-corralejo', x: 14, y: 15, mira: 'o', escena: { vision: 3 }, uniforme: 'tuyo', sin: 'estatua-defendida' },
         { id: 'surfista-corralejo', x: 8, y: 13, mira: 'e', frase: 'Aquí el viento sopla tan fuerte que las olas vienen peinadas.' },
       ],
       altura: 0,
@@ -108,6 +109,9 @@ export const ISLA_2: DefIsla = {
         { id: 'perdido-dunas-2', x: 36, y: 18, mira: 'o', entrenador: { vision: 5, obligatorio: false }, frase: 'Todas las dunas son iguales… ¿Tú también te has perdido? ¡Pues a luchar!' },
         { id: 'buscador-dunas', x: 14, y: 26, mira: 'e', entrenador: { vision: 5, obligatorio: false }, frase: 'La arena esconde tesoros. Y criaturas. ¡Y entrenadores como yo!' },
         { id: 'arqueologa', x: 7, y: 17, mira: 'o', frase: '¡Cuidado con las cuerdas!' },
+        { id: 'soldado-dunas-1', x: 10, y: 17, mira: 'o', entrenador: { vision: 3, obligatorio: false }, uniforme: 'perseguidor', sin: 'estatua-defendida' },
+        { id: 'soldado-dunas-2', x: 10, y: 18, mira: 'o', escena: { vision: 3 }, uniforme: 'perseguidor', sin: 'estatua-defendida' },
+        { id: 'chano-dunas', x: 9, y: 16, mira: 'o', uniforme: 'tuyo', con: 'estatua-defendida' },
       ],
       objetos: [
         { id: 'pocion-horno', x: 33, y: 11, objeto: 'pocion' },
@@ -164,6 +168,7 @@ export const ISLA_2: DefIsla = {
         '22,18': 'Otra escultura. La placa dice: «Paciencia».\nUn niño dice que es un perro; su madre, que es el mar.',
       },
       personajes: [
+        { id: 'viejo-puerto', x: 25, y: 11, mira: 'e' },
         { id: 'escultor-puerto', x: 17, y: 13, mira: 's', frase: 'Esta ciudad está llena de esculturas por la calle. Algún día pondrán una mía.' },
         { id: 'vecina-puerto', x: 9, y: 21, mira: 'n', frase: 'De aquí salían los barcos de la cal. Hoy salen los de turistas.' },
         { id: 'paseante-puerto', x: 21, y: 22, mira: 'o', entrenador: { vision: 4, obligatorio: false }, frase: 'Paseo cada tarde junto al mar. Y cada tarde reto a alguien. ¡Hoy te toca!' },

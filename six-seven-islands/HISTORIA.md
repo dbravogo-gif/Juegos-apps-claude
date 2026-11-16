@@ -266,6 +266,15 @@ rival; `{amigo}`, el nombre que le pones.
     Famara (vencer a los dos pescadores, por tres cubos) y el faro (subir con el farero y ver la isla
     que se esconde).
 - **El campo en pantalla:** arena o viento durante los combates del gimnasio.
+- **Fuerteventura, hecha (2026-11-16):**
+  - **Corralejo:** Chano te para al pasar camino de Las Dunas. Lleva ropa del color de tu pueblo y
+    dice que luchó junto al último elegido.
+  - **La excavación de Las Dunas:** dos soldados de tu rama enemiga quieren la estatua. Uno
+    lucha con criaturas de su pueblo y, al vencerlo, huyen. Después llega Chano, «tarde».
+  - **La arqueóloga** te cuenta lo del grabado de trece círculos: el Sello que abría algo en el
+    Teide.
+  - **El viejo que te vigila** pesca en el muelle de Puerto del Rosario.
+  - **La líder de Aire** dice que ya le han pedido dos veces su pintadera.
 
 ## Lo que falta decidir
 

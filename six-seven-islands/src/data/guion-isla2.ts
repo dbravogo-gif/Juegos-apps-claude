@@ -71,7 +71,68 @@ export const GUION_ISLA2: Guion = {
   ],
   // La arqueóloga de Las Dunas (autor, 2026-11-13): desentierra una estatua ancestral y cuenta un
   // trozo de la historia. La estatua de verdad, ya se verá.
+  // Chano (HISTORIA.md): dice defender a tu pueblo. Es el jefe secreto de la rama que te persigue.
+  'chano-corralejo': [
+    {
+      sin: 'chano-conocido',
+      dialogo: {
+        lineas: [
+          { quien: 'Señor', texto: '¡Eh, tú! Esa cría desciende de una leyenda… Eres el nuevo elegido de {pueblo}, ¿a que sí?' },
+          { quien: 'Chano', texto: 'Me llamo Chano. Hace muchos años luché junto al último elegido de tu pueblo. ¡Qué tiempos!' },
+          { quien: 'Chano', texto: 'Ándate con ojo: los de {rama} andan revueltos por las dunas. Si me necesitas, por aquí ando.' },
+        ],
+        efecto: { condicion: 'chano-conocido' },
+      },
+    },
+    { dialogo: { lineas: [{ quien: 'Chano', texto: 'Las dunas están al sur. Allí hay una arqueóloga desenterrando algo muy viejo.' }] } },
+  ],
+  'chano-dunas': [
+    {
+      dialogo: {
+        lineas: [
+          { quien: 'Chano', texto: '¡Uf, llego tarde! He visto a los de {rama} huir por las dunas. ¿Estás bien?' },
+          { quien: 'Chano', texto: 'Menos mal que estabas tú. Esa estatua… mejor que no caiga en malas manos.' },
+          { quien: 'Chano', texto: 'Sigue hacia el sur, elegido. Yo me quedo vigilando la excavación.' },
+        ],
+      },
+    },
+  ],
+  'soldado-dunas-1': [
+    {
+      dialogo: {
+        lineas: [
+          { quien: 'Soldado de {rama}', texto: '¡Tú otra vez! El jefe dijo que te dejáramos crecer…' },
+          { quien: 'Soldado de {rama}', texto: '…¡pero esta estatua es nuestra! ¡A luchar!' },
+        ],
+      },
+    },
+  ],
+  'soldado-dunas-2': [
+    { dialogo: { lineas: [{ quien: 'Soldado de {rama}', texto: '¡Alto! Yo solo vigilo, ¿eh? El que lucha es mi compañero.' }] } },
+  ],
+  // El señor que te vigila vuelve a aparecer, sin decir quién es.
+  'viejo-puerto': [
+    {
+      dialogo: {
+        lineas: [
+          { quien: 'Pescador', texto: 'Volvemos a vernos. Aquí también pica bien.' },
+          { quien: 'Pescador', texto: 'Dicen que la estatua de las dunas mira al oeste. Las leyendas siempre miran al oeste…' },
+        ],
+      },
+    },
+  ],
   arqueologa: [
+    {
+      con: 'estatua-defendida',
+      dialogo: {
+        lineas: [
+          { quien: 'Arqueóloga', texto: '¡Gracias por echarlos! Querían llevarse la estatua… y no sé para qué.' },
+          { quien: 'Arqueóloga', texto: 'Mira lo que había debajo: un grabado con trece círculos. Ocho pequeños y cinco grandes.' },
+          { quien: 'Arqueóloga', texto: 'Los pequeños tienen la forma de las pintaderas de los gimnasios. Los grandes, de las cinco leyendas.' },
+          { quien: 'Arqueóloga', texto: 'Juntos forman un sello. Dicen que abría algo en el Teide. ¡Ojalá supiera qué!' },
+        ],
+      },
+    },
     {
       dialogo: {
         lineas: [
