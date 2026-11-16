@@ -86,6 +86,10 @@ function modeloDe(p: DefPersonaje): string {
   // Las líderes, con la figura de maga y más grandes (abajo): antes llevaban la misma que sus
   // aprendices o que el vigilante y no se distinguían (probador, 2026-11-13).
   if (esLider(p)) return 'Mage';
+  // La silueta del jefe tiene la figura de Chano, en negro: una pista sutil (HISTORIA.md).
+  if (p.silueta) return 'Barbarian';
+  // El viejo que te vigila: capucha, con ropa del color de tu pueblo (no se confunde con el farero).
+  if (p.id.startsWith('viejo-')) return 'Rogue_Hooded';
   // Tu amigo, el mismo en el bar y en el muelle: así se reconoce.
   if (AMIGOS.has(p.id)) return 'Rogue';
   // Los soldados de uniforme, con la armadura gris: se tiñe bien del color de su pueblo (con la capa
@@ -112,6 +116,8 @@ export class Personaje implements Subsistema {
   private figuras: Figura[] = [];
   /** Los personajes por id, con hacia dónde miran normalmente, para girarlos al hablar. */
   private porId = new Map<string, { figura: Figura; giro: number; tumbado?: boolean }>();
+  /** Todos los personajes con figura, por id: para saber si su vista se dibuja. */
+  private defs = new Map<string, DefPersonaje>();
   /** Los que solo están con ciertas condiciones (soldados, siluetas): se enseñan o se esconden. */
   private condicionados: { p: DefPersonaje; raiz: Object3D }[] = [];
   /** Los de uniforme, por hacer hasta saber de qué color va (el del pueblo que te persigue). */
@@ -184,7 +190,9 @@ export class Personaje implements Subsistema {
           const persona = PERSONA_DE[p.id];
           const nombre = modeloDe(p);
           const tinte = p.silueta ? SILUETA : p.quemado ? QUEMADO : undefined;
-          const f = persona ? await this.figuraPersona(persona) : this.figura(await cargar(nombre), nombre, tinte);
+          // La silueta, negra del todo (mezcla completa); multiplicando, quedaba verde oscuro.
+          const f = persona ? await this.figuraPersona(persona) : this.figura(await cargar(nombre), nombre, tinte, p.silueta ? { mezcla: 1 } : {});
+          this.defs.set(p.id, p);
           if (p.con || p.sin) this.condicionados.push({ p, raiz: f.raiz });
           const k = enIsla(mapa, z.id, p.x, p.y);
           const [x, y] = deClave(k);
@@ -205,7 +213,8 @@ export class Personaje implements Subsistema {
           }
           ctx.escena.add(f.raiz);
           this.objetos.push(f.raiz);
-          for (const v of vision(mapa, z.id, p)) {
+          // Solo los entrenadores marcan su vista en rojo; quien solo tiene escena, no.
+          for (const v of p.entrenador ? vision(mapa, z.id, p) : []) {
             const [vx, vy] = deClave(v);
             deQuien.set(p.id, [...(deQuien.get(p.id) ?? []), visiones.length]);
             // Sobre la hierba alta y la arena de duna, algo más alta: si no, las matas la tapaban y
@@ -310,7 +319,7 @@ export class Personaje implements Subsistema {
   }
 
   /** Una figurita: copia del modelo con su esqueleto, sin armas, a escala y con sus animaciones. */
-  private figura(gltf: GLTF, nombre: string, tinte?: readonly [number, number, number], cabezaSinTinte = false): Figura {
+  private figura(gltf: GLTF, nombre: string, tinte?: readonly [number, number, number], op: { cabezaSinTinte?: boolean; mezcla?: number } = {}): Figura {
     const base = nombre.split('_')[0];
     const copia = clonarConEsqueleto(gltf.scene);
     copia.traverse((o) => {
@@ -319,7 +328,7 @@ export class Personaje implements Subsistema {
       o.visible = o.name.startsWith(`${base}_`) && !o.name.includes('Shield');
     });
     // Los uniformes (cabeza sin teñir) mezclan su color con la ropa; el resto de tintes multiplican.
-    this.materiales.push(...aMaterialDelJuego(copia, { bordes: [-0.25, 0.5], especular: 0.1, dureza: 16, contraluz: 0.35 }, tinte, cabezaSinTinte ? (m) => /head/i.test(m.name) : undefined, cabezaSinTinte ? 0.55 : undefined));
+    this.materiales.push(...aMaterialDelJuego(copia, { bordes: [-0.25, 0.5], especular: 0.1, dureza: 16, contraluz: 0.35 }, tinte, op.cabezaSinTinte ? (m) => /head/i.test(m.name) : undefined, op.mezcla));
     const caja = new Box3();
     copia.updateWorldMatrix(true, true);
     copia.traverse((o) => {
@@ -473,7 +482,8 @@ export class Personaje implements Subsistema {
 
   private async hacerUniformado(u: { p: DefPersonaje; mapa: MundoLogico; zona: string }, tinte: readonly [number, number, number], ctx: Ctx): Promise<void> {
     const nombre = modeloDe(u.p);
-    const f = this.figura(await cargarModelo(rutaModelo(`kaykit/${nombre}.glb`)), nombre, tinte, true);
+    // Los soldados, de su color bien vivo; Chano y el viejo, más suave (probador: salían pálidos).
+    const f = this.figura(await cargarModelo(rutaModelo(`kaykit/${nombre}.glb`)), nombre, tinte, { cabezaSinTinte: true, mezcla: u.p.uniforme === 'perseguidor' ? 0.78 : 0.55 });
     const k = enIsla(u.mapa, u.zona, u.p.x, u.p.y);
     const [x, y] = deClave(k);
     f.raiz.position.set(x, alturaSuelo(u.mapa.casillas.get(k)!.h), y);
@@ -488,13 +498,16 @@ export class Personaje implements Subsistema {
   private ocultarVisionesVencidas(): void {
     const v = this.visiones;
     const vencidos = this.partida.vencidos;
-    const firma = vencidos.join(',');
+    const cond = this.partida.estado.condiciones;
+    const firma = `${vencidos.join(',')}|${cond.join(',')}`;
     if (!v || firma === this.firmaVencidos) return;
     this.firmaVencidos = firma;
     const nada = new Matrix4().makeScale(0, 0, 0);
     for (const [id, indices] of v.deQuien) {
-      const vencido = vencidos.includes(id);
-      for (const i of indices) v.malla.setMatrixAt(i, vencido ? nada : v.matrices[i]);
+      // Tampoco se ve la de quien aún no está (tu amigo en el muelle antes del gimnasio; probador).
+      const def = this.defs.get(id);
+      const oculta = vencidos.includes(id) || (!!def && !presente(def, cond));
+      for (const i of indices) v.malla.setMatrixAt(i, oculta ? nada : v.matrices[i]);
     }
     v.malla.instanceMatrix.needsUpdate = true;
   }

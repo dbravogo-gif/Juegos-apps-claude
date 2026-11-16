@@ -254,7 +254,7 @@ export const ISLA_1: DefIsla = {
         { id: 'entrenador-caldera', x: 19, y: 20, mira: 'e', entrenador: { vision: 5, obligatorio: false }, frase: 'Esta caldera es mi escondite. ¿Cómo la has encontrado?' },
         { id: 'soldado-fuego-1', x: 29, y: 11, mira: 'o', escena: { vision: 4 }, con: 'inicial-elegida', sin: 'soldados-fuego', uniforme: 'perseguidor' },
         { id: 'soldado-fuego-2', x: 29, y: 13, mira: 'o', escena: { vision: 4 }, con: 'inicial-elegida', sin: 'soldados-fuego', uniforme: 'perseguidor' },
-        { id: 'silueta-fuego', x: 30, y: 12, mira: 'o', con: 'inicial-elegida', sin: 'soldados-fuego', silueta: true },
+        { id: 'silueta-fuego', x: 30, y: 12, mira: 'o', escena: { vision: 4 }, con: 'inicial-elegida', sin: 'soldados-fuego', silueta: true },
       ],
       objetos: [{ id: 'pocion-caldera', x: 25, y: 22, objeto: 'pocion' }],
       alturas: [
@@ -360,7 +360,7 @@ export const ISLA_1: DefIsla = {
       personajes: [
         { id: 'vecina-rivales', x: 9, y: 11, mira: 's', frase: 'Unos tipos raros preguntaban en el puerto por la isla que desapareció...' },
         { id: 'marinero', x: 25, y: 13, mira: 'n', frase: 'El barco va a la isla siguiente, pero solo con quien ha vencido al gimnasio.' },
-        { id: 'viejo-muelle', x: 25, y: 9, mira: 'e' },
+        { id: 'viejo-muelle', x: 25, y: 9, mira: 'e', uniforme: 'tuyo' },
         { id: 'amigo-muelle', x: 24, y: 10, mira: 's', entrenador: { vision: 2, obligatorio: false }, con: 'gimnasio-vencido' },
         { id: 'farero', x: 21, y: 13, mira: 'e' },
       ],

@@ -172,3 +172,27 @@ describe('historia: Fuerteventura (Chano, la estatua y el viejo)', () => {
     expect(d.lineas.map((l) => l.texto).join(' ')).toContain('trece círculos');
   });
 });
+
+describe('historia: arreglos de la revisión del probador (2026-11-16)', () => {
+  it('cada una de las cinco iniciales tiene su historia con el anciano (a la de Tierra le faltaba)', async () => {
+    const { GUION_ISLA1 } = await import('../src/data/guion-isla1');
+    for (const x of INICIALES) {
+      const d = elegirDialogo(GUION_ISLA1, 'anciano', [], x)!;
+      expect(d.lineas.map((l) => l.texto).join(' '), x).not.toContain('Las cinco leyendas eran orgullosas');
+    }
+  });
+
+  it('la silueta ve la fila del medio: por ahí ya no se llega encajonado y sin escena', async () => {
+    const { construirMundo, vision, enIsla } = await import('../src/core/mundo');
+    const { ISLA_1 } = await import('../src/data/isla1');
+    const m = construirMundo(ISLA_1);
+    const silueta = m.zonas.get('fuego')!.personajes.find((p) => p.id === 'silueta-fuego')!;
+    expect(silueta.escena).toBeDefined();
+    expect(vision(m, 'fuego', silueta, ['inicial-elegida'])).toContain(enIsla(m, 'fuego', 29, 12));
+  });
+
+  it('tu amigo deja el bar al elegir inicial: no está a la vez en el bar y en el muelle', () => {
+    const bar = LANZAROTE.interiores.find((d) => d.id === 'bar')!;
+    expect(bar.personajes.find((p) => p.id === 'amigo')?.sin).toBe('inicial-elegida');
+  });
+});

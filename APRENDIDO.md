@@ -4,6 +4,12 @@ Errores ya pagados y la barrera que evita repetirlos (regla R6). Formato: fecha 
 causa · barrera. Lo más reciente va arriba. Si un error vuelve a pasar, su barrera sube de
 nivel: de nota a regla, y de regla a prueba o hook.
 
+- **2026-11-16 · Pasar diálogos con Enter le ponía «Amigo» al rival para siempre** (Six-seven
+  islands; lo vio el probador).
+  - Causa: la caja del nombre se abría al hablar, ya con un nombre por defecto, y el siguiente Enter
+    (el de pasar diálogo) la aceptaba al instante.
+  - Barrera: las cajas que se abren en mitad de una conversación empiezan vacías, no aceptan vacío,
+    ignoran la tecla mantenida y el primer medio segundo.
 - **2026-11-15 · El mar de las zonas de costa quedaba encerrado como un canal** (Six-seven
   islands; lo vio el probador en Puerto del Rosario, y salió también en Sotavento, Morro Jable,
   Cofete y la capital de Lanzarote).

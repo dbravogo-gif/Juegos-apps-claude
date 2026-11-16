@@ -39,7 +39,8 @@ const SALAS: Record<string, DefSala> = {
     tipo: 'bar',
     gente: (s) => [
       { id: 'camarero', x: s.residente.x, y: s.residente.y, mira: 's' },
-      { id: 'amigo', x: s.cliente!.x, y: s.cliente!.y, mira: 'n' },
+      // Se va al elegir tu inicial: él también va al museo (probador: seguía en el bar).
+      { id: 'amigo', x: s.cliente!.x, y: s.cliente!.y, mira: 'n', sin: 'inicial-elegida' },
     ],
   },
   'casa-vecina': { nombre: 'Casa de unos vecinos', gente: vive('vecina-casa') },

@@ -266,6 +266,17 @@ rival; `{amigo}`, el nombre que le pones.
     Famara (vencer a los dos pescadores, por tres cubos) y el faro (subir con el farero y ver la isla
     que se esconde).
 - **El campo en pantalla:** arena o viento durante los combates del gimnasio.
+- **Revisión del probador (2026-11-16), arreglado:**
+  - el nombre del amigo ya no se acepta sin escribirlo;
+  - la silueta ve la fila del medio;
+  - tu amigo deja el bar al elegir inicial;
+  - no se dibuja la vista de quien aún no está;
+  - la silueta es negra, con la figura de Chano;
+  - el viejo que te vigila va de tu color;
+  - los soldados van más saturados;
+  - el mensaje se ve como una burbuja de móvil;
+  - la arena dice a quién daña y se ve más;
+  - el anciano tiene su historia para la inicial de Tierra.
 - **Fuerteventura, hecha (2026-11-16):**
   - **Corralejo:** Chano te para al pasar camino de Las Dunas. Lleva ropa del color de tu pueblo y
     dice que luchó junto al último elegido.
