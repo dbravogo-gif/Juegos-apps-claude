@@ -1,6 +1,6 @@
 # Criaturas (modelos para el juego)
 
-Las copia Claude desde `conceptos/criaturas/meshy/`, donde sube el autor los originales con el
+Las copia `herramientas/criaturas/juego.py` desde `conceptos/criaturas/meshy/`, donde sube el autor los originales con el
 nombre «PokN. Nombre». Aquí van reducidas y con el id interno de `PLAN-CRIATURAS.md`: el número
 de la lista de referencia y la forma.
 

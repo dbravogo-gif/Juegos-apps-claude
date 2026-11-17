@@ -4,6 +4,8 @@
 
 import { type Group } from 'three/webgpu';
 import { MODELO_INICIAL, figuraCriatura } from '../../arte/criaturas3d';
+import { escalaPorAltura } from '../../arte/escala-criaturas';
+import { DATOS_COMBATE_PRUEBA, ESPECIE_INICIAL } from '../../data/combate-prueba';
 import type { Direccion } from '../../core/mundo';
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Partida } from '../partida/partida';
@@ -47,7 +49,9 @@ export class Companera implements Subsistema {
     // La de Tierra aún no tiene modelo: mientras, el de Roca (autor, 2026-11-13).
     const modelo = MODELO_INICIAL[inicial] ?? (inicial === 'tierra' ? MODELO_INICIAL.roca : undefined);
     if (!modelo) return;
-    void figuraCriatura(modelo, 'color', TAMANO_COMPANERA).then((f) => {
+    // A su altura respecto al jugador, comprimida como en combate (ARTE.md, «Escala de las criaturas»).
+    const altura = DATOS_COMBATE_PRUEBA.especies[ESPECIE_INICIAL[inicial] ?? '']?.altura;
+    void figuraCriatura(modelo, 'color', TAMANO_COMPANERA * escalaPorAltura(altura)).then((f) => {
       if (this.pedida !== inicial) return;
       this.figura?.removeFromParent();
       this.figura = f;
