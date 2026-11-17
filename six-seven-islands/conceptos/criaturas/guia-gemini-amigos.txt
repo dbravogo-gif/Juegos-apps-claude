@@ -1,0 +1,1413 @@
+INSTRUCCIONES PARA GEMINI
+
+Vamos a generar las criaturas de mi juego de una en una, con el estilo de imagen de la sección
+«CÓMO TIENEN QUE SER LAS IMÁGENES», más abajo. Abajo tienes la lista completa, numerada. Es mi plan: 203 criaturas,
+de las que 15 ya están hechas.
+
+CÓMO VAMOS
+- Al empezar, y cada vez que te diga «siguiente», dime cuál toca, con este formato:
+  «PokN. Nombre, forma · tipo · fuerza (quintil) y papel · estadísticas como X · zona · idea».
+  Después, propón el diseño en 2 o 3 frases.
+- Cuando te diga «genera», haz la imagen. Si te digo «otra», repítela con los cambios que te
+  diga. «Saltar» pasa a la siguiente sin hacerla. Si te digo un número («vamos por el 57»),
+  sigue desde ahí.
+- Al terminar cada una, recuérdame cómo guardar la imagen y después el modelo 3D: «PokN. Nombre»,
+  por ejemplo «Pok16. Civeta». N es su número de la lista y no cambia nunca. Si va con apodo y
+  elegimos un nombre, usa el nombre elegido.
+- Si te pido «estado», dime por qué número vamos y cuántas faltan.
+
+REGLAS
+1. El Pokémon de «estadísticas como» es solo una referencia interna de lo fuerte que es y de su
+   papel. La criatura NO puede parecerse a él ni a ningún otro Pokémon: ni en el animal, ni en
+   la silueta, ni en los colores, ni en las piezas. Parte de la idea que te doy, que es canaria.
+2. Una imagen por criatura, nunca la línea entera junta: después la paso a 3D.
+3. Las evoluciones mantienen el diseño de la forma anterior (colores, cara y piezas) y crecen:
+   la 2.ª forma añade piezas, como crestas o cuernos, y la 3.ª es más grande e imponente. Si la
+   anterior no está en esta conversación, pídeme su imagen antes de diseñar.
+4. Si pone «lámina del autor», el diseño ya existe: pídeme la lámina y dibuja esa criatura sola,
+   fiel a ella.
+5. El color principal sale de su tipo, y el papel se nota en el cuerpo: los tanques, robustos;
+   los atacantes, más ágiles.
+6. Si el nombre va entre comillas («Guirre»), es un apodo provisional: propón 3 nombres
+   originales para la especie, que no se parezcan a nombres de Pokémon. Si ya tiene nombre, úsalo.
+7. Nunca escribas texto ni nombres de Pokémon en la imagen.
+8. Las marcadas «YA HECHA» se saltan.
+
+CÓMO TIENEN QUE SER LAS IMÁGENES
+Cada imagen termina con este bloque de estilo, en inglés y tal cual, detrás de la descripción
+de la criatura:
+
+Official-quality 2D character concept art in the clean anime style of modern monster-collecting
+RPGs: crisp clean linework, cel shading with soft highlights, flat saturated colors, moderate
+detail, big expressive eyes, appealing silhouette. Cute animal face with big round eyes and a
+small muzzle, never a human face. Bold simple shapes: a few large leaves, feathers or scales
+instead of many small ones; thick parts with rounded tips, no thin spikes, branches, strands or
+floating particles. Single creature, full body, three-quarter front view, centered, plain white
+background, no shadow, no text.
+
+Por qué así: la imagen se pasa a 3D con Meshy. Con varias criaturas juntas, sombra, fondo o
+texto, el modelo sale roto. Nada de aspecto de «juguete de vinilo». Si sale con demasiado
+detalle, cambia «moderate detail» por «low detail»; si sale pobre, por «rich but clean detail».
+
+LOS TIPOS DE MI JUEGO
+Común (normal), Agua, Tierra, Planta, Aire (volador), Eléctrico, Hielo, Infernal (fuego),
+Lucha, Mental (psíquico), Oscuridad (siniestro), Espectral (fantasma), Acero, Roca, Ancestral
+(primordial y dragones), Bicho y Veneno. «Agua/Tierra» quiere decir dos tipos: el primero es el
+principal.
+
+REPARTO ENTRE AMIGOS
+Somos varios generando a la vez. Hazme solo las del tramo que te diga
+(por ejemplo, «del Pok63 al Pok92») y guarda cada archivo como «PokN. Nombre».
+
+LA LISTA
+
+== LANZAROTE ==
+
+Pok1. Cronti, 1.ª forma de 3 · YA HECHA
+
+Pok2. Chicront, 2.ª forma de 3
+   Tipo: Agua (la línea: Agua → Agua → Agua)
+   Fuerza: inicial, con estadísticas propias (empieza floja y la final es fuerte).
+   Zona: Inicial (museo de Lanzarote)
+   Idea: Nombres del autor; la 1.ª forma ya está hecha. Pídeme la imagen de la 1.ª forma para seguir su diseño.
+
+Pok3. Krantacor, 3.ª forma de 3
+   Tipo: Agua (la línea: Agua → Agua → Agua)
+   Fuerza: inicial, con estadísticas propias (empieza floja y la final es fuerte).
+   Zona: Inicial (museo de Lanzarote)
+   Idea: Nombres del autor; la 1.ª forma ya está hecha. Pídeme la imagen de la 1.ª forma para seguir su diseño.
+
+Pok4. Inicial de planta, 1.ª forma de 3 · YA HECHA
+
+Pok5. Inicial de planta, 2.ª forma de 3
+   Tipo: Planta (la línea: Planta → Planta → Planta/Mental)
+   Fuerza: inicial, con estadísticas propias (empieza floja y la final es fuerte).
+   Zona: Inicial (museo de Lanzarote)
+   Idea: El lagarto chamán, que acaba en chamán de Planta/Mental; la 1.ª forma ya está hecha. Pídeme la imagen de la 1.ª forma para seguir su diseño.
+
+Pok6. Inicial de planta, 3.ª forma de 3
+   Tipo: Planta/Mental (la línea: Planta → Planta → Planta/Mental)
+   Fuerza: inicial, con estadísticas propias (empieza floja y la final es fuerte).
+   Zona: Inicial (museo de Lanzarote)
+   Idea: El lagarto chamán, que acaba en chamán de Planta/Mental; la 1.ª forma ya está hecha. Pídeme la imagen de la 1.ª forma para seguir su diseño.
+
+Pok7. Inicial de infernal, 1.ª forma de 3 · YA HECHA
+
+Pok8. Inicial de infernal, 2.ª forma de 3
+   Tipo: Infernal (la línea: Infernal → Infernal → Infernal)
+   Fuerza: inicial, con estadísticas propias (empieza floja y la final es fuerte).
+   Zona: Inicial (museo de Lanzarote)
+   Idea: La 1.ª forma ya está hecha. Pídeme la imagen de la 1.ª forma para seguir su diseño.
+
+Pok9. Inicial de infernal, 3.ª forma de 3
+   Tipo: Infernal (la línea: Infernal → Infernal → Infernal)
+   Fuerza: inicial, con estadísticas propias (empieza floja y la final es fuerte).
+   Zona: Inicial (museo de Lanzarote)
+   Idea: La 1.ª forma ya está hecha. Pídeme la imagen de la 1.ª forma para seguir su diseño.
+
+Pok10. Armalito, 1.ª forma de 3 · YA HECHA
+
+Pok11. Uralito, 2.ª forma de 3
+   Tipo: Roca/Veneno (la línea: Roca → Roca/Veneno → Roca/Veneno)
+   Fuerza: inicial, con estadísticas propias (empieza floja y la final es fuerte).
+   Zona: Inicial (museo de Lanzarote)
+   Idea: lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.
+
+Pok12. Reactolito, 3.ª forma de 3
+   Tipo: Roca/Veneno (la línea: Roca → Roca/Veneno → Roca/Veneno)
+   Fuerza: inicial, con estadísticas propias (empieza floja y la final es fuerte).
+   Zona: Inicial (museo de Lanzarote)
+   Idea: lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.
+
+Pok13. Inicial de tierra, 1.ª forma de 3
+   Tipo: Tierra (la línea: Tierra → Tierra/Espectral → Tierra/Espectral)
+   Fuerza: inicial, con estadísticas propias (empieza floja y la final es fuerte).
+   Zona: Inicial (museo de Lanzarote)
+   Idea: Por diseñar: la inicial del pueblo de los pueblos sepultados por el volcán. Una cría de tierra y ceniza que, al evolucionar, gana un aire espectral. Que no se parezca a las otras cuatro iniciales.
+
+Pok14. Inicial de tierra, 2.ª forma de 3
+   Tipo: Tierra/Espectral (la línea: Tierra → Tierra/Espectral → Tierra/Espectral)
+   Fuerza: inicial, con estadísticas propias (empieza floja y la final es fuerte).
+   Zona: Inicial (museo de Lanzarote)
+   Idea: Por diseñar: la inicial del pueblo de los pueblos sepultados por el volcán. Una cría de tierra y ceniza que, al evolucionar, gana un aire espectral. Que no se parezca a las otras cuatro iniciales. Pídeme la imagen de la 1.ª forma para seguir su diseño.
+
+Pok15. Inicial de tierra, 3.ª forma de 3
+   Tipo: Tierra/Espectral (la línea: Tierra → Tierra/Espectral → Tierra/Espectral)
+   Fuerza: inicial, con estadísticas propias (empieza floja y la final es fuerte).
+   Zona: Inicial (museo de Lanzarote)
+   Idea: Por diseñar: la inicial del pueblo de los pueblos sepultados por el volcán. Una cría de tierra y ceniza que, al evolucionar, gana un aire espectral. Que no se parezca a las otras cuatro iniciales. Pídeme la imagen de la 1.ª forma para seguir su diseño.
+
+Pok16. Civeta, 1.ª forma de 2 · YA HECHA
+
+Pok17. Civeta, 2.ª forma de 2 · YA HECHA
+
+Pok18. Ravich, 1.ª forma de 2 · YA HECHA
+
+Pok19. Azurvan, 2.ª forma de 2 · YA HECHA
+
+Pok20. Aculiso, 1.ª forma de 2 · YA HECHA
+
+Pok21. Sierpajable, 2.ª forma de 2 · YA HECHA
+
+Pok22. Dragosil, 1.ª forma de 3 · YA HECHA
+
+Pok23. Dragombo, 2.ª forma de 3 · YA HECHA
+
+Pok24. Dragalis, 3.ª forma de 3 · YA HECHA
+
+Pok25. Erizo de fuego, 1.ª forma de 3
+   Tipo: Infernal (la línea: Infernal → Infernal → Infernal/Tierra)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante físico.
+   Estadísticas como: Sandile (la línea: Sandile → Krokorok → Krookodile). Solo de referencia: que no se parezca.
+   Zona: Montañas del Fuego, Lanzarote (niveles 5-7)
+   Idea: Erizo de fuego (autor, 2026-11-17): erizo moruno con púas de lava encendida que se hace bola y rueda; la 2.ª, con púas de escoria más largas; la 3.ª, gran erizo volcánico que echa humo por la espalda.
+
+Pok26. Erizo de fuego, 2.ª forma de 3
+   Tipo: Infernal (la línea: Infernal → Infernal → Infernal/Tierra)
+   Fuerza: quintil 2 de 5, floja. Papel: atacante físico.
+   Estadísticas como: Krokorok (la línea: Sandile → Krokorok → Krookodile). Solo de referencia: que no se parezca.
+   Zona: Montañas del Fuego, Lanzarote (niveles 5-7)
+   Idea: Erizo de fuego (autor, 2026-11-17): erizo moruno con púas de lava encendida que se hace bola y rueda; la 2.ª, con púas de escoria más largas; la 3.ª, gran erizo volcánico que echa humo por la espalda.
+
+Pok27. Erizo de fuego, 3.ª forma de 3
+   Tipo: Infernal/Tierra (la línea: Infernal → Infernal → Infernal/Tierra)
+   Fuerza: quintil 4 de 5, fuerte. Papel: atacante físico.
+   Estadísticas como: Krookodile (la línea: Sandile → Krokorok → Krookodile). Solo de referencia: que no se parezca.
+   Zona: Montañas del Fuego, Lanzarote (niveles 5-7)
+   Idea: Erizo de fuego (autor, 2026-11-17): erizo moruno con púas de lava encendida que se hace bola y rueda; la 2.ª, con púas de escoria más largas; la 3.ª, gran erizo volcánico que echa humo por la espalda.
+
+Pok28. Musaraña luchadora, 1.ª forma de 2
+   Tipo: Lucha (la línea: Lucha → Lucha)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante físico.
+   Estadísticas como: Riolu (la línea: Riolu → Lucario). Solo de referencia: que no se parezca.
+   Zona: Montañas del Fuego, Lanzarote (niveles 5-7)
+   Idea: Musaraña canaria (la del malpaís de Lanzarote), chiquita y nerviosa, que lanza golpes rápidos; la 2.ª, erguida, lucha con agarres de lucha canaria (faja y calzón de bregar). Ya no es un erizo: el erizo es el de fuego.
+
+Pok29. Musaraña luchadora, 2.ª forma de 2
+   Tipo: Lucha (la línea: Lucha → Lucha)
+   Fuerza: quintil 4 de 5, fuerte. Papel: atacante especial.
+   Estadísticas como: Lucario (la línea: Riolu → Lucario). Solo de referencia: que no se parezca.
+   Zona: Montañas del Fuego, Lanzarote (niveles 5-7)
+   Idea: Musaraña canaria (la del malpaís de Lanzarote), chiquita y nerviosa, que lanza golpes rápidos; la 2.ª, erguida, lucha con agarres de lucha canaria (faja y calzón de bregar). Ya no es un erizo: el erizo es el de fuego.
+
+Pok30. Basalto, 1.ª forma de 3
+   Tipo: Roca (la línea: Roca → Roca → Roca)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: tanque físico.
+   Estadísticas como: Roggenrola (la línea: Roggenrola → Boldore → Gigalith). Solo de referencia: que no se parezca.
+   Zona: Famara (rara), Lanzarote (niveles 6-8)
+   Idea: Bola de basalto con ojos verdes de olivina; la 2.ª, con cristales de olivina en el lomo; la 3.ª, coloso de columnas de basalto. La usa la líder de Roca.
+
+Pok31. Basalto, 2.ª forma de 3
+   Tipo: Roca (la línea: Roca → Roca → Roca)
+   Fuerza: quintil 2 de 5, floja. Papel: tanque físico.
+   Estadísticas como: Boldore (la línea: Roggenrola → Boldore → Gigalith). Solo de referencia: que no se parezca.
+   Zona: Famara (rara), Lanzarote (niveles 6-8)
+   Idea: Bola de basalto con ojos verdes de olivina; la 2.ª, con cristales de olivina en el lomo; la 3.ª, coloso de columnas de basalto. La usa la líder de Roca.
+
+Pok32. Basalto, 3.ª forma de 3
+   Tipo: Roca (la línea: Roca → Roca → Roca)
+   Fuerza: quintil 4 de 5, fuerte. Papel: tanque físico.
+   Estadísticas como: Gigalith (la línea: Roggenrola → Boldore → Gigalith). Solo de referencia: que no se parezca.
+   Zona: Famara (rara), Lanzarote (niveles 6-8)
+   Idea: Bola de basalto con ojos verdes de olivina; la 2.ª, con cristales de olivina en el lomo; la 3.ª, coloso de columnas de basalto. La usa la líder de Roca.
+
+Pok33. Patatín, 1.ª forma de 2
+   Tipo: Tierra (la línea: Tierra → Tierra)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante físico.
+   Estadísticas como: Makuhita (la línea: Makuhita → Hariyama). Solo de referencia: que no se parezca.
+   Zona: El Jable, Lanzarote (niveles 6-8)
+   Idea: lámina del autor: pídemela y dibújala sola, fiel a ella.
+
+Pok34. Paparrón, 2.ª forma de 2
+   Tipo: Tierra (la línea: Tierra → Tierra)
+   Fuerza: quintil 3 de 5, media. Papel: atacante físico.
+   Estadísticas como: Hariyama (la línea: Makuhita → Hariyama). Solo de referencia: que no se parezca.
+   Zona: El Jable, Lanzarote (niveles 6-8)
+   Idea: lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.
+
+Pok35. Melaní, 1.ª forma de 3
+   Tipo: Bicho (la línea: Bicho → Bicho/Veneno → Bicho/Veneno)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: tanque físico.
+   Estadísticas como: Venipede (la línea: Venipede → Whirlipede → Scolipede). Solo de referencia: que no se parezca.
+   Zona: El Jable, Lanzarote (niveles 6-8)
+   Idea: lámina del autor: pídemela y dibújala sola, fiel a ella.
+
+Pok36. Favenir, 2.ª forma de 3
+   Tipo: Bicho/Veneno (la línea: Bicho → Bicho/Veneno → Bicho/Veneno)
+   Fuerza: quintil 2 de 5, floja. Papel: tanque físico.
+   Estadísticas como: Whirlipede (la línea: Venipede → Whirlipede → Scolipede). Solo de referencia: que no se parezca.
+   Zona: El Jable, Lanzarote (niveles 6-8)
+   Idea: lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.
+
+Pok37. Reginis, 3.ª forma de 3
+   Tipo: Bicho/Veneno (la línea: Bicho → Bicho/Veneno → Bicho/Veneno)
+   Fuerza: quintil 3 de 5, media. Papel: atacante físico.
+   Estadísticas como: Scolipede (la línea: Venipede → Whirlipede → Scolipede). Solo de referencia: que no se parezca.
+   Zona: El Jable, Lanzarote (niveles 6-8)
+   Idea: lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.
+
+Pok38. Aerund, 1.ª forma de 2
+   Tipo: Aire (la línea: Aire → Aire/Agua)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante especial.
+   Estadísticas como: Wingull (la línea: Wingull → Pelipper). Solo de referencia: que no se parezca.
+   Zona: Famara, Lanzarote (niveles 6-8)
+   Idea: lámina del autor: pídemela y dibújala sola, fiel a ella.
+
+Pok39. Marwen, 2.ª forma de 2
+   Tipo: Aire/Agua (la línea: Aire → Aire/Agua)
+   Fuerza: quintil 3 de 5, media. Papel: tanque físico.
+   Estadísticas como: Pelipper (la línea: Wingull → Pelipper). Solo de referencia: que no se parezca.
+   Zona: Famara, Lanzarote (niveles 6-8)
+   Idea: lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.
+
+Pok40. Salmito, 1.ª forma de 3
+   Tipo: Agua (la línea: Agua → Agua → Agua/Hielo)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: equilibrada.
+   Estadísticas como: Spheal (la línea: Spheal → Sealeo → Walrein). Solo de referencia: que no se parezca.
+   Zona: Famara, Lanzarote (niveles 6-8)
+   Idea: Nombre del autor; el aspecto, por diseñar.
+
+Pok41. Salmarín, 2.ª forma de 3
+   Tipo: Agua (la línea: Agua → Agua → Agua/Hielo)
+   Fuerza: quintil 3 de 5, media. Papel: equilibrada.
+   Estadísticas como: Sealeo (la línea: Spheal → Sealeo → Walrein). Solo de referencia: que no se parezca.
+   Zona: Famara, Lanzarote (niveles 6-8)
+   Idea: Nombre del autor; el aspecto, por diseñar.
+
+Pok42. Salmástil, 3.ª forma de 3
+   Tipo: Agua/Hielo (la línea: Agua → Agua → Agua/Hielo)
+   Fuerza: quintil 4 de 5, fuerte. Papel: tanque especial.
+   Estadísticas como: Walrein (la línea: Spheal → Sealeo → Walrein). Solo de referencia: que no se parezca.
+   Zona: Famara, Lanzarote (niveles 6-8)
+   Idea: Nombre del autor; el aspecto, por diseñar.
+
+Pok43. Leyenda verde, sin evolución
+   Tipo: Planta/Tierra
+   Fuerza: quintil 5 de 5, de las más fuertes, nivel legendario. Papel: atacante especial.
+   Estadísticas como: Dialga. Solo de referencia: que no se parezca.
+   Zona: La Geria (leyenda), Lanzarote (sale tras la Liga)
+   Idea: La leyenda verde, del pueblo del Hoyo: gran criatura de vid y picón que duerme en un hoyo de La Geria.
+
+Pok44. Magecora, sin evolución
+   Tipo: Infernal/Mental
+   Fuerza: quintil 5 de 5, de las más fuertes, nivel legendario. Papel: atacante especial.
+   Estadísticas como: Reshiram. Solo de referencia: que no se parezca.
+   Zona: Montañas del Fuego, el cráter (leyenda), Lanzarote (sale tras la Liga)
+   Idea: lámina del autor: pídemela y dibújala sola, fiel a ella.
+
+Pok45. Leyenda de roca, sin evolución
+   Tipo: Roca/Aire
+   Fuerza: quintil 5 de 5, de las más fuertes, nivel legendario. Papel: atacante físico.
+   Estadísticas como: Zekrom. Solo de referencia: que no se parezca.
+   Zona: Risco de Famara (leyenda), Lanzarote (sale tras la Liga)
+   Idea: La leyenda de roca, del pueblo del Risco: guardiana del acantilado de Famara, de basalto y viento.
+
+Pok46. Leyenda de tierra, sin evolución
+   Tipo: Tierra/Espectral
+   Fuerza: quintil 5 de 5, de las más fuertes, nivel legendario. Papel: atacante físico.
+   Estadísticas como: Groudon. Solo de referencia: que no se parezca.
+   Zona: Pueblos sepultados (leyenda), Lanzarote (sale tras la Liga)
+   Idea: La leyenda de tierra, del pueblo del Llano: duerme bajo los pueblos que sepultó el volcán.
+
+Pok47. Leyenda del agua, sin evolución
+   Tipo: Agua/Oscuridad
+   Fuerza: quintil 5 de 5, de las más fuertes, nivel legendario. Papel: atacante especial.
+   Estadísticas como: Kyogre. Solo de referencia: que no se parezca.
+   Zona: Los jameos (leyenda; zona por crear), Lanzarote (sale tras la Liga)
+   Idea: La leyenda del agua, del pueblo del Jameo: gran criatura blanca y ciega de los túneles donde entra el mar.
+
+== FUERTEVENTURA ==
+
+Pok48. Remolino de jable, 1.ª forma de 2
+   Tipo: Aire (la línea: Aire → Aire/Tierra)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: tanque físico.
+   Estadísticas como: Cottonee (la línea: Cottonee → Whimsicott). Solo de referencia: que no se parezca.
+   Zona: Las Dunas, Fuerteventura (niveles 10-13)
+   Idea: Remolino de jable: bolita de arena y semillas que rueda con el viento; la 2.ª, torbellino de arena con cara. Sustituye al remolino provisional del gimnasio de Aire.
+
+Pok49. Remolino de jable, 2.ª forma de 2
+   Tipo: Aire/Tierra (la línea: Aire → Aire/Tierra)
+   Fuerza: quintil 4 de 5, fuerte. Papel: tanque físico.
+   Estadísticas como: Whimsicott (la línea: Cottonee → Whimsicott). Solo de referencia: que no se parezca.
+   Zona: Las Dunas, Fuerteventura (niveles 10-13)
+   Idea: Remolino de jable: bolita de arena y semillas que rueda con el viento; la 2.ª, torbellino de arena con cara. Sustituye al remolino provisional del gimnasio de Aire.
+
+Pok50. Lisa de duna, 1.ª forma de 3
+   Tipo: Tierra (la línea: Tierra → Tierra → Tierra/Aire)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante físico.
+   Estadísticas como: Trapinch (la línea: Trapinch → Vibrava → Flygon). Solo de referencia: que no se parezca.
+   Zona: Las Dunas, Fuerteventura (niveles 10-13)
+   Idea: Lisa de duna: lagartija que nada bajo la arena; la 2.ª, con aletas de arena; la 3.ª, con velas que planean sobre las dunas.
+
+Pok51. Lisa de duna, 2.ª forma de 3
+   Tipo: Tierra (la línea: Tierra → Tierra → Tierra/Aire)
+   Fuerza: quintil 2 de 5, floja. Papel: equilibrada.
+   Estadísticas como: Vibrava (la línea: Trapinch → Vibrava → Flygon). Solo de referencia: que no se parezca.
+   Zona: Las Dunas, Fuerteventura (niveles 10-13)
+   Idea: Lisa de duna: lagartija que nada bajo la arena; la 2.ª, con aletas de arena; la 3.ª, con velas que planean sobre las dunas.
+
+Pok52. Lisa de duna, 3.ª forma de 3
+   Tipo: Tierra/Aire (la línea: Tierra → Tierra → Tierra/Aire)
+   Fuerza: quintil 4 de 5, fuerte. Papel: equilibrada.
+   Estadísticas como: Flygon (la línea: Trapinch → Vibrava → Flygon). Solo de referencia: que no se parezca.
+   Zona: Las Dunas, Fuerteventura (niveles 10-13)
+   Idea: Lisa de duna: lagartija que nada bajo la arena; la 2.ª, con aletas de arena; la 3.ª, con velas que planean sobre las dunas.
+
+Pok53. Conejo de jable, 1.ª forma de 2
+   Tipo: Común (la línea: Común → Común)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: equilibrada.
+   Estadísticas como: Bidoof (la línea: Bidoof → Bibarel). Solo de referencia: que no se parezca.
+   Zona: Las Dunas, Fuerteventura (niveles 10-13)
+   Idea: Conejo de jable, bajito y orejudo; la 2.ª, conejo grande que excava madrigueras.
+
+Pok54. Conejo de jable, 2.ª forma de 2
+   Tipo: Común (la línea: Común → Común)
+   Fuerza: quintil 3 de 5, media. Papel: atacante físico.
+   Estadísticas como: Bibarel (la línea: Bidoof → Bibarel). Solo de referencia: que no se parezca.
+   Zona: Las Dunas, Fuerteventura (niveles 10-13)
+   Idea: Conejo de jable, bajito y orejudo; la 2.ª, conejo grande que excava madrigueras.
+
+Pok55. Cigarrón, 1.ª forma de 2
+   Tipo: Bicho (la línea: Bicho → Bicho)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: tanque físico.
+   Estadísticas como: Kricketot (la línea: Kricketot → Kricketune). Solo de referencia: que no se parezca.
+   Zona: Las Dunas (rara), Fuerteventura (niveles 10-13)
+   Idea: Cigarrón: langosta que llega con el viento de África; la 2.ª, grande, hace sonar las alas.
+
+Pok56. Cigarrón, 2.ª forma de 2
+   Tipo: Bicho (la línea: Bicho → Bicho)
+   Fuerza: quintil 2 de 5, floja. Papel: atacante físico.
+   Estadísticas como: Kricketune (la línea: Kricketot → Kricketune). Solo de referencia: que no se parezca.
+   Zona: Las Dunas (rara), Fuerteventura (niveles 10-13)
+   Idea: Cigarrón: langosta que llega con el viento de África; la 2.ª, grande, hace sonar las alas.
+
+Pok57. Dromedario, 1.ª forma de 2
+   Tipo: Común (la línea: Común → Común)
+   Fuerza: quintil 2 de 5, floja. Papel: atacante físico.
+   Estadísticas como: Deerling (la línea: Deerling → Sawsbuck). Solo de referencia: que no se parezca.
+   Zona: Betancuria, Fuerteventura (niveles 12-14)
+   Idea: Dromedario majorero: cría torpe de patas largas; la 2.ª, dromedario adulto con alforjas.
+
+Pok58. Dromedario, 2.ª forma de 2
+   Tipo: Común (la línea: Común → Común)
+   Fuerza: quintil 3 de 5, media. Papel: atacante físico.
+   Estadísticas como: Sawsbuck (la línea: Deerling → Sawsbuck). Solo de referencia: que no se parezca.
+   Zona: Betancuria, Fuerteventura (niveles 12-14)
+   Idea: Dromedario majorero: cría torpe de patas largas; la 2.ª, dromedario adulto con alforjas.
+
+Pok59. Perro bardino, 1.ª forma de 3
+   Tipo: Común (la línea: Común → Común → Común)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante físico.
+   Estadísticas como: Lillipup (la línea: Lillipup → Herdier → Stoutland). Solo de referencia: que no se parezca.
+   Zona: Betancuria, Fuerteventura (niveles 12-14)
+   Idea: Perro bardino: cachorro atigrado; la 2.ª, perro pastor; la 3.ª, gran perro de ganado de melena gruesa.
+
+Pok60. Perro bardino, 2.ª forma de 3
+   Tipo: Común (la línea: Común → Común → Común)
+   Fuerza: quintil 2 de 5, floja. Papel: atacante físico.
+   Estadísticas como: Herdier (la línea: Lillipup → Herdier → Stoutland). Solo de referencia: que no se parezca.
+   Zona: Betancuria, Fuerteventura (niveles 12-14)
+   Idea: Perro bardino: cachorro atigrado; la 2.ª, perro pastor; la 3.ª, gran perro de ganado de melena gruesa.
+
+Pok61. Perro bardino, 3.ª forma de 3
+   Tipo: Común (la línea: Común → Común → Común)
+   Fuerza: quintil 4 de 5, fuerte. Papel: atacante físico.
+   Estadísticas como: Stoutland (la línea: Lillipup → Herdier → Stoutland). Solo de referencia: que no se parezca.
+   Zona: Betancuria, Fuerteventura (niveles 12-14)
+   Idea: Perro bardino: cachorro atigrado; la 2.ª, perro pastor; la 3.ª, gran perro de ganado de melena gruesa.
+
+Pok62. Guirre, 1.ª forma de 3
+   Tipo: Aire (la línea: Aire → Aire → Aire)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante físico.
+   Estadísticas como: Starly (la línea: Starly → Staravia → Staraptor). Solo de referencia: que no se parezca.
+   Zona: Betancuria, Fuerteventura (niveles 12-14)
+   Idea: Guirre: polluelo blanco; la 2.ª, joven de plumas pardas; la 3.ª, gran guirre de cara amarilla. Sustituye al guirre provisional del gimnasio de Aire.
+
+Pok63. Guirre, 2.ª forma de 3
+   Tipo: Aire (la línea: Aire → Aire → Aire)
+   Fuerza: quintil 2 de 5, floja. Papel: atacante físico.
+   Estadísticas como: Staravia (la línea: Starly → Staravia → Staraptor). Solo de referencia: que no se parezca.
+   Zona: Betancuria, Fuerteventura (niveles 12-14)
+   Idea: Guirre: polluelo blanco; la 2.ª, joven de plumas pardas; la 3.ª, gran guirre de cara amarilla. Sustituye al guirre provisional del gimnasio de Aire.
+
+Pok64. Guirre, 3.ª forma de 3
+   Tipo: Aire (la línea: Aire → Aire → Aire)
+   Fuerza: quintil 3 de 5, media. Papel: atacante físico.
+   Estadísticas como: Staraptor (la línea: Starly → Staravia → Staraptor). Solo de referencia: que no se parezca.
+   Zona: Betancuria, Fuerteventura (niveles 12-14)
+   Idea: Guirre: polluelo blanco; la 2.ª, joven de plumas pardas; la 3.ª, gran guirre de cara amarilla. Sustituye al guirre provisional del gimnasio de Aire.
+
+Pok65. Erizo negro, 1.ª forma de 2
+   Tipo: Agua (la línea: Agua → Agua/Oscuridad)
+   Fuerza: quintil 2 de 5, floja. Papel: atacante físico.
+   Estadísticas como: Corphish (la línea: Corphish → Crawdaunt). Solo de referencia: que no se parezca.
+   Zona: Ajuy, Fuerteventura (niveles 13-15)
+   Idea: Erizo negro de los charcos, redondo y de púas cortas; la 2.ª, grande y de púas larguísimas.
+
+Pok66. Erizo negro, 2.ª forma de 2
+   Tipo: Agua/Oscuridad (la línea: Agua → Agua/Oscuridad)
+   Fuerza: quintil 3 de 5, media. Papel: atacante físico.
+   Estadísticas como: Crawdaunt (la línea: Corphish → Crawdaunt). Solo de referencia: que no se parezca.
+   Zona: Ajuy, Fuerteventura (niveles 13-15)
+   Idea: Erizo negro de los charcos, redondo y de púas cortas; la 2.ª, grande y de púas larguísimas.
+
+Pok67. Murciélago de cueva, 1.ª forma de 3
+   Tipo: Veneno (la línea: Veneno → Veneno/Aire → Veneno/Aire)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: equilibrada.
+   Estadísticas como: Zubat (la línea: Zubat → Golbat → Crobat). Solo de referencia: que no se parezca.
+   Zona: Cueva de Ajuy, Fuerteventura (niveles 13-15)
+   Idea: Murciélago orejudo de cueva, de ojos grandes; la 2.ª y la 3.ª, más grandes, con alas como capas.
+
+Pok68. Murciélago de cueva, 2.ª forma de 3
+   Tipo: Veneno/Aire (la línea: Veneno → Veneno/Aire → Veneno/Aire)
+   Fuerza: quintil 3 de 5, media. Papel: equilibrada.
+   Estadísticas como: Golbat (la línea: Zubat → Golbat → Crobat). Solo de referencia: que no se parezca.
+   Zona: Cueva de Ajuy, Fuerteventura (niveles 13-15)
+   Idea: Murciélago orejudo de cueva, de ojos grandes; la 2.ª y la 3.ª, más grandes, con alas como capas.
+
+Pok69. Murciélago de cueva, 3.ª forma de 3
+   Tipo: Veneno/Aire (la línea: Veneno → Veneno/Aire → Veneno/Aire)
+   Fuerza: quintil 4 de 5, fuerte. Papel: equilibrada.
+   Estadísticas como: Crobat (la línea: Zubat → Golbat → Crobat). Solo de referencia: que no se parezca.
+   Zona: Cueva de Ajuy, Fuerteventura (niveles 13-15)
+   Idea: Murciélago orejudo de cueva, de ojos grandes; la 2.ª y la 3.ª, más grandes, con alas como capas.
+
+Pok70. Escarabajo de escoria, 1.ª forma de 2
+   Tipo: Roca (la línea: Roca → Roca/Bicho)
+   Fuerza: quintil 2 de 5, floja. Papel: atacante físico.
+   Estadísticas como: Anorith (la línea: Anorith → Armaldo). Solo de referencia: que no se parezca.
+   Zona: Cueva de Ajuy, Fuerteventura (niveles 13-15)
+   Idea: Escarabajo de escoria volcánica que rueda por la cueva; la 2.ª, erguido y con brazos de basalto.
+
+Pok71. Escarabajo de escoria, 2.ª forma de 2
+   Tipo: Roca/Bicho (la línea: Roca → Roca/Bicho)
+   Fuerza: quintil 4 de 5, fuerte. Papel: atacante físico.
+   Estadísticas como: Armaldo (la línea: Anorith → Armaldo). Solo de referencia: que no se parezca.
+   Zona: Cueva de Ajuy, Fuerteventura (niveles 13-15)
+   Idea: Escarabajo de escoria volcánica que rueda por la cueva; la 2.ª, erguido y con brazos de basalto.
+
+Pok72. Escolopendra, sin evolución
+   Tipo: Veneno/Bicho
+   Fuerza: quintil 3 de 5, media. Papel: atacante especial.
+   Estadísticas como: Seviper. Solo de referencia: que no se parezca.
+   Zona: Cofete (opcional), Fuerteventura (niveles 17-19)
+   Idea: Escolopendra: ciempiés gigante de las piedras, con colores de aviso.
+
+Pok73. Carabela, 1.ª forma de 2
+   Tipo: Veneno (la línea: Veneno → Veneno/Agua)
+   Fuerza: quintil 2 de 5, floja. Papel: equilibrada.
+   Estadísticas como: Shellos (la línea: Shellos → Gastrodon). Solo de referencia: que no se parezca.
+   Zona: Sotavento, Fuerteventura (niveles 15-17)
+   Idea: Carabela: medusa con una vela azul que flota en la laguna; la 2.ª, colonia grande con vela de colores.
+
+Pok74. Carabela, 2.ª forma de 2
+   Tipo: Veneno/Agua (la línea: Veneno → Veneno/Agua)
+   Fuerza: quintil 3 de 5, media. Papel: tanque especial.
+   Estadísticas como: Gastrodon (la línea: Shellos → Gastrodon). Solo de referencia: que no se parezca.
+   Zona: Sotavento, Fuerteventura (niveles 15-17)
+   Idea: Carabela: medusa con una vela azul que flota en la laguna; la 2.ª, colonia grande con vela de colores.
+
+Pok75. Piedra de Tindaya, sin evolución
+   Tipo: Roca/Mental
+   Fuerza: quintil 3 de 5, media. Papel: atacante especial.
+   Estadísticas como: Lunatone. Solo de referencia: que no se parezca.
+   Zona: Tindaya (opcional) (rara), Fuerteventura (niveles 14-16)
+   Idea: Piedra de la montaña sagrada: roca clara con grabados que flota y medita.
+
+Pok76. Cardón, 1.ª forma de 2
+   Tipo: Planta (la línea: Planta → Planta/Veneno)
+   Fuerza: quintil 2 de 5, floja. Papel: atacante especial.
+   Estadísticas como: Cacnea (la línea: Cacnea → Cacturne). Solo de referencia: que no se parezca.
+   Zona: Cofete (opcional), Fuerteventura (niveles 17-19)
+   Idea: Cardón de Jandía: brote de cardón de brazos cortos; la 2.ª, gran cardón con brazos de candelabro y savia tóxica.
+
+Pok77. Cardón, 2.ª forma de 2
+   Tipo: Planta/Veneno (la línea: Planta → Planta/Veneno)
+   Fuerza: quintil 3 de 5, media. Papel: atacante especial.
+   Estadísticas como: Cacturne (la línea: Cacnea → Cacturne). Solo de referencia: que no se parezca.
+   Zona: Cofete (opcional), Fuerteventura (niveles 17-19)
+   Idea: Cardón de Jandía: brote de cardón de brazos cortos; la 2.ª, gran cardón con brazos de candelabro y savia tóxica.
+
+== GRAN CANARIA ==
+
+Pok78. Tembladera, 1.ª forma de 2
+   Tipo: Eléctrico (la línea: Eléctrico → Eléctrico/Agua)
+   Fuerza: quintil 2 de 5, floja. Papel: atacante especial.
+   Estadísticas como: Psyduck (la línea: Psyduck → Golduck). Solo de referencia: que no se parezca.
+   Zona: La Isleta, Gran Canaria (niveles 18-20)
+   Idea: Tembladera: raya eléctrica de la arena del puerto; la 2.ª, grande, con alas que chispean.
+
+Pok79. Tembladera, 2.ª forma de 2
+   Tipo: Eléctrico/Agua (la línea: Eléctrico → Eléctrico/Agua)
+   Fuerza: quintil 4 de 5, fuerte. Papel: atacante especial.
+   Estadísticas como: Golduck (la línea: Psyduck → Golduck). Solo de referencia: que no se parezca.
+   Zona: La Isleta, Gran Canaria (niveles 18-20)
+   Idea: Tembladera: raya eléctrica de la arena del puerto; la 2.ª, grande, con alas que chispean.
+
+Pok80. Chicharro, 1.ª forma de 2
+   Tipo: Agua (la línea: Agua → Agua)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: tanque físico.
+   Estadísticas como: Magikarp (la línea: Magikarp → Gyarados). Solo de referencia: que no se parezca.
+   Zona: La Isleta, Gran Canaria (niveles 18-20)
+   Idea: Chicharro: pez flaco y torpe del muelle que no sirve para nada; la 2.ª, un marrajo enorme y temible.
+
+Pok81. Chicharro, 2.ª forma de 2
+   Tipo: Agua (la línea: Agua → Agua)
+   Fuerza: quintil 4 de 5, fuerte. Papel: atacante físico.
+   Estadísticas como: Gyarados (la línea: Magikarp → Gyarados). Solo de referencia: que no se parezca.
+   Zona: La Isleta, Gran Canaria (niveles 18-20)
+   Idea: Chicharro: pez flaco y torpe del muelle que no sirve para nada; la 2.ª, un marrajo enorme y temible.
+
+Pok82. Chispa de cable, 1.ª forma de 2
+   Tipo: Eléctrico (la línea: Eléctrico → Eléctrico/Bicho)
+   Fuerza: quintil 2 de 5, floja. Papel: atacante especial.
+   Estadísticas como: Joltik (la línea: Joltik → Galvantula). Solo de referencia: que no se parezca.
+   Zona: La Isleta, Gran Canaria (niveles 18-20)
+   Idea: Chispa de cable: bichito que vive en los enchufes del puerto; la 2.ª, escarabajo con antenas de cobre que suelta descargas.
+
+Pok83. Chispa de cable, 2.ª forma de 2
+   Tipo: Eléctrico/Bicho (la línea: Eléctrico → Eléctrico/Bicho)
+   Fuerza: quintil 3 de 5, media. Papel: atacante especial.
+   Estadísticas como: Galvantula (la línea: Joltik → Galvantula). Solo de referencia: que no se parezca.
+   Zona: La Isleta, Gran Canaria (niveles 18-20)
+   Idea: Chispa de cable: bichito que vive en los enchufes del puerto; la 2.ª, escarabajo con antenas de cobre que suelta descargas.
+
+Pok84. Enredo, 1.ª forma de 2
+   Tipo: Veneno (la línea: Veneno → Veneno)
+   Fuerza: quintil 2 de 5, floja. Papel: equilibrada.
+   Estadísticas como: Trubbish (la línea: Trubbish → Garbodor). Solo de referencia: que no se parezca.
+   Zona: La Isleta, Gran Canaria (niveles 18-20)
+   Idea: Enredo: bola de redes de pesca viejas y plástico; la 2.ª, gran mole de redes. Sustituye a Basún, descartado.
+
+Pok85. Enredo, 2.ª forma de 2
+   Tipo: Veneno (la línea: Veneno → Veneno)
+   Fuerza: quintil 3 de 5, media. Papel: tanque físico.
+   Estadísticas como: Garbodor (la línea: Trubbish → Garbodor). Solo de referencia: que no se parezca.
+   Zona: La Isleta, Gran Canaria (niveles 18-20)
+   Idea: Enredo: bola de redes de pesca viejas y plástico; la 2.ª, gran mole de redes. Sustituye a Basún, descartado.
+
+Pok86. Farito, sin evolución
+   Tipo: Eléctrico
+   Fuerza: quintil 3 de 5, media. Papel: atacante especial.
+   Estadísticas como: Plusle. Solo de referencia: que no se parezca.
+   Zona: La Isleta (rara), Gran Canaria (niveles 18-20)
+   Idea: Farito: criatura con forma de faro pequeño que lanza destellos. Hace pareja con la boya en combates dobles.
+
+Pok87. Boya, sin evolución
+   Tipo: Eléctrico/Agua
+   Fuerza: quintil 3 de 5, media. Papel: atacante especial.
+   Estadísticas como: Minun. Solo de referencia: que no se parezca.
+   Zona: Maspalomas (opcional) (rara), Gran Canaria (niveles 22-26)
+   Idea: Boya luminosa con cara que parpadea. Hace pareja con el farito en combates dobles.
+
+Pok88. Perdiz, 1.ª forma de 3
+   Tipo: Común (la línea: Común → Común/Aire → Común/Aire)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante físico.
+   Estadísticas como: Pidove (la línea: Pidove → Tranquill → Unfezant). Solo de referencia: que no se parezca.
+   Zona: Las cumbres, Gran Canaria (niveles 21-23)
+   Idea: Perdiz moruna: polluelo; la 2.ª, perdiz de collar; la 3.ª, gran perdiz de cresta roja.
+
+Pok89. Perdiz, 2.ª forma de 3
+   Tipo: Común/Aire (la línea: Común → Común/Aire → Común/Aire)
+   Fuerza: quintil 2 de 5, floja. Papel: atacante físico.
+   Estadísticas como: Tranquill (la línea: Pidove → Tranquill → Unfezant). Solo de referencia: que no se parezca.
+   Zona: Las cumbres, Gran Canaria (niveles 21-23)
+   Idea: Perdiz moruna: polluelo; la 2.ª, perdiz de collar; la 3.ª, gran perdiz de cresta roja.
+
+Pok90. Perdiz, 3.ª forma de 3
+   Tipo: Común/Aire (la línea: Común → Común/Aire → Común/Aire)
+   Fuerza: quintil 3 de 5, media. Papel: atacante físico.
+   Estadísticas como: Unfezant (la línea: Pidove → Tranquill → Unfezant). Solo de referencia: que no se parezca.
+   Zona: Las cumbres, Gran Canaria (niveles 21-23)
+   Idea: Perdiz moruna: polluelo; la 2.ª, perdiz de collar; la 3.ª, gran perdiz de cresta roja.
+
+Pok91. Almendrita, 1.ª forma de 2
+   Tipo: Planta (la línea: Planta → Planta)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante especial.
+   Estadísticas como: Cherubi (la línea: Cherubi → Cherrim). Solo de referencia: que no se parezca.
+   Zona: Las cumbres, Gran Canaria (niveles 21-23)
+   Idea: Almendrita: capullo de almendro cerrado; la 2.ª, se abre en flor de almendro cuando hay sol.
+
+Pok92. Almendrita, 2.ª forma de 2
+   Tipo: Planta (la línea: Planta → Planta)
+   Fuerza: quintil 3 de 5, media. Papel: atacante especial.
+   Estadísticas como: Cherrim (la línea: Cherubi → Cherrim). Solo de referencia: que no se parezca.
+   Zona: Las cumbres, Gran Canaria (niveles 21-23)
+   Idea: Almendrita: capullo de almendro cerrado; la 2.ª, se abre en flor de almendro cuando hay sol.
+
+Pok93. Bomba volcánica, sin evolución
+   Tipo: Roca/Infernal
+   Fuerza: quintil 3 de 5, media. Papel: atacante físico.
+   Estadísticas como: Solrock. Solo de referencia: que no se parezca.
+   Zona: Bandama (opcional) (rara), Gran Canaria (niveles 19-21)
+   Idea: Bomba volcánica: roca redonda y agrietada, con lava dentro, que salió volando del cráter.
+
+Pok94. Tabona, sin evolución
+   Tipo: Oscuridad/Roca
+   Fuerza: quintil 2 de 5, floja. Papel: equilibrada.
+   Estadísticas como: Sableye. Solo de referencia: que no se parezca.
+   Zona: Guayadeque, Gran Canaria (niveles 20-22)
+   Idea: Tabona: duendecillo tallado en obsidiana negra que vive en las casas cueva.
+
+Pok95. Cantero, 1.ª forma de 2
+   Tipo: Tierra (la línea: Tierra → Tierra/Acero)
+   Fuerza: quintil 2 de 5, floja. Papel: atacante físico.
+   Estadísticas como: Drilbur (la línea: Drilbur → Excadrill). Solo de referencia: que no se parezca.
+   Zona: Guayadeque, Gran Canaria (niveles 20-22)
+   Idea: Cantero: criaturita con cola de maza de piedra que pica la toba de las casas cueva; la 2.ª, gran cantero con brazos de pico de hierro. Sustituye a Tunelín, descartado.
+
+Pok96. Cantero, 2.ª forma de 2
+   Tipo: Tierra/Acero (la línea: Tierra → Tierra/Acero)
+   Fuerza: quintil 4 de 5, fuerte. Papel: atacante físico.
+   Estadísticas como: Excadrill (la línea: Drilbur → Excadrill). Solo de referencia: que no se parezca.
+   Zona: Guayadeque, Gran Canaria (niveles 20-22)
+   Idea: Cantero: criaturita con cola de maza de piedra que pica la toba de las casas cueva; la 2.ª, gran cantero con brazos de pico de hierro. Sustituye a Tunelín, descartado.
+
+Pok97. Tibicán, sin evolución
+   Tipo: Oscuridad
+   Fuerza: quintil 3 de 5, media. Papel: atacante físico.
+   Estadísticas como: Absol. Solo de referencia: que no se parezca.
+   Zona: Guayadeque (rara), Gran Canaria (niveles 20-22)
+   Idea: lámina del autor: pídemela y dibújala sola, fiel a ella.
+
+Pok98. Burro, 1.ª forma de 3
+   Tipo: Lucha (la línea: Lucha → Lucha → Lucha)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante físico.
+   Estadísticas como: Slakoth (la línea: Slakoth → Vigoroth → Slaking). Solo de referencia: que no se parezca.
+   Zona: Las cumbres, Gran Canaria (niveles 21-23)
+   Idea: Burro: se pasa el día tumbado; la 2.ª, no para quieto y cocea; la 3.ª, enorme burro luchador que solo pelea cuando quiere. La 3.ª es Q5: la vigila el autor.
+
+Pok99. Burro, 2.ª forma de 3
+   Tipo: Lucha (la línea: Lucha → Lucha → Lucha)
+   Fuerza: quintil 3 de 5, media. Papel: atacante físico.
+   Estadísticas como: Vigoroth (la línea: Slakoth → Vigoroth → Slaking). Solo de referencia: que no se parezca.
+   Zona: Las cumbres, Gran Canaria (niveles 21-23)
+   Idea: Burro: se pasa el día tumbado; la 2.ª, no para quieto y cocea; la 3.ª, enorme burro luchador que solo pelea cuando quiere. La 3.ª es Q5: la vigila el autor.
+
+Pok100. Burro, 3.ª forma de 3
+   Tipo: Lucha (la línea: Lucha → Lucha → Lucha)
+   Fuerza: quintil 5 de 5, de las más fuertes, nivel legendario. Papel: atacante físico.
+   Estadísticas como: Slaking (la línea: Slakoth → Vigoroth → Slaking). Solo de referencia: que no se parezca.
+   Zona: Las cumbres, Gran Canaria (niveles 21-23)
+   Idea: Burro: se pasa el día tumbado; la 2.ª, no para quieto y cocea; la 3.ª, enorme burro luchador que solo pelea cuando quiere. La 3.ª es Q5: la vigila el autor.
+
+Pok101. Caprún, 1.ª forma de 3
+   Tipo: Tierra (la línea: Tierra → Tierra → Tierra)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante físico.
+   Estadísticas como: Shinx (la línea: Shinx → Luxio → Luxray). Solo de referencia: que no se parezca.
+   Zona: Roque Nublo, Gran Canaria (niveles 22-24)
+   Idea: lámina del autor: pídemela y dibújala sola, fiel a ella.
+
+Pok102. Roquén, 2.ª forma de 3
+   Tipo: Tierra (la línea: Tierra → Tierra → Tierra)
+   Fuerza: quintil 2 de 5, floja. Papel: atacante físico.
+   Estadísticas como: Luxio (la línea: Shinx → Luxio → Luxray). Solo de referencia: que no se parezca.
+   Zona: Roque Nublo, Gran Canaria (niveles 22-24)
+   Idea: lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.
+
+Pok103. Terracorn, 3.ª forma de 3
+   Tipo: Tierra (la línea: Tierra → Tierra → Tierra)
+   Fuerza: quintil 4 de 5, fuerte. Papel: atacante físico.
+   Estadísticas como: Luxray (la línea: Shinx → Luxio → Luxray). Solo de referencia: que no se parezca.
+   Zona: Roque Nublo, Gran Canaria (niveles 22-24)
+   Idea: lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.
+
+Pok104. Briso, 1.ª forma de 3
+   Tipo: Eléctrico (la línea: Eléctrico → Eléctrico → Eléctrico)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: equilibrada.
+   Estadísticas como: Tynamo (la línea: Tynamo → Eelektrik → Eelektross). Solo de referencia: que no se parezca.
+   Zona: Roque Nublo, Gran Canaria (niveles 22-24)
+   Idea: lámina del autor: pídemela y dibújala sola, fiel a ella.
+
+Pok105. Alisor, 2.ª forma de 3
+   Tipo: Eléctrico (la línea: Eléctrico → Eléctrico → Eléctrico)
+   Fuerza: quintil 3 de 5, media. Papel: equilibrada.
+   Estadísticas como: Eelektrik (la línea: Tynamo → Eelektrik → Eelektross). Solo de referencia: que no se parezca.
+   Zona: Roque Nublo, Gran Canaria (niveles 22-24)
+   Idea: lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.
+
+Pok106. Alisior, 3.ª forma de 3
+   Tipo: Eléctrico (la línea: Eléctrico → Eléctrico → Eléctrico)
+   Fuerza: quintil 4 de 5, fuerte. Papel: equilibrada.
+   Estadísticas como: Eelektross (la línea: Tynamo → Eelektrik → Eelektross). Solo de referencia: que no se parezca.
+   Zona: Roque Nublo, Gran Canaria (niveles 22-24)
+   Idea: lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.
+
+Pok107. Voltéro, 1.ª forma de 2
+   Tipo: Eléctrico (la línea: Eléctrico → Eléctrico)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante especial.
+   Estadísticas como: Electrike (la línea: Electrike → Manectric). Solo de referencia: que no se parezca.
+   Zona: Tejeda y Artenara, Gran Canaria (niveles 22-25)
+   Idea: lámina del autor: pídemela y dibújala sola, fiel a ella.
+
+Pok108. Raigón, 2.ª forma de 2
+   Tipo: Eléctrico (la línea: Eléctrico → Eléctrico)
+   Fuerza: quintil 3 de 5, media. Papel: atacante especial.
+   Estadísticas como: Manectric (la línea: Electrike → Manectric). Solo de referencia: que no se parezca.
+   Zona: Tejeda y Artenara, Gran Canaria (niveles 22-25)
+   Idea: lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.
+
+Pok109. Bailador de isa, sin evolución
+   Tipo: Lucha
+   Fuerza: quintil 2 de 5, floja. Papel: equilibrada.
+   Estadísticas como: Spinda. Solo de referencia: que no se parezca.
+   Zona: Tejeda y Artenara, Gran Canaria (niveles 22-25)
+   Idea: Bailador de isa que da vueltas, se marea y marea al rival. Le va al gimnasio de Lucha, el de la confusión.
+
+Pok110. Saltador de garrote, sin evolución
+   Tipo: Lucha
+   Fuerza: quintil 3 de 5, media. Papel: atacante físico.
+   Estadísticas como: Zangoose. Solo de referencia: que no se parezca.
+   Zona: Tejeda y Artenara, Gran Canaria (niveles 22-25)
+   Idea: Saltador de garrote: criatura ágil que salta riscos con un palo largo, como en el salto del pastor.
+
+Pok111. Piña luchadora, 1.ª forma de 2
+   Tipo: Lucha (la línea: Lucha → Lucha/Planta)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: tanque especial.
+   Estadísticas como: Shroomish (la línea: Shroomish → Breloom). Solo de referencia: que no se parezca.
+   Zona: Tamadaba, Gran Canaria (niveles 24-27)
+   Idea: Piña de pino canario que rueda; la 2.ª, luchador de piña que reparte patadas.
+
+Pok112. Piña luchadora, 2.ª forma de 2
+   Tipo: Lucha/Planta (la línea: Lucha → Lucha/Planta)
+   Fuerza: quintil 3 de 5, media. Papel: atacante físico.
+   Estadísticas como: Breloom (la línea: Shroomish → Breloom). Solo de referencia: que no se parezca.
+   Zona: Tamadaba, Gran Canaria (niveles 24-27)
+   Idea: Piña de pino canario que rueda; la 2.ª, luchador de piña que reparte patadas.
+
+Pok113. Lisa de la charca, 1.ª forma de 2
+   Tipo: Agua (la línea: Agua → Agua)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: tanque especial.
+   Estadísticas como: Feebas (la línea: Feebas → Milotic). Solo de referencia: que no se parezca.
+   Zona: Maspalomas (opcional), Gran Canaria (niveles 22-26)
+   Idea: Lisa gris y fea de la charca del oasis; la 2.ª, gran pez precioso con velos de colores.
+
+Pok114. Lisa de la charca, 2.ª forma de 2
+   Tipo: Agua (la línea: Agua → Agua)
+   Fuerza: quintil 4 de 5, fuerte. Papel: tanque especial.
+   Estadísticas como: Milotic (la línea: Feebas → Milotic). Solo de referencia: que no se parezca.
+   Zona: Maspalomas (opcional), Gran Canaria (niveles 22-26)
+   Idea: Lisa gris y fea de la charca del oasis; la 2.ª, gran pez precioso con velos de colores.
+
+== TENERIFE ==
+
+Pok115. Mariposa de laurisilva, 1.ª forma de 3
+   Tipo: Bicho (la línea: Bicho → Bicho → Bicho/Aire)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: equilibrada.
+   Estadísticas como: Wurmple (la línea: Wurmple → Cascoon → Dustox). Solo de referencia: que no se parezca.
+   Zona: Anaga, Tenerife (niveles 26-29)
+   Idea: Oruga de la laurisilva; la 2.ª, capullo colgado; la 3.ª, gran mariposa blanca y verde.
+
+Pok116. Mariposa de laurisilva, 2.ª forma de 3
+   Tipo: Bicho (la línea: Bicho → Bicho → Bicho/Aire)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: tanque físico.
+   Estadísticas como: Cascoon (la línea: Wurmple → Cascoon → Dustox). Solo de referencia: que no se parezca.
+   Zona: Anaga, Tenerife (niveles 26-29)
+   Idea: Oruga de la laurisilva; la 2.ª, capullo colgado; la 3.ª, gran mariposa blanca y verde.
+
+Pok117. Mariposa de laurisilva, 3.ª forma de 3
+   Tipo: Bicho/Aire (la línea: Bicho → Bicho → Bicho/Aire)
+   Fuerza: quintil 2 de 5, floja. Papel: tanque especial.
+   Estadísticas como: Dustox (la línea: Wurmple → Cascoon → Dustox). Solo de referencia: que no se parezca.
+   Zona: Anaga, Tenerife (niveles 26-29)
+   Idea: Oruga de la laurisilva; la 2.ª, capullo colgado; la 3.ª, gran mariposa blanca y verde.
+
+Pok118. Gato del monte, 1.ª forma de 2
+   Tipo: Oscuridad (la línea: Oscuridad → Oscuridad)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante físico.
+   Estadísticas como: Poochyena (la línea: Poochyena → Mightyena). Solo de referencia: que no se parezca.
+   Zona: Anaga, Tenerife (niveles 26-29)
+   Idea: Gato del monte: gatito negro asilvestrado; la 2.ª, gran gato de ojos amarillos.
+
+Pok119. Gato del monte, 2.ª forma de 2
+   Tipo: Oscuridad (la línea: Oscuridad → Oscuridad)
+   Fuerza: quintil 3 de 5, media. Papel: atacante físico.
+   Estadísticas como: Mightyena (la línea: Poochyena → Mightyena). Solo de referencia: que no se parezca.
+   Zona: Anaga, Tenerife (niveles 26-29)
+   Idea: Gato del monte: gatito negro asilvestrado; la 2.ª, gran gato de ojos amarillos.
+
+Pok120. Hurón, 1.ª forma de 2
+   Tipo: Veneno (la línea: Veneno → Veneno)
+   Fuerza: quintil 2 de 5, floja. Papel: equilibrada.
+   Estadísticas como: Stunky (la línea: Stunky → Skuntank). Solo de referencia: que no se parezca.
+   Zona: Anaga, Tenerife (niveles 26-29)
+   Idea: Hurón de la caza del conejo, que suelta mal olor; la 2.ª, grande y de cola esponjada.
+
+Pok121. Hurón, 2.ª forma de 2
+   Tipo: Veneno (la línea: Veneno → Veneno)
+   Fuerza: quintil 3 de 5, media. Papel: equilibrada.
+   Estadísticas como: Skuntank (la línea: Stunky → Skuntank). Solo de referencia: que no se parezca.
+   Zona: Anaga, Tenerife (niveles 26-29)
+   Idea: Hurón de la caza del conejo, que suelta mal olor; la 2.ª, grande y de cola esponjada.
+
+Pok122. Farol, 1.ª forma de 2
+   Tipo: Acero (la línea: Acero → Acero/Espectral)
+   Fuerza: quintil 2 de 5, floja. Papel: tanque físico.
+   Estadísticas como: Bronzor (la línea: Bronzor → Bronzong). Solo de referencia: que no se parezca.
+   Zona: La Laguna, Tenerife (niveles 27-29)
+   Idea: Farol de hierro de calle antigua con una llamita dentro; la 2.ª, farol grande que alumbra a las ánimas.
+
+Pok123. Farol, 2.ª forma de 2
+   Tipo: Acero/Espectral (la línea: Acero → Acero/Espectral)
+   Fuerza: quintil 4 de 5, fuerte. Papel: tanque físico.
+   Estadísticas como: Bronzong (la línea: Bronzor → Bronzong). Solo de referencia: que no se parezca.
+   Zona: La Laguna, Tenerife (niveles 27-29)
+   Idea: Farol de hierro de calle antigua con una llamita dentro; la 2.ª, farol grande que alumbra a las ánimas.
+
+Pok124. Aldaba, sin evolución
+   Tipo: Acero
+   Fuerza: quintil 2 de 5, floja. Papel: tanque físico.
+   Estadísticas como: Mawile. Solo de referencia: que no se parezca.
+   Zona: La Laguna (rara), Tenerife (niveles 27-29)
+   Idea: Aldaba de bronce con cara, de las puertas antiguas, que muerde.
+
+Pok125. Tortuga boba, 1.ª forma de 3
+   Tipo: Agua (la línea: Agua → Agua → Agua)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: tanque especial.
+   Estadísticas como: Azurill (la línea: Azurill → Marill → Azumarill). Solo de referencia: que no se parezca.
+   Zona: Puerto de la Cruz, Tenerife (niveles 29-32)
+   Idea: Tortuga boba: cría recién salida del huevo; la 2.ª, tortuga marina joven; la 3.ª, gran tortuga marina.
+
+Pok126. Tortuga boba, 2.ª forma de 3
+   Tipo: Agua (la línea: Agua → Agua → Agua)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: equilibrada.
+   Estadísticas como: Marill (la línea: Azurill → Marill → Azumarill). Solo de referencia: que no se parezca.
+   Zona: Puerto de la Cruz, Tenerife (niveles 29-32)
+   Idea: Tortuga boba: cría recién salida del huevo; la 2.ª, tortuga marina joven; la 3.ª, gran tortuga marina.
+
+Pok127. Tortuga boba, 3.ª forma de 3
+   Tipo: Agua (la línea: Agua → Agua → Agua)
+   Fuerza: quintil 3 de 5, media. Papel: equilibrada.
+   Estadísticas como: Azumarill (la línea: Azurill → Marill → Azumarill). Solo de referencia: que no se parezca.
+   Zona: Puerto de la Cruz, Tenerife (niveles 29-32)
+   Idea: Tortuga boba: cría recién salida del huevo; la 2.ª, tortuga marina joven; la 3.ª, gran tortuga marina.
+
+Pok128. Vieja, sin evolución
+   Tipo: Agua
+   Fuerza: quintil 2 de 5, floja. Papel: equilibrada.
+   Estadísticas como: Luvdisc. Solo de referencia: que no se parezca.
+   Zona: Puerto de la Cruz, Tenerife (niveles 29-32)
+   Idea: Vieja: pez loro rojo y redondo de los charcos.
+
+Pok129. Tortuga gigante, 1.ª forma de 2
+   Tipo: Acero (la línea: Acero → Acero/Roca)
+   Fuerza: quintil 2 de 5, floja. Papel: tanque físico.
+   Estadísticas como: Shieldon (la línea: Shieldon → Bastiodon). Solo de referencia: que no se parezca.
+   Zona: Cueva del Viento, Tenerife (niveles 30-33)
+   Idea: Tortuga gigante de las islas, que se creía extinta: cría con caparazón de piedra; la 2.ª, coraza de piedra y hierro.
+
+Pok130. Tortuga gigante, 2.ª forma de 2
+   Tipo: Acero/Roca (la línea: Acero → Acero/Roca)
+   Fuerza: quintil 4 de 5, fuerte. Papel: tanque físico.
+   Estadísticas como: Bastiodon (la línea: Shieldon → Bastiodon). Solo de referencia: que no se parezca.
+   Zona: Cueva del Viento, Tenerife (niveles 30-33)
+   Idea: Tortuga gigante de las islas, que se creía extinta: cría con caparazón de piedra; la 2.ª, coraza de piedra y hierro.
+
+Pok131. Dino de casco, 1.ª forma de 2 · YA HECHA
+
+Pok132. Dino de casco, 2.ª forma de 2 · YA HECHA
+
+Pok133. Ánima de lava, sin evolución
+   Tipo: Espectral
+   Fuerza: quintil 4 de 5, fuerte. Papel: equilibrada.
+   Estadísticas como: Spiritomb. Solo de referencia: que no se parezca.
+   Zona: Cueva del Viento (rara), Tenerife (niveles 30-33)
+   Idea: Ánima atrapada en una lágrima de lava del tubo volcánico.
+
+Pok134. Guincho, sin evolución
+   Tipo: Aire
+   Fuerza: quintil 3 de 5, media. Papel: tanque físico.
+   Estadísticas como: Skarmory. Solo de referencia: que no se parezca.
+   Zona: Teno y Masca, Tenerife (niveles 31-34)
+   Idea: Guincho: águila pescadora de los acantilados.
+
+Pok135. Delfín, 1.ª forma de 2
+   Tipo: Agua (la línea: Agua → Agua)
+   Fuerza: quintil 2 de 5, floja. Papel: atacante físico.
+   Estadísticas como: Buizel (la línea: Buizel → Floatzel). Solo de referencia: que no se parezca.
+   Zona: Los Gigantes (costa), Tenerife (niveles 32-35)
+   Idea: Delfín mular: cría juguetona; la 2.ª, delfín acróbata.
+
+Pok136. Delfín, 2.ª forma de 2
+   Tipo: Agua (la línea: Agua → Agua)
+   Fuerza: quintil 4 de 5, fuerte. Papel: atacante físico.
+   Estadísticas como: Floatzel (la línea: Buizel → Floatzel). Solo de referencia: que no se parezca.
+   Zona: Los Gigantes (costa), Tenerife (niveles 32-35)
+   Idea: Delfín mular: cría juguetona; la 2.ª, delfín acróbata.
+
+Pok137. Morena, 1.ª forma de 2
+   Tipo: Oscuridad (la línea: Oscuridad → Oscuridad/Agua)
+   Fuerza: quintil 2 de 5, floja. Papel: atacante físico.
+   Estadísticas como: Carvanha (la línea: Carvanha → Sharpedo). Solo de referencia: que no se parezca.
+   Zona: Los Gigantes (costa), Tenerife (niveles 32-35)
+   Idea: Morena de las grietas; la 2.ª, gran morena negra.
+
+Pok138. Morena, 2.ª forma de 2
+   Tipo: Oscuridad/Agua (la línea: Oscuridad → Oscuridad/Agua)
+   Fuerza: quintil 3 de 5, media. Papel: atacante físico.
+   Estadísticas como: Sharpedo (la línea: Carvanha → Sharpedo). Solo de referencia: que no se parezca.
+   Zona: Los Gigantes (costa), Tenerife (niveles 32-35)
+   Idea: Morena de las grietas; la 2.ª, gran morena negra.
+
+Pok139. Calamar gigante, sin evolución
+   Tipo: Hielo/Agua
+   Fuerza: quintil 4 de 5, fuerte. Papel: equilibrada.
+   Estadísticas como: Lapras. Solo de referencia: que no se parezca.
+   Zona: Los Gigantes (costa) (rara), Tenerife (niveles 32-35)
+   Idea: Calamar gigante de las aguas profundas y frías.
+
+Pok140. Neverita, 1.ª forma de 2
+   Tipo: Hielo (la línea: Hielo → Hielo)
+   Fuerza: quintil 2 de 5, floja. Papel: equilibrada.
+   Estadísticas como: Snorunt (la línea: Snorunt → Glalie). Solo de referencia: que no se parezca.
+   Zona: Las Cañadas, Tenerife (niveles 33-36)
+   Idea: Neverita: cría que guarda nieve en su caparazón, como los pozos de nieve del Teide; la 2.ª, grande y helada.
+
+Pok141. Neverita, 2.ª forma de 2
+   Tipo: Hielo (la línea: Hielo → Hielo)
+   Fuerza: quintil 4 de 5, fuerte. Papel: equilibrada.
+   Estadísticas como: Glalie (la línea: Snorunt → Glalie). Solo de referencia: que no se parezca.
+   Zona: Las Cañadas, Tenerife (niveles 33-36)
+   Idea: Neverita: cría que guarda nieve en su caparazón, como los pozos de nieve del Teide; la 2.ª, grande y helada.
+
+Pok142. Escarcha, 1.ª forma de 3
+   Tipo: Hielo (la línea: Hielo → Hielo → Hielo/Mental)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante especial.
+   Estadísticas como: Solosis (la línea: Solosis → Duosion → Reuniclus). Solo de referencia: que no se parezca.
+   Zona: Las Cañadas, Tenerife (niveles 33-36)
+   Idea: Cristalito de escarcha de las retamas; la 2.ª, ramillete de cristales; la 3.ª, gran flor de hielo.
+
+Pok143. Escarcha, 2.ª forma de 3
+   Tipo: Hielo (la línea: Hielo → Hielo → Hielo/Mental)
+   Fuerza: quintil 2 de 5, floja. Papel: atacante especial.
+   Estadísticas como: Duosion (la línea: Solosis → Duosion → Reuniclus). Solo de referencia: que no se parezca.
+   Zona: Las Cañadas, Tenerife (niveles 33-36)
+   Idea: Cristalito de escarcha de las retamas; la 2.ª, ramillete de cristales; la 3.ª, gran flor de hielo.
+
+Pok144. Escarcha, 3.ª forma de 3
+   Tipo: Hielo/Mental (la línea: Hielo → Hielo → Hielo/Mental)
+   Fuerza: quintil 4 de 5, fuerte. Papel: atacante especial.
+   Estadísticas como: Reuniclus (la línea: Solosis → Duosion → Reuniclus). Solo de referencia: que no se parezca.
+   Zona: Las Cañadas, Tenerife (niveles 33-36)
+   Idea: Cristalito de escarcha de las retamas; la 2.ª, ramillete de cristales; la 3.ª, gran flor de hielo.
+
+Pok145. Tajinaste, 1.ª forma de 3
+   Tipo: Planta (la línea: Planta → Veneno/Planta → Veneno/Planta)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante especial.
+   Estadísticas como: Budew (la línea: Budew → Roselia → Roserade). Solo de referencia: que no se parezca.
+   Zona: Las Cañadas, Tenerife (niveles 33-36)
+   Idea: Tajinaste: brote; la 2.ª, con espigas de flores; la 3.ª, gran torre de flores rojas que suelta polen tóxico.
+
+Pok146. Tajinaste, 2.ª forma de 3
+   Tipo: Veneno/Planta (la línea: Planta → Veneno/Planta → Veneno/Planta)
+   Fuerza: quintil 3 de 5, media. Papel: atacante especial.
+   Estadísticas como: Roselia (la línea: Budew → Roselia → Roserade). Solo de referencia: que no se parezca.
+   Zona: Las Cañadas, Tenerife (niveles 33-36)
+   Idea: Tajinaste: brote; la 2.ª, con espigas de flores; la 3.ª, gran torre de flores rojas que suelta polen tóxico.
+
+Pok147. Tajinaste, 3.ª forma de 3
+   Tipo: Veneno/Planta (la línea: Planta → Veneno/Planta → Veneno/Planta)
+   Fuerza: quintil 4 de 5, fuerte. Papel: atacante especial.
+   Estadísticas como: Roserade (la línea: Budew → Roselia → Roserade). Solo de referencia: que no se parezca.
+   Zona: Las Cañadas, Tenerife (niveles 33-36)
+   Idea: Tajinaste: brote; la 2.ª, con espigas de flores; la 3.ª, gran torre de flores rojas que suelta polen tóxico.
+
+Pok148. Guardián del Sello, sin evolución
+   Tipo: Ancestral/Aire
+   Fuerza: quintil 5 de 5, de las más fuertes, nivel legendario. Papel: equilibrada.
+   Estadísticas como: Rayquaza. Solo de referencia: que no se parezca.
+   Zona: El Teide, la cima (leyenda), Tenerife (sale tras la Liga)
+   Idea: Guardián del Sello, que vive en lo alto del Teide.
+
+Pok149. Guardián del hielo, sin evolución
+   Tipo: Hielo
+   Fuerza: quintil 5 de 5, de las más fuertes, nivel legendario. Papel: tanque especial.
+   Estadísticas como: Regice. Solo de referencia: que no se parezca.
+   Zona: Cueva del Hielo del Teide (leyenda), Tenerife (sale tras la Liga)
+   Idea: Guardián de la Cueva del Hielo, junto a la cima del Teide.
+
+Pok191. Magmín, 1.ª forma de 3
+   Tipo: Infernal (la línea: Infernal → Infernal → Infernal)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante especial.
+   Estadísticas como: Litwick (la línea: Litwick → Lampent → Chandelure). Solo de referencia: que no se parezca.
+   Zona: Las Cañadas, Tenerife (niveles 33-36)
+   Idea: lámina del autor: pídemela y dibújala sola, fiel a ella.
+
+Pok192. Lavtún, 2.ª forma de 3
+   Tipo: Infernal (la línea: Infernal → Infernal → Infernal)
+   Fuerza: quintil 2 de 5, floja. Papel: atacante especial.
+   Estadísticas como: Lampent (la línea: Litwick → Lampent → Chandelure). Solo de referencia: que no se parezca.
+   Zona: Las Cañadas, Tenerife (niveles 33-36)
+   Idea: lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.
+
+Pok193. Teidrón, 3.ª forma de 3
+   Tipo: Infernal (la línea: Infernal → Infernal → Infernal)
+   Fuerza: quintil 4 de 5, fuerte. Papel: atacante especial.
+   Estadísticas como: Chandelure (la línea: Litwick → Lampent → Chandelure). Solo de referencia: que no se parezca.
+   Zona: Las Cañadas, Tenerife (niveles 33-36)
+   Idea: lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.
+
+== LA GOMERA ==
+
+Pok150. Silbador, 1.ª forma de 3
+   Tipo: Mental (la línea: Mental → Mental → Mental)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante especial.
+   Estadísticas como: Ralts (la línea: Ralts → Kirlia → Gardevoir). Solo de referencia: que no se parezca.
+   Zona: Hermigua y Agulo, La Gomera (niveles 34-37)
+   Idea: Silbador: criaturita de orejas enormes que habla silbando, como el silbo gomero; la 2.ª, con orejas como alas; la 3.ª, alta y elegante, habla con la mente.
+
+Pok151. Silbador, 2.ª forma de 3
+   Tipo: Mental (la línea: Mental → Mental → Mental)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante especial.
+   Estadísticas como: Kirlia (la línea: Ralts → Kirlia → Gardevoir). Solo de referencia: que no se parezca.
+   Zona: Hermigua y Agulo, La Gomera (niveles 34-37)
+   Idea: Silbador: criaturita de orejas enormes que habla silbando, como el silbo gomero; la 2.ª, con orejas como alas; la 3.ª, alta y elegante, habla con la mente.
+
+Pok152. Silbador, 3.ª forma de 3
+   Tipo: Mental (la línea: Mental → Mental → Mental)
+   Fuerza: quintil 4 de 5, fuerte. Papel: atacante especial.
+   Estadísticas como: Gardevoir (la línea: Ralts → Kirlia → Gardevoir). Solo de referencia: que no se parezca.
+   Zona: Hermigua y Agulo, La Gomera (niveles 34-37)
+   Idea: Silbador: criaturita de orejas enormes que habla silbando, como el silbo gomero; la 2.ª, con orejas como alas; la 3.ª, alta y elegante, habla con la mente.
+
+Pok153. Caracol hipnótico, 1.ª forma de 2
+   Tipo: Mental (la línea: Mental → Mental)
+   Fuerza: quintil 2 de 5, floja. Papel: tanque especial.
+   Estadísticas como: Spoink (la línea: Spoink → Grumpig). Solo de referencia: que no se parezca.
+   Zona: Valle Gran Rey, La Gomera (niveles 37-40)
+   Idea: Caracol de concha en espiral que hipnotiza; la 2.ª, gran caracol de concha brillante.
+
+Pok154. Caracol hipnótico, 2.ª forma de 2
+   Tipo: Mental (la línea: Mental → Mental)
+   Fuerza: quintil 3 de 5, media. Papel: tanque especial.
+   Estadísticas como: Grumpig (la línea: Spoink → Grumpig). Solo de referencia: que no se parezca.
+   Zona: Valle Gran Rey, La Gomera (niveles 37-40)
+   Idea: Caracol de concha en espiral que hipnotiza; la 2.ª, gran caracol de concha brillante.
+
+Pok155. Duende de laurisilva, 1.ª forma de 3
+   Tipo: Espectral (la línea: Espectral → Espectral → Espectral/Planta)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: tanque especial.
+   Estadísticas como: Gothita (la línea: Gothita → Gothorita → Gothitelle). Solo de referencia: que no se parezca.
+   Zona: Garajonay, La Gomera (niveles 36-39)
+   Idea: Duende de musgo y niebla de la laurisilva; la 2.ª, más alto, con barba de líquenes; la 3.ª, guardiana del bosque.
+
+Pok156. Duende de laurisilva, 2.ª forma de 3
+   Tipo: Espectral (la línea: Espectral → Espectral → Espectral/Planta)
+   Fuerza: quintil 2 de 5, floja. Papel: tanque especial.
+   Estadísticas como: Gothorita (la línea: Gothita → Gothorita → Gothitelle). Solo de referencia: que no se parezca.
+   Zona: Garajonay, La Gomera (niveles 36-39)
+   Idea: Duende de musgo y niebla de la laurisilva; la 2.ª, más alto, con barba de líquenes; la 3.ª, guardiana del bosque.
+
+Pok157. Duende de laurisilva, 3.ª forma de 3
+   Tipo: Espectral/Planta (la línea: Espectral → Espectral → Espectral/Planta)
+   Fuerza: quintil 4 de 5, fuerte. Papel: tanque especial.
+   Estadísticas como: Gothitelle (la línea: Gothita → Gothorita → Gothitelle). Solo de referencia: que no se parezca.
+   Zona: Garajonay, La Gomera (niveles 36-39)
+   Idea: Duende de musgo y niebla de la laurisilva; la 2.ª, más alto, con barba de líquenes; la 3.ª, guardiana del bosque.
+
+Pok158. Bruma, 1.ª forma de 2
+   Tipo: Espectral (la línea: Espectral → Espectral/Aire)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante especial.
+   Estadísticas como: Munna (la línea: Munna → Musharna). Solo de referencia: que no se parezca.
+   Zona: Garajonay, La Gomera (niveles 36-39)
+   Idea: Bruma: nubecilla de niebla con ojos que da sueño; la 2.ª, gran nube de niebla que viaja con el viento.
+
+Pok159. Bruma, 2.ª forma de 2
+   Tipo: Espectral/Aire (la línea: Espectral → Espectral/Aire)
+   Fuerza: quintil 4 de 5, fuerte. Papel: atacante especial.
+   Estadísticas como: Musharna (la línea: Munna → Musharna). Solo de referencia: que no se parezca.
+   Zona: Garajonay, La Gomera (niveles 36-39)
+   Idea: Bruma: nubecilla de niebla con ojos que da sueño; la 2.ª, gran nube de niebla que viaja con el viento.
+
+Pok160. Coruja, 1.ª forma de 2
+   Tipo: Oscuridad (la línea: Oscuridad → Oscuridad/Mental)
+   Fuerza: quintil 2 de 5, floja. Papel: atacante especial.
+   Estadísticas como: Zorua (la línea: Zorua → Zoroark). Solo de referencia: que no se parezca.
+   Zona: Garajonay, La Gomera (niveles 36-39)
+   Idea: Coruja (lechuza) que crea ilusiones; la 2.ª, gran lechuza de cara blanca como una máscara.
+
+Pok161. Coruja, 2.ª forma de 2
+   Tipo: Oscuridad/Mental (la línea: Oscuridad → Oscuridad/Mental)
+   Fuerza: quintil 4 de 5, fuerte. Papel: atacante especial.
+   Estadísticas como: Zoroark (la línea: Zorua → Zoroark). Solo de referencia: que no se parezca.
+   Zona: Garajonay, La Gomera (niveles 36-39)
+   Idea: Coruja (lechuza) que crea ilusiones; la 2.ª, gran lechuza de cara blanca como una máscara.
+
+Pok162. Miralín, 1.ª forma de 2
+   Tipo: Mental (la línea: Mental → Mental)
+   Fuerza: quintil 2 de 5, floja. Papel: atacante especial.
+   Estadísticas como: Elgyem (la línea: Elgyem → Beheeyem). Solo de referencia: que no se parezca.
+   Zona: Roque de Agando, La Gomera (niveles 37-40)
+   Idea: lámina del autor: pídemela y dibújala sola, fiel a ella.
+
+Pok163. Reflexán, 2.ª forma de 2
+   Tipo: Mental (la línea: Mental → Mental)
+   Fuerza: quintil 4 de 5, fuerte. Papel: atacante especial.
+   Estadísticas como: Beheeyem (la línea: Elgyem → Beheeyem). Solo de referencia: que no se parezca.
+   Zona: Roque de Agando, La Gomera (niveles 37-40)
+   Idea: lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.
+
+Pok164. Esporín, 1.ª forma de 2
+   Tipo: Planta (la línea: Planta → Planta)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: equilibrada.
+   Estadísticas como: Foongus (la línea: Foongus → Amoonguss). Solo de referencia: que no se parezca.
+   Zona: Garajonay, La Gomera (niveles 36-39)
+   Idea: lámina del autor: pídemela y dibújala sola, fiel a ella.
+
+Pok165. Micelord, 2.ª forma de 2
+   Tipo: Planta (la línea: Planta → Planta)
+   Fuerza: quintil 3 de 5, media. Papel: equilibrada.
+   Estadísticas como: Amoonguss (la línea: Foongus → Amoonguss). Solo de referencia: que no se parezca.
+   Zona: Garajonay, La Gomera (niveles 36-39)
+   Idea: lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.
+
+Pok166. Mantis, sin evolución
+   Tipo: Bicho/Mental
+   Fuerza: quintil 4 de 5, fuerte. Papel: atacante especial.
+   Estadísticas como: Sigilyph. Solo de referencia: que no se parezca.
+   Zona: Valle Gran Rey, La Gomera (niveles 37-40)
+   Idea: Mantis que reza y lee la mente.
+
+Pok167. Bucio, 1.ª forma de 3
+   Tipo: Común (la línea: Común → Común → Común)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: equilibrada.
+   Estadísticas como: Whismur (la línea: Whismur → Loudred → Exploud). Solo de referencia: que no se parezca.
+   Zona: Los Órganos (costa), La Gomera (niveles 38-41)
+   Idea: Bucio: caracola que retumba al soplar; la 2.ª, más grande; la 3.ª, enorme caracola que atruena.
+
+Pok168. Bucio, 2.ª forma de 3
+   Tipo: Común (la línea: Común → Común → Común)
+   Fuerza: quintil 2 de 5, floja. Papel: equilibrada.
+   Estadísticas como: Loudred (la línea: Whismur → Loudred → Exploud). Solo de referencia: que no se parezca.
+   Zona: Los Órganos (costa), La Gomera (niveles 38-41)
+   Idea: Bucio: caracola que retumba al soplar; la 2.ª, más grande; la 3.ª, enorme caracola que atruena.
+
+Pok169. Bucio, 3.ª forma de 3
+   Tipo: Común (la línea: Común → Común → Común)
+   Fuerza: quintil 4 de 5, fuerte. Papel: equilibrada.
+   Estadísticas como: Exploud (la línea: Whismur → Loudred → Exploud). Solo de referencia: que no se parezca.
+   Zona: Los Órganos (costa), La Gomera (niveles 38-41)
+   Idea: Bucio: caracola que retumba al soplar; la 2.ª, más grande; la 3.ª, enorme caracola que atruena.
+
+Pok170. Gara, sin evolución
+   Tipo: Mental
+   Fuerza: quintil 5 de 5, de las más fuertes, nivel legendario. Papel: tanque especial.
+   Estadísticas como: Cresselia. Solo de referencia: que no se parezca.
+   Zona: Alto de Garajonay (leyenda), La Gomera (sale tras la Liga)
+   Idea: Inspirada en Gara, de la leyenda de Gara y Jonay: criatura de niebla y luna del alto de la isla.
+
+Pok171. Jonay, sin evolución
+   Tipo: Aire/Agua
+   Fuerza: quintil 5 de 5, de las más fuertes, nivel legendario. Papel: atacante especial.
+   Estadísticas como: Latios. Solo de referencia: que no se parezca.
+   Zona: Entre Tenerife y La Gomera (leyenda errante), La Gomera (sale tras la Liga)
+   Idea: Inspirada en Jonay, el que cruzó el mar desde Tenerife: vuela entre las dos islas.
+
+== LA PALMA ==
+
+Pok172. Flor de cumbre, 1.ª forma de 2
+   Tipo: Planta (la línea: Planta → Planta)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante especial.
+   Estadísticas como: Petilil (la línea: Petilil → Lilligant). Solo de referencia: que no se parezca.
+   Zona: La Caldera de Taburiente, La Palma (niveles 42-45)
+   Idea: Capullo de flor de cumbre; la 2.ª, bailarina de pétalos.
+
+Pok173. Flor de cumbre, 2.ª forma de 2
+   Tipo: Planta (la línea: Planta → Planta)
+   Fuerza: quintil 4 de 5, fuerte. Papel: atacante especial.
+   Estadísticas como: Lilligant (la línea: Petilil → Lilligant). Solo de referencia: que no se parezca.
+   Zona: La Caldera de Taburiente, La Palma (niveles 42-45)
+   Idea: Capullo de flor de cumbre; la 2.ª, bailarina de pétalos.
+
+Pok174. Pelotero, sin evolución
+   Tipo: Bicho/Tierra
+   Fuerza: quintil 4 de 5, fuerte. Papel: atacante físico.
+   Estadísticas como: Pinsir. Solo de referencia: que no se parezca.
+   Zona: La Caldera de Taburiente, La Palma (niveles 42-45)
+   Idea: Escarabajo pelotero que empuja una bola de tierra más grande que él.
+
+Pok175. Bejeque, 1.ª forma de 2
+   Tipo: Planta (la línea: Planta → Planta/Roca)
+   Fuerza: quintil 2 de 5, floja. Papel: tanque especial.
+   Estadísticas como: Lileep (la línea: Lileep → Cradily). Solo de referencia: que no se parezca.
+   Zona: Garafía, La Palma (niveles 43-46)
+   Idea: Bejeque: roseta de hojas gordas pegada a la roca; la 2.ª, gran bejeque con hojas en abanico.
+
+Pok176. Bejeque, 2.ª forma de 2
+   Tipo: Planta/Roca (la línea: Planta → Planta/Roca)
+   Fuerza: quintil 4 de 5, fuerte. Papel: tanque especial.
+   Estadísticas como: Cradily (la línea: Lileep → Cradily). Solo de referencia: que no se parezca.
+   Zona: Garafía, La Palma (niveles 43-46)
+   Idea: Bejeque: roseta de hojas gordas pegada a la roca; la 2.ª, gran bejeque con hojas en abanico.
+
+Pok177. Carámbano, sin evolución
+   Tipo: Hielo
+   Fuerza: quintil 4 de 5, fuerte. Papel: tanque especial.
+   Estadísticas como: Cryogonal. Solo de referencia: que no se parezca.
+   Zona: Roque de los Muchachos, La Palma (niveles 44-47)
+   Idea: Carámbano: estalactita de hielo con ojos que cuelga de las rocas de la cumbre.
+
+Pok178. Saltamontes gigante, sin evolución
+   Tipo: Bicho/Lucha
+   Fuerza: quintil 4 de 5, fuerte. Papel: atacante físico.
+   Estadísticas como: Heracross. Solo de referencia: que no se parezca.
+   Zona: Roque de los Muchachos, La Palma (niveles 44-47)
+   Idea: Saltamontes gigante sin alas de las cumbres, que da patadas.
+
+Pok179. Tunera, 1.ª forma de 2
+   Tipo: Planta (la línea: Planta → Planta/Acero)
+   Fuerza: quintil 2 de 5, floja. Papel: tanque físico.
+   Estadísticas como: Ferroseed (la línea: Ferroseed → Ferrothorn). Solo de referencia: que no se parezca.
+   Zona: Los Llanos y Tazacorte, La Palma (niveles 42-45)
+   Idea: Tunera: palita de tunera con espinas de metal; la 2.ª, gran tunera que lanza espinas.
+
+Pok180. Tunera, 2.ª forma de 2
+   Tipo: Planta/Acero (la línea: Planta → Planta/Acero)
+   Fuerza: quintil 4 de 5, fuerte. Papel: tanque físico.
+   Estadísticas como: Ferrothorn (la línea: Ferroseed → Ferrothorn). Solo de referencia: que no se parezca.
+   Zona: Los Llanos y Tazacorte, La Palma (niveles 42-45)
+   Idea: Tunera: palita de tunera con espinas de metal; la 2.ª, gran tunera que lanza espinas.
+
+Pok181. Cochinilla, 1.ª forma de 2
+   Tipo: Bicho (la línea: Bicho → Bicho)
+   Fuerza: quintil 2 de 5, floja. Papel: tanque físico.
+   Estadísticas como: Dwebble (la línea: Dwebble → Crustle). Solo de referencia: que no se parezca.
+   Zona: Los Llanos y Tazacorte, La Palma (niveles 42-45)
+   Idea: Cochinilla de la tunera, blanca y algodonosa; la 2.ª, gran bicho de caparazón rojo carmín. Sustituye a Cangrix, descartado.
+
+Pok182. Cochinilla, 2.ª forma de 2
+   Tipo: Bicho (la línea: Bicho → Bicho)
+   Fuerza: quintil 3 de 5, media. Papel: tanque físico.
+   Estadísticas como: Crustle (la línea: Dwebble → Crustle). Solo de referencia: que no se parezca.
+   Zona: Los Llanos y Tazacorte, La Palma (niveles 42-45)
+   Idea: Cochinilla de la tunera, blanca y algodonosa; la 2.ª, gran bicho de caparazón rojo carmín. Sustituye a Cangrix, descartado.
+
+Pok183. Diablillo, 1.ª forma de 2
+   Tipo: Infernal (la línea: Infernal → Infernal/Oscuridad)
+   Fuerza: quintil 2 de 5, floja. Papel: atacante físico.
+   Estadísticas como: Darumaka (la línea: Darumaka → Darmanitan). Solo de referencia: que no se parezca.
+   Zona: Los Llanos y Tazacorte, La Palma (niveles 42-45)
+   Idea: Diablillo de fuegos artificiales, como el de las fiestas de Tijarafe; la 2.ª, gran diablo que escupe cohetes.
+
+Pok184. Diablillo, 2.ª forma de 2
+   Tipo: Infernal/Oscuridad (la línea: Infernal → Infernal/Oscuridad)
+   Fuerza: quintil 4 de 5, fuerte. Papel: atacante físico.
+   Estadísticas como: Darmanitan (la línea: Darumaka → Darmanitan). Solo de referencia: que no se parezca.
+   Zona: Los Llanos y Tazacorte, La Palma (niveles 42-45)
+   Idea: Diablillo de fuegos artificiales, como el de las fiestas de Tijarafe; la 2.ª, gran diablo que escupe cohetes.
+
+Pok185. Tea, 1.ª forma de 2
+   Tipo: Infernal (la línea: Infernal → Infernal)
+   Fuerza: quintil 2 de 5, floja. Papel: atacante especial.
+   Estadísticas como: Numel (la línea: Numel → Camerupt). Solo de referencia: que no se parezca.
+   Zona: Fuencaliente, La Palma (niveles 45-48)
+   Idea: Tea: tronquito de pino resinoso con una llama; la 2.ª, gran tocón de tea ardiendo.
+
+Pok186. Tea, 2.ª forma de 2
+   Tipo: Infernal (la línea: Infernal → Infernal)
+   Fuerza: quintil 3 de 5, media. Papel: atacante especial.
+   Estadísticas como: Camerupt (la línea: Numel → Camerupt). Solo de referencia: que no se parezca.
+   Zona: Fuencaliente, La Palma (niveles 45-48)
+   Idea: Tea: tronquito de pino resinoso con una llama; la 2.ª, gran tocón de tea ardiendo.
+
+Pok187. Guardián de las estrellas, sin evolución
+   Tipo: Acero/Mental
+   Fuerza: quintil 5 de 5, de las más fuertes, nivel legendario. Papel: tanque físico.
+   Estadísticas como: Cobalion. Solo de referencia: que no se parezca.
+   Zona: El observatorio del Roque (leyenda), La Palma (sale tras la Liga)
+   Idea: Guardián de las estrellas, en el observatorio del Roque.
+
+== EL HIERRO ==
+
+Pok188. Sanbor, 1.ª forma de 3
+   Tipo: Agua (la línea: Agua → Agua/Ancestral → Agua/Ancestral)
+   Fuerza: quintil 2 de 5, floja. Papel: atacante físico.
+   Estadísticas como: Deino (la línea: Deino → Zweilous → Hydreigon). Solo de referencia: que no se parezca.
+   Zona: Orchilla (llegada) (rara), El Hierro (niveles 47-50)
+   Idea: lámina del autor: pídemela y dibújala sola, fiel a ella.
+
+Pok189. Borondis, 2.ª forma de 3
+   Tipo: Agua/Ancestral (la línea: Agua → Agua/Ancestral → Agua/Ancestral)
+   Fuerza: quintil 3 de 5, media. Papel: atacante físico.
+   Estadísticas como: Zweilous (la línea: Deino → Zweilous → Hydreigon). Solo de referencia: que no se parezca.
+   Zona: Orchilla (llegada) (rara), El Hierro (niveles 47-50)
+   Idea: lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.
+
+Pok190. Atlantea, 3.ª forma de 3
+   Tipo: Agua/Ancestral (la línea: Agua → Agua/Ancestral → Agua/Ancestral)
+   Fuerza: quintil 5 de 5, de las más fuertes, nivel legendario. Papel: atacante especial.
+   Estadísticas como: Hydreigon (la línea: Deino → Zweilous → Hydreigon). Solo de referencia: que no se parezca.
+   Zona: Orchilla (llegada) (rara), El Hierro (niveles 47-50)
+   Idea: lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.
+
+Pok194. Curandera, sin evolución
+   Tipo: Común
+   Fuerza: quintil 3 de 5, media. Papel: equilibrada.
+   Estadísticas como: Audino. Solo de referencia: que no se parezca.
+   Zona: El Garoé, El Hierro (niveles 51-53)
+   Idea: Curandera: criatura redonda cubierta de hierbas medicinales que cura a las demás.
+
+Pok195. Guanchín, 1.ª forma de 3
+   Tipo: Infernal (la línea: Infernal → Infernal/Ancestral → Infernal/Ancestral)
+   Fuerza: quintil 2 de 5, floja. Papel: atacante físico.
+   Estadísticas como: Bagon (la línea: Bagon → Shelgon → Salamence). Solo de referencia: que no se parezca.
+   Zona: La Cumbre (camino de la Bajada), El Hierro (niveles 50-53)
+   Idea: lámina del autor: pídemela y dibújala sola, fiel a ella.
+
+Pok196. Menceyor, 2.ª forma de 3
+   Tipo: Infernal/Ancestral (la línea: Infernal → Infernal/Ancestral → Infernal/Ancestral)
+   Fuerza: quintil 3 de 5, media. Papel: tanque físico.
+   Estadísticas como: Shelgon (la línea: Bagon → Shelgon → Salamence). Solo de referencia: que no se parezca.
+   Zona: La Cumbre (camino de la Bajada), El Hierro (niveles 50-53)
+   Idea: lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.
+
+Pok197. Achamán, 3.ª forma de 3
+   Tipo: Infernal/Ancestral (la línea: Infernal → Infernal/Ancestral → Infernal/Ancestral)
+   Fuerza: quintil 5 de 5, de las más fuertes, nivel legendario. Papel: atacante físico.
+   Estadísticas como: Salamence (la línea: Bagon → Shelgon → Salamence). Solo de referencia: que no se parezca.
+   Zona: La Cumbre (camino de la Bajada), El Hierro (niveles 50-53)
+   Idea: lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.
+
+Pok198. Tostador de gofio, sin evolución
+   Tipo: Infernal/Tierra
+   Fuerza: quintil 3 de 5, media. Papel: tanque físico.
+   Estadísticas como: Torkoal. Solo de referencia: que no se parezca.
+   Zona: La Cumbre (camino de la Bajada), El Hierro (niveles 50-53)
+   Idea: Tostador de gofio: criatura horno de barro que tuesta el grano en la tripa.
+
+Pok199. Lagarto gigante, 1.ª forma de 3
+   Tipo: Ancestral (la línea: Ancestral → Ancestral/Tierra → Ancestral/Tierra)
+   Fuerza: quintil 2 de 5, floja. Papel: atacante físico.
+   Estadísticas como: Gible (la línea: Gible → Gabite → Garchomp). Solo de referencia: que no se parezca.
+   Zona: Frontera (opcional) (rara), El Hierro (niveles 50-54)
+   Idea: Lagarto gigante, que se creía extinto: cría de escamas grises; la 2.ª, con cresta; la 3.ª, enorme y antiguo, casi legendario.
+
+Pok200. Lagarto gigante, 2.ª forma de 3
+   Tipo: Ancestral/Tierra (la línea: Ancestral → Ancestral/Tierra → Ancestral/Tierra)
+   Fuerza: quintil 3 de 5, media. Papel: atacante físico.
+   Estadísticas como: Gabite (la línea: Gible → Gabite → Garchomp). Solo de referencia: que no se parezca.
+   Zona: Frontera (opcional) (rara), El Hierro (niveles 50-54)
+   Idea: Lagarto gigante, que se creía extinto: cría de escamas grises; la 2.ª, con cresta; la 3.ª, enorme y antiguo, casi legendario.
+
+Pok201. Lagarto gigante, 3.ª forma de 3
+   Tipo: Ancestral/Tierra (la línea: Ancestral → Ancestral/Tierra → Ancestral/Tierra)
+   Fuerza: quintil 5 de 5, de las más fuertes, nivel legendario. Papel: atacante físico.
+   Estadísticas como: Garchomp (la línea: Gible → Gabite → Garchomp). Solo de referencia: que no se parezca.
+   Zona: Frontera (opcional) (rara), El Hierro (niveles 50-54)
+   Idea: Lagarto gigante, que se creía extinto: cría de escamas grises; la 2.ª, con cresta; la 3.ª, enorme y antiguo, casi legendario.
+
+Pok202. Guardián del Tagoro, sin evolución
+   Tipo: Infernal/Agua
+   Fuerza: quintil 5 de 5, de las más fuertes, nivel legendario. Papel: tanque físico.
+   Estadísticas como: Regirock. Solo de referencia: que no se parezca.
+   Zona: El volcán bajo el mar de La Restinga (leyenda), El Hierro (sale tras la Liga)
+   Idea: Guardián del volcán que nació bajo el mar de La Restinga.
+
+Pok203. Guardiana del mar de nubes, sin evolución
+   Tipo: Espectral/Ancestral
+   Fuerza: quintil 5 de 5, de las más fuertes, nivel legendario. Papel: equilibrada.
+   Estadísticas como: Giratina. Solo de referencia: que no se parezca.
+   Zona: El mar de nubes (leyenda), El Hierro (sale tras la Liga)
+   Idea: La que guarda el mar de nubes que escondió El Hierro.
+
+FIN DE LA LISTA

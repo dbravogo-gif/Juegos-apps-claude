@@ -136,9 +136,11 @@ Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
     otro: el plan entero son unos 3.000 (2.985 sin repeticiones);
   - generarlas en el orden de la lista, con Gemini guiando (`conceptos/criaturas/guia-gemini.txt`),
     y subir la imagen y el `.glb` de cada una, como «PokN. Nombre», a `conceptos/criaturas/meshy/`;
-  - subir las que ya tiene hechas: la civeta (Pok16 y Pok17) y el dinosaurio de casco de roca
-    (Pok131 y Pok132), y decir si el dinosaurio es el de la líder de Lanzarote;
-  - poner nombre a las que van con apodo («Cabozo», «Guirre»…).
+  - subir las que ya tiene hechas, Pok16 a Pok24 y Pok131-132: en GitHub no ha llegado nada
+    (falta pulsar «Commit changes»), o adjuntarlas en el chat como el Excel; y decir si el
+    dinosaurio es el de la líder de Lanzarote;
+  - poner nombre a las que van con apodo («Guirre», «Basalto»…);
+  - repartir tramos de la lista entre sus amigos, con `conceptos/criaturas/guia-gemini-amigos.txt`.
 - **Entrenadores y zonas de captura de Lanzarote** que hay que mejorar: decir cuáles.
 - **La historia (`HISTORIA.md`, borrador 4):** está cerrada. Cuando pueda: si le valen los nombres
   de los pueblos, de las ramas y del aparato.

@@ -117,9 +117,10 @@ se usa otra palabra (R8).
 | Inicial de Tierra (sin nombre, 3), de otro amigo | Tierra · Tierra/Espectral · Tierra/Espectral | Propias (inicial), por llegar | Por diseñar |
 | Caprún → Roquén → Terracorn | Tierra | Shinx → Luxio → Luxray (Q1) | Lámina |
 | Melaní → Favenir → Reginis | Bicho · Bicho/Veneno · Bicho/Veneno | Venipede → Whirlipede → Scolipede (Q1) | Lámina |
-| Magmín → Lavtún → Teidrón | Infernal | Litwick → Lampent → Chandelure (Q1) | Lámina |
+| Magmín → Lavtún → Teidrón | Infernal | Litwick → Lampent → Chandelure (Q1) | Lámina; vive en Tenerife (Las Cañadas), no en Lanzarote (autor, 2026-11-17) |
 | Salmito → Salmarín → Salmástil | Por decidir | Spheal → Sealeo → Walrein (Q1) | Nombre |
-| Tinzal → Azurvan | Aire · Aire/Mental | Taillow → Swellow (Q1) | Lámina |
+| Ravich → Azurvan (antes Tinzal) | Aire · Aire (autor, 2026-11-17) | Taillow → Swellow (Q1) | Imagen y modelo (Pok18-19) |
+| Aculiso → Sierpajable | Agua · Agua/Tierra | Barboach → Whiscash (Q1) | Imagen y modelo (Pok20-21) |
 | Aerund → Marwen | Aire · Aire/Agua | Wingull → Pelipper (Q1) | Lámina |
 | Tibicán | Oscuridad | Absol (Q3) | Lámina |
 | Magecora | Infernal/Mental | Reshiram (Q5, legendaria) | Lámina |
@@ -147,6 +148,10 @@ copia (R8). Las abejas de Melaní recuerdan a Combee y Vespiquen, pero sus estad
 Scolipede: se quedan.
 
 ## Lanzarote (propuesta 2, 2026-11-12)
+
+**Al día en `PLAN-CRIATURAS.md`** (autor, 2026-11-17): en las Montañas del Fuego, un erizo de fuego
+en lugar de Magmín, que pasa a Tenerife; el luchador ya no es un erizo; el pez del charco es
+Aculiso → Sierpajable y Tinzal es Ravich → Azurvan, solo de Aire.
 
 Solo salen las primeras formas; las demás llegan evolucionando. Peso: de cada 100 encuentros.
 Las nuevas, por diseñar, se cubren con las láminas que mande el autor.

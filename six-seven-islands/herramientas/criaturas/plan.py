@@ -119,18 +119,20 @@ INICIALES = [
 HECHAS = {('agua', 1), ('planta', 1), ('infernal', 1), ('roca', 1)}  # modelos ya en el juego
 # Hechas por el autor antes del plan, con imagen y modelo (2026-11-17): la civeta y el dinosaurio
 # de casco de roca.
-HECHAS_IDS = {'031-1', '031-2', '062-1', '062-2'}
+HECHAS_IDS = {'031-1', '031-2', '062-1', '062-2',
+              # Pok18-24, hechas por el autor el 2026-11-17: Ravich y Azurvan, Aculiso y Sierpajable, Dragosil.
+              '032-1', '032-2', '037-1', '037-2', '007-1', '007-2', '007-3'}
 
 ESPECIES = [
     # Lanzarote (propuesta 2 de CRIATURAS.md)
     (31, 'Civeta', ['Común', 'Común'], 'lz-golfo', ['lz-fuego'], 'Lámina del autor (civeta.jpg).'),
-    (32, 'Tinzal → Azurvan', ['Aire', 'Aire/Mental'], 'lz-golfo', ['lz-jable', 'tf-anaga'], LAMINA),
-    (37, None, ['Agua', 'Agua/Tierra'], 'lz-golfo', ['lz-famara'],
-     'Cabozo: pececillo de charco con aletas como patitas; la 2.ª, grande y con cabeza de roca, se entierra en la arena.'),
-    (7, 'Dragosil → Dragombo → Dragalis', ['Planta', 'Planta', 'Planta'], 'lz-golfo*', ['lp-garafia'], LAMINA),
-    (16, 'Magmín → Lavtún → Teidrón', ['Infernal', 'Infernal', 'Infernal'], 'lz-fuego', ['tf-canadas', 'eh-cumbre'], LAMINA),
+    (32, 'Ravich → Azurvan', ['Aire', 'Aire'], 'lz-golfo', ['lz-jable', 'tf-anaga'], 'Hecha por el autor.'),
+    (37, 'Aculiso → Sierpajable', ['Agua', 'Agua/Tierra'], 'lz-golfo', ['lz-famara'], 'Hecha por el autor.'),
+    (7, 'Dragosil → Dragombo → Dragalis', ['Planta', 'Planta', 'Planta'], 'lz-golfo*', ['lp-garafia'], 'Lámina del autor; hecha.'),
+    (13, None, ['Infernal', 'Infernal', 'Infernal/Tierra'], 'lz-fuego', [],
+     'Erizo de fuego (autor, 2026-11-17): erizo moruno con púas de lava encendida que se hace bola y rueda; la 2.ª, con púas de escoria más largas; la 3.ª, gran erizo volcánico que echa humo por la espalda.'),
     (43, None, ['Lucha', 'Lucha'], 'lz-fuego', ['lz-jable*'],
-     'Erizo moruno que se hace bola y embiste; la 2.ª, erguido, lucha con agarres de lucha canaria (faja y calzón de bregar).'),
+     'Musaraña canaria (la del malpaís de Lanzarote), chiquita y nerviosa, que lanza golpes rápidos; la 2.ª, erguida, lucha con agarres de lucha canaria (faja y calzón de bregar). Ya no es un erizo: el erizo es el de fuego.'),
     (12, None, ['Roca', 'Roca', 'Roca'], 'lz-famara*', ['lz-fuego*'],
      'Bola de basalto con ojos verdes de olivina; la 2.ª, con cristales de olivina en el lomo; la 3.ª, coloso de columnas de basalto. La usa la líder de Roca.'),
     (34, 'Patatín → Paparrón', ['Tierra', 'Tierra'], 'lz-jable', [], LAMINA),
@@ -242,6 +244,8 @@ ESPECIES = [
     (47, None, ['Oscuridad', 'Oscuridad/Agua'], 'tf-gigantes', ['lg-organos', 'eh-orchilla', 'eh-restinga'],
      'Morena de las grietas; la 2.ª, gran morena negra.'),
     (90, None, ['Hielo/Agua'], 'tf-gigantes*', ['eh-restinga*'], 'Calamar gigante de las aguas profundas y frías.'),
+    (16, 'Magmín → Lavtún → Teidrón', ['Infernal', 'Infernal', 'Infernal'], 'tf-canadas', ['eh-cumbre'],
+     'Lámina del autor. Nace del Teide: vive en Las Cañadas (autor, 2026-11-17).'),
     (58, None, ['Hielo', 'Hielo'], 'tf-canadas', [],
      'Neverita: cría que guarda nieve en su caparazón, como los pozos de nieve del Teide; la 2.ª, grande y helada.'),
     (15, None, ['Hielo', 'Hielo', 'Hielo/Mental'], 'tf-canadas', ['lp-roque'],
@@ -293,8 +297,6 @@ ESPECIES = [
 
     # El Hierro
     (28, 'Sanbor → Borondis → Atlantea', ['Agua', 'Agua/Ancestral', 'Agua/Ancestral'], 'eh-orchilla*', ['eh-restinga'], LAMINA),
-    (13, None, ['Infernal', 'Infernal', 'Infernal/Tierra'], 'eh-dehesa', ['eh-cumbre', 'eh-frontera'],
-     'Cochino negro: lechón; la 2.ª, cerdo negro con el lomo de escoria; la 3.ª, gran jabalí volcánico.'),
     (84, None, ['Común'], 'eh-garoe', ['eh-dehesa'],
      'Curandera: criatura redonda cubierta de hierbas medicinales que cura a las demás.'),
     (26, 'Guanchín → Menceyor → Achamán', ['Infernal', 'Infernal/Ancestral', 'Infernal/Ancestral'], 'eh-cumbre', ['eh-frontera'], LAMINA),
@@ -308,7 +310,7 @@ ESPECIES = [
 
 # Apodos provisionales de las especies sin nombre, para entenderse: los nombres los pone el autor.
 APODO = {
-    37: 'Cabozo', 43: 'Erizo luchador', 12: 'Basalto', 94: 'Leyenda verde', 92: 'Leyenda de roca',
+    43: 'Musaraña luchadora', 13: 'Erizo de fuego', 12: 'Basalto', 94: 'Leyenda verde', 92: 'Leyenda de roca',
     91: 'Leyenda de tierra', 93: 'Leyenda del agua', 44: 'Remolino de jable', 9: 'Lisa de duna',
     38: 'Conejo de jable', 29: 'Cigarrón', 54: 'Dromedario', 11: 'Perro bardino', 4: 'Guirre',
     51: 'Erizo negro', 17: 'Murciélago de cueva', 61: 'Escarabajo de escoria', 79: 'Escolopendra',
@@ -323,7 +325,7 @@ APODO = {
     14: 'Duende de laurisilva', 46: 'Bruma', 64: 'Coruja', 87: 'Mantis', 8: 'Bucio', 100: 'Gara',
     96: 'Jonay', 45: 'Flor de cumbre', 86: 'Pelotero', 60: 'Bejeque', 88: 'Carámbano',
     85: 'Saltamontes gigante', 70: 'Tunera', 55: 'Cochinilla', 69: 'Diablillo', 48: 'Tea',
-    98: 'Guardián de las estrellas', 13: 'Cochino negro', 84: 'Curandera', 76: 'Tostador de gofio',
+    98: 'Guardián de las estrellas', 84: 'Curandera', 76: 'Tostador de gofio',
     27: 'Lagarto gigante', 97: 'Guardián del Tagoro', 102: 'Guardiana del mar de nubes',
 }
 
@@ -350,7 +352,7 @@ ALTURA = {
     'agua': [0.4, 0.9, 1.6], 'planta': [0.4, 0.9, 1.7], 'infernal': [0.4, 0.9, 1.7],
     'roca': [0.4, 1.0, 1.8], 'tierra': [0.4, 0.9, 1.7],
     31: [0.4, 0.8], 32: [0.3, 1.2], 37: [0.3, 1.0], 7: [0.5, 1.4, 3.0], 16: [0.4, 1.0, 2.2],
-    43: [0.5, 1.3], 12: [0.4, 1.0, 2.0], 34: [0.5, 1.2], 5: [0.3, 0.6, 1.5], 35: [0.4, 1.8],
+    43: [0.3, 1.1], 12: [0.4, 1.0, 2.0], 34: [0.5, 1.2], 5: [0.3, 0.6, 1.5], 35: [0.4, 1.8],
     18: [0.5, 1.1, 1.8], 94: [4.0], 95: [3.5], 92: [4.0], 91: [4.5], 93: [5.0],
     44: [0.4, 1.2], 9: [0.5, 1.1, 2.0], 38: [0.4, 0.9], 29: [0.3, 0.8], 54: [1.0, 2.2],
     11: [0.4, 0.8, 1.3], 4: [0.3, 0.8, 1.5], 51: [0.3, 0.8], 17: [0.3, 0.8, 1.5], 61: [0.5, 1.4],
@@ -366,7 +368,7 @@ ALTURA = {
     66: [0.5, 1.5], 87: [1.4], 8: [0.5, 1.0, 1.5], 100: [1.5], 96: [2.0],
     40: [0.4, 1.1], 45: [0.5, 1.1], 86: [1.4], 60: [0.8, 1.5], 88: [1.1], 85: [1.5], 70: [0.6, 1.0],
     55: [0.3, 1.4], 69: [0.6, 1.3], 48: [0.7, 1.9], 98: [2.0],
-    28: [1.0, 4.0, 9.0], 13: [0.5, 1.0, 1.9], 84: [1.1], 26: [0.6, 1.4, 2.5], 76: [1.0],
+    28: [1.0, 4.0, 9.0], 13: [0.3, 0.7, 1.4], 84: [1.1], 26: [0.6, 1.4, 2.5], 76: [1.0],
     27: [0.7, 1.6, 2.4], 97: [2.5], 102: [6.0],
 }
 
@@ -719,7 +721,7 @@ REGLAS
    fiel a ella.
 5. El color principal sale de su tipo, y el papel se nota en el cuerpo: los tanques, robustos;
    los atacantes, más ágiles.
-6. Si el nombre va entre comillas («Cabozo»), es un apodo provisional: propón 3 nombres
+6. Si el nombre va entre comillas («Guirre»), es un apodo provisional: propón 3 nombres
    originales para la especie, que no se parezcan a nombres de Pokémon. Si ya tiene nombre, úsalo.
 7. Nunca escribas texto ni nombres de Pokémon en la imagen.
 8. Las marcadas «YA HECHA» se saltan.
@@ -732,9 +734,37 @@ principal.
 """
 
 
-def guia_gemini(filas):
+# El estilo de las imágenes (prompts-meshy.md), para quien no lo tiene ya en su conversación con
+# Gemini: la guía de los amigos lo lleva dentro (autor, 2026-11-17).
+ESTILO_GEMINI = """CÓMO TIENEN QUE SER LAS IMÁGENES
+Cada imagen termina con este bloque de estilo, en inglés y tal cual, detrás de la descripción
+de la criatura:
+
+Official-quality 2D character concept art in the clean anime style of modern monster-collecting
+RPGs: crisp clean linework, cel shading with soft highlights, flat saturated colors, moderate
+detail, big expressive eyes, appealing silhouette. Cute animal face with big round eyes and a
+small muzzle, never a human face. Bold simple shapes: a few large leaves, feathers or scales
+instead of many small ones; thick parts with rounded tips, no thin spikes, branches, strands or
+floating particles. Single creature, full body, three-quarter front view, centered, plain white
+background, no shadow, no text.
+
+Por qué así: la imagen se pasa a 3D con Meshy. Con varias criaturas juntas, sombra, fondo o
+texto, el modelo sale roto. Nada de aspecto de «juguete de vinilo». Si sale con demasiado
+detalle, cambia «moderate detail» por «low detail»; si sale pobre, por «rich but clean detail».
+"""
+
+
+def guia_gemini(filas, amigos=False):
     """El texto para pasárselo a Gemini: instrucciones y la lista, una criatura por entrada."""
-    o = [INSTRUCCIONES_GEMINI, 'LA LISTA', '']
+    hechas = sum(f['hecha'] for f in filas)
+    instr = INSTRUCCIONES_GEMINI.replace('de las que 4 ya están hechas', f'de las que {hechas} ya están hechas')
+    if amigos:
+        instr = instr.replace('con el mismo estilo de imagen que ya\nusamos en esta conversación.',
+                              'con el estilo de imagen de la sección\n«CÓMO TIENEN QUE SER LAS IMÁGENES», más abajo.')
+        instr = instr.replace('LOS TIPOS DE MI JUEGO', ESTILO_GEMINI + '\nLOS TIPOS DE MI JUEGO')
+        instr += ('\nREPARTO ENTRE AMIGOS\nSomos varios generando a la vez. Hazme solo las del tramo que te diga\n'
+                  '(por ejemplo, «del Pok63 al Pok92») y guarda cada archivo como «PokN. Nombre».\n')
+    o = [instr, 'LA LISTA', '']
     isla_actual = None
     for f in filas:
         if f['isla'] != isla_actual:
@@ -783,4 +813,6 @@ if __name__ == '__main__':
     excel(filas, cuentas, os.path.join(RAIZ, 'conceptos', 'criaturas', 'plan-criaturas.xlsx'))
     with open(os.path.join(RAIZ, 'conceptos', 'criaturas', 'guia-gemini.txt'), 'w', encoding='utf-8') as fh:
         fh.write(guia_gemini(filas))
-    print(f"{len(filas)} criaturas, {cuentas['pct']:.0f} % sin secundario. Escritos PLAN-CRIATURAS.md, plan-criaturas.xlsx y guia-gemini.txt.")
+    with open(os.path.join(RAIZ, 'conceptos', 'criaturas', 'guia-gemini-amigos.txt'), 'w', encoding='utf-8') as fh:
+        fh.write(guia_gemini(filas, amigos=True))
+    print(f"{len(filas)} criaturas, {cuentas['pct']:.0f} % sin secundario. Escritos PLAN-CRIATURAS.md, plan-criaturas.xlsx y las guías de Gemini.")
