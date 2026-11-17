@@ -382,6 +382,7 @@ for _t, _especies in bloques:
     for _e in _especies:
         _n += 1
         REF[_n] = [forma(x) for x in _e]
+SUBIDAS, ARCHIVOS_RAROS = None, []  # se rellenan en criaturas()
 ZONA = {z: (isla, nombre, niv) for isla, *_r, zonas in ISLAS for z, nombre, niv in zonas}
 NOMBRE_ISLA = {c: n for c, n, *_r in ISLAS}
 ORDINAL = ['1.ª', '2.ª', '3.ª']
@@ -393,6 +394,8 @@ def limpia(z):
 
 def criaturas():
     """Una fila por criatura, en el orden de generación: las iniciales y después isla por isla."""
+    global SUBIDAS, ARCHIVOS_RAROS
+    SUBIDAS, ARCHIVOS_RAROS = archivos_del_autor()
     filas = []
     for clave, nombre, tipos, idea in INICIALES:
         for i, t in enumerate(tipos):
@@ -433,11 +436,35 @@ def criaturas():
             siguiente += 1
         # Nombre de archivo del autor (2026-11-17): «PokN. Nombre».
         f['pok'] = f"Pok{f['orden']}. {f['especie'].strip('«»')}"
+        # Lo que hay de verdad en la carpeta del autor manda: con modelo, la criatura está hecha.
+        f['tiene_imagen'] = SUBIDAS[f['orden']]['imagen']
+        f['tiene_modelo'] = SUBIDAS[f['orden']]['modelo']
+        f['hecha'] = f['hecha'] or f['tiene_modelo']
     filas.sort(key=lambda f: (orden.index(f['isla']), f['orden']))
     return filas
 
 
 RUTA_POKEDEX = os.path.join(RAIZ, 'conceptos', 'criaturas', 'pokedex.json')
+CARPETA_AUTOR = os.path.join(RAIZ, 'conceptos', 'criaturas', 'meshy')
+
+
+def archivos_del_autor():
+    """Lo que ha subido el autor a conceptos/criaturas/meshy, por número de Pokédex: si hay imagen
+    y si hay modelo. Devuelve también los archivos que no siguen «PokN. Nombre»."""
+    import re
+    hay = collections.defaultdict(lambda: {'imagen': False, 'modelo': False})
+    raros = []
+    if not os.path.isdir(CARPETA_AUTOR):
+        return hay, raros
+    for nombre in sorted(os.listdir(CARPETA_AUTOR)):
+        if nombre == 'LEEME.md':
+            continue
+        m = re.match(r'Pok(\d+)\.\s.*\.(glb|webp|png|jpe?g)$', nombre, re.I)
+        if not m:
+            raros.append(nombre)
+            continue
+        hay[int(m.group(1))]['modelo' if m.group(2).lower() == 'glb' else 'imagen'] = True
+    return hay, raros
 
 
 def leer_pokedex():
@@ -645,6 +672,7 @@ def excel(filas, c, ruta):
     wb = openpyxl.Workbook()
     ws = wb.active
     ws.title = 'Criaturas'
+    VERDE = PatternFill('solid', fgColor='C6EFCE')  # las que ya tenemos: modelo subido
     cab = ['Pokédex', 'Nombre de archivo', 'Isla', 'Zona', 'También en', 'Nº lista', 'Id interno', 'Especie', 'Forma', 'Tipo principal',
            'Tipo secundario', 'Tipos del autor', 'Estadísticas de', 'Quintil', 'Papel', 'Altura (m)', 'Idea para la imagen',
            'Imagen hecha', '3D hecho']
@@ -656,8 +684,11 @@ def excel(filas, c, ruta):
         t = f['tipos'].split('/')
         ws.append([f['orden'], f['pok'], NOMBRE_ISLA[f['isla']], f['zona'], f['tambien'], f['n'], f['archivo'],
                    f['especie'], f['forma'], t[0], t[1] if len(t) > 1 else '', 'sí' if f['autor'] else '',
-                   f['ref'], f['quintil'], f['papel'], f['altura'], f['idea'], 'sí' if f['hecha'] else 'no',
-                   'sí' if f['hecha'] else 'no'])
+                   f['ref'], f['quintil'], f['papel'], f['altura'], f['idea'],
+                   'sí' if f['tiene_imagen'] or f['hecha'] else 'no', 'sí' if f['tiene_modelo'] or f['hecha'] else 'no'])
+        if f['tiene_modelo']:
+            for celda in ws[ws.max_row]:
+                celda.fill = VERDE
     dv = DataValidation(type='list', formula1='"sí,no"', allow_blank=True)
     ws.add_data_validation(dv)
     dv.add(f'R2:S{len(filas) + 1}')
@@ -815,4 +846,15 @@ if __name__ == '__main__':
         fh.write(guia_gemini(filas))
     with open(os.path.join(RAIZ, 'conceptos', 'criaturas', 'guia-gemini-amigos.txt'), 'w', encoding='utf-8') as fh:
         fh.write(guia_gemini(filas, amigos=True))
+    # Una subida partida en dos dejó la primera mitad en la raíz del repositorio (2026-11-17).
+    perdidos = [n for d in (os.path.join(RAIZ, '..'), RAIZ) for n in os.listdir(d) if n.startswith('Pok')]
+    if perdidos:
+        print('Aviso: criaturas fuera de su carpeta (van en conceptos/criaturas/meshy): ' + ', '.join(perdidos))
+    if ARCHIVOS_RAROS:
+        print('Aviso: archivos de la carpeta del autor que no siguen «PokN. Nombre»: ' + ', '.join(ARCHIVOS_RAROS))
+    numeros = {f['orden'] for f in filas}
+    ajenos = sorted(n for n in SUBIDAS if n not in numeros)
+    if ajenos:
+        print('Aviso: archivos con un número que no está en el plan: ' + ', '.join(f'Pok{n}' for n in ajenos))
+    print(f"Con modelo subido: {sum(f['tiene_modelo'] for f in filas)}. ", end='')
     print(f"{len(filas)} criaturas, {cuentas['pct']:.0f} % sin secundario. Escritos PLAN-CRIATURAS.md, plan-criaturas.xlsx y las guías de Gemini.")
