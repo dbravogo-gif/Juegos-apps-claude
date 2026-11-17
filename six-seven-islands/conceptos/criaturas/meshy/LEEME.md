@@ -11,3 +11,7 @@ puede cambiar (apodo → nombre de verdad): Claude busca por el número.
 
 Esta carpeta no se publica. Claude copia cada criatura al juego, reducida y con su id interno, en
 `public/modelos/criaturas/` (los nombres de archivo del autor no salen en la web).
+
+**Ya están (2026-11-17):** las 1.ª formas de 4 iniciales, copiadas de `public/modelos/iniciales/`
+con el nombre del autor: Pok1 (Cronti), Pok4 (inicial de Planta), Pok7 (inicial de Infernal) y
+Pok10 (Armalito). El juego sigue usando las de `public/modelos/iniciales/`.
