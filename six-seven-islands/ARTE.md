@@ -299,7 +299,8 @@ de arte, antes de construir contenido.
 Que un renacuajo no sea del tamaño de un dragón (autor).
 
 - **Cada criatura tiene su altura en metros**, en el plan (`PLAN-CRIATURAS.md`, columna «Altura»).
-  El autor la corrige en su Excel. Una evolución nunca es más baja que la forma anterior; lo
+  Las decide Claude (las de lámina, de la lámina); el autor no las toca y avisa al probar si
+  alguna está mal (autor, 2026-11-17). Una evolución nunca es más baja que la forma anterior; lo
   comprueba `plan.py`.
 - **No se dimensiona en Meshy.** El juego mide cada modelo y lo escala al cargarlo
   (`figuraCriatura`, en `src/arte/criaturas3d.ts`), así que el tamaño que salga de Meshy da igual.
