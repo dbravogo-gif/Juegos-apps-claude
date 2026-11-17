@@ -16,5 +16,6 @@ Esta carpeta no se publica. Claude copia cada criatura al juego, reducida y con 
 con el nombre del autor: Pok1 (Cronti), Pok4 (inicial de Planta), Pok7 (inicial de Infernal) y
 Pok10 (Armalito). El juego sigue usando las de `public/modelos/iniciales/`.
 
-**Por subir (hechas por el autor):** Pok16 a Pok24 (Civeta, Ravich, Azurvan, Aculiso,
-Sierpajable, Dragosil, Dragombo y Dragalis) y Pok131-132 (el dinosaurio de casco de roca).
+**Subidas (2026-11-17):** Pok1, Pok4, Pok7 y Pok10 (iniciales), Pok16 a Pok24 y Pok131-132.
+`python3 herramientas/criaturas/plan.py` lee esta carpeta: las que tienen modelo salen en verde en
+el Excel y cuentan como hechas.

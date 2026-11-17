@@ -4,6 +4,14 @@ Errores ya pagados y la barrera que evita repetirlos (regla R6). Formato: fecha 
 causa · barrera. Lo más reciente va arriba. Si un error vuelve a pasar, su barrera sube de
 nivel: de nota a regla, y de regla a prueba o hook.
 
+- **2026-11-17 · Las criaturas del autor no llegaban a GitHub, y luego media subida cayó en la
+  raíz** (Six-seven islands).
+  - Causa: la subida web de GitHub falla si el lote pesa demasiado; al partirla en dos, la primera
+    mitad se subió desde la raíz del repositorio, no desde la carpeta del enlace.
+  - Barrera: `herramientas/criaturas/plan.py` avisa de los archivos `Pok…` fuera de
+    `conceptos/criaturas/meshy` y de los mal nombrados. Al recibir subidas, mirar todo el
+    repositorio (`git ls-files | grep Pok`), no solo la carpeta, y darle al autor el enlace de
+    subida con la carpeta ya puesta.
 - **2026-11-16 · Pasar diálogos con Enter le ponía «Amigo» al rival para siempre** (Six-seven
   islands; lo vio el probador).
   - Causa: la caja del nombre se abría al hablar, ya con un nombre por defecto, y el siguiente Enter
