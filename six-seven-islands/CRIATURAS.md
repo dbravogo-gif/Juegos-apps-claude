@@ -93,7 +93,8 @@ del Q5 son las 12 legendarias y las 4 formas finales más fuertes (líneas 25 a 
   por forma y referencia, en `PLAN-CRIATURAS.md`. Lo genera y lo comprueba
   `herramientas/criaturas/plan.py`: se cambia allí y se vuelve a generar.
 - **Nombres de archivo del autor** (2026-11-17): «PokN. Nombre», con N el número de Pokédex del
-  plan, que no cambia nunca (`conceptos/criaturas/pokedex.json`). Las criaturas nuevas van al final.
+  plan, que no cambia nunca (`conceptos/criaturas/pokedex.json`), aunque la especie cambie de zona o
+  de isla. Las criaturas nuevas van al final.
 - **No todas las láminas entran** (autor, 2026-11-12): la que no cuadra, fuera.
 - **Varias especies en cada hierba, nunca una sola** (autor, 2026-11-12). Se pueden repetir
   entre hierbas cercanas. En los juegos de referencia, la primera ruta tiene 2 o 3 especies; las
@@ -130,7 +131,8 @@ se usa otra palabra (R8).
 | Esporín → Micelord | Planta | Propuesta: Foongus → Amoonguss (Q1) | Lámina |
 | Voltéro → Raigón | Eléctrico | Propuesta: Electrike → Manectric (Q1) | Lámina |
 | Miralín → Reflexán | Mental | Propuesta: Elgyem → Beheeyem (Q2) | Lámina |
-| Civeta (sin nombre, 2) | Común | Propuesta: Zigzagoon → Linoone (Q1) | Lámina |
+| Civeta (sin nombre, 2) | Común | Propuesta: Zigzagoon → Linoone (Q1) | Lámina, imagen y modelo (Pok16-17) |
+| Dinosaurio de casco de roca (sin nombre, 2) | Roca · Roca | Cranidos → Rampardos (Q2) | Lámina, imagen y modelo (Pok131-132) |
 
 En los tipos, «Infernal · Infernal/Ancestral» quiere decir: la primera forma sin secundario y las
 siguientes con él. Las láminas ponen el doble tipo a toda la línea; quitárselo a las primeras
@@ -138,7 +140,8 @@ formas ayuda al 60 %.
 
 **Descartadas** (2026-11-12, con el permiso del autor de dejar fuera lo que no cuadre): Tunelín,
 el topo con taladro (Excadrill); Cangrix, el ermitaño que carga una roca (Crustle); Basún, la
-bolsa de basura (Garbodor), y el dinosaurio de cabeza de piedra (Cranidos). Eran demasiado
+bolsa de basura (Garbodor), y el dinosaurio de cabeza de piedra (Cranidos). **El dinosaurio vuelve** (autor,
+2026-11-17): lo ve muy distinto de su referencia; quizá lo use la líder de Lanzarote. Eran demasiado
 parecidos a su referencia en idea y dibujo, y con sus mismas estadísticas se leerían como una
 copia (R8). Las abejas de Melaní recuerdan a Combee y Vespiquen, pero sus estadísticas son de
 Scolipede: se quedan.

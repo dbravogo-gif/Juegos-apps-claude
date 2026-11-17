@@ -21,8 +21,8 @@ modelo se llaman «PokN. Nombre» (autor, 2026-11-17): N es su número en esta l
 nunca, y el nombre es el suyo o su apodo. Se suben a `conceptos/criaturas/meshy/`. Para que Gemini te las vaya
 diciendo de una en una: `conceptos/criaturas/guia-gemini.txt`, que lleva sus instrucciones arriba.
 
-**Coste.** Faltan 199 criaturas (hay 4 hechas). A 15 créditos cada una
-(Smart Topology y textura, precio comprobado el 2026-11-07), son unos 2.985 créditos sin
+**Coste.** Faltan 195 criaturas (hay 8 hechas). A 15 créditos cada una
+(Smart Topology y textura, precio comprobado el 2026-11-07), son unos 2.925 créditos sin
 contar repeticiones. Por isla, en la tabla de abajo.
 
 ## Las cuentas
@@ -56,14 +56,14 @@ Todas cuadran: si no, el script no genera nada.
 
 | Isla | Especies nuevas | Criaturas | Por generar | Créditos |
 | --- | --- | --- | --- | --- |
-| Lanzarote | 36 | 47 | 43 | 645 |
+| Lanzarote | 36 | 47 | 41 | 615 |
 | Fuerteventura | 14 | 30 | 30 | 450 |
 | Gran Canaria | 25 | 37 | 37 | 555 |
-| Tenerife | 19 | 35 | 35 | 525 |
+| Tenerife | 19 | 35 | 33 | 495 |
 | La Gomera | 13 | 22 | 22 | 330 |
 | La Palma | 10 | 16 | 16 | 240 |
 | El Hierro | 12 | 16 | 16 | 240 |
-| **Total** | | **203** | **199** | **2.985** |
+| **Total** | | **203** | **195** | **2.925** |
 
 Lanzarote incluye las 15 iniciales y las 5 leyendas de los pueblos, que duermen allí.
 
@@ -137,7 +137,7 @@ Gimnasio de **Agua**, en el Puerto de la Cruz, líder 36-38; la Liga, en el Teid
 | La Laguna | 27-29 | «Conejo de jable» · «Gato del monte» · **«Farol»** · **«Aldaba»** (rara) |
 | Valle de La Orotava | 28-31 | «Conejo de jable» · «Perdiz» · «Gato del monte» · «Hurón» |
 | Puerto de la Cruz | 29-32 | «Erizo negro» · «Tembladera» · **«Tortuga boba»** · **«Vieja»** |
-| Cueva del Viento | 30-33 | «Murciélago de cueva» · **«Tortuga gigante»** · **«Rata gigante»** · **«Ánima de lava»** (rara) |
+| Cueva del Viento | 30-33 | «Murciélago de cueva» · **«Tortuga gigante»** · **«Dino de casco»** · **«Ánima de lava»** (rara) |
 | Teno y Masca | 31-34 | «Guirre» · Caprún → Roquén → Terracorn · Voltéro → Raigón · **«Guincho»** |
 | Los Gigantes (costa) | 32-35 | «Tortuga boba» · **«Delfín»** · **«Morena»** · **«Calamar gigante»** (rara) |
 | Las Cañadas | 33-36 | Magmín → Lavtún → Teidrón · **«Neverita»** · **«Escarcha»** · **«Tajinaste»** |
@@ -223,8 +223,8 @@ nombre lo pone el autor. La idea va en la primera forma de cada especie.
 | Pok13. Inicial de tierra | inicial-tierra-1 | 1.ª | Tierra A | Propias (del autor) | Inicial (museo de Lanzarote) | Por diseñar: la inicial del pueblo de los pueblos sepultados por el volcán. Una cría de tierra y ceniza que, al evolucionar, gana un aire espectral. Que no se parezca a las otras cuatro iniciales. |
 | Pok14. Inicial de tierra | inicial-tierra-2 | 2.ª | Tierra/Espectral A | Propias (del autor) |  |  |
 | Pok15. Inicial de tierra | inicial-tierra-3 | 3.ª | Tierra/Espectral A | Propias (del autor) |  |  |
-| Pok16. Civeta | 031-1 | 1.ª | Común A | Zigzagoon (Q1, AF) | El Golfo | Lámina del autor (civeta.jpg). |
-| Pok17. Civeta | 031-2 | 2.ª | Común A | Linoone (Q3, AF) |  |  |
+| Pok16. Civeta | 031-1 (hecha) | 1.ª | Común A | Zigzagoon (Q1, AF) | El Golfo | Lámina del autor (civeta.jpg). |
+| Pok17. Civeta | 031-2 (hecha) | 2.ª | Común A | Linoone (Q3, AF) |  |  |
 | Pok18. Tinzal | 032-1 | 1.ª | Aire A | Taillow (Q1, AF) | El Golfo | Lámina del autor. |
 | Pok19. Azurvan | 032-2 | 2.ª | Aire/Mental A | Swellow (Q3, AF) |  |  |
 | Pok20. Cabozo | 037-1 | 1.ª | Agua | Barboach (Q1, EN) | El Golfo | Cabozo: pececillo de charco con aletas como patitas; la 2.ª, grande y con cabeza de roca, se entierra en la arena. |
@@ -353,8 +353,8 @@ nombre lo pone el autor. La idea va en la primera forma de cada especie.
 | Pok128. Vieja | 074 | única | Agua | Luvdisc (Q2, EN) | Puerto de la Cruz | Vieja: pez loro rojo y redondo de los charcos. |
 | Pok129. Tortuga gigante | 063-1 | 1.ª | Acero | Shieldon (Q2, TF) | Cueva del Viento | Tortuga gigante de las islas, que se creía extinta: cría con caparazón de piedra; la 2.ª, coraza de piedra y hierro. |
 | Pok130. Tortuga gigante | 063-2 | 2.ª | Acero/Roca | Bastiodon (Q4, TF) |  |  |
-| Pok131. Rata gigante | 062-1 | 1.ª | Roca | Cranidos (Q2, AF) | Cueva del Viento | Rata gigante de las islas, que se creía extinta, con el cráneo de piedra; la 2.ª, embiste rompiendo rocas. Sustituye al dinosaurio descartado. |
-| Pok132. Rata gigante | 062-2 | 2.ª | Roca | Rampardos (Q4, AF) |  |  |
+| Pok131. Dino de casco | 062-1 (hecha) | 1.ª | Roca A | Cranidos (Q2, AF) | Cueva del Viento | Lámina del autor (dino-casco-roca.jpg), recuperada el 2026-11-17: dinosaurio con casco de roca. Quizá lo use la líder de Lanzarote. |
+| Pok132. Dino de casco | 062-2 (hecha) | 2.ª | Roca A | Rampardos (Q4, AF) |  |  |
 | Pok133. Ánima de lava | 089 | única | Espectral | Spiritomb (Q4, EN) | Cueva del Viento (rara) | Ánima atrapada en una lágrima de lava del tubo volcánico. |
 | Pok134. Guincho | 075 | única | Aire | Skarmory (Q3, TF) | Teno y Masca | Guincho: águila pescadora de los acantilados. |
 | Pok135. Delfín | 059-1 | 1.ª | Agua | Buizel (Q2, AF) | Los Gigantes (costa) | Delfín mular: cría juguetona; la 2.ª, delfín acróbata. |
