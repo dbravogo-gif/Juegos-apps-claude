@@ -344,7 +344,8 @@ def miles(x):
 
 # Altura de cada forma, en metros (propuesta, 2026-11-17; las de lámina, de la lámina). El juego
 # escala cada modelo a su altura, comprimida en combate y en el mundo para que un renacuajo y un
-# dragón se vean los dos (ARTE.md, «Escala de las criaturas»). El autor las corrige en el Excel.
+# dragón se vean los dos (ARTE.md, «Escala de las criaturas»). Las decide Claude; el autor avisa
+# al probar si alguna está mal (2026-11-17).
 ALTURA = {
     'agua': [0.4, 0.9, 1.6], 'planta': [0.4, 0.9, 1.7], 'infernal': [0.4, 0.9, 1.7],
     'roca': [0.4, 1.0, 1.8], 'tierra': [0.4, 0.9, 1.7],
