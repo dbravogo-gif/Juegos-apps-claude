@@ -21,8 +21,8 @@ modelo se llaman «PokN. Nombre» (autor, 2026-11-17): N es su número en esta l
 nunca, y el nombre es el suyo o su apodo. Se suben a `conceptos/criaturas/meshy/`. Para que Gemini te las vaya
 diciendo de una en una: `conceptos/criaturas/guia-gemini.txt`, que lleva sus instrucciones arriba.
 
-**Coste.** Faltan 195 criaturas (hay 8 hechas). A 15 créditos cada una
-(Smart Topology y textura, precio comprobado el 2026-11-07), son unos 2.925 créditos sin
+**Coste.** Faltan 188 criaturas (hay 15 hechas). A 15 créditos cada una
+(Smart Topology y textura, precio comprobado el 2026-11-07), son unos 2.820 créditos sin
 contar repeticiones. Por isla, en la tabla de abajo.
 
 ## Las cuentas
@@ -40,7 +40,7 @@ Todas cuadran: si no, el script no genera nada.
 | Hielo | 8 | 8 | 1 |
 | Infernal | 16 | 16 | 1 |
 | Lucha | 9 | 9 | 1 |
-| Mental | 8 | 8 | 7 |
+| Mental | 8 | 8 | 6 |
 | Oscuridad | 8 | 8 | 3 |
 | Espectral | 7 | 7 | 2 |
 | Acero | 6 | 6 | 2 |
@@ -49,21 +49,21 @@ Todas cuadran: si no, el script no genera nada.
 | Bicho | 13 | 13 | 3 |
 | Veneno | 12 | 12 | 3 |
 
-- **Sin tipo secundario:** el 68 % de las 188 de la lista (objetivo, 60 %).
+- **Sin tipo secundario:** el 69 % de las 188 de la lista (objetivo, 60 %).
 - **Especies por hierba:** de 3 a 4 en Lanzarote y de 3 a 6 después, con una rara como mucho.
 - **Gimnasios:** cada uno tiene al menos 3 especies de su tipo antes de llegar (Lanzarote, 1: la
   roca nueva, que la líder usa evolucionada).
 
 | Isla | Especies nuevas | Criaturas | Por generar | Créditos |
 | --- | --- | --- | --- | --- |
-| Lanzarote | 36 | 47 | 41 | 615 |
+| Lanzarote | 35 | 47 | 34 | 510 |
 | Fuerteventura | 14 | 30 | 30 | 450 |
 | Gran Canaria | 25 | 37 | 37 | 555 |
-| Tenerife | 19 | 35 | 33 | 495 |
+| Tenerife | 22 | 38 | 36 | 540 |
 | La Gomera | 13 | 22 | 22 | 330 |
 | La Palma | 10 | 16 | 16 | 240 |
-| El Hierro | 12 | 16 | 16 | 240 |
-| **Total** | | **203** | **195** | **2.925** |
+| El Hierro | 11 | 13 | 13 | 195 |
+| **Total** | | **203** | **188** | **2.820** |
 
 Lanzarote incluye las 15 iniciales y las 5 leyendas de los pueblos, que duermen allí.
 
@@ -79,10 +79,10 @@ Gimnasio de **Roca**, en la Capital, líder 11-12.
 
 | Zona | Niveles | Especies |
 | --- | --- | --- |
-| El Golfo | 3-5 | **Civeta** · **Tinzal → Azurvan** · **«Cabozo»** · **Dragosil → Dragombo → Dragalis** (rara) |
-| Montañas del Fuego | 5-7 | Civeta · **Magmín → Lavtún → Teidrón** · **«Erizo luchador»** · «Basalto» (rara) |
-| El Jable | 6-8 | Tinzal → Azurvan · «Erizo luchador» (rara) · **Patatín → Paparrón** · **Melaní → Favenir → Reginis** |
-| Famara | 6-8 | «Cabozo» · **«Basalto»** (rara) · **Aerund → Marwen** · **Salmito → Salmarín → Salmástil** |
+| El Golfo | 3-5 | **Civeta** · **Ravich → Azurvan** · **Aculiso → Sierpajable** · **Dragosil → Dragombo → Dragalis** (rara) |
+| Montañas del Fuego | 5-7 | Civeta · **«Erizo de fuego»** · **«Musaraña luchadora»** · «Basalto» (rara) |
+| El Jable | 6-8 | Ravich → Azurvan · «Musaraña luchadora» (rara) · **Patatín → Paparrón** · **Melaní → Favenir → Reginis** |
+| Famara | 6-8 | Aculiso → Sierpajable · **«Basalto»** (rara) · **Aerund → Marwen** · **Salmito → Salmarín → Salmástil** |
 | La Geria (leyenda) | tras la Liga | **«Leyenda verde»** |
 | Montañas del Fuego, el cráter (leyenda) | tras la Liga | **Magecora** |
 | Risco de Famara (leyenda) | tras la Liga | **«Leyenda de roca»** |
@@ -105,7 +105,7 @@ Gimnasio de **Aire**, en Morro Jable, líder 20-21.
 | Sotavento | 15-17 | Aerund → Marwen · «Remolino de jable» · «Lisa de duna» · «Erizo negro» · **«Carabela»** |
 | Cofete (opcional) | 17-19 | «Lisa de duna» · «Erizo negro» · **«Escolopendra»** · **«Cardón»** |
 
-Para el gimnasio, de Aire: «Guirre», «Lisa de duna», «Murciélago de cueva», Tinzal → Azurvan, Aerund → Marwen, «Remolino de jable».
+Para el gimnasio, de Aire: «Guirre», «Lisa de duna», «Murciélago de cueva», Ravich → Azurvan, Aerund → Marwen, «Remolino de jable».
 
 ### Gran Canaria
 
@@ -125,7 +125,7 @@ Gimnasio de **Eléctrico y Lucha**, Eléctrico en Las Palmas y Lucha en Agaete; 
 
 Para el gimnasio, de Eléctrico: Briso → Alisor → Alisior, Voltéro → Raigón, «Chispa de cable», «Tembladera», «Farito», «Boya».
 
-Para el gimnasio, de Lucha: «Burro», «Piña luchadora», «Erizo luchador», «Bailador de isa», «Saltador de garrote».
+Para el gimnasio, de Lucha: «Burro», «Piña luchadora», «Musaraña luchadora», «Bailador de isa», «Saltador de garrote».
 
 ### Tenerife
 
@@ -133,18 +133,18 @@ Gimnasio de **Agua**, en el Puerto de la Cruz, líder 36-38; la Liga, en el Teid
 
 | Zona | Niveles | Especies |
 | --- | --- | --- |
-| Anaga | 26-29 | Tinzal → Azurvan · **«Mariposa de laurisilva»** · **«Gato del monte»** · **«Hurón»** |
+| Anaga | 26-29 | Ravich → Azurvan · **«Mariposa de laurisilva»** · **«Gato del monte»** · **«Hurón»** |
 | La Laguna | 27-29 | «Conejo de jable» · «Gato del monte» · **«Farol»** · **«Aldaba»** (rara) |
 | Valle de La Orotava | 28-31 | «Conejo de jable» · «Perdiz» · «Gato del monte» · «Hurón» |
 | Puerto de la Cruz | 29-32 | «Erizo negro» · «Tembladera» · **«Tortuga boba»** · **«Vieja»** |
 | Cueva del Viento | 30-33 | «Murciélago de cueva» · **«Tortuga gigante»** · **«Dino de casco»** · **«Ánima de lava»** (rara) |
 | Teno y Masca | 31-34 | «Guirre» · Caprún → Roquén → Terracorn · Voltéro → Raigón · **«Guincho»** |
 | Los Gigantes (costa) | 32-35 | «Tortuga boba» · **«Delfín»** · **«Morena»** · **«Calamar gigante»** (rara) |
-| Las Cañadas | 33-36 | Magmín → Lavtún → Teidrón · **«Neverita»** · **«Escarcha»** · **«Tajinaste»** |
+| Las Cañadas | 33-36 | **Magmín → Lavtún → Teidrón** · **«Neverita»** · **«Escarcha»** · **«Tajinaste»** |
 | El Teide, la cima (leyenda) | tras la Liga | **«Guardián del Sello»** |
 | Cueva del Hielo del Teide (leyenda) | tras la Liga | **«Guardián del hielo»** |
 
-Para el gimnasio, de Agua: «Tortuga boba», Salmito → Salmarín → Salmástil, Aerund → Marwen, «Cabozo», «Chicharro», «Lisa de la charca», «Morena», «Erizo negro», «Carabela», «Delfín», «Tembladera», «Vieja», «Boya», «Calamar gigante».
+Para el gimnasio, de Agua: «Tortuga boba», Salmito → Salmarín → Salmástil, Aerund → Marwen, Aculiso → Sierpajable, «Chicharro», «Lisa de la charca», «Morena», «Erizo negro», «Carabela», «Delfín», «Tembladera», «Vieja», «Boya», «Calamar gigante».
 
 ### La Gomera
 
@@ -160,7 +160,7 @@ Gimnasio de **Mental**, en Chipude, junto a La Fortaleza, líder 44-45.
 | Alto de Garajonay (leyenda) | tras la Liga | **«Gara»** |
 | Entre Tenerife y La Gomera (leyenda errante) | tras la Liga | **«Jonay»** |
 
-Para el gimnasio, de Mental: «Silbador», «Escarcha», Tinzal → Azurvan, «Caracol hipnótico», «Coruja», Miralín → Reflexán, «Piedra de Tindaya», «Mantis».
+Para el gimnasio, de Mental: «Silbador», «Escarcha», «Caracol hipnótico», «Coruja», Miralín → Reflexán, «Piedra de Tindaya», «Mantis».
 
 ### La Palma
 
@@ -185,15 +185,15 @@ Gimnasio de **Infernal/Ancestral**, en Valverde, al final de la Bajada, líder 5
 | Zona | Niveles | Especies |
 | --- | --- | --- |
 | Orchilla (llegada) | 47-50 | Aerund → Marwen · «Erizo negro» · «Morena» · **Sanbor → Borondis → Atlantea** (rara) |
-| La Dehesa | 48-51 | «Perro bardino» · «Guirre» · **«Cochino negro»** · «Curandera» |
-| La Cumbre (camino de la Bajada) | 50-53 | Magmín → Lavtún → Teidrón · Caprún → Roquén → Terracorn · «Cochino negro» · **Guanchín → Menceyor → Achamán** · **«Tostador de gofio»** |
+| La Dehesa | 48-51 | «Perro bardino» · «Guirre» · «Curandera» |
+| La Cumbre (camino de la Bajada) | 50-53 | Caprún → Roquén → Terracorn · Magmín → Lavtún → Teidrón · **Guanchín → Menceyor → Achamán** · **«Tostador de gofio»** |
 | El Garoé | 51-53 | «Silbador» · «Duende de laurisilva» · Esporín → Micelord · **«Curandera»** |
-| Frontera (opcional) | 50-54 | «Cochino negro» · Guanchín → Menceyor → Achamán · «Tostador de gofio» · **«Lagarto gigante»** (rara) |
+| Frontera (opcional) | 50-54 | Guanchín → Menceyor → Achamán · «Tostador de gofio» · **«Lagarto gigante»** (rara) |
 | La Restinga (opcional) | 52-55 | «Delfín» · «Morena» · «Calamar gigante» (rara) · Sanbor → Borondis → Atlantea |
 | El volcán bajo el mar de La Restinga (leyenda) | tras la Liga | **«Guardián del Tagoro»** |
 | El mar de nubes (leyenda) | tras la Liga | **«Guardiana del mar de nubes»** |
 
-Para el gimnasio, de Infernal: «Cochino negro», Magmín → Lavtún → Teidrón, Guanchín → Menceyor → Achamán, «Tea», «Diablillo», «Tostador de gofio», «Bomba volcánica».
+Para el gimnasio, de Infernal: «Erizo de fuego», Magmín → Lavtún → Teidrón, Guanchín → Menceyor → Achamán, «Tea», «Diablillo», «Tostador de gofio», «Bomba volcánica».
 
 Para el gimnasio, de Ancestral: Guanchín → Menceyor → Achamán, «Lagarto gigante», Sanbor → Borondis → Atlantea.
 
@@ -225,18 +225,18 @@ nombre lo pone el autor. La idea va en la primera forma de cada especie.
 | Pok15. Inicial de tierra | inicial-tierra-3 | 3.ª | Tierra/Espectral A | Propias (del autor) | 1,7 m |  |  |
 | Pok16. Civeta | 031-1 (hecha) | 1.ª | Común A | Zigzagoon (Q1, AF) | 0,4 m | El Golfo | Lámina del autor (civeta.jpg). |
 | Pok17. Civeta | 031-2 (hecha) | 2.ª | Común A | Linoone (Q3, AF) | 0,8 m |  |  |
-| Pok18. Tinzal | 032-1 | 1.ª | Aire A | Taillow (Q1, AF) | 0,3 m | El Golfo | Lámina del autor. |
-| Pok19. Azurvan | 032-2 | 2.ª | Aire/Mental A | Swellow (Q3, AF) | 1,2 m |  |  |
-| Pok20. Cabozo | 037-1 | 1.ª | Agua | Barboach (Q1, EN) | 0,3 m | El Golfo | Cabozo: pececillo de charco con aletas como patitas; la 2.ª, grande y con cabeza de roca, se entierra en la arena. |
-| Pok21. Cabozo | 037-2 | 2.ª | Agua/Tierra | Whiscash (Q3, EN) | 1,0 m |  |  |
-| Pok22. Dragosil | 007-1 | 1.ª | Planta A | Lotad (Q1, TE) | 0,5 m | El Golfo (rara) | Lámina del autor. |
-| Pok23. Dragombo | 007-2 | 2.ª | Planta A | Lombre (Q2, TE) | 1,4 m |  |  |
-| Pok24. Dragalis | 007-3 | 3.ª | Planta A | Ludicolo (Q4, TE) | 3,0 m |  |  |
-| Pok25. Magmín | 016-1 | 1.ª | Infernal A | Litwick (Q1, AE) | 0,4 m | Montañas del Fuego | Lámina del autor. |
-| Pok26. Lavtún | 016-2 | 2.ª | Infernal A | Lampent (Q2, AE) | 1,0 m |  |  |
-| Pok27. Teidrón | 016-3 | 3.ª | Infernal A | Chandelure (Q4, AE) | 2,2 m |  |  |
-| Pok28. Erizo luchador | 043-1 | 1.ª | Lucha | Riolu (Q1, AF) | 0,5 m | Montañas del Fuego | Erizo moruno que se hace bola y embiste; la 2.ª, erguido, lucha con agarres de lucha canaria (faja y calzón de bregar). |
-| Pok29. Erizo luchador | 043-2 | 2.ª | Lucha | Lucario (Q4, AE) | 1,3 m |  |  |
+| Pok18. Ravich | 032-1 (hecha) | 1.ª | Aire A | Taillow (Q1, AF) | 0,3 m | El Golfo | Hecha por el autor. |
+| Pok19. Azurvan | 032-2 (hecha) | 2.ª | Aire A | Swellow (Q3, AF) | 1,2 m |  |  |
+| Pok20. Aculiso | 037-1 (hecha) | 1.ª | Agua | Barboach (Q1, EN) | 0,3 m | El Golfo | Hecha por el autor. |
+| Pok21. Sierpajable | 037-2 (hecha) | 2.ª | Agua/Tierra | Whiscash (Q3, EN) | 1,0 m |  |  |
+| Pok22. Dragosil | 007-1 (hecha) | 1.ª | Planta A | Lotad (Q1, TE) | 0,5 m | El Golfo (rara) | Lámina del autor; hecha. |
+| Pok23. Dragombo | 007-2 (hecha) | 2.ª | Planta A | Lombre (Q2, TE) | 1,4 m |  |  |
+| Pok24. Dragalis | 007-3 (hecha) | 3.ª | Planta A | Ludicolo (Q4, TE) | 3,0 m |  |  |
+| Pok25. Erizo de fuego | 013-1 | 1.ª | Infernal | Sandile (Q1, AF) | 0,3 m | Montañas del Fuego | Erizo de fuego (autor, 2026-11-17): erizo moruno con púas de lava encendida que se hace bola y rueda; la 2.ª, con púas de escoria más largas; la 3.ª, gran erizo volcánico que echa humo por la espalda. |
+| Pok26. Erizo de fuego | 013-2 | 2.ª | Infernal | Krokorok (Q2, AF) | 0,7 m |  |  |
+| Pok27. Erizo de fuego | 013-3 | 3.ª | Infernal/Tierra | Krookodile (Q4, AF) | 1,4 m |  |  |
+| Pok28. Musaraña luchadora | 043-1 | 1.ª | Lucha | Riolu (Q1, AF) | 0,3 m | Montañas del Fuego | Musaraña canaria (la del malpaís de Lanzarote), chiquita y nerviosa, que lanza golpes rápidos; la 2.ª, erguida, lucha con agarres de lucha canaria (faja y calzón de bregar). Ya no es un erizo: el erizo es el de fuego. |
+| Pok29. Musaraña luchadora | 043-2 | 2.ª | Lucha | Lucario (Q4, AE) | 1,1 m |  |  |
 | Pok30. Basalto | 012-1 | 1.ª | Roca | Roggenrola (Q1, TF) | 0,4 m | Famara (rara) | Bola de basalto con ojos verdes de olivina; la 2.ª, con cristales de olivina en el lomo; la 3.ª, coloso de columnas de basalto. La usa la líder de Roca. |
 | Pok31. Basalto | 012-2 | 2.ª | Roca | Boldore (Q2, TF) | 1,0 m |  |  |
 | Pok32. Basalto | 012-3 | 3.ª | Roca | Gigalith (Q4, TF) | 2,0 m |  |  |
@@ -372,6 +372,9 @@ nombre lo pone el autor. La idea va en la primera forma de cada especie.
 | Pok147. Tajinaste | 019-3 | 3.ª | Veneno/Planta | Roserade (Q4, AE) | 2,0 m |  |  |
 | Pok148. Guardián del Sello | 101 | única | Ancestral/Aire | Rayquaza (Q5, EN) | 7,0 m | El Teide, la cima (leyenda) | Guardián del Sello, que vive en lo alto del Teide. |
 | Pok149. Guardián del hielo | 099 | única | Hielo | Regice (Q5, TE) | 2,0 m | Cueva del Hielo del Teide (leyenda) | Guardián de la Cueva del Hielo, junto a la cima del Teide. |
+| Pok191. Magmín | 016-1 | 1.ª | Infernal A | Litwick (Q1, AE) | 0,4 m | Las Cañadas | Lámina del autor. Nace del Teide: vive en Las Cañadas (autor, 2026-11-17). |
+| Pok192. Lavtún | 016-2 | 2.ª | Infernal A | Lampent (Q2, AE) | 1,0 m |  |  |
+| Pok193. Teidrón | 016-3 | 3.ª | Infernal A | Chandelure (Q4, AE) | 2,2 m |  |  |
 
 ### La Gomera
 
@@ -428,9 +431,6 @@ nombre lo pone el autor. La idea va en la primera forma de cada especie.
 | Pok188. Sanbor | 028-1 | 1.ª | Agua A | Deino (Q2, AF) | 1,0 m | Orchilla (llegada) (rara) | Lámina del autor. |
 | Pok189. Borondis | 028-2 | 2.ª | Agua/Ancestral A | Zweilous (Q3, AF) | 4,0 m |  |  |
 | Pok190. Atlantea | 028-3 | 3.ª | Agua/Ancestral A | Hydreigon (Q5, AE) | 9,0 m |  |  |
-| Pok191. Cochino negro | 013-1 | 1.ª | Infernal | Sandile (Q1, AF) | 0,5 m | La Dehesa | Cochino negro: lechón; la 2.ª, cerdo negro con el lomo de escoria; la 3.ª, gran jabalí volcánico. |
-| Pok192. Cochino negro | 013-2 | 2.ª | Infernal | Krokorok (Q2, AF) | 1,0 m |  |  |
-| Pok193. Cochino negro | 013-3 | 3.ª | Infernal/Tierra | Krookodile (Q4, AF) | 1,9 m |  |  |
 | Pok194. Curandera | 084 | única | Común | Audino (Q3, EN) | 1,1 m | El Garoé | Curandera: criatura redonda cubierta de hierbas medicinales que cura a las demás. |
 | Pok195. Guanchín | 026-1 | 1.ª | Infernal A | Bagon (Q2, AF) | 0,6 m | La Cumbre (camino de la Bajada) | Lámina del autor. |
 | Pok196. Menceyor | 026-2 | 2.ª | Infernal/Ancestral A | Shelgon (Q3, TF) | 1,4 m |  |  |

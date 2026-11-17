@@ -2,7 +2,7 @@ INSTRUCCIONES PARA GEMINI
 
 Vamos a generar las criaturas de mi juego de una en una, con el mismo estilo de imagen que ya
 usamos en esta conversación. Abajo tienes la lista completa, numerada. Es mi plan: 203 criaturas,
-de las que 4 ya están hechas.
+de las que 15 ya están hechas.
 
 CÓMO VAMOS
 - Al empezar, y cada vez que te diga «siguiente», dime cuál toca, con este formato:
@@ -28,7 +28,7 @@ REGLAS
    fiel a ella.
 5. El color principal sale de su tipo, y el papel se nota en el cuerpo: los tanques, robustos;
    los atacantes, más ágiles.
-6. Si el nombre va entre comillas («Cabozo»), es un apodo provisional: propón 3 nombres
+6. Si el nombre va entre comillas («Guirre»), es un apodo provisional: propón 3 nombres
    originales para la especie, que no se parezcan a nombres de Pokémon. Si ya tiene nombre, úsalo.
 7. Nunca escribas texto ni nombres de Pokémon en la imagen.
 8. Las marcadas «YA HECHA» se saltan.
@@ -121,89 +121,54 @@ Pok16. Civeta, 1.ª forma de 2 · YA HECHA
 
 Pok17. Civeta, 2.ª forma de 2 · YA HECHA
 
-Pok18. Tinzal, 1.ª forma de 2
-   Tipo: Aire (la línea: Aire → Aire/Mental)
+Pok18. Ravich, 1.ª forma de 2 · YA HECHA
+
+Pok19. Azurvan, 2.ª forma de 2 · YA HECHA
+
+Pok20. Aculiso, 1.ª forma de 2 · YA HECHA
+
+Pok21. Sierpajable, 2.ª forma de 2 · YA HECHA
+
+Pok22. Dragosil, 1.ª forma de 3 · YA HECHA
+
+Pok23. Dragombo, 2.ª forma de 3 · YA HECHA
+
+Pok24. Dragalis, 3.ª forma de 3 · YA HECHA
+
+Pok25. Erizo de fuego, 1.ª forma de 3
+   Tipo: Infernal (la línea: Infernal → Infernal → Infernal/Tierra)
    Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante físico.
-   Estadísticas como: Taillow (la línea: Taillow → Swellow). Solo de referencia: que no se parezca.
-   Zona: El Golfo, Lanzarote (niveles 3-5)
-   Idea: lámina del autor: pídemela y dibújala sola, fiel a ella.
-
-Pok19. Azurvan, 2.ª forma de 2
-   Tipo: Aire/Mental (la línea: Aire → Aire/Mental)
-   Fuerza: quintil 3 de 5, media. Papel: atacante físico.
-   Estadísticas como: Swellow (la línea: Taillow → Swellow). Solo de referencia: que no se parezca.
-   Zona: El Golfo, Lanzarote (niveles 3-5)
-   Idea: lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.
-
-Pok20. Cabozo, 1.ª forma de 2
-   Tipo: Agua (la línea: Agua → Agua/Tierra)
-   Fuerza: quintil 1 de 5, de las más flojas. Papel: equilibrada.
-   Estadísticas como: Barboach (la línea: Barboach → Whiscash). Solo de referencia: que no se parezca.
-   Zona: El Golfo, Lanzarote (niveles 3-5)
-   Idea: Cabozo: pececillo de charco con aletas como patitas; la 2.ª, grande y con cabeza de roca, se entierra en la arena.
-
-Pok21. Cabozo, 2.ª forma de 2
-   Tipo: Agua/Tierra (la línea: Agua → Agua/Tierra)
-   Fuerza: quintil 3 de 5, media. Papel: equilibrada.
-   Estadísticas como: Whiscash (la línea: Barboach → Whiscash). Solo de referencia: que no se parezca.
-   Zona: El Golfo, Lanzarote (niveles 3-5)
-   Idea: Cabozo: pececillo de charco con aletas como patitas; la 2.ª, grande y con cabeza de roca, se entierra en la arena.
-
-Pok22. Dragosil, 1.ª forma de 3
-   Tipo: Planta (la línea: Planta → Planta → Planta)
-   Fuerza: quintil 1 de 5, de las más flojas. Papel: tanque especial.
-   Estadísticas como: Lotad (la línea: Lotad → Lombre → Ludicolo). Solo de referencia: que no se parezca.
-   Zona: El Golfo (rara), Lanzarote (niveles 3-5)
-   Idea: lámina del autor: pídemela y dibújala sola, fiel a ella.
-
-Pok23. Dragombo, 2.ª forma de 3
-   Tipo: Planta (la línea: Planta → Planta → Planta)
-   Fuerza: quintil 2 de 5, floja. Papel: tanque especial.
-   Estadísticas como: Lombre (la línea: Lotad → Lombre → Ludicolo). Solo de referencia: que no se parezca.
-   Zona: El Golfo (rara), Lanzarote (niveles 3-5)
-   Idea: lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.
-
-Pok24. Dragalis, 3.ª forma de 3
-   Tipo: Planta (la línea: Planta → Planta → Planta)
-   Fuerza: quintil 4 de 5, fuerte. Papel: tanque especial.
-   Estadísticas como: Ludicolo (la línea: Lotad → Lombre → Ludicolo). Solo de referencia: que no se parezca.
-   Zona: El Golfo (rara), Lanzarote (niveles 3-5)
-   Idea: lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.
-
-Pok25. Magmín, 1.ª forma de 3
-   Tipo: Infernal (la línea: Infernal → Infernal → Infernal)
-   Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante especial.
-   Estadísticas como: Litwick (la línea: Litwick → Lampent → Chandelure). Solo de referencia: que no se parezca.
+   Estadísticas como: Sandile (la línea: Sandile → Krokorok → Krookodile). Solo de referencia: que no se parezca.
    Zona: Montañas del Fuego, Lanzarote (niveles 5-7)
-   Idea: lámina del autor: pídemela y dibújala sola, fiel a ella.
+   Idea: Erizo de fuego (autor, 2026-11-17): erizo moruno con púas de lava encendida que se hace bola y rueda; la 2.ª, con púas de escoria más largas; la 3.ª, gran erizo volcánico que echa humo por la espalda.
 
-Pok26. Lavtún, 2.ª forma de 3
-   Tipo: Infernal (la línea: Infernal → Infernal → Infernal)
-   Fuerza: quintil 2 de 5, floja. Papel: atacante especial.
-   Estadísticas como: Lampent (la línea: Litwick → Lampent → Chandelure). Solo de referencia: que no se parezca.
+Pok26. Erizo de fuego, 2.ª forma de 3
+   Tipo: Infernal (la línea: Infernal → Infernal → Infernal/Tierra)
+   Fuerza: quintil 2 de 5, floja. Papel: atacante físico.
+   Estadísticas como: Krokorok (la línea: Sandile → Krokorok → Krookodile). Solo de referencia: que no se parezca.
    Zona: Montañas del Fuego, Lanzarote (niveles 5-7)
-   Idea: lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.
+   Idea: Erizo de fuego (autor, 2026-11-17): erizo moruno con púas de lava encendida que se hace bola y rueda; la 2.ª, con púas de escoria más largas; la 3.ª, gran erizo volcánico que echa humo por la espalda.
 
-Pok27. Teidrón, 3.ª forma de 3
-   Tipo: Infernal (la línea: Infernal → Infernal → Infernal)
-   Fuerza: quintil 4 de 5, fuerte. Papel: atacante especial.
-   Estadísticas como: Chandelure (la línea: Litwick → Lampent → Chandelure). Solo de referencia: que no se parezca.
+Pok27. Erizo de fuego, 3.ª forma de 3
+   Tipo: Infernal/Tierra (la línea: Infernal → Infernal → Infernal/Tierra)
+   Fuerza: quintil 4 de 5, fuerte. Papel: atacante físico.
+   Estadísticas como: Krookodile (la línea: Sandile → Krokorok → Krookodile). Solo de referencia: que no se parezca.
    Zona: Montañas del Fuego, Lanzarote (niveles 5-7)
-   Idea: lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.
+   Idea: Erizo de fuego (autor, 2026-11-17): erizo moruno con púas de lava encendida que se hace bola y rueda; la 2.ª, con púas de escoria más largas; la 3.ª, gran erizo volcánico que echa humo por la espalda.
 
-Pok28. Erizo luchador, 1.ª forma de 2
+Pok28. Musaraña luchadora, 1.ª forma de 2
    Tipo: Lucha (la línea: Lucha → Lucha)
    Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante físico.
    Estadísticas como: Riolu (la línea: Riolu → Lucario). Solo de referencia: que no se parezca.
    Zona: Montañas del Fuego, Lanzarote (niveles 5-7)
-   Idea: Erizo moruno que se hace bola y embiste; la 2.ª, erguido, lucha con agarres de lucha canaria (faja y calzón de bregar).
+   Idea: Musaraña canaria (la del malpaís de Lanzarote), chiquita y nerviosa, que lanza golpes rápidos; la 2.ª, erguida, lucha con agarres de lucha canaria (faja y calzón de bregar). Ya no es un erizo: el erizo es el de fuego.
 
-Pok29. Erizo luchador, 2.ª forma de 2
+Pok29. Musaraña luchadora, 2.ª forma de 2
    Tipo: Lucha (la línea: Lucha → Lucha)
    Fuerza: quintil 4 de 5, fuerte. Papel: atacante especial.
    Estadísticas como: Lucario (la línea: Riolu → Lucario). Solo de referencia: que no se parezca.
    Zona: Montañas del Fuego, Lanzarote (niveles 5-7)
-   Idea: Erizo moruno que se hace bola y embiste; la 2.ª, erguido, lucha con agarres de lucha canaria (faja y calzón de bregar).
+   Idea: Musaraña canaria (la del malpaís de Lanzarote), chiquita y nerviosa, que lanza golpes rápidos; la 2.ª, erguida, lucha con agarres de lucha canaria (faja y calzón de bregar). Ya no es un erizo: el erizo es el de fuego.
 
 Pok30. Basalto, 1.ª forma de 3
    Tipo: Roca (la línea: Roca → Roca → Roca)
@@ -1041,6 +1006,27 @@ Pok149. Guardián del hielo, sin evolución
    Zona: Cueva del Hielo del Teide (leyenda), Tenerife (sale tras la Liga)
    Idea: Guardián de la Cueva del Hielo, junto a la cima del Teide.
 
+Pok191. Magmín, 1.ª forma de 3
+   Tipo: Infernal (la línea: Infernal → Infernal → Infernal)
+   Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante especial.
+   Estadísticas como: Litwick (la línea: Litwick → Lampent → Chandelure). Solo de referencia: que no se parezca.
+   Zona: Las Cañadas, Tenerife (niveles 33-36)
+   Idea: lámina del autor: pídemela y dibújala sola, fiel a ella.
+
+Pok192. Lavtún, 2.ª forma de 3
+   Tipo: Infernal (la línea: Infernal → Infernal → Infernal)
+   Fuerza: quintil 2 de 5, floja. Papel: atacante especial.
+   Estadísticas como: Lampent (la línea: Litwick → Lampent → Chandelure). Solo de referencia: que no se parezca.
+   Zona: Las Cañadas, Tenerife (niveles 33-36)
+   Idea: lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.
+
+Pok193. Teidrón, 3.ª forma de 3
+   Tipo: Infernal (la línea: Infernal → Infernal → Infernal)
+   Fuerza: quintil 4 de 5, fuerte. Papel: atacante especial.
+   Estadísticas como: Chandelure (la línea: Litwick → Lampent → Chandelure). Solo de referencia: que no se parezca.
+   Zona: Las Cañadas, Tenerife (niveles 33-36)
+   Idea: lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.
+
 == LA GOMERA ==
 
 Pok150. Silbador, 1.ª forma de 3
@@ -1333,27 +1319,6 @@ Pok190. Atlantea, 3.ª forma de 3
    Estadísticas como: Hydreigon (la línea: Deino → Zweilous → Hydreigon). Solo de referencia: que no se parezca.
    Zona: Orchilla (llegada) (rara), El Hierro (niveles 47-50)
    Idea: lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.
-
-Pok191. Cochino negro, 1.ª forma de 3
-   Tipo: Infernal (la línea: Infernal → Infernal → Infernal/Tierra)
-   Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante físico.
-   Estadísticas como: Sandile (la línea: Sandile → Krokorok → Krookodile). Solo de referencia: que no se parezca.
-   Zona: La Dehesa, El Hierro (niveles 48-51)
-   Idea: Cochino negro: lechón; la 2.ª, cerdo negro con el lomo de escoria; la 3.ª, gran jabalí volcánico.
-
-Pok192. Cochino negro, 2.ª forma de 3
-   Tipo: Infernal (la línea: Infernal → Infernal → Infernal/Tierra)
-   Fuerza: quintil 2 de 5, floja. Papel: atacante físico.
-   Estadísticas como: Krokorok (la línea: Sandile → Krokorok → Krookodile). Solo de referencia: que no se parezca.
-   Zona: La Dehesa, El Hierro (niveles 48-51)
-   Idea: Cochino negro: lechón; la 2.ª, cerdo negro con el lomo de escoria; la 3.ª, gran jabalí volcánico.
-
-Pok193. Cochino negro, 3.ª forma de 3
-   Tipo: Infernal/Tierra (la línea: Infernal → Infernal → Infernal/Tierra)
-   Fuerza: quintil 4 de 5, fuerte. Papel: atacante físico.
-   Estadísticas como: Krookodile (la línea: Sandile → Krokorok → Krookodile). Solo de referencia: que no se parezca.
-   Zona: La Dehesa, El Hierro (niveles 48-51)
-   Idea: Cochino negro: lechón; la 2.ª, cerdo negro con el lomo de escoria; la 3.ª, gran jabalí volcánico.
 
 Pok194. Curandera, sin evolución
    Tipo: Común
