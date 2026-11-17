@@ -133,7 +133,7 @@ Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
   - repasar el plan: las ideas de aspecto que no le gusten, los segundos tipos y las zonas de
     Tenerife, La Gomera, La Palma y El Hierro;
   - decir cuántos créditos al mes trae su plan de Meshy: el plan entero son unos 3.000;
-  - generarlas en el orden de la lista y subir cada `.glb` con su imagen, con el nombre de la
+  - generarlas en el orden de la lista, con Gemini guiando (`conceptos/criaturas/guia-gemini.txt`), y subir cada `.glb` con su imagen, con el nombre de la
     columna «Archivo», a `public/modelos/criaturas/`;
   - poner nombre a las que van con apodo («Cabozo», «Guirre»…).
 - **Entrenadores y zonas de captura de Lanzarote** que hay que mejorar: decir cuáles.
