@@ -342,6 +342,33 @@ def miles(x):
     return f'{x:,}'.replace(',', '.')
 
 
+# Altura de cada forma, en metros (propuesta, 2026-11-17; las de lámina, de la lámina). El juego
+# escala cada modelo a su altura, comprimida en combate y en el mundo para que un renacuajo y un
+# dragón se vean los dos (ARTE.md, «Escala de las criaturas»). El autor las corrige en el Excel.
+ALTURA = {
+    'agua': [0.4, 0.9, 1.6], 'planta': [0.4, 0.9, 1.7], 'infernal': [0.4, 0.9, 1.7],
+    'roca': [0.4, 1.0, 1.8], 'tierra': [0.4, 0.9, 1.7],
+    31: [0.4, 0.8], 32: [0.3, 1.2], 37: [0.3, 1.0], 7: [0.5, 1.4, 3.0], 16: [0.4, 1.0, 2.2],
+    43: [0.5, 1.3], 12: [0.4, 1.0, 2.0], 34: [0.5, 1.2], 5: [0.3, 0.6, 1.5], 35: [0.4, 1.8],
+    18: [0.5, 1.1, 1.8], 94: [4.0], 95: [3.5], 92: [4.0], 91: [4.5], 93: [5.0],
+    44: [0.4, 1.2], 9: [0.5, 1.1, 2.0], 38: [0.4, 0.9], 29: [0.3, 0.8], 54: [1.0, 2.2],
+    11: [0.4, 0.8, 1.3], 4: [0.3, 0.8, 1.5], 51: [0.3, 0.8], 17: [0.3, 0.8, 1.5], 61: [0.5, 1.4],
+    79: [1.8], 52: [0.4, 1.2], 82: [1.0], 50: [0.4, 1.8],
+    67: [0.5, 1.6], 41: [0.4, 4.0], 57: [0.1, 0.8], 56: [0.6, 1.9], 80: [0.4], 81: [0.4],
+    3: [0.3, 0.6, 1.2], 39: [0.4, 0.5], 83: [1.2], 71: [0.5], 68: [0.4, 1.0], 78: [1.6],
+    25: [0.8, 1.4, 2.2], 10: [0.5, 1.1, 2.5], 20: [0.4, 1.5, 4.0], 36: [0.6, 1.5], 73: [1.1],
+    77: [1.3], 33: [0.4, 1.2], 42: [0.6, 2.5],
+    1: [0.3, 0.6, 1.0], 30: [0.4, 1.0], 53: [0.4, 1.0], 65: [0.5, 1.3], 72: [0.6], 2: [0.3, 0.8, 1.8],
+    74: [0.6], 63: [0.5, 1.5], 62: [0.9, 1.6], 89: [1.0], 75: [1.7], 59: [0.8, 2.0], 47: [0.8, 2.5],
+    90: [3.5], 58: [0.5, 1.5], 15: [0.3, 0.6, 1.0], 19: [0.3, 0.8, 2.0], 101: [7.0], 99: [2.0],
+    6: [0.4, 0.8, 1.6], 49: [0.5, 0.9], 14: [0.4, 0.7, 1.5], 46: [0.6, 1.1], 64: [0.4, 1.2],
+    66: [0.5, 1.5], 87: [1.4], 8: [0.5, 1.0, 1.5], 100: [1.5], 96: [2.0],
+    40: [0.4, 1.1], 45: [0.5, 1.1], 86: [1.4], 60: [0.8, 1.5], 88: [1.1], 85: [1.5], 70: [0.6, 1.0],
+    55: [0.3, 1.4], 69: [0.6, 1.3], 48: [0.7, 1.9], 98: [2.0],
+    28: [1.0, 4.0, 9.0], 13: [0.5, 1.0, 1.9], 84: [1.1], 26: [0.6, 1.4, 2.5], 76: [1.0],
+    27: [0.7, 1.6, 2.4], 97: [2.5], 102: [6.0],
+}
+
 # Tipos que eligió el autor (los demás secundarios son propuesta).
 DEL_AUTOR = {31, 32, 7, 16, 34, 5, 35, 95, 78, 10, 20, 36, 66, 40, 28, 26, 62}
 
@@ -371,7 +398,8 @@ def criaturas():
                               ref='Propias (del autor)', quintil='', papel='', idea=idea if i == 0 else '',
                               archivo=f'inicial-{clave}-{i + 1}', hecha=(clave, i + 1) in HECHAS, autor=True,
                               idea_linea=idea, linea_tipos=' → '.join(tipos), linea_refs='', nformas=len(tipos),
-                              niveles=None, lamina=idea.startswith('Lámina'), apodo=False, inicial=True))
+                              niveles=None, lamina=idea.startswith('Lámina'), apodo=False, inicial=True,
+                              altura=ALTURA[clave][i]))
     for n, nombre, tipos, zona, tambien, idea in ESPECIES:
         refs = REF[n]
         assert len(refs) == len(tipos), (n, refs, tipos)
@@ -387,7 +415,7 @@ def criaturas():
                               autor=n in DEL_AUTOR, idea_linea=idea, linea_tipos=' → '.join(tipos),
                               linea_refs=' → '.join(r[0] for r in refs), nformas=len(tipos),
                               niveles=ZONA[limpia(zona)][2], lamina=idea.startswith('Lámina'),
-                              apodo=nombre is None, inicial=False))
+                              apodo=nombre is None, inicial=False, altura=ALTURA[n][i]))
     orden = [c for c, *_r in ISLAS]
     filas.sort(key=lambda f: orden.index(f['isla']))  # estable: respeta el orden de dentro
     # El número de Pokédex va atado a cada criatura (pokedex.json), no a su sitio en la lista: si
@@ -443,6 +471,12 @@ def nombre_zona(z):
 def comprobar(filas):
     """Las reglas de CRIATURAS.md. Devuelve las cuentas para el informe."""
     errores = [f'{n}: sin nombre ni apodo' for n, nom, *_r in ESPECIES if not nom and n not in APODO]
+    for clave, _nom, tipos, *_r in INICIALES + [(e[0], e[1], e[2]) for e in ESPECIES]:
+        h = ALTURA.get(clave)
+        if not h or len(h) != len(tipos):
+            errores.append(f'{clave}: faltan alturas o no son una por forma')
+        elif any(b < a for a, b in zip(h, h[1:])):
+            errores.append(f'{clave}: una evolución más baja que la forma anterior')
     lista = [f for f in filas if f['n'] != '—']
     nums = sorted(n for n, *_r in ESPECIES)
     esperado = sorted(k for k in REF if k not in (21, 22, 23, 24))
@@ -585,8 +619,8 @@ def markdown(filas, c):
     a('nombre lo pone el autor. La idea va en la primera forma de cada especie.\n')
     for clave, nombre, *_r in ISLAS:
         a(f'### {nombre}\n')
-        a('| Pokédex | Id interno | Forma | Tipos | Estadísticas de | Zona | Idea |')
-        a('| --- | --- | --- | --- | --- | --- | --- |')
+        a('| Pokédex | Id interno | Forma | Tipos | Estadísticas de | Altura | Zona | Idea |')
+        a('| --- | --- | --- | --- | --- | --- | --- | --- |')
         for f in filas:
             if f['isla'] != clave:
                 continue
@@ -595,7 +629,8 @@ def markdown(filas, c):
             tipos = f"{f['tipos']} A" if f['autor'] else f['tipos']
             ref = f"{f['ref']} ({f['quintil']}, {f['papel']})" if f['quintil'] else f['ref']
             zona = f['zona'] if f['forma'] in ('1.ª', 'única') else ''
-            a(f"| {pok} | {arch} | {f['forma']} | {tipos} | {ref} | {zona} | {f['idea']} |")
+            alt = f"{f['altura']:.1f} m".replace('.', ',')
+            a(f"| {pok} | {arch} | {f['forma']} | {tipos} | {ref} | {alt} | {zona} | {f['idea']} |")
         a('')
     return '\n'.join(o)
 
@@ -608,7 +643,7 @@ def excel(filas, c, ruta):
     ws = wb.active
     ws.title = 'Criaturas'
     cab = ['Pokédex', 'Nombre de archivo', 'Isla', 'Zona', 'También en', 'Nº lista', 'Id interno', 'Especie', 'Forma', 'Tipo principal',
-           'Tipo secundario', 'Tipos del autor', 'Estadísticas de', 'Quintil', 'Papel', 'Idea para la imagen',
+           'Tipo secundario', 'Tipos del autor', 'Estadísticas de', 'Quintil', 'Papel', 'Altura (m)', 'Idea para la imagen',
            'Imagen hecha', '3D hecho']
     ws.append(cab)
     for celda in ws[1]:
@@ -618,16 +653,16 @@ def excel(filas, c, ruta):
         t = f['tipos'].split('/')
         ws.append([f['orden'], f['pok'], NOMBRE_ISLA[f['isla']], f['zona'], f['tambien'], f['n'], f['archivo'],
                    f['especie'], f['forma'], t[0], t[1] if len(t) > 1 else '', 'sí' if f['autor'] else '',
-                   f['ref'], f['quintil'], f['papel'], f['idea'], 'sí' if f['hecha'] else 'no',
+                   f['ref'], f['quintil'], f['papel'], f['altura'], f['idea'], 'sí' if f['hecha'] else 'no',
                    'sí' if f['hecha'] else 'no'])
     dv = DataValidation(type='list', formula1='"sí,no"', allow_blank=True)
     ws.add_data_validation(dv)
-    dv.add(f'Q2:R{len(filas) + 1}')
-    anchos = [8, 30, 13, 30, 40, 8, 16, 32, 7, 13, 13, 8, 14, 8, 7, 70, 12, 10]
+    dv.add(f'R2:S{len(filas) + 1}')
+    anchos = [8, 30, 13, 30, 40, 8, 16, 32, 7, 13, 13, 8, 14, 8, 7, 10, 70, 12, 10]
     for i, w in enumerate(anchos):
         ws.column_dimensions[openpyxl.utils.get_column_letter(i + 1)].width = w
     for fila in ws.iter_rows(min_row=2):
-        fila[15].alignment = Alignment(wrap_text=True, vertical='top')
+        fila[16].alignment = Alignment(wrap_text=True, vertical='top')
     ws.freeze_panes = 'A2'
     ws.auto_filter.ref = ws.dimensions
 
