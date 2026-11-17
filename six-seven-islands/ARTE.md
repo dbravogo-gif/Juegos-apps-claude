@@ -294,6 +294,23 @@ de arte, antes de construir contenido.
   - Las caras y los patrones de las criaturas solo cuentan en combate.
   - Lo que queda más pequeño es ruido.
 
+## Escala de las criaturas (2026-11-17)
+
+Que un renacuajo no sea del tamaño de un dragón (autor).
+
+- **Cada criatura tiene su altura en metros**, en el plan (`PLAN-CRIATURAS.md`, columna «Altura»).
+  El autor la corrige en su Excel. Una evolución nunca es más baja que la forma anterior; lo
+  comprueba `plan.py`.
+- **No se dimensiona en Meshy.** El juego mide cada modelo y lo escala al cargarlo
+  (`figuraCriatura`, en `src/arte/criaturas3d.ts`), así que el tamaño que salga de Meshy da igual.
+  Hoy todas salen al mismo tamaño; cuando entren los modelos del autor, a su altura.
+- **La diferencia se comprime**, para que las dos criaturas de un combate se vean bien:
+  - el tamaño en pantalla va con la raíz cuadrada de la altura: una de 0,3 m frente a una de
+    3 m se ve 1 a 3, en vez de 1 a 10;
+  - con un mínimo y un máximo, para que la pequeña no desaparezca y la grande quepa en el plano.
+- **Solo te sigue la inicial** (autor, 2026-11-17), con la misma compresión respecto al jugador.
+  Así no hay problemas de escala con las criaturas muy grandes.
+
 ## Pruebas de la guía
 
 - La escena se lee en escala de grises.
