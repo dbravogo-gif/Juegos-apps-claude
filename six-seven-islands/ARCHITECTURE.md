@@ -186,6 +186,8 @@ Un evento nuevo se añade a esta tabla en el mismo commit.
 - `contadores()`: los del render en el último fotograma dibujado. Se toman al dibujar, porque
   Three.js los pone a cero al empezar cada fotograma.
 - `calidad(nivel)`: cambia el nivel de calidad en vivo.
+- `salvaje(especie, nivel)`: empieza un combate contra una salvaje, para ver una criatura nueva y su
+  tamaño. Sin GPU, el combate tarda unos 10 segundos en verse.
 
 Los bots juegan con el estado, no con los píxeles (skill `juego-3d`).
 
@@ -196,6 +198,28 @@ y `?semilla=n`. Mientras exista la vitrina de F04: `?vista=combate|todas|explora
 `?criatura=0..3`, `?gris` y `?lento=0.1` (cámara lenta, para revisar las animaciones). En el juego,
 `?abrir=todo` abre los pasos cerrados para recorrer la isla entera.
 - **Dos arranques:** el juego por defecto y la vitrina con `?vitrina` (`src/main.ts`).
+
+## Criaturas del autor en el juego
+
+1. El autor sube la imagen y el modelo de cada criatura a `conceptos/criaturas/meshy/`, con el
+   nombre «PokN. Nombre».
+2. `python3 herramientas/criaturas/juego.py` hace el resto:
+   - aligera cada modelo con `herramientas/aligerar-glb.py` (de unos 6 MB a menos de 1 MB);
+   - lo guarda en `public/modelos/criaturas/<id interno>.glb`, con su imagen reducida al lado;
+   - escribe `src/data/criaturas.ts`.
+3. `combate-prueba.ts` suma esas especies y sus modelos a los datos del juego.
+
+- **Id de especie:** `c` más el id interno del plan (`c031-1`: la 1.ª forma de la línea 31). No
+  cambia aunque cambie el nombre, para no romper las partidas guardadas.
+- **Estadísticas:** las exactas de su referencia, en `herramientas/criaturas/estadisticas.py`.
+  Las demás cosas salen así:
+  - la experiencia y la captura, de su quintil;
+  - la evolución, de la tabla de `juego.py`, y solo si la forma siguiente ya está;
+  - los ataques, de entre los que existen.
+- **Las de relleno siguen** donde aún falta la criatura de verdad (`encuentros-isla1.ts` dice cuál
+  hace de cuál).
+- **La evolución está en el núcleo pero aún no en el juego:** las formas evolucionadas se ven en
+  equipos de entrenadores.
 
 ## Islas y viajes
 

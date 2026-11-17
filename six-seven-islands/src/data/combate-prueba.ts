@@ -5,6 +5,7 @@
 // de otros juegos (R8).
 
 import type { DatosJuego, Especie, Estadisticas, Movimiento } from '../core/modelo';
+import { ESPECIES_CRIATURAS, MODELO_CRIATURA } from './criaturas';
 import { TEMPERAMENTOS } from './temperamentos';
 import { TABLA_TIPOS } from './tipos';
 
@@ -54,16 +55,16 @@ const especies: Especie[] = [
   { id: 'remolino-de-jable', nombre: 'Remolino de jable', tipos: ['aire'], base: base(40, 40, 35, 55, 40, 65), expBase: 55, ratioCaptura: 190, aprende: aprende('mirada-fija', 'rafaga'), descripcion: '' },
   { id: 'guirre-de-viento', nombre: 'Guirre de viento', tipos: ['aire'], base: base(55, 60, 45, 50, 45, 65), expBase: 70, ratioCaptura: 90, aprende: aprende('rafaga', 'picado', 'mirada-fija'), descripcion: '' },
   { id: 'chispa-de-colada', nombre: 'Chispa de colada', tipos: ['infernal'], base: base(35, 40, 35, 55, 40, 60), expBase: 55, ratioCaptura: 190, aprende: aprende('mirada-fija', 'soplo-de-brasas'), descripcion: '' },
-  { id: 'inicial-agua', nombre: 'Inicial de Agua', tipos: ['agua'], base: base(50, 50, 55, 55, 55, 45), expBase: 60, ratioCaptura: 45, aprende: aprende('remojon', 'ola-de-cresta', 'topetazo', 'mirada-fija'), descripcion: '' },
-  { id: 'inicial-planta', nombre: 'Inicial de Planta', tipos: ['planta'], base: base(50, 50, 50, 55, 55, 50), expBase: 60, ratioCaptura: 45, aprende: aprende('latigazo-de-musgo', 'esporas-de-hoja', 'topetazo', 'mirada-fija'), descripcion: '' },
-  { id: 'inicial-infernal', nombre: 'Inicial Infernal', tipos: ['infernal'], base: base(50, 55, 50, 55, 45, 55), expBase: 60, ratioCaptura: 45, aprende: aprende('soplo-de-brasas', 'orejazo-ardiente', 'trompazo-de-hierro', 'barrito'), descripcion: '' },
+  { id: 'inicial-agua', nombre: 'Inicial de Agua', tipos: ['agua'], base: base(50, 50, 55, 55, 55, 45), expBase: 60, ratioCaptura: 45, aprende: aprende('remojon', 'ola-de-cresta', 'topetazo', 'mirada-fija'), altura: 0.4, descripcion: '' },
+  { id: 'inicial-planta', nombre: 'Inicial de Planta', tipos: ['planta'], base: base(50, 50, 50, 55, 55, 50), expBase: 60, ratioCaptura: 45, aprende: aprende('latigazo-de-musgo', 'esporas-de-hoja', 'topetazo', 'mirada-fija'), altura: 0.4, descripcion: '' },
+  { id: 'inicial-infernal', nombre: 'Inicial Infernal', tipos: ['infernal'], base: base(50, 55, 50, 55, 45, 55), expBase: 60, ratioCaptura: 45, aprende: aprende('soplo-de-brasas', 'orejazo-ardiente', 'trompazo-de-hierro', 'barrito'), altura: 0.4, descripcion: '' },
   // Estadísticas provisionales: las de verdad las pasa el autor, como las de las otras iniciales.
-  { id: 'inicial-tierra', nombre: 'Inicial de Tierra', tipos: ['tierra'], base: base(55, 60, 50, 40, 45, 50), expBase: 60, ratioCaptura: 45, aprende: aprende('pisoton', 'arenazo', 'topetazo', 'mirada-fija'), descripcion: '' },
-  { id: 'inicial-roca', nombre: 'Inicial de Roca', tipos: ['roca'], base: base(55, 55, 60, 40, 50, 40), expBase: 60, ratioCaptura: 45, aprende: aprende('rodada-de-piedra', 'polvo-de-picon', 'topetazo', 'caparazon'), descripcion: '' },
+  { id: 'inicial-tierra', nombre: 'Inicial de Tierra', tipos: ['tierra'], base: base(55, 60, 50, 40, 45, 50), expBase: 60, ratioCaptura: 45, aprende: aprende('pisoton', 'arenazo', 'topetazo', 'mirada-fija'), altura: 0.4, descripcion: '' },
+  { id: 'inicial-roca', nombre: 'Inicial de Roca', tipos: ['roca'], base: base(55, 55, 60, 40, 50, 40), expBase: 60, ratioCaptura: 45, aprende: aprende('rodada-de-piedra', 'polvo-de-picon', 'topetazo', 'caparazon'), altura: 0.4, descripcion: '' },
 ];
 
 export const DATOS_COMBATE_PRUEBA: DatosJuego = {
-  especies: Object.fromEntries(especies.map((e) => [e.id, e])),
+  especies: Object.fromEntries([...especies, ...ESPECIES_CRIATURAS].map((e) => [e.id, e])),
   movimientos: Object.fromEntries(movimientos.map((m) => [m.id, m])),
   temperamentos: TEMPERAMENTOS,
   tipos: TABLA_TIPOS,
@@ -76,7 +77,7 @@ export const DATOS_COMBATE_PRUEBA: DatosJuego = {
   },
 };
 
-/** El modelo de cada especie. Las salvajes de relleno llevan el de la inicial de su tipo. */
+/** El modelo de cada especie. Las salvajes de relleno llevan el de la inicial de su tipo; las del autor, el suyo. */
 export const MODELO_DE: Readonly<Record<string, string>> = {
   'inicial-agua': 'iniciales/inicial-agua-1.glb',
   'inicial-planta': 'iniciales/inicial-planta-1.glb',
@@ -90,6 +91,8 @@ export const MODELO_DE: Readonly<Record<string, string>> = {
   'chispa-de-colada': 'iniciales/inicial-infernal-1.glb',
   'remolino-de-jable': 'iniciales/inicial-planta-1.glb',
   'guirre-de-viento': 'iniciales/inicial-agua-1.glb',
+  // Las del autor, con su modelo (criaturas.ts, generado).
+  ...MODELO_CRIATURA,
 };
 
 /** Con lo que empieza la mochila al elegir la inicial: poco (autor, 2026-11-11). */

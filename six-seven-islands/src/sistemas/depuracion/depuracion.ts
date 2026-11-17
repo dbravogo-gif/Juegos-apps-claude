@@ -2,7 +2,9 @@
 // El panel sale en desarrollo y, en la web publicada, con ?depurar: así el autor puede medir
 // los FPS en su iPhone, que es donde valen.
 
+import { crearCriatura } from '../../core/criatura';
 import { crearRng } from '../../core/rng';
+import { DATOS_COMBATE_PRUEBA } from '../../data/combate-prueba';
 import { CALIDADES, type NivelCalidad } from '../../motor/calidad';
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Contadores, Render } from '../render/render';
@@ -28,6 +30,8 @@ export interface GanchosJuego {
   poner(estado: unknown): void;
   /** Viaja en barco a otra isla, como al decir que sí al marinero (recarga la página). */
   viajar(isla: number): void;
+  /** Empieza un combate contra una salvaje de esa especie y nivel. */
+  salvaje(especie: string, nivel?: number): void;
   contadores(): Contadores;
   calidad(nivel: NivelCalidad): void;
 }
@@ -90,6 +94,11 @@ export class Depuracion implements Subsistema {
       viajar: (isla) => {
         if (!ctx.tiene('partida')) throw new Error('En la vitrina no hay partida');
         ctx.get<Subsistema & { viajar(n: number): void }>('partida').viajar(isla);
+      },
+      // Combate contra una salvaje cualquiera, para ver una criatura nueva y su tamaño.
+      salvaje: (especie, nivel = 5) => {
+        if (!DATOS_COMBATE_PRUEBA.especies[especie]) throw new Error(`Especie desconocida: «${especie}»`);
+        ctx.eventos.emit('encuentro:inicio', { salvajes: [crearCriatura(DATOS_COMBATE_PRUEBA, especie, nivel, ctx.rng)], visible: false });
       },
       contadores: () => this.render.contadores(),
       calidad: cambiarCalidad,

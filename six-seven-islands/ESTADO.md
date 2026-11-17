@@ -1,6 +1,6 @@
 # Estado de Six-seven islands
 
-Actualizado: 2026-11-16. Solo el presente; el historial está en git. Máximo 40 líneas.
+Actualizado: 2026-11-17. Solo el presente; el historial está en git. Máximo 40 líneas.
 
 ## Fase actual
 
@@ -13,26 +13,18 @@ Tanda 1: Lanzarote es la isla 1 (`ISLA-1.md`), con kit por código y la tabla de
 
 ## Siguiente
 
-1. Isla 1, Lanzarote (`ISLA-1.md`): con la silueta de Lanzarote y 7 zonas (Famara, opcional),
-   un interior por edificio, mar adornado y plano en 2D (`?mapa`). Dani es el jugador (Meshy).
-   **Ya se juega** (2026-11-12): encuentros en la hierba, combate con Luchar, Mochila, Equipo y
-   Huir, experiencia, captura con la barra, cura y vuelta al refugio al perder, y guardado
-   automático (`?nueva` empieza de cero) y todos los entrenadores, que te ven, retan y pagan;
-   la líder abre el barco, y menú de pausa con Esc (equipo, mochila, mapa y exportar o importar
-   la partida), tienda en La Geria, inicial rebelde hasta el anciano, portada (persona y
-   nombre), sonido por código y final de la isla 1 (el barco, tras la líder). Tabla de tipos del
-   autor, con Lucha (9 criaturas). Menús nuevos con medallero de pintaderas, equipo y mochila
-   por bolsillos, y un gimnasio de Roca de verdad. Fuerteventura (`ISLA-2.md`): fases 1 a 4
-   hechas y revisadas (de Corralejo al gimnasio de Aire, Tindaya, Cofete y Lobos). Historia
-   cerrada (`HISTORIA.md`); en el juego, la parte 1 (el bar, tu amigo y su mensaje).
-2. En paralelo, arte con Meshy (`prompts-meshy.md`): criaturas y edificios singulares.
-3. Criaturas: reglas en `CRIATURAS.md`; el plan de las 203 para Meshy (zonas de las 7 islas,
-   tipos y referencia), en `PLAN-CRIATURAS.md`, generado por `herramientas/criaturas/plan.py`.
+1. Lanzarote (`ISLA-1.md`) y Fuerteventura (`ISLA-2.md`, fases 1 a 4) se juegan enteras:
+   hierba, combate, captura, entrenadores, gimnasios de Roca y Aire, menús, guardado y barco.
+   Historia cerrada (`HISTORIA.md`), hecha en Lanzarote y Fuerteventura.
+2. Arte con Meshy (`prompts-meshy.md`): criaturas y edificios singulares.
+3. Criaturas: reglas en `CRIATURAS.md`; el plan de las 203 para Meshy en `PLAN-CRIATURAS.md`
+   (`herramientas/criaturas/plan.py`). Ya en el juego, a su altura: civeta, Ravich, Aculiso, Dragosil
+   y el dinosaurio, con sus evoluciones (`herramientas/criaturas/juego.py`, ARCHITECTURE.md).
 
 ## Pendiente del autor
 
-Probar Fuerteventura, cerrar la historia (`HISTORIA.md`), aprobar Gran Canaria (`ISLA-3.md`) y
-lo demás de la lista viva de `PENDIENTES.md` («Tareas del autor»).
+Probar las criaturas nuevas y Fuerteventura, aprobar Gran Canaria (`ISLA-3.md`) y lo demás de
+la lista viva de `PENDIENTES.md` («Tareas del autor»).
 
 ## Defectos conocidos
 

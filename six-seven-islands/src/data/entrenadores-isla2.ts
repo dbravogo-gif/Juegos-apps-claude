@@ -92,12 +92,12 @@ export const ENTRENADORES_ISLA2: Readonly<Record<string, DefEntrenador>> = {
   },
   'peregrino-tindaya': { equipo: [{ especie: 'chispa-de-colada', nivel: 16 }], premio: 480, tras: 'Desde aquí arriba, a veces se ve algo en el mar, hacia el oeste. Hoy no.' },
   'pastor-jandia': {
-    equipo: [{ especie: 'cangrejo-de-charco', nivel: 18 }, { especie: 'tabaiba-andante', nivel: 18 }],
+    equipo: [{ especie: 'cangrejo-de-charco', nivel: 18 }, { especie: 'c007-3', nivel: 18 }],
     premio: 540,
     tras: 'Abajo está Cofete. Las criaturas de esa hierba no son como las de Morro Jable.',
   },
   'surfista-cofete': {
-    equipo: [{ especie: 'lagartija-de-picon', nivel: 18 }, { especie: 'chispa-de-colada', nivel: 19 }],
+    equipo: [{ especie: 'chispa-de-colada', nivel: 18 }, { especie: 'c062-2', nivel: 19 }],
     premio: 560,
     tras: 'Si vienes por aquí, que sea con buen equipo. Este mar no perdona.',
   },

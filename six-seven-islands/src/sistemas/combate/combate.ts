@@ -34,6 +34,7 @@ import { gruposContra } from '../../core/tipos';
 import { ESPECIE_RAMA, inicialDelRival, puebloQueTePersigue, type TipoInicial } from '../../data/pueblos';
 import { MaterialDiorama } from '../../arte/material';
 import { figuraCriatura } from '../../arte/criaturas3d';
+import { escalaPorAltura } from '../../arte/escala-criaturas';
 import { RADIO_CUBO, figuraCubo, girarCubo } from '../../arte/cubos';
 import { attribute } from 'three/tsl';
 import { DATOS_COMBATE_PRUEBA, ENTRENADOR_PRUEBA, ESPECIE_INICIAL, MODELO_DE, RIVAL_DE } from '../../data/combate-prueba';
@@ -49,6 +50,7 @@ const DATOS = DATOS_COMBATE_PRUEBA;
 const ARENA = new Vector3(600, 0, 600);
 /** Dónde va cada criatura, respecto a la arena: la tuya delante a la izquierda, la rival al fondo. */
 const SITIO: [Vector3, Vector3] = [new Vector3(-2.05, 0, 1.55), new Vector3(2.35, 0, -1.85)];
+/** El tamaño de siempre en cada lado; cada criatura lo multiplica según su altura (escalaPorAltura). */
 const TAMANO: [number, number] = [1.0, 0.95];
 /**
  * Hacia dónde miran: la una a la otra, sobre la diagonal, con la tuya un poco más de espaldas y la
@@ -106,6 +108,8 @@ interface Luchador {
   extra: Vector3;
   escala: number;
   visible: boolean;
+  /** Su alto en la arena, según su altura: para poner a su medida el destello y las chispas. */
+  alto: number;
 }
 
 export class Combate implements Subsistema {
@@ -141,6 +145,8 @@ export class Combate implements Subsistema {
   private opciones: Opcion[] = [];
   /** La figura de cada criatura del combate, por su uid: se cargan todas al empezar. */
   private figuras = new Map<string, Group>();
+  /** El alto de cada figura en la arena, por uid. */
+  private altos = new Map<string, number>();
   /** Contra quién se lucha: el id del entrenador, o null si es salvaje. */
   private entrenador: string | null = null;
   /** La barra de captura (F08): qué cubo se lanza y cuánto lleva la flecha moviéndose. */
@@ -298,7 +304,15 @@ export class Combate implements Subsistema {
     // Todas las figuras, antes del fundido: un cambio de criatura no espera a cargar nada.
     this.figuras.clear();
     const todas = r.estado.lados.flatMap((l, lado) => l.equipo.map((c) => [lado, c] as const));
-    await Promise.all(todas.map(async ([lado, c]) => this.figuras.set(c.uid, await figuraCriatura(MODELO_DE[c.especie] ?? MODELO_DE['inicial-roca'], 'color', TAMANO[lado]))));
+    // Cada una a su altura, con la diferencia comprimida (ARTE.md, «Escala de las criaturas»).
+    this.altos.clear();
+    await Promise.all(
+      todas.map(async ([lado, c]) => {
+        const alto = TAMANO[lado] * escalaPorAltura(DATOS.especies[c.especie]?.altura);
+        this.altos.set(c.uid, alto);
+        this.figuras.set(c.uid, await figuraCriatura(MODELO_DE[c.especie] ?? MODELO_DE['inicial-roca'], 'color', alto));
+      }),
+    );
     for (const l of this.luchadores) l?.raiz.removeFromParent();
     this.luchadores = [null, null];
     // Destello y fundido a negro; en negro, se cambia a la arena.
@@ -315,7 +329,7 @@ export class Combate implements Subsistema {
     const f = this.figuras.get(uid);
     if (!f) return;
     this.luchadores[lado]?.raiz.removeFromParent();
-    this.luchadores[lado] = { raiz: f, giro: GIRO[lado], extra: new Vector3(), escala: 0, visible: false };
+    this.luchadores[lado] = { raiz: f, giro: GIRO[lado], extra: new Vector3(), escala: 0, visible: false, alto: this.altos.get(uid) ?? TAMANO[lado] };
     this.arena.add(f);
   }
 
@@ -519,7 +533,7 @@ export class Combate implements Subsistema {
               this.arena.add(cubo);
               destello = new Mesh(this.esferaDestello, this.materialDestello.clone());
               destello.visible = false;
-              destello.position.copy(SITIO[lado]).setY(TAMANO[lado] * 0.45);
+              destello.position.copy(SITIO[lado]).setY((this.luchadores[lado]?.alto ?? TAMANO[lado]) * 0.45);
               this.arena.add(destello);
             },
             animar: (t) => this.animarSalida(lado, t, cubo!, destello!, abierto),
@@ -991,7 +1005,7 @@ export class Combate implements Subsistema {
     const mat = new MeshBasicNodeMaterial({ color, transparent: true });
     mat.toneMapped = false;
     this.materiales.push(mat);
-    const centro = SITIO[lado].clone().add(new Vector3(0, TAMANO[lado] * 0.5, 0));
+    const centro = SITIO[lado].clone().add(new Vector3(0, (this.luchadores[lado]?.alto ?? TAMANO[lado]) * 0.5, 0));
     for (let i = 0; i < 14; i++) {
       const a = (i / 14) * Math.PI * 2;
       const malla = new Mesh(new SphereGeometry(0.06 + (i % 3) * 0.02, 6, 4), mat);

@@ -68,6 +68,8 @@ export interface Especie {
   aprende: { nivel: number; movimiento: string }[];
   /** Varias entradas: evolución ramificada (el jugador elige). */
   evoluciona?: Evolucion[];
+  /** Altura en metros: el tamaño con que se ve (ARTE.md, «Escala de las criaturas»). */
+  altura?: number;
   descripcion: string;
 }
 
