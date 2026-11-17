@@ -92,6 +92,8 @@ del Q5 son las 12 legendarias y las 4 formas finales más fuertes (líneas 25 a 
 - **El plan completo** (2026-11-16): las zonas de las 7 islas y las 203 criaturas, con zona, tipos
   por forma y referencia, en `PLAN-CRIATURAS.md`. Lo genera y lo comprueba
   `herramientas/criaturas/plan.py`: se cambia allí y se vuelve a generar.
+- **Nombres de archivo del autor** (2026-11-17): «PokN. Nombre», con N el número de Pokédex del
+  plan, que no cambia nunca (`conceptos/criaturas/pokedex.json`). Las criaturas nuevas van al final.
 - **No todas las láminas entran** (autor, 2026-11-12): la que no cuadra, fuera.
 - **Varias especies en cada hierba, nunca una sola** (autor, 2026-11-12). Se pueden repetir
   entre hierbas cercanas. En los juegos de referencia, la primera ruta tiene 2 o 3 especies; las

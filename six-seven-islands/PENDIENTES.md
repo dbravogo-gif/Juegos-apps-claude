@@ -132,9 +132,10 @@ Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
 - **Criaturas con Meshy (`PLAN-CRIATURAS.md`, 2026-11-16):**
   - repasar el plan: las ideas de aspecto que no le gusten, los segundos tipos y las zonas de
     Tenerife, La Gomera, La Palma y El Hierro;
-  - decir cuántos créditos al mes trae su plan de Meshy: el plan entero son unos 3.000;
-  - generarlas en el orden de la lista, con Gemini guiando (`conceptos/criaturas/guia-gemini.txt`), y subir cada `.glb` con su imagen, con el nombre de la
-    columna «Archivo», a `public/modelos/criaturas/`;
+  - mirar en Meshy si su plan trae 3.000 o 4.000 créditos al mes y si se acumulan de un mes a
+    otro: el plan entero son unos 3.000 (2.985 sin repeticiones);
+  - generarlas en el orden de la lista, con Gemini guiando (`conceptos/criaturas/guia-gemini.txt`),
+    y subir la imagen y el `.glb` de cada una, como «PokN. Nombre», a `conceptos/criaturas/meshy/`;
   - poner nombre a las que van con apodo («Cabozo», «Guirre»…).
 - **Entrenadores y zonas de captura de Lanzarote** que hay que mejorar: decir cuáles.
 - **La historia (`HISTORIA.md`, borrador 4):** está cerrada. Cuando pueda: si le valen los nombres

@@ -388,7 +388,29 @@ def criaturas():
     filas.sort(key=lambda f: orden.index(f['isla']))  # estable: respeta el orden de dentro
     for i, f in enumerate(filas, 1):
         f['orden'] = i
+        # Nombre de archivo del autor (2026-11-17): «PokN. Nombre», con N el número de esta lista.
+        f['pok'] = f"Pok{i}. {f['especie'].strip('«»')}"
     return filas
+
+
+def fijar_pokedex(filas, renumerar=False):
+    """Los números de Pokédex no cambian nunca: el autor nombra sus archivos con ellos. La primera
+    vez se guardan en pokedex.json; después, si el plan los mueve, se para (con --renumerar se
+    aceptan, solo si el autor lo decide)."""
+    import json
+    ruta = os.path.join(RAIZ, 'conceptos', 'criaturas', 'pokedex.json')
+    actual = {str(f['orden']): f['archivo'] for f in filas}
+    if os.path.exists(ruta) and not renumerar:
+        with open(ruta, encoding='utf-8') as fh:
+            fijada = json.load(fh)
+        distintos = [k for k in sorted(set(fijada) | set(actual), key=int) if fijada.get(k) != actual.get(k)]
+        if distintos:
+            raise SystemExit('La numeración de la Pokédex ha cambiado en ' + ', '.join(distintos[:10]) +
+                             '. Las criaturas nuevas van al final; renumerar solo si el autor lo decide (--renumerar).')
+        return
+    with open(ruta, 'w', encoding='utf-8') as fh:
+        json.dump(actual, fh, ensure_ascii=False, indent=0)
+        fh.write('\n')
 
 
 def nombre_zona(z):
@@ -476,8 +498,9 @@ def markdown(filas, c):
     a('- Las ideas de aspecto también son propuesta. Cada una parte de algo canario y evita el animal y la')
     a('  forma del Pokémon de referencia. Si una imagen recuerda a una criatura conocida, se descarta.\n')
     a('**Cómo generarlas.** En el orden de la lista: primero las iniciales y Lanzarote, que son las que se')
-    a('ven antes. Cada criatura sigue `prompts-meshy.md`: imagen 2D, después Image to 3D, y el archivo con')
-    a('el nombre de la columna «Archivo» (`.glb` y su imagen `.webp` o `.png`). Para que Gemini te las vaya')
+    a('ven antes. Cada criatura sigue `prompts-meshy.md`: imagen 2D, después Image to 3D. La imagen y el')
+    a('modelo se llaman «PokN. Nombre» (autor, 2026-11-17): N es su número en esta lista, que no cambia')
+    a('nunca, y el nombre es el suyo o su apodo. Se suben a `conceptos/criaturas/meshy/`. Para que Gemini te las vaya')
     a('diciendo de una en una: `conceptos/criaturas/guia-gemini.txt`, que lleva sus instrucciones arriba.\n')
     falta = total - hechas
     a(f'**Coste.** Faltan {falta} criaturas (hay {hechas} hechas). A {CREDITOS_POR_CRIATURA} créditos cada una')
@@ -535,22 +558,23 @@ def markdown(filas, c):
         a('')
 
     a('## La lista para generar\n')
-    a('Una fila por criatura, en el orden en que conviene generarlas. «Archivo»: el nombre del modelo')
-    a('(`.glb`) y de su imagen; el número es el de la lista de referencia de `CRIATURAS.md`. «A»: tipos del')
-    a('autor. Entre comillas, «así», un apodo provisional: el nombre lo pone el autor. La idea va en la')
-    a('primera forma de cada especie.\n')
+    a('Una fila por criatura, en el orden en que conviene generarlas. «Pokédex»: el nombre de la imagen y')
+    a('del modelo que sube el autor. «Id interno»: el del juego (el número de la lista de referencia de')
+    a('`CRIATURAS.md` y la forma). «A»: tipos del autor. Entre comillas, «así», un apodo provisional: el')
+    a('nombre lo pone el autor. La idea va en la primera forma de cada especie.\n')
     for clave, nombre, *_r in ISLAS:
         a(f'### {nombre}\n')
-        a('| # | Archivo | Especie | Forma | Tipos | Estadísticas de | Zona | Idea |')
-        a('| --- | --- | --- | --- | --- | --- | --- | --- |')
+        a('| Pokédex | Id interno | Forma | Tipos | Estadísticas de | Zona | Idea |')
+        a('| --- | --- | --- | --- | --- | --- | --- |')
         for f in filas:
             if f['isla'] != clave:
                 continue
             arch = f"{f['archivo']} (hecha)" if f['hecha'] else f['archivo']
+            pok = f"{f['pok']}" 
             tipos = f"{f['tipos']} A" if f['autor'] else f['tipos']
             ref = f"{f['ref']} ({f['quintil']}, {f['papel']})" if f['quintil'] else f['ref']
             zona = f['zona'] if f['forma'] in ('1.ª', 'única') else ''
-            a(f"| {f['orden']} | {arch} | {f['especie']} | {f['forma']} | {tipos} | {ref} | {zona} | {f['idea']} |")
+            a(f"| {pok} | {arch} | {f['forma']} | {tipos} | {ref} | {zona} | {f['idea']} |")
         a('')
     return '\n'.join(o)
 
@@ -562,7 +586,7 @@ def excel(filas, c, ruta):
     wb = openpyxl.Workbook()
     ws = wb.active
     ws.title = 'Criaturas'
-    cab = ['#', 'Isla', 'Zona', 'También en', 'Nº lista', 'Archivo', 'Especie', 'Forma', 'Tipo principal',
+    cab = ['Pokédex', 'Nombre de archivo', 'Isla', 'Zona', 'También en', 'Nº lista', 'Id interno', 'Especie', 'Forma', 'Tipo principal',
            'Tipo secundario', 'Tipos del autor', 'Estadísticas de', 'Quintil', 'Papel', 'Idea para la imagen',
            'Imagen hecha', '3D hecho']
     ws.append(cab)
@@ -571,18 +595,18 @@ def excel(filas, c, ruta):
         celda.fill = PatternFill('solid', fgColor='2F5D62')
     for f in filas:
         t = f['tipos'].split('/')
-        ws.append([f['orden'], NOMBRE_ISLA[f['isla']], f['zona'], f['tambien'], f['n'], f['archivo'],
+        ws.append([f['orden'], f['pok'], NOMBRE_ISLA[f['isla']], f['zona'], f['tambien'], f['n'], f['archivo'],
                    f['especie'], f['forma'], t[0], t[1] if len(t) > 1 else '', 'sí' if f['autor'] else '',
                    f['ref'], f['quintil'], f['papel'], f['idea'], 'sí' if f['hecha'] else 'no',
                    'sí' if f['hecha'] else 'no'])
     dv = DataValidation(type='list', formula1='"sí,no"', allow_blank=True)
     ws.add_data_validation(dv)
-    dv.add(f'P2:Q{len(filas) + 1}')
-    anchos = [5, 13, 30, 40, 8, 16, 32, 7, 13, 13, 8, 14, 8, 7, 70, 12, 10]
+    dv.add(f'Q2:R{len(filas) + 1}')
+    anchos = [8, 30, 13, 30, 40, 8, 16, 32, 7, 13, 13, 8, 14, 8, 7, 70, 12, 10]
     for i, w in enumerate(anchos):
         ws.column_dimensions[openpyxl.utils.get_column_letter(i + 1)].width = w
     for fila in ws.iter_rows(min_row=2):
-        fila[14].alignment = Alignment(wrap_text=True, vertical='top')
+        fila[15].alignment = Alignment(wrap_text=True, vertical='top')
     ws.freeze_panes = 'A2'
     ws.auto_filter.ref = ws.dimensions
 
@@ -616,13 +640,14 @@ de las que 4 ya están hechas.
 
 CÓMO VAMOS
 - Al empezar, y cada vez que te diga «siguiente», dime cuál toca, con este formato:
-  «N. [archivo] Nombre, forma · tipo · fuerza (quintil) y papel · estadísticas como X · zona ·
-  idea». Después, propón el diseño en 2 o 3 frases.
+  «PokN. Nombre, forma · tipo · fuerza (quintil) y papel · estadísticas como X · zona · idea».
+  Después, propón el diseño en 2 o 3 frases.
 - Cuando te diga «genera», haz la imagen. Si te digo «otra», repítela con los cambios que te
   diga. «Saltar» pasa a la siguiente sin hacerla. Si te digo un número («vamos por el 57»),
   sigue desde ahí.
-- Al terminar cada una, recuérdame cómo guardar la imagen: el nombre del archivo, por ejemplo
-  031-1.png.
+- Al terminar cada una, recuérdame cómo guardar la imagen y después el modelo 3D: «PokN. Nombre»,
+  por ejemplo «Pok16. Civeta». N es su número de la lista y no cambia nunca. Si va con apodo y
+  elegimos un nombre, usa el nombre elegido.
 - Si te pido «estado», dime por qué número vamos y cuántas faltan.
 
 REGLAS
@@ -660,7 +685,7 @@ def guia_gemini(filas):
             o.append(f"== {NOMBRE_ISLA[isla_actual].upper()} ==")
             o.append('')
         de = f"{f['forma']} forma de {f['nformas']}" if f['forma'] != 'única' else 'sin evolución'
-        cab = f"{f['orden']}. [{f['archivo']}] {f['especie']}, {de}"
+        cab = f"{f['pok']}, {de}"
         if f['hecha']:
             o.append(cab + ' · YA HECHA')
             o.append('')
@@ -695,6 +720,7 @@ def guia_gemini(filas):
 if __name__ == '__main__':
     filas = criaturas()
     cuentas = comprobar(filas)
+    fijar_pokedex(filas, renumerar='--renumerar' in sys.argv)
     with open(os.path.join(RAIZ, 'PLAN-CRIATURAS.md'), 'w', encoding='utf-8') as fh:
         fh.write(markdown(filas, cuentas) + '\n')
     excel(filas, cuentas, os.path.join(RAIZ, 'conceptos', 'criaturas', 'plan-criaturas.xlsx'))
