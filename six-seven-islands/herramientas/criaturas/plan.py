@@ -4,7 +4,7 @@
 #
 # Comprueba las cuentas (tipos principales iguales a los objetivos, 60 % sin secundario, de 3 a 6
 # especies por hierba, gimnasios cubiertos) y escribe PLAN-CRIATURAS.md y
-# conceptos/criaturas/plan-criaturas.xlsx.
+# conceptos/criaturas/plan-criaturas.xlsx, y la guía para Gemini (conceptos/criaturas/guia-gemini.txt).
 #
 # Uso: python3 herramientas/criaturas/plan.py
 import collections
@@ -109,11 +109,12 @@ ISLAS = [
 # propuesta. La idea es para la imagen: no se parece al Pokémon de referencia (R8).
 LAMINA = 'Lámina del autor.'
 INICIALES = [
-    ('agua', 'Cronti → Chicront → Krantacor', ['Agua', 'Agua', 'Agua'], 'Lámina y modelo de la 1.ª.'),
-    ('planta', None, ['Planta', 'Planta', 'Planta/Mental'], 'El lagarto chamán; modelo de la 1.ª.'),
-    ('infernal', None, ['Infernal', 'Infernal', 'Infernal'], 'Modelo de la 1.ª; el secundario de la final, por decidir.'),
-    ('roca', 'Armalito → Uralito → Reactolito', ['Roca', 'Roca/Veneno', 'Roca/Veneno'], 'Lámina y modelo de la 1.ª.'),
-    ('tierra', None, ['Tierra', 'Tierra/Espectral', 'Tierra/Espectral'], 'La de otro amigo; por diseñar.'),
+    ('agua', 'Cronti → Chicront → Krantacor', ['Agua', 'Agua', 'Agua'], 'Nombres del autor; la 1.ª forma ya está hecha.'),
+    ('planta', None, ['Planta', 'Planta', 'Planta/Mental'], 'El lagarto chamán, que acaba en chamán de Planta/Mental; la 1.ª forma ya está hecha.'),
+    ('infernal', None, ['Infernal', 'Infernal', 'Infernal'], 'La 1.ª forma ya está hecha.'),
+    ('roca', 'Armalito → Uralito → Reactolito', ['Roca', 'Roca/Veneno', 'Roca/Veneno'], 'Lámina del autor; la 1.ª forma ya está hecha.'),
+    ('tierra', None, ['Tierra', 'Tierra/Espectral', 'Tierra/Espectral'],
+     'Por diseñar: la inicial del pueblo de los pueblos sepultados por el volcán. Una cría de tierra y ceniza que, al evolucionar, gana un aire espectral. Que no se parezca a las otras cuatro iniciales.'),
 ]
 HECHAS = {('agua', 1), ('planta', 1), ('infernal', 1), ('roca', 1)}  # modelos ya en el juego
 
@@ -365,7 +366,9 @@ def criaturas():
             filas.append(dict(isla='lz', zona='Inicial (museo de Lanzarote)', tambien='', n='—',
                               especie=nombre_forma(nombre, i, len(tipos)) or nombre or f'Inicial de {clave}', forma=ORDINAL[i], tipos=t,
                               ref='Propias (del autor)', quintil='', papel='', idea=idea if i == 0 else '',
-                              archivo=f'inicial-{clave}-{i + 1}', hecha=(clave, i + 1) in HECHAS, autor=True))
+                              archivo=f'inicial-{clave}-{i + 1}', hecha=(clave, i + 1) in HECHAS, autor=True,
+                              idea_linea=idea, linea_tipos=' → '.join(tipos), linea_refs='', nformas=len(tipos),
+                              niveles=None, lamina=idea.startswith('Lámina'), apodo=False, inicial=True))
     for n, nombre, tipos, zona, tambien, idea in ESPECIES:
         refs = REF[n]
         assert len(refs) == len(tipos), (n, refs, tipos)
@@ -377,7 +380,10 @@ def criaturas():
                               forma='única' if unica else ORDINAL[i],
                               tipos=t, ref=rn, quintil=f'Q{q}', papel=p, idea=idea if i == 0 else '',
                               archivo=f'{n:03d}' if unica else f'{n:03d}-{i + 1}', hecha=False,
-                              autor=n in DEL_AUTOR))
+                              autor=n in DEL_AUTOR, idea_linea=idea, linea_tipos=' → '.join(tipos),
+                              linea_refs=' → '.join(r[0] for r in refs), nformas=len(tipos),
+                              niveles=ZONA[limpia(zona)][2], lamina=idea.startswith('Lámina'),
+                              apodo=nombre is None, inicial=False))
     orden = [c for c, *_r in ISLAS]
     filas.sort(key=lambda f: orden.index(f['isla']))  # estable: respeta el orden de dentro
     for i, f in enumerate(filas, 1):
@@ -471,7 +477,8 @@ def markdown(filas, c):
     a('  forma del Pokémon de referencia. Si una imagen recuerda a una criatura conocida, se descarta.\n')
     a('**Cómo generarlas.** En el orden de la lista: primero las iniciales y Lanzarote, que son las que se')
     a('ven antes. Cada criatura sigue `prompts-meshy.md`: imagen 2D, después Image to 3D, y el archivo con')
-    a('el nombre de la columna «Archivo» (`.glb` y su imagen `.webp` o `.png`).\n')
+    a('el nombre de la columna «Archivo» (`.glb` y su imagen `.webp` o `.png`). Para que Gemini te las vaya')
+    a('diciendo de una en una: `conceptos/criaturas/guia-gemini.txt`, que lleva sus instrucciones arriba.\n')
     falta = total - hechas
     a(f'**Coste.** Faltan {falta} criaturas (hay {hechas} hechas). A {CREDITOS_POR_CRIATURA} créditos cada una')
     a(f'(Smart Topology y textura, precio comprobado el 2026-11-07), son unos {miles(falta * CREDITOS_POR_CRIATURA)} créditos sin')
@@ -596,10 +603,101 @@ def excel(filas, c, ruta):
     wb.save(ruta)
 
 
+PAPEL = {'AF': 'atacante físico', 'AE': 'atacante especial', 'TF': 'tanque físico',
+         'TE': 'tanque especial', 'EN': 'equilibrada'}
+FUERZA = {'Q1': 'de las más flojas', 'Q2': 'floja', 'Q3': 'media', 'Q4': 'fuerte',
+          'Q5': 'de las más fuertes, nivel legendario'}
+
+INSTRUCCIONES_GEMINI = """INSTRUCCIONES PARA GEMINI
+
+Vamos a generar las criaturas de mi juego de una en una, con el mismo estilo de imagen que ya
+usamos en esta conversación. Abajo tienes la lista completa, numerada. Es mi plan: 203 criaturas,
+de las que 4 ya están hechas.
+
+CÓMO VAMOS
+- Al empezar, y cada vez que te diga «siguiente», dime cuál toca, con este formato:
+  «N. [archivo] Nombre, forma · tipo · fuerza (quintil) y papel · estadísticas como X · zona ·
+  idea». Después, propón el diseño en 2 o 3 frases.
+- Cuando te diga «genera», haz la imagen. Si te digo «otra», repítela con los cambios que te
+  diga. «Saltar» pasa a la siguiente sin hacerla. Si te digo un número («vamos por el 57»),
+  sigue desde ahí.
+- Al terminar cada una, recuérdame cómo guardar la imagen: el nombre del archivo, por ejemplo
+  031-1.png.
+- Si te pido «estado», dime por qué número vamos y cuántas faltan.
+
+REGLAS
+1. El Pokémon de «estadísticas como» es solo una referencia interna de lo fuerte que es y de su
+   papel. La criatura NO puede parecerse a él ni a ningún otro Pokémon: ni en el animal, ni en
+   la silueta, ni en los colores, ni en las piezas. Parte de la idea que te doy, que es canaria.
+2. Una imagen por criatura, nunca la línea entera junta: después la paso a 3D.
+3. Las evoluciones mantienen el diseño de la forma anterior (colores, cara y piezas) y crecen:
+   la 2.ª forma añade piezas, como crestas o cuernos, y la 3.ª es más grande e imponente. Si la
+   anterior no está en esta conversación, pídeme su imagen antes de diseñar.
+4. Si pone «lámina del autor», el diseño ya existe: pídeme la lámina y dibuja esa criatura sola,
+   fiel a ella.
+5. El color principal sale de su tipo, y el papel se nota en el cuerpo: los tanques, robustos;
+   los atacantes, más ágiles.
+6. Si el nombre va entre comillas («Cabozo»), es un apodo provisional: propón 3 nombres
+   originales para la especie, que no se parezcan a nombres de Pokémon. Si ya tiene nombre, úsalo.
+7. Nunca escribas texto ni nombres de Pokémon en la imagen.
+8. Las marcadas «YA HECHA» se saltan.
+
+LOS TIPOS DE MI JUEGO
+Común (normal), Agua, Tierra, Planta, Aire (volador), Eléctrico, Hielo, Infernal (fuego),
+Lucha, Mental (psíquico), Oscuridad (siniestro), Espectral (fantasma), Acero, Roca, Ancestral
+(primordial y dragones), Bicho y Veneno. «Agua/Tierra» quiere decir dos tipos: el primero es el
+principal.
+"""
+
+
+def guia_gemini(filas):
+    """El texto para pasárselo a Gemini: instrucciones y la lista, una criatura por entrada."""
+    o = [INSTRUCCIONES_GEMINI, 'LA LISTA', '']
+    isla_actual = None
+    for f in filas:
+        if f['isla'] != isla_actual:
+            isla_actual = f['isla']
+            o.append(f"== {NOMBRE_ISLA[isla_actual].upper()} ==")
+            o.append('')
+        de = f"{f['forma']} forma de {f['nformas']}" if f['forma'] != 'única' else 'sin evolución'
+        cab = f"{f['orden']}. [{f['archivo']}] {f['especie']}, {de}"
+        if f['hecha']:
+            o.append(cab + ' · YA HECHA')
+            o.append('')
+            continue
+        o.append(cab)
+        o.append(f"   Tipo: {f['tipos']}" + (f" (la línea: {f['linea_tipos']})" if f['nformas'] > 1 else ''))
+        if f['inicial']:
+            o.append('   Fuerza: inicial, con estadísticas propias (empieza floja y la final es fuerte).')
+        else:
+            o.append(f"   Fuerza: quintil {f['quintil'][1]} de 5, {FUERZA[f['quintil']]}. Papel: {PAPEL[f['papel']]}.")
+            linea = f" (la línea: {f['linea_refs']})" if f['nformas'] > 1 else ''
+            o.append(f"   Estadísticas como: {f['ref']}{linea}. Solo de referencia: que no se parezca.")
+        zona = f['zona']
+        if f['niveles']:
+            zona += f", {NOMBRE_ISLA[f['isla']]} (niveles {f['niveles'][0]}-{f['niveles'][1]})"
+        elif not f['inicial']:
+            zona += f", {NOMBRE_ISLA[f['isla']]} (sale tras la Liga)"
+        o.append(f'   Zona: {zona}')
+        idea = f['idea_linea']
+        if f['lamina']:
+            idea = 'lámina del autor: pídemela y dibújala sola, fiel a ella.'
+            if f['nformas'] > 1 and f['forma'] != '1.ª':
+                idea = 'lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.'
+        elif f['inicial']:
+            idea += ' Pídeme la imagen de la 1.ª forma para seguir su diseño.' if f['forma'] != '1.ª' else ''
+        o.append(f'   Idea: {idea}')
+        o.append('')
+    o.append('FIN DE LA LISTA')
+    return '\n'.join(o) + '\n'
+
+
 if __name__ == '__main__':
     filas = criaturas()
     cuentas = comprobar(filas)
     with open(os.path.join(RAIZ, 'PLAN-CRIATURAS.md'), 'w', encoding='utf-8') as fh:
         fh.write(markdown(filas, cuentas) + '\n')
     excel(filas, cuentas, os.path.join(RAIZ, 'conceptos', 'criaturas', 'plan-criaturas.xlsx'))
-    print(f"{len(filas)} criaturas, {cuentas['pct']:.0f} % sin secundario. Escritos PLAN-CRIATURAS.md y plan-criaturas.xlsx.")
+    with open(os.path.join(RAIZ, 'conceptos', 'criaturas', 'guia-gemini.txt'), 'w', encoding='utf-8') as fh:
+        fh.write(guia_gemini(filas))
+    print(f"{len(filas)} criaturas, {cuentas['pct']:.0f} % sin secundario. Escritos PLAN-CRIATURAS.md, plan-criaturas.xlsx y guia-gemini.txt.")

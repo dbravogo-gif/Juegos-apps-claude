@@ -17,7 +17,8 @@ nuevas y pueden cambiar al diseñar cada isla.
 
 **Cómo generarlas.** En el orden de la lista: primero las iniciales y Lanzarote, que son las que se
 ven antes. Cada criatura sigue `prompts-meshy.md`: imagen 2D, después Image to 3D, y el archivo con
-el nombre de la columna «Archivo» (`.glb` y su imagen `.webp` o `.png`).
+el nombre de la columna «Archivo» (`.glb` y su imagen `.webp` o `.png`). Para que Gemini te las vaya
+diciendo de una en una: `conceptos/criaturas/guia-gemini.txt`, que lleva sus instrucciones arriba.
 
 **Coste.** Faltan 199 criaturas (hay 4 hechas). A 15 créditos cada una
 (Smart Topology y textura, precio comprobado el 2026-11-07), son unos 2.985 créditos sin
@@ -206,19 +207,19 @@ primera forma de cada especie.
 
 | # | Archivo | Especie | Forma | Tipos | Estadísticas de | Zona | Idea |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | inicial-agua-1 (hecha) | Cronti | 1.ª | Agua A | Propias (del autor) | Inicial (museo de Lanzarote) | Lámina y modelo de la 1.ª. |
+| 1 | inicial-agua-1 (hecha) | Cronti | 1.ª | Agua A | Propias (del autor) | Inicial (museo de Lanzarote) | Nombres del autor; la 1.ª forma ya está hecha. |
 | 2 | inicial-agua-2 | Chicront | 2.ª | Agua A | Propias (del autor) |  |  |
 | 3 | inicial-agua-3 | Krantacor | 3.ª | Agua A | Propias (del autor) |  |  |
-| 4 | inicial-planta-1 (hecha) | Inicial de planta | 1.ª | Planta A | Propias (del autor) | Inicial (museo de Lanzarote) | El lagarto chamán; modelo de la 1.ª. |
+| 4 | inicial-planta-1 (hecha) | Inicial de planta | 1.ª | Planta A | Propias (del autor) | Inicial (museo de Lanzarote) | El lagarto chamán, que acaba en chamán de Planta/Mental; la 1.ª forma ya está hecha. |
 | 5 | inicial-planta-2 | Inicial de planta | 2.ª | Planta A | Propias (del autor) |  |  |
 | 6 | inicial-planta-3 | Inicial de planta | 3.ª | Planta/Mental A | Propias (del autor) |  |  |
-| 7 | inicial-infernal-1 (hecha) | Inicial de infernal | 1.ª | Infernal A | Propias (del autor) | Inicial (museo de Lanzarote) | Modelo de la 1.ª; el secundario de la final, por decidir. |
+| 7 | inicial-infernal-1 (hecha) | Inicial de infernal | 1.ª | Infernal A | Propias (del autor) | Inicial (museo de Lanzarote) | La 1.ª forma ya está hecha. |
 | 8 | inicial-infernal-2 | Inicial de infernal | 2.ª | Infernal A | Propias (del autor) |  |  |
 | 9 | inicial-infernal-3 | Inicial de infernal | 3.ª | Infernal A | Propias (del autor) |  |  |
-| 10 | inicial-roca-1 (hecha) | Armalito | 1.ª | Roca A | Propias (del autor) | Inicial (museo de Lanzarote) | Lámina y modelo de la 1.ª. |
+| 10 | inicial-roca-1 (hecha) | Armalito | 1.ª | Roca A | Propias (del autor) | Inicial (museo de Lanzarote) | Lámina del autor; la 1.ª forma ya está hecha. |
 | 11 | inicial-roca-2 | Uralito | 2.ª | Roca/Veneno A | Propias (del autor) |  |  |
 | 12 | inicial-roca-3 | Reactolito | 3.ª | Roca/Veneno A | Propias (del autor) |  |  |
-| 13 | inicial-tierra-1 | Inicial de tierra | 1.ª | Tierra A | Propias (del autor) | Inicial (museo de Lanzarote) | La de otro amigo; por diseñar. |
+| 13 | inicial-tierra-1 | Inicial de tierra | 1.ª | Tierra A | Propias (del autor) | Inicial (museo de Lanzarote) | Por diseñar: la inicial del pueblo de los pueblos sepultados por el volcán. Una cría de tierra y ceniza que, al evolucionar, gana un aire espectral. Que no se parezca a las otras cuatro iniciales. |
 | 14 | inicial-tierra-2 | Inicial de tierra | 2.ª | Tierra/Espectral A | Propias (del autor) |  |  |
 | 15 | inicial-tierra-3 | Inicial de tierra | 3.ª | Tierra/Espectral A | Propias (del autor) |  |  |
 | 16 | 031-1 | Civeta | 1.ª | Común A | Zigzagoon (Q1, AF) | El Golfo | Lámina del autor (civeta.jpg). |
