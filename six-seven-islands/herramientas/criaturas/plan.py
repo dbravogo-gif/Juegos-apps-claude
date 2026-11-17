@@ -117,6 +117,9 @@ INICIALES = [
      'Por diseñar: la inicial del pueblo de los pueblos sepultados por el volcán. Una cría de tierra y ceniza que, al evolucionar, gana un aire espectral. Que no se parezca a las otras cuatro iniciales.'),
 ]
 HECHAS = {('agua', 1), ('planta', 1), ('infernal', 1), ('roca', 1)}  # modelos ya en el juego
+# Hechas por el autor antes del plan, con imagen y modelo (2026-11-17): la civeta y el dinosaurio
+# de casco de roca.
+HECHAS_IDS = {'031-1', '031-2', '062-1', '062-2'}
 
 ESPECIES = [
     # Lanzarote (propuesta 2 de CRIATURAS.md)
@@ -231,7 +234,7 @@ ESPECIES = [
     (63, None, ['Acero', 'Acero/Roca'], 'tf-cueva', [],
      'Tortuga gigante de las islas, que se creía extinta: cría con caparazón de piedra; la 2.ª, coraza de piedra y hierro.'),
     (62, None, ['Roca', 'Roca'], 'tf-cueva', [],
-     'Rata gigante de las islas, que se creía extinta, con el cráneo de piedra; la 2.ª, embiste rompiendo rocas. Sustituye al dinosaurio descartado.'),
+     'Lámina del autor (dino-casco-roca.jpg), recuperada el 2026-11-17: dinosaurio con casco de roca. Quizá lo use la líder de Lanzarote.'),
     (89, None, ['Espectral'], 'tf-cueva*', [], 'Ánima atrapada en una lágrima de lava del tubo volcánico.'),
     (75, None, ['Aire'], 'tf-teno', ['lp-roque'], 'Guincho: águila pescadora de los acantilados.'),
     (59, None, ['Agua', 'Agua'], 'tf-gigantes', ['lg-organos', 'eh-restinga'],
@@ -314,7 +317,7 @@ APODO = {
     83: 'Bomba volcánica', 71: 'Tabona', 68: 'Cantero', 25: 'Burro', 73: 'Bailador de isa',
     77: 'Saltador de garrote', 33: 'Piña luchadora', 42: 'Lisa de la charca', 1: 'Mariposa de laurisilva',
     30: 'Gato del monte', 53: 'Hurón', 65: 'Farol', 72: 'Aldaba', 2: 'Tortuga boba', 74: 'Vieja',
-    63: 'Tortuga gigante', 62: 'Rata gigante', 89: 'Ánima de lava', 75: 'Guincho', 59: 'Delfín',
+    63: 'Tortuga gigante', 62: 'Dino de casco', 89: 'Ánima de lava', 75: 'Guincho', 59: 'Delfín',
     47: 'Morena', 90: 'Calamar gigante', 58: 'Neverita', 15: 'Escarcha', 19: 'Tajinaste',
     101: 'Guardián del Sello', 99: 'Guardián del hielo', 6: 'Silbador', 49: 'Caracol hipnótico',
     14: 'Duende de laurisilva', 46: 'Bruma', 64: 'Coruja', 87: 'Mantis', 8: 'Bucio', 100: 'Gara',
@@ -340,7 +343,7 @@ def miles(x):
 
 
 # Tipos que eligió el autor (los demás secundarios son propuesta).
-DEL_AUTOR = {31, 32, 7, 16, 34, 5, 35, 95, 78, 10, 20, 36, 66, 40, 28, 26}
+DEL_AUTOR = {31, 32, 7, 16, 34, 5, 35, 95, 78, 10, 20, 36, 66, 40, 28, 26, 62}
 
 # ── Datos derivados ───────────────────────────────────────────────────────────────────────────
 REF = {}  # nº → [(nombre, quintil, papel)]
@@ -379,37 +382,55 @@ def criaturas():
                               especie=nombre_forma(nombre, i, len(tipos)) or nombre_especie(n, nombre),
                               forma='única' if unica else ORDINAL[i],
                               tipos=t, ref=rn, quintil=f'Q{q}', papel=p, idea=idea if i == 0 else '',
-                              archivo=f'{n:03d}' if unica else f'{n:03d}-{i + 1}', hecha=False,
+                              archivo=f'{n:03d}' if unica else f'{n:03d}-{i + 1}',
+                              hecha=(f'{n:03d}' if unica else f'{n:03d}-{i + 1}') in HECHAS_IDS,
                               autor=n in DEL_AUTOR, idea_linea=idea, linea_tipos=' → '.join(tipos),
                               linea_refs=' → '.join(r[0] for r in refs), nformas=len(tipos),
                               niveles=ZONA[limpia(zona)][2], lamina=idea.startswith('Lámina'),
                               apodo=nombre is None, inicial=False))
     orden = [c for c, *_r in ISLAS]
     filas.sort(key=lambda f: orden.index(f['isla']))  # estable: respeta el orden de dentro
-    for i, f in enumerate(filas, 1):
-        f['orden'] = i
-        # Nombre de archivo del autor (2026-11-17): «PokN. Nombre», con N el número de esta lista.
-        f['pok'] = f"Pok{i}. {f['especie'].strip('«»')}"
+    # El número de Pokédex va atado a cada criatura (pokedex.json), no a su sitio en la lista: si
+    # una especie cambia de zona o de isla, conserva su número. Las nuevas, al final.
+    fijada = leer_pokedex()
+    siguiente = max(fijada.values(), default=0) + 1
+    for f in filas:
+        if f['archivo'] in fijada:
+            f['orden'] = fijada[f['archivo']]
+        else:
+            f['orden'] = siguiente
+            siguiente += 1
+        # Nombre de archivo del autor (2026-11-17): «PokN. Nombre».
+        f['pok'] = f"Pok{f['orden']}. {f['especie'].strip('«»')}"
+    filas.sort(key=lambda f: (orden.index(f['isla']), f['orden']))
     return filas
 
 
-def fijar_pokedex(filas, renumerar=False):
-    """Los números de Pokédex no cambian nunca: el autor nombra sus archivos con ellos. La primera
-    vez se guardan en pokedex.json; después, si el plan los mueve, se para (con --renumerar se
-    aceptan, solo si el autor lo decide)."""
+RUTA_POKEDEX = os.path.join(RAIZ, 'conceptos', 'criaturas', 'pokedex.json')
+
+
+def leer_pokedex():
+    """Id interno → número de Pokédex, o vacío si aún no se ha fijado (o con --renumerar)."""
     import json
-    ruta = os.path.join(RAIZ, 'conceptos', 'criaturas', 'pokedex.json')
-    actual = {str(f['orden']): f['archivo'] for f in filas}
-    if os.path.exists(ruta) and not renumerar:
-        with open(ruta, encoding='utf-8') as fh:
-            fijada = json.load(fh)
-        distintos = [k for k in sorted(set(fijada) | set(actual), key=int) if fijada.get(k) != actual.get(k)]
-        if distintos:
-            raise SystemExit('La numeración de la Pokédex ha cambiado en ' + ', '.join(distintos[:10]) +
-                             '. Las criaturas nuevas van al final; renumerar solo si el autor lo decide (--renumerar).')
-        return
-    with open(ruta, 'w', encoding='utf-8') as fh:
-        json.dump(actual, fh, ensure_ascii=False, indent=0)
+    if '--renumerar' in sys.argv or not os.path.exists(RUTA_POKEDEX):
+        return {}
+    with open(RUTA_POKEDEX, encoding='utf-8') as fh:
+        return {v: int(k) for k, v in json.load(fh).items()}
+
+
+def fijar_pokedex(filas, renumerar=False):
+    """Guarda los números en pokedex.json. Un número ya dado no se reutiliza ni se pierde: si una
+    criatura numerada desaparece del plan, se para (renumerar solo si el autor lo decide)."""
+    import json
+    actual = {f['archivo']: f['orden'] for f in filas}
+    if len(set(actual.values())) != len(actual):
+        raise SystemExit('Hay dos criaturas con el mismo número de Pokédex.')
+    perdidas = [f'{n} ({a})' for a, n in leer_pokedex().items() if a not in actual]
+    if perdidas and not renumerar:
+        raise SystemExit('Estas criaturas numeradas ya no están en el plan: ' + ', '.join(perdidas) +
+                         '. Un número dado no se pierde; renumerar solo si el autor lo decide (--renumerar).')
+    with open(RUTA_POKEDEX, 'w', encoding='utf-8') as fh:
+        json.dump({str(n): a for a, n in sorted(actual.items(), key=lambda x: x[1])}, fh, ensure_ascii=False, indent=0)
         fh.write('\n')
 
 

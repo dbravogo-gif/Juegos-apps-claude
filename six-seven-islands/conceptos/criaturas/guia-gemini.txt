@@ -117,19 +117,9 @@ Pok15. Inicial de tierra, 3.ª forma de 3
    Zona: Inicial (museo de Lanzarote)
    Idea: Por diseñar: la inicial del pueblo de los pueblos sepultados por el volcán. Una cría de tierra y ceniza que, al evolucionar, gana un aire espectral. Que no se parezca a las otras cuatro iniciales. Pídeme la imagen de la 1.ª forma para seguir su diseño.
 
-Pok16. Civeta, 1.ª forma de 2
-   Tipo: Común (la línea: Común → Común)
-   Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante físico.
-   Estadísticas como: Zigzagoon (la línea: Zigzagoon → Linoone). Solo de referencia: que no se parezca.
-   Zona: El Golfo, Lanzarote (niveles 3-5)
-   Idea: lámina del autor: pídemela y dibújala sola, fiel a ella.
+Pok16. Civeta, 1.ª forma de 2 · YA HECHA
 
-Pok17. Civeta, 2.ª forma de 2
-   Tipo: Común (la línea: Común → Común)
-   Fuerza: quintil 3 de 5, media. Papel: atacante físico.
-   Estadísticas como: Linoone (la línea: Zigzagoon → Linoone). Solo de referencia: que no se parezca.
-   Zona: El Golfo, Lanzarote (niveles 3-5)
-   Idea: lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.
+Pok17. Civeta, 2.ª forma de 2 · YA HECHA
 
 Pok18. Tinzal, 1.ª forma de 2
    Tipo: Aire (la línea: Aire → Aire/Mental)
@@ -928,19 +918,9 @@ Pok130. Tortuga gigante, 2.ª forma de 2
    Zona: Cueva del Viento, Tenerife (niveles 30-33)
    Idea: Tortuga gigante de las islas, que se creía extinta: cría con caparazón de piedra; la 2.ª, coraza de piedra y hierro.
 
-Pok131. Rata gigante, 1.ª forma de 2
-   Tipo: Roca (la línea: Roca → Roca)
-   Fuerza: quintil 2 de 5, floja. Papel: atacante físico.
-   Estadísticas como: Cranidos (la línea: Cranidos → Rampardos). Solo de referencia: que no se parezca.
-   Zona: Cueva del Viento, Tenerife (niveles 30-33)
-   Idea: Rata gigante de las islas, que se creía extinta, con el cráneo de piedra; la 2.ª, embiste rompiendo rocas. Sustituye al dinosaurio descartado.
+Pok131. Dino de casco, 1.ª forma de 2 · YA HECHA
 
-Pok132. Rata gigante, 2.ª forma de 2
-   Tipo: Roca (la línea: Roca → Roca)
-   Fuerza: quintil 4 de 5, fuerte. Papel: atacante físico.
-   Estadísticas como: Rampardos (la línea: Cranidos → Rampardos). Solo de referencia: que no se parezca.
-   Zona: Cueva del Viento, Tenerife (niveles 30-33)
-   Idea: Rata gigante de las islas, que se creía extinta, con el cráneo de piedra; la 2.ª, embiste rompiendo rocas. Sustituye al dinosaurio descartado.
+Pok132. Dino de casco, 2.ª forma de 2 · YA HECHA
 
 Pok133. Ánima de lava, sin evolución
    Tipo: Espectral
