@@ -2,7 +2,7 @@ INSTRUCCIONES PARA GEMINI
 
 Vamos a generar las criaturas de mi juego de una en una, con el estilo de imagen de la sección
 «CÓMO TIENEN QUE SER LAS IMÁGENES», más abajo. Abajo tienes la lista completa, numerada. Es mi plan: 203 criaturas,
-de las que 15 ya están hechas.
+de las que 25 ya están hechas.
 
 CÓMO VAMOS
 - Al empezar, y cada vez que te diga «siguiente», dime cuál toca, con este formato:
@@ -155,75 +155,25 @@ Pok23. Dragombo, 2.ª forma de 3 · YA HECHA
 
 Pok24. Dragalis, 3.ª forma de 3 · YA HECHA
 
-Pok25. Erizo de fuego, 1.ª forma de 3
-   Tipo: Infernal (la línea: Infernal → Infernal → Infernal/Tierra)
-   Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante físico.
-   Estadísticas como: Sandile (la línea: Sandile → Krokorok → Krookodile). Solo de referencia: que no se parezca.
-   Zona: Montañas del Fuego, Lanzarote (niveles 5-7)
-   Idea: Erizo de fuego (autor, 2026-11-17): erizo moruno con púas de lava encendida que se hace bola y rueda; la 2.ª, con púas de escoria más largas; la 3.ª, gran erizo volcánico que echa humo por la espalda.
+Pok25. Quillflare, 1.ª forma de 3 · YA HECHA
 
-Pok26. Erizo de fuego, 2.ª forma de 3
-   Tipo: Infernal (la línea: Infernal → Infernal → Infernal/Tierra)
-   Fuerza: quintil 2 de 5, floja. Papel: atacante físico.
-   Estadísticas como: Krokorok (la línea: Sandile → Krokorok → Krookodile). Solo de referencia: que no se parezca.
-   Zona: Montañas del Fuego, Lanzarote (niveles 5-7)
-   Idea: Erizo de fuego (autor, 2026-11-17): erizo moruno con púas de lava encendida que se hace bola y rueda; la 2.ª, con púas de escoria más largas; la 3.ª, gran erizo volcánico que echa humo por la espalda.
+Pok26. Quillfire, 2.ª forma de 3 · YA HECHA
 
-Pok27. Erizo de fuego, 3.ª forma de 3
-   Tipo: Infernal/Tierra (la línea: Infernal → Infernal → Infernal/Tierra)
-   Fuerza: quintil 4 de 5, fuerte. Papel: atacante físico.
-   Estadísticas como: Krookodile (la línea: Sandile → Krokorok → Krookodile). Solo de referencia: que no se parezca.
-   Zona: Montañas del Fuego, Lanzarote (niveles 5-7)
-   Idea: Erizo de fuego (autor, 2026-11-17): erizo moruno con púas de lava encendida que se hace bola y rueda; la 2.ª, con púas de escoria más largas; la 3.ª, gran erizo volcánico que echa humo por la espalda.
+Pok27. Quimfernum, 3.ª forma de 3 · YA HECHA
 
-Pok28. Musaraña luchadora, 1.ª forma de 2
-   Tipo: Lucha (la línea: Lucha → Lucha)
-   Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante físico.
-   Estadísticas como: Riolu (la línea: Riolu → Lucario). Solo de referencia: que no se parezca.
-   Zona: Montañas del Fuego, Lanzarote (niveles 5-7)
-   Idea: Musaraña canaria (la del malpaís de Lanzarote), chiquita y nerviosa, que lanza golpes rápidos; la 2.ª, erguida, lucha con agarres de lucha canaria (faja y calzón de bregar). Ya no es un erizo: el erizo es el de fuego.
+Pok28. Kotono, 1.ª forma de 2 · YA HECHA
 
-Pok29. Musaraña luchadora, 2.ª forma de 2
-   Tipo: Lucha (la línea: Lucha → Lucha)
-   Fuerza: quintil 4 de 5, fuerte. Papel: atacante especial.
-   Estadísticas como: Lucario (la línea: Riolu → Lucario). Solo de referencia: que no se parezca.
-   Zona: Montañas del Fuego, Lanzarote (niveles 5-7)
-   Idea: Musaraña canaria (la del malpaís de Lanzarote), chiquita y nerviosa, que lanza golpes rápidos; la 2.ª, erguida, lucha con agarres de lucha canaria (faja y calzón de bregar). Ya no es un erizo: el erizo es el de fuego.
+Pok29. Koloi, 2.ª forma de 2 · YA HECHA
 
-Pok30. Basalto, 1.ª forma de 3
-   Tipo: Roca (la línea: Roca → Roca → Roca)
-   Fuerza: quintil 1 de 5, de las más flojas. Papel: tanque físico.
-   Estadísticas como: Roggenrola (la línea: Roggenrola → Boldore → Gigalith). Solo de referencia: que no se parezca.
-   Zona: Famara (rara), Lanzarote (niveles 6-8)
-   Idea: Bola de basalto con ojos verdes de olivina; la 2.ª, con cristales de olivina en el lomo; la 3.ª, coloso de columnas de basalto. La usa la líder de Roca.
+Pok30. Oreps, 1.ª forma de 3 · YA HECHA
 
-Pok31. Basalto, 2.ª forma de 3
-   Tipo: Roca (la línea: Roca → Roca → Roca)
-   Fuerza: quintil 2 de 5, floja. Papel: tanque físico.
-   Estadísticas como: Boldore (la línea: Roggenrola → Boldore → Gigalith). Solo de referencia: que no se parezca.
-   Zona: Famara (rara), Lanzarote (niveles 6-8)
-   Idea: Bola de basalto con ojos verdes de olivina; la 2.ª, con cristales de olivina en el lomo; la 3.ª, coloso de columnas de basalto. La usa la líder de Roca.
+Pok31. Mineps, 2.ª forma de 3 · YA HECHA
 
-Pok32. Basalto, 3.ª forma de 3
-   Tipo: Roca (la línea: Roca → Roca → Roca)
-   Fuerza: quintil 4 de 5, fuerte. Papel: tanque físico.
-   Estadísticas como: Gigalith (la línea: Roggenrola → Boldore → Gigalith). Solo de referencia: que no se parezca.
-   Zona: Famara (rara), Lanzarote (niveles 6-8)
-   Idea: Bola de basalto con ojos verdes de olivina; la 2.ª, con cristales de olivina en el lomo; la 3.ª, coloso de columnas de basalto. La usa la líder de Roca.
+Pok32. Colossoreps, 3.ª forma de 3 · YA HECHA
 
-Pok33. Patatín, 1.ª forma de 2
-   Tipo: Tierra (la línea: Tierra → Tierra)
-   Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante físico.
-   Estadísticas como: Makuhita (la línea: Makuhita → Hariyama). Solo de referencia: que no se parezca.
-   Zona: El Jable, Lanzarote (niveles 6-8)
-   Idea: lámina del autor: pídemela y dibújala sola, fiel a ella.
+Pok33. Kine, 1.ª forma de 2 · YA HECHA
 
-Pok34. Paparrón, 2.ª forma de 2
-   Tipo: Tierra (la línea: Tierra → Tierra)
-   Fuerza: quintil 3 de 5, media. Papel: atacante físico.
-   Estadísticas como: Hariyama (la línea: Makuhita → Hariyama). Solo de referencia: que no se parezca.
-   Zona: El Jable, Lanzarote (niveles 6-8)
-   Idea: lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.
+Pok34. Kurokin, 2.ª forma de 2 · YA HECHA
 
 Pok35. Melaní, 1.ª forma de 3
    Tipo: Bicho (la línea: Bicho → Bicho/Veneno → Bicho/Veneno)

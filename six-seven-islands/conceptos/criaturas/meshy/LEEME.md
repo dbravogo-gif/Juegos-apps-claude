@@ -2,7 +2,7 @@
 
 Aquí sube el autor lo que va generando, tal cual sale (autor, 2026-11-17):
 
-- la imagen 2D (`.png` o `.jpg`) y el modelo (`.glb`) de cada criatura;
+- la imagen 2D (`.webp`, `.png` o `.jpg`, la que salga) y el modelo (`.glb`) de cada criatura;
 - con el nombre «PokN. Nombre», por ejemplo `Pok16. Civeta.png` y `Pok16. Civeta.glb`.
 
 N es el número de la Pokédex de `PLAN-CRIATURAS.md` (columna «Pokédex»). No cambia nunca: está

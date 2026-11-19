@@ -59,28 +59,28 @@ export function quienEs(id: string): string | undefined {
 export const ENTRENADORES_ISLA1: Readonly<Record<string, DefEntrenador>> = {
   'entrenador-barrera': { equipo: [], premio: 100, tras: 'Vale, vale: puedes subir. ¡Pero que conste que la ladera es mía!' },
   'entrenador-llano': { equipo: [{ especie: 'c031-1', nivel: 5 }, { especie: 'cangrejo-de-charco', nivel: 4 }], premio: 120, tras: 'En la hierba seca hay más criaturas de las que se ven.' },
-  excursionista: { equipo: [{ especie: 'chispa-de-colada', nivel: 7 }], premio: 160, tras: 'Desde aquí arriba se ve medio Timanfaya. Merece la pena, ¿eh?' },
-  'entrenador-centro': { equipo: [{ especie: 'lagartija-de-picon', nivel: 7 }, { especie: 'chispa-de-colada', nivel: 6 }], premio: 180, tras: 'Tendré que entrenar con más calor todavía.' },
+  excursionista: { equipo: [{ especie: 'c013-1', nivel: 7 }], premio: 160, tras: 'Desde aquí arriba se ve medio Timanfaya. Merece la pena, ¿eh?' },
+  'entrenador-centro': { equipo: [{ especie: 'c043-1', nivel: 7 }, { especie: 'c013-1', nivel: 6 }], premio: 180, tras: 'Tendré que entrenar con más calor todavía.' },
   'entrenador-caldera': { equipo: [{ especie: 'c007-2', nivel: 8 }], premio: 200, tras: 'Quédate la poción, anda. Te la has ganado.' },
-  'entrenador-salida-fuego': { equipo: [{ especie: 'chispa-de-colada', nivel: 8 }, { especie: 'c031-2', nivel: 8 }], premio: 240, tras: 'Sigue hacia El Jable. La capital está al otro lado.' },
-  'entrenador-jable': { equipo: [{ especie: 'tabaiba-andante', nivel: 8 }, { especie: 'c032-2', nivel: 9 }], premio: 240, tras: 'El viento borra las huellas. Mañana nadie sabrá que me ganaste.' },
+  'entrenador-salida-fuego': { equipo: [{ especie: 'c013-2', nivel: 8 }, { especie: 'c031-2', nivel: 8 }], premio: 240, tras: 'Sigue hacia El Jable. La capital está al otro lado.' },
+  'entrenador-jable': { equipo: [{ especie: 'c034-1', nivel: 8 }, { especie: 'c032-2', nivel: 9 }], premio: 240, tras: 'El viento borra las huellas. Mañana nadie sabrá que me ganaste.' },
   'pescador-famara': { equipo: [{ especie: 'cangrejo-de-charco', nivel: 9 }, { especie: 'c037-2', nivel: 9 }], premio: 260, tras: 'Hoy no pican ni las viejas ni las criaturas. Qué le vamos a hacer.' },
   'pulpero-famara': { equipo: [{ especie: 'cangrejo-de-charco', nivel: 9 }, { especie: 'c007-1', nivel: 8 }], premio: 260, tras: 'Ni un pulpo y encima pierdo. ¡Qué día!' },
   // Los aprendices del gimnasio de Roca (gimnasio-roca.ts): vencerlos abre sus compuertas.
   'aprendiz-roca-1': {
-    equipo: [{ especie: 'lagartija-de-picon', nivel: 9 }],
+    equipo: [{ especie: 'c012-1', nivel: 9 }],
     premio: 270,
     tras: 'La líder dice que la roca aguanta lo que le echen. Contigo no ha aguantado.',
     alVencer: ['Con un estruendo, la compuerta de basalto se hunde en la lava. ¡El paso está abierto!'],
   },
   'aprendiz-roca-2': {
-    equipo: [{ especie: 'inicial-roca', nivel: 9 }, { especie: 'lagartija-de-picon', nivel: 9 }],
+    equipo: [{ especie: 'inicial-roca', nivel: 9 }, { especie: 'c012-1', nivel: 9 }],
     premio: 300,
     tras: 'Mira bien las columnas: son hexagonales. Así se enfría el basalto.',
     alVencer: ['Se oye un crujido al fondo: la segunda compuerta baja.'],
   },
   'aprendiz-roca-3': {
-    equipo: [{ especie: 'inicial-roca', nivel: 10 }],
+    equipo: [{ especie: 'c012-2', nivel: 10 }],
     premio: 320,
     tras: 'La palanca está ahí al lado. Bájala, que la líder te espera.',
   },
@@ -93,7 +93,7 @@ export const ENTRENADORES_ISLA1: Readonly<Record<string, DefEntrenador>> = {
   },
   'lider-gimnasio': {
     // El dinosaurio de casco, provisional: el autor decidirá si es el de la líder (2026-11-17).
-    equipo: [{ especie: 'inicial-roca', nivel: 11 }, { especie: 'c062-1', nivel: 12 }],
+    equipo: [{ especie: 'c012-2', nivel: 11 }, { especie: 'c062-1', nivel: 12 }],
     premio: 600,
     tras: 'Me has vencido con justicia. El barco te espera en el puerto.',
     condicion: 'gimnasio-vencido',

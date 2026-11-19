@@ -26,7 +26,7 @@ ID_TIPO = {'Común': 'comun', 'Agua': 'agua', 'Tierra': 'tierra', 'Planta': 'pla
 POR_QUINTIL = {'Q1': (55, 200), 'Q2': (75, 150), 'Q3': (140, 90), 'Q4': (170, 60), 'Q5': (250, 3)}
 
 # Nivel al que evoluciona cada forma a la siguiente, por línea (número de la lista de referencia).
-EVOLUCION = {31: [20], 32: [22], 37: [30], 7: [14, 32], 62: [30]}
+EVOLUCION = {31: [20], 32: [22], 37: [30], 7: [14, 32], 62: [30], 13: [18, 36], 43: [20], 12: [16, 34], 34: [24]}
 
 # Ataques por forma: (nivel, ataque), con los que ya existen en combate-prueba.ts.
 ATAQUES = {
@@ -41,6 +41,16 @@ ATAQUES = {
         [(1, 'caparazon'), (1, 'esporas-de-hoja'), (1, 'latigazo-de-musgo'), (1, 'mirada-fija')]],
     62: [[(1, 'topetazo'), (1, 'mirada-fija'), (1, 'rodada-de-piedra')],
          [(1, 'rodada-de-piedra'), (1, 'pisoton'), (1, 'barrito'), (1, 'topetazo')]],
+    13: [[(1, 'topetazo'), (1, 'soplo-de-brasas'), (8, 'orejazo-ardiente')],
+         [(1, 'soplo-de-brasas'), (1, 'orejazo-ardiente'), (1, 'topetazo'), (1, 'mirada-fija')],
+         [(1, 'orejazo-ardiente'), (1, 'soplo-de-brasas'), (1, 'pisoton'), (1, 'barrito')]],
+    43: [[(1, 'topetazo'), (1, 'mirada-fija'), (5, 'agarron')],
+         [(1, 'agarron'), (1, 'topetazo'), (1, 'mirada-fija'), (1, 'barrito')]],
+    12: [[(1, 'topetazo'), (1, 'caparazon'), (5, 'rodada-de-piedra')],
+         [(1, 'rodada-de-piedra'), (1, 'caparazon'), (1, 'polvo-de-picon'), (1, 'topetazo')],
+         [(1, 'rodada-de-piedra'), (1, 'caparazon'), (1, 'polvo-de-picon'), (1, 'pisoton')]],
+    34: [[(1, 'topetazo'), (1, 'arenazo'), (6, 'pisoton')],
+         [(1, 'pisoton'), (1, 'arenazo'), (1, 'topetazo'), (1, 'barrito')]],
 }
 
 # Nombres provisionales de las formas que aún no tienen el suyo (el autor los pone).
@@ -55,8 +65,10 @@ def importar_modelo(fila, origen):
     os.makedirs(SALIDA_MODELOS, exist_ok=True)
     destino = os.path.join(SALIDA_MODELOS, f"{fila['archivo']}.glb")
     subprocess.run([sys.executable, '-I', ALIGERAR, origen, destino], check=True)
-    imagen = origen[:-4] + '.webp'
-    if os.path.exists(imagen):
+    # La imagen puede ser .webp, .png o .jpg (autor, 2026-11-19): se guarda en .webp y reducida.
+    imagenes = [origen[:-4] + ext for ext in ('.webp', '.png', '.jpg', '.jpeg', '.WEBP', '.PNG', '.JPG', '.JPEG')]
+    imagen = next((i for i in imagenes if os.path.exists(i)), None)
+    if imagen:
         from PIL import Image
         im = Image.open(imagen)
         im.thumbnail((512, 512))

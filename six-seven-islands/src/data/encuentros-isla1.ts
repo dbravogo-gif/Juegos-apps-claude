@@ -6,9 +6,9 @@
 
 import type { TablaEncuentros } from '../core/encuentros';
 
-// Con las criaturas del autor que ya tienen modelo (2026-11-17), en sus hierbas de PLAN-CRIATURAS.md;
-// las que faltan siguen con las de relleno: la chispa hace del erizo de fuego, la lagartija de la
-// musaraña, de Patatín y del Basalto, la tabaiba de Melaní y el cangrejo de Aerund y Salmito.
+// Con las criaturas del autor que ya tienen modelo (2026-11-19), en sus hierbas de PLAN-CRIATURAS.md;
+// las que faltan siguen con las de relleno: la tabaiba hace de Melaní y el cangrejo de Aerund y
+// Salmito.
 export const ENCUENTROS_ISLA1: TablaEncuentros = {
   // El Golfo: Civeta 40, Ravich 30, Aculiso 20 y Dragosil 10, la rara (y floja, por la inicial de Agua).
   combates: [
@@ -17,21 +17,24 @@ export const ENCUENTROS_ISLA1: TablaEncuentros = {
     { especie: 'c037-1', nivel: [3, 4], peso: 20 },
     { especie: 'c007-1', nivel: [3, 3], peso: 10 },
   ],
+  // Montañas del Fuego: Quillflare 40, Kotono 30, Civeta 20 y Oreps 10, la rara.
   fuego: [
-    { especie: 'chispa-de-colada', nivel: [5, 7], peso: 40 },
-    { especie: 'lagartija-de-picon', nivel: [5, 7], peso: 40 },
+    { especie: 'c013-1', nivel: [5, 7], peso: 40 },
+    { especie: 'c043-1', nivel: [5, 7], peso: 30 },
     { especie: 'c031-1', nivel: [5, 6], peso: 20 },
+    { especie: 'c012-1', nivel: [5, 6], peso: 10 },
   ],
+  // El Jable: Kine 35, Melaní (la tabaiba, de relleno) 30, Ravich 25 y Kotono 10, el raro.
   jable: [
-    { especie: 'lagartija-de-picon', nivel: [6, 7], peso: 35 },
+    { especie: 'c034-1', nivel: [6, 8], peso: 35 },
     { especie: 'tabaiba-andante', nivel: [6, 8], peso: 30 },
     { especie: 'c032-1', nivel: [6, 8], peso: 25 },
-    { especie: 'chispa-de-colada', nivel: [6, 8], peso: 10 },
+    { especie: 'c043-1', nivel: [6, 7], peso: 10 },
   ],
+  // Famara: Aerund y Salmito (el cangrejo, de relleno) 70, Aculiso 20 y Oreps 10, la rara.
   famara: [
-    { especie: 'cangrejo-de-charco', nivel: [6, 8], peso: 45 },
-    { especie: 'c037-1', nivel: [6, 8], peso: 30 },
-    { especie: 'tabaiba-andante', nivel: [6, 7], peso: 15 },
-    { especie: 'lagartija-de-picon', nivel: [7, 8], peso: 10 },
+    { especie: 'cangrejo-de-charco', nivel: [6, 8], peso: 70 },
+    { especie: 'c037-1', nivel: [6, 8], peso: 20 },
+    { especie: 'c012-1', nivel: [7, 8], peso: 10 },
   ],
 };
