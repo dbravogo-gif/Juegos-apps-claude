@@ -43,6 +43,11 @@ propuesta de Claude y qué frena mientras siga abierto.
     - **Propuesta:** los del juego. Parpadean, se cierran al debilitarse y son iguales en
       todas (`prompts-meshy.md`).
 
+11. **Más ataques y la pantalla para olvidar uno** (2026-11-19). Hay solo unos 17 ataques y
+    ninguna criatura aprende más de cuatro, porque si ya sabe cuatro el quinto se pierde sin
+    preguntar. **Propuesta:** la pantalla de «¿Olvidar un ataque?» al subir de nivel, y después más
+    ataques por tipo (también uno flojo de fuego y otro de roca para las iniciales). Coste medio.
+
 11b. **Equilibrio de la tabla** (2026-11-13). Hecho lo que pidió el autor: Acero ya no resiste
     Planta, Aire ni Mental (de 9 resistencias a 6); Bicho ya no es ×2 contra Planta, e Infernal
     ya no resiste a Acero. Lucha lleva 9 criaturas.
