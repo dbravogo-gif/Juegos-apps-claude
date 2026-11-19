@@ -27,6 +27,11 @@ export interface OpcionesCasa {
   fondo: number;
   /** Dónde está la puerta a lo largo de la fachada, desde el centro del solar. */
   puerta?: number;
+  /**
+   * Cuántas casillas de puerta tiene (el gimnasio, dos): la puerta las cubre todas. Con una sola
+   * dibujada, la otra casilla parecía pared y te metía dentro (autor, 2026-11-19).
+   */
+  huecosPuerta?: number;
   /** Tejado a dos aguas de teja o azotea. Si no se dice, lo decide la semilla en las de balcones. */
   techo?: 'teja' | 'azotea';
   semilla?: number;
@@ -100,7 +105,7 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
     for (const s of [-1, 1]) M.caja(an / 2, al, 0.04, x + s * (an / 2 + 0.06 + an / 4), y, frente + 0.01, madera, 0.95);
     M.caja(an + 0.2, 0.06, 0.16, x, y - 0.1, frente, COLORES.canteria, 1.06);
   };
-  const anPuerta = uso === 'refugio' || singular ? 0.72 : 0.5;
+  const anPuerta = (uso === 'refugio' || singular ? 0.72 : 0.5) + ((op.huecosPuerta ?? 1) - 1);
   const alPuerta = 1.05;
   const px = Math.max(-(W / 2 - 0.6), Math.min(W / 2 - 0.6, op.puerta ?? 0));
   const colorPuerta = uso === 'refugio' ? COLORES.acentoCoral : madera;

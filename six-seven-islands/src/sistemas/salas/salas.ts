@@ -17,6 +17,9 @@ import { COLOR_CRIATURA } from '../../data/tipos';
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Partida } from '../partida/partida';
 
+/** Lo alto de una compuerta (antes 1,3, y de basalto oscuro: se perdía entre las baldosas). */
+const ALTO_COMPUERTA = 1.5;
+
 const SUELO = alturaSuelo(0);
 const ALTO_PARED = 2.3;
 /** El alto de las estatuas de las formas finales, en el museo. */
@@ -255,9 +258,9 @@ export function geometriaSala(sala: Mundo, id: string): BufferGeometry {
       if (n % 3 === 0) M.pon(abollar(new SphereGeometry(0.5, 7, 4), 0.25, n).scale(0.2, 0.08, 0.16).translate(x + 0.2, SUELO - 0.02, y - 0.15), COLORES.basalto);
       continue;
     }
-    // Bajo las compuertas, un puente de basalto más claro sobre la colada.
+    // Bajo las compuertas y en los puentes, basalto más claro sobre la colada.
     // En la cueva, arena húmeda y oscura de un solo tono, con alguna piedra: nada de cuadros.
-    const colorSuelo = cueva ? '#3B3836' : cm.c === 'X' ? COLORES.basaltoClaro : (x + y) % 2 ? suelo[0] : suelo[1];
+    const colorSuelo = cueva ? '#3B3836' : cm.c === 'X' || cm.c === 'u' ? COLORES.basaltoClaro : (x + y) % 2 ? suelo[0] : suelo[1];
     M.pon(new PlaneGeometry(1, 1).rotateX(-Math.PI / 2).translate(x, SUELO + 0.002, y), colorSuelo, cueva ? 0.9 + (n % 3) * 0.06 : 0.96 + (n % 3) * 0.03);
     if (cueva && n === 2) M.pon(abollar(new SphereGeometry(0.5, 7, 4), 0.25, n + x).scale(0.18, 0.07, 0.14).translate(x - 0.25, SUELO, y + 0.2), COLORES.basalto);
     if (cm.c === '#' && volcanica) {
@@ -336,7 +339,7 @@ export class Salas implements Subsistema {
   private material!: MaterialDiorama;
   private partida!: Partida;
   /** Las compuertas de basalto: bajan cuando se cumple su condición. */
-  private compuertas: { malla: Mesh; condicion: Condicion; abierta: number }[] = [];
+  private compuertas: { malla: Object3D; condicion: Condicion; abierta: number }[] = [];
   /** Las palancas: su mango baja cuando se usan. */
   private palancas: { mango: Group; condicion: Condicion; bajada: number }[] = [];
   /** Las flechas de las corrientes de viento: giran si cambia hacia dónde soplan. */
@@ -356,7 +359,8 @@ export class Salas implements Subsistema {
     const agua = new MeshBasicNodeMaterial({ color: '#2E7F9A' });
     const viento = new MeshBasicNodeMaterial({ color: '#5BB8DE' });
     const piedraClara = new MaterialDiorama({ color: COLORES.cal, bordes: [-0.1, 0.4], especular: 0.05, rebote: 0.12 });
-    this.materialesExtra.push(piedra, lava, agua, viento, piedraClara);
+    const piedraCompuerta = new MaterialDiorama({ color: COLORES.canteria, bordes: [-0.1, 0.4], especular: 0.05, rebote: 0.12 });
+    this.materialesExtra.push(piedra, lava, agua, viento, piedraClara, piedraCompuerta);
     this.lavaMaterial = lava;
     this.piedraMaterial = piedra;
     const cargas: Promise<void>[] = [];
@@ -395,11 +399,20 @@ export class Salas implements Subsistema {
         if (c.c === 'X') {
           const cierre = cierreEn(sala, k);
           if (!cierre) continue;
-          // Una losa de basalto de una casilla, con vetas: sube del puente.
-          const g = new BoxGeometry(0.98, 1.3, 0.5).translate(0, 0.65, 0);
-          const losa = new Mesh(g, piedra);
+          // Una losa de cantería clara, más alta que todo, con un aspa de lava encendida al frente:
+          // se ve de lejos que corta el paso. La de basalto oscuro se confundía con las baldosas
+          // (autor, 2026-11-19).
+          const losa = new Group();
+          const g = new BoxGeometry(0.98, ALTO_COMPUERTA, 0.5).translate(0, ALTO_COMPUERTA / 2, 0);
+          const cuerpo = new Mesh(g, piedraCompuerta);
+          cuerpo.castShadow = true;
+          losa.add(cuerpo);
+          for (const giro of [-0.62, 0.62]) {
+            const v = new BoxGeometry(0.09, 1.25, 0.03).rotateZ(giro).translate(0, ALTO_COMPUERTA / 2, 0.26);
+            losa.add(new Mesh(v, lava));
+            this.geometrias.push(v);
+          }
           losa.position.set(x, SUELO, y);
-          losa.castShadow = true;
           ctx.escena.add(losa);
           this.geometrias.push(g);
           this.compuertas.push({ malla: losa, condicion: cierre.condicion, abierta: partida.estado.condiciones.includes(cierre.condicion) ? 1 : 0 });
@@ -494,7 +507,7 @@ export class Salas implements Subsistema {
       c.abierta += Math.sign(objetivo - c.abierta) * Math.min(Math.abs(objetivo - c.abierta), dt * 0.8);
       // Un temblor mientras baja.
       const temblor = c.abierta > 0 && c.abierta < 1 ? Math.sin(c.abierta * 90) * 0.02 : 0;
-      c.malla.position.y = SUELO - c.abierta * 1.32;
+      c.malla.position.y = SUELO - c.abierta * (ALTO_COMPUERTA + 0.02);
       c.malla.position.x = Math.round(c.malla.position.x) + temblor;
       c.malla.visible = c.abierta < 1;
     }

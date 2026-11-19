@@ -64,19 +64,17 @@ export const ENTRENADORES_ISLA1: Readonly<Record<string, DefEntrenador>> = {
   'entrenador-jable': { equipo: [{ especie: 'c034-1', nivel: 8 }, { especie: 'c032-1', nivel: 9 }], premio: 240, tras: 'El viento borra las huellas. Mañana nadie sabrá que me ganaste.' },
   'pescador-famara': { equipo: [{ especie: 'c037-1', nivel: 8 }, { especie: 'c037-1', nivel: 9 }], premio: 260, tras: 'Hoy no pican ni las viejas ni las criaturas. Qué le vamos a hacer.' },
   'pulpero-famara': { equipo: [{ especie: 'c037-1', nivel: 9 }, { especie: 'c007-1', nivel: 8 }], premio: 260, tras: 'Ni un pulpo y encima pierdo. ¡Qué día!' },
-  // Los aprendices del gimnasio de Roca (gimnasio-roca.ts): vencerlos abre sus compuertas.
+  // Los aprendices del gimnasio de Roca (gimnasio-roca.ts): te ven en el único camino.
   // Solo Roca y Tierra, y ninguna criatura más de dos veces en todo el gimnasio (autor, 2026-11-19).
   'aprendiz-roca-1': {
     equipo: [{ especie: 'c012-1', nivel: 9 }],
     premio: 270,
     tras: 'La líder dice que la roca aguanta lo que le echen. Contigo no ha aguantado.',
-    alVencer: ['Con un estruendo, la compuerta de basalto se hunde en la lava. ¡El paso está abierto!'],
   },
   'aprendiz-roca-2': {
     equipo: [{ especie: 'c034-1', nivel: 9 }],
     premio: 300,
     tras: 'Mira bien las columnas: son hexagonales. Así se enfría el basalto.',
-    alVencer: ['Se oye un crujido al fondo: la segunda compuerta baja.'],
   },
   'aprendiz-roca-3': {
     equipo: [{ especie: 'c012-1', nivel: 10 }, { especie: 'c062-1', nivel: 10 }],

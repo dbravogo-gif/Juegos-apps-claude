@@ -1,5 +1,6 @@
-// El gimnasio de Roca (autor, 2026-11-13): tres terrazas con compuertas de basalto que se abren al
-// vencer a los aprendices y con una palanca, y la líder arriba. Ningún aprendiz se puede esquivar.
+// El gimnasio de Roca (autor, 2026-11-13): terrazas separadas por coladas de lava, con puentes de
+// basalto, y la líder arriba, tras la compuerta de la palanca. Ningún aprendiz se puede esquivar.
+// Las compuertas que abrían los aprendices se quitaron: ya había que vencerlos (autor, 2026-11-19).
 import { describe, expect, it } from 'vitest';
 import { avanzar, crearExploracion, interactuar } from '../src/core/explorar';
 import { alcanzables, clave, construirInterior, transitable, vision, type Condicion, type Direccion } from '../src/core/mundo';
@@ -34,25 +35,22 @@ describe('gimnasio de Roca', () => {
     for (const [especie, n] of veces) expect(n, especie).toBeLessThanOrEqual(2);
   });
 
-  it('cada compuerta se abre solo con lo suyo, en orden, y la líder queda al final', () => {
+  it('solo queda la compuerta de la palanca, y la líder está detrás', () => {
     const lider = persona('lider-gimnasio');
     const llegaLider = (c: Condicion[]) => alLado(lider.x, lider.y).some((a) => desde(c).has(a));
-    expect(desde([]).has(k(8, 11))).toBe(false);
-    expect(desde(['vencido:aprendiz-roca-1']).has(k(8, 11))).toBe(true);
-    expect(desde(['vencido:aprendiz-roca-1']).has(k(8, 7))).toBe(false);
-    expect(desde(['vencido:aprendiz-roca-1', 'vencido:aprendiz-roca-2']).has(k(8, 7))).toBe(true);
-    expect(llegaLider(['vencido:aprendiz-roca-1', 'vencido:aprendiz-roca-2'])).toBe(false);
-    expect(llegaLider(['vencido:aprendiz-roca-1', 'vencido:aprendiz-roca-2', 'palanca:gimnasio-roca'])).toBe(true);
-    // La segunda no se abre con la primera condición, ni la tercera sin la palanca.
-    expect(transitable(m, 8, 8, { condiciones: new Set(['vencido:aprendiz-roca-1']) })).toBe(false);
-    expect(transitable(m, 8, 4, { condiciones: new Set(['vencido:aprendiz-roca-1', 'vencido:aprendiz-roca-2']) })).toBe(false);
+    expect(Object.keys(GIMNASIO_ROCA.cierres!)).toEqual(['8,4']);
+    // Los puentes se cruzan sin vencer a nadie: lo que obliga a luchar es que te vean.
+    expect(desde([]).has(k(8, 5))).toBe(true);
+    expect(llegaLider([])).toBe(false);
+    expect(transitable(m, 8, 4, { condiciones: new Set(['vencido:aprendiz-roca-1', 'vencido:aprendiz-roca-2', 'vencido:aprendiz-roca-3']) })).toBe(false);
+    expect(llegaLider(['palanca:gimnasio-roca'])).toBe(true);
   });
 
-  it('ningún aprendiz se esquiva: sin pisar lo que ve, no se llega a su compuerta ni a la palanca', () => {
+  it('ningún aprendiz se esquiva: sin pisar lo que ve, no se llega a su puente ni a la palanca', () => {
     const casos: [string, Condicion[], number[]][] = [
-      ['aprendiz-roca-1', ['vencido:aprendiz-roca-1'], [k(8, 12)]],
-      ['aprendiz-roca-2', ['vencido:aprendiz-roca-1', 'vencido:aprendiz-roca-2'], [k(8, 8)]],
-      ['aprendiz-roca-3', ['vencido:aprendiz-roca-1', 'vencido:aprendiz-roca-2'], [k(14, 6), k(15, 7), k(15, 5)]],
+      ['aprendiz-roca-1', [], [k(8, 12)]],
+      ['aprendiz-roca-2', [], [k(8, 8)]],
+      ['aprendiz-roca-3', [], [k(14, 6), k(15, 7), k(15, 5)]],
     ];
     for (const [id, condiciones, metas] of casos) {
       const ve = new Set(vision(m, 'gimnasio', persona(id)));
@@ -69,10 +67,10 @@ describe('gimnasio de Roca', () => {
     expect(interactuar(m, e)).toEqual([{ tipo: 'palanca', id: 'gimnasio-roca', ya: true }]);
   });
 
-  it('cada compuerta cerrada avisa con su propio texto', () => {
-    const e = { ...crearExploracion(m), x: 8, y: 13, desdeX: 8, desdeY: 13, mira: 'n' as Direccion, zona: 'gimnasio' };
+  it('la compuerta cerrada avisa de que hace falta una palanca', () => {
+    const e = { ...crearExploracion(m), x: 8, y: 5, desdeX: 8, desdeY: 5, mira: 'n' as Direccion, zona: 'gimnasio' };
     const ev = avanzar(m, e, 'n');
-    expect(ev).toEqual([{ tipo: 'aviso', texto: GIMNASIO_ROCA.cierres!['8,12'].aviso }]);
+    expect(ev).toEqual([{ tipo: 'aviso', texto: GIMNASIO_ROCA.cierres!['8,4'].aviso }]);
   });
 
   it('los aprendices y la líder tienen equipo; la líder da la pintadera de Lanzarote', () => {
