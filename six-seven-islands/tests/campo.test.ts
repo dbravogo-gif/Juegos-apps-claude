@@ -44,9 +44,10 @@ describe('el campo de los gimnasios', () => {
 
   it('el campo eléctrico hace que los ataques eléctricos peguen más', () => {
     const danio = (campo?: Campo) => {
-      const a = criatura('inicial-agua');
+      // A nivel 30: con poco daño, el redondeo puede igualar los dos (con o sin campo).
+      const a = criatura('inicial-agua', 30);
       a.movimientos = [{ id: 'chispazo', pp: 30 }];
-      const r = resolverTurno(combate(a, criatura('inicial-planta'), campo, 'mismo').estado, ATACA, DATOS);
+      const r = resolverTurno(combate(a, criatura('inicial-planta', 30), campo, 'mismo').estado, ATACA, DATOS);
       return r.eventos.find((e): e is Extract<Evento, { tipo: 'danio' }> => e.tipo === 'danio' && e.ref.lado === 1)!.cantidad;
     };
     expect(danio({ terreno: 'electrico' })).toBeGreaterThan(danio());
