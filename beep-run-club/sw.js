@@ -34,6 +34,7 @@ const ARCHIVOS = [
   'src/nucleo/azar.js',
   'src/nucleo/codigos.js',
   'src/nucleo/entrada.js',
+  'src/nucleo/exportar.js',
   'src/nucleo/fechas.js',
   'src/nucleo/plan.js',
   'src/nucleo/registro.js',
