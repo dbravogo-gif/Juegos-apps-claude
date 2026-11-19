@@ -39,12 +39,10 @@ export function pantallaEntrar(ctx, { aviso = null, codigo = '', cambiando = fal
   h('label', { class: 'oculto-visual', for: 'codigo' }, 'Tu código'),
   entrada, error, boton);
 
+  const rellenar = (c) => h('button', { type: 'button', class: 'chip', onclick: () => { entrada.value = c; entrada.focus(); } }, c);
   const demo = ctx.almacen?.tipo === 'demo'
-    ? h('p', { class: 'aviso-demo' }, 'Modo demo. Prueba con ',
-      h('button', { type: 'button', class: 'boton-texto', onclick: () => { entrada.value = CODIGOS_DEMO.laura; entrada.focus(); } }, CODIGOS_DEMO.laura),
-      ' o con ',
-      h('button', { type: 'button', class: 'boton-texto', onclick: () => { entrada.value = CODIGOS_DEMO.pablo; entrada.focus(); } }, CODIGOS_DEMO.pablo),
-      '.')
+    ? h('div', { class: 'aviso-demo' }, h('p', { style: { margin: 0 } }, 'Modo demo. Toca un código para probar:'),
+      h('div', { class: 'chips' }, rellenar(CODIGOS_DEMO.laura), rellenar(CODIGOS_DEMO.pablo)))
     : null;
 
   montar(h('main', { class: 'entrada-pantalla' },

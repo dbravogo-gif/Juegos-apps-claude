@@ -72,7 +72,7 @@ await p.click('.es-hoy .tarjeta-sesion'); await espera();
 ok(await p.locator('.ejercicio').count() === 2 && await p.locator('.carrera').count() === 1, 've sus 2 ejercicios y solo uno de carrera');
 await p.click('.pie-fijo button'); await espera();
 await p.click('.esfuerzo button:nth-child(10)');
-await p.click('.chip:nth-child(1)');
+await p.click('.chips-duros .chip:nth-child(1)');
 await p.click('.pie-fijo button'); await espera();
 
 // 6. Al entrenador le llega en novedades, la primera y nueva.

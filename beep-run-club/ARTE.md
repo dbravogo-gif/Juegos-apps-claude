@@ -19,7 +19,8 @@ Sale de la guía de marca del club (noviembre de 2026). No se inventan colores n
 | Blanco roto | `#F7F7F7` | Fondo de la app: el de las láminas del logo (autor, 2026-11-19) |
 | Crema Beep | `#FDF8E3` | Tarjetas y texto sobre rojo |
 | Tinta | `#2B2420` | Texto de cuerpo |
-| Rojo oscuro | `#B8332A` | Texto rojo pequeño |
+| Rojo oscuro | `#B8332A` | Texto rojo pequeño, y fondo rojo cuando lleva texto pequeño en crema (tarjeta de hoy, opción elegida). No cambia con el tema |
+| Tinta suave | `#6B625C` | Texto secundario (5,6:1) |
 
 **Modo noche** (lo pidió el autor, 2026-11-19). Sigue el ajuste del sistema y se puede fijar a
 mano en Ajustes:
@@ -40,7 +41,8 @@ El Rojo Beep no cambia en el modo noche.
   - Rojo Beep y Crema dan 3,67:1 en los dos sentidos. Solo vale para texto grande: ≥ 24 px,
     o ≥ 18,7 px en negrita 700.
   - Por eso las etiquetas de los botones rojos van en Bricolage 700 a 19 px o más.
-  - El texto pequeño en rojo usa el Rojo oscuro (5,56:1).
+  - El texto pequeño en rojo usa el Rojo oscuro (5,56:1). Si el texto pequeño va en crema sobre
+    rojo, el fondo es Rojo oscuro, no Rojo Beep (lo detectó el `probador`, 2026-11-19).
   - La Tinta sobre Crema da 14,3:1.
 
 ## Tipografía

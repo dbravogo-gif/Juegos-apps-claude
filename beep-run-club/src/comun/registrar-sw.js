@@ -3,15 +3,17 @@ import { tostada } from './ui.js';
 
 export function registrarServiceWorker(ruta) {
   if (!('serviceWorker' in navigator) || location.protocol === 'file:') return;
-  let recargando = false;
+  // Solo se recarga cuando el usuario pide actualizar: la primera instalación también cambia de
+  // controlador y recargar ahí haría perder lo que estuviera escribiendo.
+  let pidioActualizar = false;
   navigator.serviceWorker.addEventListener('controllerchange', () => {
-    if (recargando) return;
-    recargando = true;
+    if (!pidioActualizar) return;
+    pidioActualizar = false;
     location.reload();
   });
   navigator.serviceWorker.register(ruta).then((reg) => {
     const avisar = (sw) => tostada('Hay una versión nueva de Beep', {
-      accion: 'Actualizar', duracion: 0, alPulsar: () => sw.postMessage({ tipo: 'actualizar' }),
+      accion: 'Actualizar', duracion: 0, alPulsar: () => { pidioActualizar = true; sw.postMessage({ tipo: 'actualizar' }); },
     });
     if (reg.waiting && navigator.serviceWorker.controller) avisar(reg.waiting);
     reg.addEventListener('updatefound', () => {

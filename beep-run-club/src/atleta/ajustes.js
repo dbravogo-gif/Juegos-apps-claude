@@ -1,27 +1,18 @@
 // Ajustes: tema, código, cerrar sesión y privacidad.
 
-import { h, montar, confirmar, tostada } from '../comun/ui.js';
+import { h, montar, confirmar, tostada, grupoRadio } from '../comun/ui.js';
 import { TEMAS, temaGuardado, guardarTema } from '../comun/tema.js';
 import { VERSION } from '../version.js';
 import { cabecera } from './semana.js';
 
 export function pantallaAjustes(ctx) {
   const demo = ctx.almacen.tipo === 'demo';
-  const botonesTema = TEMAS.map(([valor, texto]) => h('button', {
-    type: 'button', role: 'radio', 'aria-checked': String(temaGuardado() === valor),
-    onclick: () => {
-      guardarTema(valor);
-      botonesTema.forEach((b, i) => b.setAttribute('aria-checked', String(TEMAS[i][0] === valor)));
-    },
-  }, texto));
 
   montar(
-    cabecera(ctx, { atras: { etiqueta: 'Volver a la semana', accion: () => ctx.ir('#/') } }),
+    cabecera(ctx, { atras: { etiqueta: 'Volver a la semana', accion: () => ctx.volver('#/', (r) => r === '#/' || r.startsWith('#/semana')) } }),
     h('h1', { class: 'saludo' }, 'Ajustes'),
     h('ul', { class: 'lista-ajustes' },
-      h('li', {},
-        h('h2', { id: 'titulo-tema' }, 'Tema'),
-        h('div', { class: 'segmentado', role: 'radiogroup', 'aria-labelledby': 'titulo-tema' }, botonesTema)),
+      h('li', {}, grupoRadio({ etiqueta: 'Tema', opciones: TEMAS, valor: temaGuardado(), alElegir: guardarTema })),
       h('li', { class: 'pila' },
         h('h2', {}, 'Tu código'),
         h('p', {}, h('b', { style: { fontFamily: 'var(--titular)', fontSize: '20px', letterSpacing: '0.06em' } }, ctx.sesion.codigo),
@@ -47,7 +38,10 @@ export function pantallaAjustes(ctx) {
       demo ? h('li', {},
         h('button', {
           type: 'button', class: 'boton-texto',
-          onclick: async () => { await ctx.almacen.reiniciar(); tostada('Datos de ejemplo reiniciados'); },
+          onclick: async () => {
+            const si = await confirmar({ titulo: '¿Reiniciar la demo?', texto: 'Se borran tus valoraciones y lo que haya cambiado el entrenador en este navegador, y vuelven los datos de ejemplo.', aceptar: 'Reiniciar' });
+            if (si) { await ctx.almacen.reiniciar(); tostada('Datos de ejemplo reiniciados'); }
+          },
         }, 'Reiniciar los datos de ejemplo')) : null,
       h('li', { class: 'suave' }, `Beep Run Club · versión ${VERSION}`)),
   );

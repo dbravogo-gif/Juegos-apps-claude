@@ -112,6 +112,42 @@ export async function confirmar({ titulo, texto, aceptar = 'Aceptar', cancelar =
   return (await dialogo({ titulo, texto, botones })) === true;
 }
 
+/**
+ * Grupo de opciones excluyentes (role=radiogroup) con flechas y un solo punto de Tab.
+ * `opciones`: [[valor, texto]]. Devuelve el elemento.
+ */
+export function grupoRadio({ etiqueta, opciones, valor, alElegir, clase = 'segmentado' }) {
+  const id = `grupo-${Math.abs([...etiqueta].reduce((a, c) => (a * 31 + c.charCodeAt(0)) | 0, 7))}`;
+  let actual = valor;
+  const botones = opciones.map(([v, texto]) => h('button', {
+    type: 'button', role: 'radio', onclick: () => elegir(v),
+  }, texto));
+  const pintar = () => botones.forEach((b, i) => {
+    const marcado = opciones[i][0] === actual;
+    b.setAttribute('aria-checked', String(marcado));
+    b.tabIndex = marcado || (actual == null && i === 0) ? 0 : -1;
+  });
+  const elegir = (v, foco = false) => {
+    actual = v;
+    pintar();
+    if (foco) botones[opciones.findIndex(([x]) => x === v)].focus();
+    alElegir(v);
+  };
+  pintar();
+  return h('div', {},
+    h('h2', { id }, etiqueta),
+    h('div', {
+      class: clase, role: 'radiogroup', 'aria-labelledby': id,
+      onkeydown: (e) => {
+        const paso = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+        if (!paso) return;
+        e.preventDefault();
+        const i = Math.max(0, opciones.findIndex(([x]) => x === actual));
+        elegir(opciones[(i + paso + opciones.length) % opciones.length][0], true);
+      },
+    }, botones));
+}
+
 /** Sustituye el contenido de #app y lleva el foco al título, para lectores de pantalla y teclado. */
 export function montar(...nodos) {
   const app = document.getElementById('app');

@@ -1,17 +1,18 @@
 // Una sesión: ejercicios que se marcan, datos de carrera opcionales, valoración y celebración.
-// Lo que el atleta va marcando se guarda como borrador en el móvil hasta que valora.
+// Antes de valorar, lo marcado se guarda como borrador en el móvil. Después de valorar, cada
+// cambio se guarda en la valoración al momento.
 
-import { h, icono, montar, agregar } from '../comun/ui.js';
+import { h, icono, montar, agregar, grupoRadio } from '../comun/ui.js';
 import { leerLocal, guardarLocal, borrarLocal } from '../comun/entorno.js';
 import { fechaLarga } from '../nucleo/fechas.js';
 import { ESFUERZO, MAX_COMENTARIO } from '../nucleo/registro.js';
-import { CAMPOS, leer, formatearCampo, completar } from '../nucleo/ritmo.js';
-import { cabecera } from './semana.js';
+import { CAMPOS, leer, formatearCampo, editarCarrera, estadoCarrera } from '../nucleo/ritmo.js';
+import { cabecera, rutaSemana } from './semana.js';
 
 const claveBorrador = (ctx, sid) => `beep_borrador_${ctx.sesion.atletaId}_${sid}`;
 
 function borradorVacio() {
-  return { hechos: [], carrera: {}, esfuerzo: null, duros: [], comentario: '', cambiado: false };
+  return { hechos: [], carrera: {}, esfuerzo: null, duros: [], comentario: '', completa: null };
 }
 
 function desdeRegistro(r) {
@@ -20,8 +21,14 @@ function desdeRegistro(r) {
   b.esfuerzo = r.esfuerzo;
   b.duros = [...r.duros];
   b.comentario = r.comentario ?? '';
-  for (const [id, valores] of Object.entries(r.carrera ?? {})) b.carrera[id] = { valores: { ...valores }, calculado: null };
+  for (const [id, valores] of Object.entries(r.carrera ?? {})) b.carrera[id] = estadoCarrera(valores);
   return b;
+}
+
+/** Lo que se envía al almacén a partir del borrador. */
+function datosRegistro(sid, b) {
+  const carrera = Object.fromEntries(Object.entries(b.carrera).map(([id, d]) => [id, d.valores]));
+  return { sesion: sid, hechos: b.hechos, esfuerzo: b.esfuerzo, duros: b.duros, carrera, comentario: b.comentario };
 }
 
 async function cargar(ctx, sid) {
@@ -35,21 +42,50 @@ async function cargar(ctx, sid) {
 }
 
 function noEncontrada(ctx) {
-  montar(cabecera(ctx, { atras: { etiqueta: 'Volver a la semana', accion: () => ctx.ir('#/') } }),
+  montar(cabecera(ctx, { atras: { etiqueta: 'Volver a la semana', accion: () => ctx.volver('#/') } }),
     h('h1', { class: 'saludo' }, 'Esta sesión ya no está'),
     h('p', {}, 'Puede que tu entrenador la haya cambiado. Vuelve a tu semana para ver el plan actualizado.'),
     h('button', { type: 'button', class: 'boton boton-principal boton-ancho', onclick: () => ctx.ir('#/') }, 'Ver mi semana'));
 }
 
-export async function pantallaSesion(ctx, sid) {
-  let datos;
-  try { datos = await cargar(ctx, sid); } catch (e) {
-    if (await ctx.siCodigoInvalido(e?.estado)) return;
-    return noEncontrada(ctx);
+async function cargarOFallar(ctx, sid) {
+  try {
+    const datos = await cargar(ctx, sid);
+    if (!datos.sesion) { noEncontrada(ctx); return null; }
+    return datos;
+  } catch (e) {
+    if (!(await ctx.siCodigoInvalido(e?.estado))) noEncontrada(ctx);
+    return null;
   }
-  const { sesion, registro, borrador } = datos;
-  if (!sesion) return noEncontrada(ctx);
-  const guardar = () => { borrador.cambiado = true; guardarLocal(claveBorrador(ctx, sid), borrador); };
+}
+
+export async function pantallaSesion(ctx, sid) {
+  const datos = await cargarOFallar(ctx, sid);
+  if (!datos) return;
+  const { sesion, borrador } = datos;
+  let { registro } = datos;
+  const estadoGuardado = h('span', { class: 'suave', 'aria-live': 'polite' });
+
+  // Antes de valorar: borrador local. Después: se actualiza la valoración (con una pausa corta
+  // para no guardar en cada pulsación).
+  let temporizador = null;
+  const guardarAhora = async () => {
+    temporizador = null;
+    if (!ctx.sesion) return; // la sesión se cerró mientras tanto
+    const r = await ctx.almacen.guardarRegistro(ctx.sesion.atletaId, ctx.sesion.codigo, datosRegistro(sid, borrador))
+      .catch(() => ({ ok: false, errores: ['No se ha podido guardar.'] }));
+    if (r.ok) { registro = r.registro; borrarLocal(claveBorrador(ctx, sid)); estadoGuardado.textContent = 'Cambios guardados'; }
+    else if (r.estado && await ctx.siCodigoInvalido(r.estado)) return;
+    else if (ctx.sesion) { guardarLocal(claveBorrador(ctx, sid), borrador); estadoGuardado.textContent = 'No se ha podido guardar. Se intentará al valorar.'; }
+  };
+  const guardar = () => {
+    if (!registro) { guardarLocal(claveBorrador(ctx, sid), borrador); return; }
+    estadoGuardado.textContent = 'Guardando…';
+    clearTimeout(temporizador);
+    temporizador = setTimeout(guardarAhora, 600);
+  };
+  // Al salir de la pantalla, lo pendiente se guarda ya: el temporizador no sobrevive a la pantalla.
+  ctx.alSalir = () => { if (temporizador) { clearTimeout(temporizador); guardarAhora(); } };
 
   const contador = h('span', { class: 'suave', 'aria-live': 'polite' });
   const actualizarContador = () => { contador.textContent = `${borrador.hechos.length} de ${sesion.ejercicios.length} hechos`; };
@@ -80,103 +116,153 @@ export async function pantallaSesion(ctx, sid) {
     return li;
   });
 
-  const resumen = registro && !borrador.cambiado
+  const resumen = registro
     ? h('section', { class: 'resumen-valoracion bloque', 'aria-label': 'Tu valoración' },
       h('h3', {}, 'Sesión valorada'),
       h('p', { style: { margin: '4px 0 0' } }, `Esfuerzo ${registro.esfuerzo} · ${ESFUERZO[registro.esfuerzo]}`,
         registro.duros.length ? ` · ${registro.duros.length} ${registro.duros.length === 1 ? 'ejercicio duro' : 'ejercicios duros'}` : ''),
-      registro.comentario ? h('p', { style: { margin: '6px 0 0' } }, `«${registro.comentario}»`) : null)
+      registro.comentario ? h('p', { style: { margin: '6px 0 0' } }, `«${registro.comentario}»`) : null,
+      h('p', { style: { margin: '6px 0 0', fontSize: '15px' } }, 'Si marcas algo más, se guarda solo.'))
     : null;
 
   montar(
-    cabecera(ctx, { atras: { etiqueta: 'Volver a la semana', accion: () => history.length > 1 ? history.back() : ctx.ir('#/') } }),
+    cabecera(ctx, { atras: { etiqueta: 'Volver a la semana', accion: () => ctx.volver(rutaSemana(ctx, sesion.fecha), (r) => r === '#/' || r.startsWith('#/semana')) } }),
     h('p', { class: 'antetitulo', style: { marginTop: '20px' } }, fechaLarga(sesion.fecha)),
     h('h1', {}, sesion.titulo),
     resumen,
     sesion.nota ? h('div', { class: 'nota-entrenador bloque' }, h('b', {}, 'Nota de tu entrenador'), h('p', { style: { margin: '4px 0 0' } }, sesion.nota)) : null,
     h('section', { class: 'bloque', 'aria-labelledby': 'titulo-ejercicios' },
-      h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' } },
+      h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '8px', flexWrap: 'wrap' } },
         h('h2', { id: 'titulo-ejercicios' }, 'Ejercicios'), contador),
       h('ol', { class: 'ejercicios', role: 'list' }, items)),
     h('div', { class: 'pie-fijo' },
+      registro ? h('p', { style: { margin: '0 0 8px', textAlign: 'center' } }, estadoGuardado) : null,
       h('button', { type: 'button', class: 'boton boton-principal boton-ancho', onclick: () => ctx.ir(`#/sesion/${sid}/valorar`) },
         registro ? 'Editar valoración' : 'Terminar y valorar')),
   );
 }
 
-const ETIQUETAS = { distancia: 'Distancia (km)', tiempo: 'Tiempo', ritmo: 'Ritmo (/km)' };
-const EJEMPLOS = { distancia: '5,2', tiempo: '28:30', ritmo: '5:29' };
-const ERRORES = { distancia: 'la distancia', tiempo: 'el tiempo', ritmo: 'el ritmo' };
+const ETIQUETAS = { distancia: 'Km', tiempo: 'Tiempo', ritmo: 'Ritmo/km' };
+const EJEMPLOS = { distancia: '5,2', tiempo: '28,30', ritmo: '5,29' };
+const ERRORES = {
+  distancia: 'No entiendo la distancia. Escribe los km, por ejemplo 5,2.',
+  tiempo: 'No entiendo el tiempo. Escribe 28,30 (28 min 30 s), 2830 o 1h05.',
+  ritmo: 'No entiendo el ritmo. Escribe 5,29 (5 min 29 s por km) o 529.',
+};
 
 function bloqueCarrera(ej, borrador, guardar) {
-  const datos = borrador.carrera[ej.id] ?? { valores: { distancia: null, tiempo: null, ritmo: null }, calculado: null };
-  const tiene = CAMPOS.some((c) => datos.valores[c] != null);
+  let estado = borrador.carrera[ej.id] ?? estadoCarrera(null);
+  if (!estado.orden) estado = estadoCarrera(estado.valores); // borradores de la versión anterior
+  const tiene = CAMPOS.some((c) => estado.valores[c] != null);
   const idCampos = `carrera-${ej.id}`;
-  const error = h('p', { class: 'error', 'aria-live': 'polite', style: { margin: '6px 0 0', fontSize: '15px' } });
+  const aviso = h('p', { class: 'error', 'aria-live': 'polite', style: { margin: '6px 0 0', fontSize: '15px' } });
   const entradas = {};
+  let calculado = estado.orden.length === 2 ? CAMPOS.find((c) => !estado.orden.includes(c)) : null;
 
-  const pintar = () => {
+  const pintar = (salvo = null) => {
     for (const c of CAMPOS) {
-      const v = datos.valores[c];
-      if (document.activeElement !== entradas[c] || c === datos.calculado) entradas[c].value = v == null ? '' : formatearCampo[c](v);
-      entradas[c].classList.toggle('calculado', c === datos.calculado);
+      const v = estado.valores[c];
+      if (c !== salvo) entradas[c].value = v == null ? '' : formatearCampo[c](v);
+      entradas[c].classList.toggle('calculado', c === calculado);
     }
   };
 
-  const alCambiar = (campo) => {
+  const aplicar = (campo, v, mientrasEscribe) => {
+    const r = editarCarrera(estado, campo, v);
+    estado = { valores: r.valores, orden: r.orden };
+    calculado = r.calculado;
+    borrador.carrera[ej.id] = estado;
+    pintar(mientrasEscribe ? campo : null);
+    aviso.textContent = r.imposible ? 'Con esos datos sale un valor imposible: revisa lo que has escrito.' : '';
+    guardar();
+  };
+
+  const alEscribir = (campo) => {
+    const texto = entradas[campo].value;
+    if (texto.trim() === '') { entradas[campo].setAttribute('aria-invalid', 'false'); aplicar(campo, null, true); return; }
+    const v = leer[campo](texto);
+    if (v != null) { entradas[campo].setAttribute('aria-invalid', 'false'); aviso.textContent = ''; aplicar(campo, v, true); }
+  };
+
+  const alSalir = (campo) => {
     const texto = entradas[campo].value;
     const v = leer[campo](texto);
     const malo = texto.trim() !== '' && v == null;
     entradas[campo].setAttribute('aria-invalid', String(malo));
-    error.textContent = malo ? `No entiendo ${ERRORES[campo]}. Ejemplo: ${EJEMPLOS[campo]}.` : '';
-    if (malo) return;
-    const calculado = datos.calculado === campo ? null : datos.calculado;
-    const r = completar({ ...datos.valores, [campo]: v }, calculado);
-    datos.valores = r.valores;
-    datos.calculado = r.calculado;
-    borrador.carrera[ej.id] = datos;
-    pintar();
-    guardar();
+    if (malo) { aviso.textContent = ERRORES[campo]; return; }
+    pintar(); // reescribe con formato («2830» → «28:30»)
   };
 
-  const campos = h('div', { class: 'carrera-campos', id: idCampos, hidden: !tiene },
+  const campos = h('div', { class: 'carrera-campos', id: idCampos },
     CAMPOS.map((c) => {
       entradas[c] = h('input', {
         class: 'entrada', inputmode: 'decimal', autocomplete: 'off', placeholder: EJEMPLOS[c],
-        onchange: () => alCambiar(c),
+        'aria-label': `${ETIQUETAS[c]} de «${ej.nombre}»`,
+        oninput: () => alEscribir(c), onchange: () => alSalir(c),
       });
-      return h('label', {}, h('span', {}, ETIQUETAS[c]), entradas[c]);
+      return h('label', {}, h('span', { 'aria-hidden': 'true' }, ETIQUETAS[c]), entradas[c]);
     }));
   pintar();
+  const pista = h('p', { class: 'suave', style: { margin: '6px 0 0', fontSize: '14px' } },
+    'Con dos datos se calcula el tercero. Para tiempo y ritmo vale la coma: 28,30 es 28:30.');
+  const desplegable = h('div', { hidden: !tiene }, campos, pista);
 
   const abrir = h('button', {
     type: 'button', class: 'boton-texto', 'aria-expanded': String(tiene), 'aria-controls': idCampos,
+    'aria-label': `Distancia, tiempo y ritmo de «${ej.nombre}» (opcional)`,
     onclick: () => {
-      const visible = campos.hidden;
-      campos.hidden = !visible;
+      const visible = desplegable.hidden;
+      desplegable.hidden = !visible;
       abrir.setAttribute('aria-expanded', String(visible));
       if (visible) entradas.distancia.focus();
     },
   }, icono('reloj'), ' Distancia, tiempo y ritmo (opcional)');
 
-  return h('div', { class: 'carrera' }, abrir, campos,
-    h('p', { class: 'suave', style: { margin: '6px 0 0', fontSize: '14px' }, hidden: !tiene }, 'Con dos datos se calcula el tercero.'),
-    error);
+  return h('div', { class: 'carrera' }, abrir, desplegable, aviso);
 }
 
 export async function pantallaValorar(ctx, sid) {
-  let datos;
-  try { datos = await cargar(ctx, sid); } catch (e) {
-    if (await ctx.siCodigoInvalido(e?.estado)) return;
-    return noEncontrada(ctx);
-  }
+  const datos = await cargarOFallar(ctx, sid);
+  if (!datos) return;
   const { sesion, borrador } = datos;
-  if (!sesion) return noEncontrada(ctx);
-  const guardarBorrador = () => { borrador.cambiado = true; guardarLocal(claveBorrador(ctx, sid), borrador); };
+  const todos = sesion.ejercicios.map((e) => e.id);
+  const guardarBorrador = () => guardarLocal(claveBorrador(ctx, sid), borrador);
+  const rutaSesion = `#/sesion/${sid}`;
+
+  // ¿Toda la sesión o una parte? Así valorar rápido no le dice al entrenador «0 hechos».
+  if (borrador.completa == null) {
+    borrador.completa = borrador.hechos.length === 0 || borrador.hechos.length === todos.length;
+  }
+  const chipsHechos = h('div', { class: 'chips', hidden: borrador.completa });
+  agregar(chipsHechos, sesion.ejercicios.map((ej) => {
+    const chip = h('button', {
+      type: 'button', class: 'chip', 'aria-pressed': String(borrador.hechos.includes(ej.id)),
+      onclick: () => {
+        const hecho = !borrador.hechos.includes(ej.id);
+        borrador.hechos = hecho ? [...borrador.hechos, ej.id] : borrador.hechos.filter((x) => x !== ej.id);
+        chip.setAttribute('aria-pressed', String(hecho));
+        guardarBorrador();
+      },
+    }, ej.nombre);
+    return chip;
+  }));
+  const textoParte = h('p', { class: 'suave', style: { margin: '10px 0 0' }, hidden: borrador.completa }, 'Marca lo que has hecho:');
+  const completa = grupoRadio({
+    etiqueta: '¿Has hecho toda la sesión?',
+    opciones: [[true, 'Sí, toda'], [false, 'Solo una parte']],
+    valor: borrador.completa,
+    alElegir: (v) => {
+      borrador.completa = v;
+      chipsHechos.hidden = v;
+      textoParte.hidden = v;
+      guardarBorrador();
+    },
+  });
 
   const texto = h('p', { class: 'esfuerzo-texto', 'aria-live': 'polite' });
   const pintarTexto = () => {
-    texto.textContent = borrador.esfuerzo ? `${borrador.esfuerzo} · ${ESFUERZO[borrador.esfuerzo]}` : 'Toca un número: 1 es muy fácil y 10, al máximo.';
+    texto.classList.toggle('pista', !borrador.esfuerzo);
+    texto.textContent = borrador.esfuerzo ? `${borrador.esfuerzo} · ${ESFUERZO[borrador.esfuerzo]}` : 'Del 1 (muy, muy fácil) al 10 (al máximo).';
   };
   const botones = [];
   const elegir = (n, foco = false) => {
@@ -186,6 +272,7 @@ export async function pantallaValorar(ctx, sid) {
       b.tabIndex = i + 1 === n ? 0 : -1;
     });
     if (foco) botones[n - 1].focus();
+    error.textContent = '';
     pintarTexto();
     guardarBorrador();
   };
@@ -205,9 +292,8 @@ export async function pantallaValorar(ctx, sid) {
       elegir(Math.min(10, Math.max(1, (borrador.esfuerzo ?? 0) + paso)), true);
     },
   }, botones);
-  pintarTexto();
 
-  const chips = sesion.ejercicios.map((ej) => {
+  const chipsDuros = sesion.ejercicios.map((ej) => {
     const chip = h('button', {
       type: 'button', class: 'chip', 'aria-pressed': String(borrador.duros.includes(ej.id)),
       onclick: () => {
@@ -226,21 +312,22 @@ export async function pantallaValorar(ctx, sid) {
     oninput: () => { borrador.comentario = comentario.value; guardarBorrador(); },
   });
   comentario.value = borrador.comentario;
-  const error = h('p', { class: 'error', 'aria-live': 'polite' });
+  // El error va en el pie fijo, junto al botón: así siempre se ve.
+  const error = h('p', { class: 'error', 'aria-live': 'assertive', style: { margin: '0 0 8px', textAlign: 'center' } });
   const boton = h('button', { type: 'button', class: 'boton boton-principal boton-ancho' }, 'Guardar valoración');
+  pintarTexto();
 
   boton.addEventListener('click', async () => {
     if (!borrador.esfuerzo) {
-      error.textContent = 'Indica cuánto te ha costado, del 1 al 10.';
-      botones[0].focus();
+      error.textContent = 'Falta lo principal: cuánto te ha costado, del 1 al 10.';
+      grupo.scrollIntoView({ block: 'center', behavior: 'smooth' });
       return;
     }
     boton.disabled = true;
     boton.textContent = 'Guardando…';
-    const carrera = Object.fromEntries(Object.entries(borrador.carrera).map(([id, d]) => [id, d.valores]));
-    const r = await ctx.almacen.guardarRegistro(ctx.sesion.atletaId, ctx.sesion.codigo, {
-      sesion: sid, hechos: borrador.hechos, esfuerzo: borrador.esfuerzo, duros: borrador.duros, carrera, comentario: borrador.comentario,
-    }).catch(() => ({ ok: false, errores: ['No se ha podido guardar. Inténtalo de nuevo.'] }));
+    const datosR = datosRegistro(sid, { ...borrador, hechos: borrador.completa ? todos : borrador.hechos });
+    const r = await ctx.almacen.guardarRegistro(ctx.sesion.atletaId, ctx.sesion.codigo, datosR)
+      .catch(() => ({ ok: false, errores: ['No se ha podido guardar. Inténtalo de nuevo.'] }));
     boton.disabled = false;
     boton.textContent = 'Guardar valoración';
     if (!r.ok) {
@@ -249,29 +336,31 @@ export async function pantallaValorar(ctx, sid) {
       return;
     }
     borrarLocal(claveBorrador(ctx, sid));
-    ctx.ultimoGuardado = { pendiente: !!r.pendiente };
+    ctx.ultimoGuardado = { sid, pendiente: !!r.pendiente };
     ctx.ir(`#/sesion/${sid}/hecho`);
   });
 
   montar(
-    cabecera(ctx, { atras: { etiqueta: 'Volver a la sesión', accion: () => ctx.ir(`#/sesion/${sid}`) } }),
+    cabecera(ctx, { atras: { etiqueta: 'Volver a la sesión', accion: () => ctx.volver(rutaSesion) } }),
     h('p', { class: 'antetitulo', style: { marginTop: '20px' } }, sesion.titulo),
     h('h1', { id: 'titulo-esfuerzo' }, '¿Cuánto te ha costado?'),
     grupo, texto,
+    h('section', { class: 'bloque' }, completa, textoParte, chipsHechos),
     h('section', { class: 'bloque' },
       h('h2', {}, '¿Algún ejercicio te ha resultado demasiado duro?'),
       h('p', { class: 'suave', style: { margin: '6px 0 0' } }, 'Márcalos para que tu entrenador lo sepa.'),
-      h('div', { class: 'chips' }, chips)),
+      h('div', { class: 'chips chips-duros' }, chipsDuros)),
     h('section', { class: 'bloque' },
       h('label', { class: 'campo', for: 'comentario' }, h('span', {}, 'Comentario (opcional)')),
       comentario),
-    error,
-    h('div', { class: 'pie-fijo' }, boton),
+    h('div', { class: 'pie-fijo' }, error, boton),
   );
 }
 
-export function pantallaHecho(ctx) {
-  const pendiente = ctx.ultimoGuardado?.pendiente;
+export function pantallaHecho(ctx, sid) {
+  // Solo se celebra lo que se acaba de guardar (no una dirección escrita a mano).
+  if (ctx.ultimoGuardado?.sid !== sid) { ctx.volver('#/'); return; }
+  const pendiente = ctx.ultimoGuardado.pendiente;
   montar(h('main', { class: 'celebracion' },
     h('div', { class: 'mascota', role: 'img', 'aria-label': 'La mascota de Beep corriendo con un café' }),
     h('h1', {}, '¡Sesión guardada!'),

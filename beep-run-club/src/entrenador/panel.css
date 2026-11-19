@@ -2,7 +2,7 @@
 .panel #app { max-width: 760px; }
 .pestanas { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; margin: 16px 0 8px; border-radius: 999px; background: var(--superficie); border: 2px solid var(--linea); }
 .pestanas a { display: grid; place-items: center; min-height: 44px; border-radius: 999px; color: var(--texto); text-decoration: none; font-weight: 600; }
-.pestanas a[aria-current="page"] { background: var(--rojo); color: var(--sobre-rojo); }
+.pestanas a[aria-current="page"] { background: var(--rojo-oscuro); color: var(--sobre-rojo); }
 .cabecera .rol { font: 700 14px/1 var(--titular); letter-spacing: 0.06em; text-transform: uppercase; color: var(--rojo-texto); }
 .fila-titulo { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 20px 0 8px; flex-wrap: wrap; }
 .lista { list-style: none; padding: 0; margin: 0; }
@@ -19,10 +19,10 @@ button.tarjeta, a.tarjeta { cursor: pointer; text-decoration: none; }
 .tarjeta p { margin: 4px 0 0; }
 .insignia {
   display: inline-grid; place-items: center; min-width: 40px; height: 32px; padding: 0 8px; border-radius: 10px;
-  font: 800 17px/1 var(--titular); border: 2px solid var(--rojo);
+  font: 800 19px/1 var(--titular); border: 2px solid var(--rojo);
   background: color-mix(in srgb, var(--rojo) calc(var(--n, 0) * 9%), var(--superficie)); color: var(--texto);
 }
-.nuevo { font: 700 12px/1 var(--titular); letter-spacing: 0.06em; text-transform: uppercase; background: var(--rojo); color: var(--sobre-rojo); padding: 4px 8px; border-radius: 999px; }
+.nuevo { font: 700 12px/1 var(--titular); letter-spacing: 0.06em; text-transform: uppercase; background: var(--rojo-oscuro); color: var(--sobre-rojo); padding: 4px 8px; border-radius: 999px; }
 .estado-atleta { font-size: 14px; font-weight: 600; }
 .estado-atleta.inactivo { color: var(--rojo-texto); }
 .codigo-grande { font: 800 24px/1.1 var(--titular); letter-spacing: 0.06em; word-break: break-all; }

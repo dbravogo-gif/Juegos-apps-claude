@@ -80,6 +80,74 @@ await p.locator('button', { hasText: 'Cerrar sesión' }).click();
 await p.locator('dialog .boton-principal').click(); await p.waitForTimeout(300);
 ok((await estado()).pantalla === 'entrar' && !new URL(p.url()).searchParams.get('c'), 'cerrar sesión vuelve a la entrada y quita el código de la dirección');
 
+// --- Regresiones de la revisión del probador (2026-11-19) ---
+const db = () => p.evaluate(() => JSON.parse(localStorage.beep_demo_db));
+await p.evaluate(() => localStorage.clear());
+await p.goto(`${BASE}?hoy=2026-11-19&c=DEMO-BEEP22`); await p.waitForTimeout(600);
+// R1: volver no entra en bucle entre sesión y valoración.
+await p.click('.es-hoy .tarjeta-sesion'); await p.waitForTimeout(300);
+await p.click('.pie-fijo .boton-principal'); await p.waitForTimeout(300);
+await p.click('.cabecera .boton-icono'); await p.waitForTimeout(300);
+ok((await estado()).pantalla === 'sesion', 'volver desde valorar lleva a la sesión');
+await p.click('.cabecera .boton-icono'); await p.waitForTimeout(300);
+ok((await estado()).pantalla === 'semana', 'volver desde la sesión lleva a la semana (sin bucle)');
+// R5: guardar sin esfuerzo muestra el error junto al botón.
+await p.click('.es-hoy .tarjeta-sesion'); await p.waitForTimeout(300);
+await p.click('.pie-fijo .boton-principal'); await p.waitForTimeout(300);
+await p.click('.pie-fijo .boton-principal'); await p.waitForTimeout(300);
+ok(/Falta lo principal/.test(await p.locator('.pie-fijo .error').innerText()), 'sin esfuerzo, el error se ve en el pie fijo');
+// R2: valorar rápido sin marcar cuenta la sesión entera, no «0 hechos».
+await p.click('.esfuerzo button:nth-child(6)');
+await p.click('.pie-fijo .boton-principal'); await p.waitForTimeout(400);
+let d = await db();
+let laura = Object.values(d.atletas).find((a) => a.nombre === 'Laura');
+let [sidHoy, reg] = Object.entries(d.registros[laura.id]).find(([, r]) => r.fecha === '2026-11-19');
+ok(reg.hechos.length === d.sesiones[laura.id][sidHoy].ejercicios.length, 'valorar sin marcar guarda la sesión completa');
+// R14: la celebración solo sale tras guardar.
+await p.goto(`${BASE}?hoy=2026-11-19#/sesion/noexiste/hecho`); await p.waitForTimeout(400);
+ok((await estado()).pantalla === 'semana', 'una dirección de «hecho» falsa vuelve a la semana');
+// R3: lo que se cambia después de valorar se guarda solo.
+await p.click('.es-hoy .tarjeta-sesion'); await p.waitForTimeout(300);
+await p.click('.ejercicio:nth-child(1) .marca'); await p.waitForTimeout(1000);
+d = await db();
+ok(d.registros[laura.id][sidHoy].hechos.length === reg.hechos.length - 1, 'desmarcar tras valorar actualiza la valoración');
+ok(/guardados/.test(await p.locator('.pie-fijo').innerText()), 'y lo dice («Cambios guardados»)');
+// R4 y R8: tiempo «4530», el ritmo se calcula al escribir y los tres cuadran.
+const carrera = p.locator('.ejercicio:has(.carrera)').first();
+await carrera.locator('.carrera .boton-texto').click();
+const campos = carrera.locator('.carrera-campos input');
+await campos.nth(0).fill('10'); await campos.nth(1).fill('4530');
+ok(await campos.nth(2).inputValue() === '4:33', 'el ritmo se calcula mientras se escribe (10 km en 45:30 → 4:33)');
+await campos.nth(2).fill('4,30'); await campos.nth(2).blur(); await p.waitForTimeout(100);
+ok(await campos.nth(1).inputValue() === '45:00', 'al corregir el ritmo se recalcula el tiempo y la distancia se mantiene');
+// R5: si desactivan el código mientras valora, se cierra la sesión con aviso.
+await p.click('.pie-fijo .boton-principal'); await p.waitForTimeout(300);
+await p.evaluate(() => { const x = JSON.parse(localStorage.beep_demo_db); x.codigos['DEMO-BEEP22'].activo = false; localStorage.beep_demo_db = JSON.stringify(x); });
+await p.click('.pie-fijo .boton-principal'); await p.waitForTimeout(400);
+ok((await estado()).pantalla === 'entrar' && /desactivado/.test(await p.locator('#error-codigo').innerText()), 'código desactivado al guardar: sesión cerrada con aviso');
+await p.evaluate(() => { const x = JSON.parse(localStorage.beep_demo_db); x.codigos['DEMO-BEEP22'].activo = true; localStorage.beep_demo_db = JSON.stringify(x); });
+// R6: cerrar sesión no se deshace con atrás y recargar.
+await p.goto(`${BASE}?hoy=2026-11-19&c=DEMO-BEEP22`); await p.waitForTimeout(500);
+ok((await estado()).pantalla === 'entrar' && (await p.inputValue('#codigo')) === 'DEMO-BEEP22', 'tras un cierre, el enlace deja el código escrito en vez de entrar solo');
+await p.click('button[type=submit]'); await p.waitForTimeout(500);
+await p.goto(`${BASE}?hoy=2026-11-19&c=DEMO-BEEP22#/ajustes`); await p.waitForTimeout(400);
+await p.locator('button', { hasText: 'Cerrar sesión' }).click();
+await p.locator('dialog .boton-principal').click(); await p.waitForTimeout(300);
+await p.goBack(); await p.waitForTimeout(300); await p.reload(); await p.waitForTimeout(500);
+ok((await estado()).pantalla === 'entrar' && (await p.inputValue('#codigo')) === 'DEMO-BEEP22', 'tras cerrar sesión, atrás y recargar no vuelve a entrar (el código queda escrito)');
+// R9: el domingo, la sesión de hoy se ve sin bajar.
+await p.click('button[type=submit]'); await p.waitForTimeout(500);
+await p.goto(`${BASE}?hoy=2026-11-22`); await p.waitForTimeout(500);
+const caja = await p.locator('.es-hoy .tarjeta-sesion').boundingBox();
+ok(caja && caja.y >= 0 && caja.y + caja.height <= 659, 'el domingo la tarjeta de hoy queda dentro de la pantalla');
+ok((await p.locator('.es-hoy .dia-etiqueta b').innerText()) === 'HOY', 'y su día pone «HOY»');
+// R15: el tema se cambia con flechas.
+await p.goto(`${BASE}?hoy=2026-11-19#/ajustes`); await p.waitForTimeout(400);
+await p.locator('.segmentado [aria-checked="true"]').focus();
+await p.keyboard.press('ArrowRight');
+ok(await p.locator('.segmentado [aria-checked="true"]').innerText() === 'Claro', 'las flechas cambian el tema');
+await p.keyboard.press('ArrowLeft');
+
 for (const ruta of ['#/', '#/ajustes']) { await p.goto(`${BASE}?hoy=2026-11-19${ruta}`); await p.waitForTimeout(300); await sinBasura(ruta); }
 await b.close();
 srv.cerrar();

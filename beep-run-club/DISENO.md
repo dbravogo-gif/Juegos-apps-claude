@@ -32,11 +32,13 @@ le cuenta cómo le fue.
    distancia, el tiempo y el ritmo. Con dos de ellos se calcula el tercero.
 5. **Al terminar** indica:
    - el esfuerzo de la sesión, del 1 al 10, con etiquetas (1 muy fácil … 10 al máximo);
+   - si ha hecho toda la sesión o solo una parte (y cuál), para que valorar rápido no le diga
+     al entrenador «0 hechos»;
    - qué ejercicios le resultaron demasiado duros;
    - un comentario opcional.
 
-   Puede corregirlo después. Sin cobertura se guarda en el móvil y se envía al volver la
-   conexión.
+   Puede corregirlo después: lo que marque después de valorar se guarda solo. Sin cobertura se
+   guarda en el móvil y se envía al volver la conexión.
 6. **Opcional (fase 4):** en los ejercicios de carrera, sube una captura de Strava y la app
    rellena la distancia, el tiempo y el ritmo. El atleta los revisa antes de guardar. La captura
    no sale del móvil.

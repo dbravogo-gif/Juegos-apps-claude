@@ -70,7 +70,7 @@ export function crearAlmacenDemo({ almacenamiento, hoy, ahora = () => Date.now()
     async guardarRegistro(atletaId, codigo, datos) {
       const db = leer();
       if (!db.codigos[codigo]?.activo || db.codigos[codigo].atleta !== atletaId) {
-        return { ok: false, errores: ['Tu código ya no está activo.'] };
+        return { ok: false, estado: db.codigos[codigo] ? 'desactivado' : 'no-existe', errores: ['Tu código ya no está activo.'] };
       }
       const sesion = db.sesiones[atletaId]?.[datos.sesion];
       if (!sesion) return { ok: false, errores: ['Esa sesión ya no existe.'] };

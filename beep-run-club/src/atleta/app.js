@@ -14,6 +14,12 @@ import { pantallaSesion, pantallaValorar, pantallaHecho } from './sesion.js';
 import { pantallaAjustes } from './ajustes.js';
 
 const CLAVE_SESION = 'beep_sesion';
+const CLAVE_CERRADA = 'beep_cerrada'; // código del que se cerró sesión: su enlace ya no entra solo
+
+// Historial propio de rutas, para que «volver» no entre en bucle (ver ctx.volver).
+const normalizar = (ruta) => (!ruta || ruta === '#' ? '#/' : ruta);
+const pila = [normalizar(location.hash)];
+let reemplazando = false;
 
 const ctx = {
   almacen: null,
@@ -22,7 +28,19 @@ const ctx = {
   hoy,
   lunesHoy: () => lunesDe(hoy()),
   ir(ruta) {
-    if (location.hash === ruta) rutear(); else location.hash = ruta;
+    if (normalizar(location.hash) === ruta) rutear(); else location.hash = ruta;
+  },
+
+  /**
+   * Volver a la pantalla padre. Si se llegó desde ella, es «atrás» de verdad; si no, se sustituye
+   * la entrada actual por el padre. Así nunca se forma un bucle entre dos pantallas.
+   */
+  volver(padre, esPadre = (r) => r === padre) {
+    const anterior = pila[pila.length - 2];
+    if (anterior && esPadre(anterior)) { history.back(); return; }
+    if (normalizar(location.hash) === padre) { rutear(); return; }
+    reemplazando = true;
+    location.replace(`${location.pathname}${location.search}${padre}`);
   },
 
   /** Comprueba el código y entra. Pregunta antes si ya había otra sesión. Devuelve un error o null. */
@@ -42,6 +60,7 @@ const ctx = {
     const r = await ctx.almacen.entrar(codigo, idDispositivo()).catch(() => ({ ok: false, motivo: 'sin-conexion' }));
     if (!r.ok) return MENSAJES[r.motivo] ?? MENSAJES['sin-conexion'];
     if (anterior) borrarBorradores(anterior.atletaId);
+    borrarLocal(CLAVE_CERRADA);
     ctx.sesion = { codigo, atletaId: r.atleta.id, nombre: r.atleta.nombre };
     guardarLocal(CLAVE_SESION, ctx.sesion);
     ponerCodigoEnUrl(codigo);
@@ -50,7 +69,8 @@ const ctx = {
   },
 
   cerrarSesion(aviso = null) {
-    if (ctx.sesion) borrarBorradores(ctx.sesion.atletaId);
+    ctx.alSalir = null; // lo pendiente de la pantalla anterior ya no se puede guardar
+    if (ctx.sesion) { borrarBorradores(ctx.sesion.atletaId); guardarLocal(CLAVE_CERRADA, ctx.sesion.codigo); }
     ctx.sesion = null;
     borrarLocal(CLAVE_SESION);
     ponerCodigoEnUrl(null);
@@ -90,6 +110,9 @@ function ponerCodigoEnUrl(codigo) {
 }
 
 function rutear() {
+  const salida = ctx.alSalir;
+  ctx.alSalir = null;
+  salida?.();
   if (!ctx.sesion) { ctx.pantalla = 'entrar'; pantallaEntrar(ctx); return; }
   const partes = location.hash.replace(/^#\/?/, '').split('/');
   const [seccion, id, accion] = partes;
@@ -121,6 +144,11 @@ async function arrancar() {
     ponerCodigoEnUrl(null);
     pantallaEntrar(ctx, { aviso: 'El código del enlace no es válido. Escríbelo a mano.' });
     ctx.pantalla = 'entrar';
+  } else if (accion === 'entrar' && codigoEnlace === leerLocal(CLAVE_CERRADA)) {
+    // Cerró sesión con este código: su enlace (o «atrás» y recargar) no vuelve a entrar solo.
+    ponerCodigoEnUrl(null);
+    pantallaEntrar(ctx, { codigo: codigoEnlace });
+    ctx.pantalla = 'entrar';
   } else if (accion === 'entrar') {
     const error = await ctx.entrarCon(codigoEnlace);
     if (error) { ponerCodigoEnUrl(null); pantallaEntrar(ctx, { aviso: error, codigo: codigoEnlace }); ctx.pantalla = 'entrar'; }
@@ -137,7 +165,13 @@ async function arrancar() {
       await ctx.siCodigoInvalido(estado);
     }
   }
-  window.addEventListener('hashchange', rutear);
+  window.addEventListener('hashchange', () => {
+    const actual = normalizar(location.hash);
+    if (reemplazando) { pila[pila.length - 1] = actual; reemplazando = false; }
+    else if (pila.length > 1 && pila[pila.length - 2] === actual) pila.pop();
+    else pila.push(actual);
+    rutear();
+  });
   registrarServiceWorker('./sw.js');
 }
 

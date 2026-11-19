@@ -14,11 +14,13 @@ funcionan con datos de ejemplo guardados en el navegador. Falta la nube (fase 3)
 - **Entrenador** (`/entrenador/`): novedades con las duras resaltadas, altas con código y enlace
   para compartir, activar y desactivar, código nuevo, editor de sesiones con autocompletado,
   copiar semana y sesión, y baja (archivar, o descargar el CSV y borrar).
-- **Comprobado:** 47 pruebas (`npm test`) y los flujos de punta a punta (`npm run flujos`).
+- **Revisión del `probador` (fase 1):** 3/5 en funciona, se entiende y se siente bien, y 4/5 en
+  visual. Los 16 problemas que encontró están corregidos y los graves tienen su prueba en `npm run flujos`.
+- **Comprobado:** 51 pruebas (`npm test`) y 46 comprobaciones de punta a punta (`npm run flujos`).
 
 ## Siguiente
 
-1. Revisión del `probador` de la fase 1 (se cortó por el límite de uso y se ha retomado).
+1. Publicar la demo para que el autor la pruebe en su iPhone (espera su sí: toca `.github/`).
 2. Fase 3: almacén Firebase y reglas con sus pruebas (`F12`), guía de puesta en marcha (`F13`)
    y publicación (`F14`, toca `.github/`: se consulta al autor antes de fusionar).
 

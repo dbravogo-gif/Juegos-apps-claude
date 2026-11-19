@@ -3,7 +3,13 @@
 import { h, icono, montar } from '../comun/ui.js';
 import { agruparPorDia } from '../nucleo/plan.js';
 import { estadoSesion, ESFUERZO } from '../nucleo/registro.js';
-import { etiquetaDia, rangoSemana, sumarDias, diferenciaDias, fechaLarga } from '../nucleo/fechas.js';
+import { etiquetaDia, rangoSemana, sumarDias, diferenciaDias, fechaLarga, lunesDe } from '../nucleo/fechas.js';
+
+/** La ruta de la semana que contiene esa fecha («#/» si es la actual). */
+export function rutaSemana(ctx, fecha) {
+  const lunes = lunesDe(fecha);
+  return lunes === ctx.lunesHoy() ? '#/' : `#/semana/${lunes}`;
+}
 
 export function cabecera(ctx, { atras = null } = {}) {
   return h('header', { class: 'cabecera' },
@@ -55,18 +61,19 @@ export async function pantallaSemana(ctx, lunes) {
     const e = etiquetaDia(fecha);
     const esHoy = fecha === hoy;
     return h('li', { class: `dia${esHoy ? ' es-hoy' : ''}`, 'aria-current': esHoy ? 'date' : null },
-      h('div', { class: 'dia-etiqueta', 'aria-hidden': 'true' }, h('b', {}, e.corto), h('span', {}, e.num)),
+      h('div', { class: 'dia-etiqueta', 'aria-hidden': 'true' }, h('b', {}, esHoy ? 'HOY' : e.corto), h('span', {}, e.num)),
       h('div', {},
-        h('span', { class: 'oculto-visual' }, esHoy ? `Hoy, ${fechaLarga(fecha)}` : fechaLarga(fecha)),
         delDia.length === 0
-          ? h('p', { class: 'descanso' }, 'Descanso')
-          : delDia.map((s) => tarjeta(ctx, s, registros[s.id], fecha < hoy))));
+          ? h('p', { class: 'descanso' }, h('span', { class: 'oculto-visual' }, `${esHoy ? 'Hoy, ' : ''}${fechaLarga(fecha)}: `), 'Descanso')
+          : delDia.map((s) => tarjeta(ctx, s, registros[s.id], fecha < hoy, `${esHoy ? 'Hoy, ' : ''}${fechaLarga(fecha)}: `))));
   });
   lista.replaceChildren(...dias);
   lista.removeAttribute('aria-busy');
+  // De viernes a domingo, hoy queda fuera de la primera pantalla: se baja hasta él.
+  if (dif === 0) lista.querySelector('.es-hoy')?.scrollIntoView({ block: 'center' });
 }
 
-function tarjeta(ctx, sesion, registro, pasada) {
+function tarjeta(ctx, sesion, registro, pasada, prefijoLector) {
   const estado = estadoSesion(sesion, registro);
   const n = sesion.ejercicios.length;
   const etiquetaEstado = {
@@ -75,7 +82,7 @@ function tarjeta(ctx, sesion, registro, pasada) {
     pendiente: pasada ? h('span', { class: 'etiqueta' }, 'Sin valorar') : null,
   }[estado];
   return h('button', { type: 'button', class: 'tarjeta-sesion', onclick: () => ctx.ir(`#/sesion/${sesion.id}`) },
-    h('h3', {}, sesion.titulo),
+    h('h3', {}, h('span', { class: 'oculto-visual' }, prefijoLector), sesion.titulo),
     h('span', { class: 'meta' },
       h('span', {}, `${n} ${n === 1 ? 'ejercicio' : 'ejercicios'}`),
       etiquetaEstado,
