@@ -208,6 +208,9 @@ y `?semilla=n`. Mientras exista la vitrina de F04: `?vista=combate|todas|explora
    - lo guarda en `public/modelos/criaturas/<id interno>.glb`, con su imagen reducida al lado;
    - escribe `src/data/criaturas.ts`.
 3. `combate-prueba.ts` suma esas especies y sus modelos a los datos del juego.
+4. Las formas de las iniciales solo llevan el modelo, en `public/modelos/iniciales/`, porque sus
+   estadísticas son propias y las pasará el autor. Las estatuas del museo usan la forma final
+   (`MODELO_FINAL_INICIAL`, en `src/arte/criaturas3d.ts`); mientras falte, la primera.
 
 - **Id de especie:** `c` más el id interno del plan (`c031-1`: la 1.ª forma de la línea 31). No
   cambia aunque cambie el nombre, para no romper las partidas guardadas.

@@ -14,6 +14,18 @@ export const MODELO_INICIAL: Readonly<Record<string, string>> = {
   planta: 'iniciales/inicial-planta-1.glb',
   infernal: 'iniciales/inicial-infernal-1.glb',
   roca: 'iniciales/inicial-roca-1.glb',
+  tierra: 'iniciales/inicial-tierra-1.glb',
+};
+
+/**
+ * La forma final de cada inicial, para las estatuas del museo: se elige viendo en qué se
+ * convertirá (autor, 2026-11-19). La de Agua, con su primera forma hasta que llegue la final.
+ */
+export const MODELO_FINAL_INICIAL: Readonly<Record<string, string>> = {
+  planta: 'iniciales/inicial-planta-3.glb',
+  infernal: 'iniciales/inicial-infernal-3.glb',
+  roca: 'iniciales/inicial-roca-3.glb',
+  tierra: 'iniciales/inicial-tierra-3.glb',
 };
 
 export type Acabado = 'color' | 'piedra';

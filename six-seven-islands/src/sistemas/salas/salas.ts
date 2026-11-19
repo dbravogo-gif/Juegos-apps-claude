@@ -6,7 +6,7 @@
 
 import { BoxGeometry, ConeGeometry, CylinderGeometry, Group, Mesh, MeshBasicNodeMaterial, PlaneGeometry, SphereGeometry, type BufferGeometry, type Object3D } from 'three/webgpu';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
-import { MODELO_INICIAL, figuraCriatura } from '../../arte/criaturas3d';
+import { MODELO_FINAL_INICIAL, MODELO_INICIAL, figuraCriatura } from '../../arte/criaturas3d';
 import { attribute } from 'three/tsl';
 import { aspasEn, cierreEn, clave, corrienteEn, deClave, palancaEn, type Condicion, type Direccion, type Mundo } from '../../core/mundo';
 import { MaterialDiorama } from '../../arte/material';
@@ -19,6 +19,8 @@ import type { Partida } from '../partida/partida';
 
 const SUELO = alturaSuelo(0);
 const ALTO_PARED = 2.3;
+/** El alto de las estatuas de las formas finales, en el museo. */
+const ALTO_ESTATUA = 1.15;
 const ALTO_LADO = 1.9;
 const ALTO_DELANTE = 0.35;
 
@@ -440,13 +442,15 @@ export class Salas implements Subsistema {
           this.palancas.push({ mango, condicion, bajada: partida.estado.condiciones.includes(condicion) ? 1 : 0 });
         }
       }
-      // Las estatuas: el modelo de cada inicial, en piedra, sobre su pedestal.
+      // Las estatuas: la forma final de cada inicial, en piedra, sobre su pedestal (si aún no está,
+      // la primera, más pequeña).
       for (const [k, { personaje }] of sala.ocupadas) {
-        const modelo = personaje.id.startsWith('estatua-') ? MODELO_INICIAL[personaje.id.slice(8)] : undefined;
+        const tipo = personaje.id.startsWith('estatua-') ? personaje.id.slice(8) : '';
+        const modelo = MODELO_FINAL_INICIAL[tipo] ?? MODELO_INICIAL[tipo];
         if (!modelo) continue;
         const [x, y] = deClave(k);
         cargas.push(
-          figuraCriatura(modelo, 'piedra', 0.8).then((f) => {
+          figuraCriatura(modelo, 'piedra', MODELO_FINAL_INICIAL[tipo] ? ALTO_ESTATUA : 0.8).then((f) => {
             f.position.set(x, SUELO + PEDESTAL, y);
             ctx.escena.add(f);
             this.estatuas.push(f);

@@ -14,6 +14,7 @@ from estadisticas import BASE  # noqa: E402
 
 RAIZ = plan.RAIZ
 SALIDA_MODELOS = os.path.join(RAIZ, 'public', 'modelos', 'criaturas')
+SALIDA_INICIALES = os.path.join(RAIZ, 'public', 'modelos', 'iniciales')
 SALIDA_DATOS = os.path.join(RAIZ, 'src', 'data', 'criaturas.ts')
 ALIGERAR = os.path.join(RAIZ, 'herramientas', 'aligerar-glb.py')
 
@@ -61,9 +62,9 @@ def id_juego(archivo):
     return f'c{archivo}'
 
 
-def importar_modelo(fila, origen):
-    os.makedirs(SALIDA_MODELOS, exist_ok=True)
-    destino = os.path.join(SALIDA_MODELOS, f"{fila['archivo']}.glb")
+def importar_modelo(fila, origen, carpeta=SALIDA_MODELOS):
+    os.makedirs(carpeta, exist_ok=True)
+    destino = os.path.join(carpeta, f"{fila['archivo']}.glb")
     subprocess.run([sys.executable, '-I', ALIGERAR, origen, destino], check=True)
     # La imagen puede ser .webp, .png o .jpg (autor, 2026-11-19): se guarda en .webp y reducida.
     imagenes = [origen[:-4] + ext for ext in ('.webp', '.png', '.jpg', '.jpeg', '.WEBP', '.PNG', '.JPG', '.JPEG')]
@@ -72,7 +73,7 @@ def importar_modelo(fila, origen):
         from PIL import Image
         im = Image.open(imagen)
         im.thumbnail((512, 512))
-        im.save(os.path.join(SALIDA_MODELOS, f"{fila['archivo']}.webp"), 'WEBP', quality=85)
+        im.save(os.path.join(carpeta, f"{fila['archivo']}.webp"), 'WEBP', quality=85)
 
 
 def especie_ts(f, siguiente):
@@ -101,6 +102,11 @@ def main():
     for nombre in os.listdir(plan.CARPETA_AUTOR):
         if nombre.lower().endswith('.glb') and nombre.startswith('Pok'):
             origenes[int(nombre[3:].split('.')[0])] = os.path.join(plan.CARPETA_AUTOR, nombre)
+    # Las formas de las iniciales: solo el modelo, en public/modelos/iniciales (sus estadísticas son
+    # propias y las pasará el autor). Las que ya están no se tocan.
+    for f in filas:
+        if f['inicial'] and f['tiene_modelo'] and not os.path.exists(os.path.join(SALIDA_INICIALES, f"{f['archivo']}.glb")):
+            importar_modelo(f, origenes[f['orden']], SALIDA_INICIALES)
     entradas, modelos = [], []
     for f in sorted(listas, key=lambda x: x['orden']):
         importar_modelo(f, origenes[f['orden']])

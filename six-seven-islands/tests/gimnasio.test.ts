@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { avanzar, crearExploracion, interactuar } from '../src/core/explorar';
 import { alcanzables, clave, construirInterior, transitable, vision, type Condicion, type Direccion } from '../src/core/mundo';
 import { GIMNASIO_ROCA } from '../src/data/gimnasio-roca';
+import { DATOS_COMBATE_PRUEBA } from '../src/data/combate-prueba';
 import { ENTRENADORES_ISLA1 } from '../src/data/entrenadores-isla1';
 import { INTERIORES_ISLA1 } from '../src/data/interiores-isla1';
 
@@ -18,6 +19,19 @@ const alLado = (x: number, y: number) => [k(x, y + 1), k(x, y - 1), k(x + 1, y),
 describe('gimnasio de Roca', () => {
   it('es el interior del gimnasio de Lanzarote', () => {
     expect(INTERIORES_ISLA1.find((d) => d.id === 'gimnasio')).toBe(GIMNASIO_ROCA);
+  });
+
+  it('sus entrenadores solo llevan Roca o Tierra, y ninguna criatura sale más de dos veces (autor, 2026-11-19)', () => {
+    const quienes = ['aprendiz-roca-1', 'aprendiz-roca-2', 'aprendiz-roca-3', 'lider-gimnasio'];
+    const veces = new Map<string, number>();
+    for (const q of quienes) {
+      for (const { especie } of ENTRENADORES_ISLA1[q]!.equipo) {
+        const tipos = DATOS_COMBATE_PRUEBA.especies[especie]!.tipos;
+        expect(tipos.some((t) => t === 'roca' || t === 'tierra'), `${q}: ${especie}`).toBe(true);
+        veces.set(especie, (veces.get(especie) ?? 0) + 1);
+      }
+    }
+    for (const [especie, n] of veces) expect(n, especie).toBeLessThanOrEqual(2);
   });
 
   it('cada compuerta se abre solo con lo suyo, en orden, y la líder queda al final', () => {

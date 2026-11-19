@@ -139,8 +139,11 @@ Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
   - subir las que ya tiene hechas, Pok16 a Pok24 y Pok131-132: en GitHub no ha llegado nada
     (falta pulsar «Commit changes»), o adjuntarlas en el chat como el Excel; y decir si el
     dinosaurio es el de la líder de Lanzarote;
-  - poner nombre a la civeta y a su evolución, a las dos formas del dinosaurio y a las iniciales
-    de Planta, Infernal y Tierra (en el juego, provisionales);
+  - subir la 2.ª y la 3.ª forma de la inicial de Agua (Chicront y Krantacor): la estatua del museo
+    sigue con la 1.ª;
+  - poner nombre a la civeta y a su evolución, a las dos formas del dinosaurio y a la 1.ª forma de
+    las iniciales de Planta e Infernal (en el juego, provisionales);
+  - pasar las estadísticas de las iniciales, también de sus formas 2.ª y 3.ª;
   - revisar las estadísticas copiadas de memoria (`herramientas/criaturas/estadisticas.py`);
   - poner nombre a las que van con apodo («Guirre», «Basalto»…);
   - repartir tramos de la lista entre sus amigos, con `conceptos/criaturas/guia-gemini-amigos.txt`.

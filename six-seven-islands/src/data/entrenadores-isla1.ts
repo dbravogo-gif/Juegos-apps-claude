@@ -67,8 +67,9 @@ export const ENTRENADORES_ISLA1: Readonly<Record<string, DefEntrenador>> = {
   'pescador-famara': { equipo: [{ especie: 'cangrejo-de-charco', nivel: 9 }, { especie: 'c037-2', nivel: 9 }], premio: 260, tras: 'Hoy no pican ni las viejas ni las criaturas. Qué le vamos a hacer.' },
   'pulpero-famara': { equipo: [{ especie: 'cangrejo-de-charco', nivel: 9 }, { especie: 'c007-1', nivel: 8 }], premio: 260, tras: 'Ni un pulpo y encima pierdo. ¡Qué día!' },
   // Los aprendices del gimnasio de Roca (gimnasio-roca.ts): vencerlos abre sus compuertas.
+  // Solo Roca y Tierra, y ninguna criatura más de dos veces en todo el gimnasio (autor, 2026-11-19).
   'aprendiz-roca-1': {
-    equipo: [{ especie: 'c012-1', nivel: 9 }],
+    equipo: [{ especie: 'c012-1', nivel: 9 }, { especie: 'c034-1', nivel: 8 }],
     premio: 270,
     tras: 'La líder dice que la roca aguanta lo que le echen. Contigo no ha aguantado.',
     alVencer: ['Con un estruendo, la compuerta de basalto se hunde en la lava. ¡El paso está abierto!'],
@@ -80,7 +81,7 @@ export const ENTRENADORES_ISLA1: Readonly<Record<string, DefEntrenador>> = {
     alVencer: ['Se oye un crujido al fondo: la segunda compuerta baja.'],
   },
   'aprendiz-roca-3': {
-    equipo: [{ especie: 'c012-2', nivel: 10 }],
+    equipo: [{ especie: 'c034-2', nivel: 9 }, { especie: 'c012-2', nivel: 10 }],
     premio: 320,
     tras: 'La palanca está ahí al lado. Bájala, que la líder te espera.',
   },
@@ -93,7 +94,7 @@ export const ENTRENADORES_ISLA1: Readonly<Record<string, DefEntrenador>> = {
   },
   'lider-gimnasio': {
     // El dinosaurio de casco, provisional: el autor decidirá si es el de la líder (2026-11-17).
-    equipo: [{ especie: 'c012-2', nivel: 11 }, { especie: 'c062-1', nivel: 12 }],
+    equipo: [{ especie: 'c034-1', nivel: 10 }, { especie: 'c012-2', nivel: 11 }, { especie: 'c062-1', nivel: 12 }],
     premio: 600,
     tras: 'Me has vencido con justicia. El barco te espera en el puerto.',
     condicion: 'gimnasio-vencido',

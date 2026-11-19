@@ -85,8 +85,7 @@ export const MODELO_DE: Readonly<Record<string, string>> = {
   'inicial-planta': 'iniciales/inicial-planta-1.glb',
   'inicial-infernal': 'iniciales/inicial-infernal-1.glb',
   'inicial-roca': 'iniciales/inicial-roca-1.glb',
-  // Hasta que llegue su modelo de Meshy, la de Tierra se ve con el de Roca.
-  'inicial-tierra': 'iniciales/inicial-roca-1.glb',
+  'inicial-tierra': 'iniciales/inicial-tierra-1.glb',
   'cangrejo-de-charco': 'iniciales/inicial-agua-1.glb',
   'lagartija-de-picon': 'iniciales/inicial-roca-1.glb',
   'tabaiba-andante': 'iniciales/inicial-planta-1.glb',
