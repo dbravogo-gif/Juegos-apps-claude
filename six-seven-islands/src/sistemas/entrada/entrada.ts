@@ -1,31 +1,35 @@
 // Subsistema «entrada»: el teclado, que es el único control del juego (sin ratón ni mando).
-// Flechas o WASD para andar; E, Enter o Espacio para interactuar (hablar, pasar los diálogos y
-// confirmar); Escape para volver; del 1 al 9, atajo a una opción del menú de combate.
+// Como una consola (autor, 2026-11-19): flechas para andar y elegir; A (o E, Enter, Espacio) para
+// confirmar; Z (o Esc) para abrir el menú; X (o Retroceso) para volver, como el botón B. En los
+// menús, Z y Esc también vuelven. Del 1 al 9, atajo a una opción del menú de combate.
+// WASD ya no anda: la A es confirmar.
 // Un toque corto cuenta como un paso aunque se suelte antes de que el juego lo lea, y aunque
 // llegue mientras el jugador termina el paso anterior: así no se pierde ninguno.
 
 import type { Direccion } from '../../core/mundo';
 import type { Ctx, Subsistema } from '../../motor/motor';
 
-/** `tabla`: la T, que en combate abre la tabla de tipos (autor, 2026-11-15). */
-export type Accion = 'confirmar' | 'cancelar' | 'tabla';
+/**
+ * `menu`: abre el menú al explorar; en todo lo demás vale lo mismo que `cancelar`.
+ * `tabla`: la T, que en combate abre la tabla de tipos (autor, 2026-11-15).
+ */
+export type Accion = 'confirmar' | 'cancelar' | 'menu' | 'tabla';
 
-const DIRECCIONES: Record<string, Direccion> = {
+export const DIRECCIONES: Readonly<Record<string, Direccion>> = {
   ArrowUp: 'n',
   ArrowDown: 's',
   ArrowRight: 'e',
   ArrowLeft: 'o',
-  KeyW: 'n',
-  KeyS: 's',
-  KeyD: 'e',
-  KeyA: 'o',
 };
-const ACCIONES: Record<string, Accion> = {
+export const ACCIONES: Readonly<Record<string, Accion>> = {
+  KeyA: 'confirmar',
   KeyE: 'confirmar',
   Enter: 'confirmar',
   NumpadEnter: 'confirmar',
   Space: 'confirmar',
-  Escape: 'cancelar',
+  KeyZ: 'menu',
+  Escape: 'menu',
+  KeyX: 'cancelar',
   Backspace: 'cancelar',
   KeyT: 'tabla',
 };
@@ -110,9 +114,14 @@ export class Entrada implements Subsistema {
     return d;
   }
 
-  /** ¿Se ha pulsado esta acción desde la última vez que se preguntó? */
+  /**
+   * ¿Se ha pulsado esta acción desde la última vez que se preguntó? `cancelar` también se lleva
+   * la de `menu` (Z o Esc vuelven en los menús); `menu` solo la suya.
+   */
   consumir(a: Accion): boolean {
-    return this.pendientes.delete(a);
+    if (a !== 'cancelar') return this.pendientes.delete(a);
+    const menu = this.pendientes.delete('menu');
+    return this.pendientes.delete('cancelar') || menu;
   }
 
   /** El número pulsado desde la última vez (0 para el 1), o null. */

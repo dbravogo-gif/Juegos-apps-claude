@@ -2,7 +2,7 @@
 // (cada amigo tiene la suya, hecha con Meshy) y se escribe el nombre. Se enseña mientras «partida»
 // está en modo «titulo»: con una partida guardada no sale, porque se sigue donde se dejó. También
 // la pantalla del final de la isla 1 (F23), en modo «fin», con el gancho hacia la isla 2.
-// Teclado: flechas para elegir, E, Enter o Espacio para seguir y Esc para volver.
+// Teclado: flechas para elegir, A (o E, Enter, Espacio) para seguir y X (o Z, Esc) para volver.
 
 import { JUGABLES } from '../../arte/personas';
 import { nombreDe } from '../../core/criatura';
@@ -118,9 +118,9 @@ export class Inicio implements Subsistema {
     this.raiz.querySelector<HTMLElement>('.inicio-nombre')!.hidden = p !== 'nombre';
     this.raiz.querySelector<HTMLElement>('.inicio-codigo')!.hidden = p !== 'codigo';
     this.pista.textContent = {
-      portada: 'Flechas para elegir, Enter para seguir',
+      portada: 'Flechas para elegir, A o Enter para seguir',
       codigo: 'Escribe el código y pulsa Enter. Esc: volver',
-      persona: '¿Quién eres? Flechas para elegir, Enter para seguir',
+      persona: '¿Quién eres? Flechas para elegir, A o Enter para seguir',
       nombre: 'Escribe tu nombre y pulsa Enter. Esc: volver',
       fin: this.pistaFin(),
     }[p];
@@ -147,7 +147,7 @@ export class Inicio implements Subsistema {
   /** Qué hace Enter en el final: zarpar (si hay isla a la que ir) o seguir explorando. */
   private pistaFin(): string {
     const destino = this.partida.destinoViaje;
-    return destino ? `Enter: zarpar hacia ${destino.nombre}` : `Enter: seguir explorando ${this.partida.datos.nombre}`;
+    return destino ? `A: zarpar hacia ${destino.nombre}` : `A: seguir explorando ${this.partida.datos.nombre}`;
   }
 
   /** El final: quién eres, tu equipo y lo que viene. */

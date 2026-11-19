@@ -1,4 +1,4 @@
-// Subsistema «menu»: el menú de pausa, con Esc mientras se explora, y la tienda.
+// Subsistema «menu»: el menú de pausa, con Z o Esc mientras se explora, y la tienda.
 //
 // Diseño del autor (2026-11-12):
 // - Menú de pausa: un degradado oscuro de izquierda (menos transparente) a derecha (casi nada),
@@ -13,7 +13,7 @@
 //
 // La tienda (F17) se abre al acabar de hablar con el tendero: cada compra se confirma (×1 o ×5),
 // para no comprar sin querer al venir pulsando E desde el diálogo. Todo con el teclado: flechas
-// para elegir, E, Enter o Espacio para confirmar y Esc para volver.
+// para elegir, A (o E, Enter, Espacio) para confirmar y X (o Z, Esc) para volver.
 
 import { curarDelTodo, nombreDe, objetoUtil, usarObjeto } from '../../core/criatura';
 import { calcularEstadisticas, vidaMaxima } from '../../core/estadisticas';
@@ -287,14 +287,14 @@ export class Menu implements Subsistema {
     const pies: Partial<Record<Pantalla, string>> = {
       tienda: '',
       compra: '',
-      mochila: '← → bolsillo · ↑ ↓ objeto · Enter: usar · Esc: volver',
-      datos: '← → otra criatura · Esc: volver',
-      medallero: 'Flechas: ver otra isla · Esc: volver',
-      mapa: 'Esc: volver',
+      mochila: '← → bolsillo · ↑ ↓ objeto · A: usar · X: volver',
+      datos: '← → otra criatura · X: volver',
+      medallero: 'Flechas: ver otra isla · X: volver',
+      mapa: 'X: volver',
       exportar: 'Enter: copiar · Esc: volver',
       importar: 'Enter: importar · Esc: volver',
     };
-    this.pie.textContent = pies[p] ?? (REJILLA.has(p) ? 'Flechas: elegir · Enter: aceptar · Esc: volver' : '↑ ↓ elegir · Enter: aceptar · Esc: volver');
+    this.pie.textContent = pies[p] ?? (REJILLA.has(p) ? 'Flechas: elegir · A: aceptar · X: volver' : '↑ ↓ elegir · A: aceptar · X: volver');
     if (p !== 'importar') this.area.blur();
     const equipo = this.partida.equipo;
     const ganadas = medallasGanadas(this.partida.estado.condiciones).length;
@@ -628,7 +628,7 @@ export class Menu implements Subsistema {
           { texto: `×5 · ${precio * 5}`, activa: this.partida.dinero >= precio * 5, elegir: comprar(5) },
           { texto: 'Nada, gracias', activa: true, elegir: () => this.abrir('tienda') },
         ];
-        this.avisar('Esc: volver a la tienda');
+        this.avisar('X: volver a la tienda');
         break;
       }
     }

@@ -119,7 +119,7 @@ export class Partida implements Subsistema {
   /** Un entrenador acaba de ver al jugador: cuando pase la exclamación, habla. */
   private alerta: { zona: string; personaje: string; pasos: number } | null = null;
   private pasosSinGuardar = 0;
-  /** Esc pulsado mientras se anda (o con una flecha apretada): el menú se abre al acabar el paso. */
+  /** Z o Esc pulsado mientras se anda (o con una flecha apretada): el menú se abre al acabar el paso. */
   private menuPendiente = false;
   /** La partida se ha borrado para empezar otra: ya no se guarda nada (ni al cerrar la pestaña). */
   private borrada = false;
@@ -479,9 +479,11 @@ export class Partida implements Subsistema {
       this.alerta = null;
       return this.atender({ tipo: 'hablar', zona: a.zona, personaje: a.personaje });
     }
-    // Esc: el menú de pausa. Si se está andando, se abre al acabar el paso, antes del siguiente
-    // (aunque se mantenga una flecha apretada); así no se pierde la pulsación.
-    if (this.entrada.consumir('cancelar')) this.menuPendiente = true;
+    // Z o Esc: el menú de pausa. Si se está andando, se abre al acabar el paso, antes del siguiente
+    // (aunque se mantenga una flecha apretada); así no se pierde la pulsación. X (volver) no hace
+    // nada al explorar: se descarta para que no cierre el menú nada más abrirlo.
+    if (this.entrada.consumir('menu')) this.menuPendiente = true;
+    this.entrada.consumir('cancelar');
     if (this.menuPendiente && this.estado.paso === 0) {
       this.menuPendiente = false;
       this.modo = 'menu';
