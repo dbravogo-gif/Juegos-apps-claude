@@ -5,6 +5,10 @@ import { crearCriatura } from '../src/core/criatura';
 import { evolucionesTrasCombate } from '../src/core/progreso';
 import { crearRng } from '../src/core/rng';
 import { DATOS_COMBATE_PRUEBA as DATOS, MODELO_DE, NIVELES_EVOLUCION_INICIAL } from '../src/data/combate-prueba';
+import { ENCUENTROS_ISLA1 } from '../src/data/encuentros-isla1';
+import { ENCUENTROS_ISLA2 } from '../src/data/encuentros-isla2';
+import { ENTRENADORES_ISLA1 } from '../src/data/entrenadores-isla1';
+import { ENTRENADORES_ISLA2 } from '../src/data/entrenadores-isla2';
 
 const MODELOS = Object.keys(import.meta.glob('../public/modelos/**/*.glb')).map((r) => r.replace('../public/modelos/', ''));
 const rng = crearRng(7);
@@ -42,6 +46,31 @@ describe('formas de las iniciales', () => {
     const suma = (id: string) => Object.values(DATOS.especies[id]!.base).reduce((a, b) => a + b, 0);
     for (const t of ['agua', 'planta', 'infernal', 'roca', 'tierra']) {
       expect([suma(`inicial-${t}`), suma(`inicial-${t}-2`), suma(`inicial-${t}-3`)], t).toEqual([314, 405, 530]);
+    }
+  });
+});
+
+describe('evoluciones a su tiempo (autor, 2026-11-19)', () => {
+  // A qué nivel se llega a cada especie evolucionando.
+  const desde = new Map<string, number>();
+  for (const e of Object.values(DATOS.especies)) for (const ev of e.evoluciona ?? []) desde.set(ev.a, ev.nivel);
+  // La excepción: Ishiradon, la estrella de la líder de Roca.
+  const EXCEPCIONES = new Set(['lider-gimnasio>c062-2']);
+
+  it('ningún entrenador lleva una forma evolucionada antes del nivel al que se evoluciona', () => {
+    for (const [quien, d] of Object.entries({ ...ENTRENADORES_ISLA1, ...ENTRENADORES_ISLA2 })) {
+      for (const { especie, nivel } of d.equipo) {
+        if (EXCEPCIONES.has(`${quien}>${especie}`)) continue;
+        expect(nivel, `${quien}: ${especie} al ${nivel}`).toBeGreaterThanOrEqual(desde.get(especie) ?? 0);
+      }
+    }
+  });
+
+  it('ninguna salvaje sale evolucionada antes de tiempo', () => {
+    for (const tabla of [ENCUENTROS_ISLA1, ENCUENTROS_ISLA2]) {
+      for (const [zona, lista] of Object.entries(tabla)) {
+        for (const { especie, nivel } of lista) expect(nivel[0], `${zona}: ${especie}`).toBeGreaterThanOrEqual(desde.get(especie) ?? 0);
+      }
     }
   });
 });

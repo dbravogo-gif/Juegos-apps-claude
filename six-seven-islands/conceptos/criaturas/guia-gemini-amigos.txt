@@ -93,9 +93,9 @@ Pok14. Tsuborei, 2.ª forma de 3 · YA HECHA
 
 Pok15. Sunaiki, 3.ª forma de 3 · YA HECHA
 
-Pok16. Civeta, 1.ª forma de 2 · YA HECHA
+Pok16. Shimari, 1.ª forma de 2 · YA HECHA
 
-Pok17. Civeta, 2.ª forma de 2 · YA HECHA
+Pok17. Shimarō, 2.ª forma de 2 · YA HECHA
 
 Pok18. Ravich, 1.ª forma de 2 · YA HECHA
 
@@ -809,9 +809,9 @@ Pok130. Tortuga gigante, 2.ª forma de 2
    Zona: Cueva del Viento, Tenerife (niveles 30-33)
    Idea: Tortuga gigante de las islas, que se creía extinta: cría con caparazón de piedra; la 2.ª, coraza de piedra y hierro.
 
-Pok131. Dino de casco, 1.ª forma de 2 · YA HECHA
+Pok131. Ishiro, 1.ª forma de 2 · YA HECHA
 
-Pok132. Dino de casco, 2.ª forma de 2 · YA HECHA
+Pok132. Ishiradon, 2.ª forma de 2 · YA HECHA
 
 Pok133. Ánima de lava, sin evolución
    Tipo: Espectral

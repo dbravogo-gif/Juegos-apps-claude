@@ -47,7 +47,7 @@ export const ENTRENADORES_ISLA2: Readonly<Record<string, DefEntrenador>> = {
     premio: 460,
     tras: 'El gimnasio está en Morro Jable. Allí el viento sí que manda.',
   },
-  'corredor-sotavento': { equipo: [{ especie: 'c013-3', nivel: 17 }], premio: 460, tras: 'Contra el viento corro más despacio. Contra ti, también he perdido.' },
+  'corredor-sotavento': { equipo: [{ especie: 'c013-1', nivel: 17 }], premio: 460, tras: 'Contra el viento corro más despacio. Contra ti, también he perdido.' },
   'aprendiz-aire-1': { equipo: [{ especie: 'remolino-de-jable', nivel: 17 }], premio: 480, tras: 'La corriente del centro solo sube hacia la líder si alguien gira las aspas de arriba a la derecha.' },
   'aprendiz-aire-2': { equipo: [{ especie: 'remolino-de-jable', nivel: 18 }], premio: 500, tras: 'Gira esas aspas de ahí y la corriente del centro te subirá hasta la líder.' },
   'aprendiz-aire-3': {
@@ -80,24 +80,24 @@ export const ENTRENADORES_ISLA2: Readonly<Record<string, DefEntrenador>> = {
     alVencer: ['¡Otra vez tú! ¡Retirada, que el jefe se va a enfadar!', 'Los soldados de {rama} huyen por las dunas, sin la estatua.'],
   },
   'buscador-dunas': {
-    equipo: [{ especie: 'c013-2', nivel: 12 }, { especie: 'c012-2', nivel: 13 }],
+    equipo: [{ especie: 'c013-1', nivel: 12 }, { especie: 'c012-1', nivel: 13 }],
     premio: 380,
     tras: 'Hoy solo he encontrado arena. Y a ti, que me has ganado.',
   },
   // Fase 4: las zonas opcionales, algo más fuertes que el camino (Tindaya, 15 y 16; Cofete, 18 y 19).
   'montanera-tindaya': {
-    equipo: [{ especie: 'c034-2', nivel: 15 }, { especie: 'lagartija-de-picon', nivel: 15 }],
+    equipo: [{ especie: 'c034-1', nivel: 15 }, { especie: 'lagartija-de-picon', nivel: 15 }],
     premio: 450,
     tras: 'Arriba, en la cima, hay pies grabados en la roca. Sube a verlos.',
   },
-  'peregrino-tindaya': { equipo: [{ especie: 'c043-2', nivel: 16 }], premio: 480, tras: 'Desde aquí arriba, a veces se ve algo en el mar, hacia el oeste. Hoy no.' },
+  'peregrino-tindaya': { equipo: [{ especie: 'c043-1', nivel: 16 }], premio: 480, tras: 'Desde aquí arriba, a veces se ve algo en el mar, hacia el oeste. Hoy no.' },
   'pastor-jandia': {
-    equipo: [{ especie: 'cangrejo-de-charco', nivel: 18 }, { especie: 'c007-3', nivel: 18 }],
+    equipo: [{ especie: 'cangrejo-de-charco', nivel: 18 }, { especie: 'c007-2', nivel: 18 }],
     premio: 540,
     tras: 'Abajo está Cofete. Las criaturas de esa hierba no son como las de Morro Jable.',
   },
   'surfista-cofete': {
-    equipo: [{ especie: 'c012-3', nivel: 18 }, { especie: 'c062-2', nivel: 19 }],
+    equipo: [{ especie: 'c012-2', nivel: 18 }, { especie: 'c062-1', nivel: 19 }],
     premio: 560,
     tras: 'Si vienes por aquí, que sea con buen equipo. Este mar no perdona.',
   },
