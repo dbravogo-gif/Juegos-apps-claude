@@ -19,9 +19,10 @@ export const MODELO_INICIAL: Readonly<Record<string, string>> = {
 
 /**
  * La forma final de cada inicial, para las estatuas del museo: se elige viendo en qué se
- * convertirá (autor, 2026-11-19). La de Agua, con su primera forma hasta que llegue la final.
+ * convertirá (autor, 2026-11-19).
  */
 export const MODELO_FINAL_INICIAL: Readonly<Record<string, string>> = {
+  agua: 'iniciales/inicial-agua-3.glb',
   planta: 'iniciales/inicial-planta-3.glb',
   infernal: 'iniciales/inicial-infernal-3.glb',
   roca: 'iniciales/inicial-roca-3.glb',

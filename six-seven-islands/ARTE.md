@@ -314,6 +314,18 @@ Que un renacuajo no sea del tamaño de un dragón (autor).
 - **Solo te sigue la inicial** (autor, 2026-11-17), con la misma compresión respecto al jugador.
   Así no hay problemas de escala con las criaturas muy grandes.
 
+## Evolución (2026-11-19)
+
+Propia, no la del género (R8). De la idea común se quedan la anticipación, el latido entre las
+dos formas y el destello. Lo nuestro:
+- pasa en la arena, en 3D, con el fondo en noche honda (`#140f26`) y las plataformas apagadas;
+- **el Sello de la historia se dibuja en el suelo,** sus trece círculos uno tras otro, del color
+  del tipo de la forma nueva, y suben motas de ese color;
+- la criatura, hecha luz crema, late entre su forma y la nueva, cada vez más deprisa, mientras el
+  Sello gira;
+- con el destello, los círculos salen despedidos y queda la nueva con su color y un rebote;
+- Esc la para mientras late: «X ha dejado de cambiar».
+
 ## Pruebas de la guía
 
 - La escena se lee en escala de grises.

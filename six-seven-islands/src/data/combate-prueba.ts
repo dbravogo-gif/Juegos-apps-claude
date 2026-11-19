@@ -57,16 +57,56 @@ const especies: Especie[] = [
   { id: 'remolino-de-jable', nombre: 'Remolino de jable', tipos: ['aire'], base: base(40, 40, 35, 55, 40, 65), expBase: 55, ratioCaptura: 190, aprende: aprende('mirada-fija', 'rafaga'), descripcion: '' },
   { id: 'guirre-de-viento', nombre: 'Guirre de viento', tipos: ['aire'], base: base(55, 60, 45, 50, 45, 65), expBase: 70, ratioCaptura: 90, aprende: aprende('rafaga', 'picado', 'mirada-fija'), descripcion: '' },
   { id: 'chispa-de-colada', nombre: 'Chispa de colada', tipos: ['infernal'], base: base(35, 40, 35, 55, 40, 60), expBase: 55, ratioCaptura: 190, aprende: aprende('mirada-fija', 'soplo-de-brasas'), descripcion: '' },
-  { id: 'inicial-agua', nombre: 'Inicial de Agua', tipos: ['agua'], base: base(50, 50, 55, 55, 55, 45), expBase: 60, ratioCaptura: 45, aprende: aprende('remojon', 'ola-de-cresta', 'topetazo', 'mirada-fija'), altura: 0.4, descripcion: '' },
+  { id: 'inicial-agua', nombre: 'Cronti', tipos: ['agua'], base: base(50, 50, 55, 55, 55, 45), expBase: 60, ratioCaptura: 45, aprende: aprende('remojon', 'ola-de-cresta', 'topetazo', 'mirada-fija'), altura: 0.4, descripcion: '' },
   { id: 'inicial-planta', nombre: 'Inicial de Planta', tipos: ['planta'], base: base(50, 50, 50, 55, 55, 50), expBase: 60, ratioCaptura: 45, aprende: aprende('latigazo-de-musgo', 'esporas-de-hoja', 'topetazo', 'mirada-fija'), altura: 0.4, descripcion: '' },
   { id: 'inicial-infernal', nombre: 'Inicial Infernal', tipos: ['infernal'], base: base(50, 55, 50, 55, 45, 55), expBase: 60, ratioCaptura: 45, aprende: aprende('soplo-de-brasas', 'orejazo-ardiente', 'trompazo-de-hierro', 'barrito'), altura: 0.4, descripcion: '' },
   // Estadísticas provisionales: las de verdad las pasa el autor, como las de las otras iniciales.
-  { id: 'inicial-tierra', nombre: 'Inicial de Tierra', tipos: ['tierra'], base: base(55, 60, 50, 40, 45, 50), expBase: 60, ratioCaptura: 45, aprende: aprende('pisoton', 'arenazo', 'topetazo', 'mirada-fija'), altura: 0.4, descripcion: '' },
-  { id: 'inicial-roca', nombre: 'Inicial de Roca', tipos: ['roca'], base: base(55, 55, 60, 40, 50, 40), expBase: 60, ratioCaptura: 45, aprende: aprende('rodada-de-piedra', 'polvo-de-picon', 'topetazo', 'caparazon'), altura: 0.4, descripcion: '' },
+  { id: 'inicial-tierra', nombre: 'Tsubomi', tipos: ['tierra'], base: base(55, 60, 50, 40, 45, 50), expBase: 60, ratioCaptura: 45, aprende: aprende('pisoton', 'arenazo', 'topetazo', 'mirada-fija'), altura: 0.4, descripcion: '' },
+  { id: 'inicial-roca', nombre: 'Armalito', tipos: ['roca'], base: base(55, 55, 60, 40, 50, 40), expBase: 60, ratioCaptura: 45, aprende: aprende('rodada-de-piedra', 'polvo-de-picon', 'topetazo', 'caparazon'), altura: 0.4, descripcion: '' },
 ];
 
+/** A qué nivel evolucionan las iniciales: a la 2.ª forma y a la 3.ª. */
+export const NIVELES_EVOLUCION_INICIAL = [16, 34] as const;
+
+/**
+ * Las formas 2.ª y 3.ª de las iniciales, con los modelos del autor (2026-11-19) y los nombres de sus
+ * archivos. Estadísticas PROVISIONALES: las de la 1.ª forma por 1,3 y por 1,7, hasta que el autor
+ * pase las suyas. Aprenden lo mismo que la 1.ª forma.
+ */
+const FORMAS_INICIALES: Readonly<Record<string, { nombres: [string, string]; tipos: [Especie['tipos'], Especie['tipos']]; alturas: [number, number] }>> = {
+  agua: { nombres: ['Chicront', 'Krantacor'], tipos: [['agua'], ['agua']], alturas: [0.9, 1.6] },
+  planta: { nombres: ['Sporecko', 'Transcecko'], tipos: [['planta'], ['planta', 'mental']], alturas: [0.9, 1.7] },
+  infernal: { nombres: ['Hinozö', 'Jigoku'], tipos: [['infernal'], ['infernal']], alturas: [0.9, 1.7] },
+  roca: { nombres: ['Uralito', 'Reactolito'], tipos: [['roca', 'veneno'], ['roca', 'veneno']], alturas: [1.0, 1.8] },
+  tierra: { nombres: ['Tsuborei', 'Sunaiki'], tipos: [['tierra', 'espectral'], ['tierra', 'espectral']], alturas: [0.9, 1.7] },
+};
+
+function formasDeInicial(primera: Especie, tipo: string): Especie[] {
+  const f = FORMAS_INICIALES[tipo]!;
+  const crecer = (k: number): Estadisticas =>
+    Object.fromEntries(Object.entries(primera.base).map(([e, v]) => [e, Math.round(v * k)])) as Estadisticas;
+  const segunda: Especie = {
+    ...primera,
+    id: `${primera.id}-2`,
+    nombre: f.nombres[0],
+    tipos: f.tipos[0],
+    base: crecer(1.3),
+    expBase: 140,
+    altura: f.alturas[0],
+    evoluciona: [{ a: `${primera.id}-3`, nivel: NIVELES_EVOLUCION_INICIAL[1] }],
+  };
+  const tercera: Especie = { ...primera, id: `${primera.id}-3`, nombre: f.nombres[1], tipos: f.tipos[1], base: crecer(1.7), expBase: 240, altura: f.alturas[1] };
+  delete tercera.evoluciona;
+  return [{ ...primera, evoluciona: [{ a: segunda.id, nivel: NIVELES_EVOLUCION_INICIAL[0] }] }, segunda, tercera];
+}
+
+const conFormas = especies.flatMap((e) => {
+  const tipo = Object.keys(FORMAS_INICIALES).find((t) => e.id === `inicial-${t}`);
+  return tipo ? formasDeInicial(e, tipo) : [e];
+});
+
 export const DATOS_COMBATE_PRUEBA: DatosJuego = {
-  especies: Object.fromEntries([...especies, ...ESPECIES_CRIATURAS].map((e) => [e.id, e])),
+  especies: Object.fromEntries([...conFormas, ...ESPECIES_CRIATURAS].map((e) => [e.id, e])),
   movimientos: Object.fromEntries(movimientos.map((m) => [m.id, m])),
   temperamentos: TEMPERAMENTOS,
   tipos: TABLA_TIPOS,
@@ -86,6 +126,10 @@ export const MODELO_DE: Readonly<Record<string, string>> = {
   'inicial-infernal': 'iniciales/inicial-infernal-1.glb',
   'inicial-roca': 'iniciales/inicial-roca-1.glb',
   'inicial-tierra': 'iniciales/inicial-tierra-1.glb',
+  // Sus formas 2.ª y 3.ª.
+  ...Object.fromEntries(
+    ['agua', 'planta', 'infernal', 'roca', 'tierra'].flatMap((t) => [2, 3].map((n) => [`inicial-${t}-${n}`, `iniciales/inicial-${t}-${n}.glb`])),
+  ),
   'cangrejo-de-charco': 'iniciales/inicial-agua-1.glb',
   'lagartija-de-picon': 'iniciales/inicial-roca-1.glb',
   'tabaiba-andante': 'iniciales/inicial-planta-1.glb',

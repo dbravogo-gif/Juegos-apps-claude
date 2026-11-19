@@ -433,6 +433,7 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
   olas, rocas, boyas frente a las playas y barcas en el puerto (`mar.ts`).
 - 2026-11-10 · Tabla de tipos «C» revisada: Roca sustituye a Luz. Claude corrige sus
 - 2026-11-17 · Solo te sigue la inicial; cada criatura tiene su altura y se ve comprimida en combate (ARTE.md).
+- 2026-11-19 · Evolución propia: el Sello se dibuja bajo la criatura, que late entre sus dos formas hasta un destello; Esc la para (ARTE.md).
   contradicciones y los extremos (5 debilidades o resistencias). Reglas de Ancestral.
 - 2026-11-08 · Isla 1, segunda vuelta con el autor:
   - el malpaís y las dunas también son zona de encuentros, y deben reconocerse como tal;

@@ -224,6 +224,21 @@ y `?semilla=n`. Mientras exista la vitrina de F04: `?vista=combate|todas|explora
 - **La evolución está en el núcleo pero aún no en el juego:** las formas evolucionadas se ven en
   equipos de entrenadores.
 
+## Evolución
+
+- **Cuándo:** al ganar un combate, la que ha subido de nivel en él y ya tiene el de su evolución
+  (`evolucionesTrasCombate`, en `core/progreso.ts`). Si se para con Esc, lo intenta al volver a
+  subir.
+- **La escena** (`encolarEvolucion`, en `sistemas/combate/combate.ts`) va en la arena, antes del
+  fundido de vuelta. Los modelos de la forma siguiente se cargan al empezar el combate, para que no
+  haya esperas. La criatura cambia de especie con `evolucionar`, y la que vuelve a la isla ya es la
+  nueva.
+- **Las iniciales** evolucionan a los niveles 16 y 34 (`NIVELES_EVOLUCION_INICIAL`). Sus formas 2.ª
+  y 3.ª llevan estadísticas provisionales: las de la 1.ª por 1,3 y por 1,7.
+- **La que te sigue** es tu inicial tal como esté: si evoluciona, sale su forma nueva.
+- **Para probarla:** `poner({ anadir: [{ especie, nivel, casiSube: true }] })` la deja a un punto de
+  subir. Después, `salvaje(...)` y ganar.
+
 ## Islas y viajes
 
 - `data/islas.ts` reúne lo propio de cada isla (mapa, puertas, interiores, encuentros,
