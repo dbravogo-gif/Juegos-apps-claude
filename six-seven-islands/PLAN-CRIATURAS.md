@@ -21,8 +21,8 @@ modelo se llaman «PokN. Nombre» (autor, 2026-11-17): N es su número en esta l
 nunca, y el nombre es el suyo o su apodo. Se suben a `conceptos/criaturas/meshy/`. Para que Gemini te las vaya
 diciendo de una en una: `conceptos/criaturas/guia-gemini.txt`, que lleva sus instrucciones arriba.
 
-**Coste.** Faltan 188 criaturas (hay 15 hechas). A 15 créditos cada una
-(Smart Topology y textura, precio comprobado el 2026-11-07), son unos 2.820 créditos sin
+**Coste.** Faltan 178 criaturas (hay 25 hechas). A 15 créditos cada una
+(Smart Topology y textura, precio comprobado el 2026-11-07), son unos 2.670 créditos sin
 contar repeticiones. Por isla, en la tabla de abajo.
 
 ## Las cuentas
@@ -56,14 +56,14 @@ Todas cuadran: si no, el script no genera nada.
 
 | Isla | Especies nuevas | Criaturas | Por generar | Créditos |
 | --- | --- | --- | --- | --- |
-| Lanzarote | 35 | 47 | 34 | 510 |
+| Lanzarote | 40 | 47 | 24 | 360 |
 | Fuerteventura | 14 | 30 | 30 | 450 |
 | Gran Canaria | 25 | 37 | 37 | 555 |
 | Tenerife | 22 | 38 | 36 | 540 |
 | La Gomera | 13 | 22 | 22 | 330 |
 | La Palma | 10 | 16 | 16 | 240 |
 | El Hierro | 11 | 13 | 13 | 195 |
-| **Total** | | **203** | **188** | **2.820** |
+| **Total** | | **203** | **178** | **2.670** |
 
 Lanzarote incluye las 15 iniciales y las 5 leyendas de los pueblos, que duermen allí.
 
@@ -80,16 +80,16 @@ Gimnasio de **Roca**, en la Capital, líder 11-12.
 | Zona | Niveles | Especies |
 | --- | --- | --- |
 | El Golfo | 3-5 | **Civeta** · **Ravich → Azurvan** · **Aculiso → Sierpajable** · **Dragosil → Dragombo → Dragalis** (rara) |
-| Montañas del Fuego | 5-7 | Civeta · **«Erizo de fuego»** · **«Musaraña luchadora»** · «Basalto» (rara) |
-| El Jable | 6-8 | Ravich → Azurvan · «Musaraña luchadora» (rara) · **Patatín → Paparrón** · **Melaní → Favenir → Reginis** |
-| Famara | 6-8 | Aculiso → Sierpajable · **«Basalto»** (rara) · **Aerund → Marwen** · **Salmito → Salmarín → Salmástil** |
+| Montañas del Fuego | 5-7 | Civeta · **Quillflare → Quillfire → Quimfernum** · **Kotono → Koloi** · Oreps → Mineps → Colossoreps (rara) |
+| El Jable | 6-8 | Ravich → Azurvan · Kotono → Koloi (rara) · **Kine → Kurokin** · **Melaní → Favenir → Reginis** |
+| Famara | 6-8 | Aculiso → Sierpajable · **Oreps → Mineps → Colossoreps** (rara) · **Aerund → Marwen** · **Salmito → Salmarín → Salmástil** |
 | La Geria (leyenda) | tras la Liga | **«Leyenda verde»** |
 | Montañas del Fuego, el cráter (leyenda) | tras la Liga | **Magecora** |
 | Risco de Famara (leyenda) | tras la Liga | **«Leyenda de roca»** |
 | Pueblos sepultados (leyenda) | tras la Liga | **«Leyenda de tierra»** |
 | Los jameos (leyenda; zona por crear) | tras la Liga | **«Leyenda del agua»** |
 
-Para el gimnasio, de Roca: «Basalto».
+Para el gimnasio, de Roca: Oreps → Mineps → Colossoreps.
 
 ### Fuerteventura
 
@@ -125,7 +125,7 @@ Gimnasio de **Eléctrico y Lucha**, Eléctrico en Las Palmas y Lucha en Agaete; 
 
 Para el gimnasio, de Eléctrico: Briso → Alisor → Alisior, Voltéro → Raigón, «Chispa de cable», «Tembladera», «Farito», «Boya».
 
-Para el gimnasio, de Lucha: «Burro», «Piña luchadora», «Musaraña luchadora», «Bailador de isa», «Saltador de garrote».
+Para el gimnasio, de Lucha: «Burro», «Piña luchadora», Kotono → Koloi, «Bailador de isa», «Saltador de garrote».
 
 ### Tenerife
 
@@ -193,7 +193,7 @@ Gimnasio de **Infernal/Ancestral**, en Valverde, al final de la Bajada, líder 5
 | El volcán bajo el mar de La Restinga (leyenda) | tras la Liga | **«Guardián del Tagoro»** |
 | El mar de nubes (leyenda) | tras la Liga | **«Guardiana del mar de nubes»** |
 
-Para el gimnasio, de Infernal: «Erizo de fuego», Magmín → Lavtún → Teidrón, Guanchín → Menceyor → Achamán, «Tea», «Diablillo», «Tostador de gofio», «Bomba volcánica».
+Para el gimnasio, de Infernal: Quillflare → Quillfire → Quimfernum, Magmín → Lavtún → Teidrón, Guanchín → Menceyor → Achamán, «Tea», «Diablillo», «Tostador de gofio», «Bomba volcánica».
 
 Para el gimnasio, de Ancestral: Guanchín → Menceyor → Achamán, «Lagarto gigante», Sanbor → Borondis → Atlantea.
 
@@ -232,16 +232,16 @@ nombre lo pone el autor. La idea va en la primera forma de cada especie.
 | Pok22. Dragosil | 007-1 (hecha) | 1.ª | Planta A | Lotad (Q1, TE) | 0,5 m | El Golfo (rara) | Lámina del autor; hecha. |
 | Pok23. Dragombo | 007-2 (hecha) | 2.ª | Planta A | Lombre (Q2, TE) | 1,4 m |  |  |
 | Pok24. Dragalis | 007-3 (hecha) | 3.ª | Planta A | Ludicolo (Q4, TE) | 3,0 m |  |  |
-| Pok25. Erizo de fuego | 013-1 | 1.ª | Infernal | Sandile (Q1, AF) | 0,3 m | Montañas del Fuego | Erizo de fuego (autor, 2026-11-17): erizo moruno con púas de lava encendida que se hace bola y rueda; la 2.ª, con púas de escoria más largas; la 3.ª, gran erizo volcánico que echa humo por la espalda. |
-| Pok26. Erizo de fuego | 013-2 | 2.ª | Infernal | Krokorok (Q2, AF) | 0,7 m |  |  |
-| Pok27. Erizo de fuego | 013-3 | 3.ª | Infernal/Tierra | Krookodile (Q4, AF) | 1,4 m |  |  |
-| Pok28. Musaraña luchadora | 043-1 | 1.ª | Lucha | Riolu (Q1, AF) | 0,3 m | Montañas del Fuego | Musaraña canaria (la del malpaís de Lanzarote), chiquita y nerviosa, que lanza golpes rápidos; la 2.ª, erguida, lucha con agarres de lucha canaria (faja y calzón de bregar). Ya no es un erizo: el erizo es el de fuego. |
-| Pok29. Musaraña luchadora | 043-2 | 2.ª | Lucha | Lucario (Q4, AE) | 1,1 m |  |  |
-| Pok30. Basalto | 012-1 | 1.ª | Roca | Roggenrola (Q1, TF) | 0,4 m | Famara (rara) | Bola de basalto con ojos verdes de olivina; la 2.ª, con cristales de olivina en el lomo; la 3.ª, coloso de columnas de basalto. La usa la líder de Roca. |
-| Pok31. Basalto | 012-2 | 2.ª | Roca | Boldore (Q2, TF) | 1,0 m |  |  |
-| Pok32. Basalto | 012-3 | 3.ª | Roca | Gigalith (Q4, TF) | 2,0 m |  |  |
-| Pok33. Patatín | 034-1 | 1.ª | Tierra A | Makuhita (Q1, AF) | 0,5 m | El Jable | Lámina del autor. |
-| Pok34. Paparrón | 034-2 | 2.ª | Tierra A | Hariyama (Q3, AF) | 1,2 m |  |  |
+| Pok25. Quillflare | 013-1 (hecha) | 1.ª | Infernal | Sandile (Q1, AF) | 0,3 m | Montañas del Fuego | Hecha por el autor. |
+| Pok26. Quillfire | 013-2 (hecha) | 2.ª | Infernal | Krokorok (Q2, AF) | 0,7 m |  |  |
+| Pok27. Quimfernum | 013-3 (hecha) | 3.ª | Infernal/Tierra | Krookodile (Q4, AF) | 1,4 m |  |  |
+| Pok28. Kotono | 043-1 (hecha) | 1.ª | Lucha | Riolu (Q1, AF) | 0,3 m | Montañas del Fuego | Hecha por el autor. |
+| Pok29. Koloi | 043-2 (hecha) | 2.ª | Lucha | Lucario (Q4, AE) | 1,1 m |  |  |
+| Pok30. Oreps | 012-1 (hecha) | 1.ª | Roca | Roggenrola (Q1, TF) | 0,4 m | Famara (rara) | Hecha por el autor. |
+| Pok31. Mineps | 012-2 (hecha) | 2.ª | Roca | Boldore (Q2, TF) | 1,0 m |  |  |
+| Pok32. Colossoreps | 012-3 (hecha) | 3.ª | Roca | Gigalith (Q4, TF) | 2,0 m |  |  |
+| Pok33. Kine | 034-1 (hecha) | 1.ª | Tierra A | Makuhita (Q1, AF) | 0,5 m | El Jable | Hecha por el autor. |
+| Pok34. Kurokin | 034-2 (hecha) | 2.ª | Tierra A | Hariyama (Q3, AF) | 1,2 m |  |  |
 | Pok35. Melaní | 005-1 | 1.ª | Bicho A | Venipede (Q1, TF) | 0,3 m | El Jable | Lámina del autor. |
 | Pok36. Favenir | 005-2 | 2.ª | Bicho/Veneno A | Whirlipede (Q2, TF) | 0,6 m |  |  |
 | Pok37. Reginis | 005-3 | 3.ª | Bicho/Veneno A | Scolipede (Q3, AF) | 1,5 m |  |  |

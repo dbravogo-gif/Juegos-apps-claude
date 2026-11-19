@@ -35,6 +35,8 @@ const movimientos: Movimiento[] = [
   // donde todos sus otros ataques están resistidos (autor, 2026-11-15).
   { id: 'trompazo-de-hierro', nombre: 'Trompazo de hierro', tipo: 'acero', categoria: 'fisico', poder: 35, precision: 100, pp: 30 },
   // De Aire, para las de relleno del gimnasio de Aire (probador, 2026-11-13).
+  // De Lucha, para las criaturas de Lucha del autor (2026-11-19). Agarrón: la presa de la lucha canaria.
+  { id: 'agarron', nombre: 'Agarrón', tipo: 'lucha', categoria: 'fisico', poder: 50, precision: 100, pp: 20 },
   { id: 'rafaga', nombre: 'Ráfaga', tipo: 'aire', categoria: 'magico', poder: 40, precision: 100, pp: 25 },
   { id: 'picado', nombre: 'Picado', tipo: 'aire', categoria: 'fisico', poder: 55, precision: 95, pp: 15 },
   { id: 'pisoton', nombre: 'Pisotón', tipo: 'tierra', categoria: 'fisico', poder: 50, precision: 95, pp: 20 },

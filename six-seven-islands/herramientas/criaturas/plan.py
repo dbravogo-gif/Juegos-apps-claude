@@ -129,13 +129,10 @@ ESPECIES = [
     (32, 'Ravich → Azurvan', ['Aire', 'Aire'], 'lz-golfo', ['lz-jable', 'tf-anaga'], 'Hecha por el autor.'),
     (37, 'Aculiso → Sierpajable', ['Agua', 'Agua/Tierra'], 'lz-golfo', ['lz-famara'], 'Hecha por el autor.'),
     (7, 'Dragosil → Dragombo → Dragalis', ['Planta', 'Planta', 'Planta'], 'lz-golfo*', ['lp-garafia'], 'Lámina del autor; hecha.'),
-    (13, None, ['Infernal', 'Infernal', 'Infernal/Tierra'], 'lz-fuego', [],
-     'Erizo de fuego (autor, 2026-11-17): erizo moruno con púas de lava encendida que se hace bola y rueda; la 2.ª, con púas de escoria más largas; la 3.ª, gran erizo volcánico que echa humo por la espalda.'),
-    (43, None, ['Lucha', 'Lucha'], 'lz-fuego', ['lz-jable*'],
-     'Musaraña canaria (la del malpaís de Lanzarote), chiquita y nerviosa, que lanza golpes rápidos; la 2.ª, erguida, lucha con agarres de lucha canaria (faja y calzón de bregar). Ya no es un erizo: el erizo es el de fuego.'),
-    (12, None, ['Roca', 'Roca', 'Roca'], 'lz-famara*', ['lz-fuego*'],
-     'Bola de basalto con ojos verdes de olivina; la 2.ª, con cristales de olivina en el lomo; la 3.ª, coloso de columnas de basalto. La usa la líder de Roca.'),
-    (34, 'Patatín → Paparrón', ['Tierra', 'Tierra'], 'lz-jable', [], LAMINA),
+    (13, 'Quillflare → Quillfire → Quimfernum', ['Infernal', 'Infernal', 'Infernal/Tierra'], 'lz-fuego', [], 'Hecha por el autor.'),
+    (43, 'Kotono → Koloi', ['Lucha', 'Lucha'], 'lz-fuego', ['lz-jable*'], 'Hecha por el autor.'),
+    (12, 'Oreps → Mineps → Colossoreps', ['Roca', 'Roca', 'Roca'], 'lz-famara*', ['lz-fuego*'], 'Hecha por el autor.'),
+    (34, 'Kine → Kurokin', ['Tierra', 'Tierra'], 'lz-jable', [], 'Hecha por el autor.'),
     (5, 'Melaní → Favenir → Reginis', ['Bicho', 'Bicho/Veneno', 'Bicho/Veneno'], 'lz-jable', [], LAMINA),
     (35, 'Aerund → Marwen', ['Aire', 'Aire/Agua'], 'lz-famara', ['fv-ajuy', 'fv-sotavento', 'lg-organos', 'eh-orchilla'], LAMINA),
     (18, 'Salmito → Salmarín → Salmástil', ['Agua', 'Agua', 'Agua/Hielo'], 'lz-famara', [],
@@ -434,6 +431,9 @@ def criaturas():
         else:
             f['orden'] = siguiente
             siguiente += 1
+        # El nombre del archivo del autor manda (2026-11-19): es el que ha elegido para esa forma.
+        if SUBIDAS[f['orden']]['nombre']:
+            f['especie'] = SUBIDAS[f['orden']]['nombre']
         # Nombre de archivo del autor (2026-11-17): «PokN. Nombre».
         f['pok'] = f"Pok{f['orden']}. {f['especie'].strip('«»')}"
         # Lo que hay de verdad en la carpeta del autor manda: con modelo, la criatura está hecha.
@@ -452,18 +452,19 @@ def archivos_del_autor():
     """Lo que ha subido el autor a conceptos/criaturas/meshy, por número de Pokédex: si hay imagen
     y si hay modelo. Devuelve también los archivos que no siguen «PokN. Nombre»."""
     import re
-    hay = collections.defaultdict(lambda: {'imagen': False, 'modelo': False})
+    hay = collections.defaultdict(lambda: {'imagen': False, 'modelo': False, 'nombre': None})
     raros = []
     if not os.path.isdir(CARPETA_AUTOR):
         return hay, raros
     for nombre in sorted(os.listdir(CARPETA_AUTOR)):
         if nombre == 'LEEME.md':
             continue
-        m = re.match(r'Pok(\d+)\.\s.*\.(glb|webp|png|jpe?g)$', nombre, re.I)
+        m = re.match(r'Pok(\d+)\.\s(.*)\.(glb|webp|png|jpe?g)$', nombre, re.I)
         if not m:
             raros.append(nombre)
             continue
-        hay[int(m.group(1))]['modelo' if m.group(2).lower() == 'glb' else 'imagen'] = True
+        hay[int(m.group(1))]['modelo' if m.group(3).lower() == 'glb' else 'imagen'] = True
+        hay[int(m.group(1))]['nombre'] = m.group(2).strip()
     return hay, raros
 
 

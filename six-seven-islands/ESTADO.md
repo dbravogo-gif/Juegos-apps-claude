@@ -1,6 +1,6 @@
 # Estado de Six-seven islands
 
-Actualizado: 2026-11-17. Solo el presente; el historial está en git. Máximo 40 líneas.
+Actualizado: 2026-11-19. Solo el presente; el historial está en git. Máximo 40 líneas.
 
 ## Fase actual
 
@@ -18,8 +18,8 @@ Tanda 1: Lanzarote es la isla 1 (`ISLA-1.md`), con kit por código y la tabla de
    Historia cerrada (`HISTORIA.md`), hecha en Lanzarote y Fuerteventura.
 2. Arte con Meshy (`prompts-meshy.md`): criaturas y edificios singulares.
 3. Criaturas: reglas en `CRIATURAS.md`; el plan de las 203 para Meshy en `PLAN-CRIATURAS.md`
-   (`herramientas/criaturas/plan.py`). Ya en el juego, a su altura: civeta, Ravich, Aculiso, Dragosil
-   y el dinosaurio, con sus evoluciones (`herramientas/criaturas/juego.py`, ARCHITECTURE.md).
+   (`herramientas/criaturas/plan.py`). Ya en el juego, a su altura, 21 criaturas del autor (Pok16 a
+   Pok34 y el dinosaurio), con `herramientas/criaturas/juego.py` (ARCHITECTURE.md).
 
 ## Pendiente del autor
 
