@@ -2,7 +2,7 @@ INSTRUCCIONES PARA GEMINI
 
 Vamos a generar las criaturas de mi juego de una en una, con el mismo estilo de imagen que ya
 usamos en esta conversación. Abajo tienes la lista completa, numerada. Es mi plan: 203 criaturas,
-de las que 25 ya están hechas.
+de las que 34 ya están hechas.
 
 CÓMO VAMOS
 - Al empezar, y cada vez que te diga «siguiente», dime cuál toca, con este formato:
@@ -59,63 +59,27 @@ Pok3. Krantacor, 3.ª forma de 3
 
 Pok4. Inicial de planta, 1.ª forma de 3 · YA HECHA
 
-Pok5. Inicial de planta, 2.ª forma de 3
-   Tipo: Planta (la línea: Planta → Planta → Planta/Mental)
-   Fuerza: inicial, con estadísticas propias (empieza floja y la final es fuerte).
-   Zona: Inicial (museo de Lanzarote)
-   Idea: El lagarto chamán, que acaba en chamán de Planta/Mental; la 1.ª forma ya está hecha. Pídeme la imagen de la 1.ª forma para seguir su diseño.
+Pok5. Sporecko, 2.ª forma de 3 · YA HECHA
 
-Pok6. Inicial de planta, 3.ª forma de 3
-   Tipo: Planta/Mental (la línea: Planta → Planta → Planta/Mental)
-   Fuerza: inicial, con estadísticas propias (empieza floja y la final es fuerte).
-   Zona: Inicial (museo de Lanzarote)
-   Idea: El lagarto chamán, que acaba en chamán de Planta/Mental; la 1.ª forma ya está hecha. Pídeme la imagen de la 1.ª forma para seguir su diseño.
+Pok6. Transcecko, 3.ª forma de 3 · YA HECHA
 
 Pok7. Inicial de infernal, 1.ª forma de 3 · YA HECHA
 
-Pok8. Inicial de infernal, 2.ª forma de 3
-   Tipo: Infernal (la línea: Infernal → Infernal → Infernal)
-   Fuerza: inicial, con estadísticas propias (empieza floja y la final es fuerte).
-   Zona: Inicial (museo de Lanzarote)
-   Idea: La 1.ª forma ya está hecha. Pídeme la imagen de la 1.ª forma para seguir su diseño.
+Pok8. Hinozö, 2.ª forma de 3 · YA HECHA
 
-Pok9. Inicial de infernal, 3.ª forma de 3
-   Tipo: Infernal (la línea: Infernal → Infernal → Infernal)
-   Fuerza: inicial, con estadísticas propias (empieza floja y la final es fuerte).
-   Zona: Inicial (museo de Lanzarote)
-   Idea: La 1.ª forma ya está hecha. Pídeme la imagen de la 1.ª forma para seguir su diseño.
+Pok9. Jigoku, 3.ª forma de 3 · YA HECHA
 
 Pok10. Armalito, 1.ª forma de 3 · YA HECHA
 
-Pok11. Uralito, 2.ª forma de 3
-   Tipo: Roca/Veneno (la línea: Roca → Roca/Veneno → Roca/Veneno)
-   Fuerza: inicial, con estadísticas propias (empieza floja y la final es fuerte).
-   Zona: Inicial (museo de Lanzarote)
-   Idea: lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.
+Pok11. Uralito, 2.ª forma de 3 · YA HECHA
 
-Pok12. Reactolito, 3.ª forma de 3
-   Tipo: Roca/Veneno (la línea: Roca → Roca/Veneno → Roca/Veneno)
-   Fuerza: inicial, con estadísticas propias (empieza floja y la final es fuerte).
-   Zona: Inicial (museo de Lanzarote)
-   Idea: lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.
+Pok12. Reactolito, 3.ª forma de 3 · YA HECHA
 
-Pok13. Inicial de tierra, 1.ª forma de 3
-   Tipo: Tierra (la línea: Tierra → Tierra/Espectral → Tierra/Espectral)
-   Fuerza: inicial, con estadísticas propias (empieza floja y la final es fuerte).
-   Zona: Inicial (museo de Lanzarote)
-   Idea: Por diseñar: la inicial del pueblo de los pueblos sepultados por el volcán. Una cría de tierra y ceniza que, al evolucionar, gana un aire espectral. Que no se parezca a las otras cuatro iniciales.
+Pok13. Tsubomi, 1.ª forma de 3 · YA HECHA
 
-Pok14. Inicial de tierra, 2.ª forma de 3
-   Tipo: Tierra/Espectral (la línea: Tierra → Tierra/Espectral → Tierra/Espectral)
-   Fuerza: inicial, con estadísticas propias (empieza floja y la final es fuerte).
-   Zona: Inicial (museo de Lanzarote)
-   Idea: Por diseñar: la inicial del pueblo de los pueblos sepultados por el volcán. Una cría de tierra y ceniza que, al evolucionar, gana un aire espectral. Que no se parezca a las otras cuatro iniciales. Pídeme la imagen de la 1.ª forma para seguir su diseño.
+Pok14. Tsuborei, 2.ª forma de 3 · YA HECHA
 
-Pok15. Inicial de tierra, 3.ª forma de 3
-   Tipo: Tierra/Espectral (la línea: Tierra → Tierra/Espectral → Tierra/Espectral)
-   Fuerza: inicial, con estadísticas propias (empieza floja y la final es fuerte).
-   Zona: Inicial (museo de Lanzarote)
-   Idea: Por diseñar: la inicial del pueblo de los pueblos sepultados por el volcán. Una cría de tierra y ceniza que, al evolucionar, gana un aire espectral. Que no se parezca a las otras cuatro iniciales. Pídeme la imagen de la 1.ª forma para seguir su diseño.
+Pok15. Sunaiki, 3.ª forma de 3 · YA HECHA
 
 Pok16. Civeta, 1.ª forma de 2 · YA HECHA
 

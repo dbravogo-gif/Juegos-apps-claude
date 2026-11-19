@@ -21,8 +21,8 @@ modelo se llaman «PokN. Nombre» (autor, 2026-11-17): N es su número en esta l
 nunca, y el nombre es el suyo o su apodo. Se suben a `conceptos/criaturas/meshy/`. Para que Gemini te las vaya
 diciendo de una en una: `conceptos/criaturas/guia-gemini.txt`, que lleva sus instrucciones arriba.
 
-**Coste.** Faltan 178 criaturas (hay 25 hechas). A 15 créditos cada una
-(Smart Topology y textura, precio comprobado el 2026-11-07), son unos 2.670 créditos sin
+**Coste.** Faltan 169 criaturas (hay 34 hechas). A 15 créditos cada una
+(Smart Topology y textura, precio comprobado el 2026-11-07), son unos 2.535 créditos sin
 contar repeticiones. Por isla, en la tabla de abajo.
 
 ## Las cuentas
@@ -56,14 +56,14 @@ Todas cuadran: si no, el script no genera nada.
 
 | Isla | Especies nuevas | Criaturas | Por generar | Créditos |
 | --- | --- | --- | --- | --- |
-| Lanzarote | 40 | 47 | 24 | 360 |
+| Lanzarote | 46 | 47 | 15 | 225 |
 | Fuerteventura | 14 | 30 | 30 | 450 |
 | Gran Canaria | 25 | 37 | 37 | 555 |
 | Tenerife | 22 | 38 | 36 | 540 |
 | La Gomera | 13 | 22 | 22 | 330 |
 | La Palma | 10 | 16 | 16 | 240 |
 | El Hierro | 11 | 13 | 13 | 195 |
-| **Total** | | **203** | **178** | **2.670** |
+| **Total** | | **203** | **169** | **2.535** |
 
 Lanzarote incluye las 15 iniciales y las 5 leyendas de los pueblos, que duermen allí.
 
@@ -212,17 +212,17 @@ nombre lo pone el autor. La idea va en la primera forma de cada especie.
 | Pok2. Chicront | inicial-agua-2 | 2.ª | Agua A | Propias (del autor) | 0,9 m |  |  |
 | Pok3. Krantacor | inicial-agua-3 | 3.ª | Agua A | Propias (del autor) | 1,6 m |  |  |
 | Pok4. Inicial de planta | inicial-planta-1 (hecha) | 1.ª | Planta A | Propias (del autor) | 0,4 m | Inicial (museo de Lanzarote) | El lagarto chamán, que acaba en chamán de Planta/Mental; la 1.ª forma ya está hecha. |
-| Pok5. Inicial de planta | inicial-planta-2 | 2.ª | Planta A | Propias (del autor) | 0,9 m |  |  |
-| Pok6. Inicial de planta | inicial-planta-3 | 3.ª | Planta/Mental A | Propias (del autor) | 1,7 m |  |  |
+| Pok5. Sporecko | inicial-planta-2 (hecha) | 2.ª | Planta A | Propias (del autor) | 0,9 m |  |  |
+| Pok6. Transcecko | inicial-planta-3 (hecha) | 3.ª | Planta/Mental A | Propias (del autor) | 1,7 m |  |  |
 | Pok7. Inicial de infernal | inicial-infernal-1 (hecha) | 1.ª | Infernal A | Propias (del autor) | 0,4 m | Inicial (museo de Lanzarote) | La 1.ª forma ya está hecha. |
-| Pok8. Inicial de infernal | inicial-infernal-2 | 2.ª | Infernal A | Propias (del autor) | 0,9 m |  |  |
-| Pok9. Inicial de infernal | inicial-infernal-3 | 3.ª | Infernal A | Propias (del autor) | 1,7 m |  |  |
+| Pok8. Hinozö | inicial-infernal-2 (hecha) | 2.ª | Infernal A | Propias (del autor) | 0,9 m |  |  |
+| Pok9. Jigoku | inicial-infernal-3 (hecha) | 3.ª | Infernal A | Propias (del autor) | 1,7 m |  |  |
 | Pok10. Armalito | inicial-roca-1 (hecha) | 1.ª | Roca A | Propias (del autor) | 0,4 m | Inicial (museo de Lanzarote) | Lámina del autor; la 1.ª forma ya está hecha. |
-| Pok11. Uralito | inicial-roca-2 | 2.ª | Roca/Veneno A | Propias (del autor) | 1,0 m |  |  |
-| Pok12. Reactolito | inicial-roca-3 | 3.ª | Roca/Veneno A | Propias (del autor) | 1,8 m |  |  |
-| Pok13. Inicial de tierra | inicial-tierra-1 | 1.ª | Tierra A | Propias (del autor) | 0,4 m | Inicial (museo de Lanzarote) | Por diseñar: la inicial del pueblo de los pueblos sepultados por el volcán. Una cría de tierra y ceniza que, al evolucionar, gana un aire espectral. Que no se parezca a las otras cuatro iniciales. |
-| Pok14. Inicial de tierra | inicial-tierra-2 | 2.ª | Tierra/Espectral A | Propias (del autor) | 0,9 m |  |  |
-| Pok15. Inicial de tierra | inicial-tierra-3 | 3.ª | Tierra/Espectral A | Propias (del autor) | 1,7 m |  |  |
+| Pok11. Uralito | inicial-roca-2 (hecha) | 2.ª | Roca/Veneno A | Propias (del autor) | 1,0 m |  |  |
+| Pok12. Reactolito | inicial-roca-3 (hecha) | 3.ª | Roca/Veneno A | Propias (del autor) | 1,8 m |  |  |
+| Pok13. Tsubomi | inicial-tierra-1 (hecha) | 1.ª | Tierra A | Propias (del autor) | 0,4 m | Inicial (museo de Lanzarote) | Por diseñar: la inicial del pueblo de los pueblos sepultados por el volcán. Una cría de tierra y ceniza que, al evolucionar, gana un aire espectral. Que no se parezca a las otras cuatro iniciales. |
+| Pok14. Tsuborei | inicial-tierra-2 (hecha) | 2.ª | Tierra/Espectral A | Propias (del autor) | 0,9 m |  |  |
+| Pok15. Sunaiki | inicial-tierra-3 (hecha) | 3.ª | Tierra/Espectral A | Propias (del autor) | 1,7 m |  |  |
 | Pok16. Civeta | 031-1 (hecha) | 1.ª | Común A | Zigzagoon (Q1, AF) | 0,4 m | El Golfo | Lámina del autor (civeta.jpg). |
 | Pok17. Civeta | 031-2 (hecha) | 2.ª | Común A | Linoone (Q3, AF) | 0,8 m |  |  |
 | Pok18. Ravich | 032-1 (hecha) | 1.ª | Aire A | Taillow (Q1, AF) | 0,3 m | El Golfo | Hecha por el autor. |

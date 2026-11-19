@@ -46,8 +46,7 @@ export class Companera implements Subsistema {
   private preparar(inicial: string): void {
     if (this.pedida === inicial) return;
     this.pedida = inicial;
-    // La de Tierra aún no tiene modelo: mientras, el de Roca (autor, 2026-11-13).
-    const modelo = MODELO_INICIAL[inicial] ?? (inicial === 'tierra' ? MODELO_INICIAL.roca : undefined);
+    const modelo = MODELO_INICIAL[inicial];
     if (!modelo) return;
     // A su altura respecto al jugador, comprimida como en combate (ARTE.md, «Escala de las criaturas»).
     const altura = DATOS_COMBATE_PRUEBA.especies[ESPECIE_INICIAL[inicial] ?? '']?.altura;

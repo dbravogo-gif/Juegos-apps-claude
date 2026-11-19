@@ -1,6 +1,7 @@
 // Las criaturas del autor que ya están en el juego (src/data/criaturas.ts, generado por
 // herramientas/criaturas/juego.py) y su escala por altura (ARTE.md, «Escala de las criaturas»).
 import { describe, expect, it } from 'vitest';
+import { MODELO_FINAL_INICIAL, MODELO_INICIAL } from '../src/arte/criaturas3d';
 import { ESCALA_MAXIMA, ESCALA_MINIMA, escalaPorAltura } from '../src/arte/escala-criaturas';
 import { DATOS_COMBATE_PRUEBA as DATOS, MODELO_DE } from '../src/data/combate-prueba';
 import { ESPECIES_CRIATURAS } from '../src/data/criaturas';
@@ -16,6 +17,11 @@ describe('criaturas del autor', () => {
       expect(MODELO_DE[e.id]).toBeDefined();
       expect(MODELOS).toContain(MODELO_DE[e.id]);
     }
+  });
+
+  it('las cinco iniciales tienen modelo, y las estatuas del museo, el de su forma final', () => {
+    for (const t of ['agua', 'planta', 'infernal', 'roca', 'tierra']) expect(MODELOS).toContain(MODELO_INICIAL[t]);
+    for (const m of Object.values(MODELO_FINAL_INICIAL)) expect(MODELOS).toContain(m);
   });
 
   it('sus tipos, ataques y evoluciones existen, y ninguna evolución encoge ni llega antes de tiempo', () => {
