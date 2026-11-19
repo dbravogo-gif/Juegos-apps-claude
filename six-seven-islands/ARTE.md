@@ -318,11 +318,20 @@ Que un renacuajo no sea del tamaño de un dragón (autor).
 
 Propia, no la del género (R8). De la idea común se quedan la anticipación, el latido entre las
 dos formas y el destello. Lo nuestro (revisado con el probador y el autor):
-- **fondo blanco roto** y una **plataforma según el tipo principal** de la forma nueva, con su
-  adorno y lo que cae del cielo (`ESCENARIO_EVOLUCION`, en `sistemas/combate/combate.ts`). Agua:
-  azul con ondas y gotas; Roca: marrón con rocas y piedrecitas; Planta: hierba y hojas; Infernal:
-  basalto con grietas y brasas; Tierra: terrones y granos; Hielo: cristales y copos; Aire, plumas;
-  Eléctrico, chispas; los demás, su color con motas o burbujas;
+- **fondo blanco roto** y una **isla flotante según el tipo principal** de la forma nueva
+  (`sistemas/combate/escenario-evolucion.ts`; rehecha el 2026-11-19 porque al autor le pareció muy
+  pobre la primera, de discos planos y confeti):
+  - suelo con relieve y manchas de tres tonos (liso en el centro, para el Sello), canto en estratos
+    tallados y un peñón que se afila hacia abajo, con luz y sombra, y peñascos que flotan al lado;
+  - encima, lo de su tipo, sobre todo detrás de la criatura. Planta: briznas, flores, setas, raíces
+    que cuelgan; Roca: columnas de basalto gris, peñascos y grietas; Agua: un foso alrededor del
+    centro, con ondas, nenúfares y juncos; Infernal: agujas de lava, grietas encendidas y charquitos;
+    Tierra: arena ondulada, piedras y matas secas; Hielo: nieve, cristales y carámbanos; Aire: nubes
+    bajo el canto; los demás, cristales de su color o piedras;
+  - lo que cae, alrededor de la criatura y con su peso: hojas que planean y se posan, piedras que
+    rebotan y levantan polvo, gotas que salpican; las brasas, burbujas y motas suben;
+  - la luz de abajo de la escena es la del suelo verde de la isla del juego: la isla lleva luz propia
+    (más en las caras que miran abajo) para que el peñón no salga negro y verdoso;
 - **el Sello de la historia se dibuja sobre la plataforma,** en claro: los trece círculos del cubo
   de Metatrón, que se tocan, y después las líneas que unen sus centros;
 - la criatura, hecha silueta del color de su tipo, late entre su forma y la nueva;

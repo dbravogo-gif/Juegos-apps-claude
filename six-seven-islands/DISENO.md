@@ -458,6 +458,7 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
 - 2026-11-19 · Teclas de consola (autor): flechas para andar y elegir, A para confirmar, Z para abrir el menú (como Esc) y X para volver, como el botón B. WASD ya no anda, porque la A confirma (`tests/entrada.test.ts`).
 - 2026-11-19 · Gimnasio de Roca (autor): fuera las dos compuertas que abrían los aprendices (ya había que vencerlos); queda la de la palanca, ahora bien visible. La puerta del gimnasio se dibuja doble, sobre sus dos casillas: la de la izquierda parecía pared y te metía dentro.
 - 2026-11-19 · Combate (autor): el cursor vuelve al último ataque de cada criatura; las fichas llevan los tipos bajo el nombre; el ataque marcado se explica a la izquierda: un cuadradito propio con su categoría (pesa, física; destello, mágica; flechas, de estado) y debajo potencia, PP y efectos. Con qué estadística pega no se dice, porque es lo normal; la precisión, solo si no es 100 (`core/describir.ts`).
+- 2026-11-19 · Evolución más currada (autor): una isla flotante esculpida por tipo, con lo de su tipo encima y lo que cae con peso y forma, en vez de un disco plano y confeti (ARTE.md).
 
 ## Decisiones abiertas
 
