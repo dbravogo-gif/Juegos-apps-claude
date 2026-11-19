@@ -318,14 +318,19 @@ Que un renacuajo no sea del tamaño de un dragón (autor).
 ## Evolución (2026-11-19)
 
 Propia, no la del género (R8). De la idea común se quedan la anticipación, el latido entre las
-dos formas y el destello. Lo nuestro:
-- pasa en la arena, en 3D, con el fondo en noche honda (`#140f26`) y las plataformas apagadas;
-- **el Sello de la historia se dibuja en el suelo,** sus trece círculos uno tras otro, del color
-  del tipo de la forma nueva, y suben motas de ese color;
-- la criatura, hecha luz crema, late entre su forma y la nueva, cada vez más deprisa, mientras el
-  Sello gira;
-- con el destello, los círculos salen despedidos y queda la nueva con su color y un rebote;
-- Esc la para mientras late: «X ha dejado de cambiar».
+dos formas y el destello. Lo nuestro (revisado con el probador y el autor):
+- **fondo blanco roto** y una **plataforma según el tipo principal** de la forma nueva, con su
+  adorno y lo que cae del cielo (`ESCENARIO_EVOLUCION`, en `sistemas/combate/combate.ts`). Agua:
+  azul con ondas y gotas; Roca: marrón con rocas y piedrecitas; Planta: hierba y hojas; Infernal:
+  basalto con grietas y brasas; Tierra: terrones y granos; Hielo: cristales y copos; Aire, plumas;
+  Eléctrico, chispas; los demás, su color con motas o burbujas;
+- **el Sello de la historia se dibuja sobre la plataforma,** en claro: los trece círculos del cubo
+  de Metatrón, que se tocan, y después las líneas que unen sus centros;
+- la criatura, hecha silueta del color de su tipo, late entre su forma y la nueva;
+- con el fogonazo, el Sello sale despedido y queda la nueva, que se ve casi dos segundos antes de
+  poder pasar el mensaje;
+- textos propios: «¡El Sello reacciona a X! (Esc: pararlo)», «¡X es ahora Y!» y, si se para, «X se
+  aparta del Sello y sigue igual».
 
 ## Pruebas de la guía
 

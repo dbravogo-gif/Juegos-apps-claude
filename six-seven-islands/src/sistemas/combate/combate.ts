@@ -8,18 +8,30 @@
 
 import {
   AdditiveBlending,
+  BufferGeometry,
   CanvasTexture,
+  CircleGeometry,
   Color,
+  BoxGeometry,
+  ConeGeometry,
   CylinderGeometry,
+  DodecahedronGeometry,
+  DoubleSide,
+  Float32BufferAttribute,
   Group,
+  LineBasicNodeMaterial,
+  LineSegments,
   Mesh,
   MeshBasicNodeMaterial,
+  OctahedronGeometry,
+  PlaneGeometry,
   SRGBColorSpace,
   SphereGeometry,
   TextureLoader,
   Vector3,
   RingGeometry,
   type Fog,
+  type Object3D,
   type Material,
   type Texture,
 } from 'three/webgpu';
@@ -62,9 +74,48 @@ const TAMANO: [number, number] = [1.0, 0.95];
 const GIRO: [number, number] = [2.4, -0.75];
 const CAMARA = new Vector3(0.1, 2.7, 8.6);
 /** Dónde evoluciona una criatura: en el centro, un poco hacia la cámara, mirándola. */
-const CENTRO_EVOLUCION = new Vector3(0.15, 0, 1.6);
-/** El fondo de la evolución: noche honda, para que brillen el Sello y la silueta. */
-const FONDO_EVOLUCION = new Color('#140f26');
+const CENTRO_EVOLUCION = new Vector3(0.15, 0, 0.2);
+/** El fondo de la evolución: blanco roto (autor, 2026-11-19). */
+const FONDO_EVOLUCION = new Color('#f2ede4');
+
+type Cae = 'gota' | 'roca' | 'grano' | 'hoja' | 'brasa' | 'pluma' | 'chispa' | 'copo' | 'burbuja' | 'mota';
+type Adorno = 'ondas' | 'rocas' | 'terrones' | 'hierba' | 'grietas' | 'cristales' | 'nada';
+/**
+ * El escenario de la evolución según el tipo principal de la forma nueva (autor, 2026-11-19): el
+ * color de la plataforma, lo que tiene encima y lo que cae del cielo.
+ */
+const ESCENARIO_EVOLUCION: Readonly<Record<string, { plataforma: number; adorno: Adorno; cae: Cae; colorCae: number }>> = {
+  agua: { plataforma: 0x3a7bd5, adorno: 'ondas', cae: 'gota', colorCae: 0x6fb6ff },
+  roca: { plataforma: 0x8a6a4f, adorno: 'rocas', cae: 'roca', colorCae: 0x6f5a49 },
+  tierra: { plataforma: 0xa8763e, adorno: 'terrones', cae: 'grano', colorCae: 0x9b6a35 },
+  planta: { plataforma: 0x4f9a4a, adorno: 'hierba', cae: 'hoja', colorCae: 0x5fbf55 },
+  infernal: { plataforma: 0x4a2b26, adorno: 'grietas', cae: 'brasa', colorCae: 0xff7a2a },
+  aire: { plataforma: 0x9fd3ef, adorno: 'nada', cae: 'pluma', colorCae: 0x8fb8d8 },
+  electrico: { plataforma: 0xe2b52c, adorno: 'nada', cae: 'chispa', colorCae: 0xf2c200 },
+  hielo: { plataforma: 0xa9dcea, adorno: 'cristales', cae: 'copo', colorCae: 0x8cc9e0 },
+  lucha: { plataforma: 0xa33a3a, adorno: 'nada', cae: 'mota', colorCae: 0xd9534f },
+  mental: { plataforma: 0xd76aa8, adorno: 'nada', cae: 'burbuja', colorCae: 0xe58cc2 },
+  oscuridad: { plataforma: 0x4a4550, adorno: 'nada', cae: 'mota', colorCae: 0x3b3640 },
+  espectral: { plataforma: 0x6a4bb0, adorno: 'nada', cae: 'mota', colorCae: 0x8f73e0 },
+  acero: { plataforma: 0x9aa6b5, adorno: 'nada', cae: 'chispa', colorCae: 0x8794a6 },
+  ancestral: { plataforma: 0x9a6a2a, adorno: 'rocas', cae: 'mota', colorCae: 0xd9a441 },
+  bicho: { plataforma: 0x7fa63a, adorno: 'hierba', cae: 'hoja', colorCae: 0x9cc64e },
+  veneno: { plataforma: 0x8a3a9a, adorno: 'nada', cae: 'burbuja', colorCae: 0xb468c4 },
+  comun: { plataforma: 0xb5aea6, adorno: 'nada', cae: 'mota', colorCae: 0xa39b92 },
+};
+/** Cómo cae cada cosa: velocidad (unidades por segundo) y vaivén. */
+const CAIDA_TIPO: Readonly<Record<Cae, { velocidad: number; vaiven: number }>> = {
+  gota: { velocidad: 3.2, vaiven: 0 },
+  roca: { velocidad: 2.4, vaiven: 0 },
+  grano: { velocidad: 1.8, vaiven: 0.05 },
+  hoja: { velocidad: 0.7, vaiven: 0.35 },
+  brasa: { velocidad: 0.9, vaiven: 0.15 },
+  pluma: { velocidad: 0.5, vaiven: 0.4 },
+  chispa: { velocidad: 2.6, vaiven: 0 },
+  copo: { velocidad: 0.6, vaiven: 0.3 },
+  burbuja: { velocidad: 0.6, vaiven: 0.2 },
+  mota: { velocidad: 0.8, vaiven: 0.15 },
+};
 /**
  * Los trece círculos del Sello (HISTORIA.md: el cubo de Metatrón), en el suelo bajo la criatura que
  * evoluciona: uno en el centro, seis alrededor y seis más fuera.
@@ -111,6 +162,8 @@ interface Paso {
   duracion: number;
   /** Se puede adelantar pulsando. */
   saltable: boolean;
+  /** Segundos antes de poder adelantarlo (0,25 si no se dice). */
+  minimo?: number;
   empezar?: () => void;
   /** t de 0 a 1 a lo largo del paso. */
   animar?: (t: number) => void;
@@ -125,6 +178,8 @@ interface Luchador {
   visible: boolean;
   /** Su alto en la arena, según su altura: para poner a su medida el destello y las chispas. */
   alto: number;
+  /** Cuánto se aparta de su sitio por ser grande: la tuya, hacia el centro, para no salirse por la izquierda. */
+  ajuste: Vector3;
 }
 
 export class Combate implements Subsistema {
@@ -166,10 +221,12 @@ export class Combate implements Subsistema {
   private nivelesAntes = new Map<string, number>();
   /** La figura de la forma siguiente de cada criatura tuya, por «uid>especie», cargada de antemano. */
   private figurasEvolucion = new Map<string, { figura: Group; alto: number }>();
-  /** La evolución en curso: mientras late, Esc la para. */
-  private evolucion: { latiendo: boolean; cancelada: boolean } | null = null;
-  /** La silueta luminosa de la criatura que evoluciona. */
-  private materialSilueta: MeshBasicNodeMaterial | null = null;
+  /** La evolución en curso: hasta el destello, Esc la para. */
+  private evolucion: { parable: boolean; cancelada: boolean } | null = null;
+  /** Lo que la evolución apaga de la arena (las plataformas): se vuelve a encender al abrirla otra vez. */
+  private apagadasEvolucion: Object3D[] = [];
+  /** Lo que queda de cada evolución hasta que se cierra la arena: su grupo y lo que hay que soltar. */
+  private restosEvolucion: { grupo: Group; nuevos: { dispose(): void }[] }[] = [];
   /** Contra quién se lucha: el id del entrenador, o null si es salvaje. */
   private entrenador: string | null = null;
   /** La barra de captura (F08): qué cubo se lanza y cuánto lleva la flecha moviéndose. */
@@ -366,7 +423,11 @@ export class Combate implements Subsistema {
     const f = this.figuras.get(uid);
     if (!f) return;
     this.luchadores[lado]?.raiz.removeFromParent();
-    this.luchadores[lado] = { raiz: f, giro: GIRO[lado], extra: new Vector3(), escala: 0, visible: false, alto: this.altos.get(uid) ?? TAMANO[lado] };
+    const alto = this.altos.get(uid) ?? TAMANO[lado];
+    // Las tuyas grandes se salían por el borde izquierdo (probador, 2026-11-19): hacia el centro y atrás.
+    const sobra = lado === 0 ? Math.max(0, alto - 1.15) : 0;
+    const ajuste = new Vector3(sobra * 1.1, 0, -sobra * 0.45);
+    this.luchadores[lado] = { raiz: f, giro: GIRO[lado], extra: new Vector3(), escala: 0, visible: false, alto, ajuste };
     this.arena.add(f);
   }
 
@@ -376,6 +437,8 @@ export class Combate implements Subsistema {
     this.raiz.hidden = !si;
     if (!si) this.clima.hidden = true;
     if (si) {
+      for (const o of this.apagadasEvolucion) o.visible = true;
+      this.apagadasEvolucion = [];
       this.guardado = { fondo: escena.background as Color | Texture | null, niebla: escena.fog as Fog | null };
       const enGimnasio = this.partida.estado.dentro?.startsWith('gimnasio') ?? false;
       // La arena (ocre) o el viento (rachas blancas) del campo, mientras dure el combate.
@@ -389,6 +452,11 @@ export class Combate implements Subsistema {
       this.colocarCamara();
       for (const lado of [0, 1] as const) this.pintarFicha(lado, true);
     } else if (this.guardado) {
+      for (const r of this.restosEvolucion) {
+        r.grupo.removeFromParent();
+        for (const n of r.nuevos) n.dispose();
+      }
+      this.restosEvolucion = [];
       escena.background = this.guardado.fondo;
       escena.fog = this.guardado.niebla;
       this.guardado = null;
@@ -562,7 +630,7 @@ export class Combate implements Subsistema {
           let destello: Mesh | null = null;
           const abierto = { chispas: false };
           this.encolar({
-            texto: lado === 1 ? `¡El entrenador saca a ${ev.ficha.nombre}!` : `¡Adelante, ${ev.ficha.nombre}!`,
+            texto: lado === 1 ? `¡${this.entrenador?.startsWith('lider') ? 'La líder' : 'El entrenador'} saca a ${ev.ficha.nombre}!` : `¡Adelante, ${ev.ficha.nombre}!`,
             sonido: 'salida',
             duracion: 1.9,
             saltable: false,
@@ -832,11 +900,11 @@ export class Combate implements Subsistema {
     // otra opción sin querer).
     this.entrada.pulsacion();
     // Esc mientras late: la evolución se para (como en el género, se puede no querer).
-    if (cancelar && this.evolucion?.latiendo && this.paso) {
+    if (cancelar && this.evolucion?.parable && !this.evolucion.cancelada && this.paso) {
       this.evolucion.cancelada = true;
       this.tPaso = this.paso.duracion;
     }
-    if (confirmar && this.paso?.saltable && this.tPaso > 0.25) this.tPaso = this.paso.duracion;
+    if (confirmar && this.paso?.saltable && this.tPaso > (this.paso.minimo ?? 0.25)) this.tPaso = this.paso.duracion;
   }
 
   actualizar(dt: number): void {
@@ -1035,10 +1103,14 @@ export class Combate implements Subsistema {
   }
 
   /**
-   * La evolución, en la arena y a oscuras (autor, 2026-11-19; propia, no la del género): el Sello se
-   * dibuja en el suelo, círculo a círculo, del color del tipo; suben motas; la criatura, hecha luz,
-   * late entre su forma y la nueva cada vez más deprisa; y con un destello los círculos salen
-   * despedidos y queda la nueva, con su color. Esc la para mientras late.
+   * La evolución, en la arena (autor, 2026-11-19; propia, no la del género; revisada con el probador):
+   * - de noche, el Sello se dibuja en el suelo: los trece círculos del cubo de Metatrón, que se tocan,
+   *   y después las líneas que unen sus centros, del color del tipo de la forma nueva;
+   * - un círculo de luz bajo la criatura, para que se lea aunque sea oscura, y motas que suben;
+   * - la criatura, hecha luz de su color, late entre su forma y la nueva cada vez más deprisa;
+   * - con un fogonazo blanco, el Sello se rompe hacia fuera y queda la nueva, que se ve un rato
+   *   antes de poder pasar el mensaje.
+   * Hasta el destello, Esc la para.
    */
   private encolarEvolucion(uid: string, a: string): void {
     const nueva = this.figurasEvolucion.get(`${uid}>${a}`);
@@ -1047,37 +1119,155 @@ export class Combate implements Subsistema {
     if (!nueva || !vieja || !especieNueva) return;
     const equipo = () => this.estado!.lados[0].equipo;
     const nombre = nombreDe(equipo().find((c) => c.uid === uid)!, DATOS);
-    const color = TIPOS.find((t) => t.id === especieNueva.tipos[0])?.color ?? 0xfff4dc;
+    const color = new Color(TIPOS.find((t) => t.id === especieNueva.tipos[0])?.color ?? 0xfff4dc);
+    const escenario = ESCENARIO_EVOLUCION[especieNueva.tipos[0]] ?? ESCENARIO_EVOLUCION.comun!;
     const grupo = new Group();
     grupo.position.copy(CENTRO_EVOLUCION);
-    const matCirculo = new MeshBasicNodeMaterial({ color, transparent: true, depthWrite: false, blending: AdditiveBlending });
-    matCirculo.toneMapped = false;
-    this.materiales.push(matCirculo);
-    if (!this.materialSilueta) {
-      this.materialSilueta = new MeshBasicNodeMaterial({ color: '#fff6e0' });
-      this.materialSilueta.toneMapped = false;
-      this.materiales.push(this.materialSilueta);
+    const nuevos: { dispose(): void }[] = [];
+    const material = <T extends { dispose(): void; toneMapped: boolean }>(m: T): T => {
+      m.toneMapped = false;
+      nuevos.push(m);
+      return m;
+    };
+    // Sobre el blanco roto: el Sello, en claro sobre la plataforma; la silueta, del color del tipo.
+    const matCirculo = material(new MeshBasicNodeMaterial({ color: '#fffaf0', transparent: true, depthWrite: false }));
+    const matMota = material(new MeshBasicNodeMaterial({ color, transparent: true, depthWrite: false }));
+    const matSilueta = material(new MeshBasicNodeMaterial({ color: color.clone().lerp(new Color('#ffffff'), 0.2) }));
+    const matSuelo = material(new MeshBasicNodeMaterial({ color: '#ffffff', transparent: true, opacity: 0, depthWrite: false }));
+    const matLineas = material(new LineBasicNodeMaterial({ color: '#fffaf0', transparent: true, opacity: 0, depthWrite: false }));
+    const matDestello = material(new MeshBasicNodeMaterial({ color, transparent: true, opacity: 0, depthWrite: false }));
+    const plataformaColor = new Color(escenario.plataforma);
+    const matPlataforma = material(new MeshBasicNodeMaterial({ color: plataformaColor }));
+    const matCanto = material(new MeshBasicNodeMaterial({ color: plataformaColor.clone().multiplyScalar(0.72) }));
+    const matAdorno = material(
+      new MeshBasicNodeMaterial({
+        color: escenario.adorno === 'grietas' ? 0xff8a3a : escenario.adorno === 'ondas' || escenario.adorno === 'cristales' ? 0xf4fbff : plataformaColor.clone().multiplyScalar(0.7),
+        transparent: escenario.adorno === 'ondas',
+        side: DoubleSide,
+      }),
+    );
+    const matCae = material(new MeshBasicNodeMaterial({ color: escenario.colorCae, side: DoubleSide, transparent: escenario.cae === 'burbuja', opacity: escenario.cae === 'burbuja' ? 0.7 : 1 }));
+    const anillo = new RingGeometry(0.24, 0.285, 48);
+    const disco = new CircleGeometry(1.35, 48);
+    // La plataforma del tipo: canto oscuro y cara de su color, con su adorno encima.
+    const cilindro = new CylinderGeometry(1.55, 1.68, 0.22, 56);
+    const cara = new CircleGeometry(1.55, 56);
+    const geoAdorno =
+      escenario.adorno === 'rocas'
+        ? new DodecahedronGeometry(0.12)
+        : escenario.adorno === 'terrones'
+          ? new BoxGeometry(0.16, 0.1, 0.14)
+          : escenario.adorno === 'hierba'
+            ? new ConeGeometry(0.045, 0.26, 5)
+            : escenario.adorno === 'grietas'
+              ? new BoxGeometry(0.55, 0.012, 0.035)
+              : escenario.adorno === 'cristales'
+                ? new OctahedronGeometry(0.11)
+                : new RingGeometry(0.9, 0.95, 48);
+    const geoCae: BufferGeometry =
+      escenario.cae === 'gota'
+        ? new SphereGeometry(0.045, 8, 6).scale(1, 2.4, 1)
+        : escenario.cae === 'roca'
+          ? new DodecahedronGeometry(0.07)
+          : escenario.cae === 'grano'
+            ? new BoxGeometry(0.06, 0.06, 0.06)
+            : escenario.cae === 'hoja'
+              ? new PlaneGeometry(0.14, 0.08)
+              : escenario.cae === 'pluma'
+                ? new PlaneGeometry(0.05, 0.18)
+                : escenario.cae === 'chispa'
+                  ? new BoxGeometry(0.022, 0.16, 0.022)
+                  : escenario.cae === 'copo'
+                    ? new OctahedronGeometry(0.06)
+                    : escenario.cae === 'burbuja'
+                      ? new SphereGeometry(0.07, 10, 8)
+                      : new SphereGeometry(0.045, 6, 4);
+    const esfera = new SphereGeometry(0.5, 40, 24);
+    const mota = new SphereGeometry(0.035, 6, 4);
+    // Las líneas del cubo de Metatrón: todos los centros unidos entre sí.
+    const puntos: number[] = [];
+    CIRCULOS_SELLO.forEach(([x1, z1], i) => CIRCULOS_SELLO.slice(i + 1).forEach(([x2, z2]) => puntos.push(x1, 0.03, z1, x2, 0.03, z2)));
+    const geoLineas = new BufferGeometry();
+    geoLineas.setAttribute('position', new Float32BufferAttribute(puntos, 3));
+    nuevos.push(anillo, disco, esfera, mota, geoLineas, cilindro, cara, geoAdorno, geoCae);
+    const plataforma = new Group();
+    const canto = new Mesh(cilindro, matCanto);
+    canto.position.y = -0.12;
+    const caraArriba = new Mesh(cara, matPlataforma);
+    caraArriba.rotation.x = -Math.PI / 2;
+    caraArriba.position.y = 0;
+    plataforma.add(canto, caraArriba);
+    const adornos: Mesh[] = [];
+    if (escenario.adorno === 'ondas') {
+      // Las ondas se abren despacio, como en un charco.
+      for (let i = 0; i < 3; i++) {
+        const o = new Mesh(geoAdorno, matAdorno);
+        o.rotation.x = -Math.PI / 2;
+        o.position.y = 0.015;
+        o.userData = { fase: i / 3 };
+        plataforma.add(o);
+        adornos.push(o);
+      }
+    } else if (escenario.adorno !== 'nada') {
+      const n = escenario.adorno === 'hierba' ? 14 : escenario.adorno === 'grietas' ? 7 : 7;
+      for (let i = 0; i < n; i++) {
+        const ang = (i / n) * Math.PI * 2 + (i % 3) * 0.3;
+        const r = escenario.adorno === 'grietas' ? 0.35 + (i % 4) * 0.25 : 1.12 + (i % 3) * 0.12;
+        const o = new Mesh(geoAdorno, matAdorno);
+        o.position.set(Math.cos(ang) * r, escenario.adorno === 'grietas' ? 0.012 : 0.06, Math.sin(ang) * r);
+        o.rotation.y = ang * 2.3;
+        o.scale.setScalar(0.75 + (i % 4) * 0.18);
+        plataforma.add(o);
+      }
     }
-    const anillo = new RingGeometry(0.2, 0.25, 40);
+    // Lo que cae del cielo, por toda la escena (se calcula con el reloj: no guarda estado).
+    const cayendo = Array.from({ length: 42 }, (_, i) => {
+      const m = new Mesh(geoCae, matCae);
+      m.userData = { x: ((i * 37) % 80) / 10 - 4, z: ((i * 53) % 45) / 10 - 2.6, fase: (i * 0.618) % 1, giro: (i % 5) * 1.3 };
+      grupo.add(m);
+      return m;
+    });
+    const caer = (tiempo: number) => {
+      const c = CAIDA_TIPO[escenario.cae];
+      for (const m of cayendo) {
+        const { x, z, fase, giro } = m.userData as { x: number; z: number; fase: number; giro: number };
+        const alto = 4.6;
+        const y = 4 - ((tiempo * c.velocidad + fase * alto) % alto);
+        m.position.set(x + Math.sin(tiempo * 1.7 + giro) * c.vaiven, y, z);
+        m.visible = y > -0.4;
+        m.rotation.set(tiempo * 0.9 + giro, tiempo * 1.3 + giro, 0);
+        if (escenario.cae === 'gota' || escenario.cae === 'chispa') m.rotation.set(0, 0, 0);
+      }
+      adornos.forEach((o) => {
+        const k = ((tiempo * 0.35 + (o.userData as { fase: number }).fase) % 1);
+        o.scale.setScalar(0.4 + k * 0.9);
+        (o.material as MeshBasicNodeMaterial).opacity = 0.8 * (1 - k);
+      });
+    };
+    const suelo = new Mesh(disco, matSuelo);
+    suelo.rotation.x = -Math.PI / 2;
+    suelo.position.y = 0.01;
+    const lineas = new LineSegments(geoLineas, matLineas);
+    const sello = new Group();
+    sello.add(lineas);
     const circulos = CIRCULOS_SELLO.map(([x, z]) => {
       const m = new Mesh(anillo, matCirculo);
       m.rotation.x = -Math.PI / 2;
       m.position.set(x, 0.02, z);
       m.scale.setScalar(0);
-      grupo.add(m);
+      sello.add(m);
       return m;
     });
-    const mota = new SphereGeometry(0.035, 6, 4);
-    const motas = Array.from({ length: 22 }, (_, i) => {
-      const m = new Mesh(mota, matCirculo);
-      m.userData = { a: (i / 22) * Math.PI * 2, r: 0.5 + (i % 5) * 0.16, fase: (i * 0.37) % 1 };
+    const motas = Array.from({ length: 26 }, (_, i) => {
+      const m = new Mesh(mota, matMota);
+      m.userData = { a: (i / 26) * Math.PI * 2, r: 0.5 + (i % 5) * 0.17, fase: (i * 0.37) % 1 };
       m.visible = false;
       grupo.add(m);
       return m;
     });
-    const destello = new Mesh(this.esferaDestello, this.materialDestello.clone());
+    const destello = new Mesh(esfera, matDestello);
     destello.visible = false;
-    grupo.add(destello);
+    grupo.add(plataforma, suelo, sello, destello);
     const originales = new Map<Mesh, Material | Material[]>();
     const silueta = (f: Group, si: boolean) =>
       f.traverse((o) => {
@@ -1085,7 +1275,7 @@ export class Combate implements Subsistema {
         if (!m.isMesh) return;
         if (si) {
           if (!originales.has(m)) originales.set(m, m.material);
-          m.material = this.materialSilueta!;
+          m.material = matSilueta;
         } else if (originales.has(m)) m.material = originales.get(m)!;
       });
     const motasSuben = (tiempo: number) => {
@@ -1097,17 +1287,16 @@ export class Combate implements Subsistema {
         m.scale.setScalar(1 - k);
       }
     };
+    const respirar = (f: Group) => f.scale.set(1, 1 + Math.sin(this.reloj * 2.4) * 0.025, 1);
     const fichas = () => this.fichas.map((f) => f.nombre.parentElement!);
-    // Las plataformas y lo demás de la arena se apagan: solo la criatura y el Sello, en la oscuridad.
-    const apagadas: { o: { visible: boolean } }[] = [];
-    let alto = this.altos.get(uid) ?? TAMANO[0];
+    const cancelada = () => this.evolucion?.cancelada ?? false;
     this.encolar({
-      texto: `¿Eh? ¡${nombre} está cambiando!`,
+      texto: `¡El Sello reacciona a ${nombre}! (Esc: pararlo)`,
       sonido: 'salida',
-      duracion: 1.8,
+      duracion: 2.2,
       saltable: false,
       empezar: () => {
-        this.evolucion = { latiendo: false, cancelada: false };
+        this.evolucion = { parable: true, cancelada: false };
         // Fuera la rival y las fichas; la que evoluciona, sola en el centro y de cara.
         for (const l of this.luchadores) l?.raiz.removeFromParent();
         this.luchadores = [null, null];
@@ -1116,7 +1305,7 @@ export class Combate implements Subsistema {
         for (const o of this.arena.children) {
           if (o.visible) {
             o.visible = false;
-            apagadas.push({ o });
+            this.apagadasEvolucion.push(o);
           }
         }
         vieja.position.set(0, 0, 0);
@@ -1127,18 +1316,25 @@ export class Combate implements Subsistema {
         this.arena.add(grupo);
       },
       animar: (t) => {
-        // El Sello se dibuja: un círculo detrás de otro.
-        circulos.forEach((c, i) => c.scale.setScalar(Math.min(1, Math.max(0, t * 16 - i) / 1.5)));
-        grupo.rotation.y = this.reloj * 0.25;
-        vieja.rotation.y = 0.35 - grupo.rotation.y;
+        // Los círculos, uno detrás de otro; después, las líneas que los unen.
+        circulos.forEach((c, i) => c.scale.setScalar(Math.min(1, Math.max(0, t * 20 - i) / 1.5)));
+        matLineas.opacity = Math.max(0, (t - 0.6) / 0.4) * 0.8;
+        matSuelo.opacity = Math.min(1, t * 2) * 0.18;
+        sello.rotation.y = this.reloj * 0.25;
+        respirar(vieja);
         motasSuben(this.reloj);
+        caer(this.reloj);
       },
     });
     this.encolar({
       duracion: 3.8,
       saltable: false,
       empezar: () => {
-        this.evolucion!.latiendo = true;
+        // Parada durante el Sello: se salta el latido.
+        if (cancelada()) {
+          this.tPaso = this.paso!.duracion;
+          return;
+        }
         silueta(vieja, true);
         nueva.figura.position.set(0, 0, 0);
         nueva.figura.scale.setScalar(1);
@@ -1146,6 +1342,12 @@ export class Combate implements Subsistema {
         grupo.add(nueva.figura);
       },
       animar: (t) => {
+        caer(this.reloj);
+        if (cancelada()) {
+          vieja.visible = true;
+          nueva.figura.visible = false;
+          return;
+        }
         // Late entre las dos formas, cada vez más deprisa; al final se queda la nueva.
         const fase = Math.sin(Math.PI * 2 * (1.2 * t + 4.5 * t * t));
         const nuevaSe = t > 0.93 || fase > 0;
@@ -1154,30 +1356,31 @@ export class Combate implements Subsistema {
         const pulso = 1 + Math.abs(fase) * 0.06;
         vieja.scale.setScalar(pulso);
         nueva.figura.scale.setScalar(pulso);
-        grupo.rotation.y = this.reloj * (0.25 + t * 1.4);
-        vieja.rotation.y = nueva.figura.rotation.y = 0.35 - grupo.rotation.y;
+        sello.rotation.y = this.reloj * (0.25 + t * 1.4);
+        matSuelo.opacity = 0.18 + t * 0.14;
         motasSuben(this.reloj * (1 + t * 2));
       },
     });
     this.encolar({
-      duracion: 2.6,
+      duracion: 2.8,
       saltable: true,
+      // La forma nueva se ve un rato antes de poder pasar el mensaje (probador: con Enter no se veía).
+      minimo: 1.8,
       empezar: () => {
         const ev = this.evolucion!;
-        ev.latiendo = false;
+        ev.parable = false;
         silueta(vieja, false);
         if (ev.cancelada) {
           nueva.figura.removeFromParent();
           vieja.visible = true;
           vieja.scale.setScalar(1);
-          this.texto.textContent = `${nombre} ha dejado de cambiar.`;
+          this.texto.textContent = `${nombre} se aparta del Sello y sigue igual.`;
           this.ctx.eventos.emit('sonido:tocar', { nombre: 'atras' });
           return;
         }
         silueta(nueva.figura, false);
         vieja.removeFromParent();
         nueva.figura.visible = true;
-        alto = nueva.alto;
         this.figuras.set(uid, nueva.figura);
         this.altos.set(uid, nueva.alto);
         // La criatura cambia de verdad: la que vuelve a la isla ya es la nueva.
@@ -1185,26 +1388,35 @@ export class Combate implements Subsistema {
         const i = lista.findIndex((c) => c.uid === uid);
         lista[i] = evolucionar(lista[i]!, a, DATOS);
         destello.visible = true;
-        destello.position.set(0, alto * 0.5, 0);
-        this.texto.textContent = `¡${nombre} se ha convertido en ${especieNueva.nombre}!`;
+        destello.position.set(0, nueva.alto * 0.5, 0);
+        this.texto.textContent = `¡${nombre} es ahora ${especieNueva.nombre}!`;
         this.ctx.eventos.emit('sonido:tocar', { nombre: 'captura' });
       },
       animar: (t) => {
+        caer(this.reloj);
         if (this.evolucion?.cancelada) {
-          circulos.forEach((c) => c.scale.setScalar(Math.max(0, 1 - t * 2)));
+          // Sin congelarse: las motas siguen y el Sello se apaga despacio.
+          circulos.forEach((c) => c.scale.setScalar(Math.max(0, 1 - t * 1.5)));
+          matLineas.opacity = Math.max(0, 0.8 - t);
+          matSuelo.opacity = Math.max(0, 0.18 - t * 0.3);
+          respirar(vieja);
+          motasSuben(this.reloj);
           return;
         }
-        // Destello y los círculos, despedidos hacia fuera.
-        const k = Math.min(1, t * 2.2);
-        destello.scale.setScalar(0.4 + k * 5);
-        (destello.material as MeshBasicNodeMaterial).opacity = Math.max(0, 1 - k);
-        this.velo.style.cssText = `opacity:${Math.max(0, 0.7 - t * 2.5)};background:#fffbe8`;
+        // Fogonazo blanco y el Sello, roto hacia fuera.
+        const k = Math.min(1, t * 2.5);
+        destello.scale.setScalar(0.5 + k * 3.2);
+        matDestello.opacity = 0.55 * (1 - k);
+        this.velo.style.cssText = `opacity:${Math.max(0, 0.9 - t * 4)};background:#ffffff`;
         circulos.forEach((c, i) => {
           const [x, z] = CIRCULOS_SELLO[i]!;
           c.position.set(x * (1 + k * 3), 0.02 + k * 0.6, z * (1 + k * 3));
           c.scale.setScalar(Math.max(0, 1 - k));
         });
-        nueva.figura.scale.setScalar(rebote(Math.min(1, t * 1.6)));
+        matLineas.opacity = Math.max(0, 0.8 * (1 - k * 2));
+        matSuelo.opacity = 0.32 * (1 - t * 0.5);
+        nueva.figura.scale.setScalar(rebote(Math.min(1, t * 1.8)));
+        if (t > 0.6) respirar(nueva.figura);
         for (const m of motas) m.visible = false;
       },
     });
@@ -1212,12 +1424,10 @@ export class Combate implements Subsistema {
       duracion: 0.3,
       saltable: false,
       empezar: () => {
+        // La escena se queda hasta el fundido (se quita al cerrar la arena); lo apagado se enciende al
+        // abrirla otra vez.
         this.velo.style.cssText = 'opacity:0';
-        grupo.removeFromParent();
-        for (const { o } of apagadas) o.visible = true;
-        (destello.material as Material).dispose();
-        anillo.dispose();
-        mota.dispose();
+        this.restosEvolucion.push({ grupo, nuevos });
         this.evolucion = null;
       },
     });
@@ -1229,7 +1439,7 @@ export class Combate implements Subsistema {
       const s = SITIO[lado];
       const respira = 1 + Math.sin(this.reloj * 2.4 + lado * 1.7) * 0.025;
       l.raiz.visible = l.visible && l.escala > 0.01;
-      l.raiz.position.set(s.x + l.extra.x, s.y + l.extra.y, s.z + l.extra.z);
+      l.raiz.position.set(s.x + l.ajuste.x + l.extra.x, s.y + l.extra.y, s.z + l.ajuste.z + l.extra.z);
       l.raiz.rotation.y = l.giro;
       l.raiz.scale.set(l.escala, l.escala * respira, l.escala);
     }
