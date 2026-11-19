@@ -63,7 +63,8 @@ const DATOS = DATOS_COMBATE_PRUEBA;
 /** La arena, lejos de la isla y de los interiores. */
 const ARENA = new Vector3(600, 0, 600);
 /** Dónde va cada criatura, respecto a la arena: la tuya delante a la izquierda, la rival al fondo. */
-const SITIO: [Vector3, Vector3] = [new Vector3(-2.05, 0, 1.55), new Vector3(2.35, 0, -1.85)];
+// La tuya, más adentro y atrás que al principio: su círculo se salía de la vista (autor, 2026-11-19).
+const SITIO: [Vector3, Vector3] = [new Vector3(-1.6, 0, 1.1), new Vector3(2.35, 0, -1.85)];
 /** El tamaño de siempre en cada lado; cada criatura lo multiplica según su altura (escalaPorAltura). */
 const TAMANO: [number, number] = [1.0, 0.95];
 /**
@@ -424,9 +425,8 @@ export class Combate implements Subsistema {
     if (!f) return;
     this.luchadores[lado]?.raiz.removeFromParent();
     const alto = this.altos.get(uid) ?? TAMANO[lado];
-    // Las tuyas grandes se salían por el borde izquierdo (probador, 2026-11-19): hacia el centro y atrás.
-    const sobra = lado === 0 ? Math.max(0, alto - 1.15) : 0;
-    const ajuste = new Vector3(sobra * 1.1, 0, -sobra * 0.45);
+    // Centradas en su círculo por el centro del cuerpo (figuraCriatura), sin desplazarlas (autor).
+    const ajuste = new Vector3();
     this.luchadores[lado] = { raiz: f, giro: GIRO[lado], extra: new Vector3(), escala: 0, visible: false, alto, ajuste };
     this.arena.add(f);
   }

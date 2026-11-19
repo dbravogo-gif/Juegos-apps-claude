@@ -94,12 +94,33 @@ export async function figuraCriatura(modelo: string, acabado: Acabado, tamano: n
   const caja = new Box3().setFromObject(copia);
   const tam = caja.getSize(new Vector3());
   const escala = tamano / Math.max(tam.y, Math.max(tam.x, tam.z) * 0.75);
-  const centro = caja.getCenter(new Vector3());
+  // En planta, se centra por el centro del cuerpo (la media de sus vértices) y no por la caja: con
+  // una cola larga, el centro de la caja cae fuera de la barriga y se veía mal colocada (autor).
+  const centro = centroDeVertices(copia) ?? caja.getCenter(new Vector3());
   copia.scale.setScalar(escala);
   copia.position.set(-centro.x * escala, -caja.min.y * escala, -centro.z * escala);
   const raiz = new Group();
   raiz.add(copia);
   return raiz;
+}
+
+/** La media de los vértices del modelo (muestreados), en sus coordenadas: el centro del cuerpo. */
+function centroDeVertices(raiz: Object3D): Vector3 | null {
+  raiz.updateMatrixWorld(true);
+  const suma = new Vector3();
+  const v = new Vector3();
+  let n = 0;
+  raiz.traverse((o) => {
+    const malla = o as Mesh;
+    const pos = malla.isMesh ? malla.geometry.getAttribute('position') : undefined;
+    if (!pos) return;
+    const paso = Math.max(1, Math.floor(pos.count / 4000));
+    for (let i = 0; i < pos.count; i += paso) {
+      suma.add(v.fromBufferAttribute(pos, i).applyMatrix4(malla.matrixWorld));
+      n++;
+    }
+  });
+  return n ? suma.divideScalar(n) : null;
 }
 
 /** Suelta los materiales compartidos (al cerrar el juego). */
