@@ -17,16 +17,15 @@ function archivos(dir) {
   });
 }
 
-test('el service worker guarda todos los archivos de la app del atleta', () => {
-  const necesarios = [...archivos('src/comun'), ...archivos('src/datos'), ...archivos('src/nucleo'), ...archivos('src/atleta'),
-    'src/config.js', 'src/version.js', ...archivos('fuentes').filter((f) => f.endsWith('.woff2')), ...archivos('img'),
+test('el service worker guarda todos los archivos de la app', () => {
+  const necesarios = [...archivos('src'), 'entrenador/index.html', ...archivos('fuentes').filter((f) => f.endsWith('.woff2')), ...archivos('img'),
     ...archivos('icons')].filter((f) => f !== 'src/datos/firebase.js'); // Firebase se carga solo si está configurado
   const faltan = necesarios.filter((f) => !listados.includes(f));
   assert.deepEqual(faltan, [], `Añade a ARCHIVOS de sw.js: ${faltan.join(', ')}`);
 });
 
 test('todo lo que lista el service worker existe', () => {
-  const noExisten = listados.filter((f) => f !== './' && !existsSync(join(raiz, f)));
+  const noExisten = listados.filter((f) => !f.endsWith('/') && !existsSync(join(raiz, f)));
   assert.deepEqual(noExisten, []);
 });
 

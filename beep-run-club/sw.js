@@ -1,9 +1,10 @@
 // Service worker de Beep Run Club: guarda la app para que abra sin conexión.
 // Al publicar un cambio, sube VERSION (y la de src/version.js: una prueba comprueba que coinciden).
-const VERSION = '0.1.0';
+const VERSION = '0.2.0';
 const CACHE = `beep-run-club-${VERSION}`;
 
-// Todo lo que necesita la app para abrir sin conexión. Una prueba comprueba que no falta nada.
+// Toda la app (atleta y entrenador) en la misma versión, para no mezclar módulos viejos y nuevos
+// tras una actualización. Una prueba comprueba que no falta nada.
 const ARCHIVOS = [
   './',
   'index.html',
@@ -44,6 +45,14 @@ const ARCHIVOS = [
   'src/atleta/semana.js',
   'src/atleta/sesion.js',
   'src/atleta/ajustes.js',
+  'entrenador/',
+  'entrenador/index.html',
+  'src/entrenador/panel.css',
+  'src/entrenador/app.js',
+  'src/entrenador/comun.js',
+  'src/entrenador/novedades.js',
+  'src/entrenador/atletas.js',
+  'src/entrenador/editor.js',
 ];
 
 self.addEventListener('install', (e) => {

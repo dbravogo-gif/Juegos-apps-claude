@@ -30,7 +30,7 @@ export async function pantallaSemana(ctx, lunes) {
 
   montar(
     cabecera(ctx),
-    h('h1', { class: 'saludo' }, `Hola, ${nombre}`),
+    h('h1', { class: 'saludo' }, `Hola, ${nombre.trim().split(/\s+/)[0]}`),
     ctx.almacen.tipo === 'demo' ? h('p', { class: 'aviso-demo' }, 'Modo demo: datos de ejemplo guardados en este móvil.') : null,
     h('nav', { class: 'selector-semana', 'aria-label': 'Semanas' },
       h('button', { type: 'button', class: 'boton-icono', 'aria-label': 'Semana anterior', onclick: () => ctx.ir(`#/semana/${sumarDias(lunes, -7)}`) }, icono('atras')),

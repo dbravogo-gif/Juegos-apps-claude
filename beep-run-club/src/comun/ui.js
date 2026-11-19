@@ -39,6 +39,9 @@ const ICONOS = {
   bandera: ['M5 21V4', 'M5 4h11l-2 4 2 4H5'],
   salir: ['M10 5H6a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h4', 'M14 8l4 4-4 4', 'M18 12H9'],
   mas: ['M12 5v14', 'M5 12h14'],
+  arriba: ['M5 15l7-7 7 7'],
+  abajo: ['M5 9l7 7 7-7'],
+  cerrar: ['M6 6l12 12', 'M18 6L6 18'],
   menos: ['M5 12h14'],
 };
 
@@ -68,20 +71,45 @@ export function tostada(texto, { accion, alPulsar, duracion = 3500 } = {}) {
   return el;
 }
 
-/** Diálogo de confirmación. Devuelve una promesa con true (aceptar) o false. */
-export function confirmar({ titulo, texto, aceptar = 'Aceptar', cancelar = 'Cancelar' }) {
+/**
+ * Diálogo modal. `botones`: [{ texto, valor, principal }]. Devuelve una promesa con el valor del
+ * botón pulsado (o null si se cierra con Escape). El foco va al botón marcado con `foco`, o al
+ * último (el de cancelar, que es el seguro).
+ */
+export function dialogo({ titulo, texto = null, cuerpo = [], botones, alAceptar = null }) {
   return new Promise((resolver) => {
     const cerrar = (valor) => { dlg.close(); dlg.remove(); resolver(valor); };
+    const nodosBotones = botones.map((b) => h('button', {
+      type: b.principal ? 'submit' : 'button',
+      class: `boton${b.principal ? ' boton-principal' : ''}`,
+      autofocus: !!b.foco,
+      onclick: async (e) => {
+        e.preventDefault();
+        if (b.principal && alAceptar) {
+          const seguir = await alAceptar();
+          if (seguir === false) return; // validación fallida: el diálogo sigue abierto
+        }
+        cerrar(b.valor);
+      },
+    }, b.texto));
+    if (!botones.some((b) => b.foco)) nodosBotones[nodosBotones.length - 1].autofocus = true;
     const dlg = h('dialog', { class: 'dialogo', 'aria-labelledby': 'dialogo-titulo' },
-      h('h2', { id: 'dialogo-titulo' }, titulo),
-      texto ? h('p', {}, texto) : null,
-      h('div', { class: 'dialogo-botones' },
-        h('button', { type: 'button', class: 'boton boton-principal', onclick: () => cerrar(true) }, aceptar),
-        cancelar ? h('button', { type: 'button', class: 'boton', autofocus: true, onclick: () => cerrar(false) }, cancelar) : null));
-    dlg.addEventListener('cancel', (e) => { e.preventDefault(); cerrar(false); });
+      h('form', { method: 'dialog', onsubmit: (e) => e.preventDefault() },
+        h('h2', { id: 'dialogo-titulo' }, titulo),
+        texto ? h('p', {}, texto) : null,
+        cuerpo,
+        h('div', { class: 'dialogo-botones' }, nodosBotones)));
+    dlg.addEventListener('cancel', (e) => { e.preventDefault(); cerrar(null); });
     document.body.append(dlg);
     dlg.showModal();
   });
+}
+
+/** Confirmación de sí o no. Devuelve true o false. */
+export async function confirmar({ titulo, texto, aceptar = 'Aceptar', cancelar = 'Cancelar' }) {
+  const botones = [{ texto: aceptar, valor: true, principal: true }];
+  if (cancelar) botones.push({ texto: cancelar, valor: false });
+  return (await dialogo({ titulo, texto, botones })) === true;
 }
 
 /** Sustituye el contenido de #app y lleva el foco al título, para lectores de pantalla y teclado. */
