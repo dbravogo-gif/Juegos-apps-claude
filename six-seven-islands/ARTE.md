@@ -306,8 +306,7 @@ Que un renacuajo no sea del tamaño de un dragón (autor).
 - **No se dimensiona en Meshy.** El juego mide cada modelo y lo escala al cargarlo
   (`figuraCriatura`, en `src/arte/criaturas3d.ts`), así que el tamaño que salga de Meshy da igual.
 - **Hecho (2026-11-17)** en `src/arte/escala-criaturas.ts`, con sus pruebas: una de 0,6 m se ve al
-  tamaño de siempre, y la escala va de 0,6 a 2 veces ese tamaño. Las de relleno, sin altura, no
-  cambian.
+  tamaño de siempre, y la escala va de 0,6 a 2 veces ese tamaño. Sin altura, no cambia.
 - **La diferencia se comprime**, para que las dos criaturas de un combate se vean bien:
   - el tamaño en pantalla va con la raíz cuadrada de la altura: una de 0,3 m frente a una de
     3 m se ve 1 a 3, en vez de 1 a 10;

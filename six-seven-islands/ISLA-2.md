@@ -114,7 +114,8 @@ Lo juzga el autor al probarlo.
 - Las Dunas tienen las crestas en zigzag, la calima, el horno de cal, la arqueóloga con su estatua
   y tres entrenadores perdidos.
 - El camino del sur queda tapado por una duna hasta la fase 2.
-- Provisional: las salvajes son de relleno.
+- Provisional: las salvajes y los entrenadores llevan criaturas del autor de otras islas, hasta
+  que lleguen las de esta (las de relleno se quitaron el 2026-11-19).
 
 **Fase 2, hecha (2026-11-13).**
 - **Puerto del Rosario:** refugio, tienda, tres casas, el muelle, el paseo de palmeras y una
@@ -155,8 +156,7 @@ Lo juzga el autor al probarlo.
 
 **Revisión del probador (2026-11-13).** Los dos gimnasios se terminan sin atascos. Arreglado:
 - en los gimnasios, el combate usa el fondo pintado del gimnasio;
-- el gimnasio de Aire ya es de Aire: dos salvajes de relleno nuevas (Remolino de jable y Guirre
-  de viento, provisionales), que también salen en Sotavento;
+- el gimnasio de Aire ya es de Aire: de momento, con la línea de Ravich (antes, dos de relleno);
 - al volver en barco, el refugio es el último de esa isla y no tu casa;
 - objetivos al día en las dos islas y después de cada líder;
 - las compuertas se hunden al volver del combate, mientras el vencido lo cuenta;

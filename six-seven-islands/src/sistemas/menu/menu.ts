@@ -517,8 +517,8 @@ export class Menu implements Subsistema {
         ];
         break;
       case 'dev-criatura': {
-        // Primero las iniciales, después las del autor y al final las de relleno.
-        const orden = (id: string) => (id.startsWith('inicial-') ? 0 : id.startsWith('c0') || id.startsWith('c1') ? 1 : 2);
+        // Primero las iniciales y después las del autor.
+        const orden = (id: string) => (id.startsWith('inicial-') ? 0 : 1);
         const todas = Object.values(DATOS.especies).sort((a, b) => orden(a.id) - orden(b.id));
         const paginas = Math.ceil(todas.length / POR_PAGINA);
         this.devPagina = Math.min(this.devPagina, paginas - 1);

@@ -412,8 +412,8 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
 - 2026-11-12 · **Combate jugable** (F06, F07 y F09): pisar hierba o malpaís saca una criatura
   1 de cada 10 pasos, de la tabla de su zona. El menú tiene Luchar, Mochila, Equipo y Huir. Al
   perder, se vuelve curado al último sitio donde te curaron (al principio, tu casa). Curan la
-  madre y las enfermeras. Las salvajes son de relleno, con el modelo de la inicial de su tipo,
-  hasta que lleguen las criaturas del autor.
+  madre y las enfermeras. Las salvajes son las criaturas del autor (las de relleno se quitaron el
+  2026-11-19).
 - 2026-11-11 · **La isla con forma de Lanzarote** (autor, opción 1 del boceto): silueta
   alrededor de las zonas, que no cambian; tierra volcánica que no se pisa y el norte libre.
   **Famara**, zona opcional: playa con bañistas (uno, un guiri quemado) y dos entrenadores que
@@ -432,8 +432,6 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
 - 2026-11-10 · El mar nunca queda liso junto a donde se camina (autor): espuma en la orilla,
   olas, rocas, boyas frente a las playas y barcas en el puerto (`mar.ts`).
 - 2026-11-10 · Tabla de tipos «C» revisada: Roca sustituye a Luz. Claude corrige sus
-- 2026-11-17 · Solo te sigue la inicial; cada criatura tiene su altura y se ve comprimida en combate (ARTE.md).
-- 2026-11-19 · Evolución propia: el Sello se dibuja bajo la criatura, que late entre sus dos formas hasta un destello; Esc la para (ARTE.md).
   contradicciones y los extremos (5 debilidades o resistencias). Reglas de Ancestral.
 - 2026-11-08 · Isla 1, segunda vuelta con el autor:
   - el malpaís y las dunas también son zona de encuentros, y deben reconocerse como tal;
@@ -452,6 +450,9 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
   `prompts-meshy.md`. En esta especie no hay diferencias entre hembra y macho. **Sustituida**
   el 2026-11-10: la inicial de Planta es el lagarto chamán; qué hacer con el ciervo-león, en
   `PENDIENTES.md`.
+- 2026-11-17 · Solo te sigue la inicial; cada criatura tiene su altura y se ve comprimida en combate (ARTE.md).
+- 2026-11-19 · Evolución propia: el Sello se dibuja bajo la criatura, que late entre sus dos formas hasta un destello; Esc la para (ARTE.md).
+- 2026-11-19 · Fuera las criaturas de relleno: usaban el modelo de una inicial. Las iniciales solo las llevan tú y tu amigo; Fuerteventura usa de momento las criaturas del autor que ya hay (prueba en `tests/reparto.test.ts`).
 
 ## Decisiones abiertas
 

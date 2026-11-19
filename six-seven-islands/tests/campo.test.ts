@@ -32,7 +32,7 @@ describe('el campo de los gimnasios', () => {
   });
 
   it('el viento a favor hace que ese lado mueva antes, aunque sea más lento', () => {
-    const rapida = criatura('remolino-de-jable', 20);
+    const rapida = criatura('inicial-agua', 20); // Celeridad 43, frente a 29: con viento a favor, la lenta la dobla.
     const lenta = criatura('inicial-roca', 20);
     const orden = (campo?: Campo) => {
       const r = resolverTurno(combate(rapida, lenta, campo).estado, ATACA, DATOS);

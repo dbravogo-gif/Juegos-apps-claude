@@ -262,7 +262,7 @@ rival; `{amigo}`, el nombre que le pones.
   - la líder de Roca dice que la pintadera es una pieza de algo más grande;
   - tu amigo te espera en el muelle al vencer al gimnasio, con la inicial que gana a la tuya (si no
     le habías puesto nombre, se lo pones ahí);
-  - los recados: la vid del anciano (una tabaiba andante, por una poción), la red de la redera de
+  - los recados: la vid del anciano (un Dragosil, por una poción), la red de la redera de
     Famara (vencer a los dos pescadores, por tres cubos) y el faro (subir con el farero y ver la isla
     que se esconde).
 - **El campo en pantalla:** arena o viento durante los combates del gimnasio.
