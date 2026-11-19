@@ -48,9 +48,10 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
 
 - **Entrada real:**
   - Solo teclado; el ratón no hace falta y la cámara no gira.
-  - Para moverse, WASD o las flechas.
-  - En los menús y en combate: flechas para elegir, Enter o Espacio para confirmar y Escape
-    para volver. Atajos del 1 al 4 para los movimientos.
+  - Para moverse, las flechas (WASD no: la A confirma; autor, 2026-11-19).
+  - Como una consola: A (o Enter, E, Espacio) confirma, Z (o Esc) abre el menú y X (o Retroceso)
+    vuelve, como el botón B. En los menús, Z y Esc también vuelven. Atajos del 1 al 4 para los
+    movimientos.
   - Para capturar, una pulsación en el momento justo (ver «Captura»).
 - **Objetivo visible:** la cámara de diorama deja ver el camino y, a lo lejos, el faro de la
   ciudad del campeón.
@@ -454,6 +455,7 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
 - 2026-11-19 · Evolución propia: el Sello se dibuja bajo la criatura, que late entre sus dos formas hasta un destello; Esc la para (ARTE.md).
 - 2026-11-19 · Fuera las criaturas de relleno: usaban el modelo de una inicial. Las iniciales solo las llevan tú y tu amigo; Fuerteventura usa de momento las criaturas del autor que ya hay (prueba en `tests/reparto.test.ts`).
 - 2026-11-19 · Las primeras formas empiezan solo con ataques comunes (uno de daño y uno de estado); el de su tipo llega a los pocos niveles. Las iniciales: al 7 y al 13; la de fuego, el de Acero al 9 (autor; `tests/ataques.test.ts`).
+- 2026-11-19 · Teclas de consola (autor): flechas para andar y elegir, A para confirmar, Z para abrir el menú (como Esc) y X para volver, como el botón B. WASD ya no anda, porque la A confirma (`tests/entrada.test.ts`).
 
 ## Decisiones abiertas
 

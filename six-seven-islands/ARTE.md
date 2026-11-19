@@ -328,7 +328,7 @@ dos formas y el destello. Lo nuestro (revisado con el probador y el autor):
 - la criatura, hecha silueta del color de su tipo, late entre su forma y la nueva;
 - con el fogonazo, el Sello sale despedido y queda la nueva, que se ve casi dos segundos antes de
   poder pasar el mensaje;
-- textos propios: «¡El Sello reacciona a X! (Esc: pararlo)», «¡X es ahora Y!» y, si se para, «X se
+- textos propios: «¡El Sello reacciona a X! (X: pararlo)», «¡X es ahora Y!» y, si se para, «X se
   aparta del Sello y sigue igual».
 
 ## Pruebas de la guía

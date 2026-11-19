@@ -556,7 +556,7 @@ export class Combate implements Subsistema {
     this.lanzamiento = { objeto, t: 0 };
     this.menu.hidden = true;
     this.barra.hidden = false;
-    this.texto.textContent = 'Para la flecha con Espacio. En el verde, mucho mejor. (Esc: volver)';
+    this.texto.textContent = 'Para la flecha con A o Espacio. En el verde, mucho mejor. (X: volver)';
   }
 
   /** Dónde está la flecha, de 0 (izquierda) a 1 (derecha): va y viene. */
@@ -957,7 +957,7 @@ export class Combate implements Subsistema {
         break;
       case 'ataques': {
         // Sin pistas en los botones (al autor no le gustaron, 2026-11-15): la tabla, con la T.
-        texto = `¿Qué hará ${nombre}? (T: tabla de tipos · Esc: volver)`;
+        texto = `¿Qué hará ${nombre}? (T: tabla de tipos · X: volver)`;
         this.opciones = c.movimientos.map((m, indice) => {
           const mov = DATOS.movimientos[m.id];
           const color = `#${(COLOR_TIPO.get(mov.tipo) ?? 0xa8a29e).toString(16).padStart(6, '0')}`;
@@ -972,7 +972,7 @@ export class Combate implements Subsistema {
       case 'mochila': {
         // Por bolsillos, como fuera del combate: ← y → cambian entre el botiquín y los cubos.
         const b = BOLSILLOS.find((x) => x.id === BOLSILLOS_COMBATE[this.bolsillo])!;
-        texto = `◀ ${b.nombre} ▶ ¿Qué usas? (Esc: volver)`;
+        texto = `◀ ${b.nombre} ▶ ¿Qué usas? (X: volver)`;
         const activo = e.lados[0].activos[0];
         this.opciones = this.objetosMochila().map((id) => {
           const n = this.partida.mochila[id];
@@ -984,12 +984,12 @@ export class Combate implements Subsistema {
             elegir: () => (captura ? this.abrirBarra(id) : this.enviar({ tipo: 'objeto', objeto: id, objetivo: activo })),
           };
         });
-        if (!this.opciones.length) texto = `◀ ${b.nombre} ▶ ${b.vacio} (Esc: volver)`;
+        if (!this.opciones.length) texto = `◀ ${b.nombre} ▶ ${b.vacio} (X: volver)`;
         break;
       }
       case 'equipo':
       case 'forzado': {
-        texto = cual === 'forzado' ? '¿A quién sacas?' : '¿A quién sacas? (Esc: volver)';
+        texto = cual === 'forzado' ? '¿A quién sacas?' : '¿A quién sacas? (X: volver)';
         const l = e.lados[0];
         this.opciones = l.equipo.map((x, indice) => ({
           html: boton(`${nombreDe(x, DATOS)} · Nv. ${x.nivel}`, `Vida ${x.vida}/${vidaMaxima(x, DATOS)}${l.activos.includes(indice) ? ' · en combate' : ''}`),
@@ -1031,7 +1031,7 @@ export class Combate implements Subsistema {
       const g = gruposContra(DATOS.tipos, tipos);
       return `<h3>${quien} ${tipos.map(chip).join(' ')}</h3>${fila('Le hacen mucho daño:', g.mucho)}${fila('Le hacen poco:', g.poco)}${fila('No le afectan:', g.nada)}`;
     };
-    this.panelTipos.innerHTML = `${bloque(nombreDe(rival, DATOS), DATOS.especies[rival.especie].tipos)}${bloque(`Tu ${nombreDe(propia, DATOS)}`, DATOS.especies[propia.especie].tipos)}<p class="combate-tipos-ayuda">T o Esc: cerrar</p>`;
+    this.panelTipos.innerHTML = `${bloque(nombreDe(rival, DATOS), DATOS.especies[rival.especie].tipos)}${bloque(`Tu ${nombreDe(propia, DATOS)}`, DATOS.especies[propia.especie].tipos)}<p class="combate-tipos-ayuda">T o X: cerrar</p>`;
     this.panelTipos.hidden = false;
     this.ctx.eventos.emit('sonido:tocar', { nombre: 'seleccion' });
   }
@@ -1309,7 +1309,7 @@ export class Combate implements Subsistema {
     const fichas = () => this.fichas.map((f) => f.nombre.parentElement!);
     const cancelada = () => this.evolucion?.cancelada ?? false;
     this.encolar({
-      texto: `¡El Sello reacciona a ${nombre}! (Esc: pararlo)`,
+      texto: `¡El Sello reacciona a ${nombre}! (X: pararlo)`,
       sonido: 'salida',
       duracion: 2.2,
       saltable: false,
