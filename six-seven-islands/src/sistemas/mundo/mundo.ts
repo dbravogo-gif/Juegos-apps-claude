@@ -279,7 +279,10 @@ export class Mundo implements Subsistema {
           continue;
         }
         if (uso) {
-          const puerta = e.puertas.length ? deClave(e.puertas[0])[0] - cx : 0;
+          // La puerta, centrada en sus casillas y del ancho de todas (el gimnasio tiene dos).
+          const xsPuerta = e.puertas.map((k) => deClave(k)[0]);
+          const puerta = xsPuerta.length ? (Math.min(...xsPuerta) + Math.max(...xsPuerta)) / 2 - cx : 0;
+          const huecosPuerta = xsPuerta.length ? Math.max(...xsPuerta) - Math.min(...xsPuerta) + 1 : 1;
           const deZona = estiloDe(m.zonas.get(zona)!);
           // El museo, de una planta: de dos tapaba al jugador al empezar (probador, 2026-11-08).
           // El gimnasio, con azotea: más bajo, para no tapar tanto el camino de detrás, y con el
@@ -290,7 +293,7 @@ export class Mundo implements Subsistema {
               : uso === 'gimnasio'
                 ? { estilo: 'balcones', blanca: deZona.blanca, techo: 'azotea', emblema: m.isla.gimnasio === 'roca' ? 'volcan' : m.isla.gimnasio === 'aire' ? 'molino' : 'sol' }
                 : deZona;
-          const geometria = casaCanaria({ ...estilo, uso, ancho: e.ancho, fondo: e.fondo, puerta, semilla: pseudo(e.casillas[0]) });
+          const geometria = casaCanaria({ ...estilo, uso, ancho: e.ancho, fondo: e.fondo, puerta, huecosPuerta, semilla: pseudo(e.casillas[0]) });
           const casa = new Mesh(geometria, this.materialColores);
           casa.position.set(cx, base, cz);
           this.anadir(casa);

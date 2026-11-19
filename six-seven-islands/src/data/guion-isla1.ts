@@ -275,7 +275,7 @@ export const GUION_ISLA1: Guion = {
       dialogo: {
         lineas: [
           { quien: 'Vigilante', texto: '¡Bienvenido al gimnasio de Roca! Lo excavaron dentro de una colada, como los jameos.' },
-          { quien: 'Vigilante', texto: 'Las compuertas de basalto se hunden cuando vences a los aprendices. La última, con una palanca.' },
+          { quien: 'Vigilante', texto: 'Los aprendices vigilan el camino. Arriba, la última compuerta solo se abre con una palanca.' },
           { quien: 'Vigilante', texto: 'Un consejo: a la Roca le hacen mucho daño el Agua y la Planta. El fuego, casi nada.' },
         ],
       },

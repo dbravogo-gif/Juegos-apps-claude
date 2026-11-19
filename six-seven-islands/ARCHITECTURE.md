@@ -265,7 +265,8 @@ y `?semilla=n`. Mientras exista la vitrina de F04: `?vista=combate|todas|explora
 ## Gimnasios: compuertas, palancas y viento
 
 Todo en el núcleo (`core/mundo.ts` y `core/explorar.ts`), igual en zonas e interiores:
-- **Compuertas** (`cierres`, por casilla `"x,y"`): cerradas hasta cumplir su condición.
+- **Compuertas** (`cierres`, por casilla `"x,y"`): cerradas hasta cumplir su condición. Se dibujan
+  claras y con un aspa de lava, para que se vean. Los puentes sobre la lava son `u`.
 - **Palancas** (`p`): cumplen `palanca:<id>` al usarlas.
 - **Corrientes de viento** (`W`, `corrientes`): al acabar un paso sobre una, el jugador queda
   empujado en su dirección (`empuje`) hasta que la casilla siguiente no se pueda pisar. Con

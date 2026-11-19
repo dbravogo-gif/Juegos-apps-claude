@@ -89,10 +89,12 @@ al final con la Liga.
 - **Gimnasio de Roca:** la isla de los volcanes. Tiene un volcán pintado en la azotea. Por dentro
   (autor, 2026-11-13: «hay que hacer el gimnasio bien bien»; `data/gimnasio-roca.ts`), una cueva
   volcánica en tres terrazas separadas por coladas de lava encendida:
-  - el vigilante de la entrada explica las compuertas y que a la Roca le hacen daño el Agua y la
+  - el vigilante de la entrada explica la palanca y que a la Roca le hacen daño el Agua y la
     Planta;
-  - cada terraza tiene una compuerta de basalto: las dos primeras se hunden al vencer a su
-    aprendiz y la tercera con una palanca, en un saliente que vigila el tercer aprendiz;
+  - las coladas se cruzan por puentes de basalto. Solo la última tiene compuerta, una losa clara
+    con un aspa de lava: la abre una palanca, en un saliente que vigila el tercer aprendiz. Las
+    dos compuertas que abrían los aprendices se quitaron: no servían, porque ya hay que vencerlos,
+    y no se veían (autor, 2026-11-19);
   - los tres aprendices ven el único camino, así que no se esquivan (lo vigila una prueba);
   - la líder espera arriba, ante un volcán en relieve. Al vencerla da la pintadera de Lanzarote,
     que sale en grande en pantalla, y el barco queda abierto;

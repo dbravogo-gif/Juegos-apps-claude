@@ -285,6 +285,18 @@ function probarIsla(c: Isla): void {
       expect(casillasDe('B').flatMap(junto).some((k) => r.has(k))).toBe(true);
     });
 
+    it('las puertas de un edificio van juntas en una fila, para que la puerta dibujada las cubra todas', () => {
+      // En el gimnasio solo se dibujaba una de sus dos puertas, y la otra parecía pared (autor, 2026-11-19).
+      for (const z of orden) {
+        for (const e of edificios(m, z)) {
+          if (e.puertas.length < 2) continue;
+          const xs = e.puertas.map((k) => deClave(k)[0]);
+          expect(new Set(e.puertas.map((k) => deClave(k)[1])).size, `${z}: ${e.tipo}`).toBe(1);
+          expect(Math.max(...xs) - Math.min(...xs) + 1, `${z}: ${e.tipo}`).toBe(xs.length);
+        }
+      }
+    });
+
     it('todas las puertas tienen su edificio y se alcanzan', () => {
       const r = llega(TODAS_LAS_CONDICIONES);
       const conEdificio = new Set(orden.flatMap((z) => edificios(m, z).flatMap((e) => e.puertas)));
