@@ -58,14 +58,14 @@ export function quienEs(id: string): string | undefined {
 
 export const ENTRENADORES_ISLA1: Readonly<Record<string, DefEntrenador>> = {
   'entrenador-barrera': { equipo: [], premio: 100, tras: 'Vale, vale: puedes subir. ¡Pero que conste que la ladera es mía!' },
-  'entrenador-llano': { equipo: [{ especie: 'c031-1', nivel: 5 }, { especie: 'cangrejo-de-charco', nivel: 4 }], premio: 120, tras: 'En la hierba seca hay más criaturas de las que se ven.' },
+  'entrenador-llano': { equipo: [{ especie: 'c031-1', nivel: 5 }, { especie: 'c037-1', nivel: 4 }], premio: 120, tras: 'En la hierba seca hay más criaturas de las que se ven.' },
   excursionista: { equipo: [{ especie: 'c013-1', nivel: 7 }], premio: 160, tras: 'Desde aquí arriba se ve medio Timanfaya. Merece la pena, ¿eh?' },
   'entrenador-centro': { equipo: [{ especie: 'c043-1', nivel: 7 }, { especie: 'c013-1', nivel: 6 }], premio: 180, tras: 'Tendré que entrenar con más calor todavía.' },
   'entrenador-caldera': { equipo: [{ especie: 'c007-1', nivel: 8 }], premio: 200, tras: 'Quédate la poción, anda. Te la has ganado.' },
   'entrenador-salida-fuego': { equipo: [{ especie: 'c013-1', nivel: 8 }, { especie: 'c031-1', nivel: 8 }], premio: 240, tras: 'Sigue hacia El Jable. La capital está al otro lado.' },
   'entrenador-jable': { equipo: [{ especie: 'c034-1', nivel: 8 }, { especie: 'c032-1', nivel: 9 }], premio: 240, tras: 'El viento borra las huellas. Mañana nadie sabrá que me ganaste.' },
-  'pescador-famara': { equipo: [{ especie: 'cangrejo-de-charco', nivel: 9 }, { especie: 'c037-1', nivel: 9 }], premio: 260, tras: 'Hoy no pican ni las viejas ni las criaturas. Qué le vamos a hacer.' },
-  'pulpero-famara': { equipo: [{ especie: 'cangrejo-de-charco', nivel: 9 }, { especie: 'c007-1', nivel: 8 }], premio: 260, tras: 'Ni un pulpo y encima pierdo. ¡Qué día!' },
+  'pescador-famara': { equipo: [{ especie: 'c037-1', nivel: 8 }, { especie: 'c037-1', nivel: 9 }], premio: 260, tras: 'Hoy no pican ni las viejas ni las criaturas. Qué le vamos a hacer.' },
+  'pulpero-famara': { equipo: [{ especie: 'c037-1', nivel: 9 }, { especie: 'c007-1', nivel: 8 }], premio: 260, tras: 'Ni un pulpo y encima pierdo. ¡Qué día!' },
   // Los aprendices del gimnasio de Roca (gimnasio-roca.ts): vencerlos abre sus compuertas.
   // Solo Roca y Tierra, y ninguna criatura más de dos veces en todo el gimnasio (autor, 2026-11-19).
   'aprendiz-roca-1': {
@@ -75,27 +75,27 @@ export const ENTRENADORES_ISLA1: Readonly<Record<string, DefEntrenador>> = {
     alVencer: ['Con un estruendo, la compuerta de basalto se hunde en la lava. ¡El paso está abierto!'],
   },
   'aprendiz-roca-2': {
-    equipo: [{ especie: 'c034-1', nivel: 9 }, { especie: 'inicial-roca', nivel: 9 }],
+    equipo: [{ especie: 'c034-1', nivel: 9 }],
     premio: 300,
     tras: 'Mira bien las columnas: son hexagonales. Así se enfría el basalto.',
     alVencer: ['Se oye un crujido al fondo: la segunda compuerta baja.'],
   },
   'aprendiz-roca-3': {
-    equipo: [{ especie: 'c012-1', nivel: 10 }, { especie: 'c034-1', nivel: 10 }],
+    equipo: [{ especie: 'c012-1', nivel: 10 }, { especie: 'c062-1', nivel: 10 }],
     premio: 320,
     tras: 'La palanca está ahí al lado. Bájala, que la líder te espera.',
   },
   // La revancha en el muelle, al vencer al gimnasio (HISTORIA.md, parte 3).
   'amigo-muelle': {
     equipo: [],
-    rival: { nivel: 13, extra: [{ especie: 'lagartija-de-picon', nivel: 11 }] },
+    rival: { nivel: 13, extra: [{ especie: 'c043-1', nivel: 11 }] },
     premio: 400,
     tras: 'Vale, vale: la ventana es tuya. ¡Nos vemos en Fuerteventura!',
   },
   'lider-gimnasio': {
     // Ishiro e Ishiradon, el dinosaurio de casco: la única 2.ª forma del gimnasio, la de la líder
-    // (autor, 2026-11-19).
-    equipo: [{ especie: 'inicial-roca', nivel: 11 }, { especie: 'c062-1', nivel: 11 }, { especie: 'c062-2', nivel: 12 }],
+    // (autor, 2026-11-19). Las iniciales no las lleva ningún entrenador, salvo tu amigo.
+    equipo: [{ especie: 'c034-1', nivel: 11 }, { especie: 'c062-1', nivel: 11 }, { especie: 'c062-2', nivel: 12 }],
     premio: 600,
     tras: 'Me has vencido con justicia. El barco te espera en el puerto.',
     condicion: 'gimnasio-vencido',

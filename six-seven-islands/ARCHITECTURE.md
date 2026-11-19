@@ -219,8 +219,9 @@ y `?semilla=n`. Mientras exista la vitrina de F04: `?vista=combate|todas|explora
   - la experiencia y la captura, de su quintil;
   - la evolución, de la tabla de `juego.py`, y solo si la forma siguiente ya está;
   - los ataques, de entre los que existen.
-- **Las de relleno siguen** donde aún falta la criatura de verdad (`encuentros-isla1.ts` dice cuál
-  hace de cuál).
+- **Sin criaturas de relleno (2026-11-19):** donde falta la criatura prevista, sale otra del autor
+  que ya tiene modelo. Las iniciales solo las llevan tú y tu amigo, y su modelo es solo suyo
+  (`tests/reparto.test.ts`).
 - **La evolución está en el núcleo pero aún no en el juego:** las formas evolucionadas se ven en
   equipos de entrenadores.
 

@@ -9,11 +9,11 @@ export const RECADOS_ISLA1: Readonly<Record<string, DefRecado>> = {
   anciano: {
     id: 'vid-anciano',
     con: 'anciano',
-    pide: { especie: 'tabaiba-andante' },
+    pide: { especie: 'c007-1' },
     da: { objeto: 'pocion', cantidad: 1 },
     quien: 'Anciano',
-    pedir: ['Mis vides andan tristes. Dicen que una tabaiba andante cerca las alegra.', 'Si capturas una, tráemela: solo quiero que la vean un ratito.'],
-    cumplido: ['¡Una tabaiba andante! Mira cómo se animan las vides.', 'Toma, mi niño, por las molestias.'],
+    pedir: ['Mis vides andan tristes. Dicen que un Dragosil cerca las alegra.', 'Si capturas una, tráemela: solo quiero que la vean un ratito.'],
+    cumplido: ['¡Un Dragosil! Mira cómo se animan las vides.', 'Toma, mi niño, por las molestias.'],
     hecho: ['Mis vides nunca habían estado tan verdes. ¡Gracias!'],
   },
   'redera-famara': {

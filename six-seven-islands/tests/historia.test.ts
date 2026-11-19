@@ -114,7 +114,7 @@ describe('historia: el resto de Lanzarote (parte 3)', () => {
     const vid = RECADOS_ISLA1.anciano;
     expect(puntoRecado(vid, [], [], [])).toBe('cerrado');
     expect(puntoRecado(vid, ['anciano'], ['inicial-agua'], [])).toBe('pendiente');
-    expect(puntoRecado(vid, ['anciano'], ['inicial-agua', 'tabaiba-andante'], [])).toBe('cumplible');
+    expect(puntoRecado(vid, ['anciano'], ['inicial-agua', 'c007-1'], [])).toBe('cumplible');
     expect(puntoRecado(vid, ['anciano', 'recado:vid-anciano'], [], [])).toBe('hecho');
     const red = RECADOS_ISLA1['redera-famara'];
     expect(puntoRecado(red, [], [], ['pescador-famara'])).toBe('pendiente');

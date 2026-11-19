@@ -2,8 +2,9 @@
 // código para copiar y pegar (en Safari, WebKit borra lo guardado tras 7 días sin visitar la web;
 // ARCHITECTURE.md, «Guardado»). Puro: no toca localStorage, que es cosa de «partida».
 
+import { vidaMaxima } from './estadisticas';
 import type { EstadoExplorar } from './explorar';
-import type { Criatura } from './modelo';
+import type { Criatura, DatosJuego } from './modelo';
 import type { EstadoRng } from './rng';
 
 export const VERSION_GUARDADO = 1;
@@ -84,6 +85,21 @@ export function reubicar(e: EstadoExplorar, antes: Origenes, ahora: Origenes): E
     r.fuera.y += ahora.fuera.y - antes.fuera.y;
   }
   return r;
+}
+
+/**
+ * El equipo guardado, con las especies que se han quitado del juego cambiadas por su sustituta
+ * (`retiradas`: id viejo → id nuevo). La Vida no pasa del máximo de la nueva. Sin esto, una
+ * partida con una criatura quitada no cargaría.
+ */
+export function cambiarRetiradas(equipo: readonly Criatura[], retiradas: Readonly<Record<string, string>>, datos: DatosJuego): Criatura[] {
+  return equipo.map((c) => {
+    const nueva = retiradas[c.especie];
+    if (!nueva || datos.especies[c.especie]) return c;
+    const r = { ...structuredClone(c), especie: nueva };
+    r.vida = Math.min(r.vida, vidaMaxima(r, datos));
+    return r;
+  });
 }
 
 export function serializar(g: Guardado): string {

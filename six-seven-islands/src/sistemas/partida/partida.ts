@@ -25,9 +25,9 @@ import { sortearEncuentro } from '../../core/encuentros';
 import { perdidaPorDerrota } from '../../core/economia';
 import { crearRng } from '../../core/rng';
 import { claveGuardado, esCodigoDesarrollador } from '../../core/desarrollador';
-import { VERSION_GUARDADO, deserializar, refugiosAlViajar, reubicar, serializar, type Guardado, type Origenes } from '../../core/guardado';
+import { VERSION_GUARDADO, cambiarRetiradas, deserializar, refugiosAlViajar, reubicar, serializar, type Guardado, type Origenes } from '../../core/guardado';
 import type { Criatura } from '../../core/modelo';
-import { DATOS_COMBATE_PRUEBA as DATOS, ESPECIE_INICIAL, MOCHILA_INICIAL } from '../../data/combate-prueba';
+import { DATOS_COMBATE_PRUEBA as DATOS, ESPECIE_INICIAL, ESPECIES_RETIRADAS, MOCHILA_INICIAL } from '../../data/combate-prueba';
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Entrada } from '../entrada/entrada';
 
@@ -431,7 +431,7 @@ export class Partida implements Subsistema {
       this.estado.recogidos = [...e.recogidos];
       this.estado.inicial = e.inicial;
     }
-    this.equipo = g.equipo;
+    this.equipo = cambiarRetiradas(g.equipo, ESPECIES_RETIRADAS, DATOS);
     this.mochila = g.mochila;
     this.ultimoRefugio = this.interiores.has(g.ultimoRefugio) ? g.ultimoRefugio : this.datos.refugio;
     this.refugios = { ...g.refugios };
