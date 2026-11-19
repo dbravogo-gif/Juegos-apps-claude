@@ -12,19 +12,13 @@ import {
   CanvasTexture,
   CircleGeometry,
   Color,
-  BoxGeometry,
-  ConeGeometry,
   CylinderGeometry,
-  DodecahedronGeometry,
-  DoubleSide,
   Float32BufferAttribute,
   Group,
   LineBasicNodeMaterial,
   LineSegments,
   Mesh,
   MeshBasicNodeMaterial,
-  OctahedronGeometry,
-  PlaneGeometry,
   SRGBColorSpace,
   SphereGeometry,
   TextureLoader,
@@ -49,6 +43,7 @@ import { gruposContra } from '../../core/tipos';
 import { ESPECIE_RAMA, inicialDelRival, puebloQueTePersigue, type TipoInicial } from '../../data/pueblos';
 import { MaterialDiorama } from '../../arte/material';
 import { figuraCriatura } from '../../arte/criaturas3d';
+import { crearEscenarioEvolucion } from './escenario-evolucion';
 import { escalaPorAltura } from '../../arte/escala-criaturas';
 import { RADIO_CUBO, figuraCubo, girarCubo } from '../../arte/cubos';
 import { attribute } from 'three/tsl';
@@ -75,49 +70,14 @@ const TAMANO: [number, number] = [1.0, 0.95];
  */
 const GIRO: [number, number] = [2.4, -0.75];
 const CAMARA = new Vector3(0.1, 2.7, 8.6);
-/** Dónde evoluciona una criatura: en el centro, un poco hacia la cámara, mirándola. */
-const CENTRO_EVOLUCION = new Vector3(0.15, 0, 0.2);
+/**
+ * Dónde evoluciona una criatura: en el centro, un poco hacia la cámara, mirándola, y algo alta: la
+ * isla flota y su peñón no debe quedar tapado por el cuadro de texto.
+ */
+const CENTRO_EVOLUCION = new Vector3(0.15, 0.6, 0.2);
 /** El fondo de la evolución: blanco roto (autor, 2026-11-19). */
 const FONDO_EVOLUCION = new Color('#f2ede4');
 
-type Cae = 'gota' | 'roca' | 'grano' | 'hoja' | 'brasa' | 'pluma' | 'chispa' | 'copo' | 'burbuja' | 'mota';
-type Adorno = 'ondas' | 'rocas' | 'terrones' | 'hierba' | 'grietas' | 'cristales' | 'nada';
-/**
- * El escenario de la evolución según el tipo principal de la forma nueva (autor, 2026-11-19): el
- * color de la plataforma, lo que tiene encima y lo que cae del cielo.
- */
-const ESCENARIO_EVOLUCION: Readonly<Record<string, { plataforma: number; adorno: Adorno; cae: Cae; colorCae: number }>> = {
-  agua: { plataforma: 0x3a7bd5, adorno: 'ondas', cae: 'gota', colorCae: 0x6fb6ff },
-  roca: { plataforma: 0x8a6a4f, adorno: 'rocas', cae: 'roca', colorCae: 0x6f5a49 },
-  tierra: { plataforma: 0xa8763e, adorno: 'terrones', cae: 'grano', colorCae: 0x9b6a35 },
-  planta: { plataforma: 0x4f9a4a, adorno: 'hierba', cae: 'hoja', colorCae: 0x5fbf55 },
-  infernal: { plataforma: 0x4a2b26, adorno: 'grietas', cae: 'brasa', colorCae: 0xff7a2a },
-  aire: { plataforma: 0x9fd3ef, adorno: 'nada', cae: 'pluma', colorCae: 0x8fb8d8 },
-  electrico: { plataforma: 0xe2b52c, adorno: 'nada', cae: 'chispa', colorCae: 0xf2c200 },
-  hielo: { plataforma: 0xa9dcea, adorno: 'cristales', cae: 'copo', colorCae: 0x8cc9e0 },
-  lucha: { plataforma: 0xa33a3a, adorno: 'nada', cae: 'mota', colorCae: 0xd9534f },
-  mental: { plataforma: 0xd76aa8, adorno: 'nada', cae: 'burbuja', colorCae: 0xe58cc2 },
-  oscuridad: { plataforma: 0x4a4550, adorno: 'nada', cae: 'mota', colorCae: 0x3b3640 },
-  espectral: { plataforma: 0x6a4bb0, adorno: 'nada', cae: 'mota', colorCae: 0x8f73e0 },
-  acero: { plataforma: 0x9aa6b5, adorno: 'nada', cae: 'chispa', colorCae: 0x8794a6 },
-  ancestral: { plataforma: 0x9a6a2a, adorno: 'rocas', cae: 'mota', colorCae: 0xd9a441 },
-  bicho: { plataforma: 0x7fa63a, adorno: 'hierba', cae: 'hoja', colorCae: 0x9cc64e },
-  veneno: { plataforma: 0x8a3a9a, adorno: 'nada', cae: 'burbuja', colorCae: 0xb468c4 },
-  comun: { plataforma: 0xb5aea6, adorno: 'nada', cae: 'mota', colorCae: 0xa39b92 },
-};
-/** Cómo cae cada cosa: velocidad (unidades por segundo) y vaivén. */
-const CAIDA_TIPO: Readonly<Record<Cae, { velocidad: number; vaiven: number }>> = {
-  gota: { velocidad: 3.2, vaiven: 0 },
-  roca: { velocidad: 2.4, vaiven: 0 },
-  grano: { velocidad: 1.8, vaiven: 0.05 },
-  hoja: { velocidad: 0.7, vaiven: 0.35 },
-  brasa: { velocidad: 0.9, vaiven: 0.15 },
-  pluma: { velocidad: 0.5, vaiven: 0.4 },
-  chispa: { velocidad: 2.6, vaiven: 0 },
-  copo: { velocidad: 0.6, vaiven: 0.3 },
-  burbuja: { velocidad: 0.6, vaiven: 0.2 },
-  mota: { velocidad: 0.8, vaiven: 0.15 },
-};
 /**
  * Los trece círculos del Sello (HISTORIA.md: el cubo de Metatrón), en el suelo bajo la criatura que
  * evoluciona: uno en el centro, seis alrededor y seis más fuera.
@@ -1179,7 +1139,6 @@ export class Combate implements Subsistema {
     const equipo = () => this.estado!.lados[0].equipo;
     const nombre = nombreDe(equipo().find((c) => c.uid === uid)!, DATOS);
     const color = new Color(TIPOS.find((t) => t.id === especieNueva.tipos[0])?.color ?? 0xfff4dc);
-    const escenario = ESCENARIO_EVOLUCION[especieNueva.tipos[0]] ?? ESCENARIO_EVOLUCION.comun!;
     const grupo = new Group();
     grupo.position.copy(CENTRO_EVOLUCION);
     const nuevos: { dispose(): void }[] = [];
@@ -1195,52 +1154,8 @@ export class Combate implements Subsistema {
     const matSuelo = material(new MeshBasicNodeMaterial({ color: '#ffffff', transparent: true, opacity: 0, depthWrite: false }));
     const matLineas = material(new LineBasicNodeMaterial({ color: '#fffaf0', transparent: true, opacity: 0, depthWrite: false }));
     const matDestello = material(new MeshBasicNodeMaterial({ color, transparent: true, opacity: 0, depthWrite: false }));
-    const plataformaColor = new Color(escenario.plataforma);
-    const matPlataforma = material(new MeshBasicNodeMaterial({ color: plataformaColor }));
-    const matCanto = material(new MeshBasicNodeMaterial({ color: plataformaColor.clone().multiplyScalar(0.72) }));
-    const matAdorno = material(
-      new MeshBasicNodeMaterial({
-        color: escenario.adorno === 'grietas' ? 0xff8a3a : escenario.adorno === 'ondas' || escenario.adorno === 'cristales' ? 0xf4fbff : plataformaColor.clone().multiplyScalar(0.7),
-        transparent: escenario.adorno === 'ondas',
-        side: DoubleSide,
-      }),
-    );
-    const matCae = material(new MeshBasicNodeMaterial({ color: escenario.colorCae, side: DoubleSide, transparent: escenario.cae === 'burbuja', opacity: escenario.cae === 'burbuja' ? 0.7 : 1 }));
     const anillo = new RingGeometry(0.24, 0.285, 48);
     const disco = new CircleGeometry(1.35, 48);
-    // La plataforma del tipo: canto oscuro y cara de su color, con su adorno encima.
-    const cilindro = new CylinderGeometry(1.55, 1.68, 0.22, 56);
-    const cara = new CircleGeometry(1.55, 56);
-    const geoAdorno =
-      escenario.adorno === 'rocas'
-        ? new DodecahedronGeometry(0.12)
-        : escenario.adorno === 'terrones'
-          ? new BoxGeometry(0.16, 0.1, 0.14)
-          : escenario.adorno === 'hierba'
-            ? new ConeGeometry(0.045, 0.26, 5)
-            : escenario.adorno === 'grietas'
-              ? new BoxGeometry(0.55, 0.012, 0.035)
-              : escenario.adorno === 'cristales'
-                ? new OctahedronGeometry(0.11)
-                : new RingGeometry(0.9, 0.95, 48);
-    const geoCae: BufferGeometry =
-      escenario.cae === 'gota'
-        ? new SphereGeometry(0.045, 8, 6).scale(1, 2.4, 1)
-        : escenario.cae === 'roca'
-          ? new DodecahedronGeometry(0.07)
-          : escenario.cae === 'grano'
-            ? new BoxGeometry(0.06, 0.06, 0.06)
-            : escenario.cae === 'hoja'
-              ? new PlaneGeometry(0.14, 0.08)
-              : escenario.cae === 'pluma'
-                ? new PlaneGeometry(0.05, 0.18)
-                : escenario.cae === 'chispa'
-                  ? new BoxGeometry(0.022, 0.16, 0.022)
-                  : escenario.cae === 'copo'
-                    ? new OctahedronGeometry(0.06)
-                    : escenario.cae === 'burbuja'
-                      ? new SphereGeometry(0.07, 10, 8)
-                      : new SphereGeometry(0.045, 6, 4);
     const esfera = new SphereGeometry(0.5, 40, 24);
     const mota = new SphereGeometry(0.035, 6, 4);
     // Las líneas del cubo de Metatrón: todos los centros unidos entre sí.
@@ -1248,61 +1163,12 @@ export class Combate implements Subsistema {
     CIRCULOS_SELLO.forEach(([x1, z1], i) => CIRCULOS_SELLO.slice(i + 1).forEach(([x2, z2]) => puntos.push(x1, 0.03, z1, x2, 0.03, z2)));
     const geoLineas = new BufferGeometry();
     geoLineas.setAttribute('position', new Float32BufferAttribute(puntos, 3));
-    nuevos.push(anillo, disco, esfera, mota, geoLineas, cilindro, cara, geoAdorno, geoCae);
-    const plataforma = new Group();
-    const canto = new Mesh(cilindro, matCanto);
-    canto.position.y = -0.12;
-    const caraArriba = new Mesh(cara, matPlataforma);
-    caraArriba.rotation.x = -Math.PI / 2;
-    caraArriba.position.y = 0;
-    plataforma.add(canto, caraArriba);
-    const adornos: Mesh[] = [];
-    if (escenario.adorno === 'ondas') {
-      // Las ondas se abren despacio, como en un charco.
-      for (let i = 0; i < 3; i++) {
-        const o = new Mesh(geoAdorno, matAdorno);
-        o.rotation.x = -Math.PI / 2;
-        o.position.y = 0.015;
-        o.userData = { fase: i / 3 };
-        plataforma.add(o);
-        adornos.push(o);
-      }
-    } else if (escenario.adorno !== 'nada') {
-      const n = escenario.adorno === 'hierba' ? 14 : escenario.adorno === 'grietas' ? 7 : 7;
-      for (let i = 0; i < n; i++) {
-        const ang = (i / n) * Math.PI * 2 + (i % 3) * 0.3;
-        const r = escenario.adorno === 'grietas' ? 0.35 + (i % 4) * 0.25 : 1.12 + (i % 3) * 0.12;
-        const o = new Mesh(geoAdorno, matAdorno);
-        o.position.set(Math.cos(ang) * r, escenario.adorno === 'grietas' ? 0.012 : 0.06, Math.sin(ang) * r);
-        o.rotation.y = ang * 2.3;
-        o.scale.setScalar(0.75 + (i % 4) * 0.18);
-        plataforma.add(o);
-      }
-    }
-    // Lo que cae del cielo, por toda la escena (se calcula con el reloj: no guarda estado).
-    const cayendo = Array.from({ length: 42 }, (_, i) => {
-      const m = new Mesh(geoCae, matCae);
-      m.userData = { x: ((i * 37) % 80) / 10 - 4, z: ((i * 53) % 45) / 10 - 2.6, fase: (i * 0.618) % 1, giro: (i % 5) * 1.3 };
-      grupo.add(m);
-      return m;
-    });
-    const caer = (tiempo: number) => {
-      const c = CAIDA_TIPO[escenario.cae];
-      for (const m of cayendo) {
-        const { x, z, fase, giro } = m.userData as { x: number; z: number; fase: number; giro: number };
-        const alto = 4.6;
-        const y = 4 - ((tiempo * c.velocidad + fase * alto) % alto);
-        m.position.set(x + Math.sin(tiempo * 1.7 + giro) * c.vaiven, y, z);
-        m.visible = y > -0.4;
-        m.rotation.set(tiempo * 0.9 + giro, tiempo * 1.3 + giro, 0);
-        if (escenario.cae === 'gota' || escenario.cae === 'chispa') m.rotation.set(0, 0, 0);
-      }
-      adornos.forEach((o) => {
-        const k = ((tiempo * 0.35 + (o.userData as { fase: number }).fase) % 1);
-        o.scale.setScalar(0.4 + k * 0.9);
-        (o.material as MeshBasicNodeMaterial).opacity = 0.8 * (1 - k);
-      });
-    };
+    nuevos.push(anillo, disco, esfera, mota, geoLineas);
+    // La isla de su tipo y lo que cae alrededor (escenario-evolucion.ts; autor, 2026-11-19).
+    const semilla = [...`${uid}>${a}`].reduce((h, letra) => (Math.imul(h, 31) + letra.charCodeAt(0)) >>> 0, 7);
+    const escenario = crearEscenarioEvolucion(especieNueva.tipos[0], semilla);
+    nuevos.push(escenario);
+    const caer = (tiempo: number) => escenario.animar(tiempo);
     const suelo = new Mesh(disco, matSuelo);
     suelo.rotation.x = -Math.PI / 2;
     suelo.position.y = 0.01;
@@ -1326,7 +1192,7 @@ export class Combate implements Subsistema {
     });
     const destello = new Mesh(esfera, matDestello);
     destello.visible = false;
-    grupo.add(plataforma, suelo, sello, destello);
+    grupo.add(escenario.grupo, suelo, sello, destello);
     const originales = new Map<Mesh, Material | Material[]>();
     const silueta = (f: Group, si: boolean) =>
       f.traverse((o) => {
