@@ -453,6 +453,7 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
 - 2026-11-17 · Solo te sigue la inicial; cada criatura tiene su altura y se ve comprimida en combate (ARTE.md).
 - 2026-11-19 · Evolución propia: el Sello se dibuja bajo la criatura, que late entre sus dos formas hasta un destello; Esc la para (ARTE.md).
 - 2026-11-19 · Fuera las criaturas de relleno: usaban el modelo de una inicial. Las iniciales solo las llevan tú y tu amigo; Fuerteventura usa de momento las criaturas del autor que ya hay (prueba en `tests/reparto.test.ts`).
+- 2026-11-19 · Las primeras formas empiezan solo con ataques comunes (uno de daño y uno de estado); el de su tipo llega a los pocos niveles. Las iniciales: al 7 y al 13; la de fuego, el de Acero al 9 (autor; `tests/ataques.test.ts`).
 
 ## Decisiones abiertas
 

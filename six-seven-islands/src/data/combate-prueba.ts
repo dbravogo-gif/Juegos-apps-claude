@@ -29,29 +29,33 @@ const movimientos: Movimiento[] = [
   { id: 'barrito', nombre: 'Barrito', tipo: 'comun', categoria: 'estado', poder: 0, precision: 100, pp: 30, objetivo: 'rivales', efectos: [{ tipo: 'etapa', a: 'objetivo', estadistica: 'fuerza', cambio: -1, prob: 100 }] },
   { id: 'rodada-de-piedra', nombre: 'Rodada de piedra', tipo: 'roca', categoria: 'fisico', poder: 50, precision: 95, pp: 20 },
   { id: 'polvo-de-picon', nombre: 'Polvo de picón', tipo: 'roca', categoria: 'magico', poder: 40, precision: 100, pp: 25 },
-  // La quinta inicial, de Tierra (autor, 2026-11-13).
   // De Acero, flojo: para que la inicial de fuego no se quede sin nada contra el gimnasio de Roca,
   // donde todos sus otros ataques están resistidos (autor, 2026-11-15).
   { id: 'trompazo-de-hierro', nombre: 'Trompazo de hierro', tipo: 'acero', categoria: 'fisico', poder: 35, precision: 100, pp: 30 },
-  // De Aire (los usa la línea de Ravich).
   // De Lucha, para las criaturas de Lucha del autor (2026-11-19). Agarrón: la presa de la lucha canaria.
   { id: 'agarron', nombre: 'Agarrón', tipo: 'lucha', categoria: 'fisico', poder: 50, precision: 100, pp: 20 },
+  // De Aire (los usa la línea de Ravich).
   { id: 'rafaga', nombre: 'Ráfaga', tipo: 'aire', categoria: 'magico', poder: 40, precision: 100, pp: 25 },
   { id: 'picado', nombre: 'Picado', tipo: 'aire', categoria: 'fisico', poder: 55, precision: 95, pp: 15 },
+  // De Tierra (la quinta inicial, autor, 2026-11-13).
   { id: 'pisoton', nombre: 'Pisotón', tipo: 'tierra', categoria: 'fisico', poder: 50, precision: 95, pp: 20 },
   { id: 'arenazo', nombre: 'Arenazo', tipo: 'tierra', categoria: 'magico', poder: 40, precision: 100, pp: 25 },
   { id: 'caparazon', nombre: 'Caparazón', tipo: 'comun', categoria: 'estado', poder: 0, precision: null, pp: 20, objetivo: 'propio', efectos: [{ tipo: 'etapa', a: 'propio', estadistica: 'escudo', cambio: 1, prob: 100 }] },
 ];
 
-const aprende = (...ids: string[]) => ids.map((movimiento) => ({ nivel: 1, movimiento }));
+/** Los ataques que aprende, con su nivel. */
+const enNiveles = (...pares: [number, string][]) => pares.map(([nivel, movimiento]) => ({ nivel, movimiento }));
 
 const especies: Especie[] = [
   // Las iniciales: estadísticas con el carácter que pidió el autor (FORMAS_INICIALES, abajo).
-  { id: 'inicial-agua', nombre: 'Cronti', tipos: ['agua'], base: base(50, 65, 64, 44, 48, 43), expBase: 60, ratioCaptura: 45, aprende: aprende('remojon', 'ola-de-cresta', 'topetazo', 'mirada-fija'), altura: 0.4, descripcion: '' },
-  { id: 'inicial-planta', nombre: 'Lisza', tipos: ['planta'], base: base(36, 39, 36, 77, 50, 76), expBase: 60, ratioCaptura: 45, aprende: aprende('latigazo-de-musgo', 'esporas-de-hoja', 'topetazo', 'mirada-fija'), altura: 0.4, descripcion: '' },
-  { id: 'inicial-infernal', nombre: 'Nokoribi', tipos: ['infernal'], base: base(59, 33, 59, 65, 62, 36), expBase: 60, ratioCaptura: 45, aprende: aprende('soplo-de-brasas', 'orejazo-ardiente', 'trompazo-de-hierro', 'barrito'), altura: 0.4, descripcion: '' },
-  { id: 'inicial-tierra', nombre: 'Tsubomi', tipos: ['tierra'], base: base(48, 36, 48, 63, 57, 62), expBase: 60, ratioCaptura: 45, aprende: aprende('pisoton', 'arenazo', 'topetazo', 'mirada-fija'), altura: 0.4, descripcion: '' },
-  { id: 'inicial-roca', nombre: 'Armalito', tipos: ['roca'], base: base(59, 71, 68, 33, 54, 29), expBase: 60, ratioCaptura: 45, aprende: aprende('rodada-de-piedra', 'polvo-de-picon', 'topetazo', 'caparazon'), altura: 0.4, descripcion: '' },
+  // Empiezan con un ataque común y uno de estado; el de su tipo llega al nivel 7 y el segundo al 13
+  // (autor, 2026-11-19). La de fuego aprende al 9 su ataque flojo de Acero, antes del gimnasio de
+  // Roca. Cuatro como mucho: aún no hay pantalla para olvidar uno (tests/ataques.test.ts).
+  { id: 'inicial-agua', nombre: 'Cronti', tipos: ['agua'], base: base(50, 65, 64, 44, 48, 43), expBase: 60, ratioCaptura: 45, aprende: enNiveles([1, 'topetazo'], [1, 'mirada-fija'], [7, 'remojon'], [13, 'ola-de-cresta']), altura: 0.4, descripcion: '' },
+  { id: 'inicial-planta', nombre: 'Lisza', tipos: ['planta'], base: base(36, 39, 36, 77, 50, 76), expBase: 60, ratioCaptura: 45, aprende: enNiveles([1, 'topetazo'], [1, 'mirada-fija'], [7, 'latigazo-de-musgo'], [13, 'esporas-de-hoja']), altura: 0.4, descripcion: '' },
+  { id: 'inicial-infernal', nombre: 'Nokoribi', tipos: ['infernal'], base: base(59, 33, 59, 65, 62, 36), expBase: 60, ratioCaptura: 45, aprende: enNiveles([1, 'topetazo'], [1, 'barrito'], [7, 'soplo-de-brasas'], [9, 'trompazo-de-hierro']), altura: 0.4, descripcion: '' },
+  { id: 'inicial-tierra', nombre: 'Tsubomi', tipos: ['tierra'], base: base(48, 36, 48, 63, 57, 62), expBase: 60, ratioCaptura: 45, aprende: enNiveles([1, 'topetazo'], [1, 'mirada-fija'], [7, 'arenazo'], [13, 'pisoton']), altura: 0.4, descripcion: '' },
+  { id: 'inicial-roca', nombre: 'Armalito', tipos: ['roca'], base: base(59, 71, 68, 33, 54, 29), expBase: 60, ratioCaptura: 45, aprende: enNiveles([1, 'topetazo'], [1, 'caparazon'], [7, 'rodada-de-piedra'], [13, 'pisoton']), altura: 0.4, descripcion: '' },
 ];
 
 /** A qué nivel evolucionan las iniciales: a la 2.ª forma y a la 3.ª. */
@@ -158,8 +162,8 @@ export const ESPECIE_INICIAL: Readonly<Record<string, string>> = {
 
 /**
  * La inicial del primer entrenador: la que pierde contra la tuya en el ciclo del autor (el agua
- * desgasta la roca, la roca sepulta el fuego, el fuego quema lo verde y lo verde bebe el agua),
- * para que el primer combate enseñe un «¡Es muy eficaz!».
+ * desgasta la roca, la roca sepulta el fuego, el fuego quema lo verde y lo verde bebe el agua).
+ * Al nivel 5 las dos solo tienen ataques comunes; el «¡Es muy eficaz!» llega con el de tipo, al 7.
  */
 export const RIVAL_DE: Readonly<Record<string, string>> = { agua: 'roca', roca: 'infernal', infernal: 'planta', planta: 'agua', tierra: 'infernal' };
 

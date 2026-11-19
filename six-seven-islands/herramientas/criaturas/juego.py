@@ -3,7 +3,8 @@
 # escribe src/data/criaturas.ts con sus especies (nombre, tipos, estadísticas de su referencia,
 # altura, evolución y ataques). Las iniciales no: siguen en src/data/combate-prueba.ts.
 #
-# Uso: python3 herramientas/criaturas/juego.py
+# Uso: python3 herramientas/criaturas/juego.py [--solo-datos]
+# Con --solo-datos, solo reescribe src/data/criaturas.ts, sin volver a aligerar los modelos.
 import os
 import subprocess
 import sys
@@ -29,20 +30,23 @@ POR_QUINTIL = {'Q1': (55, 200), 'Q2': (75, 150), 'Q3': (140, 90), 'Q4': (170, 60
 # Nivel al que evoluciona cada forma a la siguiente, por línea (número de la lista de referencia).
 EVOLUCION = {31: [20], 32: [22], 37: [30], 7: [14, 32], 62: [30], 13: [18, 36], 43: [20], 12: [16, 34], 34: [24]}
 
-# Ataques por forma: (nivel, ataque), con los que ya existen en combate-prueba.ts.
+# Ataques por forma: (nivel, ataque), con los que ya existen en combate-prueba.ts. La 1.ª forma
+# empieza solo con ataques comunes y aprende los de su tipo a los pocos niveles; cuatro como mucho,
+# porque aún no hay pantalla para olvidar uno (autor, 2026-11-19; tests/ataques.test.ts).
+# Las evolucionadas los tienen todos al nivel 1: son los que llevan los entrenadores.
 ATAQUES = {
     31: [[(1, 'topetazo'), (1, 'mirada-fija'), (9, 'barrito')],
          [(1, 'topetazo'), (1, 'mirada-fija'), (1, 'barrito')]],
     32: [[(1, 'topetazo'), (1, 'mirada-fija'), (6, 'picado')],
          [(1, 'topetazo'), (1, 'picado'), (1, 'rafaga'), (1, 'mirada-fija')]],
-    37: [[(1, 'topetazo'), (1, 'remojon'), (7, 'arenazo')],
+    37: [[(1, 'topetazo'), (1, 'mirada-fija'), (5, 'remojon'), (9, 'arenazo')],
          [(1, 'remojon'), (1, 'ola-de-cresta'), (1, 'arenazo'), (1, 'pisoton')]],
-    7: [[(1, 'caparazon'), (1, 'esporas-de-hoja')],
-        [(1, 'caparazon'), (1, 'esporas-de-hoja'), (1, 'latigazo-de-musgo')],
+    7: [[(1, 'topetazo'), (1, 'caparazon'), (6, 'latigazo-de-musgo'), (11, 'esporas-de-hoja')],
+        [(1, 'caparazon'), (1, 'esporas-de-hoja'), (1, 'latigazo-de-musgo'), (1, 'topetazo')],
         [(1, 'caparazon'), (1, 'esporas-de-hoja'), (1, 'latigazo-de-musgo'), (1, 'mirada-fija')]],
-    62: [[(1, 'topetazo'), (1, 'mirada-fija'), (1, 'rodada-de-piedra')],
+    62: [[(1, 'topetazo'), (1, 'mirada-fija'), (7, 'rodada-de-piedra')],
          [(1, 'rodada-de-piedra'), (1, 'pisoton'), (1, 'barrito'), (1, 'topetazo')]],
-    13: [[(1, 'topetazo'), (1, 'soplo-de-brasas'), (8, 'orejazo-ardiente')],
+    13: [[(1, 'topetazo'), (1, 'mirada-fija'), (5, 'soplo-de-brasas'), (10, 'orejazo-ardiente')],
          [(1, 'soplo-de-brasas'), (1, 'orejazo-ardiente'), (1, 'topetazo'), (1, 'mirada-fija')],
          [(1, 'orejazo-ardiente'), (1, 'soplo-de-brasas'), (1, 'pisoton'), (1, 'barrito')]],
     43: [[(1, 'topetazo'), (1, 'mirada-fija'), (5, 'agarron')],
@@ -50,7 +54,7 @@ ATAQUES = {
     12: [[(1, 'topetazo'), (1, 'caparazon'), (5, 'rodada-de-piedra')],
          [(1, 'rodada-de-piedra'), (1, 'caparazon'), (1, 'polvo-de-picon'), (1, 'topetazo')],
          [(1, 'rodada-de-piedra'), (1, 'caparazon'), (1, 'polvo-de-picon'), (1, 'pisoton')]],
-    34: [[(1, 'topetazo'), (1, 'arenazo'), (6, 'pisoton')],
+    34: [[(1, 'topetazo'), (1, 'mirada-fija'), (5, 'arenazo'), (9, 'pisoton')],
          [(1, 'pisoton'), (1, 'arenazo'), (1, 'topetazo'), (1, 'barrito')]],
 }
 
@@ -104,12 +108,16 @@ def main():
             origenes[int(nombre[3:].split('.')[0])] = os.path.join(plan.CARPETA_AUTOR, nombre)
     # Las formas de las iniciales: solo el modelo, en public/modelos/iniciales (sus estadísticas son
     # propias y las pasará el autor). Las que ya están no se tocan.
+    solo_datos = '--solo-datos' in sys.argv
     for f in filas:
+        if solo_datos:
+            break
         if f['inicial'] and f['tiene_modelo'] and not os.path.exists(os.path.join(SALIDA_INICIALES, f"{f['archivo']}.glb")):
             importar_modelo(f, origenes[f['orden']], SALIDA_INICIALES)
     entradas, modelos = [], []
     for f in sorted(listas, key=lambda x: x['orden']):
-        importar_modelo(f, origenes[f['orden']])
+        if not solo_datos:
+            importar_modelo(f, origenes[f['orden']])
         base_id, _, forma = f['archivo'].partition('-')
         sig = f'{base_id}-{int(forma) + 1}' if forma and f'{base_id}-{int(forma) + 1}' in por_archivo else None
         if sig and not por_archivo[sig]['tiene_modelo']:

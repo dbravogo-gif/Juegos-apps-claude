@@ -1,7 +1,5 @@
-// Los equipos de los entrenadores de la isla 1 (PROVISIONAL, 2026-11-12): con las salvajes de
-// relleno, hasta que lleguen las criaturas del autor y se decida dónde va cada una. Los niveles
-// suben con el recorrido; los premios, en dinero, también. El primer entrenador saca la inicial
-// que pierde contra la tuya (`RIVAL_DE`), para que el primer combate enseñe un «¡Es muy eficaz!».
+// Los equipos de los entrenadores de la isla 1. Los niveles suben con el recorrido; los premios, en
+// dinero, también. El primer entrenador saca la inicial que pierde contra la tuya (`RIVAL_DE`).
 
 import type { Condicion } from '../core/mundo';
 
