@@ -1282,6 +1282,22 @@ body {
   font: 600 15px/1.2 system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
+/* Los tipos bajo el nombre, en sus colores (autor, 2026-11-19). */
+.combate-chips {
+  clear: both;
+  margin: 0 0 7px;
+  display: flex;
+  gap: 5px;
+}
+
+.combate-chips i {
+  padding: 1px 8px;
+  border-radius: 999px;
+  color: #fff;
+  font: 600 12px/1.4 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-style: normal;
+}
+
 .combate-vida {
   clear: both;
   height: 10px;
@@ -1326,6 +1342,31 @@ body {
   flex: 1;
   margin: 0;
   font: 500 20px/1.4 system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+/* Qué hace el ataque marcado: debajo de su nombre y sus números. */
+.combate-titulo-ataque {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.combate-categoria {
+  flex: none;
+  width: 26px;
+  height: 26px;
+}
+
+.combate-texto small {
+  display: block;
+  margin-top: 4px;
+  font: 500 15px/1.35 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color: #5b4a40;
+}
+
+.combate-texto small.combate-pista {
+  font-size: 13px;
+  color: #8a776a;
 }
 
 .combate-menu {
