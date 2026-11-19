@@ -5,21 +5,22 @@
 import { datosDeEjemplo } from './ejemplo.js';
 import { validarRegistro } from '../nucleo/registro.js';
 import { ordenarSesiones } from '../nucleo/plan.js';
+import { lunesDe, diaSemana } from '../nucleo/fechas.js';
 
 export const CLAVE_DEMO = 'beep_demo_db';
 
 /**
  * @param {object} op
  * @param {{getItem, setItem, removeItem}} op.almacenamiento  localStorage o un sustituto
- * @param {string} op.lunes  lunes de la semana actual, para colocar los datos de ejemplo
+ * @param {string} op.hoy  fecha de hoy, para colocar los datos de ejemplo alrededor
  */
-export function crearAlmacenDemo({ almacenamiento, lunes }) {
+export function crearAlmacenDemo({ almacenamiento, hoy }) {
   const leer = () => {
     try {
       const t = almacenamiento.getItem(CLAVE_DEMO);
       if (t) return JSON.parse(t);
     } catch { /* datos corruptos: se regeneran */ }
-    const db = datosDeEjemplo(lunes);
+    const db = datosDeEjemplo(lunesDe(hoy), diaSemana(hoy));
     almacenamiento.setItem(CLAVE_DEMO, JSON.stringify(db));
     return db;
   };

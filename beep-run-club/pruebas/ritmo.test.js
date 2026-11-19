@@ -17,6 +17,8 @@ test('leer tiempo en minutos, mm:ss o h:mm:ss', () => {
   assert.equal(leerTiempo('45:30'), 2730);
   assert.equal(leerTiempo('1:02:15'), 3735);
   assert.equal(leerTiempo("45'30"), 2730);
+  assert.equal(leerTiempo('45,30'), 2730); // teclado decimal del móvil
+  assert.equal(leerTiempo('1,02,15'), 3735);
   assert.equal(leerTiempo('45:75'), null);
   assert.equal(leerTiempo('1:75:00'), null);
   assert.equal(leerTiempo('abc'), null);
@@ -26,6 +28,7 @@ test('leer ritmo por km', () => {
   assert.equal(leerRitmo('5:12'), 312);
   assert.equal(leerRitmo('5:12/km'), 312);
   assert.equal(leerRitmo('5'), 300);
+  assert.equal(leerRitmo('5,12'), 312);
   assert.equal(leerRitmo('0:30'), null);
   assert.equal(leerRitmo('5:99'), null);
 });

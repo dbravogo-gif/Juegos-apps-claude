@@ -33,6 +33,7 @@ Todo agente lo lee antes de escribir código.
 | `src/atleta/` | Pantallas del atleta (`index.html`) |
 | `src/entrenador/` | Pantallas del entrenador (`entrenador/index.html`) |
 | `pruebas/` | Pruebas del núcleo y de las reglas de seguridad |
+| `pruebas-navegador/` | Flujos de punta a punta en Chromium |
 | `fuentes/`, `icons/` | Recursos estáticos |
 
 ## Modelo en la nube (Firestore, región de la UE)
@@ -72,9 +73,17 @@ Todo agente lo lee antes de escribir código.
 | Tesseract.js (solo en la fase 4; se carga la primera vez que se usa) | Apache-2.0 | Leer en el móvil las capturas de Strava, sin servidor ni coste |
 | `@firebase/rules-unit-testing` y el emulador (solo para desarrollo) | Apache-2.0 | Demostrar las reglas de seguridad con pruebas |
 
+## Pruebas
+
+- **`npm test`:** el núcleo, el almacén demo y las barreras de publicación. Por ejemplo, que el
+  service worker guarde todos los archivos y que las versiones coincidan.
+- **`npm run flujos`:** los flujos del atleta en Chromium. Usan Playwright, así que no corren en
+  el flujo de publicación. Fallan si alguna pantalla muestra «null» o «undefined».
+
 ## Ganchos de prueba
 
-`window.__BEEP__` con:
+`window.__BEEP__` (también en `window.__JUEGO__`, que es el que lee
+`herramientas/capturar.mjs`) con:
 
 - `estado()`: pantalla actual, si hay sesión y el almacén en uso;
 - `hoy(fecha)`: fija la fecha de hoy;

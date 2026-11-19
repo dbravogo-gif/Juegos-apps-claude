@@ -4,17 +4,35 @@ Sale de la guía de marca del club (noviembre de 2026). No se inventan colores n
 
 - **Concepto visual:** un cartel de club de barrio. Crema de fondo, rojo con mucho peso y
   letras gordas y blanditas.
-- **El elemento memorable:** el correcaminos con gafas y café. Aparece en el icono, en la
-  pantalla de entrada y al terminar una sesión; no está en todas partes.
+- **El elemento memorable:** el correcaminos con gafas y café. Aparece en la pantalla de
+  entrada y al terminar una sesión; no está en todas partes.
+- **Logo:** vectorizado de las imágenes originales (`img/`), de un solo color. Se pinta con
+  máscara CSS para que tome el rojo de marca en los dos temas.
+- **Icono:** «BEEP RUN CLUB» en crema sobre rojo. A 60 px se lee mejor que la mascota, cuyas
+  líneas se pierden. Nombre bajo el icono: «Beep».
 
 ## Paleta
 
 | Nombre | Hex | Uso |
 | --- | --- | --- |
 | Rojo Beep | `#E84639` | Marca, botones principales, cabeceras y lo importante |
-| Crema Beep | `#FDF8E3` | Fondo de la app y texto sobre rojo |
-| Tinta | `#2B2420` | Texto de cuerpo sobre crema |
-| Rojo oscuro | `#B8332A` | Estado pulsado y texto rojo pequeño |
+| Blanco roto | `#F7F7F7` | Fondo de la app: el de las láminas del logo (autor, 2026-11-19) |
+| Crema Beep | `#FDF8E3` | Tarjetas y texto sobre rojo |
+| Tinta | `#2B2420` | Texto de cuerpo |
+| Rojo oscuro | `#B8332A` | Texto rojo pequeño |
+
+**Modo noche** (lo pidió el autor, 2026-11-19). Sigue el ajuste del sistema y se puede fijar a
+mano en Ajustes:
+
+| Nombre | Hex | Uso |
+| --- | --- | --- |
+| Noche | `#1A1512` | Fondo |
+| Noche superficie | `#26201C` | Tarjetas |
+| Crema Beep | `#FDF8E3` | Texto (17:1) |
+| Crema apagada | `#B5ABA2` | Texto secundario (8:1) |
+| Rojo claro | `#FF7A6B` | Texto rojo pequeño (7,1:1) |
+
+El Rojo Beep no cambia en el modo noche.
 
 - **Tinta y Rojo oscuro** son derivados funcionales, no colores de marca. Se usan para que el
   texto pequeño se lea bien.
@@ -24,7 +42,6 @@ Sale de la guía de marca del club (noviembre de 2026). No se inventan colores n
   - Por eso las etiquetas de los botones rojos van en Bricolage 700 a 19 px o más.
   - El texto pequeño en rojo usa el Rojo oscuro (5,56:1).
   - La Tinta sobre Crema da 14,3:1.
-- **Sin modo oscuro en la v1:** la marca es crema y rojo.
 
 ## Tipografía
 

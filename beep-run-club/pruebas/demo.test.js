@@ -12,7 +12,7 @@ const LUNES = '2026-11-16';
 
 test('entrar con un código activo registra el móvil', async () => {
   const al = memoria();
-  const a = crearAlmacenDemo({ almacenamiento: al, lunes: LUNES });
+  const a = crearAlmacenDemo({ almacenamiento: al, hoy: LUNES });
   const r = await a.entrar(CODIGOS_DEMO.laura, 'movil-1');
   assert.equal(r.ok, true);
   assert.equal(r.atleta.nombre, 'Laura');
@@ -21,7 +21,7 @@ test('entrar con un código activo registra el móvil', async () => {
 });
 
 test('códigos que no existen o desactivados no entran', async () => {
-  const a = crearAlmacenDemo({ almacenamiento: memoria(), lunes: LUNES });
+  const a = crearAlmacenDemo({ almacenamiento: memoria(), hoy: LUNES });
   assert.deepEqual(await a.entrar('NADIE-AAAAAA', 'm'), { ok: false, motivo: 'no-existe' });
   assert.deepEqual(await a.entrar(CODIGOS_DEMO.baja, 'm'), { ok: false, motivo: 'desactivado' });
   assert.equal(await a.comprobar(CODIGOS_DEMO.baja), 'desactivado');
@@ -29,7 +29,7 @@ test('códigos que no existen o desactivados no entran', async () => {
 });
 
 test('el plan de la semana y las valoraciones de ejemplo', async () => {
-  const a = crearAlmacenDemo({ almacenamiento: memoria(), lunes: LUNES });
+  const a = crearAlmacenDemo({ almacenamiento: memoria(), hoy: LUNES });
   const { atleta } = await a.entrar(CODIGOS_DEMO.laura, 'm');
   const semana = await a.sesionesEntre(atleta.id, LUNES, '2026-11-22');
   assert.equal(semana.length, 4);
@@ -40,19 +40,19 @@ test('el plan de la semana y las valoraciones de ejemplo', async () => {
 
 test('guardar una valoración la valida y la deja guardada', async () => {
   const al = memoria();
-  const a = crearAlmacenDemo({ almacenamiento: al, lunes: LUNES });
+  const a = crearAlmacenDemo({ almacenamiento: al, hoy: LUNES });
   const { atleta } = await a.entrar(CODIGOS_DEMO.laura, 'm');
   const [s] = await a.sesionesEntre(atleta.id, LUNES, LUNES);
   assert.equal((await a.guardarRegistro(atleta.id, CODIGOS_DEMO.laura, { sesion: s.id, esfuerzo: 11 })).ok, false);
   const r = await a.guardarRegistro(atleta.id, CODIGOS_DEMO.laura, { sesion: s.id, esfuerzo: 6, hechos: [s.ejercicios[0].id] });
   assert.equal(r.ok, true);
-  const otra = crearAlmacenDemo({ almacenamiento: al, lunes: LUNES });
+  const otra = crearAlmacenDemo({ almacenamiento: al, hoy: LUNES });
   const regs = await otra.registros(atleta.id, [s.id]);
   assert.equal(regs[s.id].esfuerzo, 6);
 });
 
 test('un código que no es del atleta no puede guardar', async () => {
-  const a = crearAlmacenDemo({ almacenamiento: memoria(), lunes: LUNES });
+  const a = crearAlmacenDemo({ almacenamiento: memoria(), hoy: LUNES });
   const { atleta } = await a.entrar(CODIGOS_DEMO.laura, 'm');
   const [s] = await a.sesionesEntre(atleta.id, LUNES, LUNES);
   const r = await a.guardarRegistro(atleta.id, CODIGOS_DEMO.pablo, { sesion: s.id, esfuerzo: 5 });
@@ -62,7 +62,7 @@ test('un código que no es del atleta no puede guardar', async () => {
 test('los datos corruptos se regeneran', async () => {
   const al = memoria();
   al.setItem(CLAVE_DEMO, '{no es json');
-  const a = crearAlmacenDemo({ almacenamiento: al, lunes: LUNES });
+  const a = crearAlmacenDemo({ almacenamiento: al, hoy: LUNES });
   assert.equal(await a.comprobar(CODIGOS_DEMO.laura), 'activo');
 });
 
@@ -75,4 +75,12 @@ test('decidir qué hacer al abrir la app', () => {
   assert.equal(trasComprobar('desactivado'), 'cerrar-con-aviso');
   assert.equal(trasComprobar('no-existe'), 'cerrar-con-aviso');
   assert.equal(trasComprobar('sin-conexion'), 'seguir');
+});
+
+test('en la demo siempre hay sesión el día de hoy', async () => {
+  for (const hoy of ['2026-11-16', '2026-11-19', '2026-11-22']) {
+    const a = crearAlmacenDemo({ almacenamiento: memoria(), hoy });
+    const { atleta } = await a.entrar(CODIGOS_DEMO.laura, 'm');
+    assert.equal((await a.sesionesEntre(atleta.id, hoy, hoy)).length, 1, hoy);
+  }
 });

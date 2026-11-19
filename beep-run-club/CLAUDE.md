@@ -12,8 +12,12 @@ y el atleta lo hace y lo valora. Stack: HTML y JS en módulos sin build, y Fireb
 ## Comprobar
 
 - `npm test`
-- `node ../herramientas/capturar.mjs beep-run-club`
+- `npm run flujos`: los flujos del atleta en el navegador.
+- `node ../herramientas/capturar.mjs beep-run-club --consulta "?hoy=2026-11-19"`. `?hoy=` fija la
+  fecha para que las capturas se puedan comparar.
 
 ## Reglas propias
 
-Las que surjan de errores observados (regla R6), cada una con la fecha y el porqué.
+- (2026-11-19) **Los hijos de un elemento se añaden con `h()` o `agregar()`, nunca con
+  `append()` directo.** El `append` nativo escribe «null» en pantalla, y pasó dos veces.
+  Barrera: `npm run flujos` falla si una pantalla muestra «null» o «undefined».

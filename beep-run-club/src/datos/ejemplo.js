@@ -46,9 +46,14 @@ const PLANTILLAS = {
   },
 };
 
-const SEMANA_TIPO = [[0, 'rodaje'], [2, 'series'], [4, 'fuerza'], [6, 'larga']];
+// Días de la semana con sesión: siempre hay una el día de hoy, para que la demo tenga algo que hacer.
+const semanaTipo = (diaHoy) => {
+  const dias = diaHoy % 2 === 0 ? [0, 2, 4, 6] : [1, 3, 5, 6];
+  return [[dias[0], 'rodaje'], [dias[1], 'series'], [dias[2], 'fuerza'], [dias[3], 'larga']];
+};
 
-export function datosDeEjemplo(lunes) {
+/** `diaHoy`: 0 = lunes … 6 = domingo. */
+export function datosDeEjemplo(lunes, diaHoy = 0) {
   const rng = conSemilla(2026);
   const id = () => generarId(rng);
   const db = { codigos: {}, atletas: {}, dispositivos: {}, sesiones: {}, registros: {} };
@@ -74,7 +79,7 @@ export function datosDeEjemplo(lunes) {
   alta('Marta', CODIGOS_DEMO.baja, false);
 
   for (const semana of [-7, 0, 7]) {
-    for (const [dia, plantilla] of SEMANA_TIPO) sesion(laura, sumarDias(lunes, semana + dia), plantilla);
+    for (const [dia, plantilla] of semanaTipo(diaHoy)) sesion(laura, sumarDias(lunes, semana + dia), plantilla);
   }
   for (const [dia, plantilla] of [[1, 'rodaje'], [3, 'series'], [5, 'larga']]) sesion(pablo, sumarDias(lunes, dia), plantilla);
 

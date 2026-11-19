@@ -28,9 +28,9 @@ export function leerDistancia(texto) {
   return dentro('distancia', v) ? Math.round(v * 1000) / 1000 : null;
 }
 
-/** «45:30» → 2730; «1:02:15» → 3735; «45» → 45 minutos. */
+/** «45:30» o «45,30» (teclado numérico del móvil) → 2730; «1:02:15» → 3735; «45» → 45 minutos. */
 export function leerTiempo(texto) {
-  const t = limpiar(texto).replace(/[.'h]/g, ':').replace(/:+$/, '');
+  const t = limpiar(texto).replace(/[.,'h]/g, ':').replace(/:+$/, '');
   if (!t) return null;
   let v;
   if (/^\d+$/.test(t)) v = Number(t) * 60;
@@ -46,7 +46,7 @@ export function leerTiempo(texto) {
 
 /** «5:12» «5:12/km» → 312; «5» → 300. */
 export function leerRitmo(texto) {
-  const t = limpiar(texto).replace(/\/?km$/, '').replace(/[.']/g, ':');
+  const t = limpiar(texto).replace(/\/?km$/, '').replace(/[.,']/g, ':');
   if (!t) return null;
   let v;
   if (/^\d+$/.test(t)) v = Number(t) * 60;

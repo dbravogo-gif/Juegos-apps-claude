@@ -96,10 +96,14 @@ Entra en un panel aparte (`/beep-run-club/entrenador/`) con su email y contrase�
 No se diseñan sin el autor.
 
 - **Límite de móviles por código:** cuántos y qué pasa al superarlo. Más adelante.
-- **Nombre en la pantalla de inicio:** propuesto «Beep» (iOS corta los nombres largos).
-- **Logo original** (SVG o PNG sin fondo). Mientras no llegue, se vectoriza el de las imágenes.
-- **Cuenta de Google** en la que vive el proyecto de Firebase: la del entrenador (recomendado:
-  los datos son suyos) o la del autor.
+
+- (2026-11-19) **Android e iPhone:** web instalable con manifest e iconos para los dos (autor).
+- (2026-11-19) **Modo noche** automático, o fijado a mano en Ajustes (autor).
+- (2026-11-19) **«Beep» bajo el icono, y el logo vectorizado de las imágenes**, que son el
+  original (autor).
+- (2026-11-19) **Firebase en la cuenta del entrenador:** el autor ya se la ha pedido.
+- (2026-11-19) **Los temas legales (parecido de la marca y protección de datos)** son cosa del
+  club. El autor ya se lo advirtió.
 
 ## Fuera de la v1
 
