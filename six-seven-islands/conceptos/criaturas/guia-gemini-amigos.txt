@@ -2,7 +2,7 @@ INSTRUCCIONES PARA GEMINI
 
 Vamos a generar las criaturas de mi juego de una en una, con el estilo de imagen de la sección
 «CÓMO TIENEN QUE SER LAS IMÁGENES», más abajo. Abajo tienes la lista completa, numerada. Es mi plan: 203 criaturas,
-de las que 34 ya están hechas.
+de las que 36 ya están hechas.
 
 CÓMO VAMOS
 - Al empezar, y cada vez que te diga «siguiente», dime cuál toca, con este formato:
@@ -65,17 +65,9 @@ LA LISTA
 
 Pok1. Cronti, 1.ª forma de 3 · YA HECHA
 
-Pok2. Chicront, 2.ª forma de 3
-   Tipo: Agua (la línea: Agua → Agua → Agua)
-   Fuerza: inicial, con estadísticas propias (empieza floja y la final es fuerte).
-   Zona: Inicial (museo de Lanzarote)
-   Idea: Nombres del autor; la 1.ª forma ya está hecha. Pídeme la imagen de la 1.ª forma para seguir su diseño.
+Pok2. Chicront, 2.ª forma de 3 · YA HECHA
 
-Pok3. Krantacor, 3.ª forma de 3
-   Tipo: Agua (la línea: Agua → Agua → Agua)
-   Fuerza: inicial, con estadísticas propias (empieza floja y la final es fuerte).
-   Zona: Inicial (museo de Lanzarote)
-   Idea: Nombres del autor; la 1.ª forma ya está hecha. Pídeme la imagen de la 1.ª forma para seguir su diseño.
+Pok3. Krantacor, 3.ª forma de 3 · YA HECHA
 
 Pok4. Inicial de planta, 1.ª forma de 3 · YA HECHA
 

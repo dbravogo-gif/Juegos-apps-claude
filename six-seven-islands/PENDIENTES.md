@@ -139,8 +139,8 @@ Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
   - subir las que ya tiene hechas, Pok16 a Pok24 y Pok131-132: en GitHub no ha llegado nada
     (falta pulsar «Commit changes»), o adjuntarlas en el chat como el Excel; y decir si el
     dinosaurio es el de la líder de Lanzarote;
-  - subir la 2.ª y la 3.ª forma de la inicial de Agua (Chicront y Krantacor): la estatua del museo
-    sigue con la 1.ª;
+  - decidir si cambia los nombres en «-ecko» (Sporecko, Transcecko): recuerdan a una inicial de
+    Pokémon (R8);
   - poner nombre a la civeta y a su evolución, a las dos formas del dinosaurio y a la 1.ª forma de
     las iniciales de Planta e Infernal (en el juego, provisionales);
   - pasar las estadísticas de las iniciales, también de sus formas 2.ª y 3.ª;

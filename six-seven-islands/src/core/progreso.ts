@@ -93,6 +93,26 @@ export function evolucionesPosibles(c: Criatura, datos: DatosJuego): Evolucion[]
   return (datos.especies[c.especie].evoluciona ?? []).filter((e) => c.nivel >= e.nivel);
 }
 
+/**
+ * Las que evolucionan al acabar un combate, como en el género: en pie, que hayan subido de nivel en
+ * él y que ya tengan el nivel de su evolución. Si hay varias evoluciones posibles, la primera (las
+ * ramificadas, más adelante). Una que no evolucionó (se paró) lo intentará al volver a subir.
+ */
+export function evolucionesTrasCombate(
+  nivelesAntes: ReadonlyMap<string, number>,
+  equipo: readonly Criatura[],
+  datos: DatosJuego,
+): { uid: string; a: string }[] {
+  const r: { uid: string; a: string }[] = [];
+  for (const c of equipo) {
+    const antes = nivelesAntes.get(c.uid);
+    if (antes === undefined || c.nivel <= antes) continue;
+    const [e] = evolucionesPosibles(c, datos);
+    if (e) r.push({ uid: c.uid, a: e.a });
+  }
+  return r;
+}
+
 /** Evoluciona a la especie `a`, conservando la Vida perdida. Devuelve una copia. */
 export function evolucionar(c: Criatura, a: string, datos: DatosJuego): Criatura {
   if (!evolucionesPosibles(c, datos).some((e) => e.a === a)) {

@@ -9,6 +9,7 @@
 import {
   AdditiveBlending,
   CanvasTexture,
+  Color,
   CylinderGeometry,
   Group,
   Mesh,
@@ -17,7 +18,7 @@ import {
   SphereGeometry,
   TextureLoader,
   Vector3,
-  type Color,
+  RingGeometry,
   type Fog,
   type Material,
   type Texture,
@@ -27,6 +28,7 @@ import { crearCriatura, nombreDe, objetoUtil } from '../../core/criatura';
 import type { Criatura } from '../../core/modelo';
 import { CALIDAD_ZONA, MEDIA_BLANCA, MEDIA_VERDE, zonaBarra } from '../../core/captura';
 import { crearRng } from '../../core/rng';
+import { evolucionar, evolucionesTrasCombate } from '../../core/progreso';
 import { perdidaPorDerrota } from '../../core/economia';
 import { BOLSILLOS, bolsilloDe, type IdBolsillo } from '../../data/bolsillos';
 import { vidaMaxima } from '../../core/estadisticas';
@@ -59,6 +61,19 @@ const TAMANO: [number, number] = [1.0, 0.95];
  */
 const GIRO: [number, number] = [2.4, -0.75];
 const CAMARA = new Vector3(0.1, 2.7, 8.6);
+/** Dónde evoluciona una criatura: en el centro, un poco hacia la cámara, mirándola. */
+const CENTRO_EVOLUCION = new Vector3(0.15, 0, 1.6);
+/** El fondo de la evolución: noche honda, para que brillen el Sello y la silueta. */
+const FONDO_EVOLUCION = new Color('#140f26');
+/**
+ * Los trece círculos del Sello (HISTORIA.md: el cubo de Metatrón), en el suelo bajo la criatura que
+ * evoluciona: uno en el centro, seis alrededor y seis más fuera.
+ */
+const CIRCULOS_SELLO: readonly [number, number][] = [
+  [0, 0],
+  ...Array.from({ length: 6 }, (_, i): [number, number] => [Math.cos((i * Math.PI) / 3) * 0.55, Math.sin((i * Math.PI) / 3) * 0.55]),
+  ...Array.from({ length: 6 }, (_, i): [number, number] => [Math.cos((i * Math.PI) / 3) * 1.1, Math.sin((i * Math.PI) / 3) * 1.1]),
+];
 const MIRA = new Vector3(0.15, 0.4, 0);
 /** El cubo de captura con que sale cada criatura (por ahora, el blanco, el básico). */
 const CUBO: [number, number] = [0, 0];
@@ -147,6 +162,14 @@ export class Combate implements Subsistema {
   private figuras = new Map<string, Group>();
   /** El alto de cada figura en la arena, por uid. */
   private altos = new Map<string, number>();
+  /** Nivel de cada criatura tuya al empezar: las que suben y ya pueden, evolucionan al ganar. */
+  private nivelesAntes = new Map<string, number>();
+  /** La figura de la forma siguiente de cada criatura tuya, por «uid>especie», cargada de antemano. */
+  private figurasEvolucion = new Map<string, { figura: Group; alto: number }>();
+  /** La evolución en curso: mientras late, Esc la para. */
+  private evolucion: { latiendo: boolean; cancelada: boolean } | null = null;
+  /** La silueta luminosa de la criatura que evoluciona. */
+  private materialSilueta: MeshBasicNodeMaterial | null = null;
   /** Contra quién se lucha: el id del entrenador, o null si es salvaje. */
   private entrenador: string | null = null;
   /** La barra de captura (F08): qué cubo se lanza y cuánto lleva la flecha moviéndose. */
@@ -313,6 +336,19 @@ export class Combate implements Subsistema {
         this.figuras.set(c.uid, await figuraCriatura(MODELO_DE[c.especie] ?? MODELO_DE['inicial-roca'], 'color', alto));
       }),
     );
+    // Lo que hace falta para evolucionar al final, ya cargado: el nivel de cada una y su forma siguiente.
+    this.nivelesAntes = new Map(this.partida.equipo.map((c) => [c.uid, c.nivel]));
+    this.figurasEvolucion.clear();
+    await Promise.all(
+      this.partida.equipo.flatMap((c) =>
+        (DATOS.especies[c.especie]?.evoluciona ?? []).map(async (ev) => {
+          const modelo = MODELO_DE[ev.a];
+          if (!modelo) return;
+          const alto = TAMANO[0] * escalaPorAltura(DATOS.especies[ev.a]?.altura);
+          this.figurasEvolucion.set(`${c.uid}>${ev.a}`, { figura: await figuraCriatura(modelo, 'color', alto), alto });
+        }),
+      ),
+    );
     for (const l of this.luchadores) l?.raiz.removeFromParent();
     this.luchadores = [null, null];
     // Destello y fundido a negro; en negro, se cambia a la arena.
@@ -383,6 +419,9 @@ export class Combate implements Subsistema {
   private terminar(): void {
     const caja = this.raiz.querySelector<HTMLElement>('.combate-caja')!;
     const paneles = [caja, ...this.fichas.map((f) => f.nombre.parentElement!)];
+    // Antes de volver: las que han subido de nivel y ya pueden, evolucionan (si no has perdido).
+    const fin = this.estado!;
+    if (fin.fin !== 'derrota') for (const { uid, a } of evolucionesTrasCombate(this.nivelesAntes, fin.lados[0].equipo, DATOS)) this.encolarEvolucion(uid, a);
     this.encolar({ duracion: FUNDIDO, saltable: false, animar: (t) => (this.velo.style.cssText = `opacity:${t};background:#1d1720`) });
     this.encolar({
       // En negro: vuelta a la isla. Solo queda el velo, que se aclara.
@@ -790,6 +829,11 @@ export class Combate implements Subsistema {
     // Una flecha pulsada mientras salen los mensajes no debe mover el menú al abrirse (se elegía
     // otra opción sin querer).
     this.entrada.pulsacion();
+    // Esc mientras late: la evolución se para (como en el género, se puede no querer).
+    if (cancelar && this.evolucion?.latiendo && this.paso) {
+      this.evolucion.cancelada = true;
+      this.tPaso = this.paso.duracion;
+    }
     if (confirmar && this.paso?.saltable && this.tPaso > 0.25) this.tPaso = this.paso.duracion;
   }
 
@@ -986,6 +1030,195 @@ export class Combate implements Subsistema {
       (destello.material as Material).dispose();
       this.velo.style.cssText = 'opacity:0';
     }
+  }
+
+  /**
+   * La evolución, en la arena y a oscuras (autor, 2026-11-19; propia, no la del género): el Sello se
+   * dibuja en el suelo, círculo a círculo, del color del tipo; suben motas; la criatura, hecha luz,
+   * late entre su forma y la nueva cada vez más deprisa; y con un destello los círculos salen
+   * despedidos y queda la nueva, con su color. Esc la para mientras late.
+   */
+  private encolarEvolucion(uid: string, a: string): void {
+    const nueva = this.figurasEvolucion.get(`${uid}>${a}`);
+    const vieja = this.figuras.get(uid);
+    const especieNueva = DATOS.especies[a];
+    if (!nueva || !vieja || !especieNueva) return;
+    const equipo = () => this.estado!.lados[0].equipo;
+    const nombre = nombreDe(equipo().find((c) => c.uid === uid)!, DATOS);
+    const color = TIPOS.find((t) => t.id === especieNueva.tipos[0])?.color ?? 0xfff4dc;
+    const grupo = new Group();
+    grupo.position.copy(CENTRO_EVOLUCION);
+    const matCirculo = new MeshBasicNodeMaterial({ color, transparent: true, depthWrite: false, blending: AdditiveBlending });
+    matCirculo.toneMapped = false;
+    this.materiales.push(matCirculo);
+    if (!this.materialSilueta) {
+      this.materialSilueta = new MeshBasicNodeMaterial({ color: '#fff6e0' });
+      this.materialSilueta.toneMapped = false;
+      this.materiales.push(this.materialSilueta);
+    }
+    const anillo = new RingGeometry(0.2, 0.25, 40);
+    const circulos = CIRCULOS_SELLO.map(([x, z]) => {
+      const m = new Mesh(anillo, matCirculo);
+      m.rotation.x = -Math.PI / 2;
+      m.position.set(x, 0.02, z);
+      m.scale.setScalar(0);
+      grupo.add(m);
+      return m;
+    });
+    const mota = new SphereGeometry(0.035, 6, 4);
+    const motas = Array.from({ length: 22 }, (_, i) => {
+      const m = new Mesh(mota, matCirculo);
+      m.userData = { a: (i / 22) * Math.PI * 2, r: 0.5 + (i % 5) * 0.16, fase: (i * 0.37) % 1 };
+      m.visible = false;
+      grupo.add(m);
+      return m;
+    });
+    const destello = new Mesh(this.esferaDestello, this.materialDestello.clone());
+    destello.visible = false;
+    grupo.add(destello);
+    const originales = new Map<Mesh, Material | Material[]>();
+    const silueta = (f: Group, si: boolean) =>
+      f.traverse((o) => {
+        const m = o as Mesh;
+        if (!m.isMesh) return;
+        if (si) {
+          if (!originales.has(m)) originales.set(m, m.material);
+          m.material = this.materialSilueta!;
+        } else if (originales.has(m)) m.material = originales.get(m)!;
+      });
+    const motasSuben = (tiempo: number) => {
+      for (const m of motas) {
+        const { a: ang, r, fase } = m.userData as { a: number; r: number; fase: number };
+        const k = (tiempo * 0.45 + fase) % 1;
+        m.visible = true;
+        m.position.set(Math.cos(ang + tiempo * 0.8) * r, k * 2.2, Math.sin(ang + tiempo * 0.8) * r);
+        m.scale.setScalar(1 - k);
+      }
+    };
+    const fichas = () => this.fichas.map((f) => f.nombre.parentElement!);
+    // Las plataformas y lo demás de la arena se apagan: solo la criatura y el Sello, en la oscuridad.
+    const apagadas: { o: { visible: boolean } }[] = [];
+    let alto = this.altos.get(uid) ?? TAMANO[0];
+    this.encolar({
+      texto: `¿Eh? ¡${nombre} está cambiando!`,
+      sonido: 'salida',
+      duracion: 1.8,
+      saltable: false,
+      empezar: () => {
+        this.evolucion = { latiendo: false, cancelada: false };
+        // Fuera la rival y las fichas; la que evoluciona, sola en el centro y de cara.
+        for (const l of this.luchadores) l?.raiz.removeFromParent();
+        this.luchadores = [null, null];
+        for (const f of fichas()) f.style.visibility = 'hidden';
+        this.ctx.escena.background = FONDO_EVOLUCION;
+        for (const o of this.arena.children) {
+          if (o.visible) {
+            o.visible = false;
+            apagadas.push({ o });
+          }
+        }
+        vieja.position.set(0, 0, 0);
+        vieja.rotation.y = 0.35;
+        vieja.scale.setScalar(1);
+        vieja.visible = true;
+        grupo.add(vieja);
+        this.arena.add(grupo);
+      },
+      animar: (t) => {
+        // El Sello se dibuja: un círculo detrás de otro.
+        circulos.forEach((c, i) => c.scale.setScalar(Math.min(1, Math.max(0, t * 16 - i) / 1.5)));
+        grupo.rotation.y = this.reloj * 0.25;
+        vieja.rotation.y = 0.35 - grupo.rotation.y;
+        motasSuben(this.reloj);
+      },
+    });
+    this.encolar({
+      duracion: 3.8,
+      saltable: false,
+      empezar: () => {
+        this.evolucion!.latiendo = true;
+        silueta(vieja, true);
+        nueva.figura.position.set(0, 0, 0);
+        nueva.figura.scale.setScalar(1);
+        silueta(nueva.figura, true);
+        grupo.add(nueva.figura);
+      },
+      animar: (t) => {
+        // Late entre las dos formas, cada vez más deprisa; al final se queda la nueva.
+        const fase = Math.sin(Math.PI * 2 * (1.2 * t + 4.5 * t * t));
+        const nuevaSe = t > 0.93 || fase > 0;
+        vieja.visible = !nuevaSe;
+        nueva.figura.visible = nuevaSe;
+        const pulso = 1 + Math.abs(fase) * 0.06;
+        vieja.scale.setScalar(pulso);
+        nueva.figura.scale.setScalar(pulso);
+        grupo.rotation.y = this.reloj * (0.25 + t * 1.4);
+        vieja.rotation.y = nueva.figura.rotation.y = 0.35 - grupo.rotation.y;
+        motasSuben(this.reloj * (1 + t * 2));
+      },
+    });
+    this.encolar({
+      duracion: 2.6,
+      saltable: true,
+      empezar: () => {
+        const ev = this.evolucion!;
+        ev.latiendo = false;
+        silueta(vieja, false);
+        if (ev.cancelada) {
+          nueva.figura.removeFromParent();
+          vieja.visible = true;
+          vieja.scale.setScalar(1);
+          this.texto.textContent = `${nombre} ha dejado de cambiar.`;
+          this.ctx.eventos.emit('sonido:tocar', { nombre: 'atras' });
+          return;
+        }
+        silueta(nueva.figura, false);
+        vieja.removeFromParent();
+        nueva.figura.visible = true;
+        alto = nueva.alto;
+        this.figuras.set(uid, nueva.figura);
+        this.altos.set(uid, nueva.alto);
+        // La criatura cambia de verdad: la que vuelve a la isla ya es la nueva.
+        const lista = equipo();
+        const i = lista.findIndex((c) => c.uid === uid);
+        lista[i] = evolucionar(lista[i]!, a, DATOS);
+        destello.visible = true;
+        destello.position.set(0, alto * 0.5, 0);
+        this.texto.textContent = `¡${nombre} se ha convertido en ${especieNueva.nombre}!`;
+        this.ctx.eventos.emit('sonido:tocar', { nombre: 'captura' });
+      },
+      animar: (t) => {
+        if (this.evolucion?.cancelada) {
+          circulos.forEach((c) => c.scale.setScalar(Math.max(0, 1 - t * 2)));
+          return;
+        }
+        // Destello y los círculos, despedidos hacia fuera.
+        const k = Math.min(1, t * 2.2);
+        destello.scale.setScalar(0.4 + k * 5);
+        (destello.material as MeshBasicNodeMaterial).opacity = Math.max(0, 1 - k);
+        this.velo.style.cssText = `opacity:${Math.max(0, 0.7 - t * 2.5)};background:#fffbe8`;
+        circulos.forEach((c, i) => {
+          const [x, z] = CIRCULOS_SELLO[i]!;
+          c.position.set(x * (1 + k * 3), 0.02 + k * 0.6, z * (1 + k * 3));
+          c.scale.setScalar(Math.max(0, 1 - k));
+        });
+        nueva.figura.scale.setScalar(rebote(Math.min(1, t * 1.6)));
+        for (const m of motas) m.visible = false;
+      },
+    });
+    this.encolar({
+      duracion: 0.3,
+      saltable: false,
+      empezar: () => {
+        this.velo.style.cssText = 'opacity:0';
+        grupo.removeFromParent();
+        for (const { o } of apagadas) o.visible = true;
+        (destello.material as Material).dispose();
+        anillo.dispose();
+        mota.dispose();
+        this.evolucion = null;
+      },
+    });
   }
 
   private animarLuchadores(): void {

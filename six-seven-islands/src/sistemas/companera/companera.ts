@@ -3,9 +3,9 @@
 // su luz pintada (src/arte/criaturas3d.ts). Lee «partida» y «personaje»; no cambia nada.
 
 import { type Group } from 'three/webgpu';
-import { MODELO_INICIAL, figuraCriatura } from '../../arte/criaturas3d';
+import { figuraCriatura } from '../../arte/criaturas3d';
 import { escalaPorAltura } from '../../arte/escala-criaturas';
-import { DATOS_COMBATE_PRUEBA, ESPECIE_INICIAL } from '../../data/combate-prueba';
+import { DATOS_COMBATE_PRUEBA, ESPECIE_INICIAL, MODELO_DE } from '../../data/combate-prueba';
 import type { Direccion } from '../../core/mundo';
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Partida } from '../partida/partida';
@@ -42,19 +42,28 @@ export class Companera implements Subsistema {
     this.personaje = ctx.get<Personaje>('personaje');
   }
 
-  /** Carga el modelo de la inicial si cambia (al elegirla en el museo). */
-  private preparar(inicial: string): void {
-    if (this.pedida === inicial) return;
-    this.pedida = inicial;
-    const modelo = MODELO_INICIAL[inicial];
+  /**
+   * La especie que te sigue: la de tu inicial tal como esté ahora (si ha evolucionado, su forma
+   * nueva; autor, 2026-11-19). Solo te sigue la inicial.
+   */
+  private especieQueSigue(inicial: string): string {
+    const base = ESPECIE_INICIAL[inicial] ?? '';
+    return this.partida.equipo.find((c) => c.especie === base || c.especie.startsWith(`${base}-`))?.especie ?? base;
+  }
+
+  /** Carga el modelo si cambia (al elegirla en el museo o al evolucionar). */
+  private preparar(especie: string): void {
+    if (this.pedida === especie) return;
+    this.pedida = especie;
+    const modelo = MODELO_DE[especie];
     if (!modelo) return;
     // A su altura respecto al jugador, comprimida como en combate (ARTE.md, «Escala de las criaturas»).
-    const altura = DATOS_COMBATE_PRUEBA.especies[ESPECIE_INICIAL[inicial] ?? '']?.altura;
+    const altura = DATOS_COMBATE_PRUEBA.especies[especie]?.altura;
     void figuraCriatura(modelo, 'color', TAMANO_COMPANERA * escalaPorAltura(altura)).then((f) => {
-      if (this.pedida !== inicial) return;
+      if (this.pedida !== especie) return;
       this.figura?.removeFromParent();
       this.figura = f;
-      this.cargada = inicial;
+      this.cargada = especie;
       this.rastro = new Rastro();
       this.ctx.escena.add(f);
     });
@@ -62,10 +71,11 @@ export class Companera implements Subsistema {
 
   actualizar(dt: number): void {
     const inicial = this.partida.estado.inicial;
-    if (inicial) this.preparar(inicial);
+    const especie = inicial ? this.especieQueSigue(inicial) : null;
+    if (especie) this.preparar(especie);
     const f = this.figura;
     if (!f) return;
-    f.visible = !!inicial && this.cargada === inicial && this.partida.modo !== 'combate';
+    f.visible = !!especie && this.cargada === especie && this.partida.modo !== 'combate';
     if (!f.visible) return;
 
     const p = this.personaje.posicion;

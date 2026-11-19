@@ -21,8 +21,8 @@ modelo se llaman «PokN. Nombre» (autor, 2026-11-17): N es su número en esta l
 nunca, y el nombre es el suyo o su apodo. Se suben a `conceptos/criaturas/meshy/`. Para que Gemini te las vaya
 diciendo de una en una: `conceptos/criaturas/guia-gemini.txt`, que lleva sus instrucciones arriba.
 
-**Coste.** Faltan 169 criaturas (hay 34 hechas). A 15 créditos cada una
-(Smart Topology y textura, precio comprobado el 2026-11-07), son unos 2.535 créditos sin
+**Coste.** Faltan 167 criaturas (hay 36 hechas). A 15 créditos cada una
+(Smart Topology y textura, precio comprobado el 2026-11-07), son unos 2.505 créditos sin
 contar repeticiones. Por isla, en la tabla de abajo.
 
 ## Las cuentas
@@ -56,14 +56,14 @@ Todas cuadran: si no, el script no genera nada.
 
 | Isla | Especies nuevas | Criaturas | Por generar | Créditos |
 | --- | --- | --- | --- | --- |
-| Lanzarote | 46 | 47 | 15 | 225 |
+| Lanzarote | 46 | 47 | 13 | 195 |
 | Fuerteventura | 14 | 30 | 30 | 450 |
 | Gran Canaria | 25 | 37 | 37 | 555 |
 | Tenerife | 22 | 38 | 36 | 540 |
 | La Gomera | 13 | 22 | 22 | 330 |
 | La Palma | 10 | 16 | 16 | 240 |
 | El Hierro | 11 | 13 | 13 | 195 |
-| **Total** | | **203** | **169** | **2.535** |
+| **Total** | | **203** | **167** | **2.505** |
 
 Lanzarote incluye las 15 iniciales y las 5 leyendas de los pueblos, que duermen allí.
 
@@ -209,8 +209,8 @@ nombre lo pone el autor. La idea va en la primera forma de cada especie.
 | Pokédex | Id interno | Forma | Tipos | Estadísticas de | Altura | Zona | Idea |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Pok1. Cronti | inicial-agua-1 (hecha) | 1.ª | Agua A | Propias (del autor) | 0,4 m | Inicial (museo de Lanzarote) | Nombres del autor; la 1.ª forma ya está hecha. |
-| Pok2. Chicront | inicial-agua-2 | 2.ª | Agua A | Propias (del autor) | 0,9 m |  |  |
-| Pok3. Krantacor | inicial-agua-3 | 3.ª | Agua A | Propias (del autor) | 1,6 m |  |  |
+| Pok2. Chicront | inicial-agua-2 (hecha) | 2.ª | Agua A | Propias (del autor) | 0,9 m |  |  |
+| Pok3. Krantacor | inicial-agua-3 (hecha) | 3.ª | Agua A | Propias (del autor) | 1,6 m |  |  |
 | Pok4. Inicial de planta | inicial-planta-1 (hecha) | 1.ª | Planta A | Propias (del autor) | 0,4 m | Inicial (museo de Lanzarote) | El lagarto chamán, que acaba en chamán de Planta/Mental; la 1.ª forma ya está hecha. |
 | Pok5. Sporecko | inicial-planta-2 (hecha) | 2.ª | Planta A | Propias (del autor) | 0,9 m |  |  |
 | Pok6. Transcecko | inicial-planta-3 (hecha) | 3.ª | Planta/Mental A | Propias (del autor) | 1,7 m |  |  |

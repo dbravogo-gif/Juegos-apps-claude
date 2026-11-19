@@ -20,6 +20,7 @@ import { puntoRecado } from '../../core/recados';
 import { AMIGOS, NOMBRE_TIPO_INICIAL } from '../../data/textos-isla1';
 import { PUEBLOS, inicialDelRival, puebloQueTePersigue, type TipoInicial } from '../../data/pueblos';
 import { crearCriatura, curarDelTodo } from '../../core/criatura';
+import { expParaNivel } from '../../core/progreso';
 import { sortearEncuentro } from '../../core/encuentros';
 import { perdidaPorDerrota } from '../../core/economia';
 import { crearRng } from '../../core/rng';
@@ -60,7 +61,8 @@ export interface EstadoParcial {
   /** Solo para pruebas: los entrenadores vencidos. */
   vencidos?: string[];
   /** Solo para pruebas: criaturas que se añaden al principio del equipo (especie y nivel). */
-  anadir?: { especie: string; nivel: number }[];
+  /** `casiSube`: a un punto de experiencia del nivel siguiente (para probar la evolución). */
+  anadir?: { especie: string; nivel: number; casiSube?: boolean }[];
   /** Zona de la isla o id de un interior. */
   zona?: string;
   x?: number;
@@ -698,7 +700,12 @@ export class Partida implements Subsistema {
       this.formarEquipo();
     }
     // Delante: así la añadida es la que sale a combatir (para probar combates).
-    for (const a of p.anadir ?? []) if (this.equipo.length < 6) this.equipo.unshift(crearCriatura(DATOS, a.especie, a.nivel, this.ctx.rng));
+    for (const a of p.anadir ?? []) {
+      if (this.equipo.length >= 6) break;
+      const c = crearCriatura(DATOS, a.especie, a.nivel, this.ctx.rng);
+      if (a.casiSube) c.exp = expParaNivel(a.nivel + 1) - 1;
+      this.equipo.unshift(c);
+    }
     if (p.vida !== undefined) for (const c of this.equipo) c.vida = Math.min(c.vida, p.vida);
     if (p.dinero !== undefined) this.dinero = p.dinero;
     if (p.vencidos !== undefined) this.vencidos = [...p.vencidos];
