@@ -168,3 +168,11 @@ nivel: de nota a regla, y de regla a prueba o hook.
   - Causa: no se exigía URL.
   - Barrera: el prompt de `investigacion/prompts-otras-ias.md` exige URL y marca hecho o
     inferencia. Perplexity y Grok para datos; Gemini solo para vídeos.
+- **2026-11-19 · «null» escrito en pantalla, dos veces** (Beep Run Club).
+  - Causa: `append()` nativo con un hijo condicional (`cond ? nodo : null`) escribe «null».
+  - Barrera: los hijos se añaden con `h()` o `agregar()`, que ignoran null. En Beep,
+    `npm run flujos` falla si una pantalla muestra «null» o «undefined».
+- **2026-11-19 · Un autoguardado con espera sobrevivía a su pantalla** (Beep Run Club).
+  - Causa: un `setTimeout` de 600 ms disparaba después de cerrar la sesión, con datos nulos.
+  - Barrera: cada pantalla registra en `ctx.alSalir` lo que tiene pendiente, y el router lo
+    ejecuta (guarda ya) antes de pintar la siguiente. Al cerrar sesión se descarta.
