@@ -112,8 +112,11 @@ se usa otra palabra (R8).
 
 | Especie (formas) | Tipos por forma | Estadísticas de | Estado |
 | --- | --- | --- | --- |
-| Cronti → Chicront → Krantacor | Agua · Agua · Agua | Propias (inicial) | Nombre |
+| Cronti → Chicront → Krantacor | Agua · Agua · Agua | Las de Totodile → Croconaw → Feraligatr (autor, 2026-11-19) | Modelos (Pok1-3) |
 | Armalito → Uralito → Reactolito | Roca · Roca/Veneno · Roca/Veneno | Propias (inicial) | Lámina |
+| Lisza → Sporecko → Transcecko | Planta · Planta · Planta/Mental | Propias (inicial) | Modelos (Pok4-6). Los nombres en «-ecko» se quedan (autor, 2026-11-19) |
+| Nokoribi → Hinozö → Dumbotron | Infernal | Propias (inicial) | Modelos (Pok7-9) |
+| Tsubomi → Tsuborei → Sunaiki | Tierra · Tierra/Espectral · Tierra/Espectral | Propias (inicial) | Modelos (Pok13-15) |
 | Inicial de Tierra (sin nombre, 3), de otro amigo | Tierra · Tierra/Espectral · Tierra/Espectral | Propias (inicial), por llegar | Por diseñar |
 | Caprún → Roquén → Terracorn | Tierra | Shinx → Luxio → Luxray (Q1) | Lámina |
 | Melaní → Favenir → Reginis | Bicho · Bicho/Veneno · Bicho/Veneno | Venipede → Whirlipede → Scolipede (Q1) | Lámina |

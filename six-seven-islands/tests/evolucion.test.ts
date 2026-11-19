@@ -37,4 +37,11 @@ describe('formas de las iniciales', () => {
       for (const f of [f1, f2, f3]) expect(MODELOS).toContain(MODELO_DE[f!.id]);
     }
   });
+
+  it('las cinco suman lo mismo en cada forma (314, 405 y 530): ninguna es mejor que otra en total', () => {
+    const suma = (id: string) => Object.values(DATOS.especies[id]!.base).reduce((a, b) => a + b, 0);
+    for (const t of ['agua', 'planta', 'infernal', 'roca', 'tierra']) {
+      expect([suma(`inicial-${t}`), suma(`inicial-${t}-2`), suma(`inicial-${t}-3`)], t).toEqual([314, 405, 530]);
+    }
+  });
 });
