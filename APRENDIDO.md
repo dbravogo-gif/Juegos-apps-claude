@@ -176,3 +176,8 @@ nivel: de nota a regla, y de regla a prueba o hook.
   - Causa: un `setTimeout` de 600 ms disparaba después de cerrar la sesión, con datos nulos.
   - Barrera: cada pantalla registra en `ctx.alSalir` lo que tiene pendiente, y el router lo
     ejecuta (guarda ya) antes de pintar la siguiente. Al cerrar sesión se descarta.
+- **2026-11-19 · Se cerró la fase 2 de Beep sin el `probador` y sin avisar la excepción (R3).**
+  - Causa: con la revisión de la fase 1 en marcha, se siguió construyendo y se marcó la fase 2
+    como hecha.
+  - Barrera: una fase solo se marca hecha en `funciones.json` cuando su revisión ha terminado; si
+    no, se avisa la excepción antes.

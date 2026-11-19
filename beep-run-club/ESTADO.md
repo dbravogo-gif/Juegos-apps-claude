@@ -20,8 +20,9 @@ funcionan con datos de ejemplo guardados en el navegador. Falta la nube (fase 3)
 
 ## Siguiente
 
-1. Publicar la demo para que el autor la pruebe en su iPhone (espera su sí: toca `.github/`).
-2. Fase 3: almacén Firebase y reglas con sus pruebas (`F12`), guía de puesta en marcha (`F13`)
+1. Revisión del `probador` del panel del entrenador (fase 2): falta, se cerró sin ella.
+2. Publicar la demo para que el autor la pruebe en su iPhone (espera su sí: toca `.github/`).
+3. Fase 3: almacén Firebase y reglas con sus pruebas (`F12`), guía de puesta en marcha (`F13`)
    y publicación (`F14`, toca `.github/`: se consulta al autor antes de fusionar).
 
 ## Pendiente del autor
