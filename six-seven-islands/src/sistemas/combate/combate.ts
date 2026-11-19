@@ -35,12 +35,12 @@ import {
   type Material,
   type Texture,
 } from 'three/webgpu';
-import { iniciarCombate, reemplazar, resolverTurno, type Accion, type EstadoCombate, type Evento, type Resultado } from '../../core/combate';
+import { iniciarCombate, reemplazar, resolverTurno, type Accion, type EstadoCombate, type Evento, type FichaCombate, type Resultado } from '../../core/combate';
 import { crearCriatura, nombreDe, objetoUtil } from '../../core/criatura';
 import type { Criatura } from '../../core/modelo';
 import { CALIDAD_ZONA, MEDIA_BLANCA, MEDIA_VERDE, zonaBarra } from '../../core/captura';
 import { crearRng } from '../../core/rng';
-import { evolucionar, evolucionesTrasCombate } from '../../core/progreso';
+import { evolucionar, evolucionesTrasCombate, type SubidaNivel } from '../../core/progreso';
 import { perdidaPorDerrota } from '../../core/economia';
 import { BOLSILLOS, bolsilloDe, type IdBolsillo } from '../../data/bolsillos';
 import { vidaMaxima } from '../../core/estadisticas';
@@ -614,7 +614,7 @@ export class Combate implements Subsistema {
               saltable: false,
               empezar: () => {
                 this.ponerLuchador(lado, uid);
-                this.pintarFicha(lado, true);
+                this.pintarEntrada(lado, ev.ficha);
               },
               animar: (t) => {
                 const l = this.luchadores[lado]!;
@@ -636,7 +636,7 @@ export class Combate implements Subsistema {
             saltable: false,
             empezar: () => {
               this.ponerLuchador(lado, uid);
-              this.pintarFicha(lado, true);
+              this.pintarEntrada(lado, ev.ficha);
               cubo = figuraCubo(CUBO[lado], this.materialCubo);
               cubo.position.copy(SITIO[lado]).setY(CAIDA);
               this.arena.add(cubo);
@@ -785,7 +785,7 @@ export class Combate implements Subsistema {
         case 'experiencia': {
           this.encolar({ texto: `${ev.nombre} gana ${ev.cantidad} puntos de experiencia.`, duracion: 1.1, saltable: true });
           for (const s of ev.subidas) {
-            this.encolar({ texto: `¡${ev.nombre} sube al nivel ${s.nivel}!`, sonido: 'nivel', duracion: 1.3, saltable: true, empezar: () => this.pintarFicha(0, true) });
+            this.encolar({ texto: `¡${ev.nombre} sube al nivel ${s.nivel}!`, sonido: 'nivel', duracion: 1.3, saltable: true, empezar: () => this.pintarSubida(ev.indice, s) });
             for (const m of s.aprendidos) this.encolar({ texto: `¡${ev.nombre} aprende ${DATOS.movimientos[m]?.nombre ?? m}!`, duracion: 1.2, saltable: true });
           }
           break;
@@ -1047,6 +1047,24 @@ export class Combate implements Subsistema {
     f.nombre.textContent = nombreDe(c, DATOS);
     f.nivel.textContent = `Nv. ${c.nivel}`;
     if (deGolpe) this.pintarVida(lado, c.vida, vidaMaxima(c, DATOS), true);
+  }
+
+  /**
+   * La ficha de la que entra, con la vida que trae al entrar (la del evento). La del estado ya es la
+   * del final del turno: al cambiar, salía con el golpe del rival ya restado (autor, 2026-11-19).
+   */
+  private pintarEntrada(lado: 0 | 1, ficha: FichaCombate): void {
+    const f = this.fichas[lado];
+    f.nombre.textContent = ficha.nombre;
+    f.nivel.textContent = `Nv. ${ficha.nivel}`;
+    this.pintarVida(lado, ficha.vida, ficha.vidaMax, true);
+  }
+
+  /** La subida de nivel de la que está en combate, con el nivel y la vida de esa subida (no los del final). */
+  private pintarSubida(indice: number, s: SubidaNivel): void {
+    if (this.estado?.lados[0].activos[0] !== indice) return;
+    this.fichas[0].nivel.textContent = `Nv. ${s.nivel}`;
+    this.pintarVida(0, s.vida, s.vidaMax, true);
   }
 
   private pintarVida(lado: number, vida: number, max: number, deGolpe = false): void {
