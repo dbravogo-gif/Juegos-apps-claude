@@ -64,12 +64,14 @@ export function objetoUtil(c: Criatura, objetoId: string, datos: DatosJuego): bo
       return c.vida > 0 && c.estado !== null && o.estados.includes(c.estado.tipo);
     case 'revivir':
       return c.vida === 0;
+    case 'nivel':
+      return c.nivel < 100;
     default:
       return false;
   }
 }
 
-/** Aplica un objeto de curación, remedio o revivir. Devuelve una copia; falla si no sirve. */
+/** Aplica un objeto de curación, remedio, revivir o nivel. Devuelve una copia; falla si no sirve. */
 export function usarObjeto(c: Criatura, objetoId: string, datos: DatosJuego): Criatura {
   if (!objetoUtil(c, objetoId, datos)) throw new Error(`${objetoId} no sirve ahora sobre ${c.uid}`);
   const o = datos.objetos[objetoId];
@@ -78,5 +80,11 @@ export function usarObjeto(c: Criatura, objetoId: string, datos: DatosJuego): Cr
   if (o.tipo === 'curar') r.vida = o.cantidad === 'toda' ? max : Math.min(max, r.vida + o.cantidad);
   else if (o.tipo === 'remedio') r.estado = null;
   else if (o.tipo === 'revivir') r.vida = Math.max(1, Math.floor(max * o.fraccion));
+  else if (o.tipo === 'nivel') {
+    r.nivel += 1;
+    r.exp = Math.max(r.exp, expParaNivel(r.nivel));
+    // La vida que gana al crecer se le suma (como al subir de nivel en combate).
+    if (r.vida > 0) r.vida += vidaMaxima(r, datos) - max;
+  }
   return r;
 }

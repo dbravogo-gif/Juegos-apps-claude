@@ -224,6 +224,19 @@ y `?semilla=n`. Mientras exista la vitrina de F04: `?vista=combate|todas|explora
 - **La evolución está en el núcleo pero aún no en el juego:** las formas evolucionadas se ven en
   equipos de entrenadores.
 
+## Modo desarrollador y portada
+
+- **La portada** ofrece «Continuar» (si hay partida), «Partida nueva» y «Código». El menú de pausa
+  tiene «Menú principal»: guarda y vuelve a la portada (`?portada`).
+- **El código** abre el modo desarrollador. En el juego no está escrito, solo su huella
+  (`core/desarrollador.ts`).
+- **Partida aparte:** el modo se guarda en `sessionStorage`, así que sobrevive a los viajes en barco y
+  se pierde al cerrar la pestaña o al volver al menú. Su partida va en otra clave de `localStorage`.
+- **Menú «Desarrollador»** (pausa): viajar a una zona o a otra isla, añadir una criatura al nivel que
+  se quiera, diez almendrados (suben un nivel; si llega al de su evolución, evoluciona al ganar el
+  próximo combate), curar y quitar la última del equipo.
+- **La vista roja de los entrenadores** solo se dibuja en este modo.
+
 ## Evolución
 
 - **Cuándo:** al ganar un combate, la que ha subido de nivel en él y ya tiene el de su evolución

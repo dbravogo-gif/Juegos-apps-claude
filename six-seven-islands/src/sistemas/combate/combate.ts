@@ -337,7 +337,8 @@ export class Combate implements Subsistema {
       }),
     );
     // Lo que hace falta para evolucionar al final, ya cargado: el nivel de cada una y su forma siguiente.
-    this.nivelesAntes = new Map(this.partida.equipo.map((c) => [c.uid, c.nivel]));
+    // Las que subieron fuera del combate (el almendrado) cuentan como subidas: evolucionan al ganar.
+    this.nivelesAntes = new Map(this.partida.equipo.map((c) => [c.uid, this.partida.subidasFuera.has(c.uid) ? c.nivel - 1 : c.nivel]));
     this.figurasEvolucion.clear();
     await Promise.all(
       this.partida.equipo.flatMap((c) =>
@@ -436,6 +437,7 @@ export class Combate implements Subsistema {
         const e = this.estado!;
         // El equipo vuelve a «partida» como ha quedado: vida, PP, estados y experiencia.
         this.partida.equipo = e.lados[0].equipo;
+        if (e.fin !== 'derrota') this.partida.subidasFuera.clear();
         if (e.capturada && this.partida.equipo.length < MAX_EQUIPO) this.partida.equipo.push(e.capturada);
         if (e.fin === 'victoria' && this.entrenador) this.partida.vencerA(this.entrenador);
         this.partida.terminarCombate();
