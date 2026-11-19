@@ -149,8 +149,13 @@ Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
 - **Amigos:** sus fotos y GLB de Meshy para las personas jugables, y sus 2 o 3 poses para los
   retratos de diálogo.
 - **Dani con `Idle`** en el GLB (opcional).
-- **Puntuar de 1 a 5** lo último publicado: menús, equipo, mochila, medallero, el gimnasio de
-  Roca y Fuerteventura entera (sobre todo el gimnasio de Aire).
+- **Puntuar de 1 a 5** lo último publicado (2026-11-19):
+  - la evolución nueva, con la isla de su tipo (sube una criatura con el modo desarrollador);
+  - el combate: qué hace cada ataque, tipos bajo el nombre y el cursor en el último ataque;
+  - las teclas A, Z y X (WASD ya no anda);
+  - el gimnasio de Roca: puerta doble, sin las dos compuertas y la de la palanca visible;
+  - hierbas y entrenadores sin «iniciales», y las iniciales empezando con ataques comunes (en
+    partida nueva: la tuya guardada conserva sus cuatro ataques de antes).
 
 - Medir los FPS en los ordenadores del autor y de sus amigos.
 - Prueba de Meshy: pagar Pro el primer mes (~10 $), y descargar y subir `planta-2.glb`

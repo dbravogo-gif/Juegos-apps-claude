@@ -22,6 +22,9 @@ Tanda 1: Lanzarote es la isla 1 (`ISLA-1.md`), con kit por código y la tabla de
    Pok34 y el dinosaurio), con `herramientas/criaturas/juego.py` (ARCHITECTURE.md). Las iniciales,
    con sus tres formas; las criaturas evolucionan tras el combate, con el Sello.
 
+4. Pendiente de lo que pidió el autor: sonido (hierba, malpaís, música y ambiente) y refugios,
+   tiendas y escaleras de las casas más claros.
+
 ## Pendiente del autor
 
 Probar las criaturas nuevas y Fuerteventura, aprobar Gran Canaria (`ISLA-3.md`) y lo demás de
