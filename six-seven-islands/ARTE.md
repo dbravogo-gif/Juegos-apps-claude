@@ -68,7 +68,8 @@ Cada una se distingue por la silueta a la distancia de juego.
 - **Peligros:**
   - La hierba alta es más alta, más oscura y se mece de otra manera.
   - El equipo enemigo viste formas angulosas.
-  - Los entrenadores muestran su línea de visión.
+  - La línea de visión de los entrenadores, en rojo, solo se ve en el modo desarrollador (autor,
+    2026-11-19): jugando, que te vean es una sorpresa.
 - **Recompensas:** objetos redondos con brillo propio. Las criaturas casi perfectas, visibles en
   la hierba, despiden un destello sutil.
 - **Mundo:**

@@ -24,6 +24,7 @@ import { expParaNivel } from '../../core/progreso';
 import { sortearEncuentro } from '../../core/encuentros';
 import { perdidaPorDerrota } from '../../core/economia';
 import { crearRng } from '../../core/rng';
+import { claveGuardado, esCodigoDesarrollador } from '../../core/desarrollador';
 import { VERSION_GUARDADO, deserializar, refugiosAlViajar, reubicar, serializar, type Guardado, type Origenes } from '../../core/guardado';
 import type { Criatura } from '../../core/modelo';
 import { DATOS_COMBATE_PRUEBA as DATOS, ESPECIE_INICIAL, MOCHILA_INICIAL } from '../../data/combate-prueba';
@@ -44,7 +45,16 @@ const SEPARACION_INTERIORES = 24;
 /** Nivel de la inicial al elegirla. */
 const NIVEL_INICIAL = 5;
 /** Dónde se guarda la partida en el navegador. */
-const CLAVE_GUARDADO = 'six-seven-islands:partida';
+/** En la sesión del navegador: si se juega en modo desarrollador (con su partida aparte). */
+const CLAVE_SESION_DESARROLLADOR = 'six-seven-islands:desarrollador';
+
+function leerModoDesarrollador(): boolean {
+  try {
+    return sessionStorage.getItem(CLAVE_SESION_DESARROLLADOR) === '1';
+  } catch {
+    return false;
+  }
+}
 /** Cada cuántos pasos fijos se guarda mientras se explora: 5 segundos. */
 const PASOS_GUARDADO = 300;
 /** Lo que dura la exclamación del entrenador que te ve, antes de que hable: 0,75 s. */
@@ -127,6 +137,17 @@ export class Partida implements Subsistema {
   private espera = 0;
   private quitar: (() => void) | null = null;
 
+  /** Modo desarrollador (autor, 2026-11-19): con su partida aparte y su menú. */
+  readonly desarrollador = leerModoDesarrollador();
+  /** Dónde se guarda esta partida: la del modo desarrollador no pisa la normal. */
+  private get clave(): string {
+    return claveGuardado(this.desarrollador);
+  }
+  /** Las que han subido de nivel fuera del combate (el almendrado): evolucionan al ganar el siguiente. */
+  readonly subidasFuera = new Set<string>();
+  /** Si hay una partida guardada que se pueda continuar (para la portada). */
+  hayGuardado = false;
+
   init(ctx: Ctx): void {
     this.ctx = ctx;
     this.entrada = ctx.get<Entrada>('entrada');
@@ -158,7 +179,10 @@ export class Partida implements Subsistema {
     // Se sigue donde se dejó, salvo con ?nueva. Sin partida guardada, se empieza en la portada
     // (elegir persona y nombre). En Safari, se pide que no se borre lo guardado.
     if (guardada) this.aplicarGuardado(guardada);
-    else this.modo = 'titulo';
+    this.hayGuardado = guardada !== null;
+    // Sin partida, la portada. Con ?portada (al volver al menú), también, encima de la partida
+    // cargada: «Continuar» sigue donde estaba.
+    if (!guardada || new URLSearchParams(location.search).has('portada')) this.modo = 'titulo';
     void navigator.storage?.persist?.().catch(() => undefined);
     // Al cerrar u ocultar la pestaña se guarda, para no perder los últimos pasos. En combate no:
     // el combate no se guarda a medias y vale lo guardado al empezarlo.
@@ -232,7 +256,7 @@ export class Partida implements Subsistema {
     if (this.modo === 'titulo' || this.borrada) return;
     this.pasosSinGuardar = 0;
     try {
-      localStorage.setItem(CLAVE_GUARDADO, serializar(this.guardado()));
+      localStorage.setItem(this.clave, serializar(this.guardado()));
       this.ctx.eventos.emit('guardado:hecho', {});
     } catch {
       // Sin almacenamiento (ventana privada, cuota llena): se sigue jugando sin guardar.
@@ -261,7 +285,7 @@ export class Partida implements Subsistema {
     const n = this.viajePendiente!;
     const destino = ISLAS[n];
     try {
-      localStorage.setItem(CLAVE_GUARDADO, serializar(this.guardadoEnIsla(n)));
+      localStorage.setItem(this.clave, serializar(this.guardadoEnIsla(n)));
     } catch {
       // Sin almacenamiento no se puede viajar recargando: se queda donde está.
       this.modo = 'explorar';
@@ -290,11 +314,87 @@ export class Partida implements Subsistema {
     return { ...this.guardado(), isla: n, explorar: e, ultimoRefugio: ultimo, refugios, origenes: { actual: { ...z.origen } } };
   }
 
+  /** Vuelve a la portada (Continuar, Partida nueva o Código), guardando antes. Sale del modo desarrollador. */
+  volverAlMenu(): void {
+    this.guardar();
+    try {
+      sessionStorage.removeItem(CLAVE_SESION_DESARROLLADOR);
+    } catch {
+      // Sin almacenamiento de sesión no había modo desarrollador.
+    }
+    location.replace(`${location.pathname}?portada`);
+  }
+
+  /** Desde la portada: sigue con la partida cargada. */
+  continuar(): void {
+    if (!this.hayGuardado) return;
+    // Fuera el ?portada de la dirección: al recargar (un viaje en barco), se sigue jugando.
+    history.replaceState(null, '', location.pathname);
+    this.modo = 'explorar';
+    this.entrada.olvidar();
+    this.ctx.eventos.emit('zona:entrar', { zonaId: this.estado.zona });
+  }
+
+  /** Desde la portada: una partida nueva en este hueco (borra la guardada de este hueco). */
+  partidaNueva(): void {
+    this.borrarPartida();
+  }
+
+  /** El código del modo desarrollador: si vale, se recarga en su partida aparte. */
+  activarDesarrollador(codigo: string): boolean {
+    if (!esCodigoDesarrollador(codigo)) return false;
+    try {
+      sessionStorage.setItem(CLAVE_SESION_DESARROLLADOR, '1');
+    } catch {
+      return false;
+    }
+    location.replace(location.pathname);
+    return true;
+  }
+
+  // ——— Modo desarrollador ———
+
+  /** Las zonas de la isla, para viajar entre ellas: id y nombre. */
+  zonasDeLaIsla(): { id: string; nombre: string }[] {
+    return [...this.mundo.zonas.entries()].map(([id, z]) => ({ id, nombre: z.nombre ?? id }));
+  }
+
+  /** Lleva al jugador a una zona: a la casilla que se pueda pisar más cerca de su centro. */
+  teletransportar(zonaId: string): void {
+    const m = this.mundo;
+    const z = m.zonas.get(zonaId);
+    if (!z) return;
+    const opciones = { condiciones: new Set(this.estado.condiciones) };
+    const casillas = [...m.casillas.entries()].filter(([, c]) => c.zona === zonaId).map(([k]) => deClave(k));
+    if (!casillas.length) return;
+    const cx = casillas.reduce((a, [x]) => a + x, 0) / casillas.length;
+    const cy = casillas.reduce((a, [, y]) => a + y, 0) / casillas.length;
+    const libres = casillas.filter(([x, y]) => transitable(m, x, y, opciones));
+    if (!libres.length) return;
+    libres.sort(([ax, ay], [bx, by]) => Math.hypot(ax - cx, ay - cy) - Math.hypot(bx - cx, by - cy));
+    const [x, y] = libres[0]!;
+    this.poner({ zona: zonaId, x: x - z.origen.x, y: y - z.origen.y });
+  }
+
+  /** Pone una criatura en el equipo, si cabe. */
+  anadirCriatura(especie: string, nivel: number): boolean {
+    if (this.equipo.length >= 6 || !DATOS.especies[especie]) return false;
+    this.equipo.push(crearCriatura(DATOS, especie, nivel, this.ctx.rng));
+    this.guardar();
+    return true;
+  }
+
+  /** Quita la última del equipo (si queda alguna más). */
+  quitarUltima(): void {
+    if (this.equipo.length > 1) this.equipo.pop();
+    this.guardar();
+  }
+
   /** Borra la partida guardada y vuelve a la portada (desde el menú, con confirmación). */
   borrarPartida(): void {
     this.borrada = true;
     try {
-      localStorage.removeItem(CLAVE_GUARDADO);
+      localStorage.removeItem(this.clave);
     } catch {
       // Sin almacenamiento no había nada guardado.
     }
@@ -305,7 +405,7 @@ export class Partida implements Subsistema {
   /** La partida guardada en el navegador, si la hay. */
   private leerGuardado(): Guardado | null {
     try {
-      return deserializar(localStorage.getItem(CLAVE_GUARDADO));
+      return deserializar(localStorage.getItem(this.clave));
     } catch {
       return null;
     }
