@@ -125,7 +125,7 @@ HECHAS_IDS = {'031-1', '031-2', '062-1', '062-2',
 
 ESPECIES = [
     # Lanzarote (propuesta 2 de CRIATURAS.md)
-    (31, 'Civeta', ['Común', 'Común'], 'lz-golfo', ['lz-fuego'], 'Lámina del autor (civeta.jpg).'),
+    (31, 'Shimari → Shimarō', ['Común', 'Común'], 'lz-golfo', ['lz-fuego'], 'Lámina del autor (civeta.jpg).'),
     (32, 'Ravich → Azurvan', ['Aire', 'Aire'], 'lz-golfo', ['lz-jable', 'tf-anaga'], 'Hecha por el autor.'),
     (37, 'Aculiso → Sierpajable', ['Agua', 'Agua/Tierra'], 'lz-golfo', ['lz-famara'], 'Hecha por el autor.'),
     (7, 'Dragosil → Dragombo → Dragalis', ['Planta', 'Planta', 'Planta'], 'lz-golfo*', ['lp-garafia'], 'Lámina del autor; hecha.'),
@@ -232,8 +232,8 @@ ESPECIES = [
     (74, None, ['Agua'], 'tf-puerto', [], 'Vieja: pez loro rojo y redondo de los charcos.'),
     (63, None, ['Acero', 'Acero/Roca'], 'tf-cueva', [],
      'Tortuga gigante de las islas, que se creía extinta: cría con caparazón de piedra; la 2.ª, coraza de piedra y hierro.'),
-    (62, None, ['Roca', 'Roca'], 'tf-cueva', [],
-     'Lámina del autor (dino-casco-roca.jpg), recuperada el 2026-11-17: dinosaurio con casco de roca. Quizá lo use la líder de Lanzarote.'),
+    (62, 'Ishiro → Ishiradon', ['Roca', 'Roca'], 'tf-cueva', [],
+     'Lámina del autor (dino-casco-roca.jpg): dinosaurio con casco de roca. Ishiradon es la estrella de la líder de Roca.'),
     (89, None, ['Espectral'], 'tf-cueva*', [], 'Ánima atrapada en una lágrima de lava del tubo volcánico.'),
     (75, None, ['Aire'], 'tf-teno', ['lp-roque'], 'Guincho: águila pescadora de los acantilados.'),
     (59, None, ['Agua', 'Agua'], 'tf-gigantes', ['lg-organos', 'eh-restinga'],

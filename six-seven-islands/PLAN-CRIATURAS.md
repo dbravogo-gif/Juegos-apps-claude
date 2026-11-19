@@ -56,10 +56,10 @@ Todas cuadran: si no, el script no genera nada.
 
 | Isla | Especies nuevas | Criaturas | Por generar | Créditos |
 | --- | --- | --- | --- | --- |
-| Lanzarote | 46 | 47 | 13 | 195 |
+| Lanzarote | 47 | 47 | 13 | 195 |
 | Fuerteventura | 14 | 30 | 30 | 450 |
 | Gran Canaria | 25 | 37 | 37 | 555 |
-| Tenerife | 22 | 38 | 36 | 540 |
+| Tenerife | 23 | 38 | 36 | 540 |
 | La Gomera | 13 | 22 | 22 | 330 |
 | La Palma | 10 | 16 | 16 | 240 |
 | El Hierro | 11 | 13 | 13 | 195 |
@@ -79,8 +79,8 @@ Gimnasio de **Roca**, en la Capital, líder 11-12.
 
 | Zona | Niveles | Especies |
 | --- | --- | --- |
-| El Golfo | 3-5 | **Civeta** · **Ravich → Azurvan** · **Aculiso → Sierpajable** · **Dragosil → Dragombo → Dragalis** (rara) |
-| Montañas del Fuego | 5-7 | Civeta · **Quillflare → Quillfire → Quimfernum** · **Kotono → Koloi** · Oreps → Mineps → Colossoreps (rara) |
+| El Golfo | 3-5 | **Shimari → Shimarō** · **Ravich → Azurvan** · **Aculiso → Sierpajable** · **Dragosil → Dragombo → Dragalis** (rara) |
+| Montañas del Fuego | 5-7 | Shimari → Shimarō · **Quillflare → Quillfire → Quimfernum** · **Kotono → Koloi** · Oreps → Mineps → Colossoreps (rara) |
 | El Jable | 6-8 | Ravich → Azurvan · Kotono → Koloi (rara) · **Kine → Kurokin** · **Melaní → Favenir → Reginis** |
 | Famara | 6-8 | Aculiso → Sierpajable · **Oreps → Mineps → Colossoreps** (rara) · **Aerund → Marwen** · **Salmito → Salmarín → Salmástil** |
 | La Geria (leyenda) | tras la Liga | **«Leyenda verde»** |
@@ -137,7 +137,7 @@ Gimnasio de **Agua**, en el Puerto de la Cruz, líder 36-38; la Liga, en el Teid
 | La Laguna | 27-29 | «Conejo de jable» · «Gato del monte» · **«Farol»** · **«Aldaba»** (rara) |
 | Valle de La Orotava | 28-31 | «Conejo de jable» · «Perdiz» · «Gato del monte» · «Hurón» |
 | Puerto de la Cruz | 29-32 | «Erizo negro» · «Tembladera» · **«Tortuga boba»** · **«Vieja»** |
-| Cueva del Viento | 30-33 | «Murciélago de cueva» · **«Tortuga gigante»** · **«Dino de casco»** · **«Ánima de lava»** (rara) |
+| Cueva del Viento | 30-33 | «Murciélago de cueva» · **«Tortuga gigante»** · **Ishiro → Ishiradon** · **«Ánima de lava»** (rara) |
 | Teno y Masca | 31-34 | «Guirre» · Caprún → Roquén → Terracorn · Voltéro → Raigón · **«Guincho»** |
 | Los Gigantes (costa) | 32-35 | «Tortuga boba» · **«Delfín»** · **«Morena»** · **«Calamar gigante»** (rara) |
 | Las Cañadas | 33-36 | **Magmín → Lavtún → Teidrón** · **«Neverita»** · **«Escarcha»** · **«Tajinaste»** |
@@ -223,8 +223,8 @@ nombre lo pone el autor. La idea va en la primera forma de cada especie.
 | Pok13. Tsubomi | inicial-tierra-1 (hecha) | 1.ª | Tierra A | Propias (del autor) | 0,4 m | Inicial (museo de Lanzarote) | Por diseñar: la inicial del pueblo de los pueblos sepultados por el volcán. Una cría de tierra y ceniza que, al evolucionar, gana un aire espectral. Que no se parezca a las otras cuatro iniciales. |
 | Pok14. Tsuborei | inicial-tierra-2 (hecha) | 2.ª | Tierra/Espectral A | Propias (del autor) | 0,9 m |  |  |
 | Pok15. Sunaiki | inicial-tierra-3 (hecha) | 3.ª | Tierra/Espectral A | Propias (del autor) | 1,7 m |  |  |
-| Pok16. Civeta | 031-1 (hecha) | 1.ª | Común A | Zigzagoon (Q1, AF) | 0,4 m | El Golfo | Lámina del autor (civeta.jpg). |
-| Pok17. Civeta | 031-2 (hecha) | 2.ª | Común A | Linoone (Q3, AF) | 0,8 m |  |  |
+| Pok16. Shimari | 031-1 (hecha) | 1.ª | Común A | Zigzagoon (Q1, AF) | 0,4 m | El Golfo | Lámina del autor (civeta.jpg). |
+| Pok17. Shimarō | 031-2 (hecha) | 2.ª | Común A | Linoone (Q3, AF) | 0,8 m |  |  |
 | Pok18. Ravich | 032-1 (hecha) | 1.ª | Aire A | Taillow (Q1, AF) | 0,3 m | El Golfo | Hecha por el autor. |
 | Pok19. Azurvan | 032-2 (hecha) | 2.ª | Aire A | Swellow (Q3, AF) | 1,2 m |  |  |
 | Pok20. Aculiso | 037-1 (hecha) | 1.ª | Agua | Barboach (Q1, EN) | 0,3 m | El Golfo | Hecha por el autor. |
@@ -353,8 +353,8 @@ nombre lo pone el autor. La idea va en la primera forma de cada especie.
 | Pok128. Vieja | 074 | única | Agua | Luvdisc (Q2, EN) | 0,6 m | Puerto de la Cruz | Vieja: pez loro rojo y redondo de los charcos. |
 | Pok129. Tortuga gigante | 063-1 | 1.ª | Acero | Shieldon (Q2, TF) | 0,5 m | Cueva del Viento | Tortuga gigante de las islas, que se creía extinta: cría con caparazón de piedra; la 2.ª, coraza de piedra y hierro. |
 | Pok130. Tortuga gigante | 063-2 | 2.ª | Acero/Roca | Bastiodon (Q4, TF) | 1,5 m |  |  |
-| Pok131. Dino de casco | 062-1 (hecha) | 1.ª | Roca A | Cranidos (Q2, AF) | 0,9 m | Cueva del Viento | Lámina del autor (dino-casco-roca.jpg), recuperada el 2026-11-17: dinosaurio con casco de roca. Quizá lo use la líder de Lanzarote. |
-| Pok132. Dino de casco | 062-2 (hecha) | 2.ª | Roca A | Rampardos (Q4, AF) | 1,6 m |  |  |
+| Pok131. Ishiro | 062-1 (hecha) | 1.ª | Roca A | Cranidos (Q2, AF) | 0,9 m | Cueva del Viento | Lámina del autor (dino-casco-roca.jpg): dinosaurio con casco de roca. Ishiradon es la estrella de la líder de Roca. |
+| Pok132. Ishiradon | 062-2 (hecha) | 2.ª | Roca A | Rampardos (Q4, AF) | 1,6 m |  |  |
 | Pok133. Ánima de lava | 089 | única | Espectral | Spiritomb (Q4, EN) | 1,0 m | Cueva del Viento (rara) | Ánima atrapada en una lágrima de lava del tubo volcánico. |
 | Pok134. Guincho | 075 | única | Aire | Skarmory (Q3, TF) | 1,7 m | Teno y Masca | Guincho: águila pescadora de los acantilados. |
 | Pok135. Delfín | 059-1 | 1.ª | Agua | Buizel (Q2, AF) | 0,8 m | Los Gigantes (costa) | Delfín mular: cría juguetona; la 2.ª, delfín acróbata. |

@@ -136,11 +136,6 @@ Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
     otro: el plan entero son unos 3.000 (2.985 sin repeticiones);
   - generarlas en el orden de la lista, con Gemini guiando (`conceptos/criaturas/guia-gemini.txt`),
     y subir la imagen y el `.glb` de cada una, como «PokN. Nombre», a `conceptos/criaturas/meshy/`;
-  - subir las que ya tiene hechas, Pok16 a Pok24 y Pok131-132: en GitHub no ha llegado nada
-    (falta pulsar «Commit changes»), o adjuntarlas en el chat como el Excel; y decir si el
-    dinosaurio es el de la líder de Lanzarote;
-  - poner nombre a la civeta y a su evolución, y a las dos formas del dinosaurio (en el juego,
-    provisionales);
   - revisar las estadísticas propuestas para las iniciales (`src/data/combate-prueba.ts`);
   - revisar las estadísticas copiadas de memoria (`herramientas/criaturas/estadisticas.py`);
   - poner nombre a las que van con apodo («Guirre», «Basalto»…);

@@ -55,7 +55,7 @@ ATAQUES = {
 }
 
 # Nombres provisionales de las formas que aún no tienen el suyo (el autor los pone).
-PROVISIONAL = {'031-1': 'Civeta', '031-2': 'Civeta adulta', '062-1': 'Dino de casco', '062-2': 'Dino de casco adulto'}
+PROVISIONAL: dict[str, str] = {}
 
 
 def id_juego(archivo):

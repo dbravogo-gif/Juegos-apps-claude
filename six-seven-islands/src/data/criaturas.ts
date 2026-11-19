@@ -15,9 +15,9 @@ const base = (vida: number, fuerza: number, escudo: number, magia: number, resMa
 
 export const ESPECIES_CRIATURAS: readonly Especie[] = [
   // Pok16: Zigzagoon (Q1, AF).
-  { id: 'c031-1', nombre: 'Civeta', tipos: ['comun'], base: base(38, 30, 41, 30, 41, 60), expBase: 55, ratioCaptura: 200, aprende: [{ nivel: 1, movimiento: 'topetazo' }, { nivel: 1, movimiento: 'mirada-fija' }, { nivel: 9, movimiento: 'barrito' }], evoluciona: [{ a: 'c031-2', nivel: 20 }], altura: 0.4, descripcion: '' },
+  { id: 'c031-1', nombre: 'Shimari', tipos: ['comun'], base: base(38, 30, 41, 30, 41, 60), expBase: 55, ratioCaptura: 200, aprende: [{ nivel: 1, movimiento: 'topetazo' }, { nivel: 1, movimiento: 'mirada-fija' }, { nivel: 9, movimiento: 'barrito' }], evoluciona: [{ a: 'c031-2', nivel: 20 }], altura: 0.4, descripcion: '' },
   // Pok17: Linoone (Q3, AF).
-  { id: 'c031-2', nombre: 'Civeta adulta', tipos: ['comun'], base: base(78, 70, 61, 50, 61, 100), expBase: 140, ratioCaptura: 90, aprende: [{ nivel: 1, movimiento: 'topetazo' }, { nivel: 1, movimiento: 'mirada-fija' }, { nivel: 1, movimiento: 'barrito' }], altura: 0.8, descripcion: '' },
+  { id: 'c031-2', nombre: 'Shimarō', tipos: ['comun'], base: base(78, 70, 61, 50, 61, 100), expBase: 140, ratioCaptura: 90, aprende: [{ nivel: 1, movimiento: 'topetazo' }, { nivel: 1, movimiento: 'mirada-fija' }, { nivel: 1, movimiento: 'barrito' }], altura: 0.8, descripcion: '' },
   // Pok18: Taillow (Q1, AF).
   { id: 'c032-1', nombre: 'Ravich', tipos: ['aire'], base: base(40, 55, 30, 30, 30, 85), expBase: 55, ratioCaptura: 200, aprende: [{ nivel: 1, movimiento: 'topetazo' }, { nivel: 1, movimiento: 'mirada-fija' }, { nivel: 6, movimiento: 'picado' }], evoluciona: [{ a: 'c032-2', nivel: 22 }], altura: 0.3, descripcion: '' },
   // Pok19: Swellow (Q3, AF).
@@ -53,9 +53,9 @@ export const ESPECIES_CRIATURAS: readonly Especie[] = [
   // Pok34: Hariyama (Q3, AF).
   { id: 'c034-2', nombre: 'Kurokin', tipos: ['tierra'], base: base(144, 120, 60, 40, 60, 50), expBase: 140, ratioCaptura: 90, aprende: [{ nivel: 1, movimiento: 'pisoton' }, { nivel: 1, movimiento: 'arenazo' }, { nivel: 1, movimiento: 'topetazo' }, { nivel: 1, movimiento: 'barrito' }], altura: 1.2, descripcion: '' },
   // Pok131: Cranidos (Q2, AF).
-  { id: 'c062-1', nombre: 'Dino de casco', tipos: ['roca'], base: base(67, 125, 40, 30, 30, 58), expBase: 75, ratioCaptura: 150, aprende: [{ nivel: 1, movimiento: 'topetazo' }, { nivel: 1, movimiento: 'mirada-fija' }, { nivel: 1, movimiento: 'rodada-de-piedra' }], evoluciona: [{ a: 'c062-2', nivel: 30 }], altura: 0.9, descripcion: '' },
+  { id: 'c062-1', nombre: 'Ishiro', tipos: ['roca'], base: base(67, 125, 40, 30, 30, 58), expBase: 75, ratioCaptura: 150, aprende: [{ nivel: 1, movimiento: 'topetazo' }, { nivel: 1, movimiento: 'mirada-fija' }, { nivel: 1, movimiento: 'rodada-de-piedra' }], evoluciona: [{ a: 'c062-2', nivel: 30 }], altura: 0.9, descripcion: '' },
   // Pok132: Rampardos (Q4, AF).
-  { id: 'c062-2', nombre: 'Dino de casco adulto', tipos: ['roca'], base: base(97, 165, 60, 65, 50, 58), expBase: 170, ratioCaptura: 60, aprende: [{ nivel: 1, movimiento: 'rodada-de-piedra' }, { nivel: 1, movimiento: 'pisoton' }, { nivel: 1, movimiento: 'barrito' }, { nivel: 1, movimiento: 'topetazo' }], altura: 1.6, descripcion: '' },
+  { id: 'c062-2', nombre: 'Ishiradon', tipos: ['roca'], base: base(97, 165, 60, 65, 50, 58), expBase: 170, ratioCaptura: 60, aprende: [{ nivel: 1, movimiento: 'rodada-de-piedra' }, { nivel: 1, movimiento: 'pisoton' }, { nivel: 1, movimiento: 'barrito' }, { nivel: 1, movimiento: 'topetazo' }], altura: 1.6, descripcion: '' },
 ];
 
 /** El modelo de cada una, en public/modelos/. */
