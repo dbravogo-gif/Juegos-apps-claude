@@ -59,7 +59,7 @@ export function datosDeEjemplo(lunes, diaHoy = 0) {
   const db = { codigos: {}, atletas: {}, dispositivos: {}, sesiones: {}, registros: {} };
 
   const alta = (nombre, codigo, activo) => {
-    const a = { id: id(), nombre, codigo, estado: activo ? 'activo' : 'archivado' };
+    const a = { id: id(), nombre, codigo, activo, archivado: false };
     db.atletas[a.id] = a;
     db.codigos[codigo] = { atleta: a.id, activo };
     db.dispositivos[codigo] = {};
@@ -89,10 +89,12 @@ export function datosDeEjemplo(lunes, diaHoy = 0) {
   db.registros[laura.id][rodaje.id] = {
     sesion: rodaje.id, fecha: rodaje.fecha, hechos: rodaje.ejercicios.map((e) => e.id), esfuerzo: 4, duros: [],
     carrera: { [rodaje.ejercicios[1].id]: { distancia: 7.2, tiempo: 2400, ritmo: 333 } }, comentario: '',
+    actualizado: Date.parse(`${rodaje.fecha}T19:30:00Z`),
   };
   db.registros[laura.id][series.id] = {
     sesion: series.id, fecha: series.fecha, hechos: series.ejercicios.slice(0, 3).map((e) => e.id), esfuerzo: 9,
     duros: [series.ejercicios[2].id], carrera: {}, comentario: 'Las dos últimas series no llegué al ritmo.',
+    actualizado: Date.parse(`${series.fecha}T20:10:00Z`),
   };
   return db;
 }
