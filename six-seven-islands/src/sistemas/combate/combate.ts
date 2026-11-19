@@ -35,6 +35,7 @@ import {
   type Material,
   type Texture,
 } from 'three/webgpu';
+import { describirMovimiento } from '../../core/describir';
 import { iniciarCombate, reemplazar, resolverTurno, type Accion, type EstadoCombate, type Evento, type FichaCombate, type Resultado } from '../../core/combate';
 import { crearCriatura, nombreDe, objetoUtil } from '../../core/criatura';
 import type { Criatura } from '../../core/modelo';
@@ -143,6 +144,23 @@ const MAX_EQUIPO = 6;
 
 const NOMBRE_TIPO = new Map<string, string>(TIPOS.map((t) => [t.id, t.nombre]));
 const COLOR_TIPO = new Map<string, number>(TIPOS.map((t) => [t.id, t.color]));
+/**
+ * El icono de la categoría de un ataque, en un cuadradito (autor, 2026-11-19), dibujo propio:
+ * una pesa para los físicos (Fuerza), un destello para los mágicos (Magia) y dos flechas, sube y
+ * baja, para los de estado.
+ */
+const ICONO_CATEGORIA: Record<string, { color: string; dibujo: string; nombre: string }> = {
+  fisico: { color: '#C9542A', nombre: 'Físico (Fuerza)', dibujo: '<rect x="3" y="7" width="4" height="10" rx="1"/><rect x="17" y="7" width="4" height="10" rx="1"/><rect x="7" y="10.5" width="10" height="3"/>' },
+  magico: { color: '#4766CC', nombre: 'Mágico (Magia)', dibujo: '<path d="M12 3 L14 10 L21 12 L14 14 L12 21 L10 14 L3 12 L10 10 Z"/>' },
+  estado: { color: '#8A847E', nombre: 'De estado', dibujo: '<path d="M8 4 L12 9 H9.5 V20 H6.5 V9 H4 Z"/><path d="M16 20 L20 15 H17.5 V4 H14.5 V15 H12 Z"/>' },
+};
+const iconoCategoria = (categoria: string) => {
+  const i = ICONO_CATEGORIA[categoria] ?? ICONO_CATEGORIA.estado;
+  return `<svg class="combate-categoria" viewBox="0 0 24 24" role="img" aria-label="${i.nombre}"><title>${i.nombre}</title><rect width="24" height="24" rx="5" fill="${i.color}"/><g fill="#fff">${i.dibujo}</g></svg>`;
+};
+/** Los tipos de una criatura, en sus colores, para ponerlos bajo su nombre (autor, 2026-11-19). */
+const chipsTipos = (tipos: readonly string[]) =>
+  tipos.map((t) => `<i style="background:#${(COLOR_TIPO.get(t) ?? 0xa8a29e).toString(16).padStart(6, '0')}">${NOMBRE_TIPO.get(t) ?? t}</i>`).join('');
 const ESTADISTICA: Record<string, string> = { fuerza: 'la fuerza', escudo: 'el escudo', magia: 'la magia', resMagica: 'la resistencia mágica', celeridad: 'la celeridad' };
 
 type Fase = 'fuera' | 'entrando' | 'mensajes' | 'menu' | 'barra' | 'saliendo';
@@ -242,7 +260,9 @@ export class Combate implements Subsistema {
   private texto!: HTMLParagraphElement;
   private menu!: HTMLDivElement;
   private botones: HTMLSpanElement[] = [];
-  private fichas: { nombre: HTMLElement; nivel: HTMLElement; relleno: HTMLElement; numeros: HTMLElement | null }[] = [];
+  private fichas: { nombre: HTMLElement; nivel: HTMLElement; chips: HTMLElement; relleno: HTMLElement; numeros: HTMLElement | null }[] = [];
+  /** El último ataque elegido por cada criatura (por su uid): el cursor vuelve a él (autor, 2026-11-19). */
+  private ultimoAtaque = new Map<string, number>();
   private velo!: HTMLDivElement;
   /** La tabla de tipos (tecla T): qué le hace daño a la rival y qué a la tuya. */
   private panelTipos!: HTMLDivElement;
@@ -319,8 +339,8 @@ export class Combate implements Subsistema {
     raiz.hidden = true;
     raiz.innerHTML = `
       <div class="calima combate-clima" hidden aria-hidden="true"></div>
-      <div class="combate-ficha rival"><p class="combate-nombre"></p><p class="combate-nivel"></p><div class="combate-vida"><div class="combate-relleno"></div></div></div>
-      <div class="combate-ficha propia"><p class="combate-nombre"></p><p class="combate-nivel"></p><div class="combate-vida"><div class="combate-relleno"></div></div><p class="combate-numeros"></p></div>
+      <div class="combate-ficha rival"><p class="combate-nombre"></p><p class="combate-nivel"></p><p class="combate-chips"></p><div class="combate-vida"><div class="combate-relleno"></div></div></div>
+      <div class="combate-ficha propia"><p class="combate-nombre"></p><p class="combate-nivel"></p><p class="combate-chips"></p><div class="combate-vida"><div class="combate-relleno"></div></div><p class="combate-numeros"></p></div>
       <div class="combate-caja"><p class="combate-texto" aria-live="assertive"></p><div class="combate-menu" hidden></div></div>
       <div class="combate-tipos" hidden></div>
       <div class="combate-barra" hidden><i class="blanca"></i><i class="verde"></i><b class="flecha"></b></div>
@@ -351,6 +371,7 @@ export class Combate implements Subsistema {
       this.fichas.push({
         nombre: ficha.querySelector('.combate-nombre')!,
         nivel: ficha.querySelector('.combate-nivel')!,
+        chips: ficha.querySelector('.combate-chips')!,
         relleno: ficha.querySelector('.combate-relleno')!,
         numeros: ficha.querySelector('.combate-numeros'),
       });
@@ -964,7 +985,10 @@ export class Combate implements Subsistema {
           return {
             html: boton(mov.nombre, `<i style="background:${color}">${NOMBRE_TIPO.get(mov.tipo) ?? 'Común'}</i> PP ${m.pp}/${mov.pp}`),
             activa: m.pp > 0,
-            elegir: () => this.enviar({ tipo: 'movimiento', indice, objetivo: { lado: 1, hueco: 0 } }),
+            elegir: () => {
+              this.ultimoAtaque.set(c.uid, indice);
+              this.enviar({ tipo: 'movimiento', indice, objetivo: { lado: 1, hueco: 0 } });
+            },
           };
         });
         break;
@@ -1011,8 +1035,10 @@ export class Combate implements Subsistema {
       this.menu.append(b);
       return b;
     });
-    // Se empieza en la primera opción que se puede elegir.
+    // Se empieza en la primera opción que se puede elegir; en los ataques, en el último que usó.
     this.eleccion = Math.max(0, this.opciones.findIndex((o) => o.activa));
+    const ultimo = cual === 'ataques' ? this.ultimoAtaque.get(c.uid) : undefined;
+    if (ultimo !== undefined && this.opciones[ultimo]?.activa) this.eleccion = ultimo;
     this.pintarMenu();
   }
 
@@ -1038,6 +1064,19 @@ export class Combate implements Subsistema {
 
   private pintarMenu(): void {
     this.botones.forEach((b, i) => b.classList.toggle('elegido', i === this.eleccion));
+    // En los ataques, el texto de la izquierda explica el marcado (sin pistas en los botones).
+    if (this.fase === 'menu' && this.menuActual === 'ataques') {
+      const m = this.activa(0)?.movimientos[this.eleccion];
+      const mov = m && DATOS.movimientos[m.id];
+      if (m && mov) {
+        // Como en el género: un cuadradito con la categoría y, debajo, potencia, PP y efectos.
+        const d = describirMovimiento(mov);
+        const cifras = [d.cifras, `PP ${m.pp}/${mov.pp}`].filter(Boolean).join(' · ');
+        this.texto.innerHTML =
+          `<span class="combate-titulo-ataque">${iconoCategoria(mov.categoria)}<b>${mov.nombre}</b></span>` +
+          `<small>${cifras}</small>${d.efecto ? `<small>${d.efecto}</small>` : ''}<small class="combate-pista">T: tabla de tipos · X: volver</small>`;
+      }
+    }
   }
 
   private pintarFicha(lado: 0 | 1, deGolpe = false): void {
@@ -1046,6 +1085,7 @@ export class Combate implements Subsistema {
     const f = this.fichas[lado];
     f.nombre.textContent = nombreDe(c, DATOS);
     f.nivel.textContent = `Nv. ${c.nivel}`;
+    f.chips.innerHTML = chipsTipos(DATOS.especies[c.especie].tipos);
     if (deGolpe) this.pintarVida(lado, c.vida, vidaMaxima(c, DATOS), true);
   }
 
@@ -1057,6 +1097,7 @@ export class Combate implements Subsistema {
     const f = this.fichas[lado];
     f.nombre.textContent = ficha.nombre;
     f.nivel.textContent = `Nv. ${ficha.nivel}`;
+    f.chips.innerHTML = chipsTipos(DATOS.especies[ficha.especie].tipos);
     this.pintarVida(lado, ficha.vida, ficha.vidaMax, true);
   }
 
