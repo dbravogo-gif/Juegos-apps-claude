@@ -1560,3 +1560,10 @@ body {
   font: 700 12px/1.2 system-ui, -apple-system, 'Segoe UI', sans-serif;
   pointer-events: none;
 }
+
+/* Los iconos de los ataques, pequeños, en la leyenda de la tabla de tipos. */
+.combate-tipos-ayuda .combate-categoria {
+  width: 14px;
+  height: 14px;
+  vertical-align: -3px;
+}

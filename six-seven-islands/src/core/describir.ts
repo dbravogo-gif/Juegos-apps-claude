@@ -48,14 +48,15 @@ function efecto(e: Efecto): string {
  * contra el Escudo y los mágicos con la Magia contra la Resistencia mágica es lo normal y no se
  * dice (autor, 2026-11-19): solo lo que se salga de eso.
  */
-export function describirMovimiento(m: Movimiento): { cifras: string; efecto: string } {
+export function describirMovimiento(m: Movimiento, op: { variosRivales?: boolean } = {}): { cifras: string; efecto: string } {
   const cifras = [m.categoria === 'estado' ? null : `Potencia ${m.poder}`, m.precision !== null && m.precision < 100 ? `Precisión ${m.precision}` : null]
     .filter(Boolean)
     .join(' · ');
   const partes: string[] = [];
   if (m.descripcion) partes.push(m.descripcion);
   for (const e of m.efectos ?? []) partes.push(efecto(e));
-  if (m.objetivo === 'rivales') partes.push('Alcanza a todos los rivales.');
+  // En un 1 contra 1 no tiene sentido decirlo (probador, 2026-11-19).
+  if (m.objetivo === 'rivales' && op.variosRivales) partes.push('Alcanza a todos los rivales.');
   if ((m.prioridad ?? 0) > 0) partes.push('Va antes que los demás.');
   else if ((m.prioridad ?? 0) < 0) partes.push('Va después que los demás.');
   return { cifras, efecto: partes.join(' ') };

@@ -8,10 +8,13 @@
 
 import {
   AdditiveBlending,
+  BackSide,
+  Box3,
   BufferGeometry,
   CanvasTexture,
   CircleGeometry,
   Color,
+  DoubleSide,
   CylinderGeometry,
   Float32BufferAttribute,
   Group,
@@ -87,6 +90,11 @@ const CIRCULOS_SELLO: readonly [number, number][] = [
   ...Array.from({ length: 6 }, (_, i): [number, number] => [Math.cos((i * Math.PI) / 3) * 0.55, Math.sin((i * Math.PI) / 3) * 0.55]),
   ...Array.from({ length: 6 }, (_, i): [number, number] => [Math.cos((i * Math.PI) / 3) * 1.1, Math.sin((i * Math.PI) / 3) * 1.1]),
 ];
+/**
+ * El Sello, a este tamaño: entero llegaba a 1,39 del centro y el relieve de la isla se comía los
+ * círculos de fuera (probador, 2026-11-19). Así llega a 1,08, dentro del suelo liso.
+ */
+const ESCALA_SELLO = 0.78;
 const MIRA = new Vector3(0.15, 0.4, 0);
 /** El cubo de captura con que sale cada criatura (por ahora, el blanco, el básico). */
 const CUBO: [number, number] = [0, 0];
@@ -110,7 +118,8 @@ const COLOR_TIPO = new Map<string, number>(TIPOS.map((t) => [t.id, t.color]));
  * baja, para los de estado.
  */
 const ICONO_CATEGORIA: Record<string, { color: string; dibujo: string; nombre: string }> = {
-  fisico: { color: '#C9542A', nombre: 'Físico (Fuerza)', dibujo: '<rect x="3" y="7" width="4" height="10" rx="1"/><rect x="17" y="7" width="4" height="10" rx="1"/><rect x="7" y="10.5" width="10" height="3"/>' },
+  // La pesa, en diagonal y con discos redondos: recta, a su tamaño, parecía una «H» (probador).
+  fisico: { color: '#C9542A', nombre: 'Físico (Fuerza)', dibujo: '<g transform="rotate(-40 12 12)"><rect x="6" y="10.6" width="12" height="2.8" rx="1"/><circle cx="5.2" cy="12" r="3.6"/><circle cx="18.8" cy="12" r="3.6"/></g>' },
   magico: { color: '#4766CC', nombre: 'Mágico (Magia)', dibujo: '<path d="M12 3 L14 10 L21 12 L14 14 L12 21 L10 14 L3 12 L10 10 Z"/>' },
   estado: { color: '#8A847E', nombre: 'De estado', dibujo: '<path d="M8 4 L12 9 H9.5 V20 H6.5 V9 H4 Z"/><path d="M16 20 L20 15 H17.5 V4 H14.5 V15 H12 Z"/>' },
 };
@@ -118,9 +127,18 @@ const iconoCategoria = (categoria: string) => {
   const i = ICONO_CATEGORIA[categoria] ?? ICONO_CATEGORIA.estado;
   return `<svg class="combate-categoria" viewBox="0 0 24 24" role="img" aria-label="${i.nombre}"><title>${i.nombre}</title><rect width="24" height="24" rx="5" fill="${i.color}"/><g fill="#fff">${i.dibujo}</g></svg>`;
 };
+/**
+ * La etiqueta de un tipo, en su color. Con letra oscura en los tipos claros: blanca sobre Hielo,
+ * Aire o Eléctrico no se leía (probador, 2026-11-19).
+ */
+function chipTipo(t: string): string {
+  const color = COLOR_TIPO.get(t) ?? 0xa8a29e;
+  const c = new Color(color);
+  const luz = 0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b;
+  return `<i style="background:#${color.toString(16).padStart(6, '0')};color:${luz > 0.42 ? '#2B2320' : '#FFFFFF'}">${NOMBRE_TIPO.get(t) ?? t}</i>`;
+}
 /** Los tipos de una criatura, en sus colores, para ponerlos bajo su nombre (autor, 2026-11-19). */
-const chipsTipos = (tipos: readonly string[]) =>
-  tipos.map((t) => `<i style="background:#${(COLOR_TIPO.get(t) ?? 0xa8a29e).toString(16).padStart(6, '0')}">${NOMBRE_TIPO.get(t) ?? t}</i>`).join('');
+const chipsTipos = (tipos: readonly string[]) => tipos.map(chipTipo).join('');
 const ESTADISTICA: Record<string, string> = { fuerza: 'la fuerza', escudo: 'el escudo', magia: 'la magia', resMagica: 'la resistencia mágica', celeridad: 'la celeridad' };
 
 type Fase = 'fuera' | 'entrando' | 'mensajes' | 'menu' | 'barra' | 'saliendo';
@@ -221,8 +239,8 @@ export class Combate implements Subsistema {
   private menu!: HTMLDivElement;
   private botones: HTMLSpanElement[] = [];
   private fichas: { nombre: HTMLElement; nivel: HTMLElement; chips: HTMLElement; relleno: HTMLElement; numeros: HTMLElement | null }[] = [];
-  /** El último ataque elegido por cada criatura (por su uid): el cursor vuelve a él (autor, 2026-11-19). */
-  private ultimoAtaque = new Map<string, number>();
+  /** El último ataque elegido por cada criatura (uid → id del ataque): el cursor vuelve a él (autor, 2026-11-19). */
+  private ultimoAtaque = new Map<string, string>();
   private velo!: HTMLDivElement;
   /** La tabla de tipos (tecla T): qué le hace daño a la rival y qué a la tuya. */
   private panelTipos!: HTMLDivElement;
@@ -941,12 +959,11 @@ export class Combate implements Subsistema {
         texto = `¿Qué hará ${nombre}? (T: tabla de tipos · X: volver)`;
         this.opciones = c.movimientos.map((m, indice) => {
           const mov = DATOS.movimientos[m.id];
-          const color = `#${(COLOR_TIPO.get(mov.tipo) ?? 0xa8a29e).toString(16).padStart(6, '0')}`;
           return {
-            html: boton(mov.nombre, `<i style="background:${color}">${NOMBRE_TIPO.get(mov.tipo) ?? 'Común'}</i> PP ${m.pp}/${mov.pp}`),
+            html: boton(mov.nombre, `${chipTipo(mov.tipo || 'comun')} PP ${m.pp}/${mov.pp}`),
             activa: m.pp > 0,
             elegir: () => {
-              this.ultimoAtaque.set(c.uid, indice);
+              this.ultimoAtaque.set(c.uid, m.id);
               this.enviar({ tipo: 'movimiento', indice, objetivo: { lado: 1, hueco: 0 } });
             },
           };
@@ -997,8 +1014,8 @@ export class Combate implements Subsistema {
     });
     // Se empieza en la primera opción que se puede elegir; en los ataques, en el último que usó.
     this.eleccion = Math.max(0, this.opciones.findIndex((o) => o.activa));
-    const ultimo = cual === 'ataques' ? this.ultimoAtaque.get(c.uid) : undefined;
-    if (ultimo !== undefined && this.opciones[ultimo]?.activa) this.eleccion = ultimo;
+    const ultimo = cual === 'ataques' ? c.movimientos.findIndex((m) => m.id === this.ultimoAtaque.get(c.uid)) : -1;
+    if (ultimo >= 0 && this.opciones[ultimo]?.activa) this.eleccion = ultimo;
     this.pintarMenu();
   }
 
@@ -1011,13 +1028,13 @@ export class Combate implements Subsistema {
     const rival = this.activa(1);
     const propia = this.activa(0);
     if (!rival || !propia) return;
-    const chip = (t: string) => `<i style="background:#${(COLOR_TIPO.get(t) ?? 0xa8a29e).toString(16).padStart(6, '0')}">${NOMBRE_TIPO.get(t) ?? t}</i>`;
+    const chip = chipTipo;
     const fila = (titulo: string, tipos: string[]) => (tipos.length ? `<p><b>${titulo}</b> ${tipos.map(chip).join(' ')}</p>` : '');
     const bloque = (quien: string, tipos: readonly string[]) => {
       const g = gruposContra(DATOS.tipos, tipos);
       return `<h3>${quien} ${tipos.map(chip).join(' ')}</h3>${fila('Le hacen mucho daño:', g.mucho)}${fila('Le hacen poco:', g.poco)}${fila('No le afectan:', g.nada)}`;
     };
-    this.panelTipos.innerHTML = `${bloque(nombreDe(rival, DATOS), DATOS.especies[rival.especie].tipos)}${bloque(`Tu ${nombreDe(propia, DATOS)}`, DATOS.especies[propia.especie].tipos)}<p class="combate-tipos-ayuda">T o X: cerrar</p>`;
+    this.panelTipos.innerHTML = `${bloque(nombreDe(rival, DATOS), DATOS.especies[rival.especie].tipos)}${bloque(`Tu ${nombreDe(propia, DATOS)}`, DATOS.especies[propia.especie].tipos)}<p class="combate-tipos-ayuda">Ataques: ${iconoCategoria('fisico')} físico · ${iconoCategoria('magico')} mágico · ${iconoCategoria('estado')} de estado</p><p class="combate-tipos-ayuda">T o X: cerrar</p>`;
     this.panelTipos.hidden = false;
     this.ctx.eventos.emit('sonido:tocar', { nombre: 'seleccion' });
   }
@@ -1030,11 +1047,12 @@ export class Combate implements Subsistema {
       const mov = m && DATOS.movimientos[m.id];
       if (m && mov) {
         // Como en el género: un cuadradito con la categoría y, debajo, potencia, PP y efectos.
-        const d = describirMovimiento(mov);
+        const d = describirMovimiento(mov, { variosRivales: (this.estado?.lados[1].activos.length ?? 1) > 1 });
         const cifras = [d.cifras, `PP ${m.pp}/${mov.pp}`].filter(Boolean).join(' · ');
+        // La línea del efecto, siempre (vacía si no hay): sin ella, el título saltaba 12 px.
         this.texto.innerHTML =
           `<span class="combate-titulo-ataque">${iconoCategoria(mov.categoria)}<b>${mov.nombre}</b></span>` +
-          `<small>${cifras}</small>${d.efecto ? `<small>${d.efecto}</small>` : ''}<small class="combate-pista">T: tabla de tipos · X: volver</small>`;
+          `<small>${cifras}</small><small class="combate-efecto">${d.efecto || '&nbsp;'}</small><small class="combate-pista">T: tabla de tipos · X: volver</small>`;
       }
     }
   }
@@ -1151,11 +1169,16 @@ export class Combate implements Subsistema {
     const matCirculo = material(new MeshBasicNodeMaterial({ color: '#fffaf0', transparent: true, depthWrite: false }));
     const matMota = material(new MeshBasicNodeMaterial({ color, transparent: true, depthWrite: false }));
     const matSilueta = material(new MeshBasicNodeMaterial({ color: color.clone().lerp(new Color('#ffffff'), 0.2) }));
+    // Un contorno oscuro alrededor de la silueta: del color del tipo, sobre una isla de su tipo, no
+    // se distinguía (probador, 2026-11-19: contraste de 1,06 en Roca).
+    const matHalo = material(new MeshBasicNodeMaterial({ color: '#2B2320', side: BackSide }));
     const matSuelo = material(new MeshBasicNodeMaterial({ color: '#ffffff', transparent: true, opacity: 0, depthWrite: false }));
     const matLineas = material(new LineBasicNodeMaterial({ color: '#fffaf0', transparent: true, opacity: 0, depthWrite: false }));
-    const matDestello = material(new MeshBasicNodeMaterial({ color, transparent: true, opacity: 0, depthWrite: false }));
+    // El fogonazo, con luz que se suma (no un disco plano), y una onda que recorre el suelo.
+    const matDestello = material(new MeshBasicNodeMaterial({ color: color.clone().lerp(new Color('#ffffff'), 0.5), transparent: true, opacity: 0, depthWrite: false, blending: AdditiveBlending }));
+    const matOnda = material(new MeshBasicNodeMaterial({ color: '#ffffff', transparent: true, opacity: 0, depthWrite: false, side: DoubleSide }));
     const anillo = new RingGeometry(0.24, 0.285, 48);
-    const disco = new CircleGeometry(1.35, 48);
+    const disco = new CircleGeometry(1.35 * ESCALA_SELLO, 48);
     const esfera = new SphereGeometry(0.5, 40, 24);
     const mota = new SphereGeometry(0.035, 6, 4);
     // Las líneas del cubo de Metatrón: todos los centros unidos entre sí.
@@ -1163,7 +1186,8 @@ export class Combate implements Subsistema {
     CIRCULOS_SELLO.forEach(([x1, z1], i) => CIRCULOS_SELLO.slice(i + 1).forEach(([x2, z2]) => puntos.push(x1, 0.03, z1, x2, 0.03, z2)));
     const geoLineas = new BufferGeometry();
     geoLineas.setAttribute('position', new Float32BufferAttribute(puntos, 3));
-    nuevos.push(anillo, disco, esfera, mota, geoLineas);
+    const geoOnda = new RingGeometry(0.85, 1, 72);
+    nuevos.push(anillo, disco, esfera, mota, geoLineas, geoOnda);
     // La isla de su tipo y lo que cae alrededor (escenario-evolucion.ts; autor, 2026-11-19).
     const semilla = [...`${uid}>${a}`].reduce((h, letra) => (Math.imul(h, 31) + letra.charCodeAt(0)) >>> 0, 7);
     const escenario = crearEscenarioEvolucion(especieNueva.tipos[0], semilla);
@@ -1174,6 +1198,7 @@ export class Combate implements Subsistema {
     suelo.position.y = 0.01;
     const lineas = new LineSegments(geoLineas, matLineas);
     const sello = new Group();
+    sello.scale.setScalar(ESCALA_SELLO);
     sello.add(lineas);
     const circulos = CIRCULOS_SELLO.map(([x, z]) => {
       const m = new Mesh(anillo, matCirculo);
@@ -1192,17 +1217,46 @@ export class Combate implements Subsistema {
     });
     const destello = new Mesh(esfera, matDestello);
     destello.visible = false;
+    const onda = new Mesh(geoOnda, matOnda);
+    onda.rotation.x = -Math.PI / 2;
+    onda.position.y = 0.04;
+    onda.visible = false;
+    grupo.add(onda);
     grupo.add(escenario.grupo, suelo, sello, destello);
     const originales = new Map<Mesh, Material | Material[]>();
-    const silueta = (f: Group, si: boolean) =>
+    const halos = new Map<Group, Object3D>();
+    const silueta = (f: Group, si: boolean) => {
       f.traverse((o) => {
         const m = o as Mesh;
-        if (!m.isMesh) return;
+        if (!m.isMesh || m.userData.halo) return;
         if (si) {
           if (!originales.has(m)) originales.set(m, m.material);
           m.material = matSilueta;
         } else if (originales.has(m)) m.material = originales.get(m)!;
       });
+      if (si && !halos.has(f)) {
+        // Una copia un 6 % mayor, por dentro y oscura, centrada en la caja de la figura.
+        const h = f.clone(true);
+        h.position.set(0, 0, 0);
+        h.rotation.set(0, 0, 0);
+        h.scale.set(1, 1, 1);
+        h.updateMatrixWorld(true);
+        const centro = new Box3().setFromObject(h).getCenter(new Vector3());
+        h.scale.setScalar(1.06);
+        h.position.copy(centro).multiplyScalar(-0.06);
+        h.userData.halo = true;
+        h.traverse((o) => {
+          const m = o as Mesh;
+          m.userData.halo = true;
+          if (m.isMesh) m.material = matHalo;
+        });
+        f.add(h);
+        halos.set(f, h);
+      } else if (!si && halos.has(f)) {
+        halos.get(f)!.removeFromParent();
+        halos.delete(f);
+      }
+    };
     const motasSuben = (tiempo: number) => {
       for (const m of motas) {
         const { a: ang, r, fase } = m.userData as { a: number; r: number; fase: number };
@@ -1212,7 +1266,10 @@ export class Combate implements Subsistema {
         m.scale.setScalar(1 - k);
       }
     };
-    const respirar = (f: Group) => f.scale.set(1, 1 + Math.sin(this.reloj * 2.4) * 0.025, 1);
+    // Las pequeñas se perdían en la isla (probador: Shimari, 70 px de 800): en la evolución se ven
+    // al menos de 1,15 de alto, sin cambiar la proporción entre las dos formas.
+    const k = Math.min(1.7, Math.max(1, 1.15 / Math.max(this.altos.get(uid) ?? 1, nueva.alto)));
+    const respirar = (f: Group) => f.scale.set(k, k * (1 + Math.sin(this.reloj * 2.4) * 0.025), k);
     const fichas = () => this.fichas.map((f) => f.nombre.parentElement!);
     const cancelada = () => this.evolucion?.cancelada ?? false;
     this.encolar({
@@ -1235,7 +1292,7 @@ export class Combate implements Subsistema {
         }
         vieja.position.set(0, 0, 0);
         vieja.rotation.y = 0.35;
-        vieja.scale.setScalar(1);
+        vieja.scale.setScalar(k);
         vieja.visible = true;
         grupo.add(vieja);
         this.arena.add(grupo);
@@ -1262,7 +1319,7 @@ export class Combate implements Subsistema {
         }
         silueta(vieja, true);
         nueva.figura.position.set(0, 0, 0);
-        nueva.figura.scale.setScalar(1);
+        nueva.figura.scale.setScalar(k);
         silueta(nueva.figura, true);
         grupo.add(nueva.figura);
       },
@@ -1279,18 +1336,19 @@ export class Combate implements Subsistema {
         vieja.visible = !nuevaSe;
         nueva.figura.visible = nuevaSe;
         const pulso = 1 + Math.abs(fase) * 0.06;
-        vieja.scale.setScalar(pulso);
-        nueva.figura.scale.setScalar(pulso);
+        vieja.scale.setScalar(pulso * k);
+        nueva.figura.scale.setScalar(pulso * k);
         sello.rotation.y = this.reloj * (0.25 + t * 1.4);
         matSuelo.opacity = 0.18 + t * 0.14;
         motasSuben(this.reloj * (1 + t * 2));
       },
     });
     this.encolar({
-      duracion: 2.8,
+      duracion: 3.6,
       saltable: true,
-      // La forma nueva se ve un rato antes de poder pasar el mensaje (probador: con Enter no se veía).
-      minimo: 1.8,
+      // La forma nueva se ve un rato antes de poder pasar el mensaje (probador: con Enter no se veía;
+      // y el remate se quedaba corto, 2026-11-19).
+      minimo: 2.4,
       empezar: () => {
         const ev = this.evolucion!;
         ev.parable = false;
@@ -1298,7 +1356,7 @@ export class Combate implements Subsistema {
         if (ev.cancelada) {
           nueva.figura.removeFromParent();
           vieja.visible = true;
-          vieja.scale.setScalar(1);
+          vieja.scale.setScalar(k);
           this.texto.textContent = `${nombre} se aparta del Sello y sigue igual.`;
           this.ctx.eventos.emit('sonido:tocar', { nombre: 'atras' });
           return;
@@ -1313,7 +1371,7 @@ export class Combate implements Subsistema {
         const i = lista.findIndex((c) => c.uid === uid);
         lista[i] = evolucionar(lista[i]!, a, DATOS);
         destello.visible = true;
-        destello.position.set(0, nueva.alto * 0.5, 0);
+        destello.position.set(0, nueva.alto * k * 0.5, 0);
         this.texto.textContent = `¡${nombre} es ahora ${especieNueva.nombre}!`;
         this.ctx.eventos.emit('sonido:tocar', { nombre: 'captura' });
       },
@@ -1332,6 +1390,9 @@ export class Combate implements Subsistema {
         const k = Math.min(1, t * 2.5);
         destello.scale.setScalar(0.5 + k * 3.2);
         matDestello.opacity = 0.55 * (1 - k);
+        onda.visible = k < 1;
+        onda.scale.setScalar(0.3 + k * 2.6);
+        matOnda.opacity = 0.8 * (1 - k);
         this.velo.style.cssText = `opacity:${Math.max(0, 0.9 - t * 4)};background:#ffffff`;
         circulos.forEach((c, i) => {
           const [x, z] = CIRCULOS_SELLO[i]!;
@@ -1340,7 +1401,7 @@ export class Combate implements Subsistema {
         });
         matLineas.opacity = Math.max(0, 0.8 * (1 - k * 2));
         matSuelo.opacity = 0.32 * (1 - t * 0.5);
-        nueva.figura.scale.setScalar(rebote(Math.min(1, t * 1.8)));
+        nueva.figura.scale.setScalar(k * rebote(Math.min(1, t * 1.8)));
         if (t > 0.6) respirar(nueva.figura);
         for (const m of motas) m.visible = false;
       },

@@ -15,7 +15,8 @@ describe('describir un ataque', () => {
   it('los de estado: sin poder, y lo que suben o bajan', () => {
     expect(de('caparazon')).toEqual({ cifras: '', efecto: 'Sube tu Escudo.' });
     expect(de('mirada-fija').cifras).toBe('');
-    expect(de('mirada-fija').efecto).toMatch(/^Baja el Escudo del rival\. Alcanza a todos los rivales\.$/);
+    expect(de('mirada-fija').efecto).toBe('Baja el Escudo del rival.');
+    expect(describirMovimiento(DATOS.movimientos['mirada-fija'], { variosRivales: true }).efecto).toBe('Baja el Escudo del rival. Alcanza a todos los rivales.');
   });
 
   it('ningún texto sale roto, y los de estado siempre dicen lo que hacen', () => {

@@ -340,6 +340,15 @@ dos formas y el destello. Lo nuestro (revisado con el probador y el autor):
     rebotan y levantan polvo, gotas que salpican; las brasas, burbujas y motas suben;
   - la luz de abajo de la escena es la del suelo verde de la isla del juego: la isla lleva luz propia
     (más en las caras que miran abajo) para que el peñón no salga negro y verdoso;
+  - tras la revisión del probador (2026-11-19):
+    - el Sello, al 78 %, cabe entero en el suelo liso;
+    - la silueta lleva un contorno oscuro para que se lea sobre cualquier suelo;
+    - las criaturas pequeñas se ven al menos de 1,15 de alto;
+    - lo que cae no pasa por delante de la criatura;
+    - el destello suma luz y lanza una onda por el suelo;
+    - la forma nueva se ve 2,4 s antes de poder pasar;
+    - Infernal (roca rojiza y lava), Aire (isla azulada y nubes con luz propia) y Común (corro de
+      piedras y hierba seca) tienen más carácter;
 - **el Sello de la historia se dibuja sobre la plataforma,** en claro: los trece círculos del cubo
   de Metatrón, que se tocan, y después las líneas que unen sus centros;
 - la criatura, hecha silueta del color de su tipo, late entre su forma y la nueva;
