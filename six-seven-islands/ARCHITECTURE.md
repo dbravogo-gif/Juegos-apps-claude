@@ -148,7 +148,7 @@ export class Sistema implements Subsistema {
 | `depuracion` | `src/sistemas/depuracion/` | El panel de ajustes (solo en desarrollo) y los ganchos de `window.__JUEGO__` |
 | (vista `?mapa`) | `src/sistemas/mapa/` | Herramienta y base del mapa del juego: el plano 2D de la isla 1 a pantalla completa, sin 3D. `?mapa=12` fija 12 píxeles por casilla |
 | `inicio` | `src/sistemas/inicio/` | La portada de una partida nueva: elegir persona (las jugables de `arte/personas.ts`) y escribir el nombre. Sale mientras «partida» está en modo «titulo» |
-| `sonido` | `src/sistemas/sonido/` | Con Web Audio y sin archivos. Efectos (tabla `EFECTOS`; los pasos, según el terreno: hierba alta, malpaís o arena). Música (`MUSICA`): temas escritos como datos (acordes, bajo, punteo, melodía y percusión) con eco de sala; explorar es un vals con timple y combate va en Mi menor. Ambiente por zona (`AMBIENTE`: mar, viento, volcán y pájaros), casi apagado dentro de los edificios y bajo en combate. Arranca con la primera tecla y se silencia desde el menú |
+| `sonido` | `src/sistemas/sonido/` | Con Web Audio y sin archivos. Efectos (tabla `EFECTOS`; los pasos, según el terreno: hierba alta, malpaís o arena). Música (`MUSICA`): temas escritos como datos (acordes, bajo, punteo, melodía y percusión) con eco de sala; explorar es un vals con timple y combate va en Mi menor. Música grabada (`musica-grabada.ts`, puro, y `src/assets/musica/<lista>/`): si hay pista para la situación, suena en bucle en lugar de la de código; el build incluye solo las que haya. Ambiente por zona (`AMBIENTE`: mar, viento, volcán y pájaros), casi apagado dentro de los edificios y bajo en combate. Arranca con la primera tecla y se silencia desde el menú |
 | `menu` | `src/sistemas/menu/` | El menú de pausa (Z o Esc explorando): equipo (rejilla con Datos, Mover y Objeto), mochila por bolsillos (`data/bolsillos.ts`, dibujada con `arte/mochila.ts`), medallero, mapa y opciones (sonido, exportar o importar la partida, nueva partida), y la tienda. Cambia el orden del equipo y gasta objetos de «partida». Las medallas salen de `data/medallas.ts` y se dibujan con `arte/pintaderas.ts` (SVG por código, puro) |
 | `catalogo` | `src/sistemas/catalogo/` | Herramienta, no juego: con `?catalogo` o `?catalogo=edificios`, las piezas propias del mundo en fila, con la luz y la cámara del juego; ← → acercan la cámara a cada una |
 | `prueba` | `src/sistemas/prueba/` | **Temporal:** la vitrina de la prueba de arte (`F04`), con `?vitrina`. Se queda para probar los modelos de Meshy; se borra cuando las criaturas entren en el juego |
@@ -176,6 +176,7 @@ export class Sistema implements Subsistema {
 | `jugador:elegido` | `{ nombre, persona }` | `partida` |
 | `sonido:tocar` | `{ nombre }` | `partida`, `combate`, `menu`, `inicio` |
 | `sonido:alternar` | `{}` | `menu` |
+| `combate:rival` | `{ entrenador, soloEvolucion? }` | `combate` (al empezar: la música se elige por el rival) |
 | `medalla:ganada` | `{ isla }` | `partida` (al volver de vencer a un líder) |
 | `calidad:cambio` | `{ nivel }` | `depuracion` |
 | `objeto:recogido` | `{ id, objeto }` | `partida` |

@@ -11,5 +11,16 @@ Recursos de terceros que usa el juego, con su licencia comprobada (R8).
   pantalla de créditos, también en el juego.
 - **Cambios:** se quitaron las animaciones que no se usan y se cambió el material
   (`herramientas/recursos-kaykit.mjs` y `ARTE.md`).
+- **Música (2026-11-20):** pistas de [Pixabay](https://pixabay.com/service/license-summary/) en
+  `src/assets/musica/<lista>/`, elegidas por el autor. Licencia de Pixabay: uso gratis en juegos,
+  también comerciales, sin atribución obligatoria; no se pueden vender ni repartir sueltas. Algunas
+  están registradas en Content ID de YouTube: si se sube un vídeo del juego, puede salir un aviso
+  (se resuelve con el certificado de la pista). Cada pista, con su autor y su número, en la tabla
+  de abajo cuando llegue.
+
+| Pista | Autor | Lista | Página |
+| --- | --- | --- | --- |
+| (ninguna todavía) | | | |
+
 - **Ya no se usa** el *Medieval Hexagon Pack* (montañas y nubes hasta el 2026-11-10): el paisaje
   es todo por código.

@@ -370,6 +370,7 @@ export class Combate implements Subsistema {
     if (this.fase !== 'fuera' || !this.partida.equipo.some((c) => c.vida > 0)) return;
     this.fase = 'entrando';
     this.entrenador = entrenador;
+    this.ctx.eventos.emit('combate:rival', { entrenador });
     this.partida.empezarCombate();
     // Que no asome el texto ni el menú del combate anterior mientras se aclara la arena.
     this.texto.textContent = '';
@@ -438,6 +439,7 @@ export class Combate implements Subsistema {
     if (!evoluciones.length) return;
     this.fase = 'entrando';
     this.entrenador = null;
+    this.ctx.eventos.emit('combate:rival', { entrenador: null, soloEvolucion: true });
     this.partida.empezarCombate();
     this.texto.textContent = '';
     this.menu.hidden = true;

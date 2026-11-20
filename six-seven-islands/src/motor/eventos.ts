@@ -37,6 +37,8 @@ export interface MapaEventos {
   'amigo:nombrar': { id: string };
   /** Se zarpa hacia otra isla (justo antes de recargar en ella). */
   'jugador:viaja': { isla: number };
+  /** Empieza un combate (o una evolución fuera de combate): la música se elige por el rival. */
+  'combate:rival': { entrenador: string | null; soloEvolucion?: boolean };
   /** Que suene un efecto de la tabla EFECTOS de «sonido». */
   'sonido:tocar': { nombre: string };
   /** Activar o silenciar el sonido. */
