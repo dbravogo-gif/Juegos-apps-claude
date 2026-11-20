@@ -66,9 +66,9 @@ export function icono(nombre, etiqueta) {
 
 let tostadaActual = null;
 /** Aviso breve abajo. Opcional: un botón de acción. */
-export function tostada(texto, { accion, alPulsar, duracion = 3500 } = {}) {
+export function tostada(texto, { accion, alPulsar, duracion = 3500, arriba = false } = {}) {
   tostadaActual?.remove();
-  const el = h('div', { class: 'tostada', role: 'status' }, h('span', {}, texto),
+  const el = h('div', { class: `tostada${arriba ? ' arriba' : ''}`, role: 'status' }, h('span', {}, texto),
     accion ? h('button', { type: 'button', onclick: () => { el.remove(); alPulsar?.(); } }, accion) : null);
   document.body.append(el);
   tostadaActual = el;
