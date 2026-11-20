@@ -200,3 +200,5 @@ nivel: de nota a regla, y de regla a prueba o hook.
     cambiado el turno de pantalla (`ctx.turno`). `pruebas-reglas: npm run e2e` lo comprueba con
     latencia de red móvil. Comprobado que falla sin la protección.
   - En local (127.0.0.1) todo responde al instante: un retardo de red solo se ve emulándolo.
+  - También tapaba los botones el aviso fijo «Hay una versión nueva», pegado abajo. Ahora va arriba;
+    comprobado con `elementFromPoint` que el botón principal queda libre.

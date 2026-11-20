@@ -12,8 +12,9 @@ export function registrarServiceWorker(ruta) {
     location.reload();
   });
   navigator.serviceWorker.register(ruta).then((reg) => {
+    // Arriba: un aviso que se queda abajo tapa los botones principales y «se come» los toques.
     const avisar = (sw) => tostada('Hay una versión nueva de Beep', {
-      accion: 'Actualizar', duracion: 0, alPulsar: () => { pidioActualizar = true; sw.postMessage({ tipo: 'actualizar' }); },
+      accion: 'Actualizar', duracion: 0, arriba: true, alPulsar: () => { pidioActualizar = true; sw.postMessage({ tipo: 'actualizar' }); },
     });
     if (reg.waiting && navigator.serviceWorker.controller) avisar(reg.waiting);
     reg.addEventListener('updatefound', () => {
