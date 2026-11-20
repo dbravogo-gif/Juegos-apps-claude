@@ -32,6 +32,7 @@ export interface GanchosJuego {
   viajar(isla: number): void;
   /** Empieza un combate contra una salvaje de esa especie y nivel. */
   salvaje(especie: string, nivel?: number): void;
+  probarEvolucion(tipo: string): void;
   contadores(): Contadores;
   calidad(nivel: NivelCalidad): void;
 }
@@ -99,6 +100,11 @@ export class Depuracion implements Subsistema {
       salvaje: (especie, nivel = 5) => {
         if (!DATOS_COMBATE_PRUEBA.especies[especie]) throw new Error(`Especie desconocida: «${especie}»`);
         ctx.eventos.emit('encuentro:inicio', { salvajes: [crearCriatura(DATOS_COMBATE_PRUEBA, especie, nivel, ctx.rng)], visible: false });
+      },
+      // La escena de evolución de un tipo, aunque aún no haya criaturas de él (como en el menú de desarrollador).
+      probarEvolucion: (tipo) => {
+        if (!ctx.tiene('partida')) throw new Error('En la vitrina no hay partida');
+        ctx.get<Subsistema & { probarEvolucion(t: string): void }>('partida').probarEvolucion(tipo);
       },
       contadores: () => this.render.contadores(),
       calidad: cambiarCalidad,

@@ -37,6 +37,7 @@ import {
   CircleGeometry,
 } from 'three/webgpu';
 import { MaterialDiorama } from '../../arte/material';
+import { DECORADOS } from './decorados-evolucion';
 import { Montaje, abollar, azar, ruido } from '../../arte/montaje';
 
 /** El basalto de las columnas: gris frío, no pardo (a la luz cálida parecían postes de madera). */
@@ -54,10 +55,10 @@ const R_LISO = 1.12;
 /** El foso de agua de la charca, entre estos dos radios. */
 const FOSO: [number, number] = [1.16, 1.6];
 
-type Props = 'jardin' | 'basalto' | 'charca' | 'lava' | 'desierto' | 'hielo' | 'nubes' | 'cristales' | 'piedras';
-type Cae = 'hoja' | 'piedra' | 'gota' | 'brasa' | 'arena' | 'copo' | 'pluma' | 'chispa' | 'burbuja' | 'mota';
+type Props = 'jardin' | 'basalto' | 'charca' | 'lava' | 'desierto' | 'hielo' | 'nubes' | 'cristales' | 'piedras' | 'terrero' | 'cienaga' | 'bobinas' | 'taller' | 'prismas' | 'bruma' | 'obsidiana' | 'ruinas' | 'bosquecillo';
+type Cae = 'hoja' | 'piedra' | 'gota' | 'brasa' | 'arena' | 'copo' | 'pluma' | 'chispa' | 'burbuja' | 'mota' | 'tuerca' | 'espiritu' | 'sombra' | 'luciernaga';
 
-interface Paleta {
+export interface Paleta {
   /** Tres tonos del suelo de arriba, que se mezclan a manchas. */
   suelo: [string, string, string];
   /** Los estratos del canto, de arriba abajo. */
@@ -72,23 +73,23 @@ interface Paleta {
   cristal?: string;
 }
 
-const PALETAS: Record<string, Paleta> = {
+export const PALETAS: Record<string, Paleta> = {
   planta: { suelo: ['#5E9E3F', '#7DBB4C', '#4A8436'], capas: ['#5E9E3F', '#6B4A2F', '#7A5636', '#5C3F27'], roca: '#5A4A3E', props: 'jardin', cae: 'hoja' },
-  bicho: { suelo: ['#7FA63A', '#98BE4A', '#668C2E'], capas: ['#7FA63A', '#6B4A2F', '#7A5636', '#5C3F27'], roca: '#5A4A3E', props: 'jardin', cae: 'hoja' },
+  bicho: { suelo: ['#7FA63A', '#98BE4A', '#668C2E'], capas: ['#7FA63A', '#6B4A2F', '#7A5636', '#5C3F27'], roca: '#5A4A3E', props: 'bosquecillo', cae: 'luciernaga', colorCae: '#E8FF7A' },
   roca: { suelo: ['#8C8177', '#A39789', '#70665D'], capas: ['#7C7168', '#5F574F', '#8E8378', '#4F4842'], roca: '#4A443F', props: 'basalto', cae: 'piedra' },
-  ancestral: { suelo: ['#A08458', '#B89A68', '#86704A'], capas: ['#8E7650', '#6E5A3C', '#9A8058', '#5A4A32'], roca: '#4E412E', props: 'basalto', cae: 'mota', colorCae: '#E8C25A' },
+  ancestral: { suelo: ['#B9A27A', '#C9B38A', '#A68F68'], capas: ['#A68F68', '#8A7552', '#B39C74', '#6E5A3C'], roca: '#5A4A32', props: 'ruinas', cae: 'mota', colorCae: '#FFD45E' },
   agua: { suelo: ['#7D8A8F', '#97A3A7', '#66737A'], capas: ['#6E7B80', '#56636A', '#7F8C90', '#4B575D'], roca: '#45515A', props: 'charca', cae: 'gota', colorCae: '#7CC4F2' },
   infernal: { suelo: ['#4E2E27', '#62382E', '#3A221D'], capas: ['#4A2C26', '#33201C', '#55342B', '#2A1A17'], roca: '#24160F', props: 'lava', cae: 'brasa', colorCae: '#FF8A2A' },
   tierra: { suelo: ['#D4AA68', '#E3BF82', '#C09556'], capas: ['#C69C5C', '#A87C45', '#B98D50', '#8E6738'], roca: '#7A5A36', props: 'desierto', cae: 'arena', colorCae: '#B98D50' },
   hielo: { suelo: ['#EAF5FB', '#FFFFFF', '#D2E8F3'], capas: ['#DDEEF6', '#B9D8E8', '#CBE3EF', '#9CC5DA'], roca: '#7FA7BD', props: 'hielo', cae: 'copo', colorCae: '#FFFFFF' },
   aire: { suelo: ['#9FC0D6', '#B6D3E5', '#88AEC6'], capas: ['#94B3C7', '#7C9BAF', '#A3BFD0', '#68869A'], roca: '#587083', props: 'nubes', cae: 'pluma', colorCae: '#F4F1EA' },
-  electrico: { suelo: ['#8F877C', '#A39B8F', '#7A7369'], capas: ['#7F786E', '#6A645B', '#8C857A', '#57524B'], roca: '#4E4943', props: 'cristales', cae: 'chispa', colorCae: '#FFD84A', cristal: '#F2C200' },
-  acero: { suelo: ['#9AA3AD', '#B1B9C2', '#838C96'], capas: ['#8A939D', '#6F7882', '#97A0AA', '#5E666F'], roca: '#4F5660', props: 'cristales', cae: 'chispa', colorCae: '#E6EEF5', cristal: '#B8C4D0' },
-  mental: { suelo: ['#B9A6B3', '#CDBBC7', '#A3909D'], capas: ['#A8949F', '#8E7B86', '#B5A1AC', '#76646E'], roca: '#5E4E58', props: 'cristales', cae: 'burbuja', colorCae: '#F2A5D2', cristal: '#E07BBE' },
-  veneno: { suelo: ['#8E8496', '#A298AA', '#786E80'], capas: ['#7E7486', '#655C6C', '#8B8193', '#544B5A'], roca: '#463E4C', props: 'cristales', cae: 'burbuja', colorCae: '#C384D8', cristal: '#A64FC4' },
-  espectral: { suelo: ['#7E7590', '#9389A5', '#6A617C'], capas: ['#6F6680', '#574F68', '#7C7390', '#463F55'], roca: '#3A3447', props: 'cristales', cae: 'mota', colorCae: '#B9A2F2', cristal: '#8F73E0' },
-  oscuridad: { suelo: ['#57525C', '#686270', '#46424B'], capas: ['#4F4A55', '#3D3943', '#5A5560', '#322F37'], roca: '#2A272E', props: 'cristales', cae: 'mota', colorCae: '#6B5E80', cristal: '#5C4A78' },
-  lucha: { suelo: ['#A89A88', '#BBAE9C', '#928573'], capas: ['#988B79', '#7E7262', '#A39684', '#6A5F51'], roca: '#5A5045', props: 'piedras', cae: 'mota', colorCae: '#E2685F' },
+  electrico: { suelo: ['#7E8590', '#949BA6', '#6A717C'], capas: ['#737A85', '#5E6570', '#828994', '#4C525C'], roca: '#3F444C', props: 'bobinas', cae: 'chispa', colorCae: '#FFD84A' },
+  acero: { suelo: ['#9AA3AD', '#AEB6BF', '#8A939D'], capas: ['#8A939D', '#6F7882', '#97A0AA', '#5E666F'], roca: '#4F5660', props: 'taller', cae: 'tuerca' },
+  mental: { suelo: ['#C9A8C9', '#D9BCD9', '#B693B6'], capas: ['#B898B8', '#9B7C9B', '#C4A4C4', '#7E637E'], roca: '#5E4A5E', props: 'prismas', cae: 'burbuja', colorCae: '#F2A5D2' },
+  veneno: { suelo: ['#5B4A66', '#6E5A7A', '#4A3D55'], capas: ['#56465F', '#43364C', '#62506D', '#33283D'], roca: '#2C2233', props: 'cienaga', cae: 'burbuja', colorCae: '#C77DEB' },
+  espectral: { suelo: ['#6E6880', '#827B94', '#5C566D'], capas: ['#655F76', '#504B60', '#726C85', '#3F3B4D'], roca: '#343041', props: 'bruma', cae: 'espiritu', colorCae: '#D4C8FF' },
+  oscuridad: { suelo: ['#3A3542', '#47414F', '#2E2A35'], capas: ['#34303B', '#28252E', '#3D3846', '#1F1C24'], roca: '#18161C', props: 'obsidiana', cae: 'sombra', colorCae: '#4B3A66' },
+  lucha: { suelo: ['#D8B98A', '#E4C79C', '#C9A574'], capas: ['#C9A574', '#A8865A', '#B8956A', '#8A6B45'], roca: '#6B5338', props: 'terrero', cae: 'mota', colorCae: '#E9CFA2' },
   comun: { suelo: ['#C9A97E', '#D9BD94', '#B39068'], capas: ['#B8966C', '#9A7A54', '#C2A078', '#80643F'], roca: '#6B5338', props: 'piedras', cae: 'mota', colorCae: '#F2D58A' },
 };
 
@@ -322,7 +323,8 @@ function brizna(M: Montaje, x: number, y: number, z: number, alto: number, ang: 
 function props(M: Montaje, p: Paleta, s: number, r: () => number): void {
   const y = (x: number, z: number) => alturaSuelo(p, x, z, s);
   switch (p.props) {
-    case 'jardin': {
+    case 'jardin':
+    case 'bosquecillo': {
       // Matas de hierba de briznas dobladas, flores y setas.
       for (let i = 0; i < 26; i++) {
         const [x, z] = sitio(r, 0.6);
@@ -658,7 +660,7 @@ interface Particula {
   escala: number;
 }
 
-const CUANTAS: Record<Cae, number> = { hoja: 26, piedra: 18, gota: 34, brasa: 30, arena: 22, copo: 36, pluma: 16, chispa: 10, burbuja: 18, mota: 28 };
+const CUANTAS: Record<Cae, number> = { hoja: 26, piedra: 18, gota: 34, brasa: 30, arena: 22, copo: 36, pluma: 16, chispa: 10, burbuja: 18, mota: 28, tuerca: 14, espiritu: 14, sombra: 26, luciernaga: 18 };
 
 function geometriaCae(p: Paleta, s: number): BufferGeometry {
   const color = p.colorCae ?? p.suelo[0];
@@ -706,6 +708,25 @@ function geometriaCae(p: Paleta, s: number): BufferGeometry {
       }
       return M.fusionar();
     }
+    case 'tuerca': {
+      // Una tuerca: prisma hexagonal con su agujero oscuro.
+      const M = new Montaje();
+      M.ponDegradado(plano(new CylinderGeometry(0.06, 0.06, 0.04, 6)), '#6F7882', '#C4CBD3');
+      M.pon(new CylinderGeometry(0.026, 0.026, 0.042, 10), '#3A3F47');
+      return M.fusionar();
+    }
+    case 'espiritu': {
+      // Un jirón: una gota alargada, más clara arriba.
+      const M = new Montaje();
+      M.ponDegradado(new SphereGeometry(0.05, 10, 8).scale(1, 2.2, 1), '#8F73E0', color);
+      return M.fusionar();
+    }
+    case 'luciernaga': {
+      const M = new Montaje();
+      M.pon(new SphereGeometry(0.022, 8, 6), color);
+      return M.fusionar();
+    }
+    case 'sombra':
     case 'burbuja':
     case 'brasa':
     case 'mota': {
@@ -717,9 +738,13 @@ function geometriaCae(p: Paleta, s: number): BufferGeometry {
 }
 
 /** Los que brillan (sin luz): brasas, chispas, motas, gotas y burbujas. */
-const BRILLAN: ReadonlySet<Cae> = new Set(['brasa', 'chispa', 'mota', 'gota', 'burbuja']);
+const BRILLAN: ReadonlySet<Cae> = new Set(['brasa', 'chispa', 'mota', 'gota', 'burbuja', 'espiritu', 'sombra', 'luciernaga']);
 /** Los que suben en lugar de caer. */
-const SUBEN: ReadonlySet<Cae> = new Set(['brasa', 'burbuja', 'mota']);
+const SUBEN: ReadonlySet<Cae> = new Set(['brasa', 'burbuja', 'mota', 'espiritu']);
+/** Los que planean al caer, con vaivén, y se posan. */
+const PLANEAN: ReadonlySet<Cae> = new Set(['hoja', 'pluma', 'copo', 'sombra']);
+/** Los que caen con peso y rebotan. */
+const PESAN: ReadonlySet<Cae> = new Set(['piedra', 'arena', 'tuerca']);
 
 // ——— El conjunto ———
 
@@ -735,6 +760,19 @@ export function crearEscenarioEvolucion(tipo: string, semilla: number): Escenari
   const M = new Montaje();
   isla(M, p, s);
   props(M, p, s, r);
+  // Los decorados de los tipos que tienen el suyo (decorados-evolucion.ts): primero su parte fija.
+  const decorado = DECORADOS[p.props];
+  const ctxBase = {
+    c: { suelo: p.suelo, capas: p.capas, roca: p.roca },
+    r,
+    s,
+    R,
+    R_LISO,
+    y: (x: number, z: number) => alturaSuelo(p, x, z, s),
+    sitio: (detras?: number) => sitio(r, detras),
+    plano,
+  };
+  decorado?.fijo?.({ ...ctxBase, M, brizna });
   const geoIsla = M.fusionar();
   // Sin rebote: el falso rebote toma el color del suelo de la isla del juego, y aquí no hay suelo.
   // Con algo de luz propia: la luz de abajo de la escena es la del suelo verde de la isla, y el
@@ -747,6 +785,20 @@ export function crearEscenarioEvolucion(tipo: string, semilla: number): Escenari
   nuevos.push(geoIsla, matIsla);
   grupo.add(new Mesh(geoIsla, matIsla));
   extras(grupo, p, s, r, nuevos, vivos);
+  decorado?.vivo?.({
+    ...ctxBase,
+    grupo,
+    matLuz: matIsla,
+    mat: (m) => {
+      nuevos.push(m);
+      return m;
+    },
+    geo: (g) => {
+      nuevos.push(g);
+      return g;
+    },
+    vivos,
+  });
 
   // Peñascos que flotan junto a la isla, meciéndose.
   const MF = new Montaje();
@@ -789,7 +841,7 @@ export function crearEscenarioEvolucion(tipo: string, semilla: number): Escenari
   const geoCae = geometriaCae(p, s);
   const brilla = BRILLAN.has(p.cae);
   const matCae = brilla
-    ? new MeshBasicNodeMaterial({ vertexColors: true, transparent: p.cae === 'burbuja', opacity: p.cae === 'burbuja' ? 0.55 : 1, side: DoubleSide })
+    ? new MeshBasicNodeMaterial({ vertexColors: true, transparent: p.cae === 'burbuja' || p.cae === 'espiritu', opacity: p.cae === 'burbuja' ? 0.55 : p.cae === 'espiritu' ? 0.6 : 1, side: DoubleSide })
     : new MaterialDiorama({ bordes: [-0.2, 0.5], rebote: 0 }, color, propia);
   if (brilla) (matCae as MeshBasicNodeMaterial).toneMapped = false;
   matCae.side = DoubleSide;
@@ -807,7 +859,7 @@ export function crearEscenarioEvolucion(tipo: string, semilla: number): Escenari
     const rr = sube ? R_LISO - 0.1 + r() * (R - R_LISO) : 1.05 + Math.sqrt(r()) * 1.6;
     const alto = sube ? alturaSuelo(p, Math.cos(ang) * rr, Math.sin(ang) * rr, s) + 0.02 : 3.2 + r() * 1.4;
     q.pos.set(Math.cos(ang) * rr, alPrincipio && !sube ? alto - r() * 3.6 : alto, Math.sin(ang) * rr * 0.85);
-    const lento = p.cae === 'hoja' || p.cae === 'pluma' || p.cae === 'copo';
+    const lento = PLANEAN.has(p.cae);
     q.vel.set(0, sube ? 0.35 + r() * 0.45 : lento ? -(0.45 + r() * 0.25) : p.cae === 'gota' ? -4.5 : -(0.6 + r() * 0.6), 0);
     q.giro.set(r() * 6, r() * 6, r() * 6);
     q.vgiro.set((r() - 0.5) * 4, (r() - 0.5) * 4, (r() - 0.5) * 4);
@@ -816,6 +868,12 @@ export function crearEscenarioEvolucion(tipo: string, semilla: number): Escenari
     q.t = 0;
     q.botes = 0;
     q.escala = 0.75 + r() * 0.5;
+    if (p.cae === 'luciernaga') {
+      // Cada luciérnaga revolotea alrededor de un sitio fijo, por detrás y a los lados (en `vel`).
+      const a = Math.PI + 0.1 + r() * (Math.PI - 0.2) + (r() < 0.3 ? Math.PI * 0.6 * (r() < 0.5 ? -1 : 1) : 0);
+      const rr = R_LISO + r() * (R - R_LISO + 0.5);
+      q.vel.set(Math.cos(a) * rr, r() * 0.6, Math.sin(a) * rr * 0.9);
+    }
   };
   const particulas: Particula[] = Array.from({ length: n }, () => {
     const q: Particula = { pos: new Vector3(), vel: new Vector3(), giro: new Euler(), vgiro: new Vector3(), fase: 0, estado: 'aire', t: 0, botes: 0, escala: 1 };
@@ -866,21 +924,32 @@ export function crearEscenarioEvolucion(tipo: string, semilla: number): Escenari
           visible = q.t < 1.2 ? 1 : Math.max(0, 1 - (q.t - 1.2) / 0.4);
           if (visible <= 0) nacer(q, false);
         } else {
-          if (p.cae === 'piedra' || p.cae === 'arena') q.vel.y -= 5.5 * dt;
-          if (p.cae === 'hoja' || p.cae === 'pluma' || p.cae === 'copo') {
+          if (PESAN.has(p.cae)) q.vel.y -= 5.5 * dt;
+          if (p.cae === 'luciernaga') {
+            // Revolotean despacio alrededor de su sitio y se encienden y apagan.
+            const cx = q.vel.x;
+            const cz = q.vel.z;
+            q.pos.set(cx + Math.sin(reloj * 0.7 + q.fase) * 0.35, 0.35 + q.vel.y + Math.sin(reloj * 1.1 + q.fase * 2) * 0.18, cz + Math.cos(reloj * 0.6 + q.fase) * 0.25);
+          } else if (PLANEAN.has(p.cae)) {
             // Planean: vaivén de lado a lado y un poco de giro.
             q.pos.x += Math.sin(reloj * 1.7 + q.fase) * 0.45 * dt;
             q.pos.z += Math.cos(reloj * 1.3 + q.fase) * 0.25 * dt;
+          } else if (p.cae === 'espiritu') {
+            // Suben en espiral.
+            q.pos.x += Math.cos(reloj * 2 + q.fase) * 0.35 * dt;
+            q.pos.z += Math.sin(reloj * 2 + q.fase) * 0.35 * dt;
           } else if (sube) {
             q.pos.x += Math.sin(reloj * 2.3 + q.fase) * 0.12 * dt;
           }
-          q.pos.addScaledVector(q.vel, dt);
+          if (p.cae !== 'luciernaga') q.pos.addScaledVector(q.vel, dt);
           q.giro.x += q.vgiro.x * dt;
           q.giro.y += q.vgiro.y * dt;
           q.giro.z += q.vgiro.z * dt;
           const rr = Math.hypot(q.pos.x, q.pos.z);
           const suelo = alturaSuelo(p, q.pos.x, q.pos.z, s);
-          if (sube) {
+          if (p.cae === 'luciernaga') {
+            visible = Math.sin(reloj * 2.6 + q.fase * 3) > 0.2 ? 1 : 0.25;
+          } else if (sube) {
             // Suben, parpadean (las brasas) y se apagan arriba.
             visible = Math.max(0, 1 - q.t / 3.2) * (p.cae === 'brasa' ? 0.75 + Math.sin(reloj * 14 + q.fase) * 0.25 : 1);
             if (q.t > 3.2 || q.pos.y > 3) nacer(q, false);
@@ -889,7 +958,7 @@ export function crearEscenarioEvolucion(tipo: string, semilla: number): Escenari
             if (q.t > 2.7) nacer(q, false);
           } else if (rr < R - 0.03 && q.pos.y <= suelo + 0.02 && q.vel.y < 0) {
             q.pos.y = suelo + 0.02;
-            if ((p.cae === 'piedra' || p.cae === 'arena') && q.botes < 2) {
+            if (PESAN.has(p.cae) && q.botes < 2) {
               // Rebota, cada vez menos, y levanta polvo.
               levantarPolvo(q.pos.x, suelo, q.pos.z);
               q.vel.y = -q.vel.y * 0.32;
@@ -904,11 +973,11 @@ export function crearEscenarioEvolucion(tipo: string, semilla: number): Escenari
               q.t = 0;
               q.vel.set(0, 0, 0);
               // Las hojas y plumas, tumbadas.
-              if (p.cae === 'hoja' || p.cae === 'pluma' || p.cae === 'copo') q.giro.set(-Math.PI / 2, q.giro.y, 0);
+              if (PLANEAN.has(p.cae)) q.giro.set(-Math.PI / 2, q.giro.y, 0);
             }
           } else if (q.pos.y < -2.2) nacer(q, false);
         }
-        quat.setFromEuler(p.cae === 'gota' ? QUIETO : q.giro);
+        quat.setFromEuler(p.cae === 'gota' || p.cae === 'luciernaga' || p.cae === 'espiritu' ? QUIETO : q.giro);
         escala.setScalar(q.escala * visible);
         matriz.compose(q.pos, quat, escala);
         malla.setMatrixAt(i, matriz);

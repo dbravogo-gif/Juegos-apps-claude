@@ -5,7 +5,8 @@ import type { NivelCalidad } from './calidad';
 
 export interface MapaEventos {
   'zona:entrar': { zonaId: string };
-  'encuentro:inicio': { salvajes: unknown[]; visible: boolean };
+  /** `tipoEvolucion`: solo en «Probar evolución» (modo desarrollador), el escenario que se verá. */
+  'encuentro:inicio': { salvajes: unknown[]; visible: boolean; tipoEvolucion?: string };
   'combate:evento': unknown;
   /** Una acción del jugador para un hueco (`Accion` de src/core/combate.ts, con su objetivo). */
   'combate:decision': { lado: number; hueco: number; accion: unknown };

@@ -224,6 +224,8 @@ export class Combate implements Subsistema {
   private apagadasEvolucion: Object3D[] = [];
   /** Lo que queda de cada evolución hasta que se cierra la arena: su grupo y lo que hay que soltar. */
   private restosEvolucion: { grupo: Group; nuevos: { dispose(): void }[] }[] = [];
+  /** El escenario de evolución a la fuerza («Probar evolución», modo desarrollador), o null: el de su tipo. */
+  private tipoEvolucion: string | null = null;
   /** Contra quién se lucha: el id del entrenador, o null si es salvaje. */
   private entrenador: string | null = null;
   /** La barra de captura (F08): qué cubo se lanza y cuánto lleva la flecha moviéndose. */
@@ -287,7 +289,10 @@ export class Combate implements Subsistema {
             : def.equipo.map((e) => crearCriatura(DATOS, e.especie, e.nivel, rng));
       void this.empezar(equipo, guionId);
     });
-    ctx.eventos.on('encuentro:inicio', ({ salvajes }) => void this.empezar(salvajes as Criatura[], null));
+    ctx.eventos.on('encuentro:inicio', ({ salvajes, tipoEvolucion }) => {
+      this.tipoEvolucion = tipoEvolucion ?? null;
+      void this.empezar(salvajes as Criatura[], null);
+    });
   }
 
   /** La arena: dos plataformas de jable con su canto, una para cada criatura. */
@@ -497,6 +502,7 @@ export class Combate implements Subsistema {
       saltable: false,
       empezar: () => {
         this.mostrarArena(false);
+        this.tipoEvolucion = null;
         this.raiz.hidden = false;
         for (const p of paneles) p.style.visibility = 'hidden';
         for (const l of this.luchadores) l?.raiz.removeFromParent();
@@ -1190,7 +1196,7 @@ export class Combate implements Subsistema {
     nuevos.push(anillo, disco, esfera, mota, geoLineas, geoOnda);
     // La isla de su tipo y lo que cae alrededor (escenario-evolucion.ts; autor, 2026-11-19).
     const semilla = [...`${uid}>${a}`].reduce((h, letra) => (Math.imul(h, 31) + letra.charCodeAt(0)) >>> 0, 7);
-    const escenario = crearEscenarioEvolucion(especieNueva.tipos[0], semilla);
+    const escenario = crearEscenarioEvolucion(this.tipoEvolucion ?? especieNueva.tipos[0], semilla);
     nuevos.push(escenario);
     const caer = (tiempo: number) => escenario.animar(tiempo);
     const suelo = new Mesh(disco, matSuelo);
