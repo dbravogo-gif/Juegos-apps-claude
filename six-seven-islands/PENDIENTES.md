@@ -156,6 +156,11 @@ Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
   - el gimnasio de Roca: puerta doble, sin las dos compuertas y la de la palanca visible;
   - hierbas y entrenadores sin «iniciales», y las iniciales empezando con ataques comunes (en
     partida nueva: la tuya guardada conserva sus cuatro ataques de antes).
+  - refugios y tiendas (coral con corazón, azul con cesta) y las escaleras: en unas casas de la
+    capital hay juguetes y en otras se sube al dormitorio;
+  - el sonido: los pasos en hierba alta, malpaís y dunas («Probar sonidos» del menú), la música
+    nueva al explorar y en combate, y el ambiente de cada zona (mar en Famara, viento en el Jable,
+    volcán en las Montañas del Fuego, pájaros en La Geria).
 
 - Medir los FPS en los ordenadores del autor y de sus amigos.
 - Prueba de Meshy: pagar Pro el primer mes (~10 $), y descargar y subir `planta-2.glb`
