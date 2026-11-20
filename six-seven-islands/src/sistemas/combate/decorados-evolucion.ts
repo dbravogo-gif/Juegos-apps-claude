@@ -14,7 +14,6 @@ import {
   ConeGeometry,
   CylinderGeometry,
   Group,
-  IcosahedronGeometry,
   Mesh,
   MeshBasicNodeMaterial,
   OctahedronGeometry,
@@ -25,6 +24,7 @@ import {
   Vector3,
   type Material,
 } from 'three/webgpu';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { Montaje, abollar, acanalar } from '../../arte/montaje';
 
 export interface ColoresDecorado {
@@ -56,11 +56,22 @@ export interface CtxVivo extends Omit<CtxFijo, 'M' | 'brizna'> {
   mat: <T extends Material>(m: T) => T;
   geo: <T extends BufferGeometry>(g: T) => T;
   vivos: ((t: number) => void)[];
+  /** Hace sonar un efecto (los de `sonido`, por su nombre). */
+  sonar: (nombre: string) => void;
+  /** Cambia el color del fondo; null, el de siempre. */
+  fondo: (color: Color | null) => void;
 }
 
 export interface Decorado {
   fijo?: (c: CtxFijo) => void;
   vivo?: (c: CtxVivo) => void;
+}
+
+/** Une varias geometrías en una (las de las piezas, con los mismos atributos). */
+function mezclar(gs: BufferGeometry[]): BufferGeometry {
+  const g = mergeGeometries(gs, false)!;
+  for (const x of gs) x.dispose();
+  return g;
 }
 
 /** Un material sin luz, que brilla (llamas, ojos, arcos, burbujas). */
@@ -78,12 +89,25 @@ function mallaLuz(c: CtxVivo, montar: (M: Montaje) => void): Mesh {
 }
 
 const ARRIBA = new Vector3(0, 1, 0);
+/** El fondo un instante, cuando cae un rayo. */
+const FOGONAZO = new Color('#FFFDF2');
+/** El fondo de la evolución de Eléctrico: de tormenta (sobre el blanco roto, los rayos no se veían). */
+const TORMENTA = new Color('#6B7484');
+/** Las gradas del terrero: tres escalones en arco por detrás (radio de su canto y alto). */
+const GRADAS = [
+  { radio: 1.3, alto: 0.12 },
+  { radio: 1.44, alto: 0.24 },
+  { radio: 1.58, alto: 0.36 },
+];
+/** De qué ángulo a qué ángulo van las gradas: el fondo, sin los lados de delante. */
+const ARCO_GRADAS: [number, number] = [Math.PI + 0.3, 2 * Math.PI - 0.3];
 
 export const DECORADOS: Record<string, Decorado> = {
-  // ——— Lucha: un terrero de lucha canaria, con su borde de madera, un muñeco de entrenamiento que
-  // se balancea como si le pegaran y un saco colgado.
+  // ——— Lucha: un terrero de lucha canaria (autor, 2026-11-20: mejor que el muñeco). La criatura,
+  // en la arena del centro, con su borde de madera; detrás, las gradas con el público, que se
+  // levanta y aplaude, y banderines.
   terrero: {
-    fijo: ({ M, r, y, R_LISO }) => {
+    fijo: ({ M, y, R_LISO }) => {
       // El borde del terrero, de tablas de madera, rodeando la arena del centro.
       const tablas = 44;
       for (let i = 0; i < tablas; i++) {
@@ -93,75 +117,70 @@ export const DECORADOS: Record<string, Decorado> = {
         const z = Math.sin(a) * rr;
         M.pon(new BoxGeometry(0.22, 0.09, 0.06).rotateY(-a + Math.PI / 2).translate(x, y(x, z) + 0.045, z), i % 2 ? '#8B5A2B' : '#7A4E25');
       }
-      // El poste del saco, detrás a la derecha, con su brazo.
-      const px = 1.05;
-      const pz = -1.0;
-      M.pon(new CylinderGeometry(0.045, 0.055, 1.25, 8).translate(px, y(px, pz) + 0.62, pz), '#6B4423');
-      M.pon(new BoxGeometry(0.42, 0.06, 0.06).translate(px - 0.18, y(px, pz) + 1.22, pz), '#6B4423');
-      // Unas mancuernas de piedra y una cuerda enrollada, por el borde.
-      for (let i = 0; i < 2; i++) {
-        const x = -1.3 + i * 0.2;
-        const z = 0.55 + r() * 0.1;
-        M.pon(new CylinderGeometry(0.02, 0.02, 0.22, 6).rotateZ(Math.PI / 2).translate(x, y(x, z) + 0.06, z), '#5C4A3A');
-        for (const s of [-1, 1]) M.pon(new SphereGeometry(0.06, 8, 6).translate(x + s * 0.11, y(x, z) + 0.06, z), '#7D7A74');
+      // Las gradas: tres escalones en arco por detrás, de cemento encalado con el canto de madera.
+      for (let k = 0; k < GRADAS.length; k++) {
+        const { radio, alto } = GRADAS[k];
+        const tramos = 26;
+        for (let i = 0; i < tramos; i++) {
+          const a0 = ARCO_GRADAS[0] + ((ARCO_GRADAS[1] - ARCO_GRADAS[0]) * i) / tramos;
+          const a = a0 + (ARCO_GRADAS[1] - ARCO_GRADAS[0]) / tramos / 2;
+          const largo = (radio + 0.07) * ((ARCO_GRADAS[1] - ARCO_GRADAS[0]) / tramos) + 0.012;
+          const x = Math.cos(a) * (radio + 0.07);
+          const z = Math.sin(a) * (radio + 0.07);
+          M.pon(new BoxGeometry(largo, alto, 0.15).rotateY(-a + Math.PI / 2).translate(x, alto / 2 - 0.02, z), k % 2 ? '#E2DCCF' : '#D3CCBD');
+          M.pon(new BoxGeometry(largo, 0.025, 0.04).rotateY(-a + Math.PI / 2).translate(Math.cos(a) * radio, alto - 0.0075, Math.sin(a) * radio), '#8B5A2B');
+        }
       }
-      M.pon(new TorusGeometry(0.1, 0.03, 6, 14).rotateX(Math.PI / 2).translate(1.35, y(1.35, 0.4) + 0.03, 0.4), '#C9A66B');
+      // Los mástiles de los banderines, a los lados de las gradas.
+      for (const a of ARCO_GRADAS) {
+        const x = Math.cos(a) * 1.6;
+        const z = Math.sin(a) * 1.6;
+        M.pon(new CylinderGeometry(0.012, 0.015, 0.9, 6).translate(x, 0.45, z), '#6B4423');
+      }
     },
     vivo: (c) => {
-      const { grupo, y } = c;
-      // El muñeco: poste, cuerpo de saco atado con cuerdas, brazos de palo y cabeza.
-      const mx = -0.75;
-      const mz = -1.12;
-      const muneco = mallaLuz(c, (M) => {
-        M.pon(new CylinderGeometry(0.05, 0.06, 0.55, 8).translate(0, 0.27, 0), '#6B4423');
-        M.ponDegradado(new CylinderGeometry(0.15, 0.17, 0.5, 12).translate(0, 0.78, 0), '#B08A55', '#D2B07A');
-        for (const h of [0.6, 0.78, 0.96]) M.pon(new CylinderGeometry(0.162, 0.162, 0.03, 12).translate(0, h, 0), '#5C3D22');
-        M.pon(new CylinderGeometry(0.025, 0.025, 0.7, 6).rotateZ(Math.PI / 2).translate(0, 0.88, 0), '#6B4423');
-        M.ponDegradado(new SphereGeometry(0.12, 12, 8).translate(0, 1.15, 0), '#B08A55', '#D2B07A');
-        M.pon(new CylinderGeometry(0.1, 0.1, 0.02, 10).rotateX(Math.PI / 2).translate(0, 1.15, 0.11), '#5C3D22');
-      });
-      muneco.position.set(mx, y(mx, mz), mz);
-      grupo.add(muneco);
-      // El saco colgado, que oscila.
-      const saco = mallaLuz(c, (M) => {
-        M.pon(new CylinderGeometry(0.008, 0.008, 0.25, 4).translate(0, -0.12, 0), '#C9A66B');
-        M.ponDegradado(new CylinderGeometry(0.12, 0.11, 0.42, 12).translate(0, -0.46, 0), '#7A3B2E', '#A04E3C');
-      });
-      saco.position.set(1.05 - 0.36, y(1.05, -1.0) + 1.19, -1.0);
-      grupo.add(saco);
-      // El destello de cada golpe: una estrella plana, blanca, que crece y se va.
-      const estrella = new Mesh(c.geo(new OctahedronGeometry(0.16, 0).scale(1, 1, 0.15)), brillo(c, '#FFF6D8', 0.9));
-      estrella.position.set(mx + 0.12, y(mx, mz) + 0.85, mz + 0.2);
-      grupo.add(estrella);
-      // Polvo que salta del suelo con el golpe.
-      const polvo = Array.from({ length: 5 }, () => {
-        const m = new Mesh(c.geo(new SphereGeometry(0.05, 6, 4)), brillo(c, '#E4C79C', 0.7));
+      const { grupo, r } = c;
+      // El público: figuritas sentadas en las gradas, cada una de su color, que se balancean y, a
+      // oleadas, se levantan a aplaudir.
+      const camisas = ['#E8E2D2', '#2F6FB5', '#F2C94C', '#C0392B', '#3E8E5A', '#FFFFFF', '#7A4E9C'];
+      const pieles = ['#F1C9A5', '#D9A47A', '#B07A52', '#8A5A3B'];
+      const publico: { m: Mesh; fase: number; a: number }[] = [];
+      for (let k = 0; k < GRADAS.length; k++) {
+        const { radio, alto } = GRADAS[k];
+        const n = 9 + k * 2;
+        for (let i = 0; i < n; i++) {
+          if (r() < 0.18) continue;
+          const a = ARCO_GRADAS[0] + 0.08 + ((ARCO_GRADAS[1] - ARCO_GRADAS[0] - 0.16) * (i + 0.5 + (r() - 0.5) * 0.4)) / n;
+          const m = mallaLuz(c, (M) => {
+            M.ponDegradado(new CylinderGeometry(0.035, 0.045, 0.11, 8).translate(0, 0.055, 0), camisas[Math.floor(r() * camisas.length)], '#FFFFFF');
+            M.pon(new SphereGeometry(0.035, 8, 6).translate(0, 0.145, 0), pieles[Math.floor(r() * pieles.length)]);
+          });
+          m.position.set(Math.cos(a) * (radio + 0.05), alto, Math.sin(a) * (radio + 0.05));
+          m.userData.base = alto;
+          grupo.add(m);
+          publico.push({ m, fase: r() * 6, a });
+        }
+      }
+      // Banderines de colores colgando entre los dos mástiles, por encima de las gradas.
+      const colores = ['#FFFFFF', '#2F6FB5', '#F2C94C'];
+      const banderines = Array.from({ length: 13 }, (_, i) => {
+        const u = (i + 0.5) / 13;
+        const a = ARCO_GRADAS[0] + (ARCO_GRADAS[1] - ARCO_GRADAS[0]) * u;
+        const m = new Mesh(c.geo(new ConeGeometry(0.035, 0.09, 3).rotateX(Math.PI)), brillo(c, colores[i % 3]));
+        m.position.set(Math.cos(a) * 1.6, 0.86 - Math.sin(u * Math.PI) * 0.12, Math.sin(a) * 1.6);
         grupo.add(m);
-        return m;
+        return { m, fase: i * 0.6 };
       });
-      const CADA = 1.3;
       c.vivos.push((t) => {
-        // Un golpe cada 1,3 s: el muñeco se inclina hacia atrás y vuelve, amortiguado.
-        const tt = t % CADA;
-        const golpe = Math.floor(t / CADA);
-        const lado = golpe % 2 ? 1 : -1;
-        muneco.rotation.z = lado * 0.28 * Math.exp(-tt * 3.2) * Math.sin(tt * 11);
-        muneco.rotation.x = -0.12 * Math.exp(-tt * 3.2) * Math.sin(tt * 11);
-        const k = tt / 0.18;
-        estrella.visible = k < 1;
-        estrella.scale.setScalar(0.4 + k * 1.2);
-        estrella.rotation.z = golpe * 0.7;
-        (estrella.material as MeshBasicNodeMaterial).opacity = 0.9 * (1 - k);
-        polvo.forEach((m, i) => {
-          const a = (i / polvo.length) * Math.PI * 2 + golpe;
-          const kk = Math.min(1, tt / 0.6);
-          m.visible = kk < 1;
-          m.position.set(mx + Math.cos(a) * (0.15 + kk * 0.35), y(mx, mz) + 0.04 + Math.sin(kk * Math.PI) * 0.18, mz + Math.sin(a) * (0.1 + kk * 0.25));
-          m.scale.setScalar(0.6 + kk * 1.4);
-          (m.material as MeshBasicNodeMaterial).opacity = 0.6 * (1 - kk);
-        });
-        saco.rotation.z = Math.sin(t * 2.1) * 0.12;
-        saco.rotation.x = Math.sin(t * 1.4 + 1) * 0.06;
+        // Una ola de aplausos cada 3 s, que recorre las gradas de lado a lado.
+        const ola = (t % 3) / 1.2;
+        for (const p of publico) {
+          const u = (p.a - ARCO_GRADAS[0]) / (ARCO_GRADAS[1] - ARCO_GRADAS[0]);
+          const salto = Math.max(0, 1 - Math.abs(ola - u) * 5);
+          p.m.position.y = (p.m.userData.base as number) + Math.sin(t * 6 + p.fase) * 0.006 + salto * 0.06;
+          p.m.scale.y = 1 + salto * 0.25;
+        }
+        for (const b of banderines) b.m.rotation.x = Math.sin(t * 3 + b.fase) * 0.3;
       });
     },
   },
@@ -203,9 +222,10 @@ export const DECORADOS: Record<string, Decorado> = {
     vivo: (c) => {
       const { grupo, r, y, sitio } = c;
       // Los charcos: brillan con su borde más oscuro.
-      const charcos = Array.from({ length: 5 }, (_, i) => {
+      const charcos = Array.from({ length: 4 }, (_, i) => {
         const [x, z] = i === 0 ? [-0.55, -1.32] : sitio(0.6);
-        const radio = 0.11 + r() * 0.08;
+        // Charcos y burbujas grandes (autor, 2026-11-20: «burbujas más grandes»).
+        const radio = 0.16 + r() * 0.1;
         const borde = new Mesh(c.geo(new SphereGeometry(1, 16, 6).scale(radio + 0.035, 0.012, (radio + 0.035) * 0.75)), brillo(c, '#4B1F66'));
         const charco = new Mesh(c.geo(new SphereGeometry(1, 16, 6).scale(radio, 0.018, radio * 0.75)), brillo(c, '#A445E0'));
         borde.position.set(x, y(x, z) + 0.004, z);
@@ -225,7 +245,7 @@ export const DECORADOS: Record<string, Decorado> = {
             grupo.add(g);
             return g;
           });
-          return { ch, m, gotas, periodo: 1.6 + ((i * 2 + k) % 5) * 0.35, fase: (i * 0.37 + k * 0.5) % 1, dx: (k ? 0.3 : -0.25) * ch.radio, tam: ch.radio * (0.45 + k * 0.15) };
+          return { ch, m, gotas, periodo: 1.6 + ((i * 2 + k) % 5) * 0.35, fase: (i * 0.37 + k * 0.5) % 1, dx: (k ? 0.3 : -0.25) * ch.radio, tam: ch.radio * (0.7 + k * 0.25) };
         }),
       );
       c.vivos.push((t) => {
@@ -321,6 +341,57 @@ export const DECORADOS: Record<string, Decorado> = {
         });
         for (const b of brilloBola) b.scale.setScalar(encendido ? 1 + (turno % 3) * 0.12 : 0.7);
       });
+      // Rayos que caen del cielo cada 1,6 s: detrás de la isla y, uno de cada tres, sobre la criatura,
+      // con un fogonazo del fondo y su restallido (autor, 2026-11-20).
+      const tramosRayo = 16;
+      const geoRayo = c.geo(new BoxGeometry(0.05, 1, 0.05).translate(0, 0.5, 0));
+      const rayo = Array.from({ length: tramosRayo }, () => {
+        const m = new Mesh(geoRayo, brillo(c, '#FFFBE0'));
+        grupo.add(m);
+        return m;
+      });
+      const halo = Array.from({ length: tramosRayo }, () => {
+        const m = new Mesh(geoRayo, brillo(c, '#FFE14A', 0.35));
+        grupo.add(m);
+        return m;
+      });
+      const puntosRayo = Array.from({ length: tramosRayo + 1 }, () => new Vector3());
+      const destinos = [new Vector3(-1.9, -0.3, -2.4), new Vector3(0, 0.05, 0), new Vector3(2.0, -0.3, -2.2), new Vector3(-0.6, -0.3, -3), new Vector3(0, 0.05, 0), new Vector3(1.2, -0.3, -3.1)];
+      const CADA = 1.6;
+      let ultimoRayo = -1;
+      const tramo = new Vector3();
+      c.vivos.push((t) => {
+        const n = Math.floor(t / CADA);
+        const k = (t % CADA) / 0.28;
+        const visible = k < 1 && (k < 0.35 || k > 0.5);
+        if (n !== ultimoRayo) {
+          ultimoRayo = n;
+          const fin = destinos[n % destinos.length];
+          const inicio = new Vector3(fin.x + Math.sin(n * 7.1) * 0.8, 4.6, fin.z - 0.4);
+          for (let i = 0; i <= tramosRayo; i++) {
+            const u = i / tramosRayo;
+            puntosRayo[i].lerpVectors(inicio, fin, u);
+            if (i > 0 && i < tramosRayo) {
+              puntosRayo[i].x += Math.sin(n * 13.7 + i * 2.3) * 0.22 * (1 - u * 0.5);
+              puntosRayo[i].z += Math.cos(n * 5.3 + i * 1.7) * 0.1;
+            }
+          }
+          rayo.forEach((m, i) => {
+            tramo.subVectors(puntosRayo[i + 1], puntosRayo[i]);
+            for (const x of [m, halo[i]]) {
+              x.position.copy(puntosRayo[i]);
+              x.scale.set(1, tramo.length(), 1);
+              x.quaternion.setFromUnitVectors(ARRIBA, tramo.clone().normalize());
+            }
+            halo[i].scale.x = halo[i].scale.z = 3;
+          });
+          c.sonar('rayo');
+        }
+        for (const m of rayo) m.visible = visible;
+        for (const m of halo) m.visible = visible;
+        // Fondo de tormenta, para que los rayos se vean, y casi blanco un instante con cada uno.
+        c.fondo(k < 0.12 ? FOGONAZO : TORMENTA);
+      });
     },
   },
 
@@ -382,11 +453,70 @@ export const DECORADOS: Record<string, Decorado> = {
       c.vivos.push((t) => {
         for (const { m, vel } of ruedas) m.rotation.z = t * vel;
       });
+      // El yunque, a la derecha, y un martillo que lo golpea: en cada golpe saltan chispas y suena el
+      // metal (autor, 2026-11-20: «sonidos de metales golpeándose y chispas»).
+      const yx = 1.2;
+      const yz = -0.75;
+      const base = y(yx, yz);
+      const yunque = mallaLuz(c, (M) => {
+        M.ponDegradado(new CylinderGeometry(0.1, 0.14, 0.2, 8).translate(0, 0.1, 0), '#3A3F47', '#5E666F');
+        M.ponDegradado(new BoxGeometry(0.34, 0.1, 0.16).translate(0, 0.25, 0), '#4F5660', '#9AA3AD');
+        M.pon(new ConeGeometry(0.06, 0.16, 6).rotateZ(Math.PI / 2).translate(-0.24, 0.26, 0), '#6F7882');
+      });
+      yunque.position.set(yx, base, yz);
+      grupo.add(yunque);
+      // El martillo gira sobre un eje detrás del yunque: sube despacio y cae de golpe.
+      const brazo = new Group();
+      brazo.position.set(yx + 0.32, base + 0.3, yz);
+      const martillo = mallaLuz(c, (M) => {
+        M.pon(new CylinderGeometry(0.018, 0.02, 0.36, 6).rotateZ(Math.PI / 2).translate(-0.18, 0, 0), '#7A5236');
+        M.ponDegradado(new BoxGeometry(0.1, 0.12, 0.1).translate(-0.34, 0, 0), '#4F5660', '#B8C2CC');
+      });
+      brazo.add(martillo);
+      grupo.add(brazo);
+      const chispas = Array.from({ length: 12 }, () => {
+        const m = new Mesh(c.geo(new BoxGeometry(0.014, 0.014, 0.05)), brillo(c, '#FFC44D'));
+        m.visible = false;
+        grupo.add(m);
+        return { m, vel: new Vector3() };
+      });
+      const golpe = new Vector3(yx, base + 0.31, yz);
+      const CADA = 1.15;
+      let ultimoGolpe = -1;
+      let anterior = 0;
+      c.vivos.push((t) => {
+        const dt = Math.min(0.05, Math.max(0, t - anterior));
+        anterior = t;
+        const n = Math.floor(t / CADA);
+        const k = (t % CADA) / CADA;
+        // Arriba (−1,1 rad) casi todo el ciclo; cae en el último 12 %.
+        brazo.rotation.z = k < 0.88 ? -1.1 * Math.min(1, k / 0.5) : -1.1 * (1 - (k - 0.88) / 0.12) ** 2;
+        if (n !== ultimoGolpe && k < 0.5 && n > 0) {
+          ultimoGolpe = n;
+          c.sonar('metal');
+          chispas.forEach((ch, i) => {
+            const a = (i / chispas.length) * Math.PI * 2 + n;
+            ch.m.visible = true;
+            ch.m.position.copy(golpe);
+            ch.vel.set(Math.cos(a) * (0.8 + (i % 3) * 0.3), 1.1 + (i % 4) * 0.25, Math.sin(a) * 0.6);
+            ch.m.userData.vida = 0.5;
+          });
+        }
+        for (const ch of chispas) {
+          if (!ch.m.visible) continue;
+          ch.m.userData.vida -= dt;
+          ch.vel.y -= 5 * dt;
+          ch.m.position.addScaledVector(ch.vel, dt);
+          ch.m.lookAt(ch.m.position.clone().add(ch.vel));
+          ch.m.scale.setScalar(Math.max(0, ch.m.userData.vida / 0.5));
+          if (ch.m.userData.vida <= 0) ch.m.visible = false;
+        }
+      });
     },
   },
 
-  // ——— Mental: suelo rosado con anillos grabados, prismas que orbitan alrededor y piedras que
-  // levitan.
+  // ——— Mental: suelo rosado con anillos grabados, prismas que orbitan por detrás y ondas que salen
+  // de la criatura (autor, 2026-11-20: «algo que parezca ondas mentales»; nada de piedras volando).
   prismas: {
     fijo: ({ M, R_LISO, R }) => {
       for (const rr of [R_LISO + 0.12, R - 0.12]) M.pon(new RingGeometry(rr - 0.015, rr + 0.015, 72).rotateX(-Math.PI / 2).translate(0, 0.03, 0), '#F2D7EE');
@@ -397,32 +527,35 @@ export const DECORADOS: Record<string, Decorado> = {
       }
     },
     vivo: (c) => {
-      const { grupo, y } = c;
+      const { grupo } = c;
       const geoPrisma = c.geo(new OctahedronGeometry(0.11, 0).scale(0.7, 1.8, 0.7));
       const prismas = Array.from({ length: 5 }, (_, i) => {
         const m = new Mesh(geoPrisma, brillo(c, i % 2 ? '#E07BBE' : '#B48CF0', 0.85));
         grupo.add(m);
         return { m, fase: (i / 5) * Math.PI * 2 };
       });
-      const piedras = [-0.9, 0.95].map((x, i) => {
-        const z = -1.25;
-        const m = mallaLuz(c, (M) => M.ponDegradado(abollar(new IcosahedronGeometry(0.12 + i * 0.04, 1), 0.25, 7 + i), '#8E7189', '#C9A8C9'));
-        m.position.set(x, y(x, z) + 0.5, z);
+      // Ondas mentales: anillos que nacen a la altura de la cabeza y se abren hacia fuera; unos
+      // tumbados, alrededor, y otros de pie, hacia la cámara, como ecos.
+      const geoOnda = c.geo(new TorusGeometry(1, 0.012, 6, 64));
+      const ondas = Array.from({ length: 6 }, (_, i) => {
+        const m = new Mesh(geoOnda, brillo(c, i % 2 ? '#F2A5D2' : '#C9A2FF', 0.7));
+        if (i % 2 === 0) m.rotation.x = Math.PI / 2;
         grupo.add(m);
-        return { m, base: y(x, z) + 0.45, fase: i * 1.7 };
+        return { m, fase: i / 6, tumbada: i % 2 === 0 };
       });
       c.vivos.push((t) => {
         for (const { m, fase } of prismas) {
           const a = fase + t * 0.6;
           // Solo por detrás y los lados: por delante taparían a la criatura.
-          const x = Math.cos(a) * 1.45;
-          const z = -Math.abs(Math.sin(a)) * 1.2;
-          m.position.set(x, 0.9 + Math.sin(t * 1.3 + fase) * 0.15, z);
+          m.position.set(Math.cos(a) * 1.45, 0.9 + Math.sin(t * 1.3 + fase) * 0.15, -Math.abs(Math.sin(a)) * 1.2);
           m.rotation.y = t * 1.5 + fase;
         }
-        for (const p of piedras) {
-          p.m.position.y = p.base + Math.sin(t * 1.1 + p.fase) * 0.08;
-          p.m.rotation.y = t * 0.4 + p.fase;
+        for (const o of ondas) {
+          const k = (t * 0.45 + o.fase) % 1;
+          const radio = 0.2 + k * (o.tumbada ? 1.9 : 1.4);
+          o.m.scale.setScalar(radio);
+          o.m.position.set(0, o.tumbada ? 0.95 + k * 0.3 : 0.95, o.tumbada ? 0 : -0.3 - k * 0.6);
+          (o.m.material as MeshBasicNodeMaterial).opacity = 0.75 * (1 - k) * Math.min(1, k * 6);
         }
       });
     },
@@ -463,6 +596,40 @@ export const DECORADOS: Record<string, Decorado> = {
         grupo.add(m);
         return { m, a: (i / 9) * Math.PI * 2 };
       });
+      // Espectros: sábanas translúcidas con su ojos oscuros, que suben desde el suelo o bajan del cielo
+      // y se desvanecen al final (autor, 2026-11-20).
+      const cuerpo = new SphereGeometry(0.16, 16, 10, 0, Math.PI * 2, 0, Math.PI / 2).translate(0, 0.2, 0);
+      const falda = new CylinderGeometry(0.16, 0.2, 0.26, 16, 2, true).translate(0, 0.07, 0);
+      const pos = falda.getAttribute('position');
+      for (let i = 0; i < pos.count; i++) {
+        if (pos.getY(i) < -0.05) pos.setY(i, pos.getY(i) + Math.sin(Math.atan2(pos.getZ(i), pos.getX(i)) * 6) * 0.035);
+      }
+      const geoEspectro = c.geo(mezclar([cuerpo, falda]));
+      const geoOjoEsp = c.geo(new SphereGeometry(0.025, 8, 6).scale(1, 1.5, 0.5));
+      const espectros = ESPECTROS.map(([x, z, sube], i) => {
+        const g = new Group();
+        const m = new Mesh(geoEspectro, brillo(c, i % 2 ? '#E9E4FF' : '#D9F3FF', 0.62));
+        g.add(m);
+        for (const s of [-1, 1]) {
+          const o = new Mesh(geoOjoEsp, brillo(c, '#2A2340'));
+          o.position.set(s * 0.055, 0.24, 0.15);
+          g.add(o);
+        }
+        g.position.set(x, 0, z);
+        grupo.add(g);
+        return { g, m, x, sube, fase: i * 0.31 };
+      });
+      c.vivos.push((t) => {
+        for (const e of espectros) {
+          const k = (t * 0.22 + e.fase) % 1;
+          const yy = e.sube ? -0.3 + k * 2.6 : 2.3 - k * 2.6;
+          e.g.position.y = yy;
+          e.g.position.x = e.x + Math.sin(t * 1.4 + e.fase * 10) * 0.12;
+          e.g.rotation.z = Math.sin(t * 1.4 + e.fase * 10) * 0.12;
+          (e.m.material as MeshBasicNodeMaterial).opacity = 0.62 * Math.min(1, k * 5, (1 - k) * 5);
+          e.g.visible = k > 0.02 && k < 0.98;
+        }
+      });
       c.vivos.push((t) => {
         for (const { m, fase } of llamas) m.scale.set(1 + Math.sin(t * 13 + fase) * 0.12, 1 + Math.sin(t * 9 + fase) * 0.2, 1);
         for (const b of bruma) {
@@ -491,48 +658,56 @@ export const DECORADOS: Record<string, Decorado> = {
       }
     },
     vivo: (c) => {
-      const { grupo, y, r } = c;
-      // Pares de ojos detrás, entre las agujas: parpadean y, de vez en cuando, cambian de sitio.
-      // Grandes y con un halo: a 0,022 no se veían desde la cámara.
-      const geoOjo = c.geo(new SphereGeometry(0.045, 10, 8).scale(1.4, 0.75, 0.4));
-      const geoHalo = c.geo(new SphereGeometry(0.09, 10, 8).scale(1.5, 0.8, 0.3));
-      const ojos = Array.from({ length: 4 }, (_, i) => {
+      const { grupo, r } = c;
+      // La pantalla empieza casi negra y se aclara poco a poco mientras evoluciona; en la oscuridad,
+      // ojos brillantes que parpadean por todas partes y se apagan al hacerse la luz (autor, 2026-11-20).
+      const geoOjo = c.geo(new SphereGeometry(0.05, 10, 8).scale(1.4, 0.7, 0.4));
+      const geoHalo = c.geo(new SphereGeometry(0.1, 10, 8).scale(1.5, 0.8, 0.3));
+      const ojos = Array.from({ length: 16 }, (_, i) => {
         const par = new Group();
+        const mats: MeshBasicNodeMaterial[] = [];
         for (const s of [-1, 1]) {
-          const m = new Mesh(geoOjo, brillo(c, i % 2 ? '#FFE066' : '#D2A8FF'));
-          m.position.x = s * 0.085;
-          const halo = new Mesh(geoHalo, brillo(c, i % 2 ? '#F2D14C' : '#9B6BFF', 0.3));
-          halo.position.x = s * 0.085;
+          const m = new Mesh(geoOjo, brillo(c, i % 3 === 0 ? '#FFE066' : i % 3 === 1 ? '#D2A8FF' : '#FF6B5E', 0.95));
+          m.position.x = s * 0.09;
+          const halo = new Mesh(geoHalo, brillo(c, i % 3 === 0 ? '#F2D14C' : i % 3 === 1 ? '#9B6BFF' : '#E0403A', 0.3));
+          halo.position.x = s * 0.09;
           par.add(m, halo);
+          mats.push(m.material as MeshBasicNodeMaterial, halo.material as MeshBasicNodeMaterial);
         }
+        // Repartidos por el fondo y los lados, lejos de la criatura.
+        const lado = i % 2 ? 1 : -1;
+        const x = lado * (1.2 + r() * 3.2);
+        const z = -1.5 - r() * 3;
+        par.position.set(x, 0.2 + r() * 3, z);
+        par.scale.setScalar(1 + (-z - 1.5) * 0.3);
+        par.lookAt(x * 0.3, par.position.y, 8);
         grupo.add(par);
-        return { par, fase: r() * 10, sitio: -1 };
-      });
-      const sitios = Array.from({ length: 9 }, (_, i) => {
-        const a = Math.PI + 0.3 + (i / 8) * (Math.PI - 0.6);
-        const rr = 1.35 + (i % 3) * 0.12;
-        return new Vector3(Math.cos(a) * rr, y(Math.cos(a) * rr, Math.sin(a) * rr) + 0.22 + (i % 2) * 0.16, Math.sin(a) * rr);
+        return { par, mats, fase: r() * 10, periodo: 2.2 + r() * 2 };
       });
       const bruma = Array.from({ length: 8 }, (_, i) => {
         const m = new Mesh(c.geo(new SphereGeometry(1, 12, 6).scale(0.4, 0.06, 0.2)), brillo(c, '#1E1A26', 0.35));
         grupo.add(m);
         return { m, a: (i / 8) * Math.PI * 2 };
       });
+      const oscuro = new Color('#0D0B12');
+      const claro = new Color('#D6D0DC');
+      const fondo = new Color();
+      let inicio: number | null = null;
       c.vivos.push((t) => {
-        ojos.forEach((o, i) => {
-          const ciclo = Math.floor((t + o.fase) / 4);
-          const sitio = (ciclo * 3 + i * 2) % sitios.length;
-          if (sitio !== o.sitio) {
-            o.sitio = sitio;
-            o.par.position.copy(sitios[sitio]);
-            o.par.lookAt(o.par.position.x * 0.2, o.par.position.y, 8);
-          }
-          const k = (t + o.fase) % 4;
-          // Se abren, parpadean una vez y se cierran antes de irse.
-          const abierto = k < 0.3 ? k / 0.3 : k > 3.6 ? Math.max(0, (3.9 - k) / 0.3) : Math.abs(k - 2) < 0.08 ? 0.1 : 1;
-          o.par.scale.set(1, Math.max(0.05, abierto), 1);
-          o.par.visible = abierto > 0.02;
-        });
+        inicio ??= t;
+        // De negro a claro en unos 9 s, lo que dura la evolución, primero despacio.
+        const k = Math.min(1, (t - inicio) / 9);
+        const luz = k * k * (3 - 2 * k);
+        c.fondo(fondo.copy(oscuro).lerp(claro, luz));
+        for (const o of ojos) {
+          const kk = ((t + o.fase) % o.periodo) / o.periodo;
+          // Abiertos casi siempre, con un parpadeo rápido; cada vez menos según se aclara.
+          const abierto = Math.abs(kk - 0.5) < 0.04 ? 0.08 : 1;
+          o.par.scale.y = o.par.scale.x * Math.max(0.05, abierto);
+          const intensidad = Math.max(0, 1 - luz * 1.4);
+          o.par.visible = intensidad > 0.02;
+          o.mats.forEach((m, i) => (m.opacity = (i % 2 ? 0.3 : 0.95) * intensidad));
+        }
         for (const b of bruma) {
           const a = b.a - t * 0.1;
           b.m.position.set(Math.cos(a) * 1.55, 0.06, Math.sin(a) * 1.4);
@@ -542,51 +717,81 @@ export const DECORADOS: Record<string, Decorado> = {
     },
   },
 
-  // ——— Ancestral: ruinas de piedra: columnas rotas, un arco y runas doradas que laten.
+  // ——— Ancestral: algo imponente (autor, 2026-11-20: «habrá pocos que evolucionen; si hay, debe
+  // ser algo grande y mitológico, con ofrendas»). Un templo de columnas detrás, más alto que nada,
+  // con su frontón y un sol de oro; escalinata, dos braseros encendidos y ofrendas a sus pies.
   ruinas: {
-    fijo: ({ M, r, y, plano }) => {
-      // El arco, detrás, en el centro.
-      const z = -1.42;
+    fijo: ({ M, y }) => {
+      const z = TEMPLO_Z;
+      const b = y(0, z);
+      // Escalinata de tres peldaños, de lado a lado.
+      for (let k = 0; k < 3; k++) M.ponDegradado(new BoxGeometry(2.5 - k * 0.12, 0.08, 0.5 - k * 0.1).translate(0, b + 0.04 + k * 0.08, z - k * 0.05), '#A68F68', '#C9B38A');
+      // Seis columnas estriadas, con basa y capitel; no más altas, o el frontón se sale de la pantalla.
+      const alto = ALTO_COLUMNAS;
+      const suelo = b + 0.24;
+      for (let i = 0; i < 6; i++) {
+        const x = -1.05 + i * 0.42;
+        M.pon(new BoxGeometry(0.24, 0.06, 0.24).translate(x, suelo + 0.03, z), '#B39C74');
+        M.ponDegradado(acanalar(new CylinderGeometry(0.09, 0.105, alto, 14), 10, 0.12).translate(x, suelo + 0.06 + alto / 2, z), '#B39C74', '#E3D3AE');
+        M.pon(new BoxGeometry(0.26, 0.07, 0.26).translate(x, suelo + 0.06 + alto + 0.035, z), '#D2BF98');
+      }
+      // Arquitrabe, friso y frontón.
+      const arriba = suelo + 0.06 + alto + 0.07;
+      M.ponDegradado(new BoxGeometry(2.45, 0.16, 0.34).translate(0, arriba + 0.08, z), '#B39C74', '#D2BF98');
+      M.pon(new BoxGeometry(2.5, 0.05, 0.38).translate(0, arriba + 0.185, z), '#E3D3AE');
+      // El frontón: un prisma de tres lados con la punta arriba, de lado a lado del templo.
+      const fronton = new CylinderGeometry(1, 1, 0.3, 3).rotateX(-Math.PI / 2).scale(2.5 / Math.sqrt(3), ALTO_FRONTON / 1.5, 1);
+      M.ponDegradado(fronton.translate(0, arriba + 0.21 + ALTO_FRONTON / 3, z), '#B39C74', '#E3D3AE');
+      // Dos estatuas guardianas a los lados de la escalinata: un pedestal y una figura sentada.
       for (const s of [-1, 1]) {
-        const x = s * 0.42;
-        M.ponDegradado(acanalar(new CylinderGeometry(0.09, 0.1, 0.85, 12), 8, 0.12).translate(x, y(x, z) + 0.43, z), '#A68F68', '#D2BF98');
-        M.pon(new BoxGeometry(0.26, 0.08, 0.26).translate(x, y(x, z) + 0.04, z), '#9A8460');
+        const x = s * 1.35;
+        const zz = z + 0.45;
+        M.ponDegradado(new BoxGeometry(0.26, 0.3, 0.26).translate(x, y(x, zz) + 0.15, zz), '#9A8460', '#C9B38A');
+        M.ponDegradado(new CylinderGeometry(0.08, 0.11, 0.3, 10).translate(x, y(x, zz) + 0.45, zz), '#B39C74', '#E3D3AE');
+        M.ponDegradado(new SphereGeometry(0.075, 10, 8).translate(x, y(x, zz) + 0.66, zz), '#B39C74', '#E3D3AE');
+        M.pon(new ConeGeometry(0.05, 0.1, 4).translate(x - s * 0.04, y(x, zz) + 0.75, zz), '#C9B38A');
       }
-      M.pon(new BoxGeometry(1.1, 0.16, 0.24).translate(0, y(0, z) + 0.93, z), '#B9A27A');
-      // Columnas rotas y caídas, y sillares sueltos.
-      for (const [a, alto] of [
-        [Math.PI + 0.55, 0.5],
-        [Math.PI + 0.95, 0.3],
-        [2 * Math.PI - 0.6, 0.62],
-        [2 * Math.PI - 0.95, 0.22],
-      ] as [number, number][]) {
-        const rr = 1.38;
-        const x = Math.cos(a) * rr;
-        const zz = Math.sin(a) * rr;
-        M.ponDegradado(acanalar(new CylinderGeometry(0.08, 0.09, alto, 10), 8, 0.12).translate(x, y(x, zz) + alto / 2, zz), '#A68F68', '#C9B38A');
-        M.pon(plano(abollar(new CylinderGeometry(0.075, 0.08, 0.05, 10), 0.1, a * 10).translate(x, y(x, zz) + alto + 0.02, zz)), '#B9A27A');
+      // Ofrendas al pie: ánforas, cuencos con frutas y pétalos.
+      for (const [x, zz] of [[-0.62, z + 0.4], [0.7, z + 0.42]] as [number, number][]) {
+        M.ponDegradado(new SphereGeometry(0.075, 10, 8).scale(1, 1.3, 1).translate(x, y(x, zz) + 0.1, zz), '#8A4A2E', '#C7774A');
+        M.pon(new CylinderGeometry(0.03, 0.04, 0.08, 8).translate(x, y(x, zz) + 0.22, zz), '#A85C38');
       }
-      M.ponDegradado(acanalar(new CylinderGeometry(0.08, 0.08, 0.6, 10), 8, 0.12).rotateZ(Math.PI / 2).rotateY(0.4).translate(1.15, y(1.15, 0.45) + 0.08, 0.45), '#A68F68', '#C9B38A');
-      for (let i = 0; i < 5; i++) {
-        const a = r() * Math.PI * 2;
-        const rr = 1.25 + r() * 0.3;
-        const x = Math.cos(a) * rr;
-        const zz = Math.sin(a) * rr;
-        M.pon(plano(abollar(new BoxGeometry(0.14, 0.1, 0.12), 0.1, i)).rotateY(r() * 3).translate(x, y(x, zz) + 0.05, zz), '#A68F68');
+      const frutas = ['#E2533B', '#F2C94C', '#7AB648', '#9B4DCA'];
+      for (const [x, zz] of [[-0.3, z + 0.5], [0.35, z + 0.52]] as [number, number][]) {
+        M.pon(new SphereGeometry(0.08, 12, 6, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2).translate(x, y(x, zz) + 0.07, zz), '#C9A44A');
+        for (let k = 0; k < 4; k++) M.pon(new SphereGeometry(0.03, 8, 6).translate(x + Math.cos(k * 1.6) * 0.035, y(x, zz) + 0.08, zz + Math.sin(k * 1.6) * 0.03), frutas[k]);
+      }
+      for (let k = 0; k < 14; k++) {
+        const x = -0.8 + ((k * 37) % 16) * 0.1;
+        const zz = z + 0.6 + ((k * 13) % 5) * 0.05;
+        M.pon(new SphereGeometry(0.018, 5, 3).scale(1, 0.4, 1).translate(x, y(x, zz) + 0.01, zz), k % 2 ? '#F2A5D2' : '#FFF2B3');
+      }
+      // Los braseros: trípode y cuenco (la llama, viva, aparte).
+      for (const [x, zz] of BRASEROS) {
+        for (let k = 0; k < 3; k++) {
+          const a = (k / 3) * Math.PI * 2;
+          M.pon(new CylinderGeometry(0.012, 0.012, 0.45, 5).rotateZ(Math.cos(a) * 0.2).rotateX(Math.sin(a) * 0.2).translate(x + Math.cos(a) * 0.05, y(x, zz) + 0.22, zz + Math.sin(a) * 0.05), '#6E5A3C');
+        }
+        M.ponDegradado(new SphereGeometry(0.12, 12, 6, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2).translate(x, y(x, zz) + 0.5, zz), '#8A6A2E', '#D9A441');
       }
     },
     vivo: (c) => {
       const { grupo, y } = c;
-      // Runas doradas: en el arco y en un anillo del suelo. Laten a destiempo.
+      // El sol de oro del frontón y las runas del friso y del suelo, que laten.
+      const z = TEMPLO_Z;
+      const arriba = y(0, z) + 0.24 + 0.06 + ALTO_COLUMNAS + 0.07;
+      const sol = new Mesh(c.geo(new CylinderGeometry(0.11, 0.11, 0.03, 20).rotateX(Math.PI / 2)), brillo(c, '#FFD45E'));
+      sol.position.set(0, arriba + 0.21 + ALTO_FRONTON * 0.36, z + 0.16);
+      grupo.add(sol);
       const geoRuna = c.geo(new BoxGeometry(0.05, 0.08, 0.01));
       const geoRunaSuelo = c.geo(new BoxGeometry(0.06, 0.006, 0.1));
-      const runas: { m: Mesh; fase: number }[] = [];
-      for (let i = 0; i < 5; i++) {
+      const runas: { m: Mesh; fase: number }[] = [{ m: sol, fase: 0 }];
+      for (let i = 0; i < 11; i++) {
         const m = new Mesh(geoRuna, brillo(c, '#FFD45E'));
-        m.position.set(-0.32 + i * 0.16, y(0, -1.42) + 0.93, -1.42 + 0.125);
+        m.position.set(-1.0 + i * 0.2, arriba + 0.08, z + 0.175);
         m.rotation.z = i % 2 ? 0.5 : -0.3;
         grupo.add(m);
-        runas.push({ m, fase: i * 0.7 });
+        runas.push({ m, fase: i * 0.5 });
       }
       for (let i = 0; i < 12; i++) {
         const a = (i / 12) * Math.PI * 2;
@@ -597,8 +802,20 @@ export const DECORADOS: Record<string, Decorado> = {
         grupo.add(m);
         runas.push({ m, fase: i * 0.45 });
       }
+      // Las llamas de los braseros.
+      const llamas = BRASEROS.map(([x, zz], i) => {
+        const g = new Group();
+        g.add(new Mesh(c.geo(new ConeGeometry(0.09, 0.26, 8).translate(0, 0.13, 0)), brillo(c, '#FF8A2A')));
+        g.add(new Mesh(c.geo(new ConeGeometry(0.05, 0.18, 8).translate(0, 0.09, 0)), brillo(c, '#FFE07A')));
+        g.position.set(x, y(x, zz) + 0.5, zz);
+        grupo.add(g);
+        return { g, fase: i * 2.3 };
+      });
+      const oro = new Color('#FFD45E');
       c.vivos.push((t) => {
-        for (const { m, fase } of runas) (m.material as MeshBasicNodeMaterial).color.set(new Color('#FFD45E').multiplyScalar(0.55 + 0.45 * (0.5 + 0.5 * Math.sin(t * 2.2 + fase))));
+        for (const { m, fase } of runas) (m.material as MeshBasicNodeMaterial).color.copy(oro).multiplyScalar(0.55 + 0.45 * (0.5 + 0.5 * Math.sin(t * 2.2 + fase)));
+        sol.rotation.z = t * 0.3;
+        for (const { g, fase } of llamas) g.scale.set(1 + Math.sin(t * 11 + fase) * 0.1, 1 + Math.sin(t * 8 + fase) * 0.22, 1 + Math.sin(t * 9.5 + fase) * 0.1);
       });
     },
   },
@@ -635,13 +852,66 @@ export const DECORADOS: Record<string, Decorado> = {
       tela.position.copy(centro);
       tela.lookAt(centro.x, centro.y, centro.z + 1);
       grupo.add(tela);
+      // Un avispero colgado de una rama curva, a la derecha, con avispas que vuelan alrededor.
+      const nido = mallaLuz(c, (M) => {
+        M.pon(new CylinderGeometry(0.008, 0.008, 0.12, 4).translate(0, 0.06, 0), '#6B5A3A');
+        for (let k = 0; k < 5; k++) M.ponDegradado(new SphereGeometry(0.13 - Math.abs(k - 2) * 0.025, 12, 6).scale(1, 0.32, 1).translate(0, -0.04 - k * 0.055, 0), '#9C8A6A', '#D8C9A4');
+        M.pon(new CylinderGeometry(0.03, 0.03, 0.02, 10).rotateX(Math.PI / 2).translate(0, -0.2, 0.1), '#3A2E22');
+      });
+      const nx = 1.0;
+      const nz = -1.05;
+      nido.position.set(nx, y(nx, nz) + 0.85, nz);
+      grupo.add(nido);
+      const rama = mallaLuz(c, (M) => {
+        M.pon(new CylinderGeometry(0.02, 0.03, 0.9, 6).translate(0, 0.45, 0), '#5C4A32');
+        M.pon(new CylinderGeometry(0.015, 0.02, 0.3, 6).rotateZ(Math.PI / 2.4).translate(-0.12, 0.92, 0), '#5C4A32');
+      });
+      rama.position.set(nx + 0.24, y(nx, nz), nz);
+      grupo.add(rama);
+      const geoAvispa = c.geo(mezclar([new SphereGeometry(0.025, 8, 6).scale(1.6, 1, 1), new SphereGeometry(0.018, 6, 4).translate(0.04, 0, 0)]));
+      const avispas = Array.from({ length: 4 }, (_, i) => {
+        const m = new Mesh(geoAvispa, brillo(c, i % 2 ? '#F2C230' : '#2A2218'));
+        grupo.add(m);
+        return { m, fase: (i / 4) * Math.PI * 2 };
+      });
+      // Una segunda telaraña, grande, entre los dos tallos de la derecha.
+      const [cx2, cz2, ca2] = TALLOS[2];
+      const [dx2, dz2, da2] = TALLOS[3];
+      const tela2 = tela.clone();
+      tela2.position.set((cx2 + dx2) / 2, (y(cx2, cz2) + ca2 + y(dx2, dz2) + da2) / 2 - 0.14, (cz2 + dz2) / 2);
+      tela2.scale.setScalar(0.85);
+      tela2.lookAt(tela2.position.x - 0.4, tela2.position.y, tela2.position.z + 1);
+      grupo.add(tela2);
       c.vivos.push((t) => {
         tela.rotation.y = Math.sin(t * 0.9) * 0.08;
+        nido.rotation.z = Math.sin(t * 1.2) * 0.04;
+        for (const a of avispas) {
+          const ang = a.fase + t * 2.4;
+          a.m.position.set(nx + Math.cos(ang) * 0.3, y(nx, nz) + 0.7 + Math.sin(t * 5 + a.fase) * 0.08, nz + Math.sin(ang) * 0.22);
+          a.m.rotation.y = -ang;
+        }
       });
     },
   },
 };
 
+/** Dónde está el templo de Ancestral (su fachada, de lado a lado, al fondo). */
+const TEMPLO_Z = -1.48;
+/** Lo alto de sus columnas y de su frontón: con 1,75 el frontón se salía por arriba. */
+const ALTO_COLUMNAS = 1.1;
+const ALTO_FRONTON = 0.42;
+/** Los braseros del templo. */
+const BRASEROS: [number, number][] = [
+  [-1.05, -0.55],
+  [1.05, -0.55],
+];
+/** Los espectros: [x, z, si suben (si no, bajan)]. */
+const ESPECTROS: [number, number, boolean][] = [
+  [-1.3, -0.7, true],
+  [1.25, -0.9, false],
+  [-0.55, -1.45, false],
+  [0.6, -1.5, true],
+];
 /** Dónde van los faroles del escenario espectral. */
 const FAROLES: [number, number][] = [
   [-1.25, -0.8],
