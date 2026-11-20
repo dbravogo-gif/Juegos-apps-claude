@@ -22,7 +22,7 @@ button.tarjeta, a.tarjeta { cursor: pointer; text-decoration: none; }
   font: 800 19px/1 var(--titular); border: 2px solid var(--rojo);
   background: color-mix(in srgb, var(--rojo) calc(var(--n, 0) * 9%), var(--superficie)); color: var(--texto);
 }
-.nuevo { font: 700 12px/1 var(--titular); letter-spacing: 0.06em; text-transform: uppercase; background: var(--rojo-oscuro); color: var(--sobre-rojo); padding: 4px 8px; border-radius: 999px; }
+.nuevo { white-space: nowrap; flex: none; font: 700 12px/1 var(--titular); letter-spacing: 0.06em; text-transform: uppercase; background: var(--rojo-oscuro); color: var(--sobre-rojo); padding: 4px 8px; border-radius: 999px; }
 .estado-atleta { font-size: 14px; font-weight: 600; }
 .estado-atleta.inactivo { color: var(--rojo-texto); }
 .acciones { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
