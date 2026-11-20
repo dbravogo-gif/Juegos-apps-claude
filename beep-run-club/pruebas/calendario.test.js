@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { semanasDelMes, sumarMeses, mesDe, leerMes, claveMes, tituloMes, colorDia } from '../src/nucleo/calendario.js';
 import { limpiarEnlaceStrava, validarRegistro } from '../src/nucleo/registro.js';
 import { validarSesion } from '../src/nucleo/plan.js';
-import { necesitaAceptar, VERSION_PRIVACIDAD } from '../src/nucleo/privacidad.js';
+import { necesitaAceptar, VERSION_PRIVACIDAD, validarPolitica, publicarPolitica } from '../src/nucleo/privacidad.js';
 import { plataforma } from '../src/nucleo/plataforma.js';
 
 test('noviembre de 2026 empieza en domingo: 6 semanas, de lunes 26 de octubre a domingo 6 de diciembre', () => {
@@ -78,4 +78,27 @@ test('plataforma para el tutorial de instalación', () => {
   assert.equal(plataforma('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 Version/26.1 Safari/605.1.15', 0), 'escritorio');
   assert.equal(plataforma('Mozilla/5.0 (Linux; Android 15; Pixel 9) AppleWebKit/537.36 Chrome/131.0 Mobile Safari/537.36', 5), 'android');
   assert.equal(plataforma('Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/131.0', 0), 'escritorio');
+});
+
+test('política: el entrenador tiene que poner responsable, email, resumen y apartados completos', () => {
+  const buena = { responsable: { nombre: ' Club ', email: 'Club@Correo.com ' }, resumen: ['Uno', ' '], secciones: [{ titulo: 'A', texto: 'B' }, { titulo: '', texto: '' }] };
+  const r = validarPolitica(buena);
+  assert.equal(r.ok, true, r.errores.join(' '));
+  assert.deepEqual(r.politica.responsable, { nombre: 'Club', email: 'club@correo.com' });
+  assert.deepEqual(r.politica.resumen, ['Uno']);
+  assert.equal(r.politica.secciones.length, 1, 'los apartados vacíos se descartan');
+  assert.equal(validarPolitica({ ...buena, responsable: { nombre: 'X', email: 'no-es-email' } }).ok, false);
+  assert.equal(validarPolitica({ ...buena, secciones: [{ titulo: 'Solo título', texto: '' }] }).ok, false);
+  assert.equal(validarPolitica({ ...buena, resumen: [] }).ok, false);
+});
+
+test('publicar: pedir de nuevo cambia la versión; solo corregir la mantiene', () => {
+  const anterior = { version: 'v-antigua' };
+  const pol = { responsable: { nombre: 'C', email: 'c@c.es' }, resumen: ['x'], secciones: [{ titulo: 't', texto: 'x' }] };
+  const nueva = publicarPolitica(anterior, pol, { pedirDeNuevo: true, fecha: '2026-12-01T10:00:00.000Z' });
+  assert.equal(nueva.version, '2026-12-01T10:00:00.000Z');
+  assert.equal(necesitaAceptar({ version: 'v-antigua', fecha: 'x' }, nueva.version), true);
+  const corregida = publicarPolitica(anterior, pol, { pedirDeNuevo: false, fecha: '2026-12-02T10:00:00.000Z' });
+  assert.equal(corregida.version, 'v-antigua');
+  assert.equal(corregida.publicada, '2026-12-02T10:00:00.000Z');
 });

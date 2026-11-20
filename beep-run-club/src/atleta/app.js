@@ -14,6 +14,7 @@ import { pantallaSesion, pantallaValorar, pantallaHecho } from './sesion.js';
 import { pantallaAjustes } from './ajustes.js';
 import { pantallaMes } from './mes.js';
 import { pedirPrivacidad, faltaAceptar, aceptacionGuardada, pantallaPrivacidad } from './privacidad.js';
+import { politicaPorDefecto } from '../datos/textos-privacidad.js';
 import { capturarInstalacion, debeOfrecerInstalar, pantallaInstalar } from './instalar.js';
 import { leerMes, mesDe } from '../nucleo/calendario.js';
 
@@ -64,9 +65,9 @@ const ctx = {
     }
     // Protección de datos: antes de registrar este móvil y de guardar nada.
     let aceptacion = aceptacionGuardada();
-    if (faltaAceptar()) {
+    if (faltaAceptar(ctx.politica)) {
       ctx.pantalla = 'privacidad';
-      aceptacion = await pedirPrivacidad();
+      aceptacion = await pedirPrivacidad(ctx.politica, { actualizada: !!aceptacion });
       if (!aceptacion) return MENSAJES['sin-privacidad'];
     }
     const r = await ctx.almacen.entrar(codigo, idDispositivo(), aceptacion).catch(() => ({ ok: false, motivo: 'sin-conexion' }));
@@ -159,6 +160,7 @@ async function arrancar() {
   aplicarTema();
   capturarInstalacion();
   ctx.almacen = await crearAlmacen();
+  ctx.politica = await ctx.almacen.politica().catch(() => politicaPorDefecto());
   const crudo = new URLSearchParams(location.search).get('c');
   const codigoEnlace = crudo ? normalizarCodigo(crudo) : null;
   const accion = decidirEntrada(ctx.sesion, codigoEnlace);
@@ -180,15 +182,19 @@ async function arrancar() {
     const error = await ctx.entrarCon(codigoEnlace);
     if (error && error !== 'cancelado') tostada(`El enlace que has abierto no sirve. ${error}`);
     if (error) { ponerCodigoEnUrl(ctx.sesion.codigo); rutear(); }
-  } else if (ctx.sesion && faltaAceptar()) {
-    // Sesión de antes de que hubiera protección de datos (o el texto ha cambiado): se pide ahora.
+  } else if (ctx.sesion && faltaAceptar(ctx.politica)) {
+    // El entrenador ha publicado una versión nueva pidiendo aceptarla otra vez (o es una sesión de
+    // antes de que hubiera protección de datos): se pide ahora, antes de seguir.
     ctx.pantalla = 'privacidad';
-    const aceptacion = await pedirPrivacidad();
+    const aceptacion = await pedirPrivacidad(ctx.politica, { actualizada: !!aceptacionGuardada() });
     if (!aceptacion) ctx.cerrarSesion(MENSAJES['sin-privacidad']);
     else {
-      await ctx.almacen.entrar(ctx.sesion.codigo, idDispositivo(), aceptacion).catch(() => null);
-      ponerCodigoEnUrl(ctx.sesion.codigo);
-      rutear();
+      const r = await ctx.almacen.registrarAceptacion(ctx.sesion.codigo, idDispositivo(), aceptacion).catch(() => ({ ok: true }));
+      // Sin salir de arrancar(): más abajo se registran las rutas y el service worker.
+      if (!(r.estado && await ctx.siCodigoInvalido(r.estado))) {
+        ponerCodigoEnUrl(ctx.sesion.codigo);
+        rutear();
+      }
     }
   } else {
     if (ctx.sesion) ponerCodigoEnUrl(ctx.sesion.codigo);

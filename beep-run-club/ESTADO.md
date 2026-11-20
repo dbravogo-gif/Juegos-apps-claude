@@ -18,21 +18,20 @@ funcionan con datos de ejemplo guardados en el navegador. Falta la nube (fase 3)
   visual. Los 16 problemas que encontró están corregidos y los graves tienen su prueba en `npm run flujos`.
 - **Añadido (2026-11-20):** protección de datos al entrar, tutorial de instalación, vista de mes
   con dos colores e intensidad que marca el entrenador, y enlace de Strava.
-- **Comprobado:** 60 pruebas (`npm test`) y 73 comprobaciones de punta a punta (`npm run flujos`).
+- **Comprobado:** 63 pruebas (`npm test`) y 87 comprobaciones de punta a punta (`npm run flujos`).
 
 ## Siguiente
 
-1. Revisión del `probador` del panel y de `F16` a `F19` (sin marcar hechas hasta entonces).
+1. Revisión del `probador` del panel y de `F16` a `F20` (sin marcar hechas hasta entonces).
 2. Fase 3: almacén Firebase y reglas con sus pruebas (`F12`), guía de puesta en marcha (`F13`)
    y publicación (`F14`, toca `.github/`: se consulta al autor antes de fusionar).
 
 ## Pendiente del autor
 
 - Probar la demo publicada (PR #124, 2026-11-20) en su iPhone y puntuarla de 1 a 5.
-- El nombre del responsable de los datos y un email de contacto (para la protección de datos), y
-  que el club revise ese texto.
-- Seguir la parte 1 de `PUESTA-EN-MARCHA.md` con la cuenta de Google del entrenador y pasar el
-  bloque `firebaseConfig`.
+- Con la app conectada: escribir el responsable y el email en el panel (pestaña Club) y revisar
+  el texto de protección de datos. No van en el código porque el repositorio es público.
+- Firebase ya está preparado (2026-11-20): falta pasar el bloque `firebaseConfig`.
 - Para la fase 4: 5 capturas reales de Strava (claras y oscuras).
 
 ## Defectos conocidos

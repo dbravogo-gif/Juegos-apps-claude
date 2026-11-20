@@ -15,7 +15,7 @@ export function cabeceraPanel(ctx, { atras = null } = {}) {
 
 export function pestanas(activa) {
   const enlace = (ruta, texto, id) => h('a', { href: ruta, 'aria-current': activa === id ? 'page' : null }, texto);
-  return h('nav', { class: 'pestanas', 'aria-label': 'Secciones' }, enlace('#/novedades', 'Novedades', 'novedades'), enlace('#/atletas', 'Atletas', 'atletas'));
+  return h('nav', { class: 'pestanas', 'aria-label': 'Secciones' }, enlace('#/novedades', 'Novedades', 'novedades'), enlace('#/atletas', 'Atletas', 'atletas'), enlace('#/club', 'Club', 'club'));
 }
 
 /** Enlace que abre la app del atleta ya con su código. */

@@ -118,6 +118,34 @@ await p.locator('.pie-fijo .boton-principal').click(); await espera(p);
 await p.goto(`${BASE}?hoy=2026-11-19#/mes/2026-11`); await espera(p, 500);
 const dia17 = p.locator('.mes-rejilla .dia-mes[aria-label*="17 de noviembre"]');
 ok((await dia17.getAttribute('class')).includes('exigente'), 'el día que el entrenador marca como exigente cambia de color');
+
+// --- Política de protección de datos desde el panel (nombres de prueba, no reales) ---
+await p.goto(`${BASE}entrenador/?hoy=2026-11-19#/club`); await espera(p, 500);
+ok(/La han aceptado 1 de 2 atletas activos/.test(await p.locator('body').innerText()), 'el panel dice cuántos atletas han aceptado la política');
+await p.locator('.pie-fijo .boton-principal').click(); await espera(p, 200);
+ok(/responsable/.test(await p.locator('.pie-fijo .error').innerText()), 'sin responsable ni email no deja guardar');
+await p.fill('#resp-nombre', 'Club de Prueba');
+await p.fill('#resp-email', 'club@prueba.es');
+await foto(p, '49-club');
+await p.locator('.pie-fijo .boton-principal').click(); await espera(p, 200);
+await p.locator('dialog button', { hasText: 'Pedir que la acepten de nuevo' }).click(); await espera(p, 400);
+ok(/La han aceptado 0 de 2/.test(await p.locator('body').innerText()), 'al publicar pidiendo aceptar de nuevo, nadie la tiene aceptada');
+await p.goto(`${BASE}?hoy=2026-11-19`); await espera(p, 600);
+ok((await p.locator('h1').innerText()) === 'Hemos actualizado la protección de datos', 'al atleta le sale de nuevo al abrir la app');
+ok(/Club de Prueba/.test(await p.locator('.detalle-legal').innerText()) && /club@prueba.es/.test(await p.locator('.detalle-legal').innerText()), 'con el responsable y el email nuevos');
+await foto(p, '50-actualizada');
+await p.check('#acepto'); await p.locator('button', { hasText: 'Aceptar y continuar' }).click(); await espera(p, 500);
+ok(['semana', 'mes'].includes((await estado(p)).pantalla), 'tras aceptarla sigue en su calendario');
+await p.goto(`${BASE}entrenador/?hoy=2026-11-19#/club`); await espera(p, 500);
+ok(/La han aceptado 1 de 2/.test(await p.locator('body').innerText()), 'y el panel lo cuenta');
+await p.fill('#sec-0-x', 'Texto corregido de prueba.');
+await p.locator('.pie-fijo .boton-principal').click(); await espera(p, 200);
+await p.locator('dialog button', { hasText: 'Solo corregir' }).click(); await espera(p, 400);
+ok(/La han aceptado 1 de 2/.test(await p.locator('body').innerText()), 'solo corregir no obliga a aceptarla otra vez');
+await p.goto(`${BASE}?hoy=2026-11-19`); await espera(p, 600);
+ok(['semana', 'mes'].includes((await estado(p)).pantalla), 'tras una corrección, el atleta entra sin que le salga');
+await p.goto(`${BASE}?hoy=2026-11-19#/privacidad`); await espera(p, 400);
+ok(/Texto corregido de prueba/.test(await p.locator('body').innerText()), 'pero en Ajustes ve el texto corregido');
 await ctx.close();
 
 // --- Rechazar la protección de datos ---

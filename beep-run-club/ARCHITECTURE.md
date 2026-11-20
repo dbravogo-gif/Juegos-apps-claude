@@ -40,7 +40,8 @@ Todo agente lo lee antes de escribir código.
 
 | Ruta | Campos | Quién la usa |
 | --- | --- | --- |
-| `entrenadores/{uid}` | `nombre` | Existir aquí da permisos de entrenador |
+| `entrenadores/{uid}` | `nombre` | Existir aquí da permisos de entrenador (uno por entrenador) |
+| `club/politica` | `version`, `publicada`, `responsable{}`, `resumen[]`, `secciones[]` | La política de protección de datos vigente. Sin documento, vale la original del código |
 | `codigos/{codigo}` | `atleta`, `activo` | El código que teclea el atleta |
 | `codigos/{codigo}/dispositivos/{uid}` | `alta`, `privacidad` (`version`, `fecha`) | Cada móvil que entró con ese código, con su aceptación de la protección de datos |
 | `atletas/{id}` | `nombre`, `codigo`, `estado` (`activo`, `archivado`) | Datos del atleta |

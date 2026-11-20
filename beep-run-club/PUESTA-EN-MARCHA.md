@@ -20,9 +20,9 @@ Los nombres de los menús pueden variar un poco: la consola de Firebase cambia a
 4. **Activar el acceso.** En Authentication → «Comenzar» → «Método de acceso», activar:
    - **Anónimo**, para los atletas: entran con su código, sin cuenta;
    - **Correo electrónico/contraseña**, para el entrenador. Solo eso: sin el «vínculo por correo».
-5. **Crear la cuenta del entrenador.** En Authentication → «Usuarios» → «Agregar usuario».
+5. **Crear una cuenta por entrenador.** En Authentication → «Usuarios» → «Agregar usuario».
    - Su email y una contraseña larga. **La contraseña no se le pasa a nadie, tampoco a Claude.**
-   - Copiar el **UID** que aparece en la lista de usuarios.
+   - Copiar el **UID** de cada uno, que aparece en la lista de usuarios.
 6. **Dominio autorizado.** En Authentication → «Configuración» → «Dominios autorizados» →
    «Agregar dominio»: `dbravogo-gif.github.io`.
 7. **Crear la base de datos.** En Firestore Database → «Crear base de datos».
@@ -31,24 +31,25 @@ Los nombres de los menús pueden variar un poco: la consola de Firebase cambia a
    - Modo: **producción**. Bloquea todo hasta poner las reglas de la parte 2, que es lo seguro.
 8. **Dar permiso de entrenador.** En Firestore → «Datos» → «Iniciar colección».
    - ID de la colección: `entrenadores`.
-   - ID del documento: **el UID del paso 5**.
-   - Un campo: `nombre` (cadena) con su nombre.
+   - Un documento por entrenador, con **el UID del paso 5** como ID y un campo `nombre` (cadena)
+     con su nombre.
 9. **Opcional:** dar acceso al autor para que pueda ayudar. En ⚙️ Configuración del proyecto →
    «Usuarios y permisos» → «Agregar miembro» → su email, con el rol «Editor».
 
 **Qué hay que pasarle a Claude:**
 
-- **el nombre del responsable de los datos** (el del club o el del entrenador) **y un email de
-  contacto**, que salen en la información de protección de datos;
 
 - el bloque `firebaseConfig` del paso 3;
 - la confirmación de que la ubicación es `europe-southwest1`.
 
 Nada más: ni contraseñas ni el UID.
 
-**Antes de usarla con atletas reales:** el club debe revisar el texto de protección de datos
-(`src/datos/textos-privacidad.js`). Lo redactó Claude a partir de lo que guarda la app, pero sin
-asesoría jurídica.
+**Antes de usarla con atletas reales:**
+
+- en el panel, pestaña **Club**, escribir el responsable de los datos y el email de contacto, y
+  revisar el texto de protección de datos. Lo redactó Claude a partir de lo que guarda la app,
+  pero sin asesoría jurídica;
+- guardarlo con «Pedir que la acepten de nuevo».
 
 ## Parte 2: cuando Claude termine la fase 3
 

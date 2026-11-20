@@ -115,6 +115,14 @@ Entra en un panel aparte (`/beep-run-club/entrenador/`) con su email y contrase�
 - (2026-11-20) **La fase 4 (leer capturas de Strava) queda en duda:** con el enlace, el entrenador
   ya ve la actividad entera. Se decide cuando el club haya usado el enlace.
 
+- (2026-11-20) **La política se gestiona desde el panel (pestaña Club):** responsable, email,
+  resumen y apartados. Al guardar, el entrenador elige entre «Pedir que la acepten de nuevo», si
+  cambia algo de fondo (qué datos, para qué, con quién o quién es el responsable), o «Solo
+  corregir», si son erratas o cambios de forma. Así lo entiende Claude del RGPD (inferencia, sin
+  asesoría jurídica). El panel cuenta cuántos atletas activos han aceptado la versión vigente.
+- (2026-11-20) **Los nombres y el email de los entrenadores no van en el código:** el repositorio
+  es público. Se escriben en la pestaña Club y se guardan con los datos de la app.
+
 ## Decisiones abiertas
 
 No se diseñan sin el autor.
