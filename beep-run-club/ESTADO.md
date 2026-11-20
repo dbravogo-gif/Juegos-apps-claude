@@ -1,6 +1,6 @@
 # Estado de Beep Run Club
 
-Actualizado: 2026-11-19. Solo el presente; el historial está en git. Máximo 40 líneas.
+Actualizado: 2026-11-20. Solo el presente; el historial está en git. Máximo 40 líneas.
 
 ## Fase actual
 
@@ -21,13 +21,14 @@ funcionan con datos de ejemplo guardados en el navegador. Falta la nube (fase 3)
 ## Siguiente
 
 1. Revisión del `probador` del panel del entrenador (fase 2): falta, se cerró sin ella.
-2. Publicar la demo para que el autor la pruebe en su iPhone (espera su sí: toca `.github/`).
-3. Fase 3: almacén Firebase y reglas con sus pruebas (`F12`), guía de puesta en marcha (`F13`)
+2. Fase 3: almacén Firebase y reglas con sus pruebas (`F12`), guía de puesta en marcha (`F13`)
    y publicación (`F14`, toca `.github/`: se consulta al autor antes de fusionar).
 
 ## Pendiente del autor
 
-- La cuenta de Firebase del entrenador (ya pedida). Con ella se sigue la guía de la fase 3.
+- Probar la demo publicada (PR #124, 2026-11-20) en su iPhone y puntuarla de 1 a 5.
+- Seguir la parte 1 de `PUESTA-EN-MARCHA.md` con la cuenta de Google del entrenador y pasar el
+  bloque `firebaseConfig`.
 - Para la fase 4: 5 capturas reales de Strava (claras y oscuras).
 
 ## Defectos conocidos
