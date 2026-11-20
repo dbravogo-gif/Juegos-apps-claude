@@ -460,6 +460,7 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
 - 2026-11-19 · Combate (autor): el cursor vuelve al último ataque de cada criatura; las fichas llevan los tipos bajo el nombre; el ataque marcado se explica a la izquierda: un cuadradito propio con su categoría (pesa, física; destello, mágica; flechas, de estado) y debajo potencia, PP y efectos. Con qué estadística pega no se dice, porque es lo normal; la precisión, solo si no es 100 (`core/describir.ts`).
 - 2026-11-19 · Evolución más currada (autor): una isla flotante esculpida por tipo, con lo de su tipo encima y lo que cae con peso y forma, en vez de un disco plano y confeti (ARTE.md).
 - 2026-11-19 · Refugios y tiendas marcados (carpintería, pretil y emblema de su color en la azotea) y escaleras de verdad: juguetes solo en una de cada tres casas; por las demás se sube a un dormitorio (autor).
+- 2026-11-19 · Sonido nuevo (autor): pasos según el terreno (hierba alta, malpaís, arena), música más profunda y con más voces (vals con timple al explorar; Mi menor con percusión en combate) y ambiente por zona. Todo generado por código, propio; lo valora el autor.
 
 ## Decisiones abiertas
 

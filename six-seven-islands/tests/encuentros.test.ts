@@ -57,6 +57,7 @@ describe('encuentros', () => {
     const eventos = [];
     for (let i = 0; i <= PASOS_POR_CASILLA; i++) eventos.push(...avanzar(m, e, i === 0 ? 'n' : null));
     expect(clave(e.x, e.y)).toBe(k - 4096);
-    expect(eventos).toContainEqual({ tipo: 'hierba', zona: e.zona });
+    // Con su terreno, para que cada uno suene a lo suyo (hierba alta, malpaís o arena).
+    expect(eventos).toContainEqual({ tipo: 'hierba', zona: e.zona, terreno: '"' });
   });
 });
