@@ -21,8 +21,8 @@ modelo se llaman «PokN. Nombre» (autor, 2026-11-17): N es su número en esta l
 nunca, y el nombre es el suyo o su apodo. Se suben a `conceptos/criaturas/meshy/`. Para que Gemini te las vaya
 diciendo de una en una: `conceptos/criaturas/guia-gemini.txt`, que lleva sus instrucciones arriba.
 
-**Coste.** Faltan 167 criaturas (hay 36 hechas). A 15 créditos cada una
-(Smart Topology y textura, precio comprobado el 2026-11-07), son unos 2.505 créditos sin
+**Coste.** Faltan 157 criaturas (hay 46 hechas). A 15 créditos cada una
+(Smart Topology y textura, precio comprobado el 2026-11-07), son unos 2.355 créditos sin
 contar repeticiones. Por isla, en la tabla de abajo.
 
 ## Las cuentas
@@ -56,14 +56,14 @@ Todas cuadran: si no, el script no genera nada.
 
 | Isla | Especies nuevas | Criaturas | Por generar | Créditos |
 | --- | --- | --- | --- | --- |
-| Lanzarote | 47 | 47 | 13 | 195 |
-| Fuerteventura | 14 | 30 | 30 | 450 |
+| Lanzarote | 47 | 47 | 5 | 75 |
+| Fuerteventura | 15 | 30 | 28 | 420 |
 | Gran Canaria | 25 | 37 | 37 | 555 |
 | Tenerife | 23 | 38 | 36 | 540 |
 | La Gomera | 13 | 22 | 22 | 330 |
 | La Palma | 10 | 16 | 16 | 240 |
 | El Hierro | 11 | 13 | 13 | 195 |
-| **Total** | | **203** | **167** | **2.505** |
+| **Total** | | **203** | **157** | **2.355** |
 
 Lanzarote incluye las 15 iniciales y las 5 leyendas de los pueblos, que duermen allí.
 
@@ -242,14 +242,14 @@ nombre lo pone el autor. La idea va en la primera forma de cada especie.
 | Pok32. Colossoreps | 012-3 (hecha) | 3.ª | Roca | Gigalith (Q4, TF) | 2,0 m |  |  |
 | Pok33. Kine | 034-1 (hecha) | 1.ª | Tierra A | Makuhita (Q1, AF) | 0,5 m | El Jable | Hecha por el autor. |
 | Pok34. Kurokin | 034-2 (hecha) | 2.ª | Tierra A | Hariyama (Q3, AF) | 1,2 m |  |  |
-| Pok35. Melaní | 005-1 | 1.ª | Bicho A | Venipede (Q1, TF) | 0,3 m | El Jable | Lámina del autor. |
-| Pok36. Favenir | 005-2 | 2.ª | Bicho/Veneno A | Whirlipede (Q2, TF) | 0,6 m |  |  |
-| Pok37. Reginis | 005-3 | 3.ª | Bicho/Veneno A | Scolipede (Q3, AF) | 1,5 m |  |  |
-| Pok38. Aerund | 035-1 | 1.ª | Aire A | Wingull (Q1, AE) | 0,4 m | Famara | Lámina del autor. |
-| Pok39. Marwen | 035-2 | 2.ª | Aire/Agua A | Pelipper (Q3, TF) | 1,8 m |  |  |
-| Pok40. Salmito | 018-1 | 1.ª | Agua | Spheal (Q1, EN) | 0,5 m | Famara | Nombre del autor; el aspecto, por diseñar. |
-| Pok41. Salmarín | 018-2 | 2.ª | Agua | Sealeo (Q3, EN) | 1,1 m |  |  |
-| Pok42. Salmástil | 018-3 | 3.ª | Agua/Hielo | Walrein (Q4, TE) | 1,8 m |  |  |
+| Pok35. Cicadot | 005-1 (hecha) | 1.ª | Bicho A | Venipede (Q1, TF) | 0,3 m | El Jable | Lámina del autor. |
+| Pok36. Chitick | 005-2 (hecha) | 2.ª | Bicho/Veneno A | Whirlipede (Q2, TF) | 0,6 m |  |  |
+| Pok37. Cicadread | 005-3 (hecha) | 3.ª | Bicho/Veneno A | Scolipede (Q3, AF) | 1,5 m |  |  |
+| Pok38. Gullit | 035-1 (hecha) | 1.ª | Aire A | Wingull (Q1, AE) | 0,4 m | Famara | Lámina del autor. |
+| Pok39. Seaglide | 035-2 (hecha) | 2.ª | Aire/Agua A | Pelipper (Q3, TF) | 1,8 m |  |  |
+| Pok40. Salmite | 018-1 (hecha) | 1.ª | Agua | Spheal (Q1, EN) | 0,5 m | Famara | Nombre del autor; el aspecto, por diseñar. |
+| Pok41. Salmastar | 018-2 (hecha) | 2.ª | Agua | Sealeo (Q3, EN) | 1,1 m |  |  |
+| Pok42. Koralsalm | 018-3 (hecha) | 3.ª | Agua/Hielo | Walrein (Q4, TE) | 1,8 m |  |  |
 | Pok43. Leyenda verde | 094 | única | Planta/Tierra | Dialga (Q5, AE) | 4,0 m | La Geria (leyenda) | La leyenda verde, del pueblo del Hoyo: gran criatura de vid y picón que duerme en un hoyo de La Geria. |
 | Pok44. Magecora | 095 | única | Infernal/Mental A | Reshiram (Q5, AE) | 3,5 m | Montañas del Fuego, el cráter (leyenda) | Lámina del autor: la leyenda infernal, del pueblo de la Colada. |
 | Pok45. Leyenda de roca | 092 | única | Roca/Aire | Zekrom (Q5, AF) | 4,0 m | Risco de Famara (leyenda) | La leyenda de roca, del pueblo del Risco: guardiana del acantilado de Famara, de basalto y viento. |
@@ -260,8 +260,8 @@ nombre lo pone el autor. La idea va en la primera forma de cada especie.
 
 | Pokédex | Id interno | Forma | Tipos | Estadísticas de | Altura | Zona | Idea |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Pok48. Remolino de jable | 044-1 | 1.ª | Aire | Cottonee (Q1, TF) | 0,4 m | Las Dunas | Remolino de jable: bolita de arena y semillas que rueda con el viento; la 2.ª, torbellino de arena con cara. Sustituye al remolino provisional del gimnasio de Aire. |
-| Pok49. Remolino de jable | 044-2 | 2.ª | Aire/Tierra | Whimsicott (Q4, TF) | 1,2 m |  |  |
+| Pok48. Aerund | 044-1 (hecha) | 1.ª | Aire | Cottonee (Q1, TF) | 0,4 m | Las Dunas | Remolino de jable: bolita de arena y semillas que rueda con el viento; la 2.ª, torbellino de arena con cara. Sustituye al remolino provisional del gimnasio de Aire. |
+| Pok49. Tailsan | 044-2 (hecha) | 2.ª | Aire/Tierra | Whimsicott (Q4, TF) | 1,2 m |  |  |
 | Pok50. Lisa de duna | 009-1 | 1.ª | Tierra | Trapinch (Q1, AF) | 0,5 m | Las Dunas | Lisa de duna: lagartija que nada bajo la arena; la 2.ª, con aletas de arena; la 3.ª, con velas que planean sobre las dunas. |
 | Pok51. Lisa de duna | 009-2 | 2.ª | Tierra | Vibrava (Q2, EN) | 1,1 m |  |  |
 | Pok52. Lisa de duna | 009-3 | 3.ª | Tierra/Aire | Flygon (Q4, EN) | 2,0 m |  |  |

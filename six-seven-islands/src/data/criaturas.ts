@@ -52,6 +52,26 @@ export const ESPECIES_CRIATURAS: readonly Especie[] = [
   { id: 'c034-1', nombre: 'Kine', tipos: ['tierra'], base: base(72, 60, 30, 20, 30, 25), expBase: 55, ratioCaptura: 200, aprende: [{ nivel: 1, movimiento: 'topetazo' }, { nivel: 1, movimiento: 'mirada-fija' }, { nivel: 5, movimiento: 'arenazo' }, { nivel: 9, movimiento: 'pisoton' }], evoluciona: [{ a: 'c034-2', nivel: 24 }], altura: 0.5, descripcion: '' },
   // Pok34: Hariyama (Q3, AF).
   { id: 'c034-2', nombre: 'Kurokin', tipos: ['tierra'], base: base(144, 120, 60, 40, 60, 50), expBase: 140, ratioCaptura: 90, aprende: [{ nivel: 1, movimiento: 'pisoton' }, { nivel: 1, movimiento: 'arenazo' }, { nivel: 1, movimiento: 'topetazo' }, { nivel: 1, movimiento: 'barrito' }], altura: 1.2, descripcion: '' },
+  // Pok35: Venipede (Q1, TF).
+  { id: 'c005-1', nombre: 'Cicadot', tipos: ['bicho'], base: base(30, 45, 59, 30, 39, 57), expBase: 55, ratioCaptura: 200, aprende: [{ nivel: 1, movimiento: 'topetazo' }, { nivel: 1, movimiento: 'mirada-fija' }, { nivel: 6, movimiento: 'chirrido-de-elitros' }, { nivel: 12, movimiento: 'savia-toxica' }], evoluciona: [{ a: 'c005-2', nivel: 22 }], altura: 0.3, descripcion: '' },
+  // Pok36: Whirlipede (Q2, TF).
+  { id: 'c005-2', nombre: 'Chitick', tipos: ['bicho', 'veneno'], base: base(40, 55, 99, 40, 79, 47), expBase: 75, ratioCaptura: 150, aprende: [{ nivel: 1, movimiento: 'chirrido-de-elitros' }, { nivel: 1, movimiento: 'savia-toxica' }, { nivel: 1, movimiento: 'tenaza-de-quitina' }, { nivel: 1, movimiento: 'caparazon' }], evoluciona: [{ a: 'c005-3', nivel: 30 }], altura: 0.6, descripcion: '' },
+  // Pok37: Scolipede (Q3, AF).
+  { id: 'c005-3', nombre: 'Cicadread', tipos: ['bicho', 'veneno'], base: base(60, 100, 89, 55, 69, 112), expBase: 140, ratioCaptura: 90, aprende: [{ nivel: 1, movimiento: 'tenaza-de-quitina' }, { nivel: 1, movimiento: 'savia-toxica' }, { nivel: 1, movimiento: 'chirrido-de-elitros' }, { nivel: 1, movimiento: 'caparazon' }], altura: 1.5, descripcion: '' },
+  // Pok38: Wingull (Q1, AE).
+  { id: 'c035-1', nombre: 'Gullit', tipos: ['aire'], base: base(40, 30, 30, 55, 30, 85), expBase: 55, ratioCaptura: 200, aprende: [{ nivel: 1, movimiento: 'topetazo' }, { nivel: 1, movimiento: 'mirada-fija' }, { nivel: 6, movimiento: 'rafaga' }, { nivel: 12, movimiento: 'remojon' }], evoluciona: [{ a: 'c035-2', nivel: 25 }], altura: 0.4, descripcion: '' },
+  // Pok39: Pelipper (Q3, TF).
+  { id: 'c035-2', nombre: 'Seaglide', tipos: ['aire', 'agua'], base: base(60, 50, 100, 95, 70, 65), expBase: 140, ratioCaptura: 90, aprende: [{ nivel: 1, movimiento: 'rafaga' }, { nivel: 1, movimiento: 'picado' }, { nivel: 1, movimiento: 'remojon' }, { nivel: 1, movimiento: 'ola-de-cresta' }], altura: 1.8, descripcion: '' },
+  // Pok40: Spheal (Q1, EN).
+  { id: 'c018-1', nombre: 'Salmite', tipos: ['agua'], base: base(70, 40, 50, 55, 50, 25), expBase: 55, ratioCaptura: 200, aprende: [{ nivel: 1, movimiento: 'topetazo' }, { nivel: 1, movimiento: 'caparazon' }, { nivel: 6, movimiento: 'remojon' }, { nivel: 14, movimiento: 'escarcha' }], evoluciona: [{ a: 'c018-2', nivel: 32 }], altura: 0.5, descripcion: '' },
+  // Pok41: Sealeo (Q3, EN).
+  { id: 'c018-2', nombre: 'Salmastar', tipos: ['agua'], base: base(90, 60, 70, 75, 70, 45), expBase: 140, ratioCaptura: 90, aprende: [{ nivel: 1, movimiento: 'remojon' }, { nivel: 1, movimiento: 'escarcha' }, { nivel: 1, movimiento: 'ola-de-cresta' }, { nivel: 1, movimiento: 'caparazon' }], evoluciona: [{ a: 'c018-3', nivel: 44 }], altura: 1.1, descripcion: '' },
+  // Pok42: Walrein (Q4, TE).
+  { id: 'c018-3', nombre: 'Koralsalm', tipos: ['agua', 'hielo'], base: base(110, 80, 90, 95, 90, 65), expBase: 170, ratioCaptura: 60, aprende: [{ nivel: 1, movimiento: 'ola-de-cresta' }, { nivel: 1, movimiento: 'escarcha' }, { nivel: 1, movimiento: 'remojon' }, { nivel: 1, movimiento: 'caparazon' }], altura: 1.8, descripcion: '' },
+  // Pok48: Cottonee (Q1, TF).
+  { id: 'c044-1', nombre: 'Aerund', tipos: ['aire'], base: base(40, 27, 60, 37, 50, 66), expBase: 55, ratioCaptura: 200, aprende: [{ nivel: 1, movimiento: 'topetazo' }, { nivel: 1, movimiento: 'mirada-fija' }, { nivel: 5, movimiento: 'rafaga' }, { nivel: 10, movimiento: 'arenazo' }], evoluciona: [{ a: 'c044-2', nivel: 24 }], altura: 0.4, descripcion: '' },
+  // Pok49: Whimsicott (Q4, TF).
+  { id: 'c044-2', nombre: 'Tailsan', tipos: ['aire', 'tierra'], base: base(60, 67, 85, 77, 75, 116), expBase: 170, ratioCaptura: 60, aprende: [{ nivel: 1, movimiento: 'rafaga' }, { nivel: 1, movimiento: 'arenazo' }, { nivel: 1, movimiento: 'picado' }, { nivel: 1, movimiento: 'pisoton' }], altura: 1.2, descripcion: '' },
   // Pok131: Cranidos (Q2, AF).
   { id: 'c062-1', nombre: 'Ishiro', tipos: ['roca'], base: base(67, 125, 40, 30, 30, 58), expBase: 75, ratioCaptura: 150, aprende: [{ nivel: 1, movimiento: 'topetazo' }, { nivel: 1, movimiento: 'mirada-fija' }, { nivel: 7, movimiento: 'rodada-de-piedra' }], evoluciona: [{ a: 'c062-2', nivel: 30 }], altura: 0.9, descripcion: '' },
   // Pok132: Rampardos (Q4, AF).
@@ -79,6 +99,16 @@ export const MODELO_CRIATURA: Readonly<Record<string, string>> = {
   'c012-3': 'criaturas/012-3.glb',
   'c034-1': 'criaturas/034-1.glb',
   'c034-2': 'criaturas/034-2.glb',
+  'c005-1': 'criaturas/005-1.glb',
+  'c005-2': 'criaturas/005-2.glb',
+  'c005-3': 'criaturas/005-3.glb',
+  'c035-1': 'criaturas/035-1.glb',
+  'c035-2': 'criaturas/035-2.glb',
+  'c018-1': 'criaturas/018-1.glb',
+  'c018-2': 'criaturas/018-2.glb',
+  'c018-3': 'criaturas/018-3.glb',
+  'c044-1': 'criaturas/044-1.glb',
+  'c044-2': 'criaturas/044-2.glb',
   'c062-1': 'criaturas/062-1.glb',
   'c062-2': 'criaturas/062-2.glb',
 };

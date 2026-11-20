@@ -1,6 +1,6 @@
 // Los entrenadores de la isla 2, Fuerteventura (PROVISIONAL): por encima de la líder de Lanzarote
 // (niveles 11 y 12), con las criaturas del autor que ya hay, hasta que lleguen las de esta isla
-// (PLAN-CRIATURAS.md). El gimnasio de Aire, de momento, solo tiene la línea de Ravich.
+// (PLAN-CRIATURAS.md). El gimnasio de Aire, con las tres líneas de Aire que hay (2026-11-20).
 
 import type { DefEntrenador } from './entrenadores-isla1';
 
@@ -32,7 +32,7 @@ export const ENTRENADORES_ISLA2: Readonly<Record<string, DefEntrenador>> = {
     tras: 'Mis cabras ni se han enterado. Siguen comiendo aulagas tan tranquilas.',
   },
   'pescador-ajuy': {
-    equipo: [{ especie: 'c037-1', nivel: 15 }, { especie: 'c037-1', nivel: 14 }],
+    equipo: [{ especie: 'c037-1', nivel: 15 }, { especie: 'c018-1', nivel: 14 }],
     premio: 420,
     tras: 'Dentro de la cueva el mar entra con las mareas. Ten cuidado con las pozas.',
   },
@@ -42,23 +42,23 @@ export const ENTRENADORES_ISLA2: Readonly<Record<string, DefEntrenador>> = {
     tras: 'Lo que brilla está al fondo, a la izquierda. Yo ya me he cansado de buscar.',
   },
   // Fase 3: Sotavento y el gimnasio de Aire (Morro Jable).
-  'kite-sotavento-1': { equipo: [{ especie: 'c032-1', nivel: 16 }], premio: 440, tras: 'Mañana sopla más. ¡Revancha con más viento!' },
+  'kite-sotavento-1': { equipo: [{ especie: 'c044-1', nivel: 16 }], premio: 440, tras: 'Mañana sopla más. ¡Revancha con más viento!' },
   'kite-sotavento-2': {
     equipo: [{ especie: 'c037-1', nivel: 16 }, { especie: 'c012-2', nivel: 17 }],
     premio: 460,
     tras: 'El gimnasio está en Morro Jable. Allí el viento sí que manda.',
   },
   'corredor-sotavento': { equipo: [{ especie: 'c013-1', nivel: 17 }], premio: 460, tras: 'Contra el viento corro más despacio. Contra ti, también he perdido.' },
-  'aprendiz-aire-1': { equipo: [{ especie: 'c032-1', nivel: 17 }], premio: 480, tras: 'La corriente del centro solo sube hacia la líder si alguien gira las aspas de arriba a la derecha.' },
-  'aprendiz-aire-2': { equipo: [{ especie: 'c032-1', nivel: 18 }], premio: 500, tras: 'Gira esas aspas de ahí y la corriente del centro te subirá hasta la líder.' },
+  'aprendiz-aire-1': { equipo: [{ especie: 'c044-1', nivel: 17 }], premio: 480, tras: 'La corriente del centro solo sube hacia la líder si alguien gira las aspas de arriba a la derecha.' },
+  'aprendiz-aire-2': { equipo: [{ especie: 'c035-1', nivel: 18 }], premio: 500, tras: 'Gira esas aspas de ahí y la corriente del centro te subirá hasta la líder.' },
   'aprendiz-aire-3': {
-    equipo: [{ especie: 'c032-1', nivel: 17 }, { especie: 'c032-1', nivel: 18 }],
+    equipo: [{ especie: 'c032-1', nivel: 17 }, { especie: 'c044-1', nivel: 18 }],
     premio: 520,
     tras: 'Si el pasillo te devuelve, es que las aspas de arriba siguen sin girar.',
   },
   'lider-aire': {
-    // Azurvan, al 22: el nivel al que evoluciona Ravich.
-    equipo: [{ especie: 'c032-1', nivel: 20 }, { especie: 'c032-2', nivel: 22 }],
+    // Tres líneas de Aire; Azurvan, al 22, el nivel al que evoluciona Ravich.
+    equipo: [{ especie: 'c035-1', nivel: 20 }, { especie: 'c044-1', nivel: 21 }, { especie: 'c032-2', nivel: 22 }],
     premio: 900,
     tras: 'El viento sopla hacia Gran Canaria. Cuando salga el barco, ahí estarás.',
     condicion: 'gimnasio2-vencido',

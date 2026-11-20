@@ -34,6 +34,11 @@ const movimientos: Movimiento[] = [
   { id: 'trompazo-de-hierro', nombre: 'Trompazo de hierro', tipo: 'acero', categoria: 'fisico', poder: 35, precision: 100, pp: 30 },
   // De Lucha, para las criaturas de Lucha del autor (2026-11-19). Agarrón: la presa de la lucha canaria.
   { id: 'agarron', nombre: 'Agarrón', tipo: 'lucha', categoria: 'fisico', poder: 50, precision: 100, pp: 20 },
+  // De Bicho, Veneno y Hielo, para las criaturas del autor (2026-11-20): nombres propios.
+  { id: 'chirrido-de-elitros', nombre: 'Chirrido de élitros', tipo: 'bicho', categoria: 'magico', poder: 45, precision: 100, pp: 25 },
+  { id: 'tenaza-de-quitina', nombre: 'Tenaza de quitina', tipo: 'bicho', categoria: 'fisico', poder: 55, precision: 95, pp: 15 },
+  { id: 'savia-toxica', nombre: 'Savia tóxica', tipo: 'veneno', categoria: 'magico', poder: 40, precision: 100, pp: 25, efectos: [{ tipo: 'estado', estado: 'envenenado', prob: 20 }] },
+  { id: 'escarcha', nombre: 'Escarcha', tipo: 'hielo', categoria: 'magico', poder: 50, precision: 95, pp: 15 },
   // De Aire (los usa la línea de Ravich).
   { id: 'rafaga', nombre: 'Ráfaga', tipo: 'aire', categoria: 'magico', poder: 40, precision: 100, pp: 25 },
   { id: 'picado', nombre: 'Picado', tipo: 'aire', categoria: 'fisico', poder: 55, precision: 95, pp: 15 },

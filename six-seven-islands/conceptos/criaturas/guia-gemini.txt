@@ -2,7 +2,7 @@ INSTRUCCIONES PARA GEMINI
 
 Vamos a generar las criaturas de mi juego de una en una, con el mismo estilo de imagen que ya
 usamos en esta conversación. Abajo tienes la lista completa, numerada. Es mi plan: 203 criaturas,
-de las que 36 ya están hechas.
+de las que 46 ya están hechas.
 
 CÓMO VAMOS
 - Al empezar, y cada vez que te diga «siguiente», dime cuál toca, con este formato:
@@ -111,61 +111,21 @@ Pok33. Kine, 1.ª forma de 2 · YA HECHA
 
 Pok34. Kurokin, 2.ª forma de 2 · YA HECHA
 
-Pok35. Melaní, 1.ª forma de 3
-   Tipo: Bicho (la línea: Bicho → Bicho/Veneno → Bicho/Veneno)
-   Fuerza: quintil 1 de 5, de las más flojas. Papel: tanque físico.
-   Estadísticas como: Venipede (la línea: Venipede → Whirlipede → Scolipede). Solo de referencia: que no se parezca.
-   Zona: El Jable, Lanzarote (niveles 6-8)
-   Idea: lámina del autor: pídemela y dibújala sola, fiel a ella.
+Pok35. Cicadot, 1.ª forma de 3 · YA HECHA
 
-Pok36. Favenir, 2.ª forma de 3
-   Tipo: Bicho/Veneno (la línea: Bicho → Bicho/Veneno → Bicho/Veneno)
-   Fuerza: quintil 2 de 5, floja. Papel: tanque físico.
-   Estadísticas como: Whirlipede (la línea: Venipede → Whirlipede → Scolipede). Solo de referencia: que no se parezca.
-   Zona: El Jable, Lanzarote (niveles 6-8)
-   Idea: lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.
+Pok36. Chitick, 2.ª forma de 3 · YA HECHA
 
-Pok37. Reginis, 3.ª forma de 3
-   Tipo: Bicho/Veneno (la línea: Bicho → Bicho/Veneno → Bicho/Veneno)
-   Fuerza: quintil 3 de 5, media. Papel: atacante físico.
-   Estadísticas como: Scolipede (la línea: Venipede → Whirlipede → Scolipede). Solo de referencia: que no se parezca.
-   Zona: El Jable, Lanzarote (niveles 6-8)
-   Idea: lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.
+Pok37. Cicadread, 3.ª forma de 3 · YA HECHA
 
-Pok38. Aerund, 1.ª forma de 2
-   Tipo: Aire (la línea: Aire → Aire/Agua)
-   Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante especial.
-   Estadísticas como: Wingull (la línea: Wingull → Pelipper). Solo de referencia: que no se parezca.
-   Zona: Famara, Lanzarote (niveles 6-8)
-   Idea: lámina del autor: pídemela y dibújala sola, fiel a ella.
+Pok38. Gullit, 1.ª forma de 2 · YA HECHA
 
-Pok39. Marwen, 2.ª forma de 2
-   Tipo: Aire/Agua (la línea: Aire → Aire/Agua)
-   Fuerza: quintil 3 de 5, media. Papel: tanque físico.
-   Estadísticas como: Pelipper (la línea: Wingull → Pelipper). Solo de referencia: que no se parezca.
-   Zona: Famara, Lanzarote (niveles 6-8)
-   Idea: lámina del autor: pídemela y dibuja esta forma sola, fiel a ella.
+Pok39. Seaglide, 2.ª forma de 2 · YA HECHA
 
-Pok40. Salmito, 1.ª forma de 3
-   Tipo: Agua (la línea: Agua → Agua → Agua/Hielo)
-   Fuerza: quintil 1 de 5, de las más flojas. Papel: equilibrada.
-   Estadísticas como: Spheal (la línea: Spheal → Sealeo → Walrein). Solo de referencia: que no se parezca.
-   Zona: Famara, Lanzarote (niveles 6-8)
-   Idea: Nombre del autor; el aspecto, por diseñar.
+Pok40. Salmite, 1.ª forma de 3 · YA HECHA
 
-Pok41. Salmarín, 2.ª forma de 3
-   Tipo: Agua (la línea: Agua → Agua → Agua/Hielo)
-   Fuerza: quintil 3 de 5, media. Papel: equilibrada.
-   Estadísticas como: Sealeo (la línea: Spheal → Sealeo → Walrein). Solo de referencia: que no se parezca.
-   Zona: Famara, Lanzarote (niveles 6-8)
-   Idea: Nombre del autor; el aspecto, por diseñar.
+Pok41. Salmastar, 2.ª forma de 3 · YA HECHA
 
-Pok42. Salmástil, 3.ª forma de 3
-   Tipo: Agua/Hielo (la línea: Agua → Agua → Agua/Hielo)
-   Fuerza: quintil 4 de 5, fuerte. Papel: tanque especial.
-   Estadísticas como: Walrein (la línea: Spheal → Sealeo → Walrein). Solo de referencia: que no se parezca.
-   Zona: Famara, Lanzarote (niveles 6-8)
-   Idea: Nombre del autor; el aspecto, por diseñar.
+Pok42. Koralsalm, 3.ª forma de 3 · YA HECHA
 
 Pok43. Leyenda verde, sin evolución
    Tipo: Planta/Tierra
@@ -204,19 +164,9 @@ Pok47. Leyenda del agua, sin evolución
 
 == FUERTEVENTURA ==
 
-Pok48. Remolino de jable, 1.ª forma de 2
-   Tipo: Aire (la línea: Aire → Aire/Tierra)
-   Fuerza: quintil 1 de 5, de las más flojas. Papel: tanque físico.
-   Estadísticas como: Cottonee (la línea: Cottonee → Whimsicott). Solo de referencia: que no se parezca.
-   Zona: Las Dunas, Fuerteventura (niveles 10-13)
-   Idea: Remolino de jable: bolita de arena y semillas que rueda con el viento; la 2.ª, torbellino de arena con cara. Sustituye al remolino provisional del gimnasio de Aire.
+Pok48. Aerund, 1.ª forma de 2 · YA HECHA
 
-Pok49. Remolino de jable, 2.ª forma de 2
-   Tipo: Aire/Tierra (la línea: Aire → Aire/Tierra)
-   Fuerza: quintil 4 de 5, fuerte. Papel: tanque físico.
-   Estadísticas como: Whimsicott (la línea: Cottonee → Whimsicott). Solo de referencia: que no se parezca.
-   Zona: Las Dunas, Fuerteventura (niveles 10-13)
-   Idea: Remolino de jable: bolita de arena y semillas que rueda con el viento; la 2.ª, torbellino de arena con cara. Sustituye al remolino provisional del gimnasio de Aire.
+Pok49. Tailsan, 2.ª forma de 2 · YA HECHA
 
 Pok50. Lisa de duna, 1.ª forma de 3
    Tipo: Tierra (la línea: Tierra → Tierra → Tierra/Aire)

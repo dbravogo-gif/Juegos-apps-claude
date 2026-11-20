@@ -3,8 +3,9 @@
 # escribe src/data/criaturas.ts con sus especies (nombre, tipos, estadísticas de su referencia,
 # altura, evolución y ataques). Las iniciales no: siguen en src/data/combate-prueba.ts.
 #
-# Uso: python3 herramientas/criaturas/juego.py [--solo-datos]
-# Con --solo-datos, solo reescribe src/data/criaturas.ts, sin volver a aligerar los modelos.
+# Uso: python3 herramientas/criaturas/juego.py [--solo-datos | --forzar]
+# Aligera solo los modelos que aún no están en public/; con --forzar, todos otra vez. Con
+# --solo-datos, solo reescribe src/data/criaturas.ts, sin tocar los modelos.
 import os
 import subprocess
 import sys
@@ -28,7 +29,7 @@ ID_TIPO = {'Común': 'comun', 'Agua': 'agua', 'Tierra': 'tierra', 'Planta': 'pla
 POR_QUINTIL = {'Q1': (55, 200), 'Q2': (75, 150), 'Q3': (140, 90), 'Q4': (170, 60), 'Q5': (250, 3)}
 
 # Nivel al que evoluciona cada forma a la siguiente, por línea (número de la lista de referencia).
-EVOLUCION = {31: [20], 32: [22], 37: [30], 7: [14, 32], 62: [30], 13: [18, 36], 43: [20], 12: [16, 34], 34: [24]}
+EVOLUCION = {31: [20], 32: [22], 37: [30], 7: [14, 32], 62: [30], 13: [18, 36], 43: [20], 12: [16, 34], 34: [24], 5: [22, 30], 35: [25], 18: [32, 44], 44: [24]}
 
 # Ataques por forma: (nivel, ataque), con los que ya existen en combate-prueba.ts. La 1.ª forma
 # empieza solo con ataques comunes y aprende los de su tipo a los pocos niveles; cuatro como mucho,
@@ -56,6 +57,17 @@ ATAQUES = {
          [(1, 'rodada-de-piedra'), (1, 'caparazon'), (1, 'polvo-de-picon'), (1, 'pisoton')]],
     34: [[(1, 'topetazo'), (1, 'mirada-fija'), (5, 'arenazo'), (9, 'pisoton')],
          [(1, 'pisoton'), (1, 'arenazo'), (1, 'topetazo'), (1, 'barrito')]],
+    # 2026-11-20: la cigarra, la gaviota, el salmón y el remolino de jable.
+    5: [[(1, 'topetazo'), (1, 'mirada-fija'), (6, 'chirrido-de-elitros'), (12, 'savia-toxica')],
+        [(1, 'chirrido-de-elitros'), (1, 'savia-toxica'), (1, 'tenaza-de-quitina'), (1, 'caparazon')],
+        [(1, 'tenaza-de-quitina'), (1, 'savia-toxica'), (1, 'chirrido-de-elitros'), (1, 'caparazon')]],
+    35: [[(1, 'topetazo'), (1, 'mirada-fija'), (6, 'rafaga'), (12, 'remojon')],
+         [(1, 'rafaga'), (1, 'picado'), (1, 'remojon'), (1, 'ola-de-cresta')]],
+    18: [[(1, 'topetazo'), (1, 'caparazon'), (6, 'remojon'), (14, 'escarcha')],
+         [(1, 'remojon'), (1, 'escarcha'), (1, 'ola-de-cresta'), (1, 'caparazon')],
+         [(1, 'ola-de-cresta'), (1, 'escarcha'), (1, 'remojon'), (1, 'caparazon')]],
+    44: [[(1, 'topetazo'), (1, 'mirada-fija'), (5, 'rafaga'), (10, 'arenazo')],
+         [(1, 'rafaga'), (1, 'arenazo'), (1, 'picado'), (1, 'pisoton')]],
 }
 
 # Nombres provisionales de las formas que aún no tienen el suyo (el autor los pone).
@@ -116,7 +128,8 @@ def main():
             importar_modelo(f, origenes[f['orden']], SALIDA_INICIALES)
     entradas, modelos = [], []
     for f in sorted(listas, key=lambda x: x['orden']):
-        if not solo_datos:
+        # Solo las que aún no están en public/ (con --forzar, todas otra vez).
+        if not solo_datos and ('--forzar' in sys.argv or not os.path.exists(os.path.join(SALIDA_MODELOS, f"{f['archivo']}.glb"))):
             importar_modelo(f, origenes[f['orden']])
         base_id, _, forma = f['archivo'].partition('-')
         sig = f'{base_id}-{int(forma) + 1}' if forma and f'{base_id}-{int(forma) + 1}' in por_archivo else None

@@ -6,8 +6,8 @@
 import type { TablaEncuentros } from '../core/encuentros';
 
 // Con las criaturas del autor que ya tienen modelo (2026-11-19), en sus hierbas de PLAN-CRIATURAS.md;
-// las que aún no tienen modelo (Melaní, Aerund y Salmito) no salen, y su parte se reparte entre las
-// demás. Ninguna hierba saca una inicial.
+// las que aún no tienen modelo no salen, y su parte se reparte entre las demás. Ninguna hierba saca
+// una inicial.
 export const ENCUENTROS_ISLA1: TablaEncuentros = {
   // El Golfo: Civeta 40, Ravich 30, Aculiso 20 y Dragosil 10, la rara (y floja, por la inicial de Agua).
   combates: [
@@ -23,15 +23,18 @@ export const ENCUENTROS_ISLA1: TablaEncuentros = {
     { especie: 'c031-1', nivel: [5, 6], peso: 20 },
     { especie: 'c012-1', nivel: [5, 6], peso: 10 },
   ],
-  // El Jable: Kine 50, Ravich 40 y Kotono 10, el raro.
+  // El Jable: Kine 35, Cicadot 30, Ravich 25 y Kotono 10, el raro (2026-11-20: llega la cigarra).
   jable: [
-    { especie: 'c034-1', nivel: [6, 8], peso: 50 },
-    { especie: 'c032-1', nivel: [6, 8], peso: 40 },
+    { especie: 'c034-1', nivel: [6, 8], peso: 35 },
+    { especie: 'c005-1', nivel: [6, 8], peso: 30 },
+    { especie: 'c032-1', nivel: [6, 8], peso: 25 },
     { especie: 'c043-1', nivel: [6, 7], peso: 10 },
   ],
-  // Famara: Aculiso 90 y Oreps 10, la rara.
+  // Famara: Gullit 35, Salmite 35, Aculiso 20 y Oreps 10, la rara (2026-11-20).
   famara: [
-    { especie: 'c037-1', nivel: [6, 8], peso: 90 },
+    { especie: 'c035-1', nivel: [6, 8], peso: 35 },
+    { especie: 'c018-1', nivel: [6, 8], peso: 35 },
+    { especie: 'c037-1', nivel: [6, 8], peso: 20 },
     { especie: 'c012-1', nivel: [7, 8], peso: 10 },
   ],
 };

@@ -61,9 +61,9 @@ export const ENTRENADORES_ISLA1: Readonly<Record<string, DefEntrenador>> = {
   'entrenador-centro': { equipo: [{ especie: 'c043-1', nivel: 7 }, { especie: 'c013-1', nivel: 6 }], premio: 180, tras: 'Tendré que entrenar con más calor todavía.' },
   'entrenador-caldera': { equipo: [{ especie: 'c007-1', nivel: 8 }], premio: 200, tras: 'Quédate la poción, anda. Te la has ganado.' },
   'entrenador-salida-fuego': { equipo: [{ especie: 'c013-1', nivel: 8 }, { especie: 'c031-1', nivel: 8 }], premio: 240, tras: 'Sigue hacia El Jable. La capital está al otro lado.' },
-  'entrenador-jable': { equipo: [{ especie: 'c034-1', nivel: 8 }, { especie: 'c032-1', nivel: 9 }], premio: 240, tras: 'El viento borra las huellas. Mañana nadie sabrá que me ganaste.' },
-  'pescador-famara': { equipo: [{ especie: 'c037-1', nivel: 8 }, { especie: 'c037-1', nivel: 9 }], premio: 260, tras: 'Hoy no pican ni las viejas ni las criaturas. Qué le vamos a hacer.' },
-  'pulpero-famara': { equipo: [{ especie: 'c037-1', nivel: 9 }, { especie: 'c007-1', nivel: 8 }], premio: 260, tras: 'Ni un pulpo y encima pierdo. ¡Qué día!' },
+  'entrenador-jable': { equipo: [{ especie: 'c034-1', nivel: 8 }, { especie: 'c005-1', nivel: 9 }], premio: 240, tras: 'El viento borra las huellas. Mañana nadie sabrá que me ganaste.' },
+  'pescador-famara': { equipo: [{ especie: 'c018-1', nivel: 8 }, { especie: 'c037-1', nivel: 9 }], premio: 260, tras: 'Hoy no pican ni las viejas ni las criaturas. Qué le vamos a hacer.' },
+  'pulpero-famara': { equipo: [{ especie: 'c035-1', nivel: 9 }, { especie: 'c007-1', nivel: 8 }], premio: 260, tras: 'Ni un pulpo y encima pierdo. ¡Qué día!' },
   // Los aprendices del gimnasio de Roca (gimnasio-roca.ts): te ven en el único camino.
   // Solo Roca y Tierra, y ninguna criatura más de dos veces en todo el gimnasio (autor, 2026-11-19).
   'aprendiz-roca-1': {

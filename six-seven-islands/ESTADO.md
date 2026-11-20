@@ -18,8 +18,8 @@ Tanda 1: Lanzarote es la isla 1 (`ISLA-1.md`), con kit por código y la tabla de
    Historia cerrada (`HISTORIA.md`), hecha en Lanzarote y Fuerteventura.
 2. Arte con Meshy (`prompts-meshy.md`): criaturas y edificios singulares.
 3. Criaturas: reglas en `CRIATURAS.md`; el plan de las 203 para Meshy en `PLAN-CRIATURAS.md`
-   (`herramientas/criaturas/plan.py`). Ya en el juego, a su altura, 21 criaturas del autor (Pok16 a
-   Pok34 y el dinosaurio), con `herramientas/criaturas/juego.py` (ARCHITECTURE.md). Las iniciales,
+   (`herramientas/criaturas/plan.py`). Ya en el juego, a su altura, 31 criaturas del autor (Pok16 a
+   Pok42, Pok48–49 y el dinosaurio), con `herramientas/criaturas/juego.py` (ARCHITECTURE.md). Las iniciales,
    con sus tres formas; las criaturas evolucionan tras el combate, con el Sello.
 
 4. Hecho todo lo que pidió el autor el 2026-11-19; falta que lo pruebe y lo puntúe.
