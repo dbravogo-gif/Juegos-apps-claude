@@ -19,7 +19,7 @@ import { curarDelTodo, nombreDe, objetoUtil, usarObjeto } from '../../core/criat
 import { calcularEstadisticas, vidaMaxima } from '../../core/estadisticas';
 import { exportarCodigo, importarCodigo } from '../../core/guardado';
 import { ESTADISTICAS, type Criatura, type Estadistica } from '../../core/modelo';
-import { expParaNivel } from '../../core/progreso';
+import { evolucionesPosibles, expParaNivel } from '../../core/progreso';
 import { svgMochila } from '../../arte/mochila';
 import { svgPintadera } from '../../arte/pintaderas';
 import { BOLSILLOS, bolsilloDe } from '../../data/bolsillos';
@@ -472,7 +472,7 @@ export class Menu implements Subsistema {
           },
           {
             texto: 'Diez almendrados',
-            detalle: 'Cada almendrado sube un nivel (Mochila → Botiquín). Si llega al de su evolución, evoluciona al ganar el próximo combate.',
+            detalle: 'Cada almendrado sube un nivel (Mochila → Botiquín). Si llega al de su evolución, evoluciona en el acto.',
             activa: true,
             elegir: () => {
               this.partida.mochila.almendrado = (this.partida.mochila.almendrado ?? 0) + 10;
@@ -677,8 +677,14 @@ export class Menu implements Subsistema {
     this.partida.mochila[id] = Math.max(0, (this.partida.mochila[id] ?? 0) - 1);
     const subeNivel = DATOS.objetos[id].tipo === 'nivel';
     this.ctx.eventos.emit('sonido:tocar', { nombre: subeNivel ? 'nivel' : 'curar' });
-    // El almendrado: si ya puede evolucionar, lo hará al ganar el próximo combate.
+    // El almendrado: si ya puede evolucionar, evoluciona en el acto, fuera de combate (autor,
+    // 2026-11-20). Si se para, lo intentará al subir de nivel en un combate.
     if (subeNivel) this.partida.subidasFuera.add(c.uid);
+    if (subeNivel && evolucionesPosibles(equipo[i], DATOS).length) {
+      this.cerrar();
+      this.ctx.eventos.emit('evolucion:fuera', {});
+      return;
+    }
     const nota = subeNivel
       ? `${nombreDe(c, DATOS)} sube al nivel ${equipo[i].nivel}.`
       : `${nombreDe(c, DATOS)} usa ${DATOS.objetos[id].nombre}: vida ${equipo[i].vida} / ${vidaMaxima(c, DATOS)}.`;

@@ -68,6 +68,8 @@ export interface EstadoParcial {
   vida?: number;
   /** Solo para pruebas: el dinero. */
   dinero?: number;
+  /** Solo para pruebas: objetos que se añaden a la mochila (id → cuántos). */
+  mochila?: Record<string, number>;
   /** Solo para pruebas: los entrenadores vencidos. */
   vencidos?: string[];
   /** Solo para pruebas: criaturas que se añaden al principio del equipo (especie y nivel). */
@@ -861,6 +863,7 @@ export class Partida implements Subsistema {
     }
     if (p.vida !== undefined) for (const c of this.equipo) c.vida = Math.min(c.vida, p.vida);
     if (p.dinero !== undefined) this.dinero = p.dinero;
+    for (const [id, n] of Object.entries(p.mochila ?? {})) this.mochila[id] = (this.mochila[id] ?? 0) + n;
     if (p.vencidos !== undefined) this.vencidos = [...p.vencidos];
     if (p.zona === undefined) return;
     this.modo = 'explorar';

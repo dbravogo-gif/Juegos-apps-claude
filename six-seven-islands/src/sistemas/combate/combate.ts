@@ -38,7 +38,7 @@ import { crearCriatura, nombreDe, objetoUtil } from '../../core/criatura';
 import type { Criatura } from '../../core/modelo';
 import { CALIDAD_ZONA, MEDIA_BLANCA, MEDIA_VERDE, zonaBarra } from '../../core/captura';
 import { crearRng } from '../../core/rng';
-import { evolucionar, evolucionesTrasCombate, type SubidaNivel } from '../../core/progreso';
+import { evolucionar, evolucionesPosibles, evolucionesTrasCombate, type SubidaNivel } from '../../core/progreso';
 import { perdidaPorDerrota } from '../../core/economia';
 import { BOLSILLOS, bolsilloDe, type IdBolsillo } from '../../data/bolsillos';
 import { vidaMaxima } from '../../core/estadisticas';
@@ -289,6 +289,7 @@ export class Combate implements Subsistema {
             : def.equipo.map((e) => crearCriatura(DATOS, e.especie, e.nivel, rng));
       void this.empezar(equipo, guionId);
     });
+    ctx.eventos.on('evolucion:fuera', () => void this.evolucionarFuera());
     ctx.eventos.on('encuentro:inicio', ({ salvajes, tipoEvolucion }) => {
       this.tipoEvolucion = tipoEvolucion ?? null;
       void this.empezar(salvajes as Criatura[], null);
@@ -421,6 +422,72 @@ export class Combate implements Subsistema {
     this.encolar({ duracion: FUNDIDO, saltable: false, animar: (t) => (this.velo.style.cssText = `opacity:${1 - t};background:#1d1720`) });
     this.mostrarEventos(r.eventos);
     this.fase = 'mensajes';
+  }
+
+  /**
+   * Evoluciona fuera de combate (autor, 2026-11-20: con el almendrado también): las del equipo que ya
+   * tienen el nivel de su evolución, con la misma escena que tras un combate, y de vuelta a la isla.
+   * Usa un estado mínimo con el equipo (la escena lo lee de ahí y ahí deja la forma nueva).
+   */
+  private async evolucionarFuera(): Promise<void> {
+    if (this.fase !== 'fuera') return;
+    const equipo = structuredClone(this.partida.equipo);
+    const evoluciones = equipo.flatMap((c) => {
+      const ev = evolucionesPosibles(c, DATOS)[0];
+      return ev ? [{ uid: c.uid, a: ev.a }] : [];
+    });
+    if (!evoluciones.length) return;
+    this.fase = 'entrando';
+    this.entrenador = null;
+    this.partida.empezarCombate();
+    this.texto.textContent = '';
+    this.menu.hidden = true;
+    this.estado = { lados: [{ equipo, activos: [] }, { equipo: [], activos: [] }], pendientes: [], fin: 'victoria' } as unknown as EstadoCombate;
+    this.figuras.clear();
+    this.altos.clear();
+    this.figurasEvolucion.clear();
+    await Promise.all(
+      evoluciones.map(async ({ uid, a }) => {
+        const c = equipo.find((x) => x.uid === uid)!;
+        const alto = TAMANO[0] * escalaPorAltura(DATOS.especies[c.especie]?.altura);
+        this.altos.set(uid, alto);
+        this.figuras.set(uid, await figuraCriatura(MODELO_DE[c.especie] ?? MODELO_DE['inicial-roca'], 'color', alto));
+        const altoNueva = TAMANO[0] * escalaPorAltura(DATOS.especies[a]?.altura);
+        this.figurasEvolucion.set(`${uid}>${a}`, { figura: await figuraCriatura(MODELO_DE[a] ?? MODELO_DE['inicial-roca'], 'color', altoNueva), alto: altoNueva });
+      }),
+    );
+    const caja = this.raiz.querySelector<HTMLElement>('.combate-caja')!;
+    const paneles = [caja, ...this.fichas.map((f) => f.nombre.parentElement!)];
+    this.encolar({ duracion: FUNDIDO, saltable: false, animar: (t) => (this.velo.style.cssText = `opacity:${t};background:#1d1720`) });
+    this.encolar({ duracion: 0.05, saltable: false, empezar: () => this.mostrarArena(true) });
+    this.encolar({ duracion: FUNDIDO, saltable: false, animar: (t) => (this.velo.style.cssText = `opacity:${1 - t};background:#1d1720`) });
+    for (const { uid, a } of evoluciones) this.encolarEvolucion(uid, a);
+    this.encolar({ duracion: FUNDIDO, saltable: false, animar: (t) => (this.velo.style.cssText = `opacity:${t};background:#1d1720`) });
+    this.encolar({
+      duracion: 0.05,
+      saltable: false,
+      empezar: () => {
+        this.mostrarArena(false);
+        this.raiz.hidden = false;
+        for (const p of paneles) p.style.visibility = 'hidden';
+        // El equipo vuelve como ha quedado: con las formas nuevas.
+        this.partida.equipo = this.estado!.lados[0].equipo;
+        for (const { uid } of evoluciones) this.partida.subidasFuera.delete(uid);
+        this.partida.terminarCombate();
+      },
+    });
+    this.encolar({ duracion: FUNDIDO, saltable: false, animar: (t) => (this.velo.style.cssText = `opacity:${1 - t};background:#1d1720`) });
+    this.encolar({
+      duracion: 0.01,
+      saltable: false,
+      empezar: () => {
+        this.raiz.hidden = true;
+        for (const p of paneles) p.style.visibility = '';
+        this.estado = null;
+        this.fase = 'fuera';
+      },
+    });
+    this.fase = 'saliendo';
   }
 
   /** Pone en su plataforma la figura de una criatura, en lugar de la que hubiera. */

@@ -6,6 +6,8 @@ import type { NivelCalidad } from './calidad';
 export interface MapaEventos {
   'zona:entrar': { zonaId: string };
   /** `tipoEvolucion`: solo en «Probar evolución» (modo desarrollador), el escenario que se verá. */
+  /** Una criatura ha llegado a su nivel de evolución fuera de combate (el almendrado): evoluciona ya. */
+  'evolucion:fuera': Record<string, never>;
   'encuentro:inicio': { salvajes: unknown[]; visible: boolean; tipoEvolucion?: string };
   'combate:evento': unknown;
   /** Una acción del jugador para un hueco (`Accion` de src/core/combate.ts, con su objetivo). */
