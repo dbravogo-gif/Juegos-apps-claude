@@ -340,6 +340,18 @@ dos formas y el destello. Lo nuestro (revisado con el probador y el autor):
     rebotan y levantan polvo, gotas que salpican; las brasas, burbujas y motas suben;
   - la luz de abajo de la escena es la del suelo verde de la isla del juego: la isla lleva luz propia
     (más en las caras que miran abajo) para que el peñón no salga negro y verdoso;
+  - los demás tipos, con su escenario (autor, 2026-11-20; `decorados-evolucion.ts`):
+    - Lucha: terrero con borde de madera y un muñeco de entrenamiento que se balancea con cada
+      golpe, con su destello y su polvo, y un saco colgado;
+    - Veneno: ciénaga con charcos en los que nacen burbujas violetas que crecen y revientan;
+    - Eléctrico: dos bobinas de cobre con arcos entre ellas;
+    - Acero: chapa con remaches, engranajes que giran y tuercas que caen y rebotan;
+    - Mental: anillos grabados, prismas que orbitan por detrás y piedras que levitan;
+    - Espectral: losas viejas inclinadas, faroles con llama azul, bruma y espíritus en espiral;
+    - Oscuridad: agujas de obsidiana, bruma negra y pares de ojos que parpadean y cambian de sitio;
+    - Ancestral: un arco y columnas rotas, con runas doradas que laten;
+    - Bicho: el jardín con tallos altos, una telaraña y luciérnagas;
+    - en el modo desarrollador, «Probar evolución» enseña el de cualquier tipo;
   - tras la revisión del probador (2026-11-19):
     - el Sello, al 78 %, cabe entero en el suelo liso;
     - la silueta lleva un contorno oscuro para que se lea sobre cualquier suelo;

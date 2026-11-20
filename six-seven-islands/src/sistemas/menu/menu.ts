@@ -57,6 +57,7 @@ type Pantalla =
   | 'dev-zona'
   | 'dev-isla'
   | 'dev-criatura'
+  | 'dev-evolucion'
   | 'dev-nivel';
 
 /** Las pantallas con el estilo de la tienda: sin fondo y con las opciones a la izquierda. */
@@ -85,6 +86,7 @@ const ATRAS: Partial<Record<Pantalla, Pantalla>> = {
   'dev-zona': 'desarrollador',
   'dev-isla': 'desarrollador',
   'dev-criatura': 'desarrollador',
+  'dev-evolucion': 'desarrollador',
   'dev-nivel': 'dev-criatura',
 };
 /** Cuántas especies se ven a la vez en «Añadir una criatura» del modo desarrollador. */
@@ -459,6 +461,12 @@ export class Menu implements Subsistema {
             },
           },
           {
+            texto: 'Probar evolución',
+            detalle: 'Elige un tipo: combate fácil con una criatura a punto de evolucionar, con el escenario de ese tipo.',
+            activa: true,
+            elegir: () => this.abrir('dev-evolucion'),
+          },
+          {
             texto: 'Diez almendrados',
             detalle: 'Cada almendrado sube un nivel (Mochila → Botiquín). Si llega al de su evolución, evoluciona al ganar el próximo combate.',
             activa: true,
@@ -490,6 +498,21 @@ export class Menu implements Subsistema {
         ];
         break;
       }
+      case 'dev-evolucion':
+        this.titulo.textContent = 'Probar evolución';
+        this.opciones = [
+          ...TIPOS.map((t) => ({
+            texto: t.nombre,
+            detalle: 'Gana el combate: la criatura evoluciona con el escenario de este tipo.',
+            activa: true,
+            elegir: () => {
+              this.cerrar();
+              this.partida.probarEvolucion(t.id);
+            },
+          })),
+          { texto: 'Volver', activa: true, elegir: () => this.abrir('desarrollador') },
+        ];
+        break;
       case 'dev-zona':
         this.titulo.textContent = 'Viajar a una zona';
         this.opciones = [

@@ -389,6 +389,19 @@ export class Partida implements Subsistema {
     return true;
   }
 
+  /**
+   * «Probar evolución» (modo desarrollador): pone delante una criatura a punto de evolucionar y
+   * empieza un combate fácil; al ganarlo, evoluciona con el escenario del tipo `tipo`.
+   */
+  probarEvolucion(tipo: string): void {
+    const c = crearCriatura(DATOS, 'inicial-agua', 15, this.ctx.rng);
+    c.exp = expParaNivel(16) - 1;
+    this.equipo.unshift(c);
+    if (this.equipo.length > 6) this.equipo.pop();
+    this.guardar();
+    this.ctx.eventos.emit('encuentro:inicio', { salvajes: [crearCriatura(DATOS, 'c031-1', 2, this.ctx.rng)], visible: false, tipoEvolucion: tipo });
+  }
+
   /** Quita la última del equipo (si queda alguna más). */
   quitarUltima(): void {
     if (this.equipo.length > 1) this.equipo.pop();
