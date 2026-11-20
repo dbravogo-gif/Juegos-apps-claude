@@ -268,7 +268,9 @@ export class Mundo implements Subsistema {
         const cx = (Math.min(...xs) + Math.max(...xs)) / 2;
         const cz = (Math.min(...ys) + Math.max(...ys)) / 2;
         const base = alturaSuelo(m.casillas.get(e.casillas[0])!.h);
-        const uso = USO_CASA[e.tipo];
+        // El bar es una tienda por fuera, pero sin el azul ni la bolsa de las tiendas.
+        const sala = e.puertas.length ? this.partida.salaDePuerta(e.puertas[0]) : undefined;
+        const uso = e.tipo === 'S' && sala?.startsWith('bar') ? 'bar' : USO_CASA[e.tipo];
         if (e.tipo === 'M' && !e.puertas.length) {
           // Un museo sin puerta es la iglesia del pueblo (Betancuria): no se entra.
           const geometria = iglesia(e.ancho, e.fondo);

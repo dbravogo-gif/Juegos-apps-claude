@@ -9,9 +9,9 @@
 // Parámetros de prueba: ?abrir=todo abre todos los pasos cerrados; ?nueva empieza sin cargar;
 // ?semilla=N fija el azar de una partida nueva (sin ella, cada partida nueva es distinta).
 
-import { avanzar, crearExploracion, cumplir, entrar, interactuar, salir, type EstadoExplorar, type EventoExplorar } from '../../core/explorar';
+import { avanzar, cambiarDePiso, crearExploracion, cumplir, entrar, interactuar, salir, type EstadoExplorar, type EventoExplorar } from '../../core/explorar';
 import { abrirDialogo, elegirDialogo, lineaActual, pasoDialogo, pulsar, type Dialogo, type Efecto, type EstadoDialogo, type Tecla } from '../../core/guion';
-import { TODAS_LAS_CONDICIONES, clave, construirInterior, construirMundo, deClave, enIsla, entrenadorQueVe, transitable, type Condicion, type Mundo } from '../../core/mundo';
+import { TODAS_LAS_CONDICIONES, clave, construirInterior, construirMundo, deClave, enIsla, entrenadorQueVe, transitable, type Condicion, type Direccion, type Mundo } from '../../core/mundo';
 import { PERSONA_JUGADOR, PERSONAS } from '../../arte/personas';
 import { ISLAS, LANZAROTE, type DatosIsla } from '../../data/islas';
 import { NOMBRE_OBJETO } from '../../data/textos-isla1';
@@ -131,8 +131,13 @@ export class Partida implements Subsistema {
   private ctx!: Ctx;
   /** A qué interior lleva cada puerta de la isla, por clave de casilla. */
   private puertas = new Map<number, string>();
+
+  /** La sala a la que lleva la puerta de la casilla `k` de la isla, si la hay. */
+  salaDePuerta(k: number): string | undefined {
+    return this.puertas.get(k);
+  }
   /** El fundido de una puerta: a dónde se va y de qué sala se sale (para el mensaje del rival). */
-  private cruce: { paso: number; destino: string | null; desde?: string | null } | null = null;
+  private cruce: { paso: number; destino: string | null; desde?: string | null; piso?: { id: string; punto: { x: number; y: number }; mira: Direccion } } | null = null;
   private hablando = '';
   private espera = 0;
   private quitar: (() => void) | null = null;
@@ -567,7 +572,8 @@ export class Partida implements Subsistema {
     if (c.paso === PASOS_FUNDIDO) {
       // En negro: se cambia de sitio.
       c.desde = this.estado.dentro;
-      if (c.destino) entrar(this.estado, c.destino, this.interiores.get(c.destino)!);
+      if (c.piso) cambiarDePiso(this.estado, c.piso.id, this.interiores.get(c.piso.id)!, c.piso.punto, c.piso.mira);
+      else if (c.destino) entrar(this.estado, c.destino, this.interiores.get(c.destino)!);
       else salir(this.estado);
       this.ctx.eventos.emit('zona:entrar', { zonaId: this.estado.zona });
       this.guardar();
@@ -611,6 +617,9 @@ export class Partida implements Subsistema {
       }
       case 'salida':
         this.cruzar(null);
+        break;
+      case 'escalera':
+        this.usarEscalera(ev.sube);
         break;
       case 'hablar': {
         // Quien tiene escena (te para al verte) solo te para una vez: luego se le habla sin más.
@@ -754,6 +763,34 @@ export class Partida implements Subsistema {
         this.ctx.eventos.emit('medalla:ganada', { isla: t.medalla });
       }
     }
+  }
+
+  /**
+   * Sube al piso de arriba (`<sala>-arriba`) o baja de él, con el mismo fundido que una puerta
+   * (autor, 2026-11-19). Arriba se aparece en su entrada, mirando al norte; abajo, delante de la
+   * escalera, mirando al sur: así, si se sigue pulsando la flecha, no se vuelve a cambiar de piso.
+   */
+  private usarEscalera(sube: boolean): void {
+    const aqui = this.estado.dentro;
+    if (!aqui) return;
+    const id = sube ? `${aqui}-arriba` : aqui.replace(/-arriba$/, '');
+    const sala = this.interiores.get(id);
+    if (!sala || id === aqui) {
+      this.abrir({ lineas: [{ texto: 'Esa escalera es solo para quien vive o trabaja aquí.' }] }, 'escalera');
+      return;
+    }
+    const z = sala.zonas.get(sala.isla.inicio.zona)!;
+    let punto = { x: sala.isla.inicio.x, y: sala.isla.inicio.y };
+    if (!sube) {
+      const k = [...sala.casillas].find(([, c]) => c.c === 'e')?.[0];
+      if (k !== undefined) {
+        const [x, y] = deClave(k);
+        punto = { x: x - z.origen.x, y: y + 1 - z.origen.y };
+      }
+    }
+    this.ctx.eventos.emit('sonido:tocar', { nombre: 'puerta' });
+    this.cruce = { paso: 0, destino: id, piso: { id, punto, mira: sube ? 'n' : 's' } };
+    this.modo = 'fundido';
   }
 
   /** Empieza el fundido para entrar en un interior (o salir, con null). */

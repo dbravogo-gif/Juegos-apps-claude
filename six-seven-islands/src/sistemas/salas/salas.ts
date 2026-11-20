@@ -49,10 +49,53 @@ function mueble(M: Montaje, c: string, x: number, z: number, n: number): void {
       break;
     }
     // 'c', el mostrador, va por tramos en geometriaSala.
-    case 'e': { // escalera hacia el piso de arriba, contra la pared del fondo, con barandilla
-      for (let i = 0; i < 5; i++) M.caja(0.86, 0.2 * (i + 1), 0.2, x, y, z + 0.4 - i * 0.2, i % 2 ? COLORES.maderaSuelo : COLORES.maderaSueloOscura);
-      M.caja(0.05, 0.08, 1.04, x + 0.45, y + 1.0, z - 0.02, COLORES.balcon, 0.85);
-      for (let i = 0; i < 3; i++) M.caja(0.04, 0.95 - i * 0.05, 0.04, x + 0.45, y + 0.2 * (i * 2 + 1), z + 0.4 - i * 0.4, COLORES.balcon, 0.9);
+    case 'e': {
+      // Escalera hacia el piso de arriba, contra la pared del fondo (autor, 2026-11-19: «no parecen
+      // escaleras»): peldaños con el canto claro, zancas inclinadas a los lados, barandilla con
+      // balaustres y, arriba, el hueco oscuro en la pared por donde se sube.
+      const peldanos = 6;
+      const sube = 1.32;
+      const fondo = 1 / peldanos;
+      for (let i = 0; i < peldanos; i++) {
+        const alto = (sube / peldanos) * (i + 1);
+        const zc = z + 0.5 - fondo * (i + 0.5);
+        M.caja(0.78, alto, fondo, x, y, zc, i % 2 ? COLORES.maderaSuelo : COLORES.maderaSueloOscura);
+        // El canto del peldaño, claro y un poco volado: es lo que hace que se lea como escalera.
+        // 5 mm por encima de la huella: a la misma altura, sus caras titilarían.
+        M.caja(0.8, 0.035, 0.05, x, y + alto - 0.03, zc + fondo / 2 - 0.01, COLORES.crema, 0.95);
+      }
+      const largo = Math.hypot(1, sube);
+      const pendiente = Math.atan2(sube, 1);
+      for (const s of [-1, 1]) {
+        // Zanca: una tabla inclinada que sigue la escalera.
+        M.pon(new BoxGeometry(0.06, 0.2, largo).rotateX(pendiente).translate(x + s * 0.42, y + sube / 2 + 0.04, z), COLORES.balcon);
+        // Pasamanos paralelo, y balaustres.
+        M.pon(new BoxGeometry(0.05, 0.05, largo).rotateX(pendiente).translate(x + s * 0.42, y + sube / 2 + 0.78, z), COLORES.balcon, 0.85);
+        for (let i = 0; i < 4; i++) {
+          const k = (i + 0.5) / 4;
+          M.caja(0.03, 0.7, 0.03, x + s * 0.42, y + sube * k + 0.06, z + 0.5 - k, COLORES.balcon, 0.9);
+        }
+      }
+      // El hueco de arriba, en la pared del fondo, con su marco.
+      M.caja(0.86, 0.95, 0.04, x, y + sube + 0.01, z - 0.47, COLORES.canteria);
+      M.caja(0.74, 0.84, 0.05, x, y + sube + 0.05, z - 0.46, '#2B221D');
+      break;
+    }
+    case 'z': {
+      // El hueco de la escalera en el piso de arriba: por el lado de dentro se baja; en los otros
+      // tres, barandilla. Los peldaños se ven bajar hacia la oscuridad.
+      M.caja(0.9, 0.012, 0.9, x, y + 0.004, z, '#2B221D');
+      for (let i = 0; i < 3; i++) {
+        M.caja(0.78, 0.01, 0.12, x, y + 0.019, z - 0.36 + i * 0.2, COLORES.maderaSuelo, 0.85 - i * 0.22);
+        M.caja(0.8, 0.012, 0.03, x, y + 0.033, z - 0.31 + i * 0.2, COLORES.crema, 0.8 - i * 0.22);
+      }
+      for (const s of [-1, 1]) {
+        M.caja(0.05, 0.05, 0.96, x + s * 0.46, y + 0.72, z, COLORES.balcon, 0.85);
+        for (let i = 0; i < 4; i++) M.caja(0.03, 0.7, 0.03, x + s * 0.46, y, z - 0.36 + i * 0.24, COLORES.balcon, 0.9);
+      }
+      // La de delante, 1 cm más baja: en las esquinas se cruza con las de los lados.
+      M.caja(0.96, 0.05, 0.05, x, y + 0.71, z + 0.46, COLORES.balcon, 0.85);
+      for (let i = 0; i < 4; i++) M.caja(0.03, 0.69, 0.03, x - 0.36 + i * 0.24, y, z + 0.46, COLORES.balcon, 0.9);
       break;
     }
     case 'j': { // juguetes delante de la escalera: no dejan subir

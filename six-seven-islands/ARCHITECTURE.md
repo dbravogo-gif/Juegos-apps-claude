@@ -50,6 +50,11 @@ agentes. El patrón viene de *Claude of Duty* (Matt Shumer, MIT).
   del mapa y, para cada puerta, genera su sala con `data/generar-interior.ts`, del tamaño de su
   fachada y con dos plantas en las casas de balcones. Solo el nombre de la sala y quién vive en
   ella se escriben a mano.
+- **Pisos de arriba (2026-11-19):** si la escalera (`e`) no tiene juguetes delante, la casa tiene
+  otra sala, `<id>-arriba`, con el hueco de la escalera (`z`). Andar hacia `e` o `z` da el evento
+  `escalera` del núcleo; `partida` hace el fundido y `cambiarDePiso` (`core/explorar.ts`), que
+  conserva la puerta de la isla por la que se entró. Arriba se aparece al norte del hueco mirando
+  al norte y abajo, delante de la escalera mirando al sur: si se sigue pulsando, no se rebota.
 
 - Sin motor de física: el mundo es una rejilla de casillas con alturas.
 - El sonido, más adelante, con Web Audio o ZzFX (MIT, menos de 1 KB).

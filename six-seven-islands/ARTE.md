@@ -103,7 +103,12 @@ Se revisan de cerca en `?catalogo` (plantas, rocas y muro) y `?catalogo=edificio
     geranios y tejado de teja curva, a veces con chimenea.
   - **De balcones** (capital): fachada de color, dos plantas y balcón de madera corrido con
     tejadillo. La mitad lleva teja y la otra mitad azotea con pretil, cuarto y depósito.
-  - El refugio lleva puerta y letrero coral. La tienda, toldo a rayas azules y cajas.
+  - **El refugio y la tienda se reconocen desde la cámara** (autor, 2026-11-19: «poco marcados»).
+    Llevan la carpintería, el zócalo y el pretil de su color: coral el refugio, azul la tienda.
+    En la azotea, un emblema pintado en blanco sobre un disco de su color: un corazón el refugio
+    y una cesta la tienda (dibujo propio). Encima del pretil, un letrero redondo con el mismo
+    emblema. La tienda conserva su toldo a rayas y sus cajas. El bar es una tienda por fuera, pero
+    sin sus colores.
   - **Provisionales hasta que el autor los haga con Meshy:**
     - el museo, una casa de una planta del estilo de su zona, con un pórtico de cuatro
       columnas de cantería y frontón delante de la puerta;
@@ -136,8 +141,11 @@ Se revisan de cerca en `?catalogo` (plantas, rocas y muro) y `?catalogo=edificio
 - **Objetos del suelo:** un frasco que flota y gira hasta que se recoge.
 - **Interiores** (`data/generar-interior.ts`): uno por edificio, del tamaño de su fachada, con
   muebles según el tipo (casa, refugio, tienda, gimnasio o museo): camas, cocina, mesa, sofá,
-  estanterías y plantas. En las casas de dos plantas, una escalera de madera con juguetes delante
-  (cubos, pelota y un osito) que no dejan subir.
+  estanterías y plantas. En las casas de dos plantas, una escalera de madera con peldaños de canto
+  claro, zancas, barandilla y el hueco oscuro arriba (autor, 2026-11-19: «no parecen escaleras»).
+  En una de cada tres, juguetes delante (cubos, pelota y un osito) que no dejan subir; por las
+  demás se sube a un dormitorio, con el hueco de la escalera y su barandilla. En el refugio y la
+  tienda, la escalera es del personal: siempre tapada.
 - **Silueta del jugador** cuando algo lo tapa: coral, que se ve sobre la cal y sobre el picón.
 - **La compañera:** la inicial elegida va detrás del jugador, a 0,6 de alto (las personas, 1,25),
   con saltitos al andar.
