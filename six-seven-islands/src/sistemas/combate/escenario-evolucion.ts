@@ -48,9 +48,11 @@ const BASALTO_CLARO = '#8A8A92';
 const LUZ_PROPIA = 0.32;
 
 /** Radio de la cara de arriba de la isla. */
-const R = 1.6;
-/** Hasta aquí el suelo es liso: ahí van la criatura y el Sello. */
-const R_LISO = 0.9;
+const R = 1.7;
+/** Hasta aquí el suelo es liso: ahí van la criatura y el Sello (que llega a 1,08). */
+const R_LISO = 1.12;
+/** El foso de agua de la charca, entre estos dos radios. */
+const FOSO: [number, number] = [1.16, 1.6];
 
 type Props = 'jardin' | 'basalto' | 'charca' | 'lava' | 'desierto' | 'hielo' | 'nubes' | 'cristales' | 'piedras';
 type Cae = 'hoja' | 'piedra' | 'gota' | 'brasa' | 'arena' | 'copo' | 'pluma' | 'chispa' | 'burbuja' | 'mota';
@@ -76,10 +78,10 @@ const PALETAS: Record<string, Paleta> = {
   roca: { suelo: ['#8C8177', '#A39789', '#70665D'], capas: ['#7C7168', '#5F574F', '#8E8378', '#4F4842'], roca: '#4A443F', props: 'basalto', cae: 'piedra' },
   ancestral: { suelo: ['#A08458', '#B89A68', '#86704A'], capas: ['#8E7650', '#6E5A3C', '#9A8058', '#5A4A32'], roca: '#4E412E', props: 'basalto', cae: 'mota', colorCae: '#E8C25A' },
   agua: { suelo: ['#7D8A8F', '#97A3A7', '#66737A'], capas: ['#6E7B80', '#56636A', '#7F8C90', '#4B575D'], roca: '#45515A', props: 'charca', cae: 'gota', colorCae: '#7CC4F2' },
-  infernal: { suelo: ['#3E3230', '#4E3D39', '#2C2321'], capas: ['#3A2E2C', '#2B2220', '#4D3A34', '#241C1B'], roca: '#211A19', props: 'lava', cae: 'brasa', colorCae: '#FF8A2A' },
+  infernal: { suelo: ['#4E2E27', '#62382E', '#3A221D'], capas: ['#4A2C26', '#33201C', '#55342B', '#2A1A17'], roca: '#24160F', props: 'lava', cae: 'brasa', colorCae: '#FF8A2A' },
   tierra: { suelo: ['#D4AA68', '#E3BF82', '#C09556'], capas: ['#C69C5C', '#A87C45', '#B98D50', '#8E6738'], roca: '#7A5A36', props: 'desierto', cae: 'arena', colorCae: '#B98D50' },
   hielo: { suelo: ['#EAF5FB', '#FFFFFF', '#D2E8F3'], capas: ['#DDEEF6', '#B9D8E8', '#CBE3EF', '#9CC5DA'], roca: '#7FA7BD', props: 'hielo', cae: 'copo', colorCae: '#FFFFFF' },
-  aire: { suelo: ['#C9C2B6', '#DAD4C9', '#B6AFA3'], capas: ['#B9B2A6', '#A39C90', '#C4BDB1', '#8F887D'], roca: '#7D776D', props: 'nubes', cae: 'pluma', colorCae: '#F4F1EA' },
+  aire: { suelo: ['#9FC0D6', '#B6D3E5', '#88AEC6'], capas: ['#94B3C7', '#7C9BAF', '#A3BFD0', '#68869A'], roca: '#587083', props: 'nubes', cae: 'pluma', colorCae: '#F4F1EA' },
   electrico: { suelo: ['#8F877C', '#A39B8F', '#7A7369'], capas: ['#7F786E', '#6A645B', '#8C857A', '#57524B'], roca: '#4E4943', props: 'cristales', cae: 'chispa', colorCae: '#FFD84A', cristal: '#F2C200' },
   acero: { suelo: ['#9AA3AD', '#B1B9C2', '#838C96'], capas: ['#8A939D', '#6F7882', '#97A0AA', '#5E666F'], roca: '#4F5660', props: 'cristales', cae: 'chispa', colorCae: '#E6EEF5', cristal: '#B8C4D0' },
   mental: { suelo: ['#B9A6B3', '#CDBBC7', '#A3909D'], capas: ['#A8949F', '#8E7B86', '#B5A1AC', '#76646E'], roca: '#5E4E58', props: 'cristales', cae: 'burbuja', colorCae: '#F2A5D2', cristal: '#E07BBE' },
@@ -87,7 +89,7 @@ const PALETAS: Record<string, Paleta> = {
   espectral: { suelo: ['#7E7590', '#9389A5', '#6A617C'], capas: ['#6F6680', '#574F68', '#7C7390', '#463F55'], roca: '#3A3447', props: 'cristales', cae: 'mota', colorCae: '#B9A2F2', cristal: '#8F73E0' },
   oscuridad: { suelo: ['#57525C', '#686270', '#46424B'], capas: ['#4F4A55', '#3D3943', '#5A5560', '#322F37'], roca: '#2A272E', props: 'cristales', cae: 'mota', colorCae: '#6B5E80', cristal: '#5C4A78' },
   lucha: { suelo: ['#A89A88', '#BBAE9C', '#928573'], capas: ['#988B79', '#7E7262', '#A39684', '#6A5F51'], roca: '#5A5045', props: 'piedras', cae: 'mota', colorCae: '#E2685F' },
-  comun: { suelo: ['#B5AEA4', '#C6C0B7', '#A19A90'], capas: ['#A59E94', '#8D867C', '#B0A99F', '#78726A'], roca: '#66615A', props: 'piedras', cae: 'mota', colorCae: '#CFC7BB' },
+  comun: { suelo: ['#C9A97E', '#D9BD94', '#B39068'], capas: ['#B8966C', '#9A7A54', '#C2A078', '#80643F'], roca: '#6B5338', props: 'piedras', cae: 'mota', colorCae: '#F2D58A' },
 };
 
 export interface EscenarioEvolucion {
@@ -175,7 +177,7 @@ function alturaSuelo(p: Paleta, x: number, z: number, s: number): number {
   const borde = Math.max(0, Math.min(1, (r - R_LISO) / 0.45));
   let h = borde * (suave(x * 2.4, z * 2.4, s + 3) * 0.035 + 0.012);
   if (p.props === 'desierto') h += borde * Math.sin(x * 9 + z * 3) * 0.012;
-  if (p.props === 'charca' && r > 0.95 && r < 1.42) h -= 0.07 * Math.sin(((r - 0.95) / 0.47) * Math.PI);
+  if (p.props === 'charca' && r > FOSO[0] && r < FOSO[1]) h -= 0.07 * Math.sin(((r - FOSO[0]) / (FOSO[1] - FOSO[0])) * Math.PI);
   return h;
 }
 
@@ -199,7 +201,7 @@ function isla(M: Montaje, p: Paleta, s: number): void {
       // El borde, un poco más claro, como iluminado de canto.
       if (a === anillos) t.offsetHSL(0, 0, 0.04);
       // El fondo de la charca, más oscuro y azulado.
-      if (p.props === 'charca' && r > 0.95 && r < 1.42) t.lerp(c1.set('#3F5F6E'), 0.6);
+      if (p.props === 'charca' && r > FOSO[0] && r < FOSO[1]) t.lerp(c1.set('#3F5F6E'), 0.6);
       col.push(t.r, t.g, t.b);
     }
   }
@@ -380,7 +382,7 @@ function props(M: Montaje, p: Paleta, s: number, r: () => number): void {
         const n = 4 + Math.floor(r() * 3);
         for (let i = 0; i < n; i++) {
           const a = centro + (r() - 0.5) * 0.5;
-          const rr = 1.22 + r() * 0.26;
+          const rr = R_LISO + 0.18 + r() * (R - R_LISO - 0.3);
           const x = Math.cos(a) * rr;
           const z = Math.sin(a) * rr;
           const radio = 0.08 + r() * 0.05;
@@ -416,7 +418,7 @@ function props(M: Montaje, p: Paleta, s: number, r: () => number): void {
       for (let i = 0; i < 6; i++) {
         const [x, z] = sitio(r, 1);
         const rr = Math.hypot(x, z);
-        const f = 1.18 / rr;
+        const f = (FOSO[0] + FOSO[1]) / 2 / rr;
         const n = 5 + Math.floor(r() * 3);
         for (let k = 0; k < n; k++) {
           const ang = r() * Math.PI * 2;
@@ -425,18 +427,25 @@ function props(M: Montaje, p: Paleta, s: number, r: () => number): void {
       }
       for (let i = 0; i < 16; i++) {
         const a = (i / 16) * Math.PI * 2 + r() * 0.2;
-        const rr = 1.48 + r() * 0.06;
+        const rr = FOSO[1] + 0.03 + r() * 0.04;
         const t = 0.07 + r() * 0.05;
         M.pon(abollar(new IcosahedronGeometry(t, 1), 0.2, s + i).scale(1, 0.55, 1).translate(Math.cos(a) * rr, 0.01, Math.sin(a) * rr), p.suelo[i % 3]);
       }
       break;
     }
     case 'lava': {
-      // Agujas de roca volcánica detrás y escoria.
-      for (let i = 0; i < 6; i++) {
-        const [x, z] = sitio(r, 1);
-        const alto = 0.25 + r() * 0.45;
-        M.pon(plano(abollar(new ConeGeometry(0.1 + r() * 0.06, alto, 6, 2), 0.15, s + i).translate(x, y(x, z) + alto / 2 - 0.02, z)), p.capas[i % 2 ? 1 : 2]);
+      // Agujas de roca volcánica detrás, en grupos de dos o tres, y escoria.
+      for (let i = 0; i < 5; i++) {
+        const [x0, z0] = sitio(r, 1);
+        const n = 2 + Math.floor(r() * 2);
+        for (let k = 0; k < n; k++) {
+          const x = x0 + (r() - 0.5) * 0.18;
+          const z = z0 + (r() - 0.5) * 0.12;
+          const alto = 0.2 + r() * (k === 0 ? 0.55 : 0.3);
+          const aguja = abollar(new ConeGeometry(0.07 + r() * 0.06, alto, 7, 3), 0.18, s + i * 7 + k).translate(0, alto / 2, 0);
+          aguja.rotateZ((r() - 0.5) * 0.25).rotateX((r() - 0.5) * 0.25);
+          M.ponDegradado(plano(aguja.translate(x, y(x, z) - 0.02, z)), '#1C120F', p.capas[2]);
+        }
       }
       for (let i = 0; i < 12; i++) {
         const [x, z] = sitio(r, 0.5);
@@ -478,8 +487,25 @@ function props(M: Montaje, p: Paleta, s: number, r: () => number): void {
       }
       break;
     }
-    case 'cristales':
     case 'piedras': {
+      // Un corro de piedras hincadas detrás, matas de hierba seca y alguna flor amarilla.
+      for (let i = 0; i < 7; i++) {
+        const a = Math.PI + 0.35 + (i / 6) * (Math.PI - 0.7);
+        const rr = R - 0.2;
+        const alto = 0.28 + r() * 0.3;
+        const piedra = abollar(new BoxGeometry(0.16, alto, 0.1, 2, 3, 1), 0.12, s + i).translate(0, alto / 2, 0);
+        piedra.rotateY(-a + Math.PI / 2).rotateZ((r() - 0.5) * 0.15);
+        M.ponDegradado(plano(piedra.translate(Math.cos(a) * rr, y(Math.cos(a) * rr, Math.sin(a) * rr) - 0.02, Math.sin(a) * rr)), p.roca, p.suelo[1]);
+      }
+      for (let i = 0; i < 14; i++) {
+        const [x, z] = sitio(r, 0.5);
+        const n = 5 + Math.floor(r() * 3);
+        for (let b = 0; b < n; b++) brizna(M, x, y(x, z) - 0.01, z, 0.1 + r() * 0.1, (b / n) * Math.PI * 2 + r(), 0.05, '#8A8A4A', '#D8CB86');
+        if (i % 3 === 0) M.pon(new SphereGeometry(0.022, 6, 4).translate(x, y(x, z) + 0.13, z), '#F2C94C');
+      }
+      break;
+    }
+    case 'cristales': {
       for (let i = 0; i < 10; i++) {
         const [x, z] = sitio(r, 0.6);
         const t = 0.05 + r() * 0.08;
@@ -502,7 +528,7 @@ function extras(grupo: Group, p: Paleta, s: number, r: () => number, nuevos: { d
     return g;
   };
   if (p.props === 'charca') {
-    const agua = new Mesh(geo(new RingGeometry(0.93, 1.44, 72, 1)), mat(new MeshBasicNodeMaterial({ color: '#5FB4DA', transparent: true, opacity: 0.72, depthWrite: false })));
+    const agua = new Mesh(geo(new RingGeometry(FOSO[0] - 0.02, FOSO[1] + 0.02, 72, 1)), mat(new MeshBasicNodeMaterial({ color: '#5FB4DA', transparent: true, opacity: 0.72, depthWrite: false })));
     agua.rotation.x = -Math.PI / 2;
     agua.position.y = -0.012;
     grupo.add(agua);
@@ -512,7 +538,7 @@ function extras(grupo: Group, p: Paleta, s: number, r: () => number, nuevos: { d
       const m = new Mesh(onda, mat(new MeshBasicNodeMaterial({ color: '#EAF7FF', transparent: true, opacity: 0, depthWrite: false })));
       m.rotation.x = -Math.PI / 2;
       const a = (i / 6) * Math.PI * 2 + 0.3;
-      m.position.set(Math.cos(a) * 1.18, -0.004, Math.sin(a) * 1.18);
+      m.position.set(Math.cos(a) * 1.38, -0.004, Math.sin(a) * 1.38);
       m.userData.fase = i / 6;
       grupo.add(m);
       return m;
@@ -523,7 +549,8 @@ function extras(grupo: Group, p: Paleta, s: number, r: () => number, nuevos: { d
       const m = new Mesh(hoja, mat(new MeshBasicNodeMaterial({ color: i % 2 ? '#5E9E4A' : '#6FB257' })));
       const a = r() * Math.PI * 2;
       m.rotation.set(-Math.PI / 2, 0, r() * 6);
-      m.position.set(Math.cos(a) * (1.05 + r() * 0.28), -0.006, Math.sin(a) * (1.05 + r() * 0.28));
+      const rr = FOSO[0] + 0.08 + r() * (FOSO[1] - FOSO[0] - 0.16);
+      m.position.set(Math.cos(a) * rr, -0.006, Math.sin(a) * rr);
       grupo.add(m);
     }
     vivos.push((t) => {
@@ -549,9 +576,18 @@ function extras(grupo: Group, p: Paleta, s: number, r: () => number, nuevos: { d
         a = a2;
       }
     }
-    for (let i = 0; i < 4; i++) {
-      const [x, z] = sitio(r, 0.7);
-      M.pon(new CircleGeometry(0.07 + r() * 0.05, 12).rotateX(-Math.PI / 2).scale(1, 1, 0.7).translate(x, alturaSuelo(p, x, z, s) + 0.006, z), '#FF8A2A');
+    for (let i = 0; i < 7; i++) {
+      const [x, z] = sitio(r, 0.65);
+      const radio = 0.06 + r() * 0.06;
+      const y = alturaSuelo(p, x, z, s);
+      M.pon(new CircleGeometry(radio + 0.025, 12).rotateX(-Math.PI / 2).scale(1, 1, 0.7).translate(x, y + 0.005, z), '#C2410C');
+      M.pon(new CircleGeometry(radio, 12).rotateX(-Math.PI / 2).scale(1, 1, 0.7).translate(x, y + 0.009, z), '#FFB347');
+    }
+    // Las grietas también por el canto, hacia abajo.
+    for (let i = 0; i < 10; i++) {
+      const a = (i / 10) * Math.PI * 2 + r() * 0.3;
+      const largo = 0.12 + r() * 0.18;
+      M.pon(new BoxGeometry(0.02, largo, 0.02).rotateZ((r() - 0.5) * 0.5).translate(Math.cos(a) * (R + 0.012), -0.06 - largo / 2, Math.sin(a) * (R + 0.012)), '#FF7A1F');
     }
     const m = new Mesh(geo(M.fusionar()), mat(new MeshBasicNodeMaterial({ vertexColors: true })));
     grupo.add(m);
@@ -587,12 +623,18 @@ function extras(grupo: Group, p: Paleta, s: number, r: () => number, nuevos: { d
     for (let i = 0; i < 7; i++) {
       const a = (i / 7) * Math.PI * 2 + r() * 0.4;
       const rr = R * (0.85 + r() * 0.25);
-      for (let k = 0; k < 4; k++) {
-        const t = 0.14 + r() * 0.12;
-        M.pon(new SphereGeometry(t, 10, 7).translate(Math.cos(a) * rr + (r() - 0.5) * 0.3, -0.45 - r() * 0.25, Math.sin(a) * rr + (r() - 0.5) * 0.3), '#FFFFFF');
+      // Una nube: bolas de tamaños distintos, apretadas y abolladas, más anchas que altas.
+      const cx = Math.cos(a) * rr;
+      const cz = Math.sin(a) * rr;
+      const cy = -0.45 - r() * 0.25;
+      for (let k = 0; k < 7; k++) {
+        const t = 0.09 + r() * 0.13;
+        M.pon(abollar(new SphereGeometry(t, 10, 7), 0.08, s + i * 10 + k).scale(1.25, 0.85, 1).translate(cx + (r() - 0.5) * 0.42, cy + (r() - 0.5) * 0.1, cz + (r() - 0.5) * 0.3), k % 3 ? '#FFFFFF' : '#EEF4F8');
       }
     }
-    const nubes = new Mesh(geo(M.fusionar()), new MaterialDiorama({ color: '#FFFFFF', bordes: [-0.3, 0.5], rebote: 0 }, attribute('color', 'vec3')));
+    // Con luz propia: por abajo les llegaba la luz verde del suelo de la isla y parecían huevos.
+    const blanco = attribute('color', 'vec3');
+    const nubes = new Mesh(geo(M.fusionar()), new MaterialDiorama({ color: '#FFFFFF', bordes: [-0.3, 0.5], rebote: 0 }, blanco, blanco.mul(0.55)));
     nuevos.push(nubes.material as MaterialDiorama);
     grupo.add(nubes);
     vivos.push((t) => {
@@ -761,7 +803,8 @@ export function crearEscenarioEvolucion(tipo: string, semilla: number): Escenari
   const nacer = (q: Particula, alPrincipio: boolean) => {
     const ang = r() * Math.PI * 2;
     // Las que caen, alrededor de la criatura; las que suben, desde la isla.
-    const rr = sube ? 0.3 + r() * (R - 0.4) : 0.2 + Math.sqrt(r()) * 2.3;
+    // Lejos del centro: lo que caía cerca cruzaba por delante de la criatura (probador, 2026-11-19).
+    const rr = sube ? R_LISO - 0.1 + r() * (R - R_LISO) : 1.05 + Math.sqrt(r()) * 1.6;
     const alto = sube ? alturaSuelo(p, Math.cos(ang) * rr, Math.sin(ang) * rr, s) + 0.02 : 3.2 + r() * 1.4;
     q.pos.set(Math.cos(ang) * rr, alPrincipio && !sube ? alto - r() * 3.6 : alto, Math.sin(ang) * rr * 0.85);
     const lento = p.cae === 'hoja' || p.cae === 'pluma' || p.cae === 'copo';
