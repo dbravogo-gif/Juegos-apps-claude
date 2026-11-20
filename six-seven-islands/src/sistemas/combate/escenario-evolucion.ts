@@ -71,11 +71,15 @@ export interface Paleta {
   colorCae?: string;
   /** Color de los cristales (los tipos sin escenario propio). */
   cristal?: string;
+  /** Peñascos flotando junto a la isla (sí, si no se dice; el autor no los quiere en todos). */
+  flotantes?: boolean;
+  /** Tamaño de lo que cae, por 1 (las burbujas de Veneno, más grandes). */
+  escalaCae?: number;
 }
 
 export const PALETAS: Record<string, Paleta> = {
   planta: { suelo: ['#5E9E3F', '#7DBB4C', '#4A8436'], capas: ['#5E9E3F', '#6B4A2F', '#7A5636', '#5C3F27'], roca: '#5A4A3E', props: 'jardin', cae: 'hoja' },
-  bicho: { suelo: ['#7FA63A', '#98BE4A', '#668C2E'], capas: ['#7FA63A', '#6B4A2F', '#7A5636', '#5C3F27'], roca: '#5A4A3E', props: 'bosquecillo', cae: 'luciernaga', colorCae: '#E8FF7A' },
+  bicho: { suelo: ['#7FA63A', '#98BE4A', '#668C2E'], capas: ['#7FA63A', '#6B4A2F', '#7A5636', '#5C3F27'], roca: '#5A4A3E', props: 'bosquecillo', cae: 'luciernaga', colorCae: '#E8FF7A', flotantes: false },
   roca: { suelo: ['#8C8177', '#A39789', '#70665D'], capas: ['#7C7168', '#5F574F', '#8E8378', '#4F4842'], roca: '#4A443F', props: 'basalto', cae: 'piedra' },
   ancestral: { suelo: ['#B9A27A', '#C9B38A', '#A68F68'], capas: ['#A68F68', '#8A7552', '#B39C74', '#6E5A3C'], roca: '#5A4A32', props: 'ruinas', cae: 'mota', colorCae: '#FFD45E' },
   agua: { suelo: ['#7D8A8F', '#97A3A7', '#66737A'], capas: ['#6E7B80', '#56636A', '#7F8C90', '#4B575D'], roca: '#45515A', props: 'charca', cae: 'gota', colorCae: '#7CC4F2' },
@@ -83,11 +87,11 @@ export const PALETAS: Record<string, Paleta> = {
   tierra: { suelo: ['#D4AA68', '#E3BF82', '#C09556'], capas: ['#C69C5C', '#A87C45', '#B98D50', '#8E6738'], roca: '#7A5A36', props: 'desierto', cae: 'arena', colorCae: '#B98D50' },
   hielo: { suelo: ['#EAF5FB', '#FFFFFF', '#D2E8F3'], capas: ['#DDEEF6', '#B9D8E8', '#CBE3EF', '#9CC5DA'], roca: '#7FA7BD', props: 'hielo', cae: 'copo', colorCae: '#FFFFFF' },
   aire: { suelo: ['#9FC0D6', '#B6D3E5', '#88AEC6'], capas: ['#94B3C7', '#7C9BAF', '#A3BFD0', '#68869A'], roca: '#587083', props: 'nubes', cae: 'pluma', colorCae: '#F4F1EA' },
-  electrico: { suelo: ['#7E8590', '#949BA6', '#6A717C'], capas: ['#737A85', '#5E6570', '#828994', '#4C525C'], roca: '#3F444C', props: 'bobinas', cae: 'chispa', colorCae: '#FFD84A' },
+  electrico: { suelo: ['#A3ADBA', '#BCC5D0', '#8C97A5'], capas: ['#97A1AE', '#7A8492', '#A8B1BD', '#5F6875'], roca: '#4A525E', props: 'bobinas', cae: 'chispa', colorCae: '#FFD84A', flotantes: false },
   acero: { suelo: ['#9AA3AD', '#AEB6BF', '#8A939D'], capas: ['#8A939D', '#6F7882', '#97A0AA', '#5E666F'], roca: '#4F5660', props: 'taller', cae: 'tuerca' },
-  mental: { suelo: ['#C9A8C9', '#D9BCD9', '#B693B6'], capas: ['#B898B8', '#9B7C9B', '#C4A4C4', '#7E637E'], roca: '#5E4A5E', props: 'prismas', cae: 'burbuja', colorCae: '#F2A5D2' },
-  veneno: { suelo: ['#5B4A66', '#6E5A7A', '#4A3D55'], capas: ['#56465F', '#43364C', '#62506D', '#33283D'], roca: '#2C2233', props: 'cienaga', cae: 'burbuja', colorCae: '#C77DEB' },
-  espectral: { suelo: ['#6E6880', '#827B94', '#5C566D'], capas: ['#655F76', '#504B60', '#726C85', '#3F3B4D'], roca: '#343041', props: 'bruma', cae: 'espiritu', colorCae: '#D4C8FF' },
+  mental: { suelo: ['#C9A8C9', '#D9BCD9', '#B693B6'], capas: ['#B898B8', '#9B7C9B', '#C4A4C4', '#7E637E'], roca: '#5E4A5E', props: 'prismas', cae: 'burbuja', colorCae: '#F2A5D2', flotantes: false },
+  veneno: { suelo: ['#3E2F4A', '#4B3858', '#32253D'], capas: ['#3A2C45', '#2C2135', '#45344F', '#22182A'], roca: '#1C1423', props: 'cienaga', cae: 'burbuja', colorCae: '#C77DEB', flotantes: false, escalaCae: 1.9 },
+  espectral: { suelo: ['#6E6880', '#827B94', '#5C566D'], capas: ['#655F76', '#504B60', '#726C85', '#3F3B4D'], roca: '#343041', props: 'bruma', cae: 'espiritu', colorCae: '#D4C8FF', flotantes: false },
   oscuridad: { suelo: ['#3A3542', '#47414F', '#2E2A35'], capas: ['#34303B', '#28252E', '#3D3846', '#1F1C24'], roca: '#18161C', props: 'obsidiana', cae: 'sombra', colorCae: '#4B3A66' },
   lucha: { suelo: ['#D8B98A', '#E4C79C', '#C9A574'], capas: ['#C9A574', '#A8865A', '#B8956A', '#8A6B45'], roca: '#6B5338', props: 'terrero', cae: 'mota', colorCae: '#E9CFA2' },
   comun: { suelo: ['#C9A97E', '#D9BD94', '#B39068'], capas: ['#B8966C', '#9A7A54', '#C2A078', '#80643F'], roca: '#6B5338', props: 'piedras', cae: 'mota', colorCae: '#F2D58A' },
@@ -748,7 +752,13 @@ const PESAN: ReadonlySet<Cae> = new Set(['piedra', 'arena', 'tuerca']);
 
 // ——— El conjunto ———
 
-export function crearEscenarioEvolucion(tipo: string, semilla: number): EscenarioEvolucion {
+/** Lo que el escenario puede pedir al combate: un efecto de sonido o un color de fondo (null: el de siempre). */
+export interface OpcionesEscenario {
+  sonar?: (nombre: string) => void;
+  fondo?: (color: Color | null) => void;
+}
+
+export function crearEscenarioEvolucion(tipo: string, semilla: number, opciones: OpcionesEscenario = {}): EscenarioEvolucion {
   const p = PALETAS[tipo] ?? PALETAS.comun;
   const r = azar(semilla);
   const s = Math.floor(r() * 1000);
@@ -798,6 +808,8 @@ export function crearEscenarioEvolucion(tipo: string, semilla: number): Escenari
       return g;
     },
     vivos,
+    sonar: (nombre) => opciones.sonar?.(nombre),
+    fondo: (color) => opciones.fondo?.(color),
   });
 
   // Peñascos que flotan junto a la isla, meciéndose.
@@ -805,11 +817,11 @@ export function crearEscenarioEvolucion(tipo: string, semilla: number): Escenari
   for (let i = 0; i < 3; i++) MF.ponDegradado(plano(abollar(new IcosahedronGeometry(0.1 + i * 0.03, 1), 0.3, s + 50 + i).scale(1, 0.8, 1)), p.roca, p.capas[0]);
   const geoFlota = MF.fusionar();
   nuevos.push(geoFlota);
-  const flotantes = [
+  const flotantes = (p.flotantes === false ? [] : [
     [-2.05, -0.55, -0.6],
     [2.1, -0.25, -0.9],
     [1.7, -0.95, 0.5],
-  ].map(([x, y, z], i) => {
+  ]).map(([x, y, z], i) => {
     const m = new Mesh(geoFlota, matIsla);
     m.position.set(x, y, z);
     m.scale.setScalar(0.6 + i * 0.25);
@@ -867,7 +879,7 @@ export function crearEscenarioEvolucion(tipo: string, semilla: number): Escenari
     q.estado = 'aire';
     q.t = 0;
     q.botes = 0;
-    q.escala = 0.75 + r() * 0.5;
+    q.escala = (0.75 + r() * 0.5) * (p.escalaCae ?? 1);
     if (p.cae === 'luciernaga') {
       // Cada luciérnaga revolotea alrededor de un sitio fijo, por detrás y a los lados (en `vel`).
       const a = Math.PI + 0.1 + r() * (Math.PI - 0.2) + (r() < 0.3 ? Math.PI * 0.6 * (r() < 0.5 ? -1 : 1) : 0);

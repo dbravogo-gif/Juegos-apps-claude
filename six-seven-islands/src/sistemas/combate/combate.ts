@@ -1196,7 +1196,13 @@ export class Combate implements Subsistema {
     nuevos.push(anillo, disco, esfera, mota, geoLineas, geoOnda);
     // La isla de su tipo y lo que cae alrededor (escenario-evolucion.ts; autor, 2026-11-19).
     const semilla = [...`${uid}>${a}`].reduce((h, letra) => (Math.imul(h, 31) + letra.charCodeAt(0)) >>> 0, 7);
-    const escenario = crearEscenarioEvolucion(this.tipoEvolucion ?? especieNueva.tipos[0], semilla);
+    const escenario = crearEscenarioEvolucion(this.tipoEvolucion ?? especieNueva.tipos[0], semilla, {
+      sonar: (n) => this.ctx.eventos.emit('sonido:tocar', { nombre: n }),
+      fondo: (c) => {
+        // Solo mientras se ve la evolución: al volver a la arena, el fondo es el suyo.
+        if (this.evolucion) this.ctx.escena.background = c ?? FONDO_EVOLUCION;
+      },
+    });
     nuevos.push(escenario);
     const caer = (tiempo: number) => escenario.animar(tiempo);
     const suelo = new Mesh(disco, matSuelo);

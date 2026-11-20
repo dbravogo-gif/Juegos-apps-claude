@@ -139,6 +139,10 @@ const NOMBRE_EFECTO: Record<NombreEfecto, string> = {
   curar: 'Curar',
   comprar: 'Comprar',
   huir: 'Huir',
+  metal: 'Metal contra metal (evolución de Acero)',
+  chasquido: 'Chasquido (debajo del metal)',
+  rayo: 'Rayo (evolución de Eléctrico)',
+  retumbo: 'Retumbo (debajo del rayo)',
 };
 
 interface Opcion {

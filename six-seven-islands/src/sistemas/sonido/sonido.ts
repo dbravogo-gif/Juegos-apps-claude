@@ -34,6 +34,8 @@ export interface DefEfecto {
   ataque?: number;
   /** Otro efecto que suena a la vez (una pisada debajo del crujido). */
   con?: string;
+  /** Varios tonos a la vez, por cuánto multiplican a `desde` (un metal que vibra: parciales sueltos). */
+  acorde?: number[];
 }
 
 export const EFECTOS = {
@@ -66,6 +68,13 @@ export const EFECTOS = {
   curar: { onda: 'sine', desde: 523, hasta: 523, duracion: 0.12, volumen: 0.2, notas: [0, 4, 7, 12] },
   comprar: { onda: 'square', desde: 1318, hasta: 1318, duracion: 0.06, volumen: 0.12, notas: [0, 5] },
   huir: { onda: 'triangle', desde: 300, hasta: 900, duracion: 0.3, volumen: 0.16 },
+  // La evolución de Acero (autor, 2026-11-20): un golpe de metal contra metal. Parciales que no
+  // casan entre sí, como una campana, y un chasquido seco al principio.
+  metal: { onda: 'sine', desde: 760, hasta: 740, duracion: 0.55, volumen: 0.07, variacion: 0.06, acorde: [1, 2.76, 5.4, 8.93], con: 'chasquido' },
+  chasquido: { onda: 'ruido', desde: 5200, hasta: 3000, duracion: 0.035, volumen: 0.12, filtro: 'highpass', q: 0.7 },
+  // La de Eléctrico: el rayo, un restallido agudo con un retumbo debajo.
+  rayo: { onda: 'ruido', desde: 3800, hasta: 900, duracion: 0.22, volumen: 0.16, filtro: 'bandpass', q: 0.6, granos: 3, separacion: 0.025, con: 'retumbo' },
+  retumbo: { onda: 'ruido', desde: 180, hasta: 60, duracion: 0.7, volumen: 0.2, filtro: 'lowpass', q: 0.8, ataque: 0.04 },
 } as const satisfies Record<string, DefEfecto>;
 
 export type NombreEfecto = keyof typeof EFECTOS;
@@ -271,7 +280,9 @@ export class Sonido implements Subsistema {
     const golpes: [number, number, number][] =
       d.onda === 'ruido' && d.granos
         ? Array.from({ length: d.granos }, (_, k) => [t0 + k * (d.separacion ?? 0.03) * (0.7 + Math.random() * 0.6), 1 + (Math.random() - 0.5) * 0.3, 0.6 + Math.random() * 0.4])
-        : (d.notas ?? [0]).map((n, k) => [t0 + k * d.duracion, 2 ** (n / 12), 1]);
+        : d.acorde
+          ? d.acorde.map((f, k) => [t0, f, 1 / (1 + k * 0.7)])
+          : (d.notas ?? [0]).map((n, k) => [t0 + k * d.duracion, 2 ** (n / 12), 1]);
     for (const [t, factor, fuerza] of golpes) {
       const f0 = d.desde * v * factor;
       const f1 = d.hasta * v * factor;
