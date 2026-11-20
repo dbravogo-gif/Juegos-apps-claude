@@ -1,4 +1,4 @@
-// Subsistema «menu»: el menú de pausa, con Esc mientras se explora, y la tienda.
+// Subsistema «menu»: el menú de pausa, con Z o Esc mientras se explora, y la tienda.
 //
 // Diseño del autor (2026-11-12):
 // - Menú de pausa: un degradado oscuro de izquierda (menos transparente) a derecha (casi nada),
@@ -13,9 +13,9 @@
 //
 // La tienda (F17) se abre al acabar de hablar con el tendero: cada compra se confirma (×1 o ×5),
 // para no comprar sin querer al venir pulsando E desde el diálogo. Todo con el teclado: flechas
-// para elegir, E, Enter o Espacio para confirmar y Esc para volver.
+// para elegir, A (o E, Enter, Espacio) para confirmar y X (o Z, Esc) para volver.
 
-import { nombreDe, objetoUtil, usarObjeto } from '../../core/criatura';
+import { curarDelTodo, nombreDe, objetoUtil, usarObjeto } from '../../core/criatura';
 import { calcularEstadisticas, vidaMaxima } from '../../core/estadisticas';
 import { exportarCodigo, importarCodigo } from '../../core/guardado';
 import { ESTADISTICAS, type Criatura, type Estadistica } from '../../core/modelo';
@@ -24,6 +24,7 @@ import { svgMochila } from '../../arte/mochila';
 import { svgPintadera } from '../../arte/pintaderas';
 import { BOLSILLOS, bolsilloDe } from '../../data/bolsillos';
 import { DATOS_COMBATE_PRUEBA as DATOS } from '../../data/combate-prueba';
+import { ISLAS } from '../../data/islas';
 import { MEDALLAS, medallasGanadas } from '../../data/medallas';
 import { TIPOS } from '../../data/tipos';
 import { dibujarPlano } from '../mapa/dibujo';
@@ -50,7 +51,14 @@ type Pantalla =
   | 'sonidos'
   | 'nueva'
   | 'tienda'
-  | 'compra';
+  | 'compra'
+  | 'salir'
+  | 'desarrollador'
+  | 'dev-zona'
+  | 'dev-isla'
+  | 'dev-criatura'
+  | 'dev-evolucion'
+  | 'dev-nivel';
 
 /** Las pantallas con el estilo de la tienda: sin fondo y con las opciones a la izquierda. */
 const ESTILO_TIENDA: ReadonlySet<Pantalla> = new Set(['tienda', 'compra']);
@@ -73,7 +81,18 @@ const ATRAS: Partial<Record<Pantalla, Pantalla>> = {
   sonidos: 'opciones',
   nueva: 'opciones',
   compra: 'tienda',
+  salir: 'principal',
+  desarrollador: 'principal',
+  'dev-zona': 'desarrollador',
+  'dev-isla': 'desarrollador',
+  'dev-criatura': 'desarrollador',
+  'dev-evolucion': 'desarrollador',
+  'dev-nivel': 'dev-criatura',
 };
+/** Cuántas especies se ven a la vez en «Añadir una criatura» del modo desarrollador. */
+const POR_PAGINA = 9;
+/** Los niveles que se ofrecen al añadir una criatura (con los de evolución de las iniciales). */
+const NIVELES_DEV = [5, 10, 15, 16, 20, 30, 34, 40, 50] as const;
 /** Las pantallas en las que se recuerda la opción elegida, para volver a ella al regresar. */
 const CON_VUELTA: ReadonlySet<Pantalla> = new Set(['principal', 'opciones', 'tienda', 'equipo']);
 
@@ -99,7 +118,10 @@ const NOMBRE_EFECTO: Record<NombreEfecto, string> = {
   atras: 'Volver',
   hablar: 'Hablar',
   puerta: 'Puerta',
-  hierba: 'Pisar hierba',
+  hierba: 'Pisar hierba alta',
+  malpais: 'Pisar el malpaís',
+  pisada: 'Pisada (debajo del malpaís)',
+  arena: 'Pisar arena de duna',
   objeto: 'Encontrar un objeto',
   encuentro: 'Sale una criatura',
   exclamacion: 'Un entrenador te ve',
@@ -178,6 +200,9 @@ export class Menu implements Subsistema {
   private area!: HTMLTextAreaElement;
   private pantalla: Pantalla = 'cerrado';
   private opciones: Opcion[] = [];
+  /** Modo desarrollador: la especie elegida para añadir y la página de la lista. */
+  private devEspecie = '';
+  private devPagina = 0;
   private eleccion = 0;
   /** La criatura con la que se está haciendo algo (Datos, Mover, Objeto), por su sitio en el equipo. */
   private elegida = 0;
@@ -267,14 +292,14 @@ export class Menu implements Subsistema {
     const pies: Partial<Record<Pantalla, string>> = {
       tienda: '',
       compra: '',
-      mochila: '← → bolsillo · ↑ ↓ objeto · Enter: usar · Esc: volver',
-      datos: '← → otra criatura · Esc: volver',
-      medallero: 'Flechas: ver otra isla · Esc: volver',
-      mapa: 'Esc: volver',
+      mochila: '← → bolsillo · ↑ ↓ objeto · A: usar · X: volver',
+      datos: '← → otra criatura · X: volver',
+      medallero: 'Flechas: ver otra isla · X: volver',
+      mapa: 'X: volver',
       exportar: 'Enter: copiar · Esc: volver',
       importar: 'Enter: importar · Esc: volver',
     };
-    this.pie.textContent = pies[p] ?? (REJILLA.has(p) ? 'Flechas: elegir · Enter: aceptar · Esc: volver' : '↑ ↓ elegir · Enter: aceptar · Esc: volver');
+    this.pie.textContent = pies[p] ?? (REJILLA.has(p) ? 'Flechas: elegir · A: aceptar · X: volver' : '↑ ↓ elegir · A: aceptar · X: volver');
     if (p !== 'importar') this.area.blur();
     const equipo = this.partida.equipo;
     const ganadas = medallasGanadas(this.partida.estado.condiciones).length;
@@ -297,6 +322,10 @@ export class Menu implements Subsistema {
           { texto: 'Medallero', detalle: `${ganadas} de ${MEDALLAS.length} pintaderas. Se gana una en el gimnasio de cada isla.`, activa: true, elegir: () => this.abrir('medallero') },
           { texto: 'Mapa', detalle: `${this.partida.datos.nombre}, con tu posición.`, activa: true, elegir: () => this.abrir('mapa') },
           { texto: 'Opciones', detalle: 'Sonido, exportar o importar la partida y empezar otra.', activa: true, elegir: () => this.abrir('opciones') },
+          ...(this.partida.desarrollador
+            ? [{ texto: 'Desarrollador', detalle: 'Viajar a una zona, añadir criaturas, almendrados para subir de nivel…', activa: true, elegir: () => this.abrir('desarrollador') }]
+            : []),
+          { texto: 'Menú principal', detalle: 'Se guarda y vuelves a la portada: continuar, partida nueva o el código.', activa: true, elegir: () => this.abrir('salir') },
           { texto: 'Volver al juego', detalle: 'También con Esc.', activa: true, elegir: () => this.cerrar() },
         ];
         break;
@@ -356,7 +385,7 @@ export class Menu implements Subsistema {
         const objetos = Object.entries(this.partida.mochila).filter(([id, n]) => n > 0 && DATOS.objetos[id] && bolsilloDe(DATOS.objetos[id]) === b.id);
         this.opciones = objetos.map(([id, n]) => {
           const o = DATOS.objetos[id];
-          const curativo = o.tipo === 'curar' || o.tipo === 'remedio' || o.tipo === 'revivir';
+          const curativo = o.tipo === 'curar' || o.tipo === 'remedio' || o.tipo === 'revivir' || o.tipo === 'nivel';
           return {
             texto: `${o.nombre} ×${n}`,
             activa: curativo && (destino ? objetoUtil(destino, id, DATOS) : equipo.some((c) => objetoUtil(c, id, DATOS))),
@@ -409,6 +438,153 @@ export class Menu implements Subsistema {
           { texto: 'Volver', detalle: 'Al menú.', activa: true, elegir: () => this.abrir('principal') },
         ];
         break;
+      case 'salir':
+        this.titulo.textContent = '¿Volver a la portada?';
+        this.opciones = [
+          { texto: 'No, seguir jugando', activa: true, elegir: () => this.abrir('principal') },
+          { texto: 'Sí, volver', detalle: 'La partida se guarda antes. Desde la portada puedes continuarla o empezar otra.', activa: true, elegir: () => this.partida.volverAlMenu() },
+        ];
+        break;
+      case 'desarrollador': {
+        this.titulo.textContent = 'Desarrollador';
+        const lleno = equipo.length >= 6;
+        this.opciones = [
+          { texto: 'Viajar a una zona', detalle: `Las zonas de ${this.partida.datos.nombre}.`, activa: true, elegir: () => this.abrir('dev-zona') },
+          { texto: 'Viajar a otra isla', detalle: 'En barco, como con el marinero.', activa: true, elegir: () => this.abrir('dev-isla') },
+          {
+            texto: 'Añadir una criatura',
+            detalle: lleno ? 'El equipo está lleno: quita antes la última.' : 'Cualquier especie, al nivel que elijas.',
+            activa: !lleno,
+            elegir: () => {
+              this.devPagina = 0;
+              this.abrir('dev-criatura');
+            },
+          },
+          {
+            texto: 'Probar evolución',
+            detalle: 'Elige un tipo: combate fácil con una criatura a punto de evolucionar, con el escenario de ese tipo.',
+            activa: true,
+            elegir: () => this.abrir('dev-evolucion'),
+          },
+          {
+            texto: 'Diez almendrados',
+            detalle: 'Cada almendrado sube un nivel (Mochila → Botiquín). Si llega al de su evolución, evoluciona al ganar el próximo combate.',
+            activa: true,
+            elegir: () => {
+              this.partida.mochila.almendrado = (this.partida.mochila.almendrado ?? 0) + 10;
+              this.ctx.eventos.emit('sonido:tocar', { nombre: 'objeto' });
+              this.nota.textContent = `Tienes ${this.partida.mochila.almendrado} almendrados.`;
+            },
+          },
+          {
+            texto: 'Curar el equipo',
+            activa: true,
+            elegir: () => {
+              this.partida.equipo = equipo.map((c) => curarDelTodo(c, DATOS));
+              this.ctx.eventos.emit('sonido:tocar', { nombre: 'curar' });
+              this.nota.textContent = 'Equipo curado.';
+            },
+          },
+          {
+            texto: 'Quitar la última del equipo',
+            detalle: equipo.length > 1 ? `Sale ${nombreDe(equipo[equipo.length - 1]!, DATOS)}.` : 'Siempre queda al menos una.',
+            activa: equipo.length > 1,
+            elegir: () => {
+              this.partida.quitarUltima();
+              this.abrir('desarrollador');
+            },
+          },
+          { texto: 'Volver', activa: true, elegir: () => this.abrir('principal') },
+        ];
+        break;
+      }
+      case 'dev-evolucion':
+        this.titulo.textContent = 'Probar evolución';
+        this.opciones = [
+          ...TIPOS.map((t) => ({
+            texto: t.nombre,
+            detalle: 'Gana el combate: la criatura evoluciona con el escenario de este tipo.',
+            activa: true,
+            elegir: () => {
+              this.cerrar();
+              this.partida.probarEvolucion(t.id);
+            },
+          })),
+          { texto: 'Volver', activa: true, elegir: () => this.abrir('desarrollador') },
+        ];
+        break;
+      case 'dev-zona':
+        this.titulo.textContent = 'Viajar a una zona';
+        this.opciones = [
+          ...this.partida.zonasDeLaIsla().map((z) => ({
+            texto: z.nombre,
+            activa: true,
+            elegir: () => {
+              this.cerrar();
+              this.partida.teletransportar(z.id);
+            },
+          })),
+          { texto: 'Volver', activa: true, elegir: () => this.abrir('desarrollador') },
+        ];
+        break;
+      case 'dev-isla':
+        this.titulo.textContent = 'Viajar a otra isla';
+        this.opciones = [
+          ...Object.entries(ISLAS).map(([n, isla]) => ({
+            texto: isla.nombre,
+            detalle: Number(n) === this.partida.datos.numero ? 'Estás aquí.' : undefined,
+            activa: Number(n) !== this.partida.datos.numero,
+            elegir: () => {
+              this.cerrar();
+              this.partida.viajar(Number(n));
+            },
+          })),
+          { texto: 'Volver', activa: true, elegir: () => this.abrir('desarrollador') },
+        ];
+        break;
+      case 'dev-criatura': {
+        // Primero las iniciales y después las del autor.
+        const orden = (id: string) => (id.startsWith('inicial-') ? 0 : 1);
+        const todas = Object.values(DATOS.especies).sort((a, b) => orden(a.id) - orden(b.id));
+        const paginas = Math.ceil(todas.length / POR_PAGINA);
+        this.devPagina = Math.min(this.devPagina, paginas - 1);
+        this.titulo.textContent = `Añadir una criatura (${this.devPagina + 1} de ${paginas})`;
+        this.opciones = [
+          ...todas.slice(this.devPagina * POR_PAGINA, (this.devPagina + 1) * POR_PAGINA).map((e) => ({
+            texto: e.nombre,
+            detalle: e.tipos.map((t) => TIPOS.find((x) => x.id === t)?.nombre ?? t).join(' / '),
+            activa: true,
+            elegir: () => {
+              this.devEspecie = e.id;
+              this.abrir('dev-nivel');
+            },
+          })),
+          ...(this.devPagina + 1 < paginas
+            ? [{ texto: 'Siguientes', activa: true, elegir: () => { this.devPagina++; this.abrir('dev-criatura'); } }]
+            : []),
+          ...(this.devPagina > 0 ? [{ texto: 'Anteriores', activa: true, elegir: () => { this.devPagina--; this.abrir('dev-criatura'); } }] : []),
+          { texto: 'Volver', activa: true, elegir: () => this.abrir('desarrollador') },
+        ];
+        break;
+      }
+      case 'dev-nivel': {
+        const especie = DATOS.especies[this.devEspecie];
+        this.titulo.textContent = `${especie?.nombre ?? ''}: ¿a qué nivel?`;
+        this.opciones = [
+          ...NIVELES_DEV.map((n) => ({
+            texto: `Nivel ${n}`,
+            activa: true,
+            elegir: () => {
+              const ok = this.partida.anadirCriatura(this.devEspecie, n);
+              this.ctx.eventos.emit('sonido:tocar', { nombre: ok ? 'captura' : 'atras' });
+              this.abrir('desarrollador');
+              this.nota.textContent = ok ? `${especie?.nombre} (nivel ${n}) se une al equipo.` : 'El equipo está lleno.';
+            },
+          })),
+          { texto: 'Volver', activa: true, elegir: () => this.abrir('dev-criatura') },
+        ];
+        break;
+      }
       case 'nueva':
         this.titulo.textContent = '¿Partida nueva?';
         this.opciones = [
@@ -478,7 +654,7 @@ export class Menu implements Subsistema {
           { texto: `×5 · ${precio * 5}`, activa: this.partida.dinero >= precio * 5, elegir: comprar(5) },
           { texto: 'Nada, gracias', activa: true, elegir: () => this.abrir('tienda') },
         ];
-        this.avisar('Esc: volver a la tienda');
+        this.avisar('X: volver a la tienda');
         break;
       }
     }
@@ -495,8 +671,13 @@ export class Menu implements Subsistema {
     const c = equipo[i];
     equipo[i] = usarObjeto(c, id, DATOS);
     this.partida.mochila[id] = Math.max(0, (this.partida.mochila[id] ?? 0) - 1);
-    this.ctx.eventos.emit('sonido:tocar', { nombre: 'curar' });
-    const nota = `${nombreDe(c, DATOS)} usa ${DATOS.objetos[id].nombre}: vida ${equipo[i].vida} / ${vidaMaxima(c, DATOS)}.`;
+    const subeNivel = DATOS.objetos[id].tipo === 'nivel';
+    this.ctx.eventos.emit('sonido:tocar', { nombre: subeNivel ? 'nivel' : 'curar' });
+    // El almendrado: si ya puede evolucionar, lo hará al ganar el próximo combate.
+    if (subeNivel) this.partida.subidasFuera.add(c.uid);
+    const nota = subeNivel
+      ? `${nombreDe(c, DATOS)} sube al nivel ${equipo[i].nivel}.`
+      : `${nombreDe(c, DATOS)} usa ${DATOS.objetos[id].nombre}: vida ${equipo[i].vida} / ${vidaMaxima(c, DATOS)}.`;
     // Desde Equipo → Objeto se vuelve al equipo; desde la mochila, a la mochila.
     if (this.usarEn !== null) {
       this.usarEn = null;

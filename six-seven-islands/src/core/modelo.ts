@@ -115,6 +115,8 @@ export type Objeto = ObjetoBase &
     | { tipo: 'revivir'; fraccion: number }
     /** Objeto de la historia, para los recados: no se vende ni se usa en combate. */
     | { tipo: 'clave' }
+    /** Sube un nivel (el almendrado, del modo desarrollador). */
+    | { tipo: 'nivel' }
   );
 
 export interface DatosJuego {

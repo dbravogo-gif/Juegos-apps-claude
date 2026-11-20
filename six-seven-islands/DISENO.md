@@ -48,9 +48,10 @@ la zona siguiente**. El fallo **le devuelve al refugio con menos dinero**.
 
 - **Entrada real:**
   - Solo teclado; el ratón no hace falta y la cámara no gira.
-  - Para moverse, WASD o las flechas.
-  - En los menús y en combate: flechas para elegir, Enter o Espacio para confirmar y Escape
-    para volver. Atajos del 1 al 4 para los movimientos.
+  - Para moverse, las flechas (WASD no: la A confirma; autor, 2026-11-19).
+  - Como una consola: A (o Enter, E, Espacio) confirma, Z (o Esc) abre el menú y X (o Retroceso)
+    vuelve, como el botón B. En los menús, Z y Esc también vuelven. Atajos del 1 al 4 para los
+    movimientos.
   - Para capturar, una pulsación en el momento justo (ver «Captura»).
 - **Objetivo visible:** la cámara de diorama deja ver el camino y, a lo lejos, el faro de la
   ciudad del campeón.
@@ -412,8 +413,8 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
 - 2026-11-12 · **Combate jugable** (F06, F07 y F09): pisar hierba o malpaís saca una criatura
   1 de cada 10 pasos, de la tabla de su zona. El menú tiene Luchar, Mochila, Equipo y Huir. Al
   perder, se vuelve curado al último sitio donde te curaron (al principio, tu casa). Curan la
-  madre y las enfermeras. Las salvajes son de relleno, con el modelo de la inicial de su tipo,
-  hasta que lleguen las criaturas del autor.
+  madre y las enfermeras. Las salvajes son las criaturas del autor (las de relleno se quitaron el
+  2026-11-19).
 - 2026-11-11 · **La isla con forma de Lanzarote** (autor, opción 1 del boceto): silueta
   alrededor de las zonas, que no cambian; tierra volcánica que no se pisa y el norte libre.
   **Famara**, zona opcional: playa con bañistas (uno, un guiri quemado) y dos entrenadores que
@@ -432,8 +433,6 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
 - 2026-11-10 · El mar nunca queda liso junto a donde se camina (autor): espuma en la orilla,
   olas, rocas, boyas frente a las playas y barcas en el puerto (`mar.ts`).
 - 2026-11-10 · Tabla de tipos «C» revisada: Roca sustituye a Luz. Claude corrige sus
-- 2026-11-17 · Solo te sigue la inicial; cada criatura tiene su altura y se ve comprimida en combate (ARTE.md).
-- 2026-11-19 · Evolución propia: el Sello se dibuja bajo la criatura, que late entre sus dos formas hasta un destello; Esc la para (ARTE.md).
   contradicciones y los extremos (5 debilidades o resistencias). Reglas de Ancestral.
 - 2026-11-08 · Isla 1, segunda vuelta con el autor:
   - el malpaís y las dunas también son zona de encuentros, y deben reconocerse como tal;
@@ -452,6 +451,17 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
   `prompts-meshy.md`. En esta especie no hay diferencias entre hembra y macho. **Sustituida**
   el 2026-11-10: la inicial de Planta es el lagarto chamán; qué hacer con el ciervo-león, en
   `PENDIENTES.md`.
+- 2026-11-17 · Solo te sigue la inicial; cada criatura tiene su altura y se ve comprimida en combate (ARTE.md).
+- 2026-11-19 · Evolución propia: el Sello se dibuja bajo la criatura, que late entre sus dos formas hasta un destello; Esc la para (ARTE.md).
+- 2026-11-19 · Fuera las criaturas de relleno: usaban el modelo de una inicial. Las iniciales solo las llevan tú y tu amigo; Fuerteventura usa de momento las criaturas del autor que ya hay (prueba en `tests/reparto.test.ts`).
+- 2026-11-19 · Las primeras formas empiezan solo con ataques comunes (uno de daño y uno de estado); el de su tipo llega a los pocos niveles. Las iniciales: al 7 y al 13; la de fuego, el de Acero al 9 (autor; `tests/ataques.test.ts`).
+- 2026-11-19 · Teclas de consola (autor): flechas para andar y elegir, A para confirmar, Z para abrir el menú (como Esc) y X para volver, como el botón B. WASD ya no anda, porque la A confirma (`tests/entrada.test.ts`).
+- 2026-11-19 · Gimnasio de Roca (autor): fuera las dos compuertas que abrían los aprendices (ya había que vencerlos); queda la de la palanca, ahora bien visible. La puerta del gimnasio se dibuja doble, sobre sus dos casillas: la de la izquierda parecía pared y te metía dentro.
+- 2026-11-19 · Combate (autor): el cursor vuelve al último ataque de cada criatura; las fichas llevan los tipos bajo el nombre; el ataque marcado se explica a la izquierda: un cuadradito propio con su categoría (pesa, física; destello, mágica; flechas, de estado) y debajo potencia, PP y efectos. Con qué estadística pega no se dice, porque es lo normal; la precisión, solo si no es 100 (`core/describir.ts`).
+- 2026-11-19 · Evolución más currada (autor): una isla flotante esculpida por tipo, con lo de su tipo encima y lo que cae con peso y forma, en vez de un disco plano y confeti (ARTE.md).
+- 2026-11-19 · Refugios y tiendas marcados (carpintería, pretil y emblema de su color en la azotea) y escaleras de verdad: juguetes solo en una de cada tres casas; por las demás se sube a un dormitorio (autor).
+- 2026-11-19 · Sonido nuevo (autor): pasos según el terreno (hierba alta, malpaís, arena), música más profunda y con más voces (vals con timple al explorar; Mi menor con percusión en combate) y ambiente por zona. Todo generado por código, propio; lo valora el autor.
+- 2026-11-20 · Cada tipo tiene su escenario de evolución, con partes que se mueven: el muñeco de entrenamiento de Lucha, las burbujas de Veneno, los arcos de Eléctrico… (autor; ARTE.md). «Probar evolución» en el modo desarrollador.
 
 ## Decisiones abiertas
 

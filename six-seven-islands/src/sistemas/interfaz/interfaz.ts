@@ -88,7 +88,7 @@ export class Interfaz implements Subsistema {
       <label class="nombrar" hidden><span>¿Cómo se llama tu amigo?</span><input maxlength="16" spellcheck="false" autocomplete="off" /><small>Escribe y pulsa Enter · Esc: ahora no</small></label>
       <div class="medalla-ganada" hidden><div class="medalla-dibujo"></div><p></p></div>
       <div class="fundido"></div>
-      <p class="ayuda">Flechas o WASD: andar · E, Enter o Espacio: hablar y seguir · Esc: menú</p>`;
+      <p class="ayuda">Flechas: andar · A: hablar y seguir · Z: menú · X: volver</p>`;
     document.body.append(raiz);
     this.raiz = raiz;
     this.cartel = raiz.querySelector('.zona-cartel')!;

@@ -43,6 +43,11 @@ propuesta de Claude y qué frena mientras siga abierto.
     - **Propuesta:** los del juego. Parpadean, se cierran al debilitarse y son iguales en
       todas (`prompts-meshy.md`).
 
+11. **Más ataques y la pantalla para olvidar uno** (2026-11-19). Hay solo unos 17 ataques y
+    ninguna criatura aprende más de cuatro, porque si ya sabe cuatro el quinto se pierde sin
+    preguntar. **Propuesta:** la pantalla de «¿Olvidar un ataque?» al subir de nivel, y después más
+    ataques por tipo (también uno flojo de fuego y otro de roca para las iniciales). Coste medio.
+
 11b. **Equilibrio de la tabla** (2026-11-13). Hecho lo que pidió el autor: Acero ya no resiste
     Planta, Aire ni Mental (de 9 resistencias a 6); Bicho ya no es ×2 contra Planta, e Infernal
     ya no resiste a Acero. Lucha lleva 9 criaturas.
@@ -66,8 +71,6 @@ propuesta de Claude y qué frena mientras siga abierto.
   Quitar en Equipo → Objeto) y las técnicas que enseñan movimientos (su bolsillo ya está). Una
   mochila de Meshy es opcional: la de ahora se dibuja por código.
 - **Del probador (2026-11-12), sin arreglar:**
-  - Los modelos de las salvajes se repiten (relleno con el de la inicial de su tipo): se va con
-    las criaturas del autor.
   - «Probar sonidos» está en el menú de todos: se quita cuando el autor valore los efectos.
   - La compañera encima del jugador tras un salto de sitio: no se ha podido reproducir.
 - **Llamadas de dibujo** (2026-11-11): unas 210 mirando a Famara, frente a las 160 del reparto.
@@ -136,14 +139,7 @@ Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
     otro: el plan entero son unos 3.000 (2.985 sin repeticiones);
   - generarlas en el orden de la lista, con Gemini guiando (`conceptos/criaturas/guia-gemini.txt`),
     y subir la imagen y el `.glb` de cada una, como «PokN. Nombre», a `conceptos/criaturas/meshy/`;
-  - subir las que ya tiene hechas, Pok16 a Pok24 y Pok131-132: en GitHub no ha llegado nada
-    (falta pulsar «Commit changes»), o adjuntarlas en el chat como el Excel; y decir si el
-    dinosaurio es el de la líder de Lanzarote;
-  - decidir si cambia los nombres en «-ecko» (Sporecko, Transcecko): recuerdan a una inicial de
-    Pokémon (R8);
-  - poner nombre a la civeta y a su evolución, a las dos formas del dinosaurio y a la 1.ª forma de
-    las iniciales de Planta e Infernal (en el juego, provisionales);
-  - pasar las estadísticas de las iniciales, también de sus formas 2.ª y 3.ª;
+  - revisar las estadísticas propuestas para las iniciales (`src/data/combate-prueba.ts`);
   - revisar las estadísticas copiadas de memoria (`herramientas/criaturas/estadisticas.py`);
   - poner nombre a las que van con apodo («Guirre», «Basalto»…);
   - repartir tramos de la lista entre sus amigos, con `conceptos/criaturas/guia-gemini-amigos.txt`.
@@ -153,8 +149,18 @@ Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
 - **Amigos:** sus fotos y GLB de Meshy para las personas jugables, y sus 2 o 3 poses para los
   retratos de diálogo.
 - **Dani con `Idle`** en el GLB (opcional).
-- **Puntuar de 1 a 5** lo último publicado: menús, equipo, mochila, medallero, el gimnasio de
-  Roca y Fuerteventura entera (sobre todo el gimnasio de Aire).
+- **Puntuar de 1 a 5** lo último publicado (2026-11-19):
+  - la evolución nueva, con la isla de su tipo (sube una criatura con el modo desarrollador);
+  - el combate: qué hace cada ataque, tipos bajo el nombre y el cursor en el último ataque;
+  - las teclas A, Z y X (WASD ya no anda);
+  - el gimnasio de Roca: puerta doble, sin las dos compuertas y la de la palanca visible;
+  - hierbas y entrenadores sin «iniciales», y las iniciales empezando con ataques comunes (en
+    partida nueva: la tuya guardada conserva sus cuatro ataques de antes).
+  - refugios y tiendas (coral con corazón, azul con cesta) y las escaleras: en unas casas de la
+    capital hay juguetes y en otras se sube al dormitorio;
+  - el sonido: los pasos en hierba alta, malpaís y dunas («Probar sonidos» del menú), la música
+    nueva al explorar y en combate, y el ambiente de cada zona (mar en Famara, viento en el Jable,
+    volcán en las Montañas del Fuego, pájaros en La Geria).
 
 - Medir los FPS en los ordenadores del autor y de sus amigos.
 - Prueba de Meshy: pagar Pro el primer mes (~10 $), y descargar y subir `planta-2.glb`

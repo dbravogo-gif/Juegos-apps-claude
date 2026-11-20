@@ -68,7 +68,8 @@ Cada una se distingue por la silueta a la distancia de juego.
 - **Peligros:**
   - La hierba alta es más alta, más oscura y se mece de otra manera.
   - El equipo enemigo viste formas angulosas.
-  - Los entrenadores muestran su línea de visión.
+  - La línea de visión de los entrenadores, en rojo, solo se ve en el modo desarrollador (autor,
+    2026-11-19): jugando, que te vean es una sorpresa.
 - **Recompensas:** objetos redondos con brillo propio. Las criaturas casi perfectas, visibles en
   la hierba, despiden un destello sutil.
 - **Mundo:**
@@ -102,7 +103,12 @@ Se revisan de cerca en `?catalogo` (plantas, rocas y muro) y `?catalogo=edificio
     geranios y tejado de teja curva, a veces con chimenea.
   - **De balcones** (capital): fachada de color, dos plantas y balcón de madera corrido con
     tejadillo. La mitad lleva teja y la otra mitad azotea con pretil, cuarto y depósito.
-  - El refugio lleva puerta y letrero coral. La tienda, toldo a rayas azules y cajas.
+  - **El refugio y la tienda se reconocen desde la cámara** (autor, 2026-11-19: «poco marcados»).
+    Llevan la carpintería, el zócalo y el pretil de su color: coral el refugio, azul la tienda.
+    En la azotea, un emblema pintado en blanco sobre un disco de su color: un corazón el refugio
+    y una cesta la tienda (dibujo propio). Encima del pretil, un letrero redondo con el mismo
+    emblema. La tienda conserva su toldo a rayas y sus cajas. El bar es una tienda por fuera, pero
+    sin sus colores.
   - **Provisionales hasta que el autor los haga con Meshy:**
     - el museo, una casa de una planta del estilo de su zona, con un pórtico de cuatro
       columnas de cantería y frontón delante de la puerta;
@@ -135,8 +141,11 @@ Se revisan de cerca en `?catalogo` (plantas, rocas y muro) y `?catalogo=edificio
 - **Objetos del suelo:** un frasco que flota y gira hasta que se recoge.
 - **Interiores** (`data/generar-interior.ts`): uno por edificio, del tamaño de su fachada, con
   muebles según el tipo (casa, refugio, tienda, gimnasio o museo): camas, cocina, mesa, sofá,
-  estanterías y plantas. En las casas de dos plantas, una escalera de madera con juguetes delante
-  (cubos, pelota y un osito) que no dejan subir.
+  estanterías y plantas. En las casas de dos plantas, una escalera de madera con peldaños de canto
+  claro, zancas, barandilla y el hueco oscuro arriba (autor, 2026-11-19: «no parecen escaleras»).
+  En una de cada tres, juguetes delante (cubos, pelota y un osito) que no dejan subir; por las
+  demás se sube a un dormitorio, con el hueco de la escalera y su barandilla. En el refugio y la
+  tienda, la escalera es del personal: siempre tapada.
 - **Silueta del jugador** cuando algo lo tapa: coral, que se ve sobre la cal y sobre el picón.
 - **La compañera:** la inicial elegida va detrás del jugador, a 0,6 de alto (las personas, 1,25),
   con saltitos al andar.
@@ -305,8 +314,7 @@ Que un renacuajo no sea del tamaño de un dragón (autor).
 - **No se dimensiona en Meshy.** El juego mide cada modelo y lo escala al cargarlo
   (`figuraCriatura`, en `src/arte/criaturas3d.ts`), así que el tamaño que salga de Meshy da igual.
 - **Hecho (2026-11-17)** en `src/arte/escala-criaturas.ts`, con sus pruebas: una de 0,6 m se ve al
-  tamaño de siempre, y la escala va de 0,6 a 2 veces ese tamaño. Las de relleno, sin altura, no
-  cambian.
+  tamaño de siempre, y la escala va de 0,6 a 2 veces ese tamaño. Sin altura, no cambia.
 - **La diferencia se comprime**, para que las dos criaturas de un combate se vean bien:
   - el tamaño en pantalla va con la raíz cuadrada de la altura: una de 0,3 m frente a una de
     3 m se ve 1 a 3, en vez de 1 a 10;
@@ -317,14 +325,49 @@ Que un renacuajo no sea del tamaño de un dragón (autor).
 ## Evolución (2026-11-19)
 
 Propia, no la del género (R8). De la idea común se quedan la anticipación, el latido entre las
-dos formas y el destello. Lo nuestro:
-- pasa en la arena, en 3D, con el fondo en noche honda (`#140f26`) y las plataformas apagadas;
-- **el Sello de la historia se dibuja en el suelo,** sus trece círculos uno tras otro, del color
-  del tipo de la forma nueva, y suben motas de ese color;
-- la criatura, hecha luz crema, late entre su forma y la nueva, cada vez más deprisa, mientras el
-  Sello gira;
-- con el destello, los círculos salen despedidos y queda la nueva con su color y un rebote;
-- Esc la para mientras late: «X ha dejado de cambiar».
+dos formas y el destello. Lo nuestro (revisado con el probador y el autor):
+- **fondo blanco roto** y una **isla flotante según el tipo principal** de la forma nueva
+  (`sistemas/combate/escenario-evolucion.ts`; rehecha el 2026-11-19 porque al autor le pareció muy
+  pobre la primera, de discos planos y confeti):
+  - suelo con relieve y manchas de tres tonos (liso en el centro, para el Sello), canto en estratos
+    tallados y un peñón que se afila hacia abajo, con luz y sombra, y peñascos que flotan al lado;
+  - encima, lo de su tipo, sobre todo detrás de la criatura. Planta: briznas, flores, setas, raíces
+    que cuelgan; Roca: columnas de basalto gris, peñascos y grietas; Agua: un foso alrededor del
+    centro, con ondas, nenúfares y juncos; Infernal: agujas de lava, grietas encendidas y charquitos;
+    Tierra: arena ondulada, piedras y matas secas; Hielo: nieve, cristales y carámbanos; Aire: nubes
+    bajo el canto; los demás, cristales de su color o piedras;
+  - lo que cae, alrededor de la criatura y con su peso: hojas que planean y se posan, piedras que
+    rebotan y levantan polvo, gotas que salpican; las brasas, burbujas y motas suben;
+  - la luz de abajo de la escena es la del suelo verde de la isla del juego: la isla lleva luz propia
+    (más en las caras que miran abajo) para que el peñón no salga negro y verdoso;
+  - los demás tipos, con su escenario (autor, 2026-11-20; `decorados-evolucion.ts`):
+    - Lucha: terrero con borde de madera y un muñeco de entrenamiento que se balancea con cada
+      golpe, con su destello y su polvo, y un saco colgado;
+    - Veneno: ciénaga con charcos en los que nacen burbujas violetas que crecen y revientan;
+    - Eléctrico: dos bobinas de cobre con arcos entre ellas;
+    - Acero: chapa con remaches, engranajes que giran y tuercas que caen y rebotan;
+    - Mental: anillos grabados, prismas que orbitan por detrás y piedras que levitan;
+    - Espectral: losas viejas inclinadas, faroles con llama azul, bruma y espíritus en espiral;
+    - Oscuridad: agujas de obsidiana, bruma negra y pares de ojos que parpadean y cambian de sitio;
+    - Ancestral: un arco y columnas rotas, con runas doradas que laten;
+    - Bicho: el jardín con tallos altos, una telaraña y luciérnagas;
+    - en el modo desarrollador, «Probar evolución» enseña el de cualquier tipo;
+  - tras la revisión del probador (2026-11-19):
+    - el Sello, al 78 %, cabe entero en el suelo liso;
+    - la silueta lleva un contorno oscuro para que se lea sobre cualquier suelo;
+    - las criaturas pequeñas se ven al menos de 1,15 de alto;
+    - lo que cae no pasa por delante de la criatura;
+    - el destello suma luz y lanza una onda por el suelo;
+    - la forma nueva se ve 2,4 s antes de poder pasar;
+    - Infernal (roca rojiza y lava), Aire (isla azulada y nubes con luz propia) y Común (corro de
+      piedras y hierba seca) tienen más carácter;
+- **el Sello de la historia se dibuja sobre la plataforma,** en claro: los trece círculos del cubo
+  de Metatrón, que se tocan, y después las líneas que unen sus centros;
+- la criatura, hecha silueta del color de su tipo, late entre su forma y la nueva;
+- con el fogonazo, el Sello sale despedido y queda la nueva, que se ve casi dos segundos antes de
+  poder pasar el mensaje;
+- textos propios: «¡El Sello reacciona a X! (X: pararlo)», «¡X es ahora Y!» y, si se para, «X se
+  aparta del Sello y sigue igual».
 
 ## Pruebas de la guía
 

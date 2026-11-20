@@ -45,13 +45,13 @@ export function colorUniforme(pueblo: TipoInicial): [number, number, number] {
 }
 
 /**
- * La especie con la que luchan los soldados de cada rama (provisional: las de relleno, hasta que
- * lleguen las criaturas del autor). La de Tierra no tiene de relleno: usa su inicial.
+ * La especie con la que luchan los soldados de cada rama: una del autor de su tipo (provisional,
+ * hasta que cada pueblo tenga las suyas). Nunca una inicial: esas solo las llevan tú y tu amigo.
  */
 export const ESPECIE_RAMA: Readonly<Record<TipoInicial, string>> = {
-  planta: 'tabaiba-andante',
-  infernal: 'chispa-de-colada',
-  roca: 'lagartija-de-picon',
-  tierra: 'inicial-tierra',
-  agua: 'cangrejo-de-charco',
+  planta: 'c007-1',
+  infernal: 'c013-1',
+  roca: 'c012-1',
+  tierra: 'c034-1',
+  agua: 'c037-1',
 };

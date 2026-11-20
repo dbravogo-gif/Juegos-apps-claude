@@ -9,9 +9,9 @@
 // Parámetros de prueba: ?abrir=todo abre todos los pasos cerrados; ?nueva empieza sin cargar;
 // ?semilla=N fija el azar de una partida nueva (sin ella, cada partida nueva es distinta).
 
-import { avanzar, crearExploracion, cumplir, entrar, interactuar, salir, type EstadoExplorar, type EventoExplorar } from '../../core/explorar';
+import { avanzar, cambiarDePiso, crearExploracion, cumplir, entrar, interactuar, salir, type EstadoExplorar, type EventoExplorar } from '../../core/explorar';
 import { abrirDialogo, elegirDialogo, lineaActual, pasoDialogo, pulsar, type Dialogo, type Efecto, type EstadoDialogo, type Tecla } from '../../core/guion';
-import { TODAS_LAS_CONDICIONES, clave, construirInterior, construirMundo, deClave, enIsla, entrenadorQueVe, transitable, type Condicion, type Mundo } from '../../core/mundo';
+import { TODAS_LAS_CONDICIONES, clave, construirInterior, construirMundo, deClave, enIsla, entrenadorQueVe, transitable, type Condicion, type Direccion, type Mundo } from '../../core/mundo';
 import { PERSONA_JUGADOR, PERSONAS } from '../../arte/personas';
 import { ISLAS, LANZAROTE, type DatosIsla } from '../../data/islas';
 import { NOMBRE_OBJETO } from '../../data/textos-isla1';
@@ -24,9 +24,10 @@ import { expParaNivel } from '../../core/progreso';
 import { sortearEncuentro } from '../../core/encuentros';
 import { perdidaPorDerrota } from '../../core/economia';
 import { crearRng } from '../../core/rng';
-import { VERSION_GUARDADO, deserializar, refugiosAlViajar, reubicar, serializar, type Guardado, type Origenes } from '../../core/guardado';
+import { claveGuardado, esCodigoDesarrollador } from '../../core/desarrollador';
+import { VERSION_GUARDADO, cambiarRetiradas, deserializar, refugiosAlViajar, reubicar, serializar, type Guardado, type Origenes } from '../../core/guardado';
 import type { Criatura } from '../../core/modelo';
-import { DATOS_COMBATE_PRUEBA as DATOS, ESPECIE_INICIAL, MOCHILA_INICIAL } from '../../data/combate-prueba';
+import { DATOS_COMBATE_PRUEBA as DATOS, ESPECIE_INICIAL, ESPECIES_RETIRADAS, MOCHILA_INICIAL } from '../../data/combate-prueba';
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Entrada } from '../entrada/entrada';
 
@@ -44,7 +45,16 @@ const SEPARACION_INTERIORES = 24;
 /** Nivel de la inicial al elegirla. */
 const NIVEL_INICIAL = 5;
 /** Dónde se guarda la partida en el navegador. */
-const CLAVE_GUARDADO = 'six-seven-islands:partida';
+/** En la sesión del navegador: si se juega en modo desarrollador (con su partida aparte). */
+const CLAVE_SESION_DESARROLLADOR = 'six-seven-islands:desarrollador';
+
+function leerModoDesarrollador(): boolean {
+  try {
+    return sessionStorage.getItem(CLAVE_SESION_DESARROLLADOR) === '1';
+  } catch {
+    return false;
+  }
+}
 /** Cada cuántos pasos fijos se guarda mientras se explora: 5 segundos. */
 const PASOS_GUARDADO = 300;
 /** Lo que dura la exclamación del entrenador que te ve, antes de que hable: 0,75 s. */
@@ -109,7 +119,7 @@ export class Partida implements Subsistema {
   /** Un entrenador acaba de ver al jugador: cuando pase la exclamación, habla. */
   private alerta: { zona: string; personaje: string; pasos: number } | null = null;
   private pasosSinGuardar = 0;
-  /** Esc pulsado mientras se anda (o con una flecha apretada): el menú se abre al acabar el paso. */
+  /** Z o Esc pulsado mientras se anda (o con una flecha apretada): el menú se abre al acabar el paso. */
   private menuPendiente = false;
   /** La partida se ha borrado para empezar otra: ya no se guarda nada (ni al cerrar la pestaña). */
   private borrada = false;
@@ -121,11 +131,27 @@ export class Partida implements Subsistema {
   private ctx!: Ctx;
   /** A qué interior lleva cada puerta de la isla, por clave de casilla. */
   private puertas = new Map<number, string>();
+
+  /** La sala a la que lleva la puerta de la casilla `k` de la isla, si la hay. */
+  salaDePuerta(k: number): string | undefined {
+    return this.puertas.get(k);
+  }
   /** El fundido de una puerta: a dónde se va y de qué sala se sale (para el mensaje del rival). */
-  private cruce: { paso: number; destino: string | null; desde?: string | null } | null = null;
+  private cruce: { paso: number; destino: string | null; desde?: string | null; piso?: { id: string; punto: { x: number; y: number }; mira: Direccion } } | null = null;
   private hablando = '';
   private espera = 0;
   private quitar: (() => void) | null = null;
+
+  /** Modo desarrollador (autor, 2026-11-19): con su partida aparte y su menú. */
+  readonly desarrollador = leerModoDesarrollador();
+  /** Dónde se guarda esta partida: la del modo desarrollador no pisa la normal. */
+  private get clave(): string {
+    return claveGuardado(this.desarrollador);
+  }
+  /** Las que han subido de nivel fuera del combate (el almendrado): evolucionan al ganar el siguiente. */
+  readonly subidasFuera = new Set<string>();
+  /** Si hay una partida guardada que se pueda continuar (para la portada). */
+  hayGuardado = false;
 
   init(ctx: Ctx): void {
     this.ctx = ctx;
@@ -158,7 +184,10 @@ export class Partida implements Subsistema {
     // Se sigue donde se dejó, salvo con ?nueva. Sin partida guardada, se empieza en la portada
     // (elegir persona y nombre). En Safari, se pide que no se borre lo guardado.
     if (guardada) this.aplicarGuardado(guardada);
-    else this.modo = 'titulo';
+    this.hayGuardado = guardada !== null;
+    // Sin partida, la portada. Con ?portada (al volver al menú), también, encima de la partida
+    // cargada: «Continuar» sigue donde estaba.
+    if (!guardada || new URLSearchParams(location.search).has('portada')) this.modo = 'titulo';
     void navigator.storage?.persist?.().catch(() => undefined);
     // Al cerrar u ocultar la pestaña se guarda, para no perder los últimos pasos. En combate no:
     // el combate no se guarda a medias y vale lo guardado al empezarlo.
@@ -232,7 +261,7 @@ export class Partida implements Subsistema {
     if (this.modo === 'titulo' || this.borrada) return;
     this.pasosSinGuardar = 0;
     try {
-      localStorage.setItem(CLAVE_GUARDADO, serializar(this.guardado()));
+      localStorage.setItem(this.clave, serializar(this.guardado()));
       this.ctx.eventos.emit('guardado:hecho', {});
     } catch {
       // Sin almacenamiento (ventana privada, cuota llena): se sigue jugando sin guardar.
@@ -261,7 +290,7 @@ export class Partida implements Subsistema {
     const n = this.viajePendiente!;
     const destino = ISLAS[n];
     try {
-      localStorage.setItem(CLAVE_GUARDADO, serializar(this.guardadoEnIsla(n)));
+      localStorage.setItem(this.clave, serializar(this.guardadoEnIsla(n)));
     } catch {
       // Sin almacenamiento no se puede viajar recargando: se queda donde está.
       this.modo = 'explorar';
@@ -290,11 +319,100 @@ export class Partida implements Subsistema {
     return { ...this.guardado(), isla: n, explorar: e, ultimoRefugio: ultimo, refugios, origenes: { actual: { ...z.origen } } };
   }
 
+  /** Vuelve a la portada (Continuar, Partida nueva o Código), guardando antes. Sale del modo desarrollador. */
+  volverAlMenu(): void {
+    this.guardar();
+    try {
+      sessionStorage.removeItem(CLAVE_SESION_DESARROLLADOR);
+    } catch {
+      // Sin almacenamiento de sesión no había modo desarrollador.
+    }
+    location.replace(`${location.pathname}?portada`);
+  }
+
+  /** Desde la portada: sigue con la partida cargada. */
+  continuar(): void {
+    if (!this.hayGuardado) return;
+    // Fuera el ?portada de la dirección: al recargar (un viaje en barco), se sigue jugando.
+    history.replaceState(null, '', location.pathname);
+    this.modo = 'explorar';
+    this.entrada.olvidar();
+    this.ctx.eventos.emit('zona:entrar', { zonaId: this.estado.zona });
+  }
+
+  /** Desde la portada: una partida nueva en este hueco (borra la guardada de este hueco). */
+  partidaNueva(): void {
+    this.borrarPartida();
+  }
+
+  /** El código del modo desarrollador: si vale, se recarga en su partida aparte. */
+  activarDesarrollador(codigo: string): boolean {
+    if (!esCodigoDesarrollador(codigo)) return false;
+    try {
+      sessionStorage.setItem(CLAVE_SESION_DESARROLLADOR, '1');
+    } catch {
+      return false;
+    }
+    location.replace(location.pathname);
+    return true;
+  }
+
+  // ——— Modo desarrollador ———
+
+  /** Las zonas de la isla, para viajar entre ellas: id y nombre. */
+  zonasDeLaIsla(): { id: string; nombre: string }[] {
+    return [...this.mundo.zonas.entries()].map(([id, z]) => ({ id, nombre: z.nombre ?? id }));
+  }
+
+  /** Lleva al jugador a una zona: a la casilla que se pueda pisar más cerca de su centro. */
+  teletransportar(zonaId: string): void {
+    const m = this.mundo;
+    const z = m.zonas.get(zonaId);
+    if (!z) return;
+    const opciones = { condiciones: new Set(this.estado.condiciones) };
+    const casillas = [...m.casillas.entries()].filter(([, c]) => c.zona === zonaId).map(([k]) => deClave(k));
+    if (!casillas.length) return;
+    const cx = casillas.reduce((a, [x]) => a + x, 0) / casillas.length;
+    const cy = casillas.reduce((a, [, y]) => a + y, 0) / casillas.length;
+    const libres = casillas.filter(([x, y]) => transitable(m, x, y, opciones));
+    if (!libres.length) return;
+    libres.sort(([ax, ay], [bx, by]) => Math.hypot(ax - cx, ay - cy) - Math.hypot(bx - cx, by - cy));
+    const [x, y] = libres[0]!;
+    this.poner({ zona: zonaId, x: x - z.origen.x, y: y - z.origen.y });
+  }
+
+  /** Pone una criatura en el equipo, si cabe. */
+  anadirCriatura(especie: string, nivel: number): boolean {
+    if (this.equipo.length >= 6 || !DATOS.especies[especie]) return false;
+    this.equipo.push(crearCriatura(DATOS, especie, nivel, this.ctx.rng));
+    this.guardar();
+    return true;
+  }
+
+  /**
+   * «Probar evolución» (modo desarrollador): pone delante una criatura a punto de evolucionar y
+   * empieza un combate fácil; al ganarlo, evoluciona con el escenario del tipo `tipo`.
+   */
+  probarEvolucion(tipo: string): void {
+    const c = crearCriatura(DATOS, 'inicial-agua', 15, this.ctx.rng);
+    c.exp = expParaNivel(16) - 1;
+    this.equipo.unshift(c);
+    if (this.equipo.length > 6) this.equipo.pop();
+    this.guardar();
+    this.ctx.eventos.emit('encuentro:inicio', { salvajes: [crearCriatura(DATOS, 'c031-1', 2, this.ctx.rng)], visible: false, tipoEvolucion: tipo });
+  }
+
+  /** Quita la última del equipo (si queda alguna más). */
+  quitarUltima(): void {
+    if (this.equipo.length > 1) this.equipo.pop();
+    this.guardar();
+  }
+
   /** Borra la partida guardada y vuelve a la portada (desde el menú, con confirmación). */
   borrarPartida(): void {
     this.borrada = true;
     try {
-      localStorage.removeItem(CLAVE_GUARDADO);
+      localStorage.removeItem(this.clave);
     } catch {
       // Sin almacenamiento no había nada guardado.
     }
@@ -305,7 +423,7 @@ export class Partida implements Subsistema {
   /** La partida guardada en el navegador, si la hay. */
   private leerGuardado(): Guardado | null {
     try {
-      return deserializar(localStorage.getItem(CLAVE_GUARDADO));
+      return deserializar(localStorage.getItem(this.clave));
     } catch {
       return null;
     }
@@ -331,7 +449,7 @@ export class Partida implements Subsistema {
       this.estado.recogidos = [...e.recogidos];
       this.estado.inicial = e.inicial;
     }
-    this.equipo = g.equipo;
+    this.equipo = cambiarRetiradas(g.equipo, ESPECIES_RETIRADAS, DATOS);
     this.mochila = g.mochila;
     this.ultimoRefugio = this.interiores.has(g.ultimoRefugio) ? g.ultimoRefugio : this.datos.refugio;
     this.refugios = { ...g.refugios };
@@ -379,9 +497,11 @@ export class Partida implements Subsistema {
       this.alerta = null;
       return this.atender({ tipo: 'hablar', zona: a.zona, personaje: a.personaje });
     }
-    // Esc: el menú de pausa. Si se está andando, se abre al acabar el paso, antes del siguiente
-    // (aunque se mantenga una flecha apretada); así no se pierde la pulsación.
-    if (this.entrada.consumir('cancelar')) this.menuPendiente = true;
+    // Z o Esc: el menú de pausa. Si se está andando, se abre al acabar el paso, antes del siguiente
+    // (aunque se mantenga una flecha apretada); así no se pierde la pulsación. X (volver) no hace
+    // nada al explorar: se descarta para que no cierre el menú nada más abrirlo.
+    if (this.entrada.consumir('menu')) this.menuPendiente = true;
+    this.entrada.consumir('cancelar');
     if (this.menuPendiente && this.estado.paso === 0) {
       this.menuPendiente = false;
       this.modo = 'menu';
@@ -465,7 +585,8 @@ export class Partida implements Subsistema {
     if (c.paso === PASOS_FUNDIDO) {
       // En negro: se cambia de sitio.
       c.desde = this.estado.dentro;
-      if (c.destino) entrar(this.estado, c.destino, this.interiores.get(c.destino)!);
+      if (c.piso) cambiarDePiso(this.estado, c.piso.id, this.interiores.get(c.piso.id)!, c.piso.punto, c.piso.mira);
+      else if (c.destino) entrar(this.estado, c.destino, this.interiores.get(c.destino)!);
       else salir(this.estado);
       this.ctx.eventos.emit('zona:entrar', { zonaId: this.estado.zona });
       this.guardar();
@@ -509,6 +630,9 @@ export class Partida implements Subsistema {
       }
       case 'salida':
         this.cruzar(null);
+        break;
+      case 'escalera':
+        this.usarEscalera(ev.sube);
         break;
       case 'hablar': {
         // Quien tiene escena (te para al verte) solo te para una vez: luego se le habla sin más.
@@ -578,7 +702,8 @@ export class Partida implements Subsistema {
         }
         break;
       case 'hierba': {
-        this.ctx.eventos.emit('sonido:tocar', { nombre: 'hierba' });
+        // Cada terreno suena a lo suyo: hierba alta, malpaís o arena de duna (autor, 2026-11-19).
+        this.ctx.eventos.emit('sonido:tocar', { nombre: ev.terreno === ';' ? 'malpais' : ev.terreno === 'D' ? 'arena' : 'hierba' });
         // Sin una criatura en pie no se lucha: la hierba se cruza sin más.
         if (!this.equipo.some((c) => c.vida > 0)) break;
         const s = sortearEncuentro(this.datos.encuentros, ev.zona, this.ctx.rng);
@@ -652,6 +777,34 @@ export class Partida implements Subsistema {
         this.ctx.eventos.emit('medalla:ganada', { isla: t.medalla });
       }
     }
+  }
+
+  /**
+   * Sube al piso de arriba (`<sala>-arriba`) o baja de él, con el mismo fundido que una puerta
+   * (autor, 2026-11-19). Arriba se aparece en su entrada, mirando al norte; abajo, delante de la
+   * escalera, mirando al sur: así, si se sigue pulsando la flecha, no se vuelve a cambiar de piso.
+   */
+  private usarEscalera(sube: boolean): void {
+    const aqui = this.estado.dentro;
+    if (!aqui) return;
+    const id = sube ? `${aqui}-arriba` : aqui.replace(/-arriba$/, '');
+    const sala = this.interiores.get(id);
+    if (!sala || id === aqui) {
+      this.abrir({ lineas: [{ texto: 'Esa escalera es solo para quien vive o trabaja aquí.' }] }, 'escalera');
+      return;
+    }
+    const z = sala.zonas.get(sala.isla.inicio.zona)!;
+    let punto = { x: sala.isla.inicio.x, y: sala.isla.inicio.y };
+    if (!sube) {
+      const k = [...sala.casillas].find(([, c]) => c.c === 'e')?.[0];
+      if (k !== undefined) {
+        const [x, y] = deClave(k);
+        punto = { x: x - z.origen.x, y: y + 1 - z.origen.y };
+      }
+    }
+    this.ctx.eventos.emit('sonido:tocar', { nombre: 'puerta' });
+    this.cruce = { paso: 0, destino: id, piso: { id, punto, mira: sube ? 'n' : 's' } };
+    this.modo = 'fundido';
   }
 
   /** Empieza el fundido para entrar en un interior (o salir, con null). */

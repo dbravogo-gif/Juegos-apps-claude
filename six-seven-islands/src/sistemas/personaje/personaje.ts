@@ -259,7 +259,9 @@ export class Personaje implements Subsistema {
         if (q && !q.tumbado) q.figura.raiz.rotation.y = q.giro;
       }),
     );
-    if (visiones.length) {
+    // La vista de los entrenadores en rojo solo se ve en el modo desarrollador (autor, 2026-11-19):
+    // en una partida normal, que te vean es una sorpresa, como en el género.
+    if (visiones.length && this.partida.desarrollador) {
       const plano = new PlaneGeometry(0.8, 0.8).rotateX(-Math.PI / 2);
       const mv = new MeshBasicNodeMaterial({ color: COLORES.acentoCoral, transparent: true, opacity: 0.35, depthWrite: false });
       this.geometrias.push(plano);

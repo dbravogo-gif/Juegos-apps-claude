@@ -1282,6 +1282,22 @@ body {
   font: 600 15px/1.2 system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
+/* Los tipos bajo el nombre, en sus colores (autor, 2026-11-19). */
+.combate-chips {
+  clear: both;
+  margin: 0 0 7px;
+  display: flex;
+  gap: 5px;
+}
+
+.combate-chips i {
+  padding: 1px 8px;
+  border-radius: 999px;
+  color: #fff;
+  font: 600 12px/1.4 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-style: normal;
+}
+
 .combate-vida {
   clear: both;
   height: 10px;
@@ -1326,6 +1342,31 @@ body {
   flex: 1;
   margin: 0;
   font: 500 20px/1.4 system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+/* Qué hace el ataque marcado: debajo de su nombre y sus números. */
+.combate-titulo-ataque {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.combate-categoria {
+  flex: none;
+  width: 26px;
+  height: 26px;
+}
+
+.combate-texto small {
+  display: block;
+  margin-top: 4px;
+  font: 500 15px/1.35 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color: #5b4a40;
+}
+
+.combate-texto small.combate-pista {
+  font-size: 13px;
+  color: #8a776a;
 }
 
 .combate-menu {
@@ -1467,4 +1508,62 @@ body {
   inset: 0;
   opacity: 0;
   background: #1d1720;
+}
+
+/* La portada con opciones y el código del modo desarrollador (autor, 2026-11-19). */
+.inicio-opciones {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.inicio-opciones li {
+  padding: 10px 26px;
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background: #fff;
+  font: 700 19px/1.2 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  box-shadow: 0 4px 12px rgb(59 42 32 / 0.12);
+}
+.inicio-opciones li.elegida {
+  border-color: var(--coral);
+  color: var(--coral);
+}
+.inicio-codigo {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font: 700 22px/1.2 system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+.inicio-codigo input {
+  width: 220px;
+  padding: 10px 14px;
+  border: 3px solid var(--coral);
+  border-radius: 12px;
+  color: var(--texto);
+  font: 700 24px/1.2 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  letter-spacing: 0.3em;
+  text-align: center;
+}
+.aviso-desarrollador {
+  position: fixed;
+  right: 16px;
+  bottom: 10px;
+  z-index: 40;
+  margin: 0;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: #7c3aed;
+  color: #fff;
+  font: 700 12px/1.2 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  pointer-events: none;
+}
+
+/* Los iconos de los ataques, pequeños, en la leyenda de la tabla de tipos. */
+.combate-tipos-ayuda .combate-categoria {
+  width: 14px;
+  height: 14px;
+  vertical-align: -3px;
 }

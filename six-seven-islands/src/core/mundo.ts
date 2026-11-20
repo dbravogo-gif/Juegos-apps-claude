@@ -32,6 +32,7 @@ export const LEYENDA = {
   V: 'viña en su hoyo',
   U: 'tunera',
   L: 'colada de lava',
+  u: 'puente de basalto sobre la colada',
   w: 'charco verde',
   a: 'arena de playa',
   Q: 'cono volcánico',
@@ -61,6 +62,8 @@ export const LEYENDA = {
   l: 'cama',
   v: 'maceta',
   e: 'escalera',
+  /** El hueco de la escalera en el piso de arriba: por él se baja (autor, 2026-11-19). */
+  z: 'escalera que baja',
   j: 'juguetes',
   n: 'cocina',
   q: 'sofá',
@@ -71,9 +74,9 @@ export const LEYENDA = {
 export type Casilla = keyof typeof LEYENDA;
 
 /** Se pueden pisar. Las X también, cuando su condición se cumple. */
-export const TRANSITABLES: ReadonlySet<string> = new Set(['.', ',', ':', '_', '"', ';', 'a', 'd', 'P', 'm', 't', 'D', 'W']);
+export const TRANSITABLES: ReadonlySet<string> = new Set(['.', ',', ':', '_', '"', ';', 'a', 'd', 'P', 'm', 't', 'D', 'W', 'u']);
 /** Muebles de los interiores: no se pisan y se dibujan como piezas. */
-export const MUEBLES: ReadonlySet<string> = new Set(['o', 'h', 'c', 'k', 'l', 'v', 'e', 'j', 'n', 'q']);
+export const MUEBLES: ReadonlySet<string> = new Set(['o', 'h', 'c', 'k', 'l', 'v', 'e', 'j', 'n', 'q', 'z']);
 /** Terreno de encuentros: la hierba alta, el malpaís y la arena de las dunas (como los desiertos). */
 export const DE_ENCUENTROS: ReadonlySet<string> = new Set(['"', ';', 'D']);
 /** Las letras de los edificios. Cada grupo de casillas iguales y contiguas es un edificio. */

@@ -4,12 +4,13 @@
 // por vértice, para dibujarlas con un solo material. Funciones puras y deterministas: la misma
 // semilla da siempre la misma pieza.
 
-import { BoxGeometry, BufferAttribute, BufferGeometry, CylinderGeometry, SphereGeometry } from 'three/webgpu';
+import { BoxGeometry, BufferAttribute, BufferGeometry, CylinderGeometry, RingGeometry, SphereGeometry } from 'three/webgpu';
 import { COLORES } from '../../arte/paleta';
 import { Montaje, abollar, azar, elegir, triangulo } from '../../arte/montaje';
 
 export type EstiloCasa = 'rural' | 'balcones' | 'lanzarote';
-export type UsoCasa = 'casa' | 'refugio' | 'tienda' | 'museo' | 'gimnasio';
+/** `bar`: por fuera como una tienda (toldo y cajas), pero sin sus colores ni su emblema. */
+export type UsoCasa = 'casa' | 'refugio' | 'tienda' | 'bar' | 'museo' | 'gimnasio';
 
 export interface OpcionesCasa {
   /**
@@ -27,6 +28,11 @@ export interface OpcionesCasa {
   fondo: number;
   /** Dónde está la puerta a lo largo de la fachada, desde el centro del solar. */
   puerta?: number;
+  /**
+   * Cuántas casillas de puerta tiene (el gimnasio, dos): la puerta las cubre todas. Con una sola
+   * dibujada, la otra casilla parecía pared y te metía dentro (autor, 2026-11-19).
+   */
+  huecosPuerta?: number;
   /** Tejado a dos aguas de teja o azotea. Si no se dice, lo decide la semilla en las de balcones. */
   techo?: 'teja' | 'azotea';
   semilla?: number;
@@ -58,11 +64,15 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
 
   const fachadas = [COLORES.fachadaOcre, COLORES.fachadaAzul, COLORES.fachadaSalmon, COLORES.fachadaVerde, COLORES.fachadaAmarilla];
   const pared = uso === 'museo' || unaPlanta || op.blanca ? COLORES.cal : uso === 'gimnasio' ? COLORES.fachadaAmarilla : elegir(r, fachadas);
-  const madera = lanzarote
+  // El refugio y la tienda, con la carpintería (y en Lanzarote, el zócalo) de su color: coral y azul.
+  // Antes solo cambiaba la puerta y se confundían con las casas (autor, 2026-11-19).
+  const acento = uso === 'refugio' ? COLORES.acentoCoral : uso === 'tienda' ? COLORES.toldoAzul : null;
+  const maderaCasa = lanzarote
     ? elegir(r, [COLORES.carpinteriaVerde, COLORES.carpinteriaVerde, COLORES.carpinteriaAzul])
     : rural
       ? elegir(r, [COLORES.carpinteriaVerde, COLORES.carpinteriaVerde, COLORES.carpinteriaAzul, COLORES.balcon])
       : elegir(r, op.blanca ? [COLORES.carpinteriaVerde, COLORES.carpinteriaAzul, COLORES.balcon] : [COLORES.balcon, COLORES.carpinteriaVerde]);
+  const madera = acento ?? maderaCasa;
   // En Lanzarote, el zócalo va pintado del color de la carpintería.
   const zocalo = lanzarote ? madera : rural ? elegir(r, [COLORES.zocaloOcre, COLORES.canteria, COLORES.carpinteriaVerde]) : COLORES.canteria;
   const singular = uso === 'museo' || uso === 'gimnasio';
@@ -100,7 +110,7 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
     for (const s of [-1, 1]) M.caja(an / 2, al, 0.04, x + s * (an / 2 + 0.06 + an / 4), y, frente + 0.01, madera, 0.95);
     M.caja(an + 0.2, 0.06, 0.16, x, y - 0.1, frente, COLORES.canteria, 1.06);
   };
-  const anPuerta = uso === 'refugio' || singular ? 0.72 : 0.5;
+  const anPuerta = (uso === 'refugio' || singular ? 0.72 : 0.5) + ((op.huecosPuerta ?? 1) - 1);
   const alPuerta = 1.05;
   const px = Math.max(-(W / 2 - 0.6), Math.min(W / 2 - 0.6, op.puerta ?? 0));
   const colorPuerta = uso === 'refugio' ? COLORES.acentoCoral : madera;
@@ -143,16 +153,18 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
     M.pon(fronton.translate(px, alto + 0.14 + 0.15, z), COLORES.cal);
     M.pon(new CylinderGeometry(0.1, 0.1, 0.03, 12).rotateX(Math.PI / 2).translate(px, alto + 0.33, z + 0.07), COLORES.balcon);
   }
-  if (uso === 'refugio' || uso === 'gimnasio') {
-    // Letrero sobre la puerta, con un disco blanco: se ve desde lejos. Coral en el refugio y, en el
-    // gimnasio, del color de su tipo (Roca o Luz).
+  if (uso === 'gimnasio') {
+    // Letrero sobre la puerta, con un disco blanco, del color de su tipo (Roca o Luz).
     const y = 0.12 + alPuerta + 0.1;
-    const letreroGimnasio = op.emblema === 'volcan' ? COLORES.rocaGimnasio : COLORES.amarilloLuz;
-    const letrero = uso === 'refugio' ? COLORES.acentoCoral : letreroGimnasio;
-    M.caja(0.8, 0.28, 0.06, px, y, frente + 0.03, letrero);
+    M.caja(0.8, 0.28, 0.06, px, y, frente + 0.03, op.emblema === 'volcan' ? COLORES.rocaGimnasio : COLORES.amarilloLuz);
     M.pon(new CylinderGeometry(0.09, 0.09, 0.03, 12).rotateX(Math.PI / 2).translate(px, y + 0.14, frente + 0.07), COLORES.crema);
   }
-  if (uso === 'tienda') {
+  if (uso === 'refugio') {
+    // Letrero redondo sobre la puerta: el corazón blanco sobre coral.
+    const y = 0.12 + alPuerta + 0.2;
+    letreroRedondo(M, px, unaPlanta ? y : 2.72, frente + 0.04, 0.17, COLORES.acentoCoral, 'corazon');
+  }
+  if (uso === 'tienda' || uso === 'bar') {
     // Toldo a rayas sobre la puerta y cajas a un lado.
     const franjas = 7;
     const anT = 1.3;
@@ -228,8 +240,19 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
     for (const s of [-1, 1]) {
       // El pretil de delante y el de detrás cubren las esquinas; los de los lados caben entre
       // ellos, sin solaparse (las caras de arriba titilaban).
-      M.caja(W + 0.14, 0.24, 0.08, 0, H + 0.08, s * (D / 2 + 0.03), pared);
-      M.caja(0.08, 0.24, D - 0.02, s * (W / 2 + 0.03), H + 0.08, 0, pared);
+      M.caja(W + 0.14, 0.24, 0.08, 0, H + 0.08, s * (D / 2 + 0.03), acento ?? pared);
+      M.caja(0.08, 0.24, D - 0.02, s * (W / 2 + 0.03), H + 0.08, 0, acento ?? pared);
+    }
+    if (acento) {
+      // El emblema pintado en la azotea, que es lo que más se ve desde la cámara: el corazón del
+      // refugio y la cesta de la tienda, en blanco sobre un disco de su color. Y un letrero redondo
+      // de pie sobre el pretil de delante.
+      const tam = Math.min(W, D) * 0.42;
+      const y = H + 0.135;
+      M.pon(new CylinderGeometry(tam * 0.95, tam * 0.95, 0.025, 28).translate(0, y, 0.15), acento);
+      for (const g of piezasEmblema(uso === 'refugio' ? 'corazon' : 'cesta', tam * 1.1)) M.pon(g.translate(0, y + 0.02, 0.15), COLORES.crema);
+      M.caja(0.06, 0.2, 0.06, px, H + 0.32, frente + 0.03, COLORES.balcon);
+      letreroRedondo(M, px, H + 0.72, frente + 0.03, 0.24, acento, uso === 'refugio' ? 'corazon' : 'cesta');
     }
     if (uso === 'gimnasio' && op.emblema === 'volcan') {
       // Un volcán pintado en la azotea: el gimnasio de Roca se reconoce desde arriba.
@@ -268,6 +291,35 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
     M.pon(new CylinderGeometry(0.22, 0.22, 0.4, 8).translate(-cx * 0.6, H + 0.24, cz + 0.1), COLORES.crema, 0.9);
   }
   return M.fusionar();
+}
+
+/**
+ * El emblema del refugio (un corazón) o de la tienda (una cesta), dibujo propio: piezas planas en el
+ * plano horizontal, con su «arriba» hacia el fondo (−z), para pintarlas de un color.
+ */
+function piezasEmblema(cual: 'corazon' | 'cesta', s: number): BufferGeometry[] {
+  const grueso = 0.02;
+  // Cada pieza, 3 mm más arriba que la anterior: donde se solapan, sus caras titilarían.
+  if (cual === 'corazon') {
+    return [
+      new CylinderGeometry(0.3 * s, 0.3 * s, grueso, 18).translate(-0.27 * s, 0, -0.12 * s),
+      new CylinderGeometry(0.3 * s, 0.3 * s, grueso, 18).translate(0.27 * s, 0.003, -0.12 * s),
+      plano([[-0.56 * s, -0.04 * s], [0.56 * s, -0.04 * s], [0, 0.62 * s]], 0.016),
+    ];
+  }
+  // Una cesta: más ancha arriba y con el asa de lado a lado (una bolsa con asa corta parecía un
+  // candado desde la cámara).
+  return [
+    plano([[-0.55 * s, -0.02 * s], [0.55 * s, -0.02 * s], [0.36 * s, 0.5 * s], [-0.36 * s, 0.5 * s]], 0),
+    new RingGeometry(0.43 * s, 0.53 * s, 18, 1, 0, Math.PI).rotateX(-Math.PI / 2).translate(0, 0.003, -0.02 * s),
+  ];
+}
+
+/** Un letrero redondo de cara a la calle, con el emblema en blanco. */
+function letreroRedondo(M: Montaje, x: number, y: number, z: number, radio: number, color: string, cual: 'corazon' | 'cesta'): void {
+  M.pon(new CylinderGeometry(radio + 0.03, radio + 0.03, 0.05, 24).rotateX(Math.PI / 2).translate(x, y, z), COLORES.crema);
+  M.pon(new CylinderGeometry(radio, radio, 0.06, 24).rotateX(Math.PI / 2).translate(x, y, z + 0.01), color);
+  for (const g of piezasEmblema(cual, radio * 1.15)) M.pon(g.rotateX(Math.PI / 2).translate(x, y, z + 0.05), COLORES.crema);
 }
 
 /** Una figura plana pintada: un polígono convexo en el plano horizontal, a la altura `y`, de dos caras. */

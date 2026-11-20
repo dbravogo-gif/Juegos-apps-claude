@@ -8,10 +8,18 @@
 
 import {
   AdditiveBlending,
+  BackSide,
+  Box3,
+  BufferGeometry,
   CanvasTexture,
+  CircleGeometry,
   Color,
+  DoubleSide,
   CylinderGeometry,
+  Float32BufferAttribute,
   Group,
+  LineBasicNodeMaterial,
+  LineSegments,
   Mesh,
   MeshBasicNodeMaterial,
   SRGBColorSpace,
@@ -20,15 +28,17 @@ import {
   Vector3,
   RingGeometry,
   type Fog,
+  type Object3D,
   type Material,
   type Texture,
 } from 'three/webgpu';
-import { iniciarCombate, reemplazar, resolverTurno, type Accion, type EstadoCombate, type Evento, type Resultado } from '../../core/combate';
+import { describirMovimiento } from '../../core/describir';
+import { iniciarCombate, reemplazar, resolverTurno, type Accion, type EstadoCombate, type Evento, type FichaCombate, type Resultado } from '../../core/combate';
 import { crearCriatura, nombreDe, objetoUtil } from '../../core/criatura';
 import type { Criatura } from '../../core/modelo';
 import { CALIDAD_ZONA, MEDIA_BLANCA, MEDIA_VERDE, zonaBarra } from '../../core/captura';
 import { crearRng } from '../../core/rng';
-import { evolucionar, evolucionesTrasCombate } from '../../core/progreso';
+import { evolucionar, evolucionesTrasCombate, type SubidaNivel } from '../../core/progreso';
 import { perdidaPorDerrota } from '../../core/economia';
 import { BOLSILLOS, bolsilloDe, type IdBolsillo } from '../../data/bolsillos';
 import { vidaMaxima } from '../../core/estadisticas';
@@ -36,6 +46,7 @@ import { gruposContra } from '../../core/tipos';
 import { ESPECIE_RAMA, inicialDelRival, puebloQueTePersigue, type TipoInicial } from '../../data/pueblos';
 import { MaterialDiorama } from '../../arte/material';
 import { figuraCriatura } from '../../arte/criaturas3d';
+import { crearEscenarioEvolucion } from './escenario-evolucion';
 import { escalaPorAltura } from '../../arte/escala-criaturas';
 import { RADIO_CUBO, figuraCubo, girarCubo } from '../../arte/cubos';
 import { attribute } from 'three/tsl';
@@ -51,7 +62,8 @@ const DATOS = DATOS_COMBATE_PRUEBA;
 /** La arena, lejos de la isla y de los interiores. */
 const ARENA = new Vector3(600, 0, 600);
 /** Dónde va cada criatura, respecto a la arena: la tuya delante a la izquierda, la rival al fondo. */
-const SITIO: [Vector3, Vector3] = [new Vector3(-2.05, 0, 1.55), new Vector3(2.35, 0, -1.85)];
+// La tuya, más adentro y atrás que al principio: su círculo se salía de la vista (autor, 2026-11-19).
+const SITIO: [Vector3, Vector3] = [new Vector3(-1.6, 0, 1.1), new Vector3(2.35, 0, -1.85)];
 /** El tamaño de siempre en cada lado; cada criatura lo multiplica según su altura (escalaPorAltura). */
 const TAMANO: [number, number] = [1.0, 0.95];
 /**
@@ -61,10 +73,14 @@ const TAMANO: [number, number] = [1.0, 0.95];
  */
 const GIRO: [number, number] = [2.4, -0.75];
 const CAMARA = new Vector3(0.1, 2.7, 8.6);
-/** Dónde evoluciona una criatura: en el centro, un poco hacia la cámara, mirándola. */
-const CENTRO_EVOLUCION = new Vector3(0.15, 0, 1.6);
-/** El fondo de la evolución: noche honda, para que brillen el Sello y la silueta. */
-const FONDO_EVOLUCION = new Color('#140f26');
+/**
+ * Dónde evoluciona una criatura: en el centro, un poco hacia la cámara, mirándola, y algo alta: la
+ * isla flota y su peñón no debe quedar tapado por el cuadro de texto.
+ */
+const CENTRO_EVOLUCION = new Vector3(0.15, 0.6, 0.2);
+/** El fondo de la evolución: blanco roto (autor, 2026-11-19). */
+const FONDO_EVOLUCION = new Color('#f2ede4');
+
 /**
  * Los trece círculos del Sello (HISTORIA.md: el cubo de Metatrón), en el suelo bajo la criatura que
  * evoluciona: uno en el centro, seis alrededor y seis más fuera.
@@ -74,6 +90,11 @@ const CIRCULOS_SELLO: readonly [number, number][] = [
   ...Array.from({ length: 6 }, (_, i): [number, number] => [Math.cos((i * Math.PI) / 3) * 0.55, Math.sin((i * Math.PI) / 3) * 0.55]),
   ...Array.from({ length: 6 }, (_, i): [number, number] => [Math.cos((i * Math.PI) / 3) * 1.1, Math.sin((i * Math.PI) / 3) * 1.1]),
 ];
+/**
+ * El Sello, a este tamaño: entero llegaba a 1,39 del centro y el relieve de la isla se comía los
+ * círculos de fuera (probador, 2026-11-19). Así llega a 1,08, dentro del suelo liso.
+ */
+const ESCALA_SELLO = 0.78;
 const MIRA = new Vector3(0.15, 0.4, 0);
 /** El cubo de captura con que sale cada criatura (por ahora, el blanco, el básico). */
 const CUBO: [number, number] = [0, 0];
@@ -91,6 +112,33 @@ const MAX_EQUIPO = 6;
 
 const NOMBRE_TIPO = new Map<string, string>(TIPOS.map((t) => [t.id, t.nombre]));
 const COLOR_TIPO = new Map<string, number>(TIPOS.map((t) => [t.id, t.color]));
+/**
+ * El icono de la categoría de un ataque, en un cuadradito (autor, 2026-11-19), dibujo propio:
+ * una pesa para los físicos (Fuerza), un destello para los mágicos (Magia) y dos flechas, sube y
+ * baja, para los de estado.
+ */
+const ICONO_CATEGORIA: Record<string, { color: string; dibujo: string; nombre: string }> = {
+  // La pesa, en diagonal y con discos redondos: recta, a su tamaño, parecía una «H» (probador).
+  fisico: { color: '#C9542A', nombre: 'Físico (Fuerza)', dibujo: '<g transform="rotate(-40 12 12)"><rect x="6" y="10.6" width="12" height="2.8" rx="1"/><circle cx="5.2" cy="12" r="3.6"/><circle cx="18.8" cy="12" r="3.6"/></g>' },
+  magico: { color: '#4766CC', nombre: 'Mágico (Magia)', dibujo: '<path d="M12 3 L14 10 L21 12 L14 14 L12 21 L10 14 L3 12 L10 10 Z"/>' },
+  estado: { color: '#8A847E', nombre: 'De estado', dibujo: '<path d="M8 4 L12 9 H9.5 V20 H6.5 V9 H4 Z"/><path d="M16 20 L20 15 H17.5 V4 H14.5 V15 H12 Z"/>' },
+};
+const iconoCategoria = (categoria: string) => {
+  const i = ICONO_CATEGORIA[categoria] ?? ICONO_CATEGORIA.estado;
+  return `<svg class="combate-categoria" viewBox="0 0 24 24" role="img" aria-label="${i.nombre}"><title>${i.nombre}</title><rect width="24" height="24" rx="5" fill="${i.color}"/><g fill="#fff">${i.dibujo}</g></svg>`;
+};
+/**
+ * La etiqueta de un tipo, en su color. Con letra oscura en los tipos claros: blanca sobre Hielo,
+ * Aire o Eléctrico no se leía (probador, 2026-11-19).
+ */
+function chipTipo(t: string): string {
+  const color = COLOR_TIPO.get(t) ?? 0xa8a29e;
+  const c = new Color(color);
+  const luz = 0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b;
+  return `<i style="background:#${color.toString(16).padStart(6, '0')};color:${luz > 0.42 ? '#2B2320' : '#FFFFFF'}">${NOMBRE_TIPO.get(t) ?? t}</i>`;
+}
+/** Los tipos de una criatura, en sus colores, para ponerlos bajo su nombre (autor, 2026-11-19). */
+const chipsTipos = (tipos: readonly string[]) => tipos.map(chipTipo).join('');
 const ESTADISTICA: Record<string, string> = { fuerza: 'la fuerza', escudo: 'el escudo', magia: 'la magia', resMagica: 'la resistencia mágica', celeridad: 'la celeridad' };
 
 type Fase = 'fuera' | 'entrando' | 'mensajes' | 'menu' | 'barra' | 'saliendo';
@@ -111,6 +159,8 @@ interface Paso {
   duracion: number;
   /** Se puede adelantar pulsando. */
   saltable: boolean;
+  /** Segundos antes de poder adelantarlo (0,25 si no se dice). */
+  minimo?: number;
   empezar?: () => void;
   /** t de 0 a 1 a lo largo del paso. */
   animar?: (t: number) => void;
@@ -125,6 +175,8 @@ interface Luchador {
   visible: boolean;
   /** Su alto en la arena, según su altura: para poner a su medida el destello y las chispas. */
   alto: number;
+  /** Cuánto se aparta de su sitio por ser grande: la tuya, hacia el centro, para no salirse por la izquierda. */
+  ajuste: Vector3;
 }
 
 export class Combate implements Subsistema {
@@ -166,10 +218,14 @@ export class Combate implements Subsistema {
   private nivelesAntes = new Map<string, number>();
   /** La figura de la forma siguiente de cada criatura tuya, por «uid>especie», cargada de antemano. */
   private figurasEvolucion = new Map<string, { figura: Group; alto: number }>();
-  /** La evolución en curso: mientras late, Esc la para. */
-  private evolucion: { latiendo: boolean; cancelada: boolean } | null = null;
-  /** La silueta luminosa de la criatura que evoluciona. */
-  private materialSilueta: MeshBasicNodeMaterial | null = null;
+  /** La evolución en curso: hasta el destello, Esc la para. */
+  private evolucion: { parable: boolean; cancelada: boolean } | null = null;
+  /** Lo que la evolución apaga de la arena (las plataformas): se vuelve a encender al abrirla otra vez. */
+  private apagadasEvolucion: Object3D[] = [];
+  /** Lo que queda de cada evolución hasta que se cierra la arena: su grupo y lo que hay que soltar. */
+  private restosEvolucion: { grupo: Group; nuevos: { dispose(): void }[] }[] = [];
+  /** El escenario de evolución a la fuerza («Probar evolución», modo desarrollador), o null: el de su tipo. */
+  private tipoEvolucion: string | null = null;
   /** Contra quién se lucha: el id del entrenador, o null si es salvaje. */
   private entrenador: string | null = null;
   /** La barra de captura (F08): qué cubo se lanza y cuánto lleva la flecha moviéndose. */
@@ -184,7 +240,9 @@ export class Combate implements Subsistema {
   private texto!: HTMLParagraphElement;
   private menu!: HTMLDivElement;
   private botones: HTMLSpanElement[] = [];
-  private fichas: { nombre: HTMLElement; nivel: HTMLElement; relleno: HTMLElement; numeros: HTMLElement | null }[] = [];
+  private fichas: { nombre: HTMLElement; nivel: HTMLElement; chips: HTMLElement; relleno: HTMLElement; numeros: HTMLElement | null }[] = [];
+  /** El último ataque elegido por cada criatura (uid → id del ataque): el cursor vuelve a él (autor, 2026-11-19). */
+  private ultimoAtaque = new Map<string, string>();
   private velo!: HTMLDivElement;
   /** La tabla de tipos (tecla T): qué le hace daño a la rival y qué a la tuya. */
   private panelTipos!: HTMLDivElement;
@@ -231,7 +289,10 @@ export class Combate implements Subsistema {
             : def.equipo.map((e) => crearCriatura(DATOS, e.especie, e.nivel, rng));
       void this.empezar(equipo, guionId);
     });
-    ctx.eventos.on('encuentro:inicio', ({ salvajes }) => void this.empezar(salvajes as Criatura[], null));
+    ctx.eventos.on('encuentro:inicio', ({ salvajes, tipoEvolucion }) => {
+      this.tipoEvolucion = tipoEvolucion ?? null;
+      void this.empezar(salvajes as Criatura[], null);
+    });
   }
 
   /** La arena: dos plataformas de jable con su canto, una para cada criatura. */
@@ -261,8 +322,8 @@ export class Combate implements Subsistema {
     raiz.hidden = true;
     raiz.innerHTML = `
       <div class="calima combate-clima" hidden aria-hidden="true"></div>
-      <div class="combate-ficha rival"><p class="combate-nombre"></p><p class="combate-nivel"></p><div class="combate-vida"><div class="combate-relleno"></div></div></div>
-      <div class="combate-ficha propia"><p class="combate-nombre"></p><p class="combate-nivel"></p><div class="combate-vida"><div class="combate-relleno"></div></div><p class="combate-numeros"></p></div>
+      <div class="combate-ficha rival"><p class="combate-nombre"></p><p class="combate-nivel"></p><p class="combate-chips"></p><div class="combate-vida"><div class="combate-relleno"></div></div></div>
+      <div class="combate-ficha propia"><p class="combate-nombre"></p><p class="combate-nivel"></p><p class="combate-chips"></p><div class="combate-vida"><div class="combate-relleno"></div></div><p class="combate-numeros"></p></div>
       <div class="combate-caja"><p class="combate-texto" aria-live="assertive"></p><div class="combate-menu" hidden></div></div>
       <div class="combate-tipos" hidden></div>
       <div class="combate-barra" hidden><i class="blanca"></i><i class="verde"></i><b class="flecha"></b></div>
@@ -293,6 +354,7 @@ export class Combate implements Subsistema {
       this.fichas.push({
         nombre: ficha.querySelector('.combate-nombre')!,
         nivel: ficha.querySelector('.combate-nivel')!,
+        chips: ficha.querySelector('.combate-chips')!,
         relleno: ficha.querySelector('.combate-relleno')!,
         numeros: ficha.querySelector('.combate-numeros'),
       });
@@ -337,7 +399,8 @@ export class Combate implements Subsistema {
       }),
     );
     // Lo que hace falta para evolucionar al final, ya cargado: el nivel de cada una y su forma siguiente.
-    this.nivelesAntes = new Map(this.partida.equipo.map((c) => [c.uid, c.nivel]));
+    // Las que subieron fuera del combate (el almendrado) cuentan como subidas: evolucionan al ganar.
+    this.nivelesAntes = new Map(this.partida.equipo.map((c) => [c.uid, this.partida.subidasFuera.has(c.uid) ? c.nivel - 1 : c.nivel]));
     this.figurasEvolucion.clear();
     await Promise.all(
       this.partida.equipo.flatMap((c) =>
@@ -365,7 +428,10 @@ export class Combate implements Subsistema {
     const f = this.figuras.get(uid);
     if (!f) return;
     this.luchadores[lado]?.raiz.removeFromParent();
-    this.luchadores[lado] = { raiz: f, giro: GIRO[lado], extra: new Vector3(), escala: 0, visible: false, alto: this.altos.get(uid) ?? TAMANO[lado] };
+    const alto = this.altos.get(uid) ?? TAMANO[lado];
+    // Centradas en su círculo por el centro del cuerpo (figuraCriatura), sin desplazarlas (autor).
+    const ajuste = new Vector3();
+    this.luchadores[lado] = { raiz: f, giro: GIRO[lado], extra: new Vector3(), escala: 0, visible: false, alto, ajuste };
     this.arena.add(f);
   }
 
@@ -375,6 +441,8 @@ export class Combate implements Subsistema {
     this.raiz.hidden = !si;
     if (!si) this.clima.hidden = true;
     if (si) {
+      for (const o of this.apagadasEvolucion) o.visible = true;
+      this.apagadasEvolucion = [];
       this.guardado = { fondo: escena.background as Color | Texture | null, niebla: escena.fog as Fog | null };
       const enGimnasio = this.partida.estado.dentro?.startsWith('gimnasio') ?? false;
       // La arena (ocre) o el viento (rachas blancas) del campo, mientras dure el combate.
@@ -388,6 +456,11 @@ export class Combate implements Subsistema {
       this.colocarCamara();
       for (const lado of [0, 1] as const) this.pintarFicha(lado, true);
     } else if (this.guardado) {
+      for (const r of this.restosEvolucion) {
+        r.grupo.removeFromParent();
+        for (const n of r.nuevos) n.dispose();
+      }
+      this.restosEvolucion = [];
       escena.background = this.guardado.fondo;
       escena.fog = this.guardado.niebla;
       this.guardado = null;
@@ -429,6 +502,7 @@ export class Combate implements Subsistema {
       saltable: false,
       empezar: () => {
         this.mostrarArena(false);
+        this.tipoEvolucion = null;
         this.raiz.hidden = false;
         for (const p of paneles) p.style.visibility = 'hidden';
         for (const l of this.luchadores) l?.raiz.removeFromParent();
@@ -436,6 +510,7 @@ export class Combate implements Subsistema {
         const e = this.estado!;
         // El equipo vuelve a «partida» como ha quedado: vida, PP, estados y experiencia.
         this.partida.equipo = e.lados[0].equipo;
+        if (e.fin !== 'derrota') this.partida.subidasFuera.clear();
         if (e.capturada && this.partida.equipo.length < MAX_EQUIPO) this.partida.equipo.push(e.capturada);
         if (e.fin === 'victoria' && this.entrenador) this.partida.vencerA(this.entrenador);
         this.partida.terminarCombate();
@@ -486,7 +561,7 @@ export class Combate implements Subsistema {
     this.lanzamiento = { objeto, t: 0 };
     this.menu.hidden = true;
     this.barra.hidden = false;
-    this.texto.textContent = 'Para la flecha con Espacio. En el verde, mucho mejor. (Esc: volver)';
+    this.texto.textContent = 'Para la flecha con A o Espacio. En el verde, mucho mejor. (X: volver)';
   }
 
   /** Dónde está la flecha, de 0 (izquierda) a 1 (derecha): va y viene. */
@@ -544,7 +619,7 @@ export class Combate implements Subsistema {
               saltable: false,
               empezar: () => {
                 this.ponerLuchador(lado, uid);
-                this.pintarFicha(lado, true);
+                this.pintarEntrada(lado, ev.ficha);
               },
               animar: (t) => {
                 const l = this.luchadores[lado]!;
@@ -560,13 +635,13 @@ export class Combate implements Subsistema {
           let destello: Mesh | null = null;
           const abierto = { chispas: false };
           this.encolar({
-            texto: lado === 1 ? `¡El entrenador saca a ${ev.ficha.nombre}!` : `¡Adelante, ${ev.ficha.nombre}!`,
+            texto: lado === 1 ? `¡${this.entrenador?.startsWith('lider') ? 'La líder' : 'El entrenador'} saca a ${ev.ficha.nombre}!` : `¡Adelante, ${ev.ficha.nombre}!`,
             sonido: 'salida',
             duracion: 1.9,
             saltable: false,
             empezar: () => {
               this.ponerLuchador(lado, uid);
-              this.pintarFicha(lado, true);
+              this.pintarEntrada(lado, ev.ficha);
               cubo = figuraCubo(CUBO[lado], this.materialCubo);
               cubo.position.copy(SITIO[lado]).setY(CAIDA);
               this.arena.add(cubo);
@@ -715,7 +790,7 @@ export class Combate implements Subsistema {
         case 'experiencia': {
           this.encolar({ texto: `${ev.nombre} gana ${ev.cantidad} puntos de experiencia.`, duracion: 1.1, saltable: true });
           for (const s of ev.subidas) {
-            this.encolar({ texto: `¡${ev.nombre} sube al nivel ${s.nivel}!`, sonido: 'nivel', duracion: 1.3, saltable: true, empezar: () => this.pintarFicha(0, true) });
+            this.encolar({ texto: `¡${ev.nombre} sube al nivel ${s.nivel}!`, sonido: 'nivel', duracion: 1.3, saltable: true, empezar: () => this.pintarSubida(ev.indice, s) });
             for (const m of s.aprendidos) this.encolar({ texto: `¡${ev.nombre} aprende ${DATOS.movimientos[m]?.nombre ?? m}!`, duracion: 1.2, saltable: true });
           }
           break;
@@ -830,11 +905,11 @@ export class Combate implements Subsistema {
     // otra opción sin querer).
     this.entrada.pulsacion();
     // Esc mientras late: la evolución se para (como en el género, se puede no querer).
-    if (cancelar && this.evolucion?.latiendo && this.paso) {
+    if (cancelar && this.evolucion?.parable && !this.evolucion.cancelada && this.paso) {
       this.evolucion.cancelada = true;
       this.tPaso = this.paso.duracion;
     }
-    if (confirmar && this.paso?.saltable && this.tPaso > 0.25) this.tPaso = this.paso.duracion;
+    if (confirmar && this.paso?.saltable && this.tPaso > (this.paso.minimo ?? 0.25)) this.tPaso = this.paso.duracion;
   }
 
   actualizar(dt: number): void {
@@ -887,14 +962,16 @@ export class Combate implements Subsistema {
         break;
       case 'ataques': {
         // Sin pistas en los botones (al autor no le gustaron, 2026-11-15): la tabla, con la T.
-        texto = `¿Qué hará ${nombre}? (T: tabla de tipos · Esc: volver)`;
+        texto = `¿Qué hará ${nombre}? (T: tabla de tipos · X: volver)`;
         this.opciones = c.movimientos.map((m, indice) => {
           const mov = DATOS.movimientos[m.id];
-          const color = `#${(COLOR_TIPO.get(mov.tipo) ?? 0xa8a29e).toString(16).padStart(6, '0')}`;
           return {
-            html: boton(mov.nombre, `<i style="background:${color}">${NOMBRE_TIPO.get(mov.tipo) ?? 'Común'}</i> PP ${m.pp}/${mov.pp}`),
+            html: boton(mov.nombre, `${chipTipo(mov.tipo || 'comun')} PP ${m.pp}/${mov.pp}`),
             activa: m.pp > 0,
-            elegir: () => this.enviar({ tipo: 'movimiento', indice, objetivo: { lado: 1, hueco: 0 } }),
+            elegir: () => {
+              this.ultimoAtaque.set(c.uid, m.id);
+              this.enviar({ tipo: 'movimiento', indice, objetivo: { lado: 1, hueco: 0 } });
+            },
           };
         });
         break;
@@ -902,7 +979,7 @@ export class Combate implements Subsistema {
       case 'mochila': {
         // Por bolsillos, como fuera del combate: ← y → cambian entre el botiquín y los cubos.
         const b = BOLSILLOS.find((x) => x.id === BOLSILLOS_COMBATE[this.bolsillo])!;
-        texto = `◀ ${b.nombre} ▶ ¿Qué usas? (Esc: volver)`;
+        texto = `◀ ${b.nombre} ▶ ¿Qué usas? (X: volver)`;
         const activo = e.lados[0].activos[0];
         this.opciones = this.objetosMochila().map((id) => {
           const n = this.partida.mochila[id];
@@ -914,12 +991,12 @@ export class Combate implements Subsistema {
             elegir: () => (captura ? this.abrirBarra(id) : this.enviar({ tipo: 'objeto', objeto: id, objetivo: activo })),
           };
         });
-        if (!this.opciones.length) texto = `◀ ${b.nombre} ▶ ${b.vacio} (Esc: volver)`;
+        if (!this.opciones.length) texto = `◀ ${b.nombre} ▶ ${b.vacio} (X: volver)`;
         break;
       }
       case 'equipo':
       case 'forzado': {
-        texto = cual === 'forzado' ? '¿A quién sacas?' : '¿A quién sacas? (Esc: volver)';
+        texto = cual === 'forzado' ? '¿A quién sacas?' : '¿A quién sacas? (X: volver)';
         const l = e.lados[0];
         this.opciones = l.equipo.map((x, indice) => ({
           html: boton(`${nombreDe(x, DATOS)} · Nv. ${x.nivel}`, `Vida ${x.vida}/${vidaMaxima(x, DATOS)}${l.activos.includes(indice) ? ' · en combate' : ''}`),
@@ -941,8 +1018,10 @@ export class Combate implements Subsistema {
       this.menu.append(b);
       return b;
     });
-    // Se empieza en la primera opción que se puede elegir.
+    // Se empieza en la primera opción que se puede elegir; en los ataques, en el último que usó.
     this.eleccion = Math.max(0, this.opciones.findIndex((o) => o.activa));
+    const ultimo = cual === 'ataques' ? c.movimientos.findIndex((m) => m.id === this.ultimoAtaque.get(c.uid)) : -1;
+    if (ultimo >= 0 && this.opciones[ultimo]?.activa) this.eleccion = ultimo;
     this.pintarMenu();
   }
 
@@ -955,19 +1034,33 @@ export class Combate implements Subsistema {
     const rival = this.activa(1);
     const propia = this.activa(0);
     if (!rival || !propia) return;
-    const chip = (t: string) => `<i style="background:#${(COLOR_TIPO.get(t) ?? 0xa8a29e).toString(16).padStart(6, '0')}">${NOMBRE_TIPO.get(t) ?? t}</i>`;
+    const chip = chipTipo;
     const fila = (titulo: string, tipos: string[]) => (tipos.length ? `<p><b>${titulo}</b> ${tipos.map(chip).join(' ')}</p>` : '');
     const bloque = (quien: string, tipos: readonly string[]) => {
       const g = gruposContra(DATOS.tipos, tipos);
       return `<h3>${quien} ${tipos.map(chip).join(' ')}</h3>${fila('Le hacen mucho daño:', g.mucho)}${fila('Le hacen poco:', g.poco)}${fila('No le afectan:', g.nada)}`;
     };
-    this.panelTipos.innerHTML = `${bloque(nombreDe(rival, DATOS), DATOS.especies[rival.especie].tipos)}${bloque(`Tu ${nombreDe(propia, DATOS)}`, DATOS.especies[propia.especie].tipos)}<p class="combate-tipos-ayuda">T o Esc: cerrar</p>`;
+    this.panelTipos.innerHTML = `${bloque(nombreDe(rival, DATOS), DATOS.especies[rival.especie].tipos)}${bloque(`Tu ${nombreDe(propia, DATOS)}`, DATOS.especies[propia.especie].tipos)}<p class="combate-tipos-ayuda">Ataques: ${iconoCategoria('fisico')} físico · ${iconoCategoria('magico')} mágico · ${iconoCategoria('estado')} de estado</p><p class="combate-tipos-ayuda">T o X: cerrar</p>`;
     this.panelTipos.hidden = false;
     this.ctx.eventos.emit('sonido:tocar', { nombre: 'seleccion' });
   }
 
   private pintarMenu(): void {
     this.botones.forEach((b, i) => b.classList.toggle('elegido', i === this.eleccion));
+    // En los ataques, el texto de la izquierda explica el marcado (sin pistas en los botones).
+    if (this.fase === 'menu' && this.menuActual === 'ataques') {
+      const m = this.activa(0)?.movimientos[this.eleccion];
+      const mov = m && DATOS.movimientos[m.id];
+      if (m && mov) {
+        // Como en el género: un cuadradito con la categoría y, debajo, potencia, PP y efectos.
+        const d = describirMovimiento(mov, { variosRivales: (this.estado?.lados[1].activos.length ?? 1) > 1 });
+        const cifras = [d.cifras, `PP ${m.pp}/${mov.pp}`].filter(Boolean).join(' · ');
+        // La línea del efecto, siempre (vacía si no hay): sin ella, el título saltaba 12 px.
+        this.texto.innerHTML =
+          `<span class="combate-titulo-ataque">${iconoCategoria(mov.categoria)}<b>${mov.nombre}</b></span>` +
+          `<small>${cifras}</small><small class="combate-efecto">${d.efecto || '&nbsp;'}</small><small class="combate-pista">T: tabla de tipos · X: volver</small>`;
+      }
+    }
   }
 
   private pintarFicha(lado: 0 | 1, deGolpe = false): void {
@@ -976,7 +1069,27 @@ export class Combate implements Subsistema {
     const f = this.fichas[lado];
     f.nombre.textContent = nombreDe(c, DATOS);
     f.nivel.textContent = `Nv. ${c.nivel}`;
+    f.chips.innerHTML = chipsTipos(DATOS.especies[c.especie].tipos);
     if (deGolpe) this.pintarVida(lado, c.vida, vidaMaxima(c, DATOS), true);
+  }
+
+  /**
+   * La ficha de la que entra, con la vida que trae al entrar (la del evento). La del estado ya es la
+   * del final del turno: al cambiar, salía con el golpe del rival ya restado (autor, 2026-11-19).
+   */
+  private pintarEntrada(lado: 0 | 1, ficha: FichaCombate): void {
+    const f = this.fichas[lado];
+    f.nombre.textContent = ficha.nombre;
+    f.nivel.textContent = `Nv. ${ficha.nivel}`;
+    f.chips.innerHTML = chipsTipos(DATOS.especies[ficha.especie].tipos);
+    this.pintarVida(lado, ficha.vida, ficha.vidaMax, true);
+  }
+
+  /** La subida de nivel de la que está en combate, con el nivel y la vida de esa subida (no los del final). */
+  private pintarSubida(indice: number, s: SubidaNivel): void {
+    if (this.estado?.lados[0].activos[0] !== indice) return;
+    this.fichas[0].nivel.textContent = `Nv. ${s.nivel}`;
+    this.pintarVida(0, s.vida, s.vidaMax, true);
   }
 
   private pintarVida(lado: number, vida: number, max: number, deGolpe = false): void {
@@ -1033,10 +1146,14 @@ export class Combate implements Subsistema {
   }
 
   /**
-   * La evolución, en la arena y a oscuras (autor, 2026-11-19; propia, no la del género): el Sello se
-   * dibuja en el suelo, círculo a círculo, del color del tipo; suben motas; la criatura, hecha luz,
-   * late entre su forma y la nueva cada vez más deprisa; y con un destello los círculos salen
-   * despedidos y queda la nueva, con su color. Esc la para mientras late.
+   * La evolución, en la arena (autor, 2026-11-19; propia, no la del género; revisada con el probador):
+   * - de noche, el Sello se dibuja en el suelo: los trece círculos del cubo de Metatrón, que se tocan,
+   *   y después las líneas que unen sus centros, del color del tipo de la forma nueva;
+   * - un círculo de luz bajo la criatura, para que se lea aunque sea oscura, y motas que suben;
+   * - la criatura, hecha luz de su color, late entre su forma y la nueva cada vez más deprisa;
+   * - con un fogonazo blanco, el Sello se rompe hacia fuera y queda la nueva, que se ve un rato
+   *   antes de poder pasar el mensaje.
+   * Hasta el destello, Esc la para.
    */
   private encolarEvolucion(uid: string, a: string): void {
     const nueva = this.figurasEvolucion.get(`${uid}>${a}`);
@@ -1045,47 +1162,107 @@ export class Combate implements Subsistema {
     if (!nueva || !vieja || !especieNueva) return;
     const equipo = () => this.estado!.lados[0].equipo;
     const nombre = nombreDe(equipo().find((c) => c.uid === uid)!, DATOS);
-    const color = TIPOS.find((t) => t.id === especieNueva.tipos[0])?.color ?? 0xfff4dc;
+    const color = new Color(TIPOS.find((t) => t.id === especieNueva.tipos[0])?.color ?? 0xfff4dc);
     const grupo = new Group();
     grupo.position.copy(CENTRO_EVOLUCION);
-    const matCirculo = new MeshBasicNodeMaterial({ color, transparent: true, depthWrite: false, blending: AdditiveBlending });
-    matCirculo.toneMapped = false;
-    this.materiales.push(matCirculo);
-    if (!this.materialSilueta) {
-      this.materialSilueta = new MeshBasicNodeMaterial({ color: '#fff6e0' });
-      this.materialSilueta.toneMapped = false;
-      this.materiales.push(this.materialSilueta);
-    }
-    const anillo = new RingGeometry(0.2, 0.25, 40);
+    const nuevos: { dispose(): void }[] = [];
+    const material = <T extends { dispose(): void; toneMapped: boolean }>(m: T): T => {
+      m.toneMapped = false;
+      nuevos.push(m);
+      return m;
+    };
+    // Sobre el blanco roto: el Sello, en claro sobre la plataforma; la silueta, del color del tipo.
+    const matCirculo = material(new MeshBasicNodeMaterial({ color: '#fffaf0', transparent: true, depthWrite: false }));
+    const matMota = material(new MeshBasicNodeMaterial({ color, transparent: true, depthWrite: false }));
+    const matSilueta = material(new MeshBasicNodeMaterial({ color: color.clone().lerp(new Color('#ffffff'), 0.2) }));
+    // Un contorno oscuro alrededor de la silueta: del color del tipo, sobre una isla de su tipo, no
+    // se distinguía (probador, 2026-11-19: contraste de 1,06 en Roca).
+    const matHalo = material(new MeshBasicNodeMaterial({ color: '#2B2320', side: BackSide }));
+    const matSuelo = material(new MeshBasicNodeMaterial({ color: '#ffffff', transparent: true, opacity: 0, depthWrite: false }));
+    const matLineas = material(new LineBasicNodeMaterial({ color: '#fffaf0', transparent: true, opacity: 0, depthWrite: false }));
+    // El fogonazo, con luz que se suma (no un disco plano), y una onda que recorre el suelo.
+    const matDestello = material(new MeshBasicNodeMaterial({ color: color.clone().lerp(new Color('#ffffff'), 0.5), transparent: true, opacity: 0, depthWrite: false, blending: AdditiveBlending }));
+    const matOnda = material(new MeshBasicNodeMaterial({ color: '#ffffff', transparent: true, opacity: 0, depthWrite: false, side: DoubleSide }));
+    const anillo = new RingGeometry(0.24, 0.285, 48);
+    const disco = new CircleGeometry(1.35 * ESCALA_SELLO, 48);
+    const esfera = new SphereGeometry(0.5, 40, 24);
+    const mota = new SphereGeometry(0.035, 6, 4);
+    // Las líneas del cubo de Metatrón: todos los centros unidos entre sí.
+    const puntos: number[] = [];
+    CIRCULOS_SELLO.forEach(([x1, z1], i) => CIRCULOS_SELLO.slice(i + 1).forEach(([x2, z2]) => puntos.push(x1, 0.03, z1, x2, 0.03, z2)));
+    const geoLineas = new BufferGeometry();
+    geoLineas.setAttribute('position', new Float32BufferAttribute(puntos, 3));
+    const geoOnda = new RingGeometry(0.85, 1, 72);
+    nuevos.push(anillo, disco, esfera, mota, geoLineas, geoOnda);
+    // La isla de su tipo y lo que cae alrededor (escenario-evolucion.ts; autor, 2026-11-19).
+    const semilla = [...`${uid}>${a}`].reduce((h, letra) => (Math.imul(h, 31) + letra.charCodeAt(0)) >>> 0, 7);
+    const escenario = crearEscenarioEvolucion(this.tipoEvolucion ?? especieNueva.tipos[0], semilla);
+    nuevos.push(escenario);
+    const caer = (tiempo: number) => escenario.animar(tiempo);
+    const suelo = new Mesh(disco, matSuelo);
+    suelo.rotation.x = -Math.PI / 2;
+    suelo.position.y = 0.01;
+    const lineas = new LineSegments(geoLineas, matLineas);
+    const sello = new Group();
+    sello.scale.setScalar(ESCALA_SELLO);
+    sello.add(lineas);
     const circulos = CIRCULOS_SELLO.map(([x, z]) => {
       const m = new Mesh(anillo, matCirculo);
       m.rotation.x = -Math.PI / 2;
       m.position.set(x, 0.02, z);
       m.scale.setScalar(0);
-      grupo.add(m);
+      sello.add(m);
       return m;
     });
-    const mota = new SphereGeometry(0.035, 6, 4);
-    const motas = Array.from({ length: 22 }, (_, i) => {
-      const m = new Mesh(mota, matCirculo);
-      m.userData = { a: (i / 22) * Math.PI * 2, r: 0.5 + (i % 5) * 0.16, fase: (i * 0.37) % 1 };
+    const motas = Array.from({ length: 26 }, (_, i) => {
+      const m = new Mesh(mota, matMota);
+      m.userData = { a: (i / 26) * Math.PI * 2, r: 0.5 + (i % 5) * 0.17, fase: (i * 0.37) % 1 };
       m.visible = false;
       grupo.add(m);
       return m;
     });
-    const destello = new Mesh(this.esferaDestello, this.materialDestello.clone());
+    const destello = new Mesh(esfera, matDestello);
     destello.visible = false;
-    grupo.add(destello);
+    const onda = new Mesh(geoOnda, matOnda);
+    onda.rotation.x = -Math.PI / 2;
+    onda.position.y = 0.04;
+    onda.visible = false;
+    grupo.add(onda);
+    grupo.add(escenario.grupo, suelo, sello, destello);
     const originales = new Map<Mesh, Material | Material[]>();
-    const silueta = (f: Group, si: boolean) =>
+    const halos = new Map<Group, Object3D>();
+    const silueta = (f: Group, si: boolean) => {
       f.traverse((o) => {
         const m = o as Mesh;
-        if (!m.isMesh) return;
+        if (!m.isMesh || m.userData.halo) return;
         if (si) {
           if (!originales.has(m)) originales.set(m, m.material);
-          m.material = this.materialSilueta!;
+          m.material = matSilueta;
         } else if (originales.has(m)) m.material = originales.get(m)!;
       });
+      if (si && !halos.has(f)) {
+        // Una copia un 6 % mayor, por dentro y oscura, centrada en la caja de la figura.
+        const h = f.clone(true);
+        h.position.set(0, 0, 0);
+        h.rotation.set(0, 0, 0);
+        h.scale.set(1, 1, 1);
+        h.updateMatrixWorld(true);
+        const centro = new Box3().setFromObject(h).getCenter(new Vector3());
+        h.scale.setScalar(1.06);
+        h.position.copy(centro).multiplyScalar(-0.06);
+        h.userData.halo = true;
+        h.traverse((o) => {
+          const m = o as Mesh;
+          m.userData.halo = true;
+          if (m.isMesh) m.material = matHalo;
+        });
+        f.add(h);
+        halos.set(f, h);
+      } else if (!si && halos.has(f)) {
+        halos.get(f)!.removeFromParent();
+        halos.delete(f);
+      }
+    };
     const motasSuben = (tiempo: number) => {
       for (const m of motas) {
         const { a: ang, r, fase } = m.userData as { a: number; r: number; fase: number };
@@ -1095,17 +1272,19 @@ export class Combate implements Subsistema {
         m.scale.setScalar(1 - k);
       }
     };
+    // Las pequeñas se perdían en la isla (probador: Shimari, 70 px de 800): en la evolución se ven
+    // al menos de 1,15 de alto, sin cambiar la proporción entre las dos formas.
+    const k = Math.min(1.7, Math.max(1, 1.15 / Math.max(this.altos.get(uid) ?? 1, nueva.alto)));
+    const respirar = (f: Group) => f.scale.set(k, k * (1 + Math.sin(this.reloj * 2.4) * 0.025), k);
     const fichas = () => this.fichas.map((f) => f.nombre.parentElement!);
-    // Las plataformas y lo demás de la arena se apagan: solo la criatura y el Sello, en la oscuridad.
-    const apagadas: { o: { visible: boolean } }[] = [];
-    let alto = this.altos.get(uid) ?? TAMANO[0];
+    const cancelada = () => this.evolucion?.cancelada ?? false;
     this.encolar({
-      texto: `¿Eh? ¡${nombre} está cambiando!`,
+      texto: `¡El Sello reacciona a ${nombre}! (X: pararlo)`,
       sonido: 'salida',
-      duracion: 1.8,
+      duracion: 2.2,
       saltable: false,
       empezar: () => {
-        this.evolucion = { latiendo: false, cancelada: false };
+        this.evolucion = { parable: true, cancelada: false };
         // Fuera la rival y las fichas; la que evoluciona, sola en el centro y de cara.
         for (const l of this.luchadores) l?.raiz.removeFromParent();
         this.luchadores = [null, null];
@@ -1114,68 +1293,83 @@ export class Combate implements Subsistema {
         for (const o of this.arena.children) {
           if (o.visible) {
             o.visible = false;
-            apagadas.push({ o });
+            this.apagadasEvolucion.push(o);
           }
         }
         vieja.position.set(0, 0, 0);
         vieja.rotation.y = 0.35;
-        vieja.scale.setScalar(1);
+        vieja.scale.setScalar(k);
         vieja.visible = true;
         grupo.add(vieja);
         this.arena.add(grupo);
       },
       animar: (t) => {
-        // El Sello se dibuja: un círculo detrás de otro.
-        circulos.forEach((c, i) => c.scale.setScalar(Math.min(1, Math.max(0, t * 16 - i) / 1.5)));
-        grupo.rotation.y = this.reloj * 0.25;
-        vieja.rotation.y = 0.35 - grupo.rotation.y;
+        // Los círculos, uno detrás de otro; después, las líneas que los unen.
+        circulos.forEach((c, i) => c.scale.setScalar(Math.min(1, Math.max(0, t * 20 - i) / 1.5)));
+        matLineas.opacity = Math.max(0, (t - 0.6) / 0.4) * 0.8;
+        matSuelo.opacity = Math.min(1, t * 2) * 0.18;
+        sello.rotation.y = this.reloj * 0.25;
+        respirar(vieja);
         motasSuben(this.reloj);
+        caer(this.reloj);
       },
     });
     this.encolar({
       duracion: 3.8,
       saltable: false,
       empezar: () => {
-        this.evolucion!.latiendo = true;
+        // Parada durante el Sello: se salta el latido.
+        if (cancelada()) {
+          this.tPaso = this.paso!.duracion;
+          return;
+        }
         silueta(vieja, true);
         nueva.figura.position.set(0, 0, 0);
-        nueva.figura.scale.setScalar(1);
+        nueva.figura.scale.setScalar(k);
         silueta(nueva.figura, true);
         grupo.add(nueva.figura);
       },
       animar: (t) => {
+        caer(this.reloj);
+        if (cancelada()) {
+          vieja.visible = true;
+          nueva.figura.visible = false;
+          return;
+        }
         // Late entre las dos formas, cada vez más deprisa; al final se queda la nueva.
         const fase = Math.sin(Math.PI * 2 * (1.2 * t + 4.5 * t * t));
         const nuevaSe = t > 0.93 || fase > 0;
         vieja.visible = !nuevaSe;
         nueva.figura.visible = nuevaSe;
         const pulso = 1 + Math.abs(fase) * 0.06;
-        vieja.scale.setScalar(pulso);
-        nueva.figura.scale.setScalar(pulso);
-        grupo.rotation.y = this.reloj * (0.25 + t * 1.4);
-        vieja.rotation.y = nueva.figura.rotation.y = 0.35 - grupo.rotation.y;
+        vieja.scale.setScalar(pulso * k);
+        nueva.figura.scale.setScalar(pulso * k);
+        sello.rotation.y = this.reloj * (0.25 + t * 1.4);
+        matSuelo.opacity = 0.18 + t * 0.14;
         motasSuben(this.reloj * (1 + t * 2));
       },
     });
     this.encolar({
-      duracion: 2.6,
+      duracion: 3.6,
       saltable: true,
+      // La forma nueva se ve un rato antes de poder pasar el mensaje (probador: con Enter no se veía;
+      // y el remate se quedaba corto, 2026-11-19).
+      minimo: 2.4,
       empezar: () => {
         const ev = this.evolucion!;
-        ev.latiendo = false;
+        ev.parable = false;
         silueta(vieja, false);
         if (ev.cancelada) {
           nueva.figura.removeFromParent();
           vieja.visible = true;
-          vieja.scale.setScalar(1);
-          this.texto.textContent = `${nombre} ha dejado de cambiar.`;
+          vieja.scale.setScalar(k);
+          this.texto.textContent = `${nombre} se aparta del Sello y sigue igual.`;
           this.ctx.eventos.emit('sonido:tocar', { nombre: 'atras' });
           return;
         }
         silueta(nueva.figura, false);
         vieja.removeFromParent();
         nueva.figura.visible = true;
-        alto = nueva.alto;
         this.figuras.set(uid, nueva.figura);
         this.altos.set(uid, nueva.alto);
         // La criatura cambia de verdad: la que vuelve a la isla ya es la nueva.
@@ -1183,26 +1377,38 @@ export class Combate implements Subsistema {
         const i = lista.findIndex((c) => c.uid === uid);
         lista[i] = evolucionar(lista[i]!, a, DATOS);
         destello.visible = true;
-        destello.position.set(0, alto * 0.5, 0);
-        this.texto.textContent = `¡${nombre} se ha convertido en ${especieNueva.nombre}!`;
+        destello.position.set(0, nueva.alto * k * 0.5, 0);
+        this.texto.textContent = `¡${nombre} es ahora ${especieNueva.nombre}!`;
         this.ctx.eventos.emit('sonido:tocar', { nombre: 'captura' });
       },
       animar: (t) => {
+        caer(this.reloj);
         if (this.evolucion?.cancelada) {
-          circulos.forEach((c) => c.scale.setScalar(Math.max(0, 1 - t * 2)));
+          // Sin congelarse: las motas siguen y el Sello se apaga despacio.
+          circulos.forEach((c) => c.scale.setScalar(Math.max(0, 1 - t * 1.5)));
+          matLineas.opacity = Math.max(0, 0.8 - t);
+          matSuelo.opacity = Math.max(0, 0.18 - t * 0.3);
+          respirar(vieja);
+          motasSuben(this.reloj);
           return;
         }
-        // Destello y los círculos, despedidos hacia fuera.
-        const k = Math.min(1, t * 2.2);
-        destello.scale.setScalar(0.4 + k * 5);
-        (destello.material as MeshBasicNodeMaterial).opacity = Math.max(0, 1 - k);
-        this.velo.style.cssText = `opacity:${Math.max(0, 0.7 - t * 2.5)};background:#fffbe8`;
+        // Fogonazo blanco y el Sello, roto hacia fuera.
+        const k = Math.min(1, t * 2.5);
+        destello.scale.setScalar(0.5 + k * 3.2);
+        matDestello.opacity = 0.55 * (1 - k);
+        onda.visible = k < 1;
+        onda.scale.setScalar(0.3 + k * 2.6);
+        matOnda.opacity = 0.8 * (1 - k);
+        this.velo.style.cssText = `opacity:${Math.max(0, 0.9 - t * 4)};background:#ffffff`;
         circulos.forEach((c, i) => {
           const [x, z] = CIRCULOS_SELLO[i]!;
           c.position.set(x * (1 + k * 3), 0.02 + k * 0.6, z * (1 + k * 3));
           c.scale.setScalar(Math.max(0, 1 - k));
         });
-        nueva.figura.scale.setScalar(rebote(Math.min(1, t * 1.6)));
+        matLineas.opacity = Math.max(0, 0.8 * (1 - k * 2));
+        matSuelo.opacity = 0.32 * (1 - t * 0.5);
+        nueva.figura.scale.setScalar(k * rebote(Math.min(1, t * 1.8)));
+        if (t > 0.6) respirar(nueva.figura);
         for (const m of motas) m.visible = false;
       },
     });
@@ -1210,12 +1416,10 @@ export class Combate implements Subsistema {
       duracion: 0.3,
       saltable: false,
       empezar: () => {
+        // La escena se queda hasta el fundido (se quita al cerrar la arena); lo apagado se enciende al
+        // abrirla otra vez.
         this.velo.style.cssText = 'opacity:0';
-        grupo.removeFromParent();
-        for (const { o } of apagadas) o.visible = true;
-        (destello.material as Material).dispose();
-        anillo.dispose();
-        mota.dispose();
+        this.restosEvolucion.push({ grupo, nuevos });
         this.evolucion = null;
       },
     });
@@ -1227,7 +1431,7 @@ export class Combate implements Subsistema {
       const s = SITIO[lado];
       const respira = 1 + Math.sin(this.reloj * 2.4 + lado * 1.7) * 0.025;
       l.raiz.visible = l.visible && l.escala > 0.01;
-      l.raiz.position.set(s.x + l.extra.x, s.y + l.extra.y, s.z + l.extra.z);
+      l.raiz.position.set(s.x + l.ajuste.x + l.extra.x, s.y + l.extra.y, s.z + l.ajuste.z + l.extra.z);
       l.raiz.rotation.y = l.giro;
       l.raiz.scale.set(l.escala, l.escala * respira, l.escala);
     }

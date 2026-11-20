@@ -50,6 +50,11 @@ agentes. El patrón viene de *Claude of Duty* (Matt Shumer, MIT).
   del mapa y, para cada puerta, genera su sala con `data/generar-interior.ts`, del tamaño de su
   fachada y con dos plantas en las casas de balcones. Solo el nombre de la sala y quién vive en
   ella se escriben a mano.
+- **Pisos de arriba (2026-11-19):** si la escalera (`e`) no tiene juguetes delante, la casa tiene
+  otra sala, `<id>-arriba`, con el hueco de la escalera (`z`). Andar hacia `e` o `z` da el evento
+  `escalera` del núcleo; `partida` hace el fundido y `cambiarDePiso` (`core/explorar.ts`), que
+  conserva la puerta de la isla por la que se entró. Arriba se aparece al norte del hueco mirando
+  al norte y abajo, delante de la escalera mirando al sur: si se sigue pulsando, no se rebota.
 
 - Sin motor de física: el mundo es una rejilla de casillas con alturas.
 - El sonido, más adelante, con Web Audio o ZzFX (MIT, menos de 1 KB).
@@ -143,8 +148,8 @@ export class Sistema implements Subsistema {
 | `depuracion` | `src/sistemas/depuracion/` | El panel de ajustes (solo en desarrollo) y los ganchos de `window.__JUEGO__` |
 | (vista `?mapa`) | `src/sistemas/mapa/` | Herramienta y base del mapa del juego: el plano 2D de la isla 1 a pantalla completa, sin 3D. `?mapa=12` fija 12 píxeles por casilla |
 | `inicio` | `src/sistemas/inicio/` | La portada de una partida nueva: elegir persona (las jugables de `arte/personas.ts`) y escribir el nombre. Sale mientras «partida» está en modo «titulo» |
-| `sonido` | `src/sistemas/sonido/` | Efectos (tabla `EFECTOS`) y música en bucle (explorar y combate) con Web Audio, sin archivos. Arranca con la primera tecla y se silencia desde el menú |
-| `menu` | `src/sistemas/menu/` | El menú de pausa (Esc explorando): equipo (rejilla con Datos, Mover y Objeto), mochila por bolsillos (`data/bolsillos.ts`, dibujada con `arte/mochila.ts`), medallero, mapa y opciones (sonido, exportar o importar la partida, nueva partida), y la tienda. Cambia el orden del equipo y gasta objetos de «partida». Las medallas salen de `data/medallas.ts` y se dibujan con `arte/pintaderas.ts` (SVG por código, puro) |
+| `sonido` | `src/sistemas/sonido/` | Con Web Audio y sin archivos. Efectos (tabla `EFECTOS`; los pasos, según el terreno: hierba alta, malpaís o arena). Música (`MUSICA`): temas escritos como datos (acordes, bajo, punteo, melodía y percusión) con eco de sala; explorar es un vals con timple y combate va en Mi menor. Ambiente por zona (`AMBIENTE`: mar, viento, volcán y pájaros), casi apagado dentro de los edificios y bajo en combate. Arranca con la primera tecla y se silencia desde el menú |
+| `menu` | `src/sistemas/menu/` | El menú de pausa (Z o Esc explorando): equipo (rejilla con Datos, Mover y Objeto), mochila por bolsillos (`data/bolsillos.ts`, dibujada con `arte/mochila.ts`), medallero, mapa y opciones (sonido, exportar o importar la partida, nueva partida), y la tienda. Cambia el orden del equipo y gasta objetos de «partida». Las medallas salen de `data/medallas.ts` y se dibujan con `arte/pintaderas.ts` (SVG por código, puro) |
 | `catalogo` | `src/sistemas/catalogo/` | Herramienta, no juego: con `?catalogo` o `?catalogo=edificios`, las piezas propias del mundo en fila, con la luz y la cámara del juego; ← → acercan la cámara a cada una |
 | `prueba` | `src/sistemas/prueba/` | **Temporal:** la vitrina de la prueba de arte (`F04`), con `?vitrina`. Se queda para probar los modelos de Meshy; se borra cuando las criaturas entren en el juego |
 | `audio` | `src/sistemas/audio/` | El sonido generado por código. Llegará después |
@@ -219,10 +224,24 @@ y `?semilla=n`. Mientras exista la vitrina de F04: `?vista=combate|todas|explora
   - la experiencia y la captura, de su quintil;
   - la evolución, de la tabla de `juego.py`, y solo si la forma siguiente ya está;
   - los ataques, de entre los que existen.
-- **Las de relleno siguen** donde aún falta la criatura de verdad (`encuentros-isla1.ts` dice cuál
-  hace de cuál).
+- **Sin criaturas de relleno (2026-11-19):** donde falta la criatura prevista, sale otra del autor
+  que ya tiene modelo. Las iniciales solo las llevan tú y tu amigo, y su modelo es solo suyo
+  (`tests/reparto.test.ts`).
 - **La evolución está en el núcleo pero aún no en el juego:** las formas evolucionadas se ven en
   equipos de entrenadores.
+
+## Modo desarrollador y portada
+
+- **La portada** ofrece «Continuar» (si hay partida), «Partida nueva» y «Código». El menú de pausa
+  tiene «Menú principal»: guarda y vuelve a la portada (`?portada`).
+- **El código** abre el modo desarrollador. En el juego no está escrito, solo su huella
+  (`core/desarrollador.ts`).
+- **Partida aparte:** el modo se guarda en `sessionStorage`, así que sobrevive a los viajes en barco y
+  se pierde al cerrar la pestaña o al volver al menú. Su partida va en otra clave de `localStorage`.
+- **Menú «Desarrollador»** (pausa): viajar a una zona o a otra isla, añadir una criatura al nivel que
+  se quiera, diez almendrados (suben un nivel; si llega al de su evolución, evoluciona al ganar el
+  próximo combate), curar y quitar la última del equipo.
+- **La vista roja de los entrenadores** solo se dibuja en este modo.
 
 ## Evolución
 
@@ -251,7 +270,8 @@ y `?semilla=n`. Mientras exista la vitrina de F04: `?vista=combate|todas|explora
 ## Gimnasios: compuertas, palancas y viento
 
 Todo en el núcleo (`core/mundo.ts` y `core/explorar.ts`), igual en zonas e interiores:
-- **Compuertas** (`cierres`, por casilla `"x,y"`): cerradas hasta cumplir su condición.
+- **Compuertas** (`cierres`, por casilla `"x,y"`): cerradas hasta cumplir su condición. Se dibujan
+  claras y con un aspa de lava, para que se vean. Los puentes sobre la lava son `u`.
 - **Palancas** (`p`): cumplen `palanca:<id>` al usarlas.
 - **Corrientes de viento** (`W`, `corrientes`): al acabar un paso sobre una, el jugador queda
   empujado en su dirección (`empuje`) hasta que la casilla siguiente no se pueda pisar. Con

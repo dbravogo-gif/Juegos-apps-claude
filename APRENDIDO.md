@@ -4,6 +4,17 @@ Errores ya pagados y la barrera que evita repetirlos (regla R6). Formato: fecha 
 causa · barrera. Lo más reciente va arriba. Si un error vuelve a pasar, su barrera sube de
 nivel: de nota a regla, y de regla a prueba o hook.
 
+- **2026-11-19 · Al cambiar de criatura, entraba con la vida ya rebajada** (Six-seven islands; lo
+  vio el autor con Oreps).
+  - Causa: los mensajes del combate se enseñan después de resolver el turno, y la ficha se pintaba
+    con el estado del final del turno, con el golpe del rival ya restado.
+  - Barrera: lo que se enseña en un mensaje sale de su evento (`ficha`, `vida`, `subidas`), nunca
+    del estado actual (`pintarEntrada` y `pintarSubida` en `combate.ts`).
+- **2026-11-19 · Salían «iniciales» en la hierba y en entrenadores** (Six-seven islands; lo vio el
+  autor).
+  - Causa: las criaturas de relleno tomaban prestado el modelo de una inicial.
+  - Barrera: `tests/reparto.test.ts`: ninguna criatura que no sea inicial usa su modelo, y ni
+    hierbas, ni entrenadores, ni soldados llevan iniciales.
 - **2026-11-17 · Las criaturas del autor no llegaban a GitHub, y luego media subida cayó en la
   raíz** (Six-seven islands).
   - Causa: la subida web de GitHub falla si el lote pesa demasiado; al partirla en dos, la primera
