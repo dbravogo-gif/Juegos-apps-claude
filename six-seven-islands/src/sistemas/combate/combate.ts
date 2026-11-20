@@ -8,7 +8,6 @@
 
 import {
   AdditiveBlending,
-  BackSide,
   Box3,
   BufferGeometry,
   CanvasTexture,
@@ -49,7 +48,7 @@ import { figuraCriatura } from '../../arte/criaturas3d';
 import { crearEscenarioEvolucion } from './escenario-evolucion';
 import { escalaPorAltura } from '../../arte/escala-criaturas';
 import { RADIO_CUBO, figuraCubo, girarCubo } from '../../arte/cubos';
-import { attribute } from 'three/tsl';
+import { attribute, dot, mix, normalView, positionViewDirection, pow, vec3 } from 'three/tsl';
 import { DATOS_COMBATE_PRUEBA, ENTRENADOR_PRUEBA, ESPECIE_INICIAL, MODELO_DE, RIVAL_DE } from '../../data/combate-prueba';
 import { TIPOS } from '../../data/tipos';
 import type { Ctx, Subsistema } from '../../motor/motor';
@@ -459,9 +458,10 @@ export class Combate implements Subsistema {
     const caja = this.raiz.querySelector<HTMLElement>('.combate-caja')!;
     const paneles = [caja, ...this.fichas.map((f) => f.nombre.parentElement!)];
     this.encolar({ duracion: FUNDIDO, saltable: false, animar: (t) => (this.velo.style.cssText = `opacity:${t};background:#1d1720`) });
+    // La arena se abre con la pantalla en negro y la evolución aclara desde ahí: con el fundido
+    // aparte se veía un segundo el campo de batalla vacío (autor, 2026-11-20).
     this.encolar({ duracion: 0.05, saltable: false, empezar: () => this.mostrarArena(true) });
-    this.encolar({ duracion: FUNDIDO, saltable: false, animar: (t) => (this.velo.style.cssText = `opacity:${1 - t};background:#1d1720`) });
-    for (const { uid, a } of evoluciones) this.encolarEvolucion(uid, a);
+    evoluciones.forEach(({ uid, a }, i) => this.encolarEvolucion(uid, a, { desdeNegro: i === 0 }));
     this.encolar({ duracion: FUNDIDO, saltable: false, animar: (t) => (this.velo.style.cssText = `opacity:${t};background:#1d1720`) });
     this.encolar({
       duracion: 0.05,
@@ -1217,12 +1217,13 @@ export class Combate implements Subsistema {
    * - de noche, el Sello se dibuja en el suelo: los trece círculos del cubo de Metatrón, que se tocan,
    *   y después las líneas que unen sus centros, del color del tipo de la forma nueva;
    * - un círculo de luz bajo la criatura, para que se lea aunque sea oscura, y motas que suben;
-   * - la criatura, hecha luz de su color, late entre su forma y la nueva cada vez más deprisa;
-   * - con un fogonazo blanco, el Sello se rompe hacia fuera y queda la nueva, que se ve un rato
-   *   antes de poder pasar el mensaje.
+   * - la criatura, tal cual, crece y mengua cada vez más deprisa, y cada vez que mengua una bola de
+   *   luz blanca la tapa (autor, 2026-11-20: sin silueta); al final se queda dentro;
+   * - con un fogonazo blanco, la bola y el Sello se rompen hacia fuera y queda la nueva, que se ve
+   *   un rato antes de poder pasar el mensaje.
    * Hasta el destello, Esc la para.
    */
-  private encolarEvolucion(uid: string, a: string): void {
+  private encolarEvolucion(uid: string, a: string, op: { desdeNegro?: boolean } = {}): void {
     const nueva = this.figurasEvolucion.get(`${uid}>${a}`);
     const vieja = this.figuras.get(uid);
     const especieNueva = DATOS.especies[a];
@@ -1238,13 +1239,14 @@ export class Combate implements Subsistema {
       nuevos.push(m);
       return m;
     };
-    // Sobre el blanco roto: el Sello, en claro sobre la plataforma; la silueta, del color del tipo.
+    // Sobre el blanco roto: el Sello, en claro sobre la plataforma.
     const matCirculo = material(new MeshBasicNodeMaterial({ color: '#fffaf0', transparent: true, depthWrite: false }));
     const matMota = material(new MeshBasicNodeMaterial({ color, transparent: true, depthWrite: false }));
-    const matSilueta = material(new MeshBasicNodeMaterial({ color: color.clone().lerp(new Color('#ffffff'), 0.2) }));
-    // Un contorno oscuro alrededor de la silueta: del color del tipo, sobre una isla de su tipo, no
-    // se distinguía (probador, 2026-11-19: contraste de 1,06 en Roca).
-    const matHalo = material(new MeshBasicNodeMaterial({ color: '#2B2320', side: BackSide }));
+    // La bola de luz: blanca en el centro y del color del tipo hacia el borde, para que se lea
+    // también sobre el fondo blanco roto.
+    const matBola = material(new MeshBasicNodeMaterial({ transparent: true, opacity: 0 }));
+    const borde = dot(normalView, positionViewDirection).abs().oneMinus();
+    matBola.colorNode = mix(vec3(1, 1, 1), vec3(color.r, color.g, color.b), pow(borde, 1.6));
     const matSuelo = material(new MeshBasicNodeMaterial({ color: '#ffffff', transparent: true, opacity: 0, depthWrite: false }));
     const matLineas = material(new LineBasicNodeMaterial({ color: '#fffaf0', transparent: true, opacity: 0, depthWrite: false }));
     // El fogonazo, con luz que se suma (no un disco plano), y una onda que recorre el suelo.
@@ -1302,39 +1304,28 @@ export class Combate implements Subsistema {
     onda.visible = false;
     grupo.add(onda);
     grupo.add(escenario.grupo, suelo, sello, destello);
-    const originales = new Map<Mesh, Material | Material[]>();
-    const halos = new Map<Group, Object3D>();
-    const silueta = (f: Group, si: boolean) => {
-      f.traverse((o) => {
-        const m = o as Mesh;
-        if (!m.isMesh || m.userData.halo) return;
-        if (si) {
-          if (!originales.has(m)) originales.set(m, m.material);
-          m.material = matSilueta;
-        } else if (originales.has(m)) m.material = originales.get(m)!;
-      });
-      if (si && !halos.has(f)) {
-        // Una copia un 6 % mayor, por dentro y oscura, centrada en la caja de la figura.
-        const h = f.clone(true);
-        h.position.set(0, 0, 0);
-        h.rotation.set(0, 0, 0);
-        h.scale.set(1, 1, 1);
-        h.updateMatrixWorld(true);
-        const centro = new Box3().setFromObject(h).getCenter(new Vector3());
-        h.scale.setScalar(1.06);
-        h.position.copy(centro).multiplyScalar(-0.06);
-        h.userData.halo = true;
-        h.traverse((o) => {
-          const m = o as Mesh;
-          m.userData.halo = true;
-          if (m.isMesh) m.material = matHalo;
-        });
-        f.add(h);
-        halos.set(f, h);
-      } else if (!si && halos.has(f)) {
-        halos.get(f)!.removeFromParent();
-        halos.delete(f);
-      }
+    const bola = new Mesh(esfera, matBola);
+    bola.visible = false;
+    let bolaFinal = 1;
+    // Medida de la vieja tal como está en la isla: la altura de su centro y el radio que la tapa.
+    let centroVieja = 0.5;
+    let radioVieja = 0.5;
+    const medirVieja = () => {
+      const padre = vieja.parent;
+      vieja.removeFromParent();
+      vieja.position.set(0, 0, 0);
+      vieja.scale.setScalar(1);
+      vieja.updateMatrixWorld(true);
+      const caja = new Box3().setFromObject(vieja);
+      const lado = caja.getSize(new Vector3());
+      centroVieja = caja.getCenter(new Vector3()).y;
+      radioVieja = 0.5 * Math.hypot(Math.max(lado.x, lado.z), lado.y);
+      padre?.add(vieja);
+    };
+    /** La vieja a escala s de su tamaño, con el centro quieto (si mengua, no se hunde en la isla). */
+    const escalarVieja = (s: number) => {
+      vieja.scale.setScalar(k * s);
+      vieja.position.y = Math.max(0, centroVieja * k * (1 - s));
     };
     const motasSuben = (tiempo: number) => {
       for (const m of motas) {
@@ -1385,6 +1376,7 @@ export class Combate implements Subsistema {
         respirar(vieja);
         motasSuben(this.reloj);
         caer(this.reloj);
+        if (op.desdeNegro) this.velo.style.cssText = `opacity:${Math.max(0, 1 - (t * 2.2) / FUNDIDO)};background:#1d1720`;
       },
     });
     this.encolar({
@@ -1396,27 +1388,31 @@ export class Combate implements Subsistema {
           this.tPaso = this.paso!.duracion;
           return;
         }
-        silueta(vieja, true);
-        nueva.figura.position.set(0, 0, 0);
-        nueva.figura.scale.setScalar(k);
-        silueta(nueva.figura, true);
-        grupo.add(nueva.figura);
+        medirVieja();
+        vieja.rotation.y = 0.35;
+        bola.position.set(0, centroVieja * k, 0);
+        grupo.add(bola);
       },
       animar: (t) => {
         caer(this.reloj);
         if (cancelada()) {
+          bola.visible = false;
           vieja.visible = true;
-          nueva.figura.visible = false;
+          respirar(vieja);
+          vieja.position.y = 0;
           return;
         }
-        // Late entre las dos formas, cada vez más deprisa; al final se queda la nueva.
-        const fase = Math.sin(Math.PI * 2 * (1.2 * t + 4.5 * t * t));
-        const nuevaSe = t > 0.93 || fase > 0;
-        vieja.visible = !nuevaSe;
-        nueva.figura.visible = nuevaSe;
-        const pulso = 1 + Math.abs(fase) * 0.06;
-        vieja.scale.setScalar(pulso * k);
-        nueva.figura.scale.setScalar(pulso * k);
+        // Crece y mengua cada vez más deprisa (cinco veces); cada vez que mengua, la bola la tapa.
+        // Desde la quinta se queda dentro y la bola crece hasta el destello.
+        const ciclos = Math.min(4.5, 1.2 * t + 4.5 * t * t);
+        const kk = (1 + Math.cos(Math.PI * 2 * ciclos)) / 2;
+        const s = 0.35 + 0.73 * kk;
+        escalarVieja(s);
+        const o = Math.min(1, Math.max(0, (0.55 - kk) / 0.4));
+        matBola.opacity = o * o * (3 - 2 * o);
+        bola.visible = matBola.opacity > 0.01;
+        const fin = ciclos >= 4.5 ? Math.min(1, (t - 0.8755) / 0.1245) : 0;
+        bola.scale.setScalar(2 * radioVieja * k * s * 1.2 * (1 + fin * 0.35 + Math.sin(this.reloj * 30) * 0.03 * fin));
         sello.rotation.y = this.reloj * (0.25 + t * 1.4);
         matSuelo.opacity = 0.18 + t * 0.14;
         motasSuben(this.reloj * (1 + t * 2));
@@ -1431,18 +1427,25 @@ export class Combate implements Subsistema {
       empezar: () => {
         const ev = this.evolucion!;
         ev.parable = false;
-        silueta(vieja, false);
         if (ev.cancelada) {
-          nueva.figura.removeFromParent();
+          bola.visible = false;
           vieja.visible = true;
+          vieja.position.y = 0;
           vieja.scale.setScalar(k);
           this.texto.textContent = `${nombre} se aparta del Sello y sigue igual.`;
           this.ctx.eventos.emit('sonido:tocar', { nombre: 'atras' });
           return;
         }
-        silueta(nueva.figura, false);
+        // La nueva sale de dentro de la bola.
         vieja.removeFromParent();
+        nueva.figura.position.set(0, 0, 0);
+        nueva.figura.rotation.y = 0.35;
+        nueva.figura.scale.setScalar(0);
         nueva.figura.visible = true;
+        grupo.add(nueva.figura);
+        bola.visible = true;
+        matBola.opacity = 1;
+        bolaFinal = bola.scale.x;
         this.figuras.set(uid, nueva.figura);
         this.altos.set(uid, nueva.alto);
         // La criatura cambia de verdad: la que vuelve a la isla ya es la nueva.
@@ -1465,20 +1468,23 @@ export class Combate implements Subsistema {
           motasSuben(this.reloj);
           return;
         }
-        // Fogonazo blanco y el Sello, roto hacia fuera.
-        const k = Math.min(1, t * 2.5);
-        destello.scale.setScalar(0.5 + k * 3.2);
-        matDestello.opacity = 0.55 * (1 - k);
-        onda.visible = k < 1;
-        onda.scale.setScalar(0.3 + k * 2.6);
-        matOnda.opacity = 0.8 * (1 - k);
+        // Fogonazo blanco: la bola revienta y el Sello se rompe hacia fuera.
+        const p = Math.min(1, t * 2.5);
+        bola.visible = p < 1;
+        bola.scale.setScalar(bolaFinal * (1 + p * 1.6));
+        matBola.opacity = 1 - p;
+        destello.scale.setScalar(0.5 + p * 3.2);
+        matDestello.opacity = 0.55 * (1 - p);
+        onda.visible = p < 1;
+        onda.scale.setScalar(0.3 + p * 2.6);
+        matOnda.opacity = 0.8 * (1 - p);
         this.velo.style.cssText = `opacity:${Math.max(0, 0.9 - t * 4)};background:#ffffff`;
         circulos.forEach((c, i) => {
           const [x, z] = CIRCULOS_SELLO[i]!;
-          c.position.set(x * (1 + k * 3), 0.02 + k * 0.6, z * (1 + k * 3));
-          c.scale.setScalar(Math.max(0, 1 - k));
+          c.position.set(x * (1 + p * 3), 0.02 + p * 0.6, z * (1 + p * 3));
+          c.scale.setScalar(Math.max(0, 1 - p));
         });
-        matLineas.opacity = Math.max(0, 0.8 * (1 - k * 2));
+        matLineas.opacity = Math.max(0, 0.8 * (1 - p * 2));
         matSuelo.opacity = 0.32 * (1 - t * 0.5);
         nueva.figura.scale.setScalar(k * rebote(Math.min(1, t * 1.8)));
         if (t > 0.6) respirar(nueva.figura);
