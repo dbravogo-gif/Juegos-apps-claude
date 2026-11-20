@@ -1,0 +1,93 @@
+rules_version = '2';
+
+// Reglas de seguridad de Beep Run Club. Se pegan en la consola de Firebase:
+// Firestore Database → Reglas → Publicar. Las prueban pruebas-reglas/ con el emulador.
+//
+// Idea: el código del atleta es la llave. Un móvil se registra con un código activo y desde
+// entonces lee el plan de ese atleta y escribe sus valoraciones. El entrenador (su cuenta está en
+// entrenadores/{uid}) lo puede todo.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function autenticado() { return request.auth != null; }
+    function esEntrenador() {
+      return autenticado() && exists(/databases/$(database)/documents/entrenadores/$(request.auth.uid));
+    }
+
+    // Un móvil puede con el atleta si está registrado en su código actual y ese código está activo.
+    function dispositivoValido(atletaId) {
+      let codigo = get(/databases/$(database)/documents/atletas/$(atletaId)).data.codigo;
+      let c = get(/databases/$(database)/documents/codigos/$(codigo)).data;
+      return autenticado()
+        && c.activo == true
+        && c.atleta == atletaId
+        && exists(/databases/$(database)/documents/codigos/$(codigo)/dispositivos/$(request.auth.uid));
+    }
+
+    function privacidadValida(p) {
+      return p == null || (p is map && p.keys().hasOnly(['version', 'fecha'])
+        && p.version is string && p.version.size() <= 40
+        && p.fecha is string && p.fecha.size() <= 40);
+    }
+
+    function registroValido(atletaId, sid) {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['sesion', 'fecha', 'hechos', 'esfuerzo', 'duros', 'carrera', 'comentario', 'strava', 'actualizado'])
+        && d.sesion == sid
+        && d.fecha is string && d.fecha.size() == 10
+        && d.esfuerzo is int && d.esfuerzo >= 1 && d.esfuerzo <= 10
+        && d.hechos is list && d.hechos.size() <= 50
+        && d.duros is list && d.duros.size() <= 50
+        && d.carrera is map && d.carrera.size() <= 50
+        && d.comentario is string && d.comentario.size() <= 1000
+        && d.strava is string && d.strava.size() <= 300
+        && (d.strava == '' || d.strava.matches('https://([a-z0-9-]+[.])*strava[.]com/.*') || d.strava.matches('https://strava[.]app[.]link/.*'))
+        && d.actualizado == request.time
+        && exists(/databases/$(database)/documents/atletas/$(atletaId)/sesiones/$(sid));
+    }
+
+    // Cada cuenta de entrenador ve solo su propia ficha. Se crean a mano en la consola.
+    match /entrenadores/{uid} {
+      allow get: if autenticado() && request.auth.uid == uid;
+    }
+
+    // La política de protección de datos la puede leer cualquiera (se muestra antes de entrar).
+    match /club/{documento} {
+      allow get: if documento == 'politica' || esEntrenador();
+      allow list, write: if esEntrenador();
+    }
+
+    // Conocer el código es la llave: se puede leer uno concreto, nunca listarlos.
+    match /codigos/{codigo} {
+      allow get: if true;
+      allow list, write: if esEntrenador();
+
+      match /dispositivos/{uid} {
+        allow write: if autenticado() && request.auth.uid == uid
+          && get(/databases/$(database)/documents/codigos/$(codigo)).data.activo == true
+          && request.resource.data.keys().hasOnly(['alta', 'privacidad'])
+          && request.resource.data.alta == request.time
+          && privacidadValida(request.resource.data.get('privacidad', null));
+        allow get: if (autenticado() && request.auth.uid == uid) || esEntrenador();
+        allow list, delete: if esEntrenador();
+      }
+    }
+
+    match /atletas/{atletaId} {
+      allow get: if esEntrenador() || dispositivoValido(atletaId);
+      allow list, write: if esEntrenador();
+
+      match /sesiones/{sid} {
+        allow read: if esEntrenador() || dispositivoValido(atletaId);
+        allow write: if esEntrenador();
+      }
+
+      match /registros/{sid} {
+        allow read: if esEntrenador() || dispositivoValido(atletaId);
+        allow create, update: if esEntrenador() || (dispositivoValido(atletaId) && registroValido(atletaId, sid));
+        allow delete: if esEntrenador();
+      }
+    }
+  }
+}

@@ -19,7 +19,7 @@ function archivos(dir) {
 
 test('el service worker guarda todos los archivos de la app', () => {
   const necesarios = [...archivos('src'), 'entrenador/index.html', ...archivos('fuentes').filter((f) => f.endsWith('.woff2')), ...archivos('img'),
-    ...archivos('icons')].filter((f) => f !== 'src/datos/firebase.js'); // Firebase se carga solo si está configurado
+    ...archivos('icons'), ...archivos('vendor').filter((f) => f.endsWith('.js'))];
   const faltan = necesarios.filter((f) => !listados.includes(f));
   assert.deepEqual(faltan, [], `Añade a ARCHIVOS de sw.js: ${faltan.join(', ')}`);
 });

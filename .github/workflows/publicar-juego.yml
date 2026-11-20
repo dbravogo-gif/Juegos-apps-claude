@@ -73,7 +73,7 @@ jobs:
           cp -r six-seven-islands/dist/. web/six-seven-islands/
           # App estática (sin build): solo lo que se sirve, sin pruebas ni documentos.
           mkdir web/beep-run-club
-          cp -r beep-run-club/index.html beep-run-club/manifest.webmanifest beep-run-club/sw.js beep-run-club/entrenador beep-run-club/src beep-run-club/fuentes beep-run-club/img beep-run-club/icons web/beep-run-club/
+          cp -r beep-run-club/index.html beep-run-club/manifest.webmanifest beep-run-club/sw.js beep-run-club/entrenador beep-run-club/src beep-run-club/vendor beep-run-club/fuentes beep-run-club/img beep-run-club/icons web/beep-run-club/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

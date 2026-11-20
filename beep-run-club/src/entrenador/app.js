@@ -74,7 +74,7 @@ function rutear() {
 
 async function arrancar() {
   aplicarTema();
-  ctx.almacen = await crearAlmacen();
+  ctx.almacen = await crearAlmacen({ rol: 'entrenador' });
   ctx.dentro = ctx.almacen.tipo === 'demo' ? !!leerLocal(CLAVE_DEMO) : await ctx.almacen.entrenadorConectado();
   window.addEventListener('hashchange', rutear);
   rutear();

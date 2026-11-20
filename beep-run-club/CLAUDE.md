@@ -13,6 +13,8 @@ y el atleta lo hace y lo valora. Stack: HTML y JS en módulos sin build, y Fireb
 
 - `npm test`
 - `npm run flujos`: los flujos del atleta en el navegador.
+- En `pruebas-reglas/`: `npm test` (reglas con el emulador) y `npm run e2e` (la app contra los
+  emuladores). Necesitan `npm install` en esa carpeta, Java y firebase-tools.
 - `node ../herramientas/capturar.mjs beep-run-club --consulta "?hoy=2026-11-19"`. `?hoy=` fija la
   fecha para que las capturas se puedan comparar.
 

@@ -51,15 +51,28 @@ Nada más: ni contraseñas ni el UID.
   pero sin asesoría jurídica;
 - guardarlo con «Pedir que la acepten de nuevo».
 
-## Parte 2: cuando Claude termine la fase 3
+## Parte 2: pegar las reglas de seguridad (imprescindible)
 
-Claude dará en este mismo archivo:
+Sin este paso la app no funciona: la base de datos está en «modo producción» y lo bloquea todo.
 
-1. **Las reglas de seguridad**, para pegarlas en Firestore → «Reglas» → «Publicar».
-2. **El índice de Novedades:** la primera vez que el entrenador abra Novedades, la consola dará
-   un enlace para crearlo con un clic.
-3. **Recomendado: App Check.** Evita que alguien abuse de la base de datos probando códigos al
-   azar.
+1. Abrir el archivo de reglas:
+   <https://github.com/dbravogo-gif/Juegos-apps-claude/blob/main/beep-run-club/firestore.rules>
+2. Copiarlo entero con el botón de copiar (los dos cuadraditos, arriba a la derecha del archivo).
+3. En la consola de Firebase: Firestore Database → pestaña **«Reglas»**.
+4. Borrar todo lo que haya y pegar lo copiado.
+5. **«Publicar».**
 
-Después, en la app, ya no saldrá «Modo demo». El entrenador entra en `/entrenador/` con su email
-y su contraseña y da de alta a sus atletas.
+No hay que crear índices: la app está hecha para no necesitarlos.
+
+## Parte 3: primeros pasos en el panel
+
+1. Entrar en <https://dbravogo-gif.github.io/Juegos-apps-claude/beep-run-club/entrenador/> con
+   el email y la contraseña de la cuenta del club.
+2. Pestaña **Club**: escribir el responsable de los datos y el email de contacto, revisar el texto
+   y guardar con **«Pedir que la acepten de nuevo»**.
+3. Pestaña **Atletas** → «Nuevo atleta». El código se crea solo. «Compartir» envía el enlace por
+   WhatsApp.
+4. En la ficha del atleta, «Añadir» en cada día para crear sus sesiones.
+
+**Recomendado más adelante: App Check.** Evita que alguien abuse de la base de datos probando
+códigos al azar. Se activa en la consola, y Claude ajustaría la app.
