@@ -1,6 +1,7 @@
 // Pantalla de la semana: de lunes a domingo, con hoy resaltado.
 
 import { h, icono, montar } from '../comun/ui.js';
+import { guardarLocal } from '../comun/entorno.js';
 import { agruparPorDia } from '../nucleo/plan.js';
 import { estadoSesion, ESFUERZO } from '../nucleo/registro.js';
 import { etiquetaDia, rangoSemana, sumarDias, diferenciaDias, fechaLarga, lunesDe } from '../nucleo/fechas.js';
@@ -9,6 +10,23 @@ import { etiquetaDia, rangoSemana, sumarDias, diferenciaDias, fechaLarga, lunesD
 export function rutaSemana(ctx, fecha) {
   const lunes = lunesDe(fecha);
   return lunes === ctx.lunesHoy() ? '#/' : `#/semana/${lunes}`;
+}
+
+/** Rutas que son el calendario (semana o mes): adonde vuelve «atrás» desde una sesión. */
+export const esRutaCalendario = (r) => r === '#/' || r.startsWith('#/semana') || r.startsWith('#/mes');
+
+/** «Semana | Mes». */
+export function selectorVista(ctx, actual) {
+  const ir = (vista) => {
+    guardarLocal('beep_vista', vista);
+    ctx.ir(vista === 'mes' ? `#/mes/${ctx.hoy().slice(0, 7)}` : '#/semana');
+  };
+  return h('div', { class: 'segmentado selector-vista', role: 'radiogroup', 'aria-label': 'Vista del calendario' },
+    [['semana', 'Semana'], ['mes', 'Mes']].map(([v, t]) => h('button', {
+      type: 'button', role: 'radio', 'aria-checked': String(v === actual), tabindex: v === actual ? '0' : '-1',
+      onclick: () => { if (v !== actual) ir(v); },
+      onkeydown: (e) => { if (['ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown'].includes(e.key)) { e.preventDefault(); ir(actual === 'mes' ? 'semana' : 'mes'); } },
+    }, t)));
 }
 
 export function cabecera(ctx, { atras = null } = {}) {
@@ -29,6 +47,7 @@ function textoSemana(dif) {
 }
 
 export async function pantallaSemana(ctx, lunes) {
+  guardarLocal('beep_vista', 'semana');
   const { atletaId, nombre } = ctx.sesion;
   const hoy = ctx.hoy();
   const dif = Math.round(diferenciaDias(ctx.lunesHoy(), lunes) / 7);
@@ -38,6 +57,7 @@ export async function pantallaSemana(ctx, lunes) {
     cabecera(ctx),
     h('h1', { class: 'saludo' }, `Hola, ${nombre.trim().split(/\s+/)[0]}`),
     ctx.almacen.tipo === 'demo' ? h('p', { class: 'aviso-demo' }, 'Modo demo: datos de ejemplo guardados en este móvil.') : null,
+    selectorVista(ctx, 'semana'),
     h('nav', { class: 'selector-semana', 'aria-label': 'Semanas' },
       h('button', { type: 'button', class: 'boton-icono', 'aria-label': 'Semana anterior', onclick: () => ctx.ir(`#/semana/${sumarDias(lunes, -7)}`) }, icono('atras')),
       h('div', { class: 'rango', 'aria-live': 'polite' }, rangoSemana(lunes), h('small', {}, textoSemana(dif))),
@@ -85,6 +105,7 @@ function tarjeta(ctx, sesion, registro, pasada, prefijoLector) {
     h('h3', {}, h('span', { class: 'oculto-visual' }, prefijoLector), sesion.titulo),
     h('span', { class: 'meta' },
       h('span', {}, `${n} ${n === 1 ? 'ejercicio' : 'ejercicios'}`),
+      sesion.intensidad === 'exigente' ? h('span', { class: 'etiqueta' }, 'Exigente') : null,
       etiquetaEstado,
       registro ? h('span', {}, `Esfuerzo ${registro.esfuerzo} · ${ESFUERZO[registro.esfuerzo]}`) : null));
 }

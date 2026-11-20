@@ -42,10 +42,10 @@ Todo agente lo lee antes de escribir código.
 | --- | --- | --- |
 | `entrenadores/{uid}` | `nombre` | Existir aquí da permisos de entrenador |
 | `codigos/{codigo}` | `atleta`, `activo` | El código que teclea el atleta |
-| `codigos/{codigo}/dispositivos/{uid}` | `alta` | Cada móvil que entró con ese código |
+| `codigos/{codigo}/dispositivos/{uid}` | `alta`, `privacidad` (`version`, `fecha`) | Cada móvil que entró con ese código, con su aceptación de la protección de datos |
 | `atletas/{id}` | `nombre`, `codigo`, `estado` (`activo`, `archivado`) | Datos del atleta |
-| `atletas/{id}/sesiones/{sid}` | `fecha` (AAAA-MM-DD), `titulo`, `nota`, `ejercicios[]` | El plan |
-| `atletas/{id}/registros/{sid}` | `hechos[]`, `esfuerzo` (1–10), `duros[]`, `carrera{}`, `comentario`, `actualizado` | La valoración de la sesión `sid` |
+| `atletas/{id}/sesiones/{sid}` | `fecha` (AAAA-MM-DD), `titulo`, `nota`, `intensidad` (`suave`, `exigente`), `ejercicios[]` | El plan |
+| `atletas/{id}/registros/{sid}` | `hechos[]`, `esfuerzo` (1–10), `duros[]`, `carrera{}`, `comentario`, `strava`, `actualizado` | La valoración de la sesión `sid` |
 
 - Cada ejercicio lleva `id`, `nombre`, `detalle`, `nota` y `carrera` (sí o no).
 - **Entrar:**

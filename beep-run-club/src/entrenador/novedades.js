@@ -29,7 +29,7 @@ export async function pantallaNovedades(ctx) {
           h('span', { style: { display: 'flex', gap: '8px', alignItems: 'center' } },
             (registro.actualizado ?? 0) > visto ? h('span', { class: 'nuevo' }, 'Nueva') : null,
             insigniaEsfuerzo(registro.esfuerzo))),
-        h('p', { class: 'suave' }, `${fechaLarga(sesion.fecha)} · ${registro.hechos.length} de ${sesion.ejercicios.length} hechos`),
+        h('p', { class: 'suave' }, `${fechaLarga(sesion.fecha)} · ${registro.hechos.length} de ${sesion.ejercicios.length} hechos${registro.strava ? ' · con Strava' : ''}`),
         registro.duros.length ? h('p', { style: { fontWeight: '600', color: 'var(--rojo-texto)', display: 'flex', gap: '6px', alignItems: 'center' } },
           icono('bandera'), `Demasiado duro: ${registro.duros.map(nombreDe).join(', ')}`) : null,
         registro.comentario ? h('p', {}, `«${registro.comentario}»`) : null));

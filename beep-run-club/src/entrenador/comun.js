@@ -63,5 +63,7 @@ export function bloqueValoracion(nombre, sesion, registro) {
       h('dt', {}, 'Hechos'), h('dd', {}, `${registro.hechos.length} de ${sesion.ejercicios.length}`),
       registro.duros.length ? [h('dt', {}, 'Demasiado duro'), h('dd', { style: { fontWeight: '600' } }, registro.duros.map(nombreDe).join(', '))] : null,
       carrera ? [h('dt', {}, 'Carrera'), h('dd', {}, carrera)] : null,
-      registro.comentario ? [h('dt', {}, 'Comentario'), h('dd', {}, `«${registro.comentario}»`)] : null));
+      registro.comentario ? [h('dt', {}, 'Comentario'), h('dd', {}, `«${registro.comentario}»`)] : null,
+      registro.strava ? [h('dt', {}, 'Strava'), h('dd', {},
+        h('a', { href: registro.strava, target: '_blank', rel: 'noopener noreferrer', class: 'enlace-strava' }, 'Ver la actividad ↗'))] : null));
 }

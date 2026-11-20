@@ -43,6 +43,15 @@ le cuenta cómo le fue.
    rellena la distancia, el tiempo y el ritmo. El atleta los revisa antes de guardar. La captura
    no sale del móvil.
 
+**Añadido el 2026-11-20 (lo pidió el club):**
+
+- **Primera vez:** al abrir el enlace sale la información de protección de datos, que hay que
+  aceptar marcando una casilla. Después se ofrece un tutorial para instalar la app en la pantalla
+  de inicio, con pasos distintos para iPhone y Android.
+- **Calendario por meses:** «Semana | Mes». El mes muestra los días con sesión en dos colores,
+  suave y exigente, y los días sin sesión sin color. Se cambia de mes con flechas o deslizando.
+- **Enlace de Strava** opcional al valorar, para que el entrenador vea la actividad.
+
 ## Lo que hace el entrenador
 
 Entra en un panel aparte (`/beep-run-club/entrenador/`) con su email y contraseña.
@@ -93,6 +102,18 @@ Entra en un panel aparte (`/beep-run-club/entrenador/`) con su email y contrase�
   - La app incluye un aviso breve de privacidad.
   - La baja permite borrar todo.
 
+- (2026-11-20) **La protección de datos la redacta Claude**, que conoce qué guarda la app, dónde y
+  para qué. Es un texto orientativo: el club debe revisarlo. Se acepta con una casilla sin marcar
+  (consentimiento explícito para los datos de salud) y queda registrada por móvil, con versión y
+  fecha. Si el texto cambia, se sube la versión y se vuelve a pedir.
+- (2026-11-20) **Los dos colores del mes salen de la intensidad que marca el entrenador** en cada
+  sesión (Suave o Exigente, Suave por defecto), no del esfuerzo del atleta: así también se ven los
+  días que aún no han llegado.
+- (2026-11-20) **El enlace de Strava solo admite strava.com y strava.app.link**, con https, para
+  que al entrenador no le llegue cualquier enlace.
+- (2026-11-20) **La fase 4 (leer capturas de Strava) queda en duda:** con el enlace, el entrenador
+  ya ve la actividad entera. Se decide cuando el club haya usado el enlace.
+
 ## Decisiones abiertas
 
 No se diseñan sin el autor.
@@ -120,7 +141,7 @@ No se diseñan sin el autor.
    móvil. Se puede probar sin Firebase.
 2. **Panel del entrenador en modo demo.**
 3. **Nube:** Firebase, reglas de seguridad, guía de puesta en marcha y publicación.
-4. **Opcional:** el reconocimiento de capturas de Strava.
+4. **Opcional y en duda:** el reconocimiento de capturas de Strava (el enlace quizá lo hace innecesario).
 
 ## Criterios de calidad
 

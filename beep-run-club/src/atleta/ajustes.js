@@ -3,13 +3,14 @@
 import { h, montar, confirmar, tostada, grupoRadio } from '../comun/ui.js';
 import { TEMAS, temaGuardado, guardarTema } from '../comun/tema.js';
 import { VERSION } from '../version.js';
-import { cabecera } from './semana.js';
+import { cabecera, esRutaCalendario } from './semana.js';
+import { estaInstalada } from './instalar.js';
 
 export function pantallaAjustes(ctx) {
   const demo = ctx.almacen.tipo === 'demo';
 
   montar(
-    cabecera(ctx, { atras: { etiqueta: 'Volver a la semana', accion: () => ctx.volver('#/', (r) => r === '#/' || r.startsWith('#/semana')) } }),
+    cabecera(ctx, { atras: { etiqueta: 'Volver a la semana', accion: () => ctx.volver('#/', esRutaCalendario) } }),
     h('h1', { class: 'saludo' }, 'Ajustes'),
     h('ul', { class: 'lista-ajustes' },
       h('li', {}, grupoRadio({ etiqueta: 'Tema', opciones: TEMAS, valor: temaGuardado(), alElegir: guardarTema })),
@@ -29,12 +30,15 @@ export function pantallaAjustes(ctx) {
             if (si) ctx.cerrarSesion();
           },
         }, 'Cerrar sesión')),
+      estaInstalada() ? null : h('li', {},
+        h('button', { type: 'button', class: 'boton boton-ancho', onclick: () => ctx.ir('#/instalar/pasos') }, 'Instalar en la pantalla de inicio')),
       h('li', {},
         h('h2', {}, 'Privacidad'),
         h('p', {}, 'Tu entrenador guarda tu nombre, tu plan y tus valoraciones (esfuerzo, ejercicios duros, tiempos y comentarios) para ajustar tus entrenamientos. No se guarda tu email ni tu teléfono.'),
         h('p', {}, demo
           ? 'En el modo demo todo se queda en este móvil.'
-          : 'Los datos se guardan en servidores de la Unión Europea. Si te das de baja, puedes pedirle que lo borre todo.')),
+          : 'Los datos se guardan en servidores de la Unión Europea. Si te das de baja, puedes pedirle que lo borre todo.'),
+        h('button', { type: 'button', class: 'boton-texto', onclick: () => ctx.ir('#/privacidad') }, 'Leer la información completa')),
       demo ? h('li', {},
         h('button', {
           type: 'button', class: 'boton-texto',

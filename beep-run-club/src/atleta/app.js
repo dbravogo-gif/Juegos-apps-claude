@@ -12,6 +12,10 @@ import { pantallaEntrar } from './entrar.js';
 import { pantallaSemana } from './semana.js';
 import { pantallaSesion, pantallaValorar, pantallaHecho } from './sesion.js';
 import { pantallaAjustes } from './ajustes.js';
+import { pantallaMes } from './mes.js';
+import { pedirPrivacidad, faltaAceptar, aceptacionGuardada, pantallaPrivacidad } from './privacidad.js';
+import { capturarInstalacion, debeOfrecerInstalar, pantallaInstalar } from './instalar.js';
+import { leerMes, mesDe } from '../nucleo/calendario.js';
 
 const CLAVE_SESION = 'beep_sesion';
 const CLAVE_CERRADA = 'beep_cerrada'; // código del que se cerró sesión: su enlace ya no entra solo
@@ -46,9 +50,10 @@ const ctx = {
   /** Comprueba el código y entra. Pregunta antes si ya había otra sesión. Devuelve un error o null. */
   async entrarCon(codigo) {
     const anterior = ctx.sesion;
+    // Primero se comprueba el código: no tiene sentido pedir nada con un enlace que no sirve.
+    const estado = await ctx.almacen.comprobar(codigo).catch(() => 'sin-conexion');
+    if (estado !== 'activo') return MENSAJES[estado];
     if (anterior && anterior.codigo !== codigo) {
-      const estado = await ctx.almacen.comprobar(codigo).catch(() => 'sin-conexion');
-      if (estado !== 'activo') return MENSAJES[estado];
       const si = await confirmar({
         titulo: '¿Cambiar de sesión?',
         texto: `Ahora tienes abierta la sesión de ${anterior.nombre}. ¿Seguro que quieres cerrar la sesión anterior para entrar en esta nueva sesión?`,
@@ -57,14 +62,21 @@ const ctx = {
       });
       if (!si) return 'cancelado';
     }
-    const r = await ctx.almacen.entrar(codigo, idDispositivo()).catch(() => ({ ok: false, motivo: 'sin-conexion' }));
+    // Protección de datos: antes de registrar este móvil y de guardar nada.
+    let aceptacion = aceptacionGuardada();
+    if (faltaAceptar()) {
+      ctx.pantalla = 'privacidad';
+      aceptacion = await pedirPrivacidad();
+      if (!aceptacion) return MENSAJES['sin-privacidad'];
+    }
+    const r = await ctx.almacen.entrar(codigo, idDispositivo(), aceptacion).catch(() => ({ ok: false, motivo: 'sin-conexion' }));
     if (!r.ok) return MENSAJES[r.motivo] ?? MENSAJES['sin-conexion'];
     if (anterior) borrarBorradores(anterior.atletaId);
     borrarLocal(CLAVE_CERRADA);
     ctx.sesion = { codigo, atletaId: r.atleta.id, nombre: r.atleta.nombre };
     guardarLocal(CLAVE_SESION, ctx.sesion);
     ponerCodigoEnUrl(codigo);
-    ctx.ir('#/');
+    ctx.ir(debeOfrecerInstalar() ? '#/instalar' : '#/');
     return null;
   },
 
@@ -93,6 +105,7 @@ export const MENSAJES = {
   'no-existe': 'No encontramos ese código. Revisa que esté bien escrito.',
   desactivado: 'Ese código está desactivado. Habla con tu entrenador.',
   'sin-conexion': 'No hay conexión. Inténtalo cuando tengas cobertura.',
+  'sin-privacidad': 'Sin aceptar la protección de datos no podemos guardar tus entrenamientos. Puedes leerla otra vez al pulsar «Entrar».',
   activo: null,
 };
 
@@ -127,6 +140,15 @@ function rutear() {
   } else if (seccion === 'entrar') {
     ctx.pantalla = 'entrar';
     pantallaEntrar(ctx, { cambiando: true });
+  } else if (seccion === 'instalar') {
+    ctx.pantalla = 'instalar';
+    pantallaInstalar(ctx, { directo: id === 'pasos' });
+  } else if (seccion === 'privacidad') {
+    ctx.pantalla = 'privacidad';
+    pantallaPrivacidad(ctx);
+  } else if (seccion === 'mes' || (!seccion && leerLocal('beep_vista') === 'mes')) {
+    ctx.pantalla = 'mes';
+    pantallaMes(ctx, leerMes(id) ?? mesDe(ctx.hoy()));
   } else {
     ctx.pantalla = 'semana';
     pantallaSemana(ctx, esFecha(id) ? lunesDe(id) : ctx.lunesHoy());
@@ -135,6 +157,7 @@ function rutear() {
 
 async function arrancar() {
   aplicarTema();
+  capturarInstalacion();
   ctx.almacen = await crearAlmacen();
   const crudo = new URLSearchParams(location.search).get('c');
   const codigoEnlace = crudo ? normalizarCodigo(crudo) : null;
@@ -156,7 +179,17 @@ async function arrancar() {
     rutear();
     const error = await ctx.entrarCon(codigoEnlace);
     if (error && error !== 'cancelado') tostada(`El enlace que has abierto no sirve. ${error}`);
-    if (error) ponerCodigoEnUrl(ctx.sesion.codigo);
+    if (error) { ponerCodigoEnUrl(ctx.sesion.codigo); rutear(); }
+  } else if (ctx.sesion && faltaAceptar()) {
+    // Sesión de antes de que hubiera protección de datos (o el texto ha cambiado): se pide ahora.
+    ctx.pantalla = 'privacidad';
+    const aceptacion = await pedirPrivacidad();
+    if (!aceptacion) ctx.cerrarSesion(MENSAJES['sin-privacidad']);
+    else {
+      await ctx.almacen.entrar(ctx.sesion.codigo, idDispositivo(), aceptacion).catch(() => null);
+      ponerCodigoEnUrl(ctx.sesion.codigo);
+      rutear();
+    }
   } else {
     if (ctx.sesion) ponerCodigoEnUrl(ctx.sesion.codigo);
     rutear();

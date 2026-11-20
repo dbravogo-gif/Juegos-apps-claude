@@ -5,6 +5,23 @@ import { CAMPOS, LIMITES } from './ritmo.js';
 
 export const MAX_COMENTARIO = 1000;
 
+/**
+ * Enlace de Strava: solo de strava.com o de los enlaces cortos de la app (strava.app.link), y solo
+ * https, para que al entrenador no le llegue cualquier enlace. Devuelve { ok, url } ('' si vacío).
+ */
+export function limpiarEnlaceStrava(texto) {
+  const t = String(texto ?? '').trim();
+  if (!t) return { ok: true, url: '' };
+  if (t.length > 300) return { ok: false, url: '' };
+  let url;
+  try { url = new URL(/^https?:\/\//i.test(t) ? t : `https://${t}`); } catch { return { ok: false, url: '' }; }
+  const host = url.hostname.toLowerCase();
+  const deStrava = host === 'strava.com' || host.endsWith('.strava.com') || host === 'strava.app.link';
+  if (!deStrava || url.username || url.password) return { ok: false, url: '' };
+  url.protocol = 'https:';
+  return { ok: true, url: url.toString() };
+}
+
 /** Escala de esfuerzo percibido (RPE) del 1 al 10. */
 export const ESFUERZO = [
   null,
@@ -41,7 +58,11 @@ export function validarRegistro(r, sesion) {
     duros: lista(r?.duros),
     carrera: {},
     comentario: typeof r?.comentario === 'string' ? r.comentario.trim() : '',
+    strava: '',
   };
+  const enlace = limpiarEnlaceStrava(r?.strava);
+  if (enlace.ok) registro.strava = enlace.url;
+  else errores.push('El enlace de Strava no es válido: cópialo desde «Compartir» en la actividad de Strava.');
   if (!Number.isInteger(registro.esfuerzo) || registro.esfuerzo < 1 || registro.esfuerzo > 10) {
     errores.push('Indica cuánto te ha costado, del 1 al 10.');
   }

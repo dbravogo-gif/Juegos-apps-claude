@@ -12,7 +12,7 @@ test('el CSV tiene BOM, cabecera, una fila por sesión y escapa lo que hace falt
   assert.ok(csv.startsWith('﻿'));
   const lineas = csv.slice(1).split('\r\n');
   assert.equal(lineas[0], 'Atleta: Laura');
-  assert.equal(lineas[1].split(';').length, 8);
+  assert.equal(lineas[1].split(';').length, 10);
   assert.ok(lineas[2].startsWith('2026-11-16;Rodaje;'), 'ordenado por fecha');
   assert.match(csv, /"Series; cortas"/);
   assert.match(csv, /"Series ""400"""/);

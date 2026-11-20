@@ -38,10 +38,17 @@ Los nombres de los menús pueden variar un poco: la consola de Firebase cambia a
 
 **Qué hay que pasarle a Claude:**
 
+- **el nombre del responsable de los datos** (el del club o el del entrenador) **y un email de
+  contacto**, que salen en la información de protección de datos;
+
 - el bloque `firebaseConfig` del paso 3;
 - la confirmación de que la ubicación es `europe-southwest1`.
 
 Nada más: ni contraseñas ni el UID.
+
+**Antes de usarla con atletas reales:** el club debe revisar el texto de protección de datos
+(`src/datos/textos-privacidad.js`). Lo redactó Claude a partir de lo que guarda la app, pero sin
+asesoría jurídica.
 
 ## Parte 2: cuando Claude termine la fase 3
 

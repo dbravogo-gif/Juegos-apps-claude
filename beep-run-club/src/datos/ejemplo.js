@@ -21,6 +21,7 @@ const PLANTILLAS = {
   },
   series: {
     titulo: 'Series cortas',
+    intensidad: 'exigente',
     nota: 'Si te molesta el gemelo, cambia las series por 30 min suaves y me lo cuentas.',
     ejercicios: [
       ej('Calentamiento', '15 min de trote suave', { carrera: true }),
@@ -41,6 +42,7 @@ const PLANTILLAS = {
   },
   larga: {
     titulo: 'Tirada larga',
+    intensidad: 'exigente',
     nota: 'Lleva agua. Los últimos 2 km, algo más vivos si te encuentras bien.',
     ejercicios: [ej('Tirada larga', '14 km a ritmo cómodo', { carrera: true })],
   },
@@ -69,7 +71,7 @@ export function datosDeEjemplo(lunes, diaHoy = 0) {
   };
   const sesion = (atleta, fecha, plantilla) => {
     const p = PLANTILLAS[plantilla];
-    const s = { id: id(), fecha, titulo: p.titulo, nota: p.nota, ejercicios: p.ejercicios.map((e) => ({ ...e, id: id() })) };
+    const s = { id: id(), fecha, titulo: p.titulo, nota: p.nota, intensidad: p.intensidad ?? 'suave', ejercicios: p.ejercicios.map((e) => ({ ...e, id: id() })) };
     db.sesiones[atleta.id][s.id] = s;
     return s;
   };

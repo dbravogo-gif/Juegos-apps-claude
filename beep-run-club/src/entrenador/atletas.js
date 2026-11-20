@@ -182,6 +182,7 @@ export async function pantallaAtleta(ctx, id, lunes) {
         const r = registros[s.id];
         return h('a', { class: `tarjeta${esDura(r) ? ' dura' : ''}`, href: `#/atleta/${id}/sesion/${s.id}` },
           h('div', { class: 'linea1' }, h('h3', {}, s.titulo), r ? insigniaEsfuerzo(r.esfuerzo) : null),
+          s.intensidad === 'exigente' ? h('span', { class: 'etiqueta', style: { marginTop: '4px' } }, 'Exigente') : null,
           h('p', { class: 'suave' }, `${s.ejercicios.length} ${s.ejercicios.length === 1 ? 'ejercicio' : 'ejercicios'} · `,
             r ? `valorada: ${ESFUERZO[r.esfuerzo].toLowerCase()}${r.duros.length ? `, ${r.duros.length} duro${r.duros.length === 1 ? '' : 's'}` : ''}` : 'sin valorar'));
       }));

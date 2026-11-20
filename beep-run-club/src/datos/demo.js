@@ -32,14 +32,17 @@ export function crearAlmacenDemo({ almacenamiento, hoy, ahora = () => Date.now()
   return {
     tipo: 'demo',
 
-    /** Entrar con un código desde un móvil. */
-    async entrar(codigo, dispositivo) {
+    /**
+     * Entrar con un código desde un móvil. `aceptacion` = { version, fecha } de la información de
+     * protección de datos: queda registrada con el móvil, como prueba del consentimiento.
+     */
+    async entrar(codigo, dispositivo, aceptacion = null) {
       const db = leer();
       const c = db.codigos[codigo];
       if (!c) return { ok: false, motivo: 'no-existe' };
       if (!c.activo) return { ok: false, motivo: 'desactivado' };
       db.dispositivos[codigo] ??= {};
-      db.dispositivos[codigo][dispositivo] ??= true;
+      db.dispositivos[codigo][dispositivo] = { privacidad: aceptacion };
       escribir(db);
       const a = db.atletas[c.atleta];
       return { ok: true, atleta: { id: a.id, nombre: a.nombre } };

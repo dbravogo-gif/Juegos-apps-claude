@@ -5,7 +5,7 @@ import { ESFUERZO } from './registro.js';
 import { formatearDistancia, formatearTiempo, formatearRitmo } from './ritmo.js';
 import { ordenarSesiones } from './plan.js';
 
-const COLUMNAS = ['Fecha', 'Sesión', 'Ejercicios', 'Hechos', 'Esfuerzo', 'Demasiado duros', 'Carrera', 'Comentario'];
+const COLUMNAS = ['Fecha', 'Sesión', 'Intensidad', 'Ejercicios', 'Hechos', 'Esfuerzo', 'Demasiado duros', 'Carrera', 'Comentario', 'Strava'];
 
 function celda(v) {
   const t = String(v ?? '');
@@ -35,12 +35,14 @@ export function historialCsv(atleta, sesiones, registros) {
     return [
       s.fecha,
       s.titulo,
+      s.intensidad === 'exigente' ? 'Exigente' : 'Suave',
       s.ejercicios.map((e) => e.nombre).join(' | '),
       r ? `${r.hechos.length} de ${s.ejercicios.length}` : 'Sin valorar',
       r ? `${r.esfuerzo} (${ESFUERZO[r.esfuerzo]})` : '',
       r ? r.duros.map((id) => nombre(s, id)).join(' | ') : '',
       textoCarrera(s, r),
       r?.comentario ?? '',
+      r?.strava ?? '',
     ];
   });
   const cabecera = [`Atleta: ${atleta.nombre}`];

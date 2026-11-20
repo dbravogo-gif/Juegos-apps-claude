@@ -25,7 +25,6 @@ button.tarjeta, a.tarjeta { cursor: pointer; text-decoration: none; }
 .nuevo { font: 700 12px/1 var(--titular); letter-spacing: 0.06em; text-transform: uppercase; background: var(--rojo-oscuro); color: var(--sobre-rojo); padding: 4px 8px; border-radius: 999px; }
 .estado-atleta { font-size: 14px; font-weight: 600; }
 .estado-atleta.inactivo { color: var(--rojo-texto); }
-.codigo-grande { font: 800 24px/1.1 var(--titular); letter-spacing: 0.06em; word-break: break-all; }
 .acciones { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 .acciones .boton { min-height: 44px; font-size: 17px; padding: 0 16px; }
 .dia-panel { padding: 10px 0; border-top: 1px solid var(--linea); }
@@ -53,3 +52,5 @@ select.entrada { appearance: auto; }
   .ejercicio-editor .dos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .ejercicio-editor .dos > * + * { margin-top: 0; }
 }
+.enlace-strava { color: var(--rojo-texto); font-weight: 600; }
+.intensidad .segmentado { max-width: 360px; }

@@ -249,6 +249,52 @@ textarea.entrada { min-height: 96px; resize: vertical; }
 .segmentado button { min-height: 44px; border: 0; border-radius: 999px; background: transparent; font-weight: 600; }
 .segmentado button[aria-checked="true"] { background: var(--rojo-oscuro); color: var(--sobre-rojo); }
 
+/* Calendario de mes: solo dos colores (suave y exigente) */
+.selector-vista { margin: 12px 0 4px; }
+.mes-letras, .mes-rejilla { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.mes-letras span { text-align: center; font: 700 13px/2 var(--titular); color: var(--texto-suave); }
+.mes-rejilla { touch-action: pan-y; }
+.dia-mes {
+  position: relative; display: grid; place-items: center;
+  min-height: 48px; border-radius: 12px; border: 0; padding: 0;
+  background: transparent; color: var(--texto); font: 700 16px/1 var(--titular);
+}
+button.dia-mes { cursor: pointer; }
+.dia-mes.suave { background: color-mix(in srgb, var(--rojo) 22%, var(--superficie)); }
+.dia-mes.exigente { background: var(--rojo-oscuro); color: var(--sobre-rojo); }
+.dia-mes.fuera { opacity: 0.4; }
+.dia-mes.hoy { outline: 3px solid var(--texto); outline-offset: 1px; }
+.marca-hecha { position: absolute; top: 2px; right: 3px; line-height: 0; }
+.marca-hecha svg.icono { width: 13px; height: 13px; stroke-width: 3.5; }
+.leyenda { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 18px; list-style: none; padding: 0; margin: 16px 0 0; font-size: 15px; }
+.leyenda li { display: flex; align-items: center; gap: 6px; }
+.muestra { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 6px; }
+.muestra.suave { background: color-mix(in srgb, var(--rojo) 22%, var(--superficie)); }
+.muestra.exigente { background: var(--rojo-oscuro); }
+.muestra.hecha svg.icono { width: 15px; height: 15px; stroke-width: 3.5; }
+
+/* Protección de datos */
+.resumen-legal { list-style: none; padding: 0; margin: 8px 0 0; }
+.resumen-legal li { display: grid; grid-template-columns: 24px 1fr; gap: 10px; padding: 8px 0; }
+.resumen-legal svg.icono { width: 22px; height: 22px; color: var(--rojo-texto); stroke-width: 3; }
+.detalle-legal { border: 2px solid var(--linea); border-radius: 16px; padding: 4px 14px; background: var(--superficie); }
+.detalle-legal summary { min-height: 44px; display: flex; align-items: center; font-weight: 600; cursor: pointer; }
+.texto-legal h3 { font-size: 17px; margin-top: 14px; }
+.texto-legal p { margin: 6px 0 0; font-size: 15px; }
+.casilla-legal { align-items: flex-start; padding: 12px 0; font-weight: 400; display: flex; gap: 12px; }
+.casilla-legal input { flex: none; width: 26px; height: 26px; margin-top: 2px; accent-color: var(--rojo-oscuro); }
+
+/* Tutorial de instalación */
+.codigo-grande { font: 800 24px/1.1 var(--titular); letter-spacing: 0.06em; word-break: break-all; }
+.instalar { min-height: 100dvh; display: flex; flex-direction: column; padding-bottom: 24px; }
+.ilustracion { display: flex; flex-direction: column; align-items: center; gap: 12px; margin: 20px 0 4px; }
+.ilustracion-icono { display: grid; place-items: center; width: 112px; height: 112px; border-radius: 999px; background: var(--superficie); border: 3px solid var(--rojo); color: var(--rojo-texto); }
+.ilustracion-icono svg.icono { width: 56px; height: 56px; stroke-width: 2; }
+.ilustracion-boton { padding: 10px 18px; border-radius: 14px; background: var(--superficie); border: 2px solid var(--linea); font-weight: 600; }
+.ilustracion-app { display: block; width: 96px; height: 96px; margin: 20px auto 4px; border-radius: 22px; }
+.recordatorio-codigo { padding: 14px 16px; border-radius: var(--radio); border: 2px dashed var(--rojo); text-align: center; }
+.pasos-botones { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: auto; padding-top: 16px; }
+
 /* Avisos y diálogos */
 .aviso-demo { margin: 12px 0 0; padding: 10px 14px; border-radius: 14px; border: 2px dashed var(--rojo); font-size: 15px; }
 .tostada {

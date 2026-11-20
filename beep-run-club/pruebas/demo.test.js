@@ -13,11 +13,13 @@ const LUNES = '2026-11-16';
 test('entrar con un código activo registra el móvil', async () => {
   const al = memoria();
   const a = crearAlmacenDemo({ almacenamiento: al, hoy: LUNES });
-  const r = await a.entrar(CODIGOS_DEMO.laura, 'movil-1');
+  const aceptacion = { version: '2026-11-20', fecha: '2026-11-20T10:00:00.000Z' };
+  const r = await a.entrar(CODIGOS_DEMO.laura, 'movil-1', aceptacion);
   assert.equal(r.ok, true);
   assert.equal(r.atleta.nombre, 'Laura');
   const db = JSON.parse(al.getItem(CLAVE_DEMO));
   assert.deepEqual(Object.keys(db.dispositivos[CODIGOS_DEMO.laura]), ['movil-1']);
+  assert.deepEqual(db.dispositivos[CODIGOS_DEMO.laura]['movil-1'].privacidad, aceptacion, 'queda la prueba del consentimiento');
 });
 
 test('códigos que no existen o desactivados no entran', async () => {

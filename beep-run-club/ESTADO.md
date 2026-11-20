@@ -16,7 +16,9 @@ funcionan con datos de ejemplo guardados en el navegador. Falta la nube (fase 3)
   copiar semana y sesión, y baja (archivar, o descargar el CSV y borrar).
 - **Revisión del `probador` (fase 1):** 3/5 en funciona, se entiende y se siente bien, y 4/5 en
   visual. Los 16 problemas que encontró están corregidos y los graves tienen su prueba en `npm run flujos`.
-- **Comprobado:** 51 pruebas (`npm test`) y 46 comprobaciones de punta a punta (`npm run flujos`).
+- **Añadido (2026-11-20):** protección de datos al entrar, tutorial de instalación, vista de mes
+  con dos colores e intensidad que marca el entrenador, y enlace de Strava.
+- **Comprobado:** 60 pruebas (`npm test`) y 73 comprobaciones de punta a punta (`npm run flujos`).
 
 ## Siguiente
 
@@ -27,11 +29,12 @@ funcionan con datos de ejemplo guardados en el navegador. Falta la nube (fase 3)
 ## Pendiente del autor
 
 - Probar la demo publicada (PR #124, 2026-11-20) en su iPhone y puntuarla de 1 a 5.
+- El nombre del responsable de los datos y un email de contacto (para la protección de datos), y
+  que el club revise ese texto.
 - Seguir la parte 1 de `PUESTA-EN-MARCHA.md` con la cuenta de Google del entrenador y pasar el
   bloque `firebaseConfig`.
 - Para la fase 4: 5 capturas reales de Strava (claras y oscuras).
 
 ## Defectos conocidos
 
-- En el iPhone, Safari y la app instalada no comparten datos: puede que pida el código una vez
-  más al instalarla. Está por comprobar en su iPhone.
+- En el iPhone, Safari y la app instalada no comparten datos: puede pedir el código otra vez.
