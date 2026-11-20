@@ -47,7 +47,8 @@ le cuenta cómo le fue.
 
 - **Primera vez:** al abrir el enlace sale la información de protección de datos, que hay que
   aceptar marcando una casilla. Después se ofrece un tutorial para instalar la app en la pantalla
-  de inicio, con pasos distintos para iPhone y Android.
+  de inicio. El tutorial pregunta primero «¿Qué móvil usas?» (iPhone o Android) y da los pasos de
+  ese móvil. Desde cualquier paso se puede volver a elegir, por si se equivocó (autor, 2026-11-20).
 - **Calendario por meses:** «Semana | Mes». El mes muestra los días con sesión en dos colores,
   suave y exigente, y los días sin sesión sin color. Se cambia de mes con flechas o deslizando.
 - **Enlace de Strava** opcional al valorar, para que el entrenador vea la actividad.

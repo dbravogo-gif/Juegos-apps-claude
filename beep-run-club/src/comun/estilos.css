@@ -293,6 +293,14 @@ button.dia-mes { cursor: pointer; }
 .ilustracion-boton { padding: 10px 18px; border-radius: 14px; background: var(--superficie); border: 2px solid var(--linea); font-weight: 600; }
 .ilustracion-app { display: block; width: 96px; height: 96px; margin: 20px auto 4px; border-radius: 22px; }
 .recordatorio-codigo { padding: 14px 16px; border-radius: var(--radio); border: 2px dashed var(--rojo); text-align: center; }
+.opciones-movil { display: grid; gap: 12px; margin-top: 8px; }
+.opcion-movil {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 4px; text-align: left;
+  min-height: 76px; padding: 14px 18px; border-radius: var(--radio);
+  border: 2px solid var(--rojo); background: var(--superficie); color: var(--texto);
+}
+.opcion-movil:active { background: color-mix(in srgb, var(--rojo) 14%, var(--superficie)); }
+.opcion-movil-titulo { font: 800 22px/1.1 var(--titular); }
 .pasos-botones { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: auto; padding-top: 16px; }
 
 /* Avisos y diálogos */

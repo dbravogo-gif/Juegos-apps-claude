@@ -61,31 +61,54 @@ async function copiar(texto) {
   try { await navigator.clipboard.writeText(texto); tostada('Copiado'); } catch { tostada(texto, { duracion: 8000 }); }
 }
 
-/** `directo`: desde Ajustes, sin la pregunta inicial. */
+/**
+ * Tutorial: ¿quiere instalarla? → ¿iPhone o Android? → pasos de ese móvil. Desde los pasos se
+ * puede volver a elegir el móvil, por si se equivocó. `directo`: desde Ajustes, sin la primera
+ * pregunta.
+ */
 export function pantallaInstalar(ctx, { directo = false } = {}) {
   guardarLocal(CLAVE_OFRECIDO, true);
   const terminar = () => ctx.ir('#/');
-  const tipo = plataformaActual();
+  if (directo) elegirMovil(ctx, terminar);
+  else ofrecer(ctx, terminar);
+}
 
-  if (!directo) {
-    montar(h('main', { class: 'instalar pila' },
-      h('div', { class: 'mascota', role: 'img', 'aria-label': 'La mascota de Beep', style: { width: 'min(70vw, 260px)', marginTop: '32px' } }),
-      h('h1', { style: { textAlign: 'center' } }, '¿Quieres Beep como una app?'),
-      h('p', { style: { textAlign: 'center' } }, 'Así la abres desde la pantalla de inicio, a pantalla completa y sin buscar el enlace. Te enseñamos cómo en 3 pasos.'),
-      h('button', { type: 'button', class: 'boton boton-principal boton-ancho', onclick: () => pantallaInstalar(ctx, { directo: true }) }, 'Sí, enséñame'),
-      h('button', { type: 'button', class: 'boton boton-ancho', onclick: terminar }, 'Ahora no'),
-      h('p', { class: 'suave', style: { textAlign: 'center', fontSize: '15px' } }, 'Puedes verlo más tarde en Ajustes.')));
-    return;
-  }
+function ofrecer(ctx, terminar) {
+  montar(h('main', { class: 'instalar pila' },
+    h('div', { class: 'mascota', role: 'img', 'aria-label': 'La mascota de Beep', style: { width: 'min(70vw, 260px)', marginTop: '32px' } }),
+    h('h1', { style: { textAlign: 'center' } }, '¿Quieres Beep como una app?'),
+    h('p', { style: { textAlign: 'center' } }, 'Así la abres desde la pantalla de inicio, a pantalla completa y sin buscar el enlace. Te enseñamos cómo en 3 pasos.'),
+    h('button', { type: 'button', class: 'boton boton-principal boton-ancho', onclick: () => elegirMovil(ctx, terminar) }, 'Sí, enséñame'),
+    h('button', { type: 'button', class: 'boton boton-ancho', onclick: terminar }, 'Ahora no'),
+    h('p', { class: 'suave', style: { textAlign: 'center', fontSize: '15px' } }, 'Puedes verlo más tarde en Ajustes.')));
+}
 
+function elegirMovil(ctx, terminar) {
   if (estaInstalada()) {
     montar(h('main', { class: 'instalar pila' }, h('h1', { style: { marginTop: '40px' } }, 'Ya la tienes instalada'),
       h('p', {}, 'Estás usando Beep desde la pantalla de inicio. No hay nada más que hacer.'),
       h('button', { type: 'button', class: 'boton boton-principal boton-ancho', onclick: terminar }, 'Volver a mi plan')));
     return;
   }
+  const opcion = (movil, texto, detalle) => h('button', {
+    type: 'button', class: 'opcion-movil', onclick: () => mostrarPasos(ctx, movil, terminar),
+  }, h('span', { class: 'opcion-movil-titulo' }, texto), h('span', { class: 'suave' }, detalle));
+  montar(h('main', { class: 'instalar pila' },
+    h('p', { class: 'antetitulo', style: { marginTop: '28px', textAlign: 'center' } }, 'Instalar Beep'),
+    h('h1', { style: { textAlign: 'center' } }, '¿Qué móvil usas?'),
+    h('p', { style: { textAlign: 'center' } }, 'Los pasos cambian según el móvil. Si te equivocas, podrás volver a elegir.'),
+    h('div', { class: 'opciones-movil' },
+      opcion('iphone', 'iPhone', 'Con Safari, Chrome u otro navegador'),
+      opcion('android', 'Android', 'Samsung, Xiaomi, Pixel, Motorola…')),
+    h('button', { type: 'button', class: 'boton-texto', style: { alignSelf: 'center', marginTop: 'auto' }, onclick: terminar }, 'Ahora no')));
+}
 
-  if (tipo === 'android' && avisoNativo) {
+function mostrarPasos(ctx, movil, terminar) {
+  const volverAElegir = () => elegirMovil(ctx, terminar);
+  const cambiar = h('button', { type: 'button', class: 'boton-texto', style: { alignSelf: 'center' }, onclick: volverAElegir },
+    movil === 'iphone' ? '¿No usas iPhone? Cambiar de móvil' : '¿No usas Android? Cambiar de móvil');
+
+  if (movil === 'android' && avisoNativo) {
     montar(h('main', { class: 'instalar pila' },
       h('img', { class: 'ilustracion-app', src: 'icons/icon-192.png', alt: '', style: { marginTop: '40px' } }),
       h('h1', { style: { textAlign: 'center' } }, 'Instálala en un toque'),
@@ -99,24 +122,29 @@ export function pantallaInstalar(ctx, { directo = false } = {}) {
           if (outcome === 'accepted') { tostada('¡Instalada! Ábrela desde tu pantalla de inicio.'); terminar(); }
         },
       }, 'Instalar'),
-      h('button', { type: 'button', class: 'boton boton-ancho', onclick: terminar }, 'Ahora no')));
+      h('button', { type: 'button', class: 'boton boton-ancho', onclick: volverAElegir }, 'Anterior'),
+      cambiar));
     return;
   }
 
-  const lista = pasos(tipo === 'escritorio' ? 'android' : tipo, ctx.sesion?.codigo ?? '');
+  // En iPhone, los pasos de Safari salvo que esté en otro navegador.
+  const tipo = movil === 'iphone' ? (plataformaActual() === 'ios-otro' ? 'ios-otro' : 'ios-safari') : 'android';
+  const lista = pasos(tipo, ctx.sesion?.codigo ?? '');
   let i = 0;
   const pintar = () => {
     const p = lista[i];
     const ultimo = i === lista.length - 1;
     montar(h('main', { class: 'instalar pila' },
-      h('p', { class: 'antetitulo', style: { marginTop: '28px', textAlign: 'center' } }, `Paso ${i + 1} de ${lista.length}`),
+      h('p', { class: 'antetitulo', style: { marginTop: '28px', textAlign: 'center' } }, `${movil === 'iphone' ? 'iPhone' : 'Android'} · paso ${i + 1} de ${lista.length}`),
       p.ilustracion,
       h('h1', { style: { textAlign: 'center' } }, p.titulo),
       h('p', { style: { textAlign: 'center' } }, p.texto),
       p.extra ?? null,
       h('div', { class: 'pasos-botones' },
-        i > 0 ? h('button', { type: 'button', class: 'boton', onclick: () => { i -= 1; pintar(); } }, 'Anterior') : h('span'),
+        // En el paso 1, «Anterior» vuelve a la elección de móvil.
+        h('button', { type: 'button', class: 'boton', onclick: () => { if (i === 0) volverAElegir(); else { i -= 1; pintar(); } } }, 'Anterior'),
         h('button', { type: 'button', class: 'boton boton-principal', onclick: () => { if (ultimo) terminar(); else { i += 1; pintar(); } } }, ultimo ? 'Hecho' : 'Siguiente')),
+      cambiar,
       h('button', { type: 'button', class: 'boton-texto', style: { alignSelf: 'center' }, onclick: terminar }, 'Ahora no')));
   };
   pintar();
