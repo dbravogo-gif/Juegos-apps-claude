@@ -248,6 +248,9 @@ y `?semilla=n`. Mientras exista la vitrina de F04: `?vista=combate|todas|explora
 - **Cuándo:** al ganar un combate, la que ha subido de nivel en él y ya tiene el de su evolución
   (`evolucionesTrasCombate`, en `core/progreso.ts`). Si se para con Esc, lo intenta al volver a
   subir.
+- **Fuera de combate (2026-11-20):** si un almendrado deja a una criatura en su nivel, el menú se
+  cierra y `combate` la evoluciona con la misma escena (`evolucionarFuera`, evento
+  `evolucion:fuera`), con un estado mínimo que solo tiene el equipo.
 - **La escena** (`encolarEvolucion`, en `sistemas/combate/combate.ts`) va en la arena, antes del
   fundido de vuelta. Los modelos de la forma siguiente se cargan al empezar el combate, para que no
   haya esperas. La criatura cambia de especie con `evolucionar`, y la que vuelve a la isla ya es la
