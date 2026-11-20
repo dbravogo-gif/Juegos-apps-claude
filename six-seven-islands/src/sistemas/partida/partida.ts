@@ -689,7 +689,8 @@ export class Partida implements Subsistema {
         }
         break;
       case 'hierba': {
-        this.ctx.eventos.emit('sonido:tocar', { nombre: 'hierba' });
+        // Cada terreno suena a lo suyo: hierba alta, malpaís o arena de duna (autor, 2026-11-19).
+        this.ctx.eventos.emit('sonido:tocar', { nombre: ev.terreno === ';' ? 'malpais' : ev.terreno === 'D' ? 'arena' : 'hierba' });
         // Sin una criatura en pie no se lucha: la hierba se cruza sin más.
         if (!this.equipo.some((c) => c.vida > 0)) break;
         const s = sortearEncuentro(this.datos.encuentros, ev.zona, this.ctx.rng);

@@ -60,7 +60,7 @@ export type EventoExplorar =
   | { tipo: 'aspas'; id: string; activas: boolean }
   | { tipo: 'letrero'; texto: string }
   /** Ha terminado un paso sobre terreno de encuentros: quien juega sortea si sale una criatura. */
-  | { tipo: 'hierba'; zona: string };
+  | { tipo: 'hierba'; zona: string; terreno: string };
 
 export function crearExploracion(m: Mundo, condiciones: Condicion[] = []): EstadoExplorar {
   const { zona, x, y } = m.isla.inicio;
@@ -140,7 +140,7 @@ function llegar(m: Mundo, e: EstadoExplorar, eventos: EventoExplorar[]): void {
     e.recogidos.push(o.objeto.id);
     eventos.push({ tipo: 'objeto', id: o.objeto.id, objeto: o.objeto.objeto });
   }
-  if (DE_ENCUENTROS.has(cm.c)) eventos.push({ tipo: 'hierba', zona: cm.zona });
+  if (DE_ENCUENTROS.has(cm.c)) eventos.push({ tipo: 'hierba', zona: cm.zona, terreno: cm.c });
   // Sobre una corriente, lo siguiente es dejarse llevar; fuera de ellas, vuelve a mandar el jugador.
   e.empuje = corrienteEn(m, k, e.condiciones);
   const puerta = cruzarPuerta(m, e, e.mira);
