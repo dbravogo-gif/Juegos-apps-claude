@@ -26,8 +26,8 @@ Gasto pequeño aprobado por el autor para Meshy (arte de criaturas). Concepto y 
   cooperativos 2 contra 2. El motor admite 2 contra 2 desde el principio.
 - **Six-seven islands** (`six-seven-islands/`): diseño aprobado. Diorama, archipiélago de
   6 islas + 1 secreta, 200 criaturas, los 15 tipos de Leyendas. Detalle en su `DISENO.md`.
-- **Beep Run Club** (`beep-run-club/`): app del club de running de un amigo. Diseño escrito,
-  falta el visto bueno del autor. Su estado, en su `ESTADO.md`.
+- **Beep Run Club** (`beep-run-club/`): app del club de running de un amigo. Atleta y panel
+  del entrenador en modo demo, publicada en `/beep-run-club/`. Sigue Firebase (su `ESTADO.md`).
 
 ## Siguiente paso
 
