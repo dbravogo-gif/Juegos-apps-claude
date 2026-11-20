@@ -56,21 +56,21 @@ Todas cuadran: si no, el script no genera nada.
 
 | Isla | Especies nuevas | Criaturas | Por generar | Créditos |
 | --- | --- | --- | --- | --- |
-| Lanzarote | 47 | 47 | 5 | 75 |
+| Lanzarote | 42 | 42 | 0 | 0 |
 | Fuerteventura | 15 | 30 | 28 | 420 |
 | Gran Canaria | 25 | 37 | 37 | 555 |
-| Tenerife | 23 | 38 | 36 | 540 |
-| La Gomera | 13 | 22 | 22 | 330 |
-| La Palma | 10 | 16 | 16 | 240 |
-| El Hierro | 11 | 13 | 13 | 195 |
+| Tenerife | 25 | 40 | 38 | 570 |
+| La Gomera | 14 | 23 | 23 | 345 |
+| La Palma | 11 | 17 | 17 | 255 |
+| El Hierro | 12 | 14 | 14 | 210 |
 | **Total** | | **203** | **157** | **2.355** |
 
-Lanzarote incluye las 15 iniciales y las 5 leyendas de los pueblos, que duermen allí.
+Lanzarote incluye las 15 iniciales. Las leyendas, desde la mitad del viaje (autor, 2026-11-20).
 
 ## Las islas y sus zonas
 
-En cada zona, las especies que salen, con la nueva de esa zona en **negrita**. Las leyendas salen
-tras la Liga. Niveles: los de `ISLA-3.md` hasta Gran Canaria; después, propuesta. En las islas del
+En cada zona, las especies que salen, con la nueva de esa zona en **negrita**. Las leyendas de los
+pueblos despiertan al llegar a su escondite; las guardianas, tras la Liga. Niveles: los de `ISLA-3.md` hasta Gran Canaria; después, propuesta. En las islas del
 final, una especie que se conoció antes sale ya evolucionada, según el nivel de la zona.
 
 ### Lanzarote
@@ -83,11 +83,6 @@ Gimnasio de **Roca**, en la Capital, líder 11-12.
 | Montañas del Fuego | 5-7 | Shimari → Shimarō · **Quillflare → Quillfire → Quimfernum** · **Kotono → Koloi** · Oreps → Mineps → Colossoreps (rara) |
 | El Jable | 6-8 | Ravich → Azurvan · Kotono → Koloi (rara) · **Kine → Kurokin** · **Melaní → Favenir → Reginis** |
 | Famara | 6-8 | Aculiso → Sierpajable · **Oreps → Mineps → Colossoreps** (rara) · **Aerund → Marwen** · **Salmito → Salmarín → Salmástil** |
-| La Geria (leyenda) | tras la Liga | **«Leyenda verde»** |
-| Montañas del Fuego, el cráter (leyenda) | tras la Liga | **Magecora** |
-| Risco de Famara (leyenda) | tras la Liga | **«Leyenda de roca»** |
-| Pueblos sepultados (leyenda) | tras la Liga | **«Leyenda de tierra»** |
-| Los jameos (leyenda; zona por crear) | tras la Liga | **«Leyenda del agua»** |
 
 Para el gimnasio, de Roca: Oreps → Mineps → Colossoreps.
 
@@ -142,6 +137,8 @@ Gimnasio de **Agua**, en el Puerto de la Cruz, líder 36-38; la Liga, en el Teid
 | Los Gigantes (costa) | 32-35 | «Tortuga boba» · **«Delfín»** · **«Morena»** · **«Calamar gigante»** (rara) |
 | Las Cañadas | 33-36 | **Magmín → Lavtún → Teidrón** · **«Neverita»** · **«Escarcha»** · **«Tajinaste»** |
 | El Teide, la cima (leyenda) | tras la Liga | **«Guardián del Sello»** |
+| El Teide, por dentro (leyenda; al abrir el Sello) | tras la Liga | **Magecora** |
+| Cueva del Viento, lo más hondo (leyenda) | tras la Liga | **«Leyenda del agua»** |
 | Cueva del Hielo del Teide (leyenda) | tras la Liga | **«Guardián del hielo»** |
 
 Para el gimnasio, de Agua: «Tortuga boba», Salmito → Salmarín → Salmástil, Aerund → Marwen, Aculiso → Sierpajable, «Chicharro», «Lisa de la charca», «Morena», «Erizo negro», «Carabela», «Delfín», «Tembladera», «Vieja», «Boya», «Calamar gigante».
@@ -158,6 +155,7 @@ Gimnasio de **Mental**, en Chipude, junto a La Fortaleza, líder 44-45.
 | Valle Gran Rey | 37-40 | «Silbador» · **«Caracol hipnótico»** · **«Mantis»** · «Bucio» |
 | Los Órganos (costa) | 38-41 | Aerund → Marwen · «Delfín» · «Morena» · **«Bucio»** |
 | Alto de Garajonay (leyenda) | tras la Liga | **«Gara»** |
+| Garajonay, el jardín de las Hespérides (leyenda) | tras la Liga | **«Leyenda verde»** |
 | Entre Tenerife y La Gomera (leyenda errante) | tras la Liga | **«Jonay»** |
 
 Para el gimnasio, de Mental: «Silbador», «Escarcha», «Caracol hipnótico», «Coruja», Miralín → Reflexán, «Piedra de Tindaya», «Mantis».
@@ -175,6 +173,7 @@ Gimnasio de **Planta**, en La Caldera de Taburiente, líder 50-51.
 | Roque de los Muchachos | 44-47 | «Guincho» · «Escarcha» · **«Carámbano»** · **«Saltamontes gigante»** |
 | Fuencaliente | 45-48 | «Bomba volcánica» · «Tunera» · «Cochinilla» · **«Tea»** |
 | El observatorio del Roque (leyenda) | tras la Liga | **«Guardián de las estrellas»** |
+| El fondo de La Caldera (leyenda) | tras la Liga | **«Leyenda de tierra»** |
 
 Para el gimnasio, de Planta: Dragosil → Dragombo → Dragalis, «Duende de laurisilva», «Tajinaste», «Piña luchadora», «Almendrita», Esporín → Micelord, «Flor de cumbre», «Cardón», «Bejeque», «Tunera».
 
@@ -192,6 +191,7 @@ Gimnasio de **Infernal/Ancestral**, en Valverde, al final de la Bajada, líder 5
 | La Restinga (opcional) | 52-55 | «Delfín» · «Morena» · «Calamar gigante» (rara) · Sanbor → Borondis → Atlantea |
 | El volcán bajo el mar de La Restinga (leyenda) | tras la Liga | **«Guardián del Tagoro»** |
 | El mar de nubes (leyenda) | tras la Liga | **«Guardiana del mar de nubes»** |
+| El risco de Tibataje (leyenda) | tras la Liga | **«Leyenda de roca»** |
 
 Para el gimnasio, de Infernal: Quillflare → Quillfire → Quimfernum, Magmín → Lavtún → Teidrón, Guanchín → Menceyor → Achamán, «Tea», «Diablillo», «Tostador de gofio», «Bomba volcánica».
 
@@ -250,11 +250,6 @@ nombre lo pone el autor. La idea va en la primera forma de cada especie.
 | Pok40. Salmite | 018-1 (hecha) | 1.ª | Agua | Spheal (Q1, EN) | 0,5 m | Famara | Nombre del autor; el aspecto, por diseñar. |
 | Pok41. Salmastar | 018-2 (hecha) | 2.ª | Agua | Sealeo (Q3, EN) | 1,1 m |  |  |
 | Pok42. Koralsalm | 018-3 (hecha) | 3.ª | Agua/Hielo | Walrein (Q4, TE) | 1,8 m |  |  |
-| Pok43. Leyenda verde | 094 | única | Planta/Tierra | Dialga (Q5, AE) | 4,0 m | La Geria (leyenda) | La leyenda verde, del pueblo del Hoyo: gran criatura de vid y picón que duerme en un hoyo de La Geria. |
-| Pok44. Magecora | 095 | única | Infernal/Mental A | Reshiram (Q5, AE) | 3,5 m | Montañas del Fuego, el cráter (leyenda) | Lámina del autor: la leyenda infernal, del pueblo de la Colada. |
-| Pok45. Leyenda de roca | 092 | única | Roca/Aire | Zekrom (Q5, AF) | 4,0 m | Risco de Famara (leyenda) | La leyenda de roca, del pueblo del Risco: guardiana del acantilado de Famara, de basalto y viento. |
-| Pok46. Leyenda de tierra | 091 | única | Tierra/Espectral | Groudon (Q5, AF) | 4,5 m | Pueblos sepultados (leyenda) | La leyenda de tierra, del pueblo del Llano: duerme bajo los pueblos que sepultó el volcán. |
-| Pok47. Leyenda del agua | 093 | única | Agua/Oscuridad | Kyogre (Q5, AE) | 5,0 m | Los jameos (leyenda; zona por crear) | La leyenda del agua, del pueblo del Jameo: gran criatura blanca y ciega de los túneles donde entra el mar. |
 
 ### Fuerteventura
 
@@ -337,6 +332,8 @@ nombre lo pone el autor. La idea va en la primera forma de cada especie.
 
 | Pokédex | Id interno | Forma | Tipos | Estadísticas de | Altura | Zona | Idea |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| Pok44. Magecora | 095 | única | Infernal/Mental A | Reshiram (Q5, AE) | 3,5 m | El Teide, por dentro (leyenda; al abrir el Sello) | Lámina del autor: la leyenda infernal, del pueblo de la Colada. Encerrada dentro del Teide, como Guayota en el mito: por eso el Teide está cerrado y retumba; se la encuentra al abrir el Sello. |
+| Pok47. Leyenda del agua | 093 | única | Agua/Oscuridad | Kyogre (Q5, AE) | 5,0 m | Cueva del Viento, lo más hondo (leyenda) | La leyenda del agua, del pueblo del Jameo: gran criatura blanca y ciega de los tubos de lava, escondida en lo más hondo de la Cueva del Viento. |
 | Pok115. Mariposa de laurisilva | 001-1 | 1.ª | Bicho | Wurmple (Q1, EN) | 0,3 m | Anaga | Oruga de la laurisilva; la 2.ª, capullo colgado; la 3.ª, gran mariposa blanca y verde. |
 | Pok116. Mariposa de laurisilva | 001-2 | 2.ª | Bicho | Cascoon (Q1, TF) | 0,6 m |  |  |
 | Pok117. Mariposa de laurisilva | 001-3 | 3.ª | Bicho/Aire | Dustox (Q2, TE) | 1,0 m |  |  |
@@ -380,6 +377,7 @@ nombre lo pone el autor. La idea va en la primera forma de cada especie.
 
 | Pokédex | Id interno | Forma | Tipos | Estadísticas de | Altura | Zona | Idea |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| Pok43. Leyenda verde | 094 | única | Planta/Tierra | Dialga (Q5, AE) | 4,0 m | Garajonay, el jardín de las Hespérides (leyenda) | La leyenda verde, del pueblo del Hoyo: escondida en la laurisilva de Garajonay, el jardín de las Hespérides de los antiguos; guarda frutos de oro y sangra savia de drago. |
 | Pok150. Silbador | 006-1 | 1.ª | Mental | Ralts (Q1, AE) | 0,4 m | Hermigua y Agulo | Silbador: criaturita de orejas enormes que habla silbando, como el silbo gomero; la 2.ª, con orejas como alas; la 3.ª, alta y elegante, habla con la mente. |
 | Pok151. Silbador | 006-2 | 2.ª | Mental | Kirlia (Q1, AE) | 0,8 m |  |  |
 | Pok152. Silbador | 006-3 | 3.ª | Mental | Gardevoir (Q4, AE) | 1,6 m |  |  |
@@ -407,6 +405,7 @@ nombre lo pone el autor. La idea va en la primera forma de cada especie.
 
 | Pokédex | Id interno | Forma | Tipos | Estadísticas de | Altura | Zona | Idea |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| Pok46. Leyenda de tierra | 091 | única | Tierra/Espectral | Groudon (Q5, AF) | 4,5 m | El fondo de La Caldera (leyenda) | La leyenda de tierra, del pueblo del Llano: duerme en el fondo de La Caldera de Taburiente. |
 | Pok172. Flor de cumbre | 045-1 | 1.ª | Planta | Petilil (Q1, AE) | 0,5 m | La Caldera de Taburiente | Capullo de flor de cumbre; la 2.ª, bailarina de pétalos. |
 | Pok173. Flor de cumbre | 045-2 | 2.ª | Planta | Lilligant (Q4, AE) | 1,1 m |  |  |
 | Pok174. Pelotero | 086 | única | Bicho/Tierra | Pinsir (Q4, AF) | 1,4 m | La Caldera de Taburiente | Escarabajo pelotero que empuja una bola de tierra más grande que él. |
@@ -428,6 +427,7 @@ nombre lo pone el autor. La idea va en la primera forma de cada especie.
 
 | Pokédex | Id interno | Forma | Tipos | Estadísticas de | Altura | Zona | Idea |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| Pok45. Leyenda de roca | 092 | única | Roca/Aire | Zekrom (Q5, AF) | 4,0 m | El risco de Tibataje (leyenda) | La leyenda de roca, del pueblo del Risco: de basalto y viento, escondida en el risco de Tibataje, en la isla que ocultaron las ancestrales. |
 | Pok188. Sanbor | 028-1 | 1.ª | Agua A | Deino (Q2, AF) | 1,0 m | Orchilla (llegada) (rara) | Lámina del autor. |
 | Pok189. Borondis | 028-2 | 2.ª | Agua/Ancestral A | Zweilous (Q3, AF) | 4,0 m |  |  |
 | Pok190. Atlantea | 028-3 | 3.ª | Agua/Ancestral A | Hydreigon (Q5, AE) | 9,0 m |  |  |

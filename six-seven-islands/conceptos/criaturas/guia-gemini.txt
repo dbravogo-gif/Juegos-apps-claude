@@ -127,41 +127,6 @@ Pok41. Salmastar, 2.ª forma de 3 · YA HECHA
 
 Pok42. Koralsalm, 3.ª forma de 3 · YA HECHA
 
-Pok43. Leyenda verde, sin evolución
-   Tipo: Planta/Tierra
-   Fuerza: quintil 5 de 5, de las más fuertes, nivel legendario. Papel: atacante especial.
-   Estadísticas como: Dialga. Solo de referencia: que no se parezca.
-   Zona: La Geria (leyenda), Lanzarote (sale tras la Liga)
-   Idea: La leyenda verde, del pueblo del Hoyo: gran criatura de vid y picón que duerme en un hoyo de La Geria.
-
-Pok44. Magecora, sin evolución
-   Tipo: Infernal/Mental
-   Fuerza: quintil 5 de 5, de las más fuertes, nivel legendario. Papel: atacante especial.
-   Estadísticas como: Reshiram. Solo de referencia: que no se parezca.
-   Zona: Montañas del Fuego, el cráter (leyenda), Lanzarote (sale tras la Liga)
-   Idea: lámina del autor: pídemela y dibújala sola, fiel a ella.
-
-Pok45. Leyenda de roca, sin evolución
-   Tipo: Roca/Aire
-   Fuerza: quintil 5 de 5, de las más fuertes, nivel legendario. Papel: atacante físico.
-   Estadísticas como: Zekrom. Solo de referencia: que no se parezca.
-   Zona: Risco de Famara (leyenda), Lanzarote (sale tras la Liga)
-   Idea: La leyenda de roca, del pueblo del Risco: guardiana del acantilado de Famara, de basalto y viento.
-
-Pok46. Leyenda de tierra, sin evolución
-   Tipo: Tierra/Espectral
-   Fuerza: quintil 5 de 5, de las más fuertes, nivel legendario. Papel: atacante físico.
-   Estadísticas como: Groudon. Solo de referencia: que no se parezca.
-   Zona: Pueblos sepultados (leyenda), Lanzarote (sale tras la Liga)
-   Idea: La leyenda de tierra, del pueblo del Llano: duerme bajo los pueblos que sepultó el volcán.
-
-Pok47. Leyenda del agua, sin evolución
-   Tipo: Agua/Oscuridad
-   Fuerza: quintil 5 de 5, de las más fuertes, nivel legendario. Papel: atacante especial.
-   Estadísticas como: Kyogre. Solo de referencia: que no se parezca.
-   Zona: Los jameos (leyenda; zona por crear), Lanzarote (sale tras la Liga)
-   Idea: La leyenda del agua, del pueblo del Jameo: gran criatura blanca y ciega de los túneles donde entra el mar.
-
 == FUERTEVENTURA ==
 
 Pok48. Aerund, 1.ª forma de 2 · YA HECHA
@@ -627,6 +592,20 @@ Pok114. Lisa de la charca, 2.ª forma de 2
 
 == TENERIFE ==
 
+Pok44. Magecora, sin evolución
+   Tipo: Infernal/Mental
+   Fuerza: quintil 5 de 5, de las más fuertes, nivel legendario. Papel: atacante especial.
+   Estadísticas como: Reshiram. Solo de referencia: que no se parezca.
+   Zona: El Teide, por dentro (leyenda; al abrir el Sello), Tenerife (sale tras la Liga)
+   Idea: lámina del autor: pídemela y dibújala sola, fiel a ella.
+
+Pok47. Leyenda del agua, sin evolución
+   Tipo: Agua/Oscuridad
+   Fuerza: quintil 5 de 5, de las más fuertes, nivel legendario. Papel: atacante especial.
+   Estadísticas como: Kyogre. Solo de referencia: que no se parezca.
+   Zona: Cueva del Viento, lo más hondo (leyenda), Tenerife (sale tras la Liga)
+   Idea: La leyenda del agua, del pueblo del Jameo: gran criatura blanca y ciega de los tubos de lava, escondida en lo más hondo de la Cueva del Viento.
+
 Pok115. Mariposa de laurisilva, 1.ª forma de 3
    Tipo: Bicho (la línea: Bicho → Bicho → Bicho/Aire)
    Fuerza: quintil 1 de 5, de las más flojas. Papel: equilibrada.
@@ -885,6 +864,13 @@ Pok193. Teidrón, 3.ª forma de 3
 
 == LA GOMERA ==
 
+Pok43. Leyenda verde, sin evolución
+   Tipo: Planta/Tierra
+   Fuerza: quintil 5 de 5, de las más fuertes, nivel legendario. Papel: atacante especial.
+   Estadísticas como: Dialga. Solo de referencia: que no se parezca.
+   Zona: Garajonay, el jardín de las Hespérides (leyenda), La Gomera (sale tras la Liga)
+   Idea: La leyenda verde, del pueblo del Hoyo: escondida en la laurisilva de Garajonay, el jardín de las Hespérides de los antiguos; guarda frutos de oro y sangra savia de drago.
+
 Pok150. Silbador, 1.ª forma de 3
    Tipo: Mental (la línea: Mental → Mental → Mental)
    Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante especial.
@@ -1041,6 +1027,13 @@ Pok171. Jonay, sin evolución
 
 == LA PALMA ==
 
+Pok46. Leyenda de tierra, sin evolución
+   Tipo: Tierra/Espectral
+   Fuerza: quintil 5 de 5, de las más fuertes, nivel legendario. Papel: atacante físico.
+   Estadísticas como: Groudon. Solo de referencia: que no se parezca.
+   Zona: El fondo de La Caldera (leyenda), La Palma (sale tras la Liga)
+   Idea: La leyenda de tierra, del pueblo del Llano: duerme en el fondo de La Caldera de Taburiente.
+
 Pok172. Flor de cumbre, 1.ª forma de 2
    Tipo: Planta (la línea: Planta → Planta)
    Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante especial.
@@ -1154,6 +1147,13 @@ Pok187. Guardián de las estrellas, sin evolución
    Idea: Guardián de las estrellas, en el observatorio del Roque.
 
 == EL HIERRO ==
+
+Pok45. Leyenda de roca, sin evolución
+   Tipo: Roca/Aire
+   Fuerza: quintil 5 de 5, de las más fuertes, nivel legendario. Papel: atacante físico.
+   Estadísticas como: Zekrom. Solo de referencia: que no se parezca.
+   Zona: El risco de Tibataje (leyenda), El Hierro (sale tras la Liga)
+   Idea: La leyenda de roca, del pueblo del Risco: de basalto y viento, escondida en el risco de Tibataje, en la isla que ocultaron las ancestrales.
 
 Pok188. Sanbor, 1.ª forma de 3
    Tipo: Agua (la línea: Agua → Agua/Ancestral → Agua/Ancestral)
