@@ -1,0 +1,10 @@
+{
+  "name": "beep-run-club",
+  "private": true,
+  "type": "module",
+  "description": "App del club de running Beep: planes del entrenador y valoraciones de los atletas",
+  "scripts": {
+    "test": "node --test \"pruebas/*.test.js\"",
+    "flujos": "node pruebas-navegador/flujos-atleta.mjs && node pruebas-navegador/flujos-entrenador.mjs"
+  }
+}

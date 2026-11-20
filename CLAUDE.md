@@ -11,6 +11,7 @@ constitución. No toques un proyecto distinto del que te han pedido.
 | `leyendas-de-iberia/` | Juego de criaturas (Vite + TS + Phaser) | `/leyendas-de-iberia/` |
 | `gymlog-fase1/` | App de gimnasio (HTML único) | `/gymlog-fase1/` |
 | `six-seven-islands/` | Juego de criaturas 3D (Vite + TS + Three.js) | `/six-seven-islands/` |
+| `beep-run-club/` | App del club de running Beep (JS sin build + Firebase) | `/beep-run-club/` |
 | `Bulk-up-main/` | App de gimnasio anterior | no se publica |
 
 @CONSTITUCION.md

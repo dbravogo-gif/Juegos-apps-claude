@@ -1,0 +1,55 @@
+/* Panel del entrenador: se apoya en estilos.css y solo añade lo suyo. */
+.panel #app { max-width: 760px; }
+.pestanas { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; margin: 16px 0 8px; border-radius: 999px; background: var(--superficie); border: 2px solid var(--linea); }
+.pestanas a { display: grid; place-items: center; min-height: 44px; border-radius: 999px; color: var(--texto); text-decoration: none; font-weight: 600; }
+.pestanas a[aria-current="page"] { background: var(--rojo-oscuro); color: var(--sobre-rojo); }
+.cabecera .rol { font: 700 14px/1 var(--titular); letter-spacing: 0.06em; text-transform: uppercase; color: var(--rojo-texto); }
+.fila-titulo { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 20px 0 8px; flex-wrap: wrap; }
+.lista { list-style: none; padding: 0; margin: 0; }
+.lista > li + li { margin-top: 10px; }
+.tarjeta {
+  display: block; width: 100%; text-align: left; padding: 14px 16px;
+  border: 2px solid var(--linea); border-radius: var(--radio);
+  background: var(--superficie); color: var(--texto);
+}
+button.tarjeta, a.tarjeta { cursor: pointer; text-decoration: none; }
+.tarjeta.dura { border-color: var(--rojo); border-left-width: 8px; }
+.tarjeta .linea1 { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.tarjeta h3 { font-size: 18px; }
+.tarjeta p { margin: 4px 0 0; }
+.insignia {
+  display: inline-grid; place-items: center; min-width: 40px; height: 32px; padding: 0 8px; border-radius: 10px;
+  font: 800 19px/1 var(--titular); border: 2px solid var(--rojo);
+  background: color-mix(in srgb, var(--rojo) calc(var(--n, 0) * 9%), var(--superficie)); color: var(--texto);
+}
+.nuevo { font: 700 12px/1 var(--titular); letter-spacing: 0.06em; text-transform: uppercase; background: var(--rojo-oscuro); color: var(--sobre-rojo); padding: 4px 8px; border-radius: 999px; }
+.estado-atleta { font-size: 14px; font-weight: 600; }
+.estado-atleta.inactivo { color: var(--rojo-texto); }
+.codigo-grande { font: 800 24px/1.1 var(--titular); letter-spacing: 0.06em; word-break: break-all; }
+.acciones { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.acciones .boton { min-height: 44px; font-size: 17px; padding: 0 16px; }
+.dia-panel { padding: 10px 0; border-top: 1px solid var(--linea); }
+.dia-panel .cab-dia { display: flex; justify-content: space-between; align-items: center; }
+.dia-panel .cab-dia b { font: 700 15px/1 var(--titular); letter-spacing: 0.05em; }
+.dia-panel.es-hoy .cab-dia b { color: var(--rojo-texto); }
+.dia-panel .tarjeta { margin-top: 8px; }
+.boton-mini { min-height: 44px; padding: 0 12px; border: 0; background: none; color: var(--rojo-texto); font-weight: 600; display: inline-flex; align-items: center; gap: 4px; }
+.boton-mini svg.icono { width: 20px; height: 20px; }
+fieldset.ejercicio-editor { border: 2px solid var(--linea); border-radius: var(--radio); padding: 12px 14px 14px; margin: 12px 0 0; background: var(--superficie); }
+fieldset.ejercicio-editor legend { font: 700 15px/1 var(--titular); padding: 0 6px; }
+.ejercicio-editor .pila > * + * { margin-top: 10px; }
+.ejercicio-editor .herramientas { display: flex; justify-content: flex-end; gap: 4px; margin-top: 6px; }
+.casilla { display: flex; align-items: center; gap: 10px; min-height: 44px; font-weight: 600; }
+.casilla input { width: 24px; height: 24px; accent-color: var(--rojo); }
+.casilla small { font-weight: 400; color: var(--texto-suave); }
+.valoracion { padding: 14px 16px; border-radius: var(--radio); border: 2px solid var(--rojo); background: var(--superficie); }
+.valoracion.dura { background: color-mix(in srgb, var(--rojo) 12%, var(--superficie)); }
+.valoracion dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; margin: 10px 0 0; }
+.valoracion dt { font-weight: 600; color: var(--texto-suave); }
+.valoracion dd { margin: 0; }
+.vacio { padding: 24px 0; text-align: center; color: var(--texto-suave); }
+select.entrada { appearance: auto; }
+@media (min-width: 700px) {
+  .ejercicio-editor .dos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .ejercicio-editor .dos > * + * { margin-top: 0; }
+}

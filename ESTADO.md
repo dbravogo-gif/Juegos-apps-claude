@@ -1,6 +1,6 @@
 # Estado
 
-Actualizado: 2026-11-08. Solo el presente; el historial está en git. Máximo 40 líneas.
+Actualizado: 2026-11-19. Solo el presente; el historial está en git. Máximo 40 líneas.
 
 **Modo de gasto vigente: normal.**
 
@@ -24,9 +24,10 @@ Gasto pequeño aprobado por el autor para Meshy (arte de criaturas). Concepto y 
 - **Concepto A**, por fases.
 - **Con amigos:** verlos en la misma zona, retarlos 1 contra 1 y unirse en combates
   cooperativos 2 contra 2. El motor admite 2 contra 2 desde el principio.
-
 - **Six-seven islands** (`six-seven-islands/`): diseño aprobado. Diorama, archipiélago de
   6 islas + 1 secreta, 200 criaturas, los 15 tipos de Leyendas. Detalle en su `DISENO.md`.
+- **Beep Run Club** (`beep-run-club/`): app del club de running de un amigo. Atleta y panel
+  del entrenador en modo demo, publicada en `/beep-run-club/`. Sigue Firebase (su `ESTADO.md`).
 
 ## Siguiente paso
 
@@ -36,5 +37,4 @@ Gasto pequeño aprobado por el autor para Meshy (arte de criaturas). Concepto y 
 
 ## Pendiente del autor
 
-- Más adelante, en la fase online, crear una cuenta gratuita en el servicio de tiempo real que
-  se elija.
+- En la fase online, crear una cuenta gratuita en el servicio de tiempo real que se elija.

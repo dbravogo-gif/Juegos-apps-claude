@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Beep · Entrenador</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#F7F7F7">
+  <link rel="icon" href="../icons/icono.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="Beep Entrenador">
+  <link rel="stylesheet" href="../src/comun/estilos.css">
+  <link rel="stylesheet" href="../src/entrenador/panel.css">
+  <script>
+    try { var t = localStorage.getItem('beep_tema'); if (t && t !== 'auto') document.documentElement.dataset.tema = t; } catch (e) {}
+  </script>
+  <script type="module" src="../src/entrenador/app.js"></script>
+</head>
+<body class="panel">
+  <div id="app"><p style="padding:40px 0;text-align:center">Cargando…</p></div>
+  <noscript>Esta página necesita JavaScript.</noscript>
+</body>
+</html>
