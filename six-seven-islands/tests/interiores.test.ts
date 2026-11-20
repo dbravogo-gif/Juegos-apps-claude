@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { avanzar, crearExploracion, entrar, interactuar, salir, type EstadoExplorar, type EventoExplorar } from '../src/core/explorar';
+import { avanzar, cambiarDePiso, crearExploracion, entrar, interactuar, salir, type EstadoExplorar, type EventoExplorar } from '../src/core/explorar';
 import { abrirDialogo, completa, elegirDialogo, lineaActual, pasoDialogo, pulsar, type Efecto, type EstadoDialogo } from '../src/core/guion';
 import {
   clave,
@@ -68,6 +68,11 @@ describe('interiores de la isla 1', () => {
       const z = m.zonas.get(def.id)!;
       const entrada = clave(z.origen.x + def.entrada.x, z.origen.y + def.entrada.y);
       expect(m.casillas.get(entrada)?.c, `${def.id}: la entrada se pisa`).toBe('m');
+      // El piso de arriba no tiene puerta: se sale bajando por el hueco, que está detrás de la entrada.
+      if (def.id.endsWith('-arriba')) {
+        expect(m.casillas.get(clave(z.origen.x + def.entrada.x, z.origen.y + def.entrada.y + 1))?.c, def.id).toBe('z');
+        continue;
+      }
       const salidas = [...m.casillas].filter(([, c]) => c.c === 'd');
       expect(salidas, def.id).toHaveLength(1);
       const [sx, sy] = deClave(salidas[0][0]);
@@ -242,5 +247,26 @@ describe('diálogos', () => {
 
   it('las salas están lejos de la isla: ninguna casilla coincide', () => {
     for (const m of salas.values()) for (const k of m.casillas.keys()) expect(isla.casillas.has(k)).toBe(false);
+  });
+});
+
+describe('escaleras de las casas (autor, 2026-11-19)', () => {
+  it('andar hacia la escalera libre sube; arriba, andar hacia el hueco baja, y la puerta de la isla se recuerda', () => {
+    const abajo = INTERIORES_ISLA1.find((d) => INTERIORES_ISLA1.some((a) => a.id === `${d.id}-arriba`))!;
+    expect(abajo, 'alguna casa con piso de arriba').toBeDefined();
+    const m = salas.get(abajo.id)!;
+    const k = [...m.casillas].find(([, c]) => c.c === 'e')![0];
+    const [ex, ey] = deClave(k);
+    const e: EstadoExplorar = { ...crearExploracion(m), x: ex, y: ey + 1, desdeX: ex, desdeY: ey + 1, zona: abajo.id, dentro: abajo.id, fuera: { x: 1, y: 2, zona: 'capital' } };
+    expect(avanzar(m, e, 'n')).toEqual([{ tipo: 'escalera', sube: true }]);
+    const defArriba = INTERIORES_ISLA1.find((d) => d.id === `${abajo.id}-arriba`)!;
+    const arriba = salas.get(defArriba.id)!;
+    cambiarDePiso(e, defArriba.id, arriba, defArriba.entrada, 'n');
+    expect(e.dentro).toBe(defArriba.id);
+    expect(e.fuera).toEqual({ x: 1, y: 2, zona: 'capital' });
+    // Seguir pulsando hacia arriba no vuelve a bajar: se anda hacia el cuarto.
+    expect(avanzar(arriba, e, 'n').some((ev) => ev.tipo === 'escalera')).toBe(false);
+    const e2: EstadoExplorar = { ...e, x: e.desdeX, y: e.desdeY, paso: 0 };
+    expect(avanzar(arriba, e2, 's')).toEqual([{ tipo: 'escalera', sube: false }]);
   });
 });

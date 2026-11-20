@@ -1,6 +1,7 @@
 // Los interiores de la isla 1: uno por edificio, generado a partir de su exterior (autor,
 // 2026-11-10; `generar-interior.ts`). Las casas grandes por fuera lo son por dentro, y las de dos
-// plantas (las de balcones de la capital) tienen escalera con juguetes delante. Aquí va solo lo
+// plantas (las de balcones de la capital) tienen escalera: unas con juguetes delante y otras con un
+// dormitorio arriba, que es otra sala (`<id>-arriba`, ID_ARRIBA). Aquí va solo lo
 // propio de cada sala: su nombre y quién vive o trabaja en ella. Las frases de los vecinos
 // nuevos son provisionales.
 
@@ -17,7 +18,12 @@ export interface DefSala {
   gente: (s: InteriorGenerado) => Personaje[];
   /** Otro tipo de sala que el de su edificio (el bar es una tienda por fuera). */
   tipo?: TipoSala;
+  /** Si los juguetes tapan la escalera (si no se dice, lo decide la casa). */
+  juguetes?: boolean;
 }
+
+/** El id del piso de arriba de una sala. */
+export const ID_ARRIBA = (id: string) => `${id}-arriba`;
 
 export const vive = (id: string, frase?: string) => (s: InteriorGenerado): Personaje[] => [{ id, x: s.residente.x, y: s.residente.y, mira: 's', ...(frase ? { frase } : {}) }];
 
@@ -52,7 +58,7 @@ const SALAS: Record<string, DefSala> = {
   gimnasio: { nombre: 'Gimnasio de Roca', gente: vive('lider-gimnasio') },
   'casa-capital-1': { nombre: 'Casa de la capital', gente: vive('vecino-capital-1', 'Desde el balcón se ve el puerto. Hoy no ha salido ningún barco.') },
   'casa-capital-2': { nombre: 'Casa de la capital', gente: vive('vecina-capital-2', '¿Vas al gimnasio? La líder entrena desde que sale el sol.') },
-  'casa-capital-3': { nombre: 'Casa de la capital', gente: vive('nino-capital', '¡Arriba están mis juguetes! No subas, que lo tengo todo ordenado.') },
+  'casa-capital-3': { nombre: 'Casa de la capital', juguetes: true, gente: vive('nino-capital', '¡Arriba están mis juguetes! No subas, que lo tengo todo ordenado.') },
   'casa-capital-4': { nombre: 'Casa de la capital', gente: vive('vecino-capital-4', 'Dicen que desde el faro, de noche, se ve una isla que no sale en los mapas.') },
 };
 
@@ -101,8 +107,9 @@ export function generarInteriores(
       }
       if (!def || !tipo) continue;
       const tipoSala = def.tipo ?? tipo;
-      const s = generarInterior({ tipo: tipoSala, ancho: e.ancho, fondo: e.fondo, plantas: plantasDe(z, tipoSala), semilla: semillaDe(id) });
+      const s = generarInterior({ tipo: tipoSala, ancho: e.ancho, fondo: e.fondo, plantas: plantasDe(z, tipoSala), semilla: semillaDe(id), juguetes: def.juguetes });
       res.push({ id, nombre: def.nombre, mapa: s.mapa, personajes: def.gente(s), entrada: s.entrada });
+      if (s.arriba) res.push({ id: ID_ARRIBA(id), nombre: `${def.nombre}, arriba`, mapa: s.arriba.mapa, personajes: [], entrada: s.arriba.llegada });
     }
   }
   return res;

@@ -51,6 +51,8 @@ export type EventoExplorar =
   | { tipo: 'puerta'; x: number; y: number }
   /** Salir del interior por su puerta. */
   | { tipo: 'salida' }
+  /** Andar hacia una escalera: se sube (`e`) o se baja (`z`) de piso (autor, 2026-11-19). */
+  | { tipo: 'escalera'; sube: boolean }
   | { tipo: 'hablar'; zona: string; personaje: string }
   /** Usar la palanca que se tiene delante (`ya`: estaba bajada). */
   | { tipo: 'palanca'; id: string; ya: boolean }
@@ -113,6 +115,10 @@ export function avanzar(m: Mundo, e: EstadoExplorar, dir: Direccion | null): Eve
   }
   const k = clave(nx, ny);
   const cm = m.casillas.get(k);
+  if (cm?.c === 'e' || cm?.c === 'z') {
+    eventos.push({ tipo: 'escalera', sube: cm.c === 'e' });
+    return eventos;
+  }
   if (cm?.c === 'X' && e.avisoEn !== k) {
     const aviso = cierreEn(m, k)?.aviso;
     if (aviso) eventos.push({ tipo: 'aviso', texto: aviso });
@@ -164,6 +170,22 @@ export function entrar(e: EstadoExplorar, id: string, sala: Mundo): void {
   e.y = e.desdeY = z.origen.y + y;
   e.paso = 0;
   e.mira = 'n';
+  e.avisoEn = null;
+}
+
+/**
+ * Cambia de piso dentro del mismo edificio: aparece en `punto` (de la sala), mirando hacia `mira`.
+ * La puerta de la isla por la que se entró (`fuera`) no cambia: al bajar y salir, se vuelve a ella.
+ */
+export function cambiarDePiso(e: EstadoExplorar, id: string, sala: Mundo, punto: { x: number; y: number }, mira: Direccion): void {
+  const { zona } = sala.isla.inicio;
+  const z = sala.zonas.get(zona)!;
+  e.dentro = id;
+  e.zona = zona;
+  e.x = e.desdeX = z.origen.x + punto.x;
+  e.y = e.desdeY = z.origen.y + punto.y;
+  e.paso = 0;
+  e.mira = mira;
   e.avisoEn = null;
 }
 
