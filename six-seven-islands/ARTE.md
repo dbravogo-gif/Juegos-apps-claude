@@ -340,17 +340,24 @@ dos formas y el destello. Lo nuestro (revisado con el probador y el autor):
     rebotan y levantan polvo, gotas que salpican; las brasas, burbujas y motas suben;
   - la luz de abajo de la escena es la del suelo verde de la isla del juego: la isla lleva luz propia
     (más en las caras que miran abajo) para que el peñón no salga negro y verdoso;
-  - los demás tipos, con su escenario (autor, 2026-11-20; `decorados-evolucion.ts`):
-    - Lucha: terrero con borde de madera y un muñeco de entrenamiento que se balancea con cada
-      golpe, con su destello y su polvo, y un saco colgado;
-    - Veneno: ciénaga con charcos en los que nacen burbujas violetas que crecen y revientan;
-    - Eléctrico: dos bobinas de cobre con arcos entre ellas;
-    - Acero: chapa con remaches, engranajes que giran y tuercas que caen y rebotan;
-    - Mental: anillos grabados, prismas que orbitan por detrás y piedras que levitan;
-    - Espectral: losas viejas inclinadas, faroles con llama azul, bruma y espíritus en espiral;
-    - Oscuridad: agujas de obsidiana, bruma negra y pares de ojos que parpadean y cambian de sitio;
-    - Ancestral: un arco y columnas rotas, con runas doradas que laten;
-    - Bicho: el jardín con tallos altos, una telaraña y luciérnagas;
+  - los demás tipos, con su escenario (autor, 2026-11-20, con sus cambios; `decorados-evolucion.ts`):
+    - Lucha: un terrero de lucha canaria; la criatura en la arena, con su borde de madera, y
+      detrás las gradas con el público, que se levanta a oleadas, y banderines;
+    - Veneno: ciénaga violeta oscura con charcos en los que nacen burbujas grandes que crecen y
+      revientan;
+    - Eléctrico: base metálica, fondo de tormenta, bobinas con arcos y rayos que caen detrás y,
+      uno de cada tres, sobre la criatura, con un fogonazo y su restallido;
+    - Acero: chapa con remaches, engranajes que giran y un martillo que golpea un yunque: chispas y
+      el sonido del metal en cada golpe; tuercas que caen;
+    - Mental: anillos grabados, prismas que orbitan por detrás y ondas mentales que salen de la
+      criatura, tumbadas y de pie;
+    - Espectral: losas viejas, faroles con llama azul, bruma y espectros que suben y bajan;
+    - Oscuridad: el fondo empieza casi negro y se aclara mientras evoluciona; en la oscuridad,
+      ojos brillantes que parpadean por todo el fondo;
+    - Ancestral: un templo de seis columnas con frontón y sol de oro, escalinata, estatuas
+      guardianas, braseros encendidos y ofrendas (ánforas, frutas y pétalos);
+    - Bicho: el jardín con tallos altos, dos telarañas, un avispero con avispas y luciérnagas;
+    - sin peñascos flotando en Veneno, Eléctrico, Mental, Espectral y Bicho (autor);
     - en el modo desarrollador, «Probar evolución» enseña el de cualquier tipo;
   - tras la revisión del probador (2026-11-19):
     - el Sello, al 78 %, cabe entero en el suelo liso;
