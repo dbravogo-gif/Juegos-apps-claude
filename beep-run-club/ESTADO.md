@@ -1,6 +1,6 @@
 # Estado de Beep Run Club
 
-Actualizado: 2026-11-20. Solo el presente; el historial está en git. Máximo 40 líneas.
+Actualizado: 2026-11-20. Solo el presente (historial en git). Máximo 40 líneas.
 
 ## Fase actual
 
@@ -22,8 +22,7 @@ funcionan con datos de ejemplo guardados en el navegador. Falta la nube (fase 3)
 
 ## Siguiente
 
-1. Revisión del `probador` del panel (fase 2) y de lo añadido el 2026-11-20 (`F16` a `F19`, sin
-   marcar como hechas hasta entonces).
+1. Revisión del `probador` del panel y de `F16` a `F19` (sin marcar hechas hasta entonces).
 2. Fase 3: almacén Firebase y reglas con sus pruebas (`F12`), guía de puesta en marcha (`F13`)
    y publicación (`F14`, toca `.github/`: se consulta al autor antes de fusionar).
 
