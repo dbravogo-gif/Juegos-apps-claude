@@ -3,6 +3,7 @@
 import { esFecha, diasDeSemana, diferenciaDias, sumarDias } from './fechas.js';
 
 export const MAX = { titulo: 80, nombre: 80, detalle: 300, nota: 500 };
+export const INTENSIDADES = [['suave', 'Suave'], ['exigente', 'Exigente']];
 
 const texto = (v) => (typeof v === 'string' ? v.trim() : '');
 
@@ -18,6 +19,7 @@ export function validarSesion(s) {
     fecha: texto(s.fecha),
     titulo: texto(s.titulo),
     nota: texto(s.nota),
+    intensidad: s.intensidad === 'exigente' ? 'exigente' : 'suave', // las antiguas, sin campo, son suaves
     ejercicios: [],
   };
   if (!sesion.id) errores.push('Falta el identificador de la sesión.');

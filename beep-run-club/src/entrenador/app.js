@@ -8,6 +8,7 @@ import { lunesDe, esFecha } from '../nucleo/fechas.js';
 import { pantallaNovedades } from './novedades.js';
 import { pantallaAtletas, pantallaAtleta } from './atletas.js';
 import { pantallaEditor } from './editor.js';
+import { pantallaClub } from './club.js';
 import { registrarServiceWorker } from '../comun/registrar-sw.js';
 
 const CLAVE_DEMO = 'beep_entrenador_demo';
@@ -60,6 +61,7 @@ function rutear() {
   if (!ctx.dentro) return pantallaAcceso();
   const [seccion, id, sub, extra] = location.hash.replace(/^#\/?/, '').split('/');
   if (seccion === 'atletas') { ctx.pantalla = 'atletas'; return pantallaAtletas(ctx); }
+  if (seccion === 'club') { ctx.pantalla = 'club'; return pantallaClub(ctx); }
   if (seccion === 'atleta' && id) {
     if (sub === 'sesion' && extra) { ctx.pantalla = 'editor'; return pantallaEditor(ctx, id, { sid: extra }); }
     if (sub === 'nueva') { ctx.pantalla = 'editor'; return pantallaEditor(ctx, id, { fecha: esFecha(extra) ? extra : hoy() }); }
@@ -72,7 +74,7 @@ function rutear() {
 
 async function arrancar() {
   aplicarTema();
-  ctx.almacen = await crearAlmacen();
+  ctx.almacen = await crearAlmacen({ rol: 'entrenador' });
   ctx.dentro = ctx.almacen.tipo === 'demo' ? !!leerLocal(CLAVE_DEMO) : await ctx.almacen.entrenadorConectado();
   window.addEventListener('hashchange', rutear);
   rutear();

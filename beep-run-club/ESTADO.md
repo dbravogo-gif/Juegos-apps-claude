@@ -1,36 +1,40 @@
 # Estado de Beep Run Club
 
-Actualizado: 2026-11-19. Solo el presente; el historial está en git. Máximo 40 líneas.
+Actualizado: 2026-11-20. Solo el presente (historial en git). Máximo 40 líneas.
 
 ## Fase actual
 
-Fases 1 y 2 hechas en modo demo (`F01` a `F11`): la app del atleta y el panel del entrenador
-funcionan con datos de ejemplo guardados en el navegador. Falta la nube (fase 3).
+**Conectada a Firebase y publicada** para que el club la pruebe el fin de semana y diga qué
+cambiar. Fases 1 a 3 construidas. Las funciones están sin marcar como hechas hasta que pase el
+`probador` (`F01` a `F11` sí lo están).
 
 ## Hecho
 
-- **Atleta:** entra con código o enlace, sesión persistente con confirmación al cambiar, semana,
-  sesión con ejercicios, distancia, tiempo y ritmo opcionales, valoración y modo noche.
-- **Entrenador** (`/entrenador/`): novedades con las duras resaltadas, altas con código y enlace
-  para compartir, activar y desactivar, código nuevo, editor de sesiones con autocompletado,
-  copiar semana y sesión, y baja (archivar, o descargar el CSV y borrar).
-- **Revisión del `probador` (fase 1):** 3/5 en funciona, se entiende y se siente bien, y 4/5 en
-  visual. Los 16 problemas que encontró están corregidos y los graves tienen su prueba en `npm run flujos`.
-- **Comprobado:** 51 pruebas (`npm test`) y 46 comprobaciones de punta a punta (`npm run flujos`).
+- **Atleta:**
+  - entrada con código o enlace, protección de datos y tutorial de instalación (iPhone o Android);
+  - semana y mes (dos colores), sesión con ejercicios, distancia, tiempo y ritmo;
+  - valoración con enlace de Strava; modo noche; sin conexión.
+- **Entrenador** (`/entrenador/`, email y contraseña de la cuenta del club):
+  - novedades, atletas con código y enlace, editor con intensidad, copiar semana y sesión, baja con CSV;
+  - pestaña Club: responsable y política, con «pedir de nuevo» o «solo corregir».
+- **Firebase:** almacén, reglas y SDK incluido en `vendor/`. Proyecto `beep-run-club`.
+- **Comprobado:** 63 pruebas, 87 comprobaciones en demo, 8 pruebas de reglas (que fallan con
+  reglas abiertas) y 18 comprobaciones de la app contra Firebase emulado, sin conexión incluida.
 
 ## Siguiente
 
-1. Revisión del `probador` del panel del entrenador (fase 2): falta, se cerró sin ella.
-2. Publicar la demo para que el autor la pruebe en su iPhone (espera su sí: toca `.github/`).
-3. Fase 3: almacén Firebase y reglas con sus pruebas (`F12`), guía de puesta en marcha (`F13`)
-   y publicación (`F14`, toca `.github/`: se consulta al autor antes de fusionar).
+1. Lo que pida el club tras probarla el fin de semana.
+2. Revisión del `probador` del panel, de `F12` a `F20` y de la conexión con Firebase.
+3. App Check, contra abusos probando códigos al azar.
 
 ## Pendiente del autor
 
-- La cuenta de Firebase del entrenador (ya pedida). Con ella se sigue la guía de la fase 3.
-- Para la fase 4: 5 capturas reales de Strava (claras y oscuras).
+- **Pegar las reglas** en Firebase (parte 2 de `PUESTA-EN-MARCHA.md`): sin ellas no funciona.
+- En el panel, pestaña Club: responsable y email (no van en el código: el repositorio es público).
+- Confirmar que Firestore está en `europe-southwest1` (Madrid).
+- Probarla y puntuar de 1 a 5: la primera vez, el mes, valorar y el panel.
 
 ## Defectos conocidos
 
-- En el iPhone, Safari y la app instalada no comparten datos: puede que pida el código una vez
-  más al instalarla. Está por comprobar en su iPhone.
+- En el iPhone, Safari y la app instalada no comparten datos: puede pedir el código otra vez.
+- Los pasos del tutorial están sin comprobar en un iPhone y un Android reales.

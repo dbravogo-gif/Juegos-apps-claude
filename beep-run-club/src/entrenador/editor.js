@@ -1,10 +1,10 @@
 // Editor de una sesión: fecha, título, nota y ejercicios (con la casilla «de carrera»).
 // Arriba, la valoración del atleta si ya la hay.
 
-import { h, icono, montar, dialogo, confirmar, tostada } from '../comun/ui.js';
+import { h, icono, montar, dialogo, confirmar, tostada, grupoRadio } from '../comun/ui.js';
 import { rngSeguro } from '../comun/entorno.js';
 import { generarId } from '../nucleo/codigos.js';
-import { validarSesion, MAX } from '../nucleo/plan.js';
+import { validarSesion, MAX, INTENSIDADES } from '../nucleo/plan.js';
 import { fechaLarga, lunesDe } from '../nucleo/fechas.js';
 import { cabeceraPanel, bloqueValoracion } from './comun.js';
 
@@ -25,7 +25,7 @@ export async function pantallaEditor(ctx, atletaId, { sid = null, fecha = null }
 
   const sesion = original
     ? structuredClone(original)
-    : { id: nuevoId(), fecha, titulo: '', nota: '', ejercicios: [ejercicioVacio()] };
+    : { id: nuevoId(), fecha, titulo: '', nota: '', intensidad: 'suave', ejercicios: [ejercicioVacio()] };
   let sucio = false;
   const marcarSucio = () => { sucio = true; };
   const volver = async () => {
@@ -127,6 +127,10 @@ export async function pantallaEditor(ctx, atletaId, { sid = null, fecha = null }
     h('div', { class: 'pila bloque' },
       h('div', {}, h('label', { class: 'campo', for: 'fecha' }, h('span', {}, 'Fecha')), campoFecha),
       h('div', {}, h('label', { class: 'campo', for: 'titulo' }, h('span', {}, 'Título')), campoTitulo),
+      h('div', { class: 'intensidad' }, grupoRadio({
+        etiqueta: 'Intensidad', opciones: INTENSIDADES, valor: sesion.intensidad ?? 'suave',
+        alElegir: (v) => { sesion.intensidad = v; marcarSucio(); },
+      }), h('p', { class: 'suave', style: { margin: '6px 0 0', fontSize: '14px' } }, 'Es el color del día en el calendario del atleta.')),
       h('div', {}, h('label', { class: 'campo', for: 'nota' }, h('span', {}, 'Nota para el atleta')), campoNota)),
     h('h2', { class: 'bloque' }, 'Ejercicios'),
     contenedor,

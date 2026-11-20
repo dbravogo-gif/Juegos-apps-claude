@@ -106,3 +106,24 @@ test('archivar desactiva; borrar no deja rastro del atleta', async () => {
   assert.equal(texto.includes(laura.id), false);
   assert.equal(texto.includes(laura.codigo), false);
 });
+
+test('política: guardar con «pedir de nuevo» cambia la versión y cuenta quién la ha aceptado', async () => {
+  const a = nuevo();
+  const original = await a.politica();
+  await a.entrar(CODIGOS_DEMO.laura, 'm1', { version: original.version, fecha: 'x' });
+  let r = await a.resumenAceptaciones();
+  assert.deepEqual([r.aceptada, r.total], [1, 2]);
+  const cambios = { ...original, responsable: { nombre: 'Club de prueba', email: 'club@prueba.es' } };
+  assert.equal((await a.guardarPolitica({ ...cambios, responsable: { nombre: '', email: '' } }, { pedirDeNuevo: true })).ok, false);
+  const g = await a.guardarPolitica(cambios, { pedirDeNuevo: true });
+  assert.equal(g.ok, true, g.errores?.join(' '));
+  assert.notEqual(g.politica.version, original.version);
+  r = await a.resumenAceptaciones();
+  assert.equal(r.aceptada, 0, 'nadie ha aceptado todavía la versión nueva');
+  await a.registrarAceptacion(CODIGOS_DEMO.laura, 'm1', { version: g.politica.version, fecha: 'y' });
+  r = await a.resumenAceptaciones();
+  assert.equal(r.aceptada, 1);
+  const corregida = await a.guardarPolitica({ ...cambios, resumen: ['Corregido'] }, { pedirDeNuevo: false });
+  assert.equal(corregida.politica.version, g.politica.version, 'solo corregir no cambia la versión');
+  assert.deepEqual((await a.politica()).resumen, ['Corregido']);
+});

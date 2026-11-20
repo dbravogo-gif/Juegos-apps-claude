@@ -1,6 +1,6 @@
 // Service worker de Beep Run Club: guarda la app para que abra sin conexión.
 // Al publicar un cambio, sube VERSION (y la de src/version.js: una prueba comprueba que coinciden).
-const VERSION = '0.2.1';
+const VERSION = '0.5.0';
 const CACHE = `beep-run-club-${VERSION}`;
 
 // Toda la app (atleta y entrenador) en la misma versión, para no mezclar módulos viejos y nuevos
@@ -22,6 +22,9 @@ const ARCHIVOS = [
   'img/logo-texto.svg',
   'img/logo-completo.svg',
   'img/mascota.svg',
+  'vendor/firebase/firebase-app.js',
+  'vendor/firebase/firebase-auth.js',
+  'vendor/firebase/firebase-firestore.js',
   'src/config.js',
   'src/version.js',
   'src/comun/estilos.css',
@@ -32,12 +35,17 @@ const ARCHIVOS = [
   'src/datos/almacen.js',
   'src/datos/demo.js',
   'src/datos/ejemplo.js',
+  'src/datos/firebase.js',
+  'src/datos/textos-privacidad.js',
   'src/nucleo/azar.js',
+  'src/nucleo/calendario.js',
   'src/nucleo/codigos.js',
   'src/nucleo/entrada.js',
   'src/nucleo/exportar.js',
   'src/nucleo/fechas.js',
   'src/nucleo/plan.js',
+  'src/nucleo/plataforma.js',
+  'src/nucleo/privacidad.js',
   'src/nucleo/registro.js',
   'src/nucleo/ritmo.js',
   'src/atleta/app.js',
@@ -45,6 +53,9 @@ const ARCHIVOS = [
   'src/atleta/semana.js',
   'src/atleta/sesion.js',
   'src/atleta/ajustes.js',
+  'src/atleta/mes.js',
+  'src/atleta/privacidad.js',
+  'src/atleta/instalar.js',
   'entrenador/',
   'entrenador/index.html',
   'src/entrenador/panel.css',
@@ -53,6 +64,7 @@ const ARCHIVOS = [
   'src/entrenador/novedades.js',
   'src/entrenador/atletas.js',
   'src/entrenador/editor.js',
+  'src/entrenador/club.js',
 ];
 
 self.addEventListener('install', (e) => {

@@ -1,0 +1,15 @@
+{
+  "name": "beep-run-club-pruebas-reglas",
+  "private": true,
+  "type": "module",
+  "description": "Pruebas de las reglas de Firestore con el emulador. No las corre el flujo de publicación.",
+  "scripts": {
+    "test": "firebase emulators:exec --only firestore --project demo-beep \"node --test reglas.test.mjs\"",
+    "e2e": "firebase emulators:exec --only auth,firestore --project beep-run-club \"node ../pruebas-navegador/flujos-firebase.mjs\""
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^6.0.0",
+    "firebase": "13.2.0",
+    "firebase-tools": "^15.0.0"
+  }
+}

@@ -6,6 +6,8 @@ import { datosDeEjemplo } from './ejemplo.js';
 import { validarRegistro } from '../nucleo/registro.js';
 import { ordenarSesiones, validarSesion, copiarSemana, copiarSesion, nombresUsados } from '../nucleo/plan.js';
 import { generarCodigo, generarId } from '../nucleo/codigos.js';
+import { validarPolitica, publicarPolitica } from '../nucleo/privacidad.js';
+import { politicaPorDefecto } from './textos-privacidad.js';
 import { lunesDe, diaSemana } from '../nucleo/fechas.js';
 
 export const CLAVE_DEMO = 'beep_demo_db';
@@ -32,14 +34,17 @@ export function crearAlmacenDemo({ almacenamiento, hoy, ahora = () => Date.now()
   return {
     tipo: 'demo',
 
-    /** Entrar con un código desde un móvil. */
-    async entrar(codigo, dispositivo) {
+    /**
+     * Entrar con un código desde un móvil. `aceptacion` = { version, fecha } de la información de
+     * protección de datos: queda registrada con el móvil, como prueba del consentimiento.
+     */
+    async entrar(codigo, dispositivo, aceptacion = null) {
       const db = leer();
       const c = db.codigos[codigo];
       if (!c) return { ok: false, motivo: 'no-existe' };
       if (!c.activo) return { ok: false, motivo: 'desactivado' };
       db.dispositivos[codigo] ??= {};
-      db.dispositivos[codigo][dispositivo] ??= true;
+      db.dispositivos[codigo][dispositivo] = { privacidad: aceptacion };
       escribir(db);
       const a = db.atletas[c.atleta];
       return { ok: true, atleta: { id: a.id, nombre: a.nombre } };
@@ -81,7 +86,23 @@ export function crearAlmacenDemo({ almacenamiento, hoy, ahora = () => Date.now()
       return { ok: true, registro: copia(db.registros[atletaId][sesion.id]) };
     },
 
-    ...metodosEntrenador({ leer, escribir, copia }),
+
+    /** La política de protección de datos vigente (la original si el entrenador no la ha cambiado). */
+    async politica() {
+      return copia(leer().politica ?? politicaPorDefecto());
+    },
+
+    /** Un móvil ya registrado acepta una versión nueva de la política. */
+    async registrarAceptacion(codigo, dispositivo, aceptacion) {
+      const db = leer();
+      if (!db.codigos[codigo]?.activo) return { ok: false, estado: db.codigos[codigo] ? 'desactivado' : 'no-existe' };
+      db.dispositivos[codigo] ??= {};
+      db.dispositivos[codigo][dispositivo] = { ...(db.dispositivos[codigo][dispositivo] ?? {}), privacidad: aceptacion };
+      escribir(db);
+      return { ok: true };
+    },
+
+    ...metodosEntrenador({ leer, escribir, copia, ahora }),
 
     /** Solo en demo: vuelve a los datos de ejemplo. */
     async reiniciar() {
@@ -92,7 +113,7 @@ export function crearAlmacenDemo({ almacenamiento, hoy, ahora = () => Date.now()
 }
 
 // Lo que hace el entrenador. En la nube, solo una cuenta de entrenador puede hacerlo.
-function metodosEntrenador({ leer, escribir, copia }) {
+function metodosEntrenador({ leer, escribir, copia, ahora }) {
   const resumen = (db, a) => ({
     id: a.id, nombre: a.nombre, codigo: a.codigo, activo: a.activo, archivado: a.archivado,
     dispositivos: Object.keys(db.dispositivos[a.codigo] ?? {}).length,
@@ -232,6 +253,26 @@ function metodosEntrenador({ leer, escribir, copia }) {
     async biblioteca() {
       const db = leer();
       return nombresUsados(Object.values(db.sesiones).flatMap((m) => Object.values(m)));
+    },
+
+    /** Guarda la política. `pedirDeNuevo`: todos los móviles tendrán que volver a aceptarla. */
+    async guardarPolitica(datos, { pedirDeNuevo }) {
+      const v = validarPolitica(datos);
+      if (!v.ok) return v;
+      const db = leer();
+      const anterior = db.politica ?? politicaPorDefecto();
+      db.politica = publicarPolitica(anterior, v.politica, { pedirDeNuevo, fecha: new Date(ahora()).toISOString() });
+      escribir(db);
+      return { ok: true, politica: copia(db.politica) };
+    },
+
+    /** Cuántos atletas activos tienen algún móvil con la versión vigente aceptada. */
+    async resumenAceptaciones() {
+      const db = leer();
+      const version = (db.politica ?? politicaPorDefecto()).version;
+      const activos = Object.values(db.atletas).filter((a) => a.activo && !a.archivado);
+      const aceptada = activos.filter((a) => Object.values(db.dispositivos[a.codigo] ?? {}).some((d) => d?.privacidad?.version === version)).length;
+      return { aceptada, total: activos.length, version };
     },
 
     /** Las valoraciones más recientes de todos los atletas, con su sesión. */

@@ -3,6 +3,7 @@
 import { createRequire } from 'module'; const { chromium } = createRequire(import.meta.url)('playwright');
 import { readFileSync } from 'node:fs';
 import { servir } from './servidor.mjs';
+import { VERSION_PRIVACIDAD } from '../src/nucleo/privacidad.js';
 
 const srv = await servir();
 const BASE = `${srv.url}/beep-run-club/`;
@@ -10,6 +11,11 @@ const OUT = process.argv[2] ?? null;
 const errores = [];
 const b = await chromium.launch();
 const ctx = await b.newContext({ viewport: { width: 393, height: 740 }, hasTouch: true, isMobile: true, serviceWorkers: 'block', acceptDownloads: true });
+// La primera vez (protección de datos y tutorial) se prueba en flujos-primera-vez.mjs: aquí se da
+// por aceptada para no repetirla en cada paso.
+await ctx.addInitScript((version) => {
+  if (!localStorage.getItem('beep_privacidad')) localStorage.setItem('beep_privacidad', JSON.stringify({ version, fecha: '2026-11-20T09:00:00.000Z' }));
+}, VERSION_PRIVACIDAD);
 const p = await ctx.newPage();
 p.on('pageerror', (e) => errores.push(`página: ${e.message}`));
 p.on('console', (m) => { if (m.type() === 'error') errores.push(`consola: ${m.text()}`); });

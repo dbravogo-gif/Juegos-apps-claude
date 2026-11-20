@@ -31,6 +31,8 @@ export function pantallaEntrar(ctx, { aviso = null, codigo = '', cambiando = fal
       boton.disabled = false;
       boton.textContent = 'Entrar';
       if (fallo && fallo !== 'cancelado') {
+        // Si entre medias se mostró otra pantalla (la de protección de datos), se vuelve a esta.
+        if (!document.body.contains(error)) { pantallaEntrar(ctx, { aviso: fallo, codigo: c, cambiando }); return; }
         error.textContent = fallo;
         entrada.setAttribute('aria-invalid', 'true');
       }

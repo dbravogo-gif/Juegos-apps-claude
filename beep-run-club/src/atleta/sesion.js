@@ -7,12 +7,12 @@ import { leerLocal, guardarLocal, borrarLocal } from '../comun/entorno.js';
 import { fechaLarga } from '../nucleo/fechas.js';
 import { ESFUERZO, MAX_COMENTARIO } from '../nucleo/registro.js';
 import { CAMPOS, leer, formatearCampo, editarCarrera, estadoCarrera } from '../nucleo/ritmo.js';
-import { cabecera, rutaSemana } from './semana.js';
+import { cabecera, rutaSemana, esRutaCalendario } from './semana.js';
 
 const claveBorrador = (ctx, sid) => `beep_borrador_${ctx.sesion.atletaId}_${sid}`;
 
 function borradorVacio() {
-  return { hechos: [], carrera: {}, esfuerzo: null, duros: [], comentario: '', completa: null };
+  return { hechos: [], carrera: {}, esfuerzo: null, duros: [], comentario: '', strava: '', completa: null };
 }
 
 function desdeRegistro(r) {
@@ -21,6 +21,7 @@ function desdeRegistro(r) {
   b.esfuerzo = r.esfuerzo;
   b.duros = [...r.duros];
   b.comentario = r.comentario ?? '';
+  b.strava = r.strava ?? '';
   for (const [id, valores] of Object.entries(r.carrera ?? {})) b.carrera[id] = estadoCarrera(valores);
   return b;
 }
@@ -28,7 +29,7 @@ function desdeRegistro(r) {
 /** Lo que se envía al almacén a partir del borrador. */
 function datosRegistro(sid, b) {
   const carrera = Object.fromEntries(Object.entries(b.carrera).map(([id, d]) => [id, d.valores]));
-  return { sesion: sid, hechos: b.hechos, esfuerzo: b.esfuerzo, duros: b.duros, carrera, comentario: b.comentario };
+  return { sesion: sid, hechos: b.hechos, esfuerzo: b.esfuerzo, duros: b.duros, carrera, comentario: b.comentario, strava: b.strava ?? '' };
 }
 
 async function cargar(ctx, sid) {
@@ -122,11 +123,12 @@ export async function pantallaSesion(ctx, sid) {
       h('p', { style: { margin: '4px 0 0' } }, `Esfuerzo ${registro.esfuerzo} · ${ESFUERZO[registro.esfuerzo]}`,
         registro.duros.length ? ` · ${registro.duros.length} ${registro.duros.length === 1 ? 'ejercicio duro' : 'ejercicios duros'}` : ''),
       registro.comentario ? h('p', { style: { margin: '6px 0 0' } }, `«${registro.comentario}»`) : null,
+      registro.strava ? h('p', { style: { margin: '6px 0 0' } }, 'Con enlace de Strava') : null,
       h('p', { style: { margin: '6px 0 0', fontSize: '15px' } }, 'Si marcas algo más, se guarda solo.'))
     : null;
 
   montar(
-    cabecera(ctx, { atras: { etiqueta: 'Volver a la semana', accion: () => ctx.volver(rutaSemana(ctx, sesion.fecha), (r) => r === '#/' || r.startsWith('#/semana')) } }),
+    cabecera(ctx, { atras: { etiqueta: 'Volver a la semana', accion: () => ctx.volver(rutaSemana(ctx, sesion.fecha), esRutaCalendario) } }),
     h('p', { class: 'antetitulo', style: { marginTop: '20px' } }, fechaLarga(sesion.fecha)),
     h('h1', {}, sesion.titulo),
     resumen,
@@ -312,6 +314,11 @@ export async function pantallaValorar(ctx, sid) {
     oninput: () => { borrador.comentario = comentario.value; guardarBorrador(); },
   });
   comentario.value = borrador.comentario;
+  const strava = h('input', {
+    id: 'strava', class: 'entrada', type: 'url', inputmode: 'url', autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false',
+    placeholder: 'Pega el enlace de la actividad', value: borrador.strava ?? '',
+    oninput: () => { borrador.strava = strava.value; guardarBorrador(); },
+  });
   // El error va en el pie fijo, junto al botón: así siempre se ve.
   const error = h('p', { class: 'error', 'aria-live': 'assertive', style: { margin: '0 0 8px', textAlign: 'center' } });
   const boton = h('button', { type: 'button', class: 'boton boton-principal boton-ancho' }, 'Guardar valoración');
@@ -353,6 +360,9 @@ export async function pantallaValorar(ctx, sid) {
     h('section', { class: 'bloque' },
       h('label', { class: 'campo', for: 'comentario' }, h('span', {}, 'Comentario (opcional)')),
       comentario),
+    h('section', { class: 'bloque' },
+      h('label', { class: 'campo', for: 'strava' }, h('span', {}, 'Enlace de Strava (opcional)')),
+      strava),
     h('div', { class: 'pie-fijo' }, error, boton),
   );
 }

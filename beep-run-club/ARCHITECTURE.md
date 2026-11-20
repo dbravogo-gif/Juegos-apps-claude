@@ -40,12 +40,13 @@ Todo agente lo lee antes de escribir código.
 
 | Ruta | Campos | Quién la usa |
 | --- | --- | --- |
-| `entrenadores/{uid}` | `nombre` | Existir aquí da permisos de entrenador |
+| `entrenadores/{uid}` | `nombre` | Existir aquí da permisos de entrenador (uno por entrenador) |
+| `club/politica` | `version`, `publicada`, `responsable{}`, `resumen[]`, `secciones[]` | La política de protección de datos vigente. Sin documento, vale la original del código |
 | `codigos/{codigo}` | `atleta`, `activo` | El código que teclea el atleta |
-| `codigos/{codigo}/dispositivos/{uid}` | `alta` | Cada móvil que entró con ese código |
+| `codigos/{codigo}/dispositivos/{uid}` | `alta`, `privacidad` (`version`, `fecha`) | Cada móvil que entró con ese código, con su aceptación de la protección de datos |
 | `atletas/{id}` | `nombre`, `codigo`, `estado` (`activo`, `archivado`) | Datos del atleta |
-| `atletas/{id}/sesiones/{sid}` | `fecha` (AAAA-MM-DD), `titulo`, `nota`, `ejercicios[]` | El plan |
-| `atletas/{id}/registros/{sid}` | `hechos[]`, `esfuerzo` (1–10), `duros[]`, `carrera{}`, `comentario`, `actualizado` | La valoración de la sesión `sid` |
+| `atletas/{id}/sesiones/{sid}` | `fecha` (AAAA-MM-DD), `titulo`, `nota`, `intensidad` (`suave`, `exigente`), `ejercicios[]` | El plan |
+| `atletas/{id}/registros/{sid}` | `hechos[]`, `esfuerzo` (1–10), `duros[]`, `carrera{}`, `comentario`, `strava`, `actualizado` | La valoración de la sesión `sid` |
 
 - Cada ejercicio lleva `id`, `nombre`, `detalle`, `nota` y `carrera` (sí o no).
 - **Entrar:**
@@ -63,12 +64,17 @@ Todo agente lo lee antes de escribir código.
   - **Limitar los móviles** más adelante solo añade un contador y una regla, sin migrar datos.
 - **Sin cobertura:** la caché persistente de Firestore guarda el plan y pone en cola las
   valoraciones hasta que vuelve la conexión.
+- **Sin índices manuales:** las novedades se leen atleta por atleta (con `orderBy` sobre su
+  propia colección) y los ejercicios ya usados se guardan en `club/biblioteca`. No hace falta
+  crear nada en la consola.
+- **En local se usa la demo** (las pruebas y las capturas corren en 127.0.0.1), salvo con
+  `?emulador`, que conecta con los emuladores.
 
 ## Dependencias
 
 | Dependencia | Licencia | Por qué hace falta |
 | --- | --- | --- |
-| Firebase JS SDK (CDN de gstatic, versión fijada con más de dos semanas) | Apache-2.0 | Sesión anónima y del entrenador, base de datos con caché sin conexión y cola de escrituras. Hacerlo a mano sería reinventarlo peor |
+| Firebase JS SDK 13.2.0, incluido en `vendor/firebase/` (gstatic está bloqueado en el entorno de desarrollo, y así funciona sin conexión) | Apache-2.0 | Sesión anónima y del entrenador, base de datos con caché sin conexión y cola de escrituras. Hacerlo a mano sería reinventarlo peor |
 | `@fontsource/bricolage-grotesque`, `@fontsource/dm-sans` (solo se copian los `.woff2`) | OFL-1.1 | Las fuentes de la marca, que también funcionan sin conexión |
 | Tesseract.js (solo en la fase 4; se carga la primera vez que se usa) | Apache-2.0 | Leer en el móvil las capturas de Strava, sin servidor ni coste |
 | `@firebase/rules-unit-testing` y el emulador (solo para desarrollo) | Apache-2.0 | Demostrar las reglas de seguridad con pruebas |
@@ -77,6 +83,10 @@ Todo agente lo lee antes de escribir código.
 
 - **`npm test`:** el núcleo, el almacén demo y las barreras de publicación. Por ejemplo, que el
   service worker guarde todos los archivos y que las versiones coincidan.
+- **`pruebas-reglas/` (`npm test` dentro):** las reglas de seguridad contra el emulador de
+  Firestore. Necesita Java y firebase-tools. Comprobado que fallan con unas reglas abiertas.
+- **`pruebas-reglas/` (`npm run e2e`):** la app entera contra los emuladores de Auth y Firestore,
+  con las reglas reales y el SDK real, incluida la valoración sin conexión.
 - **`npm run flujos`:** los flujos del atleta en Chromium. Usan Playwright, así que no corren en
   el flujo de publicación. Fallan si alguna pantalla muestra «null» o «undefined».
 

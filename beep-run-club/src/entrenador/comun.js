@@ -15,7 +15,7 @@ export function cabeceraPanel(ctx, { atras = null } = {}) {
 
 export function pestanas(activa) {
   const enlace = (ruta, texto, id) => h('a', { href: ruta, 'aria-current': activa === id ? 'page' : null }, texto);
-  return h('nav', { class: 'pestanas', 'aria-label': 'Secciones' }, enlace('#/novedades', 'Novedades', 'novedades'), enlace('#/atletas', 'Atletas', 'atletas'));
+  return h('nav', { class: 'pestanas', 'aria-label': 'Secciones' }, enlace('#/novedades', 'Novedades', 'novedades'), enlace('#/atletas', 'Atletas', 'atletas'), enlace('#/club', 'Club', 'club'));
 }
 
 /** Enlace que abre la app del atleta ya con su código. */
@@ -63,5 +63,7 @@ export function bloqueValoracion(nombre, sesion, registro) {
       h('dt', {}, 'Hechos'), h('dd', {}, `${registro.hechos.length} de ${sesion.ejercicios.length}`),
       registro.duros.length ? [h('dt', {}, 'Demasiado duro'), h('dd', { style: { fontWeight: '600' } }, registro.duros.map(nombreDe).join(', '))] : null,
       carrera ? [h('dt', {}, 'Carrera'), h('dd', {}, carrera)] : null,
-      registro.comentario ? [h('dt', {}, 'Comentario'), h('dd', {}, `«${registro.comentario}»`)] : null));
+      registro.comentario ? [h('dt', {}, 'Comentario'), h('dd', {}, `«${registro.comentario}»`)] : null,
+      registro.strava ? [h('dt', {}, 'Strava'), h('dd', {},
+        h('a', { href: registro.strava, target: '_blank', rel: 'noopener noreferrer', class: 'enlace-strava' }, 'Ver la actividad ↗'))] : null));
 }
