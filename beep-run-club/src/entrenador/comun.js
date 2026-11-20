@@ -1,5 +1,5 @@
 // Piezas compartidas del panel: cabecera, enlace del atleta y bloque de valoración.
-import { h, icono, tostada } from '../comun/ui.js';
+import { h, icono, tostada, montar } from '../comun/ui.js';
 import { ESFUERZO, esDura } from '../nucleo/registro.js';
 import { textoCarrera } from '../nucleo/exportar.js';
 
@@ -11,6 +11,11 @@ export function cabeceraPanel(ctx, { atras = null } = {}) {
         h('div', { class: 'logo', role: 'img', 'aria-label': 'Beep Run Club' }), h('span', { class: 'rol' }, 'Entrenador')),
     atras ? h('div', { class: 'logo', role: 'img', 'aria-label': 'Beep Run Club' }) : null,
     h('button', { type: 'button', class: 'boton-icono', 'aria-label': 'Salir del panel', onclick: () => ctx.salir() }, icono('salir')));
+}
+
+/** «Cargando…» al momento, para que el toque se note aunque la red tarde. */
+export function pantallaCargando(ctx, atras = null) {
+  montar(cabeceraPanel(ctx, { atras }), h('p', { class: 'cargando', role: 'status' }, 'Cargando…'));
 }
 
 export function pestanas(activa) {

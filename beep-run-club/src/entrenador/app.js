@@ -16,6 +16,7 @@ const CLAVE_DEMO = 'beep_entrenador_demo';
 const ctx = {
   almacen: null,
   dentro: false,
+  turno: 0, // sube en cada cambio de pantalla: lo que llega tarde de la anterior no se pinta
   pantalla: '',
   hoy,
   lunesHoy: () => lunesDe(hoy()),
@@ -58,6 +59,7 @@ function pantallaAcceso(error = '') {
 }
 
 function rutear() {
+  ctx.turno += 1;
   if (!ctx.dentro) return pantallaAcceso();
   const [seccion, id, sub, extra] = location.hash.replace(/^#\/?/, '').split('/');
   if (seccion === 'atletas') { ctx.pantalla = 'atletas'; return pantallaAtletas(ctx); }

@@ -105,6 +105,35 @@ await foto(E.p, '61-entrenador-firebase');
 await E.p.goto(`${BASE}entrenador/?emulador&hoy=${HOY}#/club`); await espera(E.p, 1500);
 ok(/La han aceptado 1 de 1/.test(await E.p.locator('body').innerText()), 'cuenta la aceptación del atleta');
 
+// --- Con la latencia de una red móvil (lo que vio el autor en su iPhone, 2026-11-20) ---
+const L = await nuevo(IPHONE);
+const red = await L.ctx.newCDPSession(L.p);
+await red.send('Network.enable');
+await red.send('Network.emulateNetworkConditions', { offline: false, latency: 400, downloadThroughput: 200000, uploadThroughput: 100000 });
+await L.p.goto(`${BASE}?emulador&hoy=${HOY}&c=${codigo}`);
+await L.p.waitForSelector('#acepto', { timeout: 30000 });
+await L.p.check('#acepto');
+await L.p.locator('button', { hasText: 'Aceptar y continuar' }).click();
+ok(/Un momento/.test(await L.p.locator('.privacidad .boton-principal').innerText()), 'lenta: al aceptar, el botón responde al momento («Un momento…»)');
+await L.p.waitForFunction(() => ['instalar', 'semana'].includes(window.__BEEP__.estado().pantalla), null, { timeout: 30000 });
+if (await L.p.locator('button', { hasText: 'Ahora no' }).count()) await L.p.locator('button', { hasText: 'Ahora no' }).click();
+await L.p.waitForSelector('.es-hoy .tarjeta-sesion', { timeout: 30000 });
+await L.p.click('.es-hoy .tarjeta-sesion');
+await L.p.waitForTimeout(50);
+ok(await L.p.locator('.cargando').count() === 1, 'lenta: al abrir la sesión, «Cargando…» sale al momento');
+await L.p.click('.cabecera .boton-icono'); // atrás antes de que termine de cargar
+await L.p.waitForTimeout(3500);
+ok(await L.p.evaluate(() => window.__BEEP__.estado().pantalla) === 'semana' && (await L.p.locator('h1').innerText()) === 'Hola, Prueba',
+  'lenta: si se vuelve atrás mientras carga, la sesión no aparece después encima');
+await L.p.click('.es-hoy .tarjeta-sesion');
+await L.p.waitForSelector('.pie-fijo .boton-principal', { timeout: 30000 });
+const t0 = Date.now();
+await L.p.click('.pie-fijo .boton-principal');
+await L.p.waitForSelector('#titulo-esfuerzo', { timeout: 30000 });
+const ms = Date.now() - t0;
+ok(ms < 400, `lenta: «Terminar y valorar» se pinta en ${ms} ms (antes, 800 ms sin señal)`);
+await L.ctx.close();
+
 // --- Desactivar el código echa al atleta ---
 await E.p.click('a[href="#/atletas"]'); await espera(E.p, 1200);
 await E.p.locator('.tarjeta', { hasText: 'Prueba Uno' }).click(); await espera(E.p, 1200);

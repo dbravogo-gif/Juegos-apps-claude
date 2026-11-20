@@ -1,6 +1,6 @@
 // Service worker de Beep Run Club: guarda la app para que abra sin conexión.
 // Al publicar un cambio, sube VERSION (y la de src/version.js: una prueba comprueba que coinciden).
-const VERSION = '0.5.0';
+const VERSION = '0.5.1';
 const CACHE = `beep-run-club-${VERSION}`;
 
 // Toda la app (atleta y entrenador) en la misma versión, para no mezclar módulos viejos y nuevos
