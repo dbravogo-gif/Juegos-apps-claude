@@ -324,8 +324,8 @@ Que un renacuajo no sea del tamaño de un dragón (autor).
 
 ## Evolución (2026-11-19)
 
-Propia, no la del género (R8). De la idea común se quedan la anticipación, el latido entre las
-dos formas y el destello. Lo nuestro (revisado con el probador y el autor):
+Propia, no la del género (R8). De la idea común se quedan la anticipación, el latido y el
+destello. Lo nuestro (revisado con el probador y el autor):
 - **fondo blanco roto** y una **isla flotante según el tipo principal** de la forma nueva
   (`sistemas/combate/escenario-evolucion.ts`; rehecha el 2026-11-19 porque al autor le pareció muy
   pobre la primera, de discos planos y confeti):
@@ -361,7 +361,6 @@ dos formas y el destello. Lo nuestro (revisado con el probador y el autor):
     - en el modo desarrollador, «Probar evolución» enseña el de cualquier tipo;
   - tras la revisión del probador (2026-11-19):
     - el Sello, al 78 %, cabe entero en el suelo liso;
-    - la silueta lleva un contorno oscuro para que se lea sobre cualquier suelo;
     - las criaturas pequeñas se ven al menos de 1,15 de alto;
     - lo que cae no pasa por delante de la criatura;
     - el destello suma luz y lanza una onda por el suelo;
@@ -370,9 +369,13 @@ dos formas y el destello. Lo nuestro (revisado con el probador y el autor):
       piedras y hierba seca) tienen más carácter;
 - **el Sello de la historia se dibuja sobre la plataforma,** en claro: los trece círculos del cubo
   de Metatrón, que se tocan, y después las líneas que unen sus centros;
-- la criatura, hecha silueta del color de su tipo, late entre su forma y la nueva;
-- con el fogonazo, el Sello sale despedido y queda la nueva, que se ve casi dos segundos antes de
-  poder pasar el mensaje;
+- **sin silueta** (autor, 2026-11-20): la criatura, tal cual, crece y mengua cinco veces, cada vez
+  más deprisa, y cada vez que mengua la tapa una bola de luz blanca (con el borde del color del
+  tipo); a la quinta se queda dentro y la bola crece;
+- con el fogonazo, la bola revienta, el Sello sale despedido y la nueva sale de dentro; se ve casi
+  dos segundos antes de poder pasar el mensaje;
+- fuera de combate (almendrado o caramelo), se pasa del negro directamente a la evolución, sin ver
+  la arena de combate (autor, 2026-11-20);
 - textos propios: «¡El Sello reacciona a X! (X: pararlo)», «¡X es ahora Y!» y, si se para, «X se
   aparta del Sello y sigue igual».
 
