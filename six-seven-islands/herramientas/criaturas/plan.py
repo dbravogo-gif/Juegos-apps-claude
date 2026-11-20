@@ -130,7 +130,8 @@ ESPECIES = [
     (32, 'Ravich → Azurvan', ['Aire', 'Aire'], 'lz-golfo', ['lz-jable', 'tf-anaga'], 'Hecha por el autor.'),
     (37, 'Aculiso → Sierpajable', ['Agua', 'Agua/Tierra'], 'lz-golfo', ['lz-famara'], 'Hecha por el autor.'),
     (7, 'Dragosil → Dragombo → Dragalis', ['Planta', 'Planta', 'Planta'], 'lz-golfo*', ['lp-garafia'], 'Lámina del autor; hecha.'),
-    (13, 'Quillflare → Quillfire → Quimfernum', ['Infernal', 'Infernal', 'Infernal/Tierra'], 'lz-fuego', [], 'Hecha por el autor.'),
+    # Nada de Tierra en esta línea, ni en tipos ni en ataques (autor, 2026-11-20).
+    (13, 'Quillflare → Quillfire → Quimfernum', ['Infernal', 'Infernal', 'Infernal'], 'lz-fuego', [], 'Hecha por el autor.'),
     (43, 'Kotono → Koloi', ['Lucha', 'Lucha'], 'lz-fuego', ['lz-jable*'], 'Hecha por el autor.'),
     (12, 'Oreps → Mineps → Colossoreps', ['Roca', 'Roca', 'Roca'], 'lz-famara*', ['lz-fuego*'], 'Hecha por el autor.'),
     (34, 'Kine → Kurokin', ['Tierra', 'Tierra'], 'lz-jable', [], 'Hecha por el autor.'),
@@ -138,7 +139,7 @@ ESPECIES = [
     (35, 'Aerund → Marwen', ['Aire', 'Aire/Agua'], 'lz-famara', ['fv-ajuy', 'fv-sotavento', 'lg-organos', 'eh-orchilla'], LAMINA),
     (18, 'Salmito → Salmarín → Salmástil', ['Agua', 'Agua', 'Agua/Hielo'], 'lz-famara', [],
      'Nombre del autor; el aspecto, por diseñar.'),
-    # Las cinco leyendas de los pueblos (HISTORIA.md). Propuesta del 2026-11-20, pendiente del autor
+    # Las cinco leyendas de los pueblos (HISTORIA.md). Aprobado por el autor el 2026-11-20
     # («los legendarios, mínimo a mitad del juego y con algo que ver con la historia»): tras la
     # traición de Chano, las ancestrales las escondieron por las islas del oeste, y cada una
     # despierta al llegar a su escondite. Los pueblos siguen siendo de Lanzarote.

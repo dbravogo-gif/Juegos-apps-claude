@@ -37,7 +37,7 @@ export const ESPECIES_CRIATURAS: readonly Especie[] = [
   // Pok26: Krokorok (Q2, AF).
   { id: 'c013-2', nombre: 'Quillfire', tipos: ['infernal'], base: base(60, 82, 45, 45, 45, 74), expBase: 75, ratioCaptura: 150, aprende: [{ nivel: 1, movimiento: 'soplo-de-brasas' }, { nivel: 1, movimiento: 'orejazo-ardiente' }, { nivel: 1, movimiento: 'topetazo' }, { nivel: 1, movimiento: 'mirada-fija' }], evoluciona: [{ a: 'c013-3', nivel: 36 }], altura: 0.7, descripcion: '' },
   // Pok27: Krookodile (Q4, AF).
-  { id: 'c013-3', nombre: 'Quimfernum', tipos: ['infernal', 'tierra'], base: base(95, 117, 80, 65, 70, 92), expBase: 170, ratioCaptura: 60, aprende: [{ nivel: 1, movimiento: 'orejazo-ardiente' }, { nivel: 1, movimiento: 'soplo-de-brasas' }, { nivel: 1, movimiento: 'pisoton' }, { nivel: 1, movimiento: 'barrito' }], altura: 1.4, descripcion: '' },
+  { id: 'c013-3', nombre: 'Quimfernum', tipos: ['infernal'], base: base(95, 117, 80, 65, 70, 92), expBase: 170, ratioCaptura: 60, aprende: [{ nivel: 1, movimiento: 'orejazo-ardiente' }, { nivel: 1, movimiento: 'soplo-de-brasas' }, { nivel: 1, movimiento: 'topetazo' }, { nivel: 1, movimiento: 'barrito' }], altura: 1.4, descripcion: '' },
   // Pok28: Riolu (Q1, AF).
   { id: 'c043-1', nombre: 'Kotono', tipos: ['lucha'], base: base(40, 70, 40, 35, 40, 60), expBase: 55, ratioCaptura: 200, aprende: [{ nivel: 1, movimiento: 'topetazo' }, { nivel: 1, movimiento: 'mirada-fija' }, { nivel: 5, movimiento: 'agarron' }], evoluciona: [{ a: 'c043-2', nivel: 20 }], altura: 0.3, descripcion: '' },
   // Pok29: Lucario (Q4, AE).

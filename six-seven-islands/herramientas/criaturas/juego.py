@@ -49,7 +49,7 @@ ATAQUES = {
          [(1, 'rodada-de-piedra'), (1, 'pisoton'), (1, 'barrito'), (1, 'topetazo')]],
     13: [[(1, 'topetazo'), (1, 'mirada-fija'), (5, 'soplo-de-brasas'), (10, 'orejazo-ardiente')],
          [(1, 'soplo-de-brasas'), (1, 'orejazo-ardiente'), (1, 'topetazo'), (1, 'mirada-fija')],
-         [(1, 'orejazo-ardiente'), (1, 'soplo-de-brasas'), (1, 'pisoton'), (1, 'barrito')]],
+         [(1, 'orejazo-ardiente'), (1, 'soplo-de-brasas'), (1, 'topetazo'), (1, 'barrito')]],
     43: [[(1, 'topetazo'), (1, 'mirada-fija'), (5, 'agarron')],
          [(1, 'agarron'), (1, 'topetazo'), (1, 'mirada-fija'), (1, 'barrito')]],
     12: [[(1, 'topetazo'), (1, 'caparazon'), (5, 'rodada-de-piedra')],

@@ -33,7 +33,7 @@ Todas cuadran: si no, el script no genera nada.
 | --- | --- | --- | --- |
 | Común | 16 | 16 | 0 |
 | Agua | 21 | 21 | 8 |
-| Tierra | 11 | 11 | 8 |
+| Tierra | 11 | 11 | 7 |
 | Planta | 17 | 17 | 4 |
 | Aire | 11 | 11 | 9 |
 | Eléctrico | 11 | 11 | 0 |
@@ -234,7 +234,7 @@ nombre lo pone el autor. La idea va en la primera forma de cada especie.
 | Pok24. Dragalis | 007-3 (hecha) | 3.ª | Planta A | Ludicolo (Q4, TE) | 3,0 m |  |  |
 | Pok25. Quillflare | 013-1 (hecha) | 1.ª | Infernal | Sandile (Q1, AF) | 0,3 m | Montañas del Fuego | Hecha por el autor. |
 | Pok26. Quillfire | 013-2 (hecha) | 2.ª | Infernal | Krokorok (Q2, AF) | 0,7 m |  |  |
-| Pok27. Quimfernum | 013-3 (hecha) | 3.ª | Infernal/Tierra | Krookodile (Q4, AF) | 1,4 m |  |  |
+| Pok27. Quimfernum | 013-3 (hecha) | 3.ª | Infernal | Krookodile (Q4, AF) | 1,4 m |  |  |
 | Pok28. Kotono | 043-1 (hecha) | 1.ª | Lucha | Riolu (Q1, AF) | 0,3 m | Montañas del Fuego | Hecha por el autor. |
 | Pok29. Koloi | 043-2 (hecha) | 2.ª | Lucha | Lucario (Q4, AE) | 1,1 m |  |  |
 | Pok30. Oreps | 012-1 (hecha) | 1.ª | Roca | Roggenrola (Q1, TF) | 0,4 m | Famara (rara) | Hecha por el autor. |
