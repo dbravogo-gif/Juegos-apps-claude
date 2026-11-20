@@ -9,6 +9,7 @@
 
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Partida } from '../partida/partida';
+import { agrupar, elegirPista, listaPara, semillaDe } from './musica-grabada';
 
 /** Un efecto: un tono que va de una frecuencia a otra, o un soplo de ruido, o varias notas. */
 export interface DefEfecto {
@@ -190,6 +191,11 @@ export function sonidoActivo(): boolean {
 
 const hz = (semitonos: number) => 220 * 2 ** (semitonos / 12);
 
+/** Las pistas grabadas que haya en src/assets/musica/<lista>/ (musica-grabada.ts). */
+const PISTAS = agrupar(import.meta.glob<string>('../../assets/musica/*/*.{mp3,m4a,ogg,wav}', { eager: true, query: '?url', import: 'default' }));
+/** Volumen de la música grabada, sobre el general. */
+const VOLUMEN_GRABADA = 0.55;
+
 export class Sonido implements Subsistema {
   static readonly id = 'sonido';
   static readonly deps: readonly string[] = ['partida'];
@@ -208,6 +214,15 @@ export class Sonido implements Subsistema {
   private reloj: number | null = null;
   private capas = new Map<Capa, GainNode>();
   private quitar: (() => void)[] = [];
+  /** El rival del combate en curso, para elegir su música. */
+  private rival: { entrenador: string | null; soloEvolucion?: boolean } = { entrenador: null };
+  private combates = 0;
+  private pistaCombate: string | undefined;
+  /** La pista grabada que suena, la que se está leyendo y las que no se pudieron leer. */
+  private grabada: { url: string; fuente: AudioBufferSourceNode; volumen: GainNode } | null = null;
+  private cargando: string | null = null;
+  private fallidas = new Set<string>();
+  private leidas = new Map<string, Promise<AudioBuffer | null>>();
 
   init(ctx: Ctx): void {
     this.partida = ctx.get<Partida>('partida');
@@ -218,6 +233,12 @@ export class Sonido implements Subsistema {
     this.quitar.push(
       ev.on('sonido:tocar', ({ nombre }) => this.tocar(nombre as NombreEfecto)),
       ev.on('sonido:alternar', () => this.alternar()),
+      ev.on('combate:rival', (r) => {
+        this.rival = r;
+        if (r.soloEvolucion) return;
+        this.combates++;
+        this.pistaCombate = undefined;
+      }),
       ev.on('encuentro:inicio', () => this.tocar('encuentro')),
       ev.on('entrenador:visto', () => this.tocar('exclamacion')),
       ev.on('objeto:recogido', () => this.tocar('objeto')),
@@ -321,7 +342,11 @@ export class Sonido implements Subsistema {
   private programarMusica(): void {
     const a = this.audio;
     if (!a) return;
-    const quiere: keyof typeof MUSICA = this.partida.modo === 'combate' ? 'combate' : 'explorar';
+    // La grabada, si la hay para esta situación; mientras se lee, silencio.
+    const url = this.pistaQueToca();
+    if (url !== (this.cargando ?? this.grabada?.url ?? null)) this.cambiarGrabada(url);
+    if (this.grabada || this.cargando) return;
+    const quiere: keyof typeof MUSICA = this.partida.modo === 'combate' && !this.rival.soloEvolucion ? 'combate' : 'explorar';
     if (quiere !== this.tema) {
       this.tema = quiere;
       this.indiceNota = 0;
@@ -356,6 +381,68 @@ export class Sonido implements Subsistema {
       this.siguienteNota += paso;
       this.indiceNota++;
     }
+  }
+
+  /** La pista grabada que toca ahora, o null para la música hecha con código. */
+  private pistaQueToca(): string | null {
+    const e = this.partida.estado;
+    const lista = listaPara({ modo: this.partida.modo, entrenador: this.rival.entrenador, soloEvolucion: this.rival.soloEvolucion, zona: e.zona, dentro: e.dentro });
+    if (lista === 'igual') return this.cargando ?? this.grabada?.url ?? null;
+    if (!lista) return null;
+    const pistas = PISTAS[lista].filter((u) => !this.fallidas.has(u));
+    // Cada ciudad, siempre su canción; cada combate, una al azar de su lista.
+    if (lista === 'lugares') return elegirPista(pistas, semillaDe(e.dentro?.startsWith('gimnasio') ? e.dentro : e.zona)) ?? null;
+    this.pistaCombate ??= elegirPista(pistas, this.combates);
+    return this.pistaCombate ?? null;
+  }
+
+  /** Funde la pista que suene y empieza otra (o vuelve la música hecha con código, con null). */
+  private cambiarGrabada(url: string | null): void {
+    const a = this.audio!;
+    const vieja = this.grabada;
+    if (vieja) {
+      vieja.volumen.gain.setTargetAtTime(0, a.currentTime, 0.25);
+      vieja.fuente.stop(a.currentTime + 1.5);
+    }
+    this.grabada = null;
+    this.cargando = url;
+    // La hecha con código vuelve desde el principio de su tema.
+    this.tema = null;
+    if (!url) return;
+    void this.leer(url).then((buffer) => {
+      if (this.cargando !== url) return;
+      this.cargando = null;
+      if (!buffer) {
+        this.fallidas.add(url);
+        return;
+      }
+      const fuente = a.createBufferSource();
+      fuente.buffer = buffer;
+      fuente.loop = true;
+      const volumen = a.createGain();
+      volumen.gain.value = 0;
+      volumen.gain.setTargetAtTime(VOLUMEN_GRABADA, a.currentTime, 0.2);
+      fuente.connect(volumen).connect(this.general);
+      fuente.start();
+      this.grabada = { url, fuente, volumen };
+    });
+  }
+
+  /** Lee y descodifica una pista; guarda las tres últimas (cada una ocupa decenas de MB). */
+  private leer(url: string): Promise<AudioBuffer | null> {
+    let p = this.leidas.get(url);
+    if (!p) {
+      p = fetch(url)
+        .then((r) => (r.ok ? r.arrayBuffer() : Promise.reject(new Error(`${r.status}`))))
+        .then((datos) => this.audio!.decodeAudioData(datos))
+        .catch(() => null);
+      this.leidas.set(url, p);
+      for (const vieja of this.leidas.keys()) {
+        if (this.leidas.size <= 3) break;
+        if (vieja !== url && vieja !== this.grabada?.url) this.leidas.delete(vieja);
+      }
+    }
+    return p;
   }
 
   /** Una nota de una de las voces de la música. */

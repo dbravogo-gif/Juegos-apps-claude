@@ -339,6 +339,12 @@ pequeño en el pueblo y la ruta costera se queda fuera (`LA-PALMA.md`).
 - 2026-11-12 · **Sonido** (F24) por código, sin archivos: efectos para menús, hierba, puertas,
   golpes, captura, subir de nivel… y dos melodías en bucle (explorar y combate). Se silencia
   en el menú, y ahí mismo se escucha cada efecto para valorarlo.
+- 2026-11-20 · **Música grabada** (autor): pistas de Pixabay que elige el autor, en tres listas
+  (`src/assets/musica/`): combates normales (una al azar en cada combate), combates importantes
+  (líderes, liga y jefes de la facción) y lugares (ciudades, pueblos y gimnasios; cada sitio,
+  siempre la misma). Donde no hay pista, sigue la música hecha con código. Licencia de Pixabay:
+  se pueden usar en un juego, también comercial, sin atribución; no se pueden vender ni repartir
+  sueltas. Se apuntan en `CREDITS.md`.
 - 2026-11-12 · **Portada:** una partida nueva empieza eligiendo persona (las de los amigos, con su
   foto) y escribiendo el nombre, que sale en los diálogos (`{nombre}` en un texto). Con una
   partida guardada se sigue donde se dejó.

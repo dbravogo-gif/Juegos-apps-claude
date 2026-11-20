@@ -152,7 +152,8 @@ Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
 - **Amigos:** sus fotos y GLB de Meshy para las personas jugables, y sus 2 o 3 poses para los
   retratos de diálogo.
 - **Dani con `Idle`** en el GLB (opcional).
-- **Puntuar de 1 a 5** lo último publicado (2026-11-19):
+- **Puntuar de 1 a 5** lo último publicado (2026-11-19 y 20):
+  - la evolución con la bola de luz, sin silueta, y con el almendrado sin ver la arena;
   - la evolución nueva, con la isla de su tipo (sube una criatura con el modo desarrollador);
   - el combate: qué hace cada ataque, tipos bajo el nombre y el cursor en el último ataque;
   - las teclas A, Z y X (WASD ya no anda);
@@ -165,6 +166,9 @@ Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
     nueva al explorar y en combate, y el ambiente de cada zona (mar en Famara, viento en el Jable,
     volcán en las Montañas del Fuego, pájaros en La Geria).
 
+- **Música (2026-11-20):** descargar de Pixabay las pistas que le gustan y subirlas, tal cual se
+  descargan, a su carpeta: combates normales (`combate`), combates importantes (`importante`) y
+  ciudades (`lugares`). Enlaces en `src/assets/musica/LEEME.md`.
 - Medir los FPS en los ordenadores del autor y de sus amigos.
 - Prueba de Meshy: pagar Pro el primer mes (~10 $), y descargar y subir `planta-2.glb`
   (`prompts-meshy.md`). Puede cambiar según el punto 5.
