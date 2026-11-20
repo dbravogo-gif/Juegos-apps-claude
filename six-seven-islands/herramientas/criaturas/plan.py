@@ -28,18 +28,14 @@ OBJETIVO = {
 CREDITOS_POR_CRIATURA = 15
 
 # ── Islas y zonas ─────────────────────────────────────────────────────────────────────────────
-# (id, nombre, niveles). Las de niveles None son de leyenda: salen tras la Liga.
+# (id, nombre, niveles). Las de niveles None son de leyenda: ninguna antes de la mitad del viaje.
 ISLAS = [
     ('lz', 'Lanzarote', 'Roca', 'en la Capital, líder 11-12', [
         ('lz-golfo', 'El Golfo', (3, 5)),
         ('lz-fuego', 'Montañas del Fuego', (5, 7)),
         ('lz-jable', 'El Jable', (6, 8)),
         ('lz-famara', 'Famara', (6, 8)),
-        ('lz-geria', 'La Geria (leyenda)', None),
-        ('lz-crater', 'Montañas del Fuego, el cráter (leyenda)', None),
-        ('lz-risco', 'Risco de Famara (leyenda)', None),
-        ('lz-sepultados', 'Pueblos sepultados (leyenda)', None),
-        ('lz-jameos', 'Los jameos (leyenda; zona por crear)', None),
+        # Sin leyendas en Lanzarote (autor, 2026-11-20): salen desde la mitad del viaje.
     ]),
     ('fv', 'Fuerteventura', 'Aire', 'en Morro Jable, líder 20-21', [
         ('fv-dunas', 'Las Dunas', (10, 13)),
@@ -71,6 +67,8 @@ ISLAS = [
         ('tf-gigantes', 'Los Gigantes (costa)', (32, 35)),
         ('tf-canadas', 'Las Cañadas', (33, 36)),
         ('tf-cima', 'El Teide, la cima (leyenda)', None),
+        ('tf-teide', 'El Teide, por dentro (leyenda; al abrir el Sello)', None),
+        ('tf-cueva-fondo', 'Cueva del Viento, lo más hondo (leyenda)', None),
         ('tf-hielo', 'Cueva del Hielo del Teide (leyenda)', None),
     ]),
     ('lg', 'La Gomera', 'Mental', 'en Chipude, junto a La Fortaleza, líder 44-45', [
@@ -80,6 +78,7 @@ ISLAS = [
         ('lg-granrey', 'Valle Gran Rey', (37, 40)),
         ('lg-organos', 'Los Órganos (costa)', (38, 41)),
         ('lg-alto', 'Alto de Garajonay (leyenda)', None),
+        ('lg-hesperides', 'Garajonay, el jardín de las Hespérides (leyenda)', None),
         ('lg-errante', 'Entre Tenerife y La Gomera (leyenda errante)', None),
     ]),
     ('lp', 'La Palma', 'Planta', 'en La Caldera de Taburiente, líder 50-51', [
@@ -90,6 +89,7 @@ ISLAS = [
         ('lp-roque', 'Roque de los Muchachos', (44, 47)),
         ('lp-fuencaliente', 'Fuencaliente', (45, 48)),
         ('lp-observatorio', 'El observatorio del Roque (leyenda)', None),
+        ('lp-caldera-fondo', 'El fondo de La Caldera (leyenda)', None),
     ]),
     ('eh', 'El Hierro', 'Infernal/Ancestral', 'en Valverde, al final de la Bajada, líder 54-56', [
         ('eh-orchilla', 'Orchilla (llegada)', (47, 50)),
@@ -100,6 +100,7 @@ ISLAS = [
         ('eh-restinga', 'La Restinga (opcional)', (52, 55)),
         ('eh-tagoro', 'El volcán bajo el mar de La Restinga (leyenda)', None),
         ('eh-nubes', 'El mar de nubes (leyenda)', None),
+        ('eh-risco', 'El risco de Tibataje (leyenda)', None),
     ]),
 ]
 
@@ -137,16 +138,20 @@ ESPECIES = [
     (35, 'Aerund → Marwen', ['Aire', 'Aire/Agua'], 'lz-famara', ['fv-ajuy', 'fv-sotavento', 'lg-organos', 'eh-orchilla'], LAMINA),
     (18, 'Salmito → Salmarín → Salmástil', ['Agua', 'Agua', 'Agua/Hielo'], 'lz-famara', [],
      'Nombre del autor; el aspecto, por diseñar.'),
-    # Las cinco leyendas de los pueblos (HISTORIA.md): duermen en Lanzarote y salen tras la Liga.
-    (94, None, ['Planta/Tierra'], 'lz-geria', [],
-     'La leyenda verde, del pueblo del Hoyo: gran criatura de vid y picón que duerme en un hoyo de La Geria.'),
-    (95, 'Magecora', ['Infernal/Mental'], 'lz-crater', [], 'Lámina del autor: la leyenda infernal, del pueblo de la Colada.'),
-    (92, None, ['Roca/Aire'], 'lz-risco', [],
-     'La leyenda de roca, del pueblo del Risco: guardiana del acantilado de Famara, de basalto y viento.'),
-    (91, None, ['Tierra/Espectral'], 'lz-sepultados', [],
-     'La leyenda de tierra, del pueblo del Llano: duerme bajo los pueblos que sepultó el volcán.'),
-    (93, None, ['Agua/Oscuridad'], 'lz-jameos', [],
-     'La leyenda del agua, del pueblo del Jameo: gran criatura blanca y ciega de los túneles donde entra el mar.'),
+    # Las cinco leyendas de los pueblos (HISTORIA.md). Propuesta del 2026-11-20, pendiente del autor
+    # («los legendarios, mínimo a mitad del juego y con algo que ver con la historia»): tras la
+    # traición de Chano, las ancestrales las escondieron por las islas del oeste, y cada una
+    # despierta al llegar a su escondite. Los pueblos siguen siendo de Lanzarote.
+    (94, None, ['Planta/Tierra'], 'lg-hesperides', [],
+     'La leyenda verde, del pueblo del Hoyo: escondida en la laurisilva de Garajonay, el jardín de las Hespérides de los antiguos; guarda frutos de oro y sangra savia de drago.'),
+    (95, 'Magecora', ['Infernal/Mental'], 'tf-teide', [],
+     'Lámina del autor: la leyenda infernal, del pueblo de la Colada. Encerrada dentro del Teide, como Guayota en el mito: por eso el Teide está cerrado y retumba; se la encuentra al abrir el Sello.'),
+    (92, None, ['Roca/Aire'], 'eh-risco', [],
+     'La leyenda de roca, del pueblo del Risco: de basalto y viento, escondida en el risco de Tibataje, en la isla que ocultaron las ancestrales.'),
+    (91, None, ['Tierra/Espectral'], 'lp-caldera-fondo', [],
+     'La leyenda de tierra, del pueblo del Llano: duerme en el fondo de La Caldera de Taburiente.'),
+    (93, None, ['Agua/Oscuridad'], 'tf-cueva-fondo', [],
+     'La leyenda del agua, del pueblo del Jameo: gran criatura blanca y ciega de los tubos de lava, escondida en lo más hondo de la Cueva del Viento.'),
 
     # Fuerteventura
     (44, None, ['Aire', 'Aire/Tierra'], 'fv-dunas', ['fv-sotavento'],
@@ -612,11 +617,11 @@ def markdown(filas, c):
         gen = sum(not f['hecha'] for f in fs)
         a(f'| {nombre} | {esp} | {len(fs)} | {gen} | {miles(gen * CREDITOS_POR_CRIATURA)} |')
     a(f'| **Total** | | **{total}** | **{falta}** | **{miles(falta * CREDITOS_POR_CRIATURA)}** |\n')
-    a('Lanzarote incluye las 15 iniciales y las 5 leyendas de los pueblos, que duermen allí.\n')
+    a('Lanzarote incluye las 15 iniciales. Las leyendas, desde la mitad del viaje (autor, 2026-11-20).\n')
 
     a('## Las islas y sus zonas\n')
-    a('En cada zona, las especies que salen, con la nueva de esa zona en **negrita**. Las leyendas salen')
-    a('tras la Liga. Niveles: los de `ISLA-3.md` hasta Gran Canaria; después, propuesta. En las islas del')
+    a('En cada zona, las especies que salen, con la nueva de esa zona en **negrita**. Las leyendas de los')
+    a('pueblos despiertan al llegar a su escondite; las guardianas, tras la Liga. Niveles: los de `ISLA-3.md` hasta Gran Canaria; después, propuesta. En las islas del')
     a('final, una especie que se conoció antes sale ya evolucionada, según el nivel de la zona.\n')
     nombres = {n: nombre_especie(n, nom) for n, nom, *_r in ESPECIES}
     principal_de = {n: limpia(z) for n, _x, _t, z, *_r in ESPECIES}

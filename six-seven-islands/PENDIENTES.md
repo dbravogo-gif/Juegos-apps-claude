@@ -48,6 +48,19 @@ propuesta de Claude y qué frena mientras siga abierto.
     preguntar. **Propuesta:** la pantalla de «¿Olvidar un ataque?» al subir de nivel, y después más
     ataques por tipo (también uno flojo de fuego y otro de roca para las iniciales). Coste medio.
 
+12. **Las leyendas, fuera de Lanzarote** (autor, 2026-11-20: «mínimo a mitad del juego, y con algo
+    que ver con la historia»). Ya movidas en el plan y el Excel; falta que el autor apruebe la
+    historia para escribirla en `HISTORIA.md`. **Propuesta:** tras la traición de Chano, las
+    ancestrales escondieron también a las cinco leyendas por las islas del oeste, y cada una
+    despierta al llegar a su escondite:
+    - Magecora (infernal): dentro del Teide, encerrada como Guayota; por eso está cerrado y
+      retumba, y se la encuentra al abrir el Sello;
+    - la del agua: lo más hondo de la Cueva del Viento (Tenerife), un tubo de lava como los jameos;
+    - la verde: Garajonay (La Gomera), el jardín de las Hespérides, con frutos de oro y drago;
+    - la de tierra: el fondo de La Caldera de Taburiente (La Palma);
+    - la de roca: el risco de Tibataje (El Hierro), la isla escondida.
+    Los pueblos siguen siendo de Lanzarote. Las siete guardianas no cambian.
+
 11b. **Equilibrio de la tabla** (2026-11-13). Hecho lo que pidió el autor: Acero ya no resiste
     Planta, Aire ni Mental (de 9 resistencias a 6); Bicho ya no es ×2 contra Planta, e Infernal
     ya no resiste a Acero. Lucha lleva 9 criaturas.
