@@ -34,6 +34,10 @@ export function pedirPrivacidad(politica, { actualizada = false } = {}) {
     const aceptar = h('button', { type: 'button', class: 'boton boton-principal boton-ancho', disabled: true }, 'Aceptar y continuar');
     casilla.addEventListener('change', () => { aceptar.disabled = !casilla.checked; });
     aceptar.addEventListener('click', () => {
+      // Lo que sigue (registrar el móvil) puede tardar unos segundos con mala cobertura: se nota.
+      aceptar.disabled = true;
+      aceptar.textContent = 'Un momento…';
+      casilla.disabled = true;
       const aceptacion = { version: politica.version, fecha: new Date().toISOString() };
       guardarLocal(CLAVE, aceptacion);
       resolver(aceptacion);

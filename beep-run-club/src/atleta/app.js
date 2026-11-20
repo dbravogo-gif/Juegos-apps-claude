@@ -28,6 +28,8 @@ let reemplazando = false;
 
 const ctx = {
   almacen: null,
+  turno: 0, // sube en cada cambio de pantalla: lo que llega tarde de la anterior no se pinta
+  cache: new Map(), // sesiones y valoraciones leídas en esta visita (ver atleta/sesion.js)
   sesion: leerLocal(CLAVE_SESION),
   pantalla: '',
   hoy,
@@ -82,6 +84,7 @@ const ctx = {
   },
 
   cerrarSesion(aviso = null) {
+    ctx.cache.clear();
     ctx.alSalir = null; // lo pendiente de la pantalla anterior ya no se puede guardar
     if (ctx.sesion) { borrarBorradores(ctx.sesion.atletaId); guardarLocal(CLAVE_CERRADA, ctx.sesion.codigo); }
     ctx.sesion = null;
@@ -124,6 +127,7 @@ function ponerCodigoEnUrl(codigo) {
 }
 
 function rutear() {
+  ctx.turno += 1;
   const salida = ctx.alSalir;
   ctx.alSalir = null;
   salida?.();
@@ -148,9 +152,11 @@ function rutear() {
     ctx.pantalla = 'privacidad';
     pantallaPrivacidad(ctx);
   } else if (seccion === 'mes' || (!seccion && leerLocal('beep_vista') === 'mes')) {
+    ctx.cache.clear();
     ctx.pantalla = 'mes';
     pantallaMes(ctx, leerMes(id) ?? mesDe(ctx.hoy()));
   } else {
+    ctx.cache.clear();
     ctx.pantalla = 'semana';
     pantallaSemana(ctx, esFecha(id) ? lunesDe(id) : ctx.lunesHoy());
   }

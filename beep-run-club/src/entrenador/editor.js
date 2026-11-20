@@ -6,21 +6,28 @@ import { rngSeguro } from '../comun/entorno.js';
 import { generarId } from '../nucleo/codigos.js';
 import { validarSesion, MAX, INTENSIDADES } from '../nucleo/plan.js';
 import { fechaLarga, lunesDe } from '../nucleo/fechas.js';
-import { cabeceraPanel, bloqueValoracion } from './comun.js';
+import { cabeceraPanel, bloqueValoracion, pantallaCargando } from './comun.js';
 
 const nuevoId = () => generarId(rngSeguro);
 const ejercicioVacio = () => ({ id: nuevoId(), nombre: '', detalle: '', nota: '', carrera: false });
 
 export async function pantallaEditor(ctx, atletaId, { sid = null, fecha = null }) {
-  const atleta = await ctx.almacen.atleta(atletaId);
-  const original = sid ? await ctx.almacen.sesion(atletaId, sid) : null;
+  const turno = ctx.turno;
+  pantallaCargando(ctx, { etiqueta: 'Volver', accion: () => ctx.ir(`#/atleta/${atletaId}`) });
+  // Todo en paralelo: con mala cobertura, una espera en vez de cuatro.
+  const [atleta, original, registros, biblioteca] = await Promise.all([
+    ctx.almacen.atleta(atletaId),
+    sid ? ctx.almacen.sesion(atletaId, sid) : null,
+    sid ? ctx.almacen.registros(atletaId, [sid]) : {},
+    ctx.almacen.biblioteca(),
+  ]);
+  if (turno !== ctx.turno) return; // ya se ha ido a otra pantalla
   if (!atleta || (sid && !original)) {
     montar(cabeceraPanel(ctx, { atras: { etiqueta: 'Volver', accion: () => ctx.ir(`#/atleta/${atletaId}`) } }),
       h('h1', { class: 'saludo' }, 'Esta sesión ya no existe'));
     return;
   }
-  const registro = sid ? (await ctx.almacen.registros(atletaId, [sid]))[sid] : null;
-  const biblioteca = await ctx.almacen.biblioteca();
+  const registro = sid ? registros[sid] ?? null : null;
   const porNombre = new Map(biblioteca.map((b) => [b.nombre.toLowerCase(), b]));
 
   const sesion = original

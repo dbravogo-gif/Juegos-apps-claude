@@ -4,12 +4,15 @@
 import { h, icono, montar, dialogo, confirmar, tostada } from '../comun/ui.js';
 import { validarPolitica, MAX_POLITICA } from '../nucleo/privacidad.js';
 import { politicaPorDefecto } from '../datos/textos-privacidad.js';
-import { cabeceraPanel, pestanas } from './comun.js';
+import { cabeceraPanel, pestanas, pantallaCargando } from './comun.js';
 
 const fechaCorta = (iso) => new Date(iso).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
 
 export async function pantallaClub(ctx) {
+  const turno = ctx.turno;
+  pantallaCargando(ctx);
   const [politica, resumen] = await Promise.all([ctx.almacen.politica(), ctx.almacen.resumenAceptaciones()]);
+  if (turno !== ctx.turno) return; // ya se ha ido a otra pantalla
   const borrador = structuredClone(politica);
   const errores = h('div', { class: 'error', role: 'alert', 'aria-live': 'polite' });
   const limpiarErrores = () => errores.replaceChildren();

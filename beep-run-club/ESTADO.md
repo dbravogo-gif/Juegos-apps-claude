@@ -17,15 +17,15 @@ cambiar. Fases 1 a 3 construidas. Las funciones están sin marcar como hechas ha
 - **Entrenador** (`/entrenador/`, email y contraseña de la cuenta del club):
   - novedades, atletas con código y enlace, editor con intensidad, copiar semana y sesión, baja con CSV;
   - pestaña Club: responsable y política, con «pedir de nuevo» o «solo corregir».
-- **Firebase:** almacén, reglas y SDK incluido en `vendor/`. Proyecto `beep-run-club`.
-- **Comprobado:** 63 pruebas, 87 comprobaciones en demo, 8 pruebas de reglas (que fallan con
-  reglas abiertas) y 18 comprobaciones de la app contra Firebase emulado, sin conexión incluida.
+- **Firebase:** almacén, reglas y SDK en `vendor/` (proyecto `beep-run-club`).
+- **Comprobado:** 63 pruebas, 87 comprobaciones en demo, 8 de reglas (fallan con reglas abiertas)
+  y 22 contra Firebase emulado, con red lenta y sin conexión incluidas.
+- **Arreglado (0.5.1):** en el iPhone se «comían» toques por esperas sin señal (ver `APRENDIDO.md`).
 
 ## Siguiente
 
 1. Lo que pida el club tras probarla el fin de semana.
-2. Revisión del `probador` del panel, de `F12` a `F20` y de la conexión con Firebase.
-3. App Check, contra abusos probando códigos al azar.
+2. Revisión del `probador` del panel, de `F12` a `F20` y de Firebase. Después, App Check.
 
 ## Pendiente del autor
 

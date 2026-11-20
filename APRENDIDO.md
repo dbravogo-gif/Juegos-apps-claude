@@ -192,3 +192,11 @@ nivel: de nota a regla, y de regla a prueba o hook.
     como hecha.
   - Barrera: una fase solo se marca hecha en `funciones.json` cuando su revisión ha terminado; si
     no, se avisa la excepción antes.
+- **2026-11-20 · En el iPhone «se comían» los toques** (Beep Run Club, con Firebase).
+  - Causa medida: con latencia móvil, aceptar tardaba 2,8 s y «Terminar y valorar» 0,8 s sin
+    ninguna señal en pantalla. Además, una pantalla que terminaba de cargar después de volver
+    atrás se pintaba encima de la nueva.
+  - Barrera: las pantallas que esperan datos pintan «Cargando…» al momento y no se pintan si ha
+    cambiado el turno de pantalla (`ctx.turno`). `pruebas-reglas: npm run e2e` lo comprueba con
+    latencia de red móvil. Comprobado que falla sin la protección.
+  - En local (127.0.0.1) todo responde al instante: un retardo de red solo se ve emulándolo.

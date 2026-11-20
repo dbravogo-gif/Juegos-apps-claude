@@ -32,14 +32,22 @@ function datosRegistro(sid, b) {
   return { sesion: sid, hechos: b.hechos, esfuerzo: b.esfuerzo, duros: b.duros, carrera, comentario: b.comentario, strava: b.strava ?? '' };
 }
 
+/**
+ * Sesión y valoración de `sid`. Las dos lecturas van en paralelo, y lo leído se guarda en
+ * ctx.cache: al pasar de la sesión a «Terminar y valorar» no se vuelve a esperar a la red.
+ */
 async function cargar(ctx, sid) {
   const { atletaId } = ctx.sesion;
-  const sesion = await ctx.almacen.sesion(atletaId, sid);
-  if (!sesion) return { sesion: null };
-  const registro = (await ctx.almacen.registros(atletaId, [sid]))[sid] ?? null;
+  let datos = ctx.cache.get(sid);
+  if (!datos) {
+    const [sesion, registros] = await Promise.all([ctx.almacen.sesion(atletaId, sid), ctx.almacen.registros(atletaId, [sid])]);
+    datos = { sesion, registro: registros[sid] ?? null };
+    if (sesion) ctx.cache.set(sid, datos);
+  }
+  if (!datos.sesion) return { sesion: null };
   const guardado = leerLocal(claveBorrador(ctx, sid));
-  const borrador = guardado ?? (registro ? desdeRegistro(registro) : borradorVacio());
-  return { sesion, registro, borrador };
+  const borrador = guardado ?? (datos.registro ? desdeRegistro(datos.registro) : borradorVacio());
+  return { sesion: datos.sesion, registro: datos.registro, borrador };
 }
 
 function noEncontrada(ctx) {
@@ -49,19 +57,29 @@ function noEncontrada(ctx) {
     h('button', { type: 'button', class: 'boton boton-principal boton-ancho', onclick: () => ctx.ir('#/') }, 'Ver mi semana'));
 }
 
-async function cargarOFallar(ctx, sid) {
+/**
+ * Pinta al momento «Cargando…» (el toque se nota aunque la red tarde) y carga. Devuelve null si
+ * falla o si mientras tanto se ha cambiado de pantalla: una pantalla vieja nunca tapa a la nueva.
+ */
+async function cargarOFallar(ctx, sid, atras) {
+  const turno = ctx.turno;
+  if (!ctx.cache.has(sid)) {
+    montar(cabecera(ctx, { atras }), h('p', { class: 'cargando', role: 'status' }, 'Cargando…'));
+  }
   try {
     const datos = await cargar(ctx, sid);
+    if (turno !== ctx.turno) return null;
     if (!datos.sesion) { noEncontrada(ctx); return null; }
     return datos;
   } catch (e) {
+    if (turno !== ctx.turno) return null;
     if (!(await ctx.siCodigoInvalido(e?.estado))) noEncontrada(ctx);
     return null;
   }
 }
 
 export async function pantallaSesion(ctx, sid) {
-  const datos = await cargarOFallar(ctx, sid);
+  const datos = await cargarOFallar(ctx, sid, { etiqueta: 'Volver a la semana', accion: () => ctx.volver('#/', esRutaCalendario) });
   if (!datos) return;
   const { sesion, borrador } = datos;
   let { registro } = datos;
@@ -75,7 +93,7 @@ export async function pantallaSesion(ctx, sid) {
     if (!ctx.sesion) return; // la sesión se cerró mientras tanto
     const r = await ctx.almacen.guardarRegistro(ctx.sesion.atletaId, ctx.sesion.codigo, datosRegistro(sid, borrador))
       .catch(() => ({ ok: false, errores: ['No se ha podido guardar.'] }));
-    if (r.ok) { registro = r.registro; borrarLocal(claveBorrador(ctx, sid)); estadoGuardado.textContent = 'Cambios guardados'; }
+    if (r.ok) { registro = r.registro; ctx.cache.set(sid, { sesion, registro }); borrarLocal(claveBorrador(ctx, sid)); estadoGuardado.textContent = 'Cambios guardados'; }
     else if (r.estado && await ctx.siCodigoInvalido(r.estado)) return;
     else if (ctx.sesion) { guardarLocal(claveBorrador(ctx, sid), borrador); estadoGuardado.textContent = 'No se ha podido guardar. Se intentará al valorar.'; }
   };
@@ -224,7 +242,7 @@ function bloqueCarrera(ej, borrador, guardar) {
 }
 
 export async function pantallaValorar(ctx, sid) {
-  const datos = await cargarOFallar(ctx, sid);
+  const datos = await cargarOFallar(ctx, sid, { etiqueta: 'Volver a la sesión', accion: () => ctx.volver(`#/sesion/${sid}`) });
   if (!datos) return;
   const { sesion, borrador } = datos;
   const todos = sesion.ejercicios.map((e) => e.id);
@@ -343,6 +361,7 @@ export async function pantallaValorar(ctx, sid) {
       return;
     }
     borrarLocal(claveBorrador(ctx, sid));
+    ctx.cache.set(sid, { sesion, registro: r.registro });
     ctx.ultimoGuardado = { sid, pendiente: !!r.pendiente };
     ctx.ir(`#/sesion/${sid}/hecho`);
   });

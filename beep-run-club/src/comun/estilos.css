@@ -303,6 +303,10 @@ button.dia-mes { cursor: pointer; }
 .opcion-movil-titulo { font: 800 22px/1.1 var(--titular); }
 .pasos-botones { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: auto; padding-top: 16px; }
 
+/* Cargando: se pinta al momento, para que el toque se note aunque la red tarde */
+.cargando { padding: 48px 0; text-align: center; color: var(--texto-suave); animation: aparecer 0.6s ease-in; }
+@keyframes aparecer { from { opacity: 0; } }
+
 /* Avisos y diálogos */
 .aviso-demo { margin: 12px 0 0; padding: 10px 14px; border-radius: 14px; border: 2px dashed var(--rojo); font-size: 15px; }
 .tostada {

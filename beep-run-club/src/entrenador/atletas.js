@@ -6,7 +6,7 @@ import { agruparPorDia } from '../nucleo/plan.js';
 import { ESFUERZO, esDura } from '../nucleo/registro.js';
 import { etiquetaDia, rangoSemana, sumarDias, diferenciaDias } from '../nucleo/fechas.js';
 import { historialCsv, nombreArchivo } from '../nucleo/exportar.js';
-import { cabeceraPanel, pestanas, botonesEnlace, insigniaEsfuerzo } from './comun.js';
+import { cabeceraPanel, pestanas, botonesEnlace, insigniaEsfuerzo, pantallaCargando } from './comun.js';
 
 const textoEstado = (a) => (a.archivado ? 'Archivado' : a.activo ? 'Activo' : 'Código desactivado');
 
@@ -106,7 +106,10 @@ async function darDeBaja(ctx, atleta) {
 }
 
 export async function pantallaAtleta(ctx, id, lunes) {
+  const turno = ctx.turno;
+  pantallaCargando(ctx, { etiqueta: 'Volver a atletas', accion: () => ctx.ir('#/atletas') });
   const atleta = await ctx.almacen.atleta(id);
+  if (turno !== ctx.turno) return; // ya se ha ido a otra pantalla
   if (!atleta) {
     montar(cabeceraPanel(ctx, { atras: { etiqueta: 'Volver a atletas', accion: () => ctx.ir('#/atletas') } }),
       h('h1', { class: 'saludo' }, 'Este atleta ya no existe'));
@@ -172,6 +175,7 @@ export async function pantallaAtleta(ctx, id, lunes) {
 
   const sesiones = await ctx.almacen.sesionesEntre(id, lunes, sumarDias(lunes, 6));
   const registros = await ctx.almacen.registros(id, sesiones.map((s) => s.id));
+  if (turno !== ctx.turno) return;
   dias.replaceChildren(...agruparPorDia(sesiones, lunes).map(({ fecha, sesiones: delDia }) => {
     const e = etiquetaDia(fecha);
     return h('section', { class: `dia-panel${fecha === hoy ? ' es-hoy' : ''}`, 'aria-label': `${e.corto} ${e.num}` },
