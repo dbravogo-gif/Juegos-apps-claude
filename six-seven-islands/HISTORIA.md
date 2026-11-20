@@ -80,6 +80,19 @@ Con el Sello completo se abre el corazón del Teide, donde se celebra la Liga y 
 - **El señor que te vigila** fue el elegido de tu pueblo en aquella generación (decidido). Nunca
   supo quién los traicionó.
 
+**Las cinco leyendas, escondidas** (aprobado por el autor el 2026-11-20). Tras la traición, las
+ancestrales escondieron también a las cinco leyendas, dormidas por las islas del oeste, para que
+nadie pudiera reunirlas a la fuerza. Por eso ninguna sale en Lanzarote, aunque los pueblos sean de
+allí, ni antes de la mitad del viaje. Cada una despierta cuando llegas a su escondite:
+
+| Leyenda | Pueblo | Escondite | De dónde viene |
+| --- | --- | --- | --- |
+| infernal (Magecora) | la Colada | dentro del Teide | encerrada como Guayota en el mito: por eso el Teide está cerrado y retumba; se la encuentra al abrir el Sello |
+| del agua | el Jameo | lo más hondo de la Cueva del Viento (Tenerife) | criatura blanca y ciega de los tubos de lava, primos de los jameos |
+| verde | el Hoyo | Garajonay (La Gomera) | el jardín de las Hespérides de los antiguos: frutos de oro y savia de drago |
+| de tierra | el Llano | el fondo de La Caldera de Taburiente (La Palma) | duerme donde la isla se hundió en sí misma |
+| de roca | el Risco | el risco de Tibataje (El Hierro) | en la isla que las ancestrales escondieron |
+
 ## 2. Los pueblos y el círculo
 
 | Pueblo (propuesto por Claude) | Leyenda | Vivía en | Ataca a |

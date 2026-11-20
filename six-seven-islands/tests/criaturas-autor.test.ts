@@ -56,3 +56,13 @@ describe('escala por altura', () => {
     expect(escalaPorAltura(9)).toBe(ESCALA_MAXIMA);
   });
 });
+
+describe('decisiones del autor sobre tipos', () => {
+  it('la línea del erizo de fuego no tiene nada de Tierra, ni en tipos ni en ataques (2026-11-20)', () => {
+    for (const id of ['c013-1', 'c013-2', 'c013-3']) {
+      const e = DATOS.especies[id];
+      expect(e.tipos, id).not.toContain('tierra');
+      for (const a of e.aprende) expect(DATOS.movimientos[a.movimiento].tipo, `${id}: ${a.movimiento}`).not.toBe('tierra');
+    }
+  });
+});
