@@ -9,9 +9,9 @@ export type ListaMusica = (typeof LISTAS)[number];
 /**
  * Ciudades y pueblos con música propia, también dentro de sus casas. Los gimnasios, siempre.
  * Lanzarote: La Geria (`pueblo`) y la capital. Fuerteventura: Corralejo, Puerto del Rosario
- * (`puerto`) y Betancuria.
+ * (`puerto`) y Betancuria. Gran Canaria: Las Palmas (`palmas`).
  */
-export const ZONAS_CON_MUSICA: ReadonlySet<string> = new Set(['pueblo', 'capital', 'corralejo', 'puerto', 'betancuria']);
+export const ZONAS_CON_MUSICA: ReadonlySet<string> = new Set(['pueblo', 'capital', 'corralejo', 'puerto', 'betancuria', 'palmas']);
 
 /** Combates importantes: líderes de gimnasio, la liga y los jefes de la facción enemiga. */
 export const esCombateImportante = (entrenador: string | null): boolean => !!entrenador && /^(lider|liga|jefe)-/.test(entrenador);

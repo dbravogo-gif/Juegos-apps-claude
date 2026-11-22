@@ -1,10 +1,11 @@
 # Estado de Six-seven islands
 
-Actualizado: 2026-11-19. Solo el presente; el historial está en git. Máximo 40 líneas.
+Actualizado: 2026-11-22. Solo el presente; el historial está en git. Máximo 40 líneas.
 
 ## Fase actual
 
-Tanda 1: Lanzarote es la isla 1 (`ISLA-1.md`), con kit por código y la tabla de tipos C.
+Gran Canaria (`ISLA-3.md`): fase 1 hecha (Las Palmas, La Isleta y el gimnasio Eléctrico, con
+el barco desde Morro Jable). Siguen la fase 2 (Guayadeque, las cumbres y el Roque Nublo).
 
 ## Hecho
 
@@ -22,7 +23,9 @@ Tanda 1: Lanzarote es la isla 1 (`ISLA-1.md`), con kit por código y la tabla de
    Pok42, Pok48–49 y el dinosaurio), con `herramientas/criaturas/juego.py` (ARCHITECTURE.md). Las iniciales,
    con sus tres formas; las criaturas evolucionan tras el combate, con el Sello.
 
-4. Hecho todo lo que pidió el autor el 2026-11-19; falta que lo pruebe y lo puntúe.
+4. Gran Canaria, fases 2 a 4 (`ISLA-3.md`). Las criaturas Eléctricas, cuando el autor las haga
+   en Meshy: la isla y el gimnasio las usan provisionales.
+5. Música grabada lista: falta que el autor suba las pistas (`src/assets/musica/LEEME.md`).
 
 ## Pendiente del autor
 

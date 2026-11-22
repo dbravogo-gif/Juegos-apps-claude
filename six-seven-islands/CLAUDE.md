@@ -24,7 +24,7 @@ Vitest.
 - `?mapa` (o `?mapa=12`) en el juego: el plano en 2D de la isla 1, el mismo del mapa del juego.
   Para sacarlo en imagen: `capturar.mjs` con `--consulta "mapa=12" --ancho 1320 --alto 1512`.
 - `python3 herramientas/isla1.py src/data/isla1.ts`: regenera el mapa de Lanzarote desde sus
-  rectángulos y caminos.
+  rectángulos y caminos. Igual `isla2.py` (Fuerteventura) e `isla3.py` (Gran Canaria).
 
 ## Reglas propias
 

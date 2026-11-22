@@ -38,6 +38,30 @@ export const GUION_ISLA2: Guion = {
     { dialogo: { lineas: [{ quien: 'Enfermera', texto: 'Hasta aquí arriba llega poca gente. ¡Descansa, que el camino es largo!' }] } },
   ],
   // Fase 3: Morro Jable y el gimnasio de Aire.
+  // El barco a Gran Canaria (2026-11-22), como el de Lanzarote: con la pintadera de Aire.
+  'marinero-morro': [
+    {
+      sin: 'gimnasio2-vencido',
+      dialogo: { lineas: [{ quien: 'Marinero', texto: 'El barco a Gran Canaria sale pronto, pero solo con quien ha vencido al gimnasio de Aire.' }] },
+    },
+    {
+      sin: 'isla2-completada',
+      dialogo: {
+        lineas: [{ quien: 'Marinero', texto: '¡Has vencido a la líder de Aire! El barco sale hacia Gran Canaria cuando tú digas.' }],
+        pregunta: { quien: 'Marinero', texto: '¿Subes al barco?' },
+        efecto: { fin: true, viaje: 3, condicion: 'isla2-completada' },
+        tras: [{ quien: 'Marinero', texto: '¡Pues arriba! Rumbo a Las Palmas.' }],
+      },
+    },
+    {
+      dialogo: {
+        lineas: [{ quien: 'Marinero', texto: 'El barco a Gran Canaria sale cuando tú digas.' }],
+        pregunta: { quien: 'Marinero', texto: '¿Vuelves a Gran Canaria?' },
+        efecto: { viaje: 3 },
+        tras: [{ quien: 'Marinero', texto: '¡Levamos anclas!' }],
+      },
+    },
+  ],
   'enfermera-morro': [
     { dialogo: { lineas: [{ quien: 'Enfermera', texto: 'Bienvenido a Morro Jable. Antes del gimnasio, deja a tu equipo como nuevo.' }] } },
   ],

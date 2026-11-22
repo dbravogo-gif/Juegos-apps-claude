@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { ISLA_1 } from '../src/data/isla1';
 import { ISLA_2 } from '../src/data/isla2';
+import { ISLA_3 } from '../src/data/isla3';
 import { ZONAS_CON_MUSICA, agrupar, elegirPista, esCombateImportante, listaPara, semillaDe } from '../src/sistemas/sonido/musica-grabada';
 
 describe('música grabada', () => {
@@ -27,7 +28,7 @@ describe('música grabada', () => {
   });
 
   it('las zonas con música existen (si se renombra una, se queda sin su canción)', () => {
-    const zonas = new Set([...ISLA_1.zonas, ...ISLA_2.zonas].map((z) => z.id));
+    const zonas = new Set([...ISLA_1.zonas, ...ISLA_2.zonas, ...ISLA_3.zonas].map((z) => z.id));
     for (const z of ZONAS_CON_MUSICA) expect(zonas, z).toContain(z);
   });
 

@@ -154,8 +154,10 @@ export class Inicio implements Subsistema {
   private pintarFin(): void {
     const pa = this.partida;
     const raiz = this.raiz;
-    const destino = pa.destinoViaje?.nombre ?? 'Fuerteventura';
-    raiz.querySelector('.inicio-fin-texto')!.textContent = `${pa.nombre}, has vencido a la líder de Roca y zarpas rumbo a ${destino} con tu equipo:`;
+    const destino = pa.destinoViaje?.nombre;
+    const final = pa.datos.final;
+    raiz.querySelector('.inicio-fin h2')!.textContent = `¡Isla ${pa.datos.numero} completada!`;
+    raiz.querySelector('.inicio-fin-texto')!.textContent = `${pa.nombre}, has vencido a ${final?.vencido ?? 'su gimnasio'}${destino ? ` y zarpas rumbo a ${destino}` : ''} con tu equipo:`;
     raiz.querySelector('.inicio-fin-equipo')!.replaceChildren(
       ...pa.equipo.map((c) => {
         const li = document.createElement('li');
@@ -163,10 +165,7 @@ export class Inicio implements Subsistema {
         return li;
       }),
     );
-    raiz.querySelector('.inicio-fin-gancho')!.textContent =
-      pa.destinoViaje
-        ? 'Desde la cubierta, a lo lejos, se ve una isla que no sale en ningún mapa… Pero el barco pone rumbo al sur, hacia las dunas.'
-        : 'Desde la cubierta, a lo lejos, se ve una isla que no sale en ningún mapa… Continuará en la isla 2.';
+    raiz.querySelector('.inicio-fin-gancho')!.textContent = destino ? (final?.gancho ?? '') : `Continuará en la isla ${pa.datos.numero + 1}.`;
   }
 
   private pintar(): void {
