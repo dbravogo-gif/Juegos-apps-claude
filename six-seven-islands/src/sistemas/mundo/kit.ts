@@ -677,6 +677,24 @@ export function roque(semilla: number): BufferGeometry {
   return M.fusionar();
 }
 
+/**
+ * Un pino canario (Tamadaba, 2026-11-22): tronco alto y rojizo, y la copa en pisos de agujas verde
+ * oscuro, más estrecha arriba. Alto, para que el pinar se lea como bosque.
+ */
+export function pino(semilla: number): BufferGeometry {
+  const r = azar(semilla);
+  const M = new Montaje();
+  const alto = 1.5 + r() * 0.5;
+  M.pon(new CylinderGeometry(0.07, 0.12, alto, 6).translate(0, alto / 2, 0), '#7A4A32');
+  const verdes = ['#2F5A36', '#3B6B40', '#27492D'];
+  for (let i = 0; i < 4; i++) {
+    const rad = 0.55 - i * 0.11;
+    const y = alto * 0.45 + i * 0.36;
+    M.pon(abollar(new SphereGeometry(rad, 8, 5).scale(1, 0.45, 1), 0.18, semilla * 3 + i).translate((r() - 0.5) * 0.08, y, (r() - 0.5) * 0.08), verdes[i % 3]!, 0.94 + r() * 0.1);
+  }
+  return M.fusionar();
+}
+
 /** Todas las piezas del kit, por nombre. */
 export const KIT = {
   laurel,
@@ -709,6 +727,7 @@ export const KIT = {
   cabra,
   almendro,
   roque,
+  pino,
 } satisfies Record<string, (semilla: number) => BufferGeometry>;
 
 export type PiezaKit = keyof typeof KIT;
@@ -747,6 +766,7 @@ export const VARIANTES: Record<PiezaKit, number> = {
   cabra: 3,
   almendro: 3,
   roque: 1,
+  pino: 3,
 };
 
 /** La geometría de una variante de una pieza del kit. */

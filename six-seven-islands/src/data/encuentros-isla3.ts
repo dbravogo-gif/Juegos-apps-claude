@@ -33,4 +33,23 @@ export const ENCUENTROS_ISLA3: TablaEncuentros = {
     { especie: 'c012-2', nivel: [22, 24], peso: 25 },
     { especie: 'c062-1', nivel: [22, 24], peso: 20 },
   ],
+  // Fase 3: Tejeda, el pinar de Tamadaba (las salvajes más fuertes del camino) y Agaete.
+  tejeda: [
+    { especie: 'c043-2', nivel: [22, 25], peso: 30 },
+    { especie: 'c031-2', nivel: [22, 25], peso: 25 },
+    { especie: 'c034-2', nivel: [24, 25], peso: 25 },
+    { especie: 'c012-2', nivel: [22, 25], peso: 20 },
+  ],
+  tamadaba: [
+    { especie: 'c007-2', nivel: [24, 27], peso: 30 },
+    { especie: 'c044-2', nivel: [24, 27], peso: 20 },
+    { especie: 'c032-2', nivel: [24, 27], peso: 20 },
+    { especie: 'c035-2', nivel: [25, 27], peso: 15 },
+    { especie: 'c005-2', nivel: [24, 27], peso: 15 },
+  ],
+  agaete: [
+    { especie: 'c018-1', nivel: [25, 27], peso: 35 },
+    { especie: 'c035-2', nivel: [25, 27], peso: 35 },
+    { especie: 'c037-1', nivel: [25, 27], peso: 30 },
+  ],
 };

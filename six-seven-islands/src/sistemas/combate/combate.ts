@@ -277,6 +277,8 @@ export class Combate implements Subsistema {
       const inicial = this.partida.estado.inicial;
       const def = this.partida.datos.entrenadores[guionId];
       if (!def || !inicial || this.partida.vencidos.includes(guionId)) return;
+      // Quien pregunta antes de luchar, solo si le has dicho que sí.
+      if (def.pregunta && !this.partida.estado.condiciones.includes(`listo:${guionId}`)) return;
       const rng = crearRng(`rival-${guionId}`);
       // El primer entrenador saca la inicial que pierde contra la tuya.
       // Tu rival (el amigo) saca la inicial del pueblo al que ataca el tuyo (HISTORIA.md).

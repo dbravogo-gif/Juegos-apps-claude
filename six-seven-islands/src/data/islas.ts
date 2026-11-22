@@ -132,16 +132,17 @@ export const GRAN_CANARIA: DatosIsla = {
   objetivos: [
     { hasta: 'vencido:aprendiz-electrico-3', texto: 'Vence a los aprendices del gimnasio Eléctrico, en Las Palmas' },
     { hasta: 'amigo2-conocido', texto: 'Sube por Guayadeque y las cumbres hasta el Roque Nublo' },
-    // El camino del oeste, a Tejeda y Agaete, se abre en la fase 3 (ISLA-3.md).
-    { hasta: 'isla3-completada', texto: 'Sigue hacia Tejeda: el camino del oeste aún está cortado' },
+    { hasta: 'vencido:luchador-3', texto: 'Cruza Tejeda y el pinar de Tamadaba hasta el terrero de Agaete' },
+    { hasta: 'isla3-completada', texto: 'Los dos líderes llegan al terrero de Agaete: lucha con tu amigo' },
   ],
-  curanderos: { 'enfermera-palmas': 'refugio-palmas', 'enfermera-guayadeque': 'refugio-guayadeque' },
-  tenderos: new Set(['tendero-palmas']),
+  curanderos: { 'enfermera-palmas': 'refugio-palmas', 'enfermera-guayadeque': 'refugio-guayadeque', 'enfermera-tejeda': 'refugio-tejeda', 'enfermera-agaete': 'refugio-agaete' },
+  tenderos: new Set(['tendero-palmas', 'tendero-tejeda', 'tendero-agaete']),
   refugio: 'refugio-palmas',
   llegada: { zona: 'palmas', x: 26, y: 4 },
   // El gimnasio Eléctrico, con su campo eléctrico (autor, 2026-11-15).
-  campos: { 'gimnasio-electrico': { terreno: 'electrico' } },
-  fondos: { palmas: 'gc-ciudad', isleta: 'gc-isleta', 'gimnasio-electrico': 'gc-gimnasio-electrico', guayadeque: 'gc-barranco', cumbres: 'gc-cumbres', nublo: 'gc-cumbres' },
+  // El agarre del terrero: tus criaturas pueden quedar confusas (autor, 2026-11-15).
+  campos: { 'gimnasio-electrico': { terreno: 'electrico' }, 'gimnasio-lucha': { agarre: true } },
+  fondos: { palmas: 'gc-ciudad', isleta: 'gc-isleta', 'gimnasio-electrico': 'gc-gimnasio-electrico', guayadeque: 'gc-barranco', cumbres: 'gc-cumbres', nublo: 'gc-cumbres', tejeda: 'gc-cumbres', tamadaba: 'gc-pinar', agaete: 'gc-isleta', 'gimnasio-lucha': 'gc-terrero' },
 };
 
 /** Las islas por su número, de este a oeste. */

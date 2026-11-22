@@ -104,6 +104,9 @@ function repartir(lista: Reparto, n: number): PiezaKit | null {
   return null;
 }
 
+/** El emblema pintado en la azotea de cada gimnasio, por su tipo. */
+const EMBLEMA: Readonly<Record<string, OpcionesCasa['emblema']>> = { roca: 'volcan', aire: 'molino', electrico: 'rayo', lucha: 'terrero' };
+
 /** Las opciones de casa de una zona: rural de teja por defecto y de balcones en la capital. */
 function estiloDe(z: DefZona): Pick<OpcionesCasa, 'estilo' | 'blanca'> {
   switch (z.casas ?? (z.id === 'capital' ? 'balcones' : 'rural')) {
@@ -295,7 +298,7 @@ export class Mundo implements Subsistema {
             uso === 'museo'
               ? { estilo: deZona.estilo === 'lanzarote' ? 'lanzarote' : 'rural', techo: 'teja' }
               : uso === 'gimnasio'
-                ? { estilo: 'balcones', blanca: deZona.blanca, techo: 'azotea', emblema: m.isla.gimnasio === 'roca' ? 'volcan' : m.isla.gimnasio === 'aire' ? 'molino' : m.isla.gimnasio === 'electrico' ? 'rayo' : 'sol' }
+                ? { estilo: 'balcones', blanca: deZona.blanca, techo: 'azotea', emblema: EMBLEMA[m.zonas.get(zona)!.gimnasio ?? m.isla.gimnasio ?? ''] ?? 'sol' }
                 : deZona;
           const geometria = casaCanaria({ ...estilo, uso, ancho: e.ancho, fondo: e.fondo, puerta, huecosPuerta, semilla: pseudo(e.casillas[0]) });
           const casa = new Mesh(geometria, this.materialColores);
@@ -365,6 +368,9 @@ export class Mundo implements Subsistema {
       } else if (cm.c === 'T' && zona.arboles === 'almendro') {
         // Almendros en flor (las cumbres de Gran Canaria).
         this.subirTapa(k, colocarKit('almendro', r, x + dx, y + dz, suelo, 0.95 + ((r >>> 4) & 3) * 0.08, giro));
+      } else if (cm.c === 'T' && zona.arboles === 'pino') {
+        // Pinos canarios (el pinar de Tamadaba).
+        this.subirTapa(k, colocarKit('pino', r, x + dx, y + dz, suelo, 0.9 + ((r >>> 4) & 3) * 0.08, giro));
       } else if (cm.c === 'T') {
         // Si no, palmeras canarias.
         this.subirTapa(k, colocarKit('palmera', r, x + dx, y + dz, suelo, 0.9 + ((r >>> 4) & 3) * 0.07, giro));

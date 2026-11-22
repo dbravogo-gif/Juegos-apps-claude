@@ -20,6 +20,11 @@ export interface DefEntrenador {
    * de `extra` (HISTORIA.md). Su `equipo` va vacío: depende de tu inicial.
    */
   rival?: { nivel: number; extra?: readonly { especie: string; nivel: number }[] };
+  /**
+   * Pregunta antes de luchar (los luchadores del terrero; autor, 2026-11-15): solo lucha si se le
+   * dice que sí (su diálogo cumple `listo:<id>`); si no, te deja ir a curarte.
+   */
+  pregunta?: boolean;
   /** Un soldado de la rama que te persigue: lucha con criaturas de su pueblo, a estos niveles. */
   rama?: { niveles: readonly number[] };
 }
@@ -29,6 +34,7 @@ const OFICIO: Readonly<Record<string, string>> = {
   aprendiz: 'Aprendiz',
   estudiante: 'Estudiante',
   comandante: '{comandante}',
+  luchador: 'Luchador',
   buscador: 'Buscador',
   cabrero: 'Cabrero',
   corredor: 'Corredor',

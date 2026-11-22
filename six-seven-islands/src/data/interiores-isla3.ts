@@ -5,6 +5,7 @@ import type { DefInterior } from '../core/mundo';
 import { ISLA_3, PUERTAS_ISLA3 } from './isla3';
 import { generarInteriores, vive, type DefSala } from './interiores-isla1';
 import { GIMNASIO_ELECTRICO } from './gimnasio-electrico';
+import { GIMNASIO_LUCHA } from './gimnasio-lucha';
 
 const SALAS: Record<string, DefSala> = {
   'refugio-palmas': { nombre: 'Refugio de Las Palmas', gente: vive('enfermera-palmas') },
@@ -18,7 +19,17 @@ const SALAS: Record<string, DefSala> = {
   'casa-cueva-1': { nombre: 'Casa cueva', gente: vive('vecino-cueva-1', 'Esta cueva la excavó mi bisabuelo a mano. Cada generación le ha hecho un cuarto más.') },
   'casa-cueva-2': { nombre: 'Casa cueva', gente: vive('vecina-cueva-2', 'Los antiguos canarios ya vivían en estas cuevas. Dicen que guardaban aquí sus momias y su grano.') },
   'restaurante-cueva': { nombre: 'Restaurante cueva', gente: vive('camarera-cueva', 'Hoy hay papas arrugadas con mojo y queso de flor. ¡Vuelve cuando tengas hambre!') },
+  // Fase 3.
+  'refugio-tejeda': { nombre: 'Refugio de Tejeda', gente: vive('enfermera-tejeda') },
+  'tienda-tejeda': { nombre: 'Tienda de Tejeda', gente: vive('tendero-tejeda') },
+  'casa-tejeda': { nombre: 'Casa de Tejeda', gente: vive('vecino-tejeda', 'En la cumbre hace frío por la noche, hasta en verano. Por eso las casas cueva son tan buenas.') },
+  'casa-cueva-tejeda': { nombre: 'Casa cueva', gente: vive('vecina-cueva-tejeda', 'Desde la puerta de mi cueva veo el Roque Nublo cada mañana. No lo cambio por nada.') },
+  'casa-cueva-artenara': { nombre: 'Casa cueva de Artenara', gente: vive('vecino-cueva-artenara', 'Artenara es el pueblo más alto de la isla. Aquí hasta la iglesia está dentro de la roca.') },
+  'refugio-agaete': { nombre: 'Refugio de Agaete', gente: vive('enfermera-agaete') },
+  'tienda-agaete': { nombre: 'Tienda de Agaete', gente: vive('tendero-agaete') },
+  'casa-agaete-1': { nombre: 'Casa de Agaete', gente: vive('vecino-agaete-1', 'En el terrero luchan los mejores de la isla. Sin golpes: solo fuerza, maña y agarres.') },
+  'casa-agaete-2': { nombre: 'Casa de Agaete', gente: vive('vecina-agaete-2', 'En el valle de Agaete crece café. ¡Café en Canarias! Pruébalo antes de irte.') },
   'casa-isleta-2': { nombre: 'Casa de La Isleta', gente: vive('vecina-isleta-2', 'Mi marido sale a pescar de madrugada. Las criaturas del mar le siguen la barca.') },
 };
 
-export const INTERIORES_ISLA3: readonly DefInterior[] = generarInteriores(ISLA_3, PUERTAS_ISLA3, SALAS, [GIMNASIO_ELECTRICO]);
+export const INTERIORES_ISLA3: readonly DefInterior[] = generarInteriores(ISLA_3, PUERTAS_ISLA3, SALAS, [GIMNASIO_ELECTRICO, GIMNASIO_LUCHA]);

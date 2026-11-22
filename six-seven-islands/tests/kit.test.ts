@@ -36,6 +36,7 @@ const PRESUPUESTO: Record<PiezaKit, number> = {
   cabra: 300,
   almendro: 500,
   roque: 900,
+  pino: 500,
 };
 /** Lo que puede salirse de su casilla cada pieza, desde el centro: las copas grandes se salen. */
 const RADIO: Record<PiezaKit, number> = {
@@ -70,6 +71,7 @@ const RADIO: Record<PiezaKit, number> = {
   cabra: 0.45,
   almendro: 0.8,
   roque: 1.3,
+  pino: 0.7,
 };
 
 describe('kit canario de naturaleza', () => {

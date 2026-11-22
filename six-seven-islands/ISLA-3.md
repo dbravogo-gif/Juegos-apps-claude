@@ -172,6 +172,23 @@ Así la subida a las cumbres tiene sentido y la historia de la isla secreta avan
     contra dos.
 - El camino del oeste, a Tejeda, se abre en la fase 3.
 
+**Fase 3a, hecha (2026-11-22).**
+- **Tejeda:** el pueblo de la cumbre, con casas blancas, refugio, tienda, dos casas cueva (una de
+  Artenara), la plaza con drago y el mirador del Bentayga.
+- **Tamadaba:** el pinar de pinos canarios (pieza nueva) con niebla (`clima: 'niebla'`), mucha
+  hierba alta y las salvajes más fuertes del camino (24 a 27). Tres entrenadores.
+- **Agaete:** el pueblo blanco, con el muelle, el barco a Tenerife (aún no sale), el refugio, la
+  tienda, el Dedo de Dios en el agua y el terrero, con su círculo pintado en la azotea. Allí te
+  espera el segundo amigo.
+- **El terrero** (`gimnasio-lucha.ts`): arena con gradas de madera.
+  - Tres luchadores salen de uno en uno.
+  - Cada uno te pregunta si luchas ya o prefieres curarte (`pregunta` del entrenador): con «No»,
+    no hay combate.
+  - Dentro, el agarre confunde.
+- Las casas cueva, ahora con su sala por dentro, encalada (antes no se podía entrar). Una prueba
+  vigila que cada puerta de cada isla lleve a una sala.
+- **Falta (3b):** los dos líderes y el dos contra dos con el segundo amigo.
+
 | 1 | Las Palmas y La Isleta, con el barco desde Morro Jable (**hecha**, 2026-11-22) | alto |
 | 2 | Guayadeque con sus casas cueva, las cumbres y el Roque Nublo, con la historia (**hecha**, 2026-11-22) | alto |
 | 3 | Tejeda, Tamadaba y Agaete con el gimnasio | alto |
