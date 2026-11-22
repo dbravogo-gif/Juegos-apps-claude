@@ -85,7 +85,8 @@ z.r(18, 16, 5, 4, '.'); z.p(20, 17, 'Y')                        # la plaza con s
 # calle se comía el muelle y el mar parecía un canal (probador, 2026-11-13).
 z.r(26, 0, 6, 26, '~'); z.r(26, 12, 4, 2, 'P'); z.r(28, 15, 2, 2, 'B')
 z.p(24, 10, 'f'); z.p(22, 18, 'f')                              # esculturas, la ciudad las tiene por las calles
-zonas['puerto'] = dict(nombre='Puerto del Rosario', origen=(38, 56), z=z, altura=0, casas='lanzarote')
+z.p(8, 17, 'N')                                                 # un molino a la salida del pueblo
+zonas['puerto'] = dict(nombre='Puerto del Rosario', origen=(38, 56), z=z, altura=0, casas='majorera')
 
 # 4. Betancuria (34 × 30): la antigua capital, en un valle entre montañas peladas. Entrada al
 # este (y 4..5, desde Puerto del Rosario); salida al oeste (y 22..23, hacia Ajuy). El pueblito con
@@ -103,7 +104,9 @@ z.r(3, 12, 5, 3, '~')                                           # la presa
 for x, y in ((2, 11), (8, 11), (2, 15), (8, 15), (5, 16)): z.p(x, y, 'T')
 z.r(22, 1, 10, 3, '"'); z.r(14, 19, 5, 6, '"'); z.r(2, 19, 8, 3, '"')    # hierba seca de las laderas
 z.r(19, 6, 4, 3, '"')                                           # la mancha que no se esquiva, en el camino
-zonas['betancuria'] = dict(nombre='Betancuria', origen=(34-30, 64), z=z, altura=0, hierba=True, casas='rural')
+z.p(28, 7, 'N'); z.p(3, 8, 'N')                                 # molinos majoreros en las laderas
+for x, y in ((25, 7), (30, 7), (23, 2)): z.p(x, y, 'A')         # las cabras del cabrero
+zonas['betancuria'] = dict(nombre='Betancuria', origen=(34-30, 64), z=z, altura=0, hierba=True, casas='majorera')
 
 # 5. Ajuy (24 × 30): la costa de las cuevas. Entrada al este (y 22..23, desde Betancuria). Playa de
 # arena negra, acantilados y la boca de la cueva (J), por la que se entra a la cueva de las pozas.
@@ -187,6 +190,7 @@ for y in range(20):
         fila += str(h)
     alt.append(fila)
 zonas['tindaya'] = dict(nombre='Tindaya', origen=(7, 28), z=z, alturas=alt, hierba=True)
+for x, y, c in ((23, 7, 'N'), (19, 12, 'A'), (24, 15, 'A')): z.p(x, y, c)   # un molino y cabras en el llano
 
 # 9. Cofete (30 × 18, opcional): la playa salvaje del oeste, detrás de las montañas de Jandía. Se
 # llega desde Morro Jable (entrada al este, y 10) por un paso que sube en zigzag entre las
@@ -212,7 +216,8 @@ for y in range(18):
         else: h = 1
         fila += str(h)
     alt.append(fila)
-zonas['cofete'] = dict(nombre='Cofete', origen=(-54, 118), z=z, alturas=alt, hierba=True)
+zonas['cofete'] = dict(nombre='Cofete', origen=(-54, 118), z=z, alturas=alt, hierba=True, casas='majorera')
+for x, y in ((12, 10), (15, 10)): z.p(x, y, 'A')                # cabras sueltas junto a la playa
 
 # Toda la isla, 60 casillas al este y 10 al sur: así caben la costa oeste (Ajuy y Cofete) y Lobos,
 # al norte de Corralejo, sin coordenadas negativas. Las coordenadas de arriba y las de la silueta

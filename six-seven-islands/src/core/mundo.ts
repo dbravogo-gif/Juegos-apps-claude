@@ -52,6 +52,9 @@ export const LEYENDA = {
   H: 'aspas de molino',
   g: 'roca grabada',
   f: 'escultura',
+  // El kit majorero (Fuerteventura, 2026-11-22): molinos y cabras. No se pisan.
+  N: 'molino majorero',
+  A: 'cabra',
   // Interiores: salas pequeñas aparte (ISLA-1.md, «Decisiones técnicas»).
   m: 'suelo',
   '|': 'pared',
@@ -217,8 +220,8 @@ export interface Cierre {
   aviso: string;
 }
 
-/** Estilos de casa canaria: rural de teja, de balcones, o la blanca de azotea de Lanzarote. */
-export type EstiloCasas = 'rural' | 'balcones' | 'lanzarote' | 'balcones-blanca';
+/** Estilos de casa canaria: rural de teja, de balcones, la blanca de azotea de Lanzarote o la majorera, baja y de piedra. */
+export type EstiloCasas = 'rural' | 'balcones' | 'lanzarote' | 'balcones-blanca' | 'majorera';
 
 export interface DefIsla {
   id: string;

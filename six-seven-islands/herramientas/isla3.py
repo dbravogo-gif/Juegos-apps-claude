@@ -160,6 +160,8 @@ ts=("// Isla 3, inspirada en Gran Canaria (2026-11-22): el mapa por casillas (IS
 "export const ISLA_3: DefIsla = {\n  id: 'gran-canaria',\n  inicio: { zona: 'palmas', x: 26, y: 4 },\n"
 "  // Dos gimnasios: Eléctrico en Las Palmas y Lucha en Agaete (fase 3). La azotea, con el rayo.\n"
 "  gimnasio: 'electrico',\n"
+"  // Más verde que las dos primeras: cumbres pardas con matorral y hierba alta de un verde vivo.\n"
+"  colores: {\n    cumbre: '#9E9070',\n    ladoCumbre: '#7C6F52',\n    matas: '#5E8240',\n  },\n"
 "  // La costa de Gran Canaria, aproximada (herramientas/isla3.py).\n"
 "  silueta: [\n"+''.join(f"    [{x}, {y}],\n" for x, y in SILUETA)+"  ],\n"
 "  zonas: [\n"+''.join(partes)+"  ],\n};\n\n"

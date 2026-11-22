@@ -174,15 +174,18 @@ Lo juzga el autor al probarlo.
 - El mar de Puerto del Rosario, Sotavento, Morro Jable y Cofete ya no queda encerrado como un
   canal, y no hay barcas en la presa.
 
-Queda: el kit majorero (casas bajas de piedra, molinos y cabras). Por ahora se usan las casas de
-Lanzarote.
+**Kit majorero (2026-11-22):**
+- Casas bajas de piedra parda con azotea de barro y una chimenea baja, en Puerto del Rosario,
+  Betancuria y Cofete. Corralejo y Morro Jable, pueblos marineros, siguen blancos.
+- Molinos majoreros (`N`) en Betancuria, Puerto del Rosario y Tindaya.
+- Cabras (`A`) pardas, blancas y negras en Betancuria, Tindaya y Cofete.
 
 | Fase | Qué | Coste |
 | --- | --- | --- |
 | 1 | Varias islas y viaje en barco; Corralejo y Las Dunas jugables (**hecha**, 2026-11-13) | alto |
 | 2 | Puerto del Rosario, Betancuria y Ajuy con su cueva (**hecha**, 2026-11-13) | alto |
 | 3 | Sotavento y Morro Jable con el gimnasio de Aire (**hecha**, 2026-11-13) | alto |
-| 4 | Tindaya y Cofete, entrenadores, pulido y revisión del probador (**hecha**, 2026-11-13; queda pulido visual) | medio |
+| 4 | Tindaya y Cofete, entrenadores, pulido y revisión del probador (**hecha**, 2026-11-13; kit majorero, 2026-11-22) | medio |
 
 ## Decisiones del autor (2026-11-13)
 

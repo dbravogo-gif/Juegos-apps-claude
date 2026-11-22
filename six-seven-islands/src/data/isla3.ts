@@ -9,6 +9,12 @@ export const ISLA_3: DefIsla = {
   inicio: { zona: 'palmas', x: 26, y: 4 },
   // Dos gimnasios: Eléctrico en Las Palmas y Lucha en Agaete (fase 3). La azotea, con el rayo.
   gimnasio: 'electrico',
+  // Más verde que las dos primeras: cumbres pardas con matorral y hierba alta de un verde vivo.
+  colores: {
+    cumbre: '#9E9070',
+    ladoCumbre: '#7C6F52',
+    matas: '#5E8240',
+  },
   // La costa de Gran Canaria, aproximada (herramientas/isla3.py).
   silueta: [
     [75.5, 9.5],
