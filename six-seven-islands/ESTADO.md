@@ -4,8 +4,9 @@ Actualizado: 2026-11-22. Solo el presente; el historial está en git. Máximo 40
 
 ## Fase actual
 
-Gran Canaria (`ISLA-3.md`): fase 1 hecha (Las Palmas, La Isleta y el gimnasio Eléctrico, con
-el barco desde Morro Jable). Siguen la fase 2 (Guayadeque, las cumbres y el Roque Nublo).
+Gran Canaria (`ISLA-3.md`): fases 1 y 2 hechas: Las Palmas, La Isleta, el gimnasio Eléctrico a
+oscuras, Guayadeque, las cumbres y el Roque Nublo, con el comandante y el segundo amigo. Sigue la
+fase 3 (Tejeda, Tamadaba y Agaete, con el terrero y el dos contra dos).
 
 ## Hecho
 
@@ -23,7 +24,7 @@ el barco desde Morro Jable). Siguen la fase 2 (Guayadeque, las cumbres y el Roqu
    Pok42, Pok48–49 y el dinosaurio), con `herramientas/criaturas/juego.py` (ARCHITECTURE.md). Las iniciales,
    con sus tres formas; las criaturas evolucionan tras el combate, con el Sello.
 
-4. Gran Canaria, fases 2 a 4 (`ISLA-3.md`). Las criaturas Eléctricas, cuando el autor las haga
+4. Gran Canaria, fases 3 y 4 (`ISLA-3.md`). Las criaturas Eléctricas, cuando el autor las haga
    en Meshy: la isla y el gimnasio las usan provisionales.
 5. Música grabada lista: falta que el autor suba las pistas (`src/assets/musica/LEEME.md`).
 

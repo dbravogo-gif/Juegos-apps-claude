@@ -28,6 +28,7 @@ export interface DefEntrenador {
 const OFICIO: Readonly<Record<string, string>> = {
   aprendiz: 'Aprendiz',
   estudiante: 'Estudiante',
+  comandante: '{comandante}',
   buscador: 'Buscador',
   cabrero: 'Cabrero',
   corredor: 'Corredor',

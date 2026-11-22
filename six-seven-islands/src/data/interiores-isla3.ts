@@ -14,6 +14,10 @@ const SALAS: Record<string, DefSala> = {
   'casa-palmas-3': { nombre: 'Casa de Vegueta', gente: vive('vecino-palmas-3', 'Dicen que Colón paró en esta ciudad camino de América. Yo no lo vi, ¿eh?') },
   'casa-palmas-4': { nombre: 'Casa junto a la plaza', gente: vive('vecina-palmas-4', 'Desde la azotea se ven las cumbres. Cuando hay nubes, parecen un mar encima de la isla.') },
   'casa-isleta-1': { nombre: 'Casa de La Isleta', gente: vive('vecino-isleta-1', 'Antes de la ciudad, La Isleta era casi una isla de verdad. Por eso se llama así.') },
+  'refugio-guayadeque': { nombre: 'Refugio de Guayadeque', gente: vive('enfermera-guayadeque') },
+  'casa-cueva-1': { nombre: 'Casa cueva', gente: vive('vecino-cueva-1', 'Esta cueva la excavó mi bisabuelo a mano. Cada generación le ha hecho un cuarto más.') },
+  'casa-cueva-2': { nombre: 'Casa cueva', gente: vive('vecina-cueva-2', 'Los antiguos canarios ya vivían en estas cuevas. Dicen que guardaban aquí sus momias y su grano.') },
+  'restaurante-cueva': { nombre: 'Restaurante cueva', gente: vive('camarera-cueva', 'Hoy hay papas arrugadas con mojo y queso de flor. ¡Vuelve cuando tengas hambre!') },
   'casa-isleta-2': { nombre: 'Casa de La Isleta', gente: vive('vecina-isleta-2', 'Mi marido sale a pescar de madrugada. Las criaturas del mar le siguen la barca.') },
 };
 

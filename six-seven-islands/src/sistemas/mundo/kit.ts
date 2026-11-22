@@ -634,6 +634,49 @@ export function cabra(semilla: number): BufferGeometry {
   return M.fusionar();
 }
 
+/**
+ * Un almendro en flor (las cumbres de Gran Canaria, 2026-11-22): tronco oscuro y torcido, con la
+ * copa de flores blancas y rosas, más ligera y abierta que la del laurel.
+ */
+export function almendro(semilla: number): BufferGeometry {
+  const r = azar(semilla);
+  const M = new Montaje();
+  const alto = 0.7 + r() * 0.25;
+  const inclina = (r() - 0.5) * 0.35;
+  M.pon(new CylinderGeometry(0.05, 0.09, alto, 5).translate(0, alto / 2, 0).rotateZ(inclina), '#4A3A32');
+  const cx = -Math.sin(inclina) * alto;
+  const cy = Math.cos(inclina) * alto;
+  const flores = ['#F6E3EA', '#EDB7C9', '#FFFFFF', '#F2CBD8'];
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2 + r();
+    const d = i === 0 ? 0 : 0.26 + r() * 0.1;
+    const rad = i === 0 ? 0.34 : 0.22 + r() * 0.08;
+    const bola = abollar(new SphereGeometry(rad, 7, 5).scale(1, 0.75, 1), 0.15, semilla * 5 + i);
+    M.pon(bola.translate(cx + Math.cos(a) * d, cy + 0.2 + r() * 0.15, Math.sin(a) * d), flores[i % 4]!, 0.96 + r() * 0.06);
+  }
+  return M.fusionar();
+}
+
+/**
+ * El Roque Nublo (2026-11-22): un monolito de roca parda, alto y algo inclinado, sobre una base de
+ * peñascos, y a su lado una aguja más baja (el Fraile). Ocupa su casilla y se ve desde lejos.
+ */
+export function roque(semilla: number): BufferGeometry {
+  const M = new Montaje();
+  const base = (rad: number, x: number, z: number, s: number) => {
+    const g = abollar(new SphereGeometry(rad, 8, 6), 0.22, s).scale(1, 0.55, 1);
+    g.computeBoundingBox();
+    M.ponDegradado(g.translate(x, -g.boundingBox!.min.y - 0.05, z), '#6F5E4E', '#9A8670');
+  };
+  base(0.75, 0, 0, semilla);
+  base(0.45, 0.55, 0.25, semilla + 1);
+  base(0.4, -0.5, -0.2, semilla + 2);
+  // El monolito: un prisma de seis caras, más estrecho arriba, abollado como la roca.
+  M.ponDegradado(abollar(new CylinderGeometry(0.32, 0.5, 4.2, 6, 4), 0.1, semilla + 3).rotateZ(0.06).translate(0.05, 2.3, 0), '#7C6A57', '#B39C80');
+  M.ponDegradado(abollar(new CylinderGeometry(0.16, 0.26, 1.7, 6, 2), 0.1, semilla + 4).translate(0.62, 1.05, 0.2), '#7C6A57', '#A48E74');
+  return M.fusionar();
+}
+
 /** Todas las piezas del kit, por nombre. */
 export const KIT = {
   laurel,
@@ -664,6 +707,8 @@ export const KIT = {
   cometa,
   molino,
   cabra,
+  almendro,
+  roque,
 } satisfies Record<string, (semilla: number) => BufferGeometry>;
 
 export type PiezaKit = keyof typeof KIT;
@@ -700,6 +745,8 @@ export const VARIANTES: Record<PiezaKit, number> = {
   cometa: 3,
   molino: 2,
   cabra: 3,
+  almendro: 3,
+  roque: 1,
 };
 
 /** La geometría de una variante de una pieza del kit. */

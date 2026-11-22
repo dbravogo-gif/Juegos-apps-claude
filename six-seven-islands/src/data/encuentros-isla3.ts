@@ -14,4 +14,23 @@ export const ENCUENTROS_ISLA3: TablaEncuentros = {
     { especie: 'c043-1', nivel: [18, 19], peso: 15 },
     { especie: 'c013-2', nivel: [19, 20], peso: 10 },
   ],
+  // Fase 2 (PLAN-CRIATURAS.md: Veneno, Oscuridad, Tierra y Lucha; mientras, las que hay).
+  guayadeque: [
+    { especie: 'c012-2', nivel: [20, 22], peso: 30 },
+    { especie: 'c034-1', nivel: [20, 22], peso: 30 },
+    { especie: 'c005-1', nivel: [20, 21], peso: 25 },
+    { especie: 'c062-1', nivel: [21, 22], peso: 15 },
+  ],
+  cumbres: [
+    { especie: 'c031-2', nivel: [21, 23], peso: 30 },
+    { especie: 'c007-2', nivel: [21, 23], peso: 25 },
+    { especie: 'c043-2', nivel: [21, 23], peso: 25 },
+    { especie: 'c032-2', nivel: [22, 23], peso: 20 },
+  ],
+  nublo: [
+    { especie: 'c032-2', nivel: [22, 24], peso: 35 },
+    { especie: 'c044-2', nivel: [24, 24], peso: 20 },
+    { especie: 'c012-2', nivel: [22, 24], peso: 25 },
+    { especie: 'c062-1', nivel: [22, 24], peso: 20 },
+  ],
 };

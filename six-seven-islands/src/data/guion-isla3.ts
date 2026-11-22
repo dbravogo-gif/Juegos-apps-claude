@@ -53,6 +53,38 @@ export const GUION_ISLA3: Guion = {
       },
     },
   ],
+  'enfermera-guayadeque': [
+    { dialogo: { lineas: [{ quien: 'Enfermera', texto: 'Bienvenido al refugio de Guayadeque. Descansa, que la subida a las cumbres es larga.' }] } },
+  ],
+  // El comandante de la rama que te persigue (HISTORIA.md, Gran Canaria): te para antes de la cima.
+  'comandante-nublo': [
+    {
+      dialogo: {
+        lineas: [
+          { quien: '{comandante}', texto: 'Vaya, vaya. El elegido de {pueblo}. El jefe dijo que acabarías subiendo hasta aquí.' },
+          { quien: '{comandante}', texto: 'Soy {comandante}, comandante de {rama}. Desde esta roca se ve lo que buscamos, al oeste, sobre las nubes.' },
+          { quien: '{comandante}', texto: 'Y tú no lo vas a ver. ¡En guardia!' },
+        ],
+      },
+    },
+  ],
+  // El segundo amigo (HISTORIA.md): llega cuando el comandante se va. Lleva una de las iniciales que
+  // quedan. En Agaete será tu compañero en el dos contra dos contra los líderes (fase 3).
+  'amigo2-nublo': [
+    {
+      sin: 'amigo2-conocido',
+      dialogo: {
+        lineas: [
+          { quien: '{amigo2}', texto: '¡Uf, llego tarde! Vi a los de {rama} subir y vine corriendo. ¿Estás bien?' },
+          { quien: '{amigo2}', texto: 'Me eligió una cría de {inicialAmigo2} hace poco. Desde entonces no paro de recorrer islas.' },
+          { quien: '{amigo2}', texto: '¿Has oído lo de Agaete? Los dos líderes de la isla te esperan juntos: dos contra dos.' },
+          { quien: '{amigo2}', texto: 'Tú solo no puedes con los dos. ¿Vamos juntos? Te espero en el terrero.' },
+        ],
+        efecto: { condicion: 'amigo2-conocido' },
+      },
+    },
+    { dialogo: { lineas: [{ quien: '{amigo2}', texto: 'Nos vemos en Agaete. ¡Entrena, que esos dos pegan fuerte!' }] } },
+  ],
   'farera-isleta': [
     {
       dialogo: {

@@ -25,6 +25,8 @@ export const NOMBRE_OBJETO: Record<string, string> = {
 export const AMIGOS: ReadonlyMap<string, string> = new Map([
   ['amigo', 'amigo'],
   ['amigo-muelle', 'amigo'],
+  // El segundo amigo, al que conoces en el Roque Nublo (Gran Canaria).
+  ['amigo2-nublo', 'amigo2'],
 ]);
 
 /** El nombre del tipo de cada inicial, para los textos («la de Roca»). */

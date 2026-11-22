@@ -18,7 +18,7 @@ import { NOMBRE_OBJETO } from '../../data/textos-isla1';
 import { quienEs } from '../../data/entrenadores-isla1';
 import { puntoRecado } from '../../core/recados';
 import { AMIGOS, NOMBRE_TIPO_INICIAL } from '../../data/textos-isla1';
-import { PUEBLOS, inicialDelRival, puebloQueTePersigue, type TipoInicial } from '../../data/pueblos';
+import { PUEBLOS, inicialDelRival, inicialesDeAmigos, puebloQueTePersigue, type TipoInicial } from '../../data/pueblos';
 import { crearCriatura, curarDelTodo } from '../../core/criatura';
 import { expParaNivel } from '../../core/progreso';
 import { sortearEncuentro } from '../../core/encuentros';
@@ -707,6 +707,9 @@ export class Partida implements Subsistema {
         .replaceAll('{amigo}', this.amigos.amigo ?? 'tu amigo')
         .replaceAll('{inicial}', tuya ? NOMBRE_TIPO_INICIAL[tuya] : '')
         .replaceAll('{inicialRival}', tuya ? NOMBRE_TIPO_INICIAL[inicialDelRival(tuya)] : '')
+        .replaceAll('{amigo2}', this.amigos.amigo2 ?? 'tu amiga')
+        .replaceAll('{inicialAmigo2}', tuya ? NOMBRE_TIPO_INICIAL[inicialesDeAmigos(tuya)[0]!] : '')
+        .replaceAll('{comandante}', tuya ? PUEBLOS[puebloQueTePersigue(tuya)].comandante : 'el comandante')
         .replaceAll('{rama}', tuya ? PUEBLOS[puebloQueTePersigue(tuya)].rama : 'la rama')
         .replaceAll('{pueblo}', tuya ? PUEBLOS[tuya].nombre : 'tu pueblo');
     const conNombre = (l: Dialogo['lineas'][number]) => ({ ...l, texto: cambiar(l.texto), ...(l.quien ? { quien: cambiar(l.quien) } : {}) });

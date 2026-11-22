@@ -166,6 +166,9 @@ const COLOR_ARRIBA: Partial<Record<Casilla, string>> = {
   E: COLORES.arenaDuna,
   g: COLORES.tierra,
   f: COLORES.canteria,
+  // El mar de nubes, blanco azulado (las nubes las pone «mundo» encima).
+  x: '#E4EAEE',
+  I: '#8C7A66',
 };
 
 type ColoresIsla = Mundo['isla']['colores'];
