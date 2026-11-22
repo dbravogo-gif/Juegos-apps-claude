@@ -31,6 +31,12 @@ Vitest.
 Las que surjan de errores observados (regla R6) o de decisiones del autor, cada una con la fecha
 y el porqué.
 
+- **2026-11-22 · Cada gimnasio, una mecánica que no se parezca a ninguna anterior** (autor: los de
+  Roca y Aire se parecían). Antes de construir uno, se le proponen opciones y elige. Hechas:
+  palanca y compuertas (Roca), corrientes y aspas (Aire), laberinto a oscuras con relámpagos
+  (Eléctrico).
+- **2026-11-22 · Generaciones caras, las justas** (autor). Fondos de combate, uno por paisaje y no
+  por zona (`src/assets/fondos/LEEME.md`); nada de pantallas de final de isla.
 - **2026-11-13 · En cada mensaje, la lista de lo que le toca al autor** (autor). Al final de cada
   respuesta, aunque sea corta. La lista viva está en `PENDIENTES.md`, «Tareas del autor». Cuando
   el autor no puede revisar, se sigue adelantando y revisando para que luego lo vea todo seguido.
