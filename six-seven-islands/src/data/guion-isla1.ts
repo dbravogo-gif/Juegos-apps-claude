@@ -304,12 +304,13 @@ export const GUION_ISLA1: Guion = {
       dialogo: { lineas: [{ quien: 'Marinero', texto: 'El barco va a la isla siguiente, pero solo con quien ha vencido al gimnasio.' }] },
     },
     {
-      // La primera vez, el final de la isla y, con Enter, a Fuerteventura (isla 2).
+      // La primera vez cumple «isla1-completada» y zarpa a Fuerteventura (isla 2), sin pantalla de
+      // final (autor, 2026-11-22: no le gusta).
       sin: 'isla1-completada',
       dialogo: {
         lineas: [{ quien: 'Marinero', texto: '¡Has vencido a la líder! El barco sale hacia Fuerteventura cuando tú digas.' }],
         pregunta: { quien: 'Marinero', texto: '¿Subes al barco?' },
-        efecto: { fin: true, viaje: 2, condicion: 'isla1-completada' },
+        efecto: { viaje: 2, condicion: 'isla1-completada' },
         tras: [{ quien: 'Marinero', texto: '¡Pues arriba! ¡Levamos anclas!' }],
       },
     },

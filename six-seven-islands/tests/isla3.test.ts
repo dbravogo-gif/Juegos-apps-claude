@@ -2,7 +2,8 @@
 // Desde el muelle se llega a todo; las zonas se tocan; los entrenadores ven por donde se pasa; el
 // gimnasio se resuelve con sus dos palancas y el tercer aprendiz no se esquiva.
 import { describe, expect, it } from 'vitest';
-import { alcanzables, clave, construirInterior, construirMundo, deClave, transitable, vision, type Condicion } from '../src/core/mundo';
+import { alcanzables, clave, construirInterior, construirMundo, deClave, transitable, vision } from '../src/core/mundo';
+import { ENTRE_RAYOS, opacidadTrasRayo } from '../src/sistemas/oscuridad/oscuridad';
 import { ISLAS, FUERTEVENTURA, GRAN_CANARIA } from '../src/data/islas';
 import { ISLA_3, PUERTAS_ISLA3 } from '../src/data/isla3';
 import { GIMNASIO_ELECTRICO } from '../src/data/gimnasio-electrico';
@@ -26,8 +27,16 @@ describe('Gran Canaria (isla 3), fase 1', () => {
     expect(transitable(m, zona('palmas').origen.x + GRAN_CANARIA.llegada.x, zona('palmas').origen.y + GRAN_CANARIA.llegada.y)).toBe(true);
     const barco = GUION_ISLA2['marinero-morro']!;
     expect(barco[0]!.sin).toBe('gimnasio2-vencido');
-    expect(barco.some((e) => e.dialogo.efecto?.viaje === 3 && e.dialogo.efecto.fin)).toBe(true);
+    expect(barco.some((e) => e.dialogo.efecto?.viaje === 3 && e.dialogo.efecto.condicion === 'isla2-completada')).toBe(true);
     expect(FUERTEVENTURA.def.zonas.find((z) => z.id === 'morro')!.personajes.some((p) => p.id === 'marinero-morro')).toBe(true);
+  });
+
+  it('de vuelta a Fuerteventura se llega al muelle de Morro Jable, y la llegada se pisa', () => {
+    const l = FUERTEVENTURA.llegadas![3]!;
+    expect(l.zona).toBe('morro');
+    const mf = construirMundo(FUERTEVENTURA.def);
+    const zf = mf.zonas.get(l.zona)!;
+    expect(transitable(mf, zf.origen.x + l.x, zf.origen.y + l.y)).toBe(true);
   });
 
   it('desde el muelle se llega a La Isleta, a cada puerta, a cada personaje y a cada objeto', () => {
@@ -87,35 +96,57 @@ describe('Gran Canaria (isla 3), fase 1', () => {
   });
 });
 
-describe('gimnasio Eléctrico de Las Palmas', () => {
+describe('gimnasio Eléctrico de Las Palmas (a oscuras, autor, 2026-11-22)', () => {
   const g = construirInterior(GIMNASIO_ELECTRICO, { x: 0, y: 0 });
   const entrada = clave(GIMNASIO_ELECTRICO.entrada.x, GIMNASIO_ELECTRICO.entrada.y);
-  const desde = (c: Condicion[], prohibidas?: Set<number>) => alcanzables(g, [entrada], { condiciones: new Set(c), prohibidas });
-  const alLado = (x: number, y: number) => [clave(x, y + 1), clave(x, y - 1), clave(x + 1, y), clave(x - 1, y)];
-  const palanca = (id: string) => Object.entries(GIMNASIO_ELECTRICO.palancas!).find(([, p]) => p === id)![0].split(',').map(Number) as [number, number];
-  const arriba = (c: Condicion[]) => [...desde(c)].some((k) => deClave(k)[1] <= 3);
+  const desde = (prohibidas?: Set<number>) => alcanzables(g, [entrada], { prohibidas });
+  const arriba = (r: Set<number>) => [...r].some((k) => deClave(k)[1] <= 3);
 
-  it('la primera palanca se alcanza desde la entrada; con ella, la segunda; con las dos, la sala del líder', () => {
-    const [x1, y1] = palanca('electrico-1');
-    const [x2, y2] = palanca('electrico-2');
-    expect(alLado(x1, y1).some((k) => desde([]).has(k))).toBe(true);
-    expect(alLado(x2, y2).some((k) => desde([]).has(k))).toBe(false);
-    expect(alLado(x2, y2).some((k) => desde(['palanca:electrico-1']).has(k))).toBe(true);
-    expect(arriba(['palanca:electrico-1'])).toBe(false);
-    expect(arriba(['palanca:electrico-2'])).toBe(false);
-    expect(arriba(['palanca:electrico-1', 'palanca:electrico-2'])).toBe(true);
+  it('es un laberinto a oscuras, sin palancas ni compuertas, y se llega a la sala del líder', () => {
+    expect(GIMNASIO_ELECTRICO.oscura).toBe(true);
+    expect(GIMNASIO_ELECTRICO.palancas).toBeUndefined();
+    expect(GIMNASIO_ELECTRICO.mapa.join('')).not.toMatch(/[Xp]/);
+    expect(arriba(desde())).toBe(true);
+    for (const o of GIMNASIO_ELECTRICO.objetos ?? []) expect(desde().has(clave(o.x, o.y)), o.id).toBe(true);
   });
 
-  it('el tercer aprendiz no se esquiva camino del líder, y el líder no está', () => {
-    const p = GIMNASIO_ELECTRICO.personajes.find((x) => x.id === 'aprendiz-electrico-3')!;
-    const ve = new Set(vision(g, GIMNASIO_ELECTRICO.id, p));
-    const todas = ['palanca:electrico-1', 'palanca:electrico-2'] as Condicion[];
-    expect([...desde(todas, ve)].some((k) => deClave(k)[1] <= 3)).toBe(false);
+  it('ningún aprendiz se esquiva camino del líder, y el líder no está', () => {
+    for (const p of GIMNASIO_ELECTRICO.personajes.filter((x) => x.entrenador)) {
+      const ve = new Set(vision(g, GIMNASIO_ELECTRICO.id, p));
+      expect(arriba(desde(ve)), p.id).toBe(false);
+    }
     expect(GIMNASIO_ELECTRICO.personajes.some((x) => x.id.startsWith('lider'))).toBe(false);
     expect(GRAN_CANARIA.entrenadores['aprendiz-electrico-3']!.alVencer?.join(' ')).toMatch(/no está/);
   });
 
+  it('el camino da vueltas: más de 20 pasos y desvíos desde la entrada', () => {
+    // Del laberinto entero, la sala de arriba queda lejos de la puerta.
+    const dist = new Map<number, number>([[entrada, 0]]);
+    const cola = [entrada];
+    while (cola.length) {
+      const k = cola.shift()!;
+      const [x, y] = deClave(k);
+      for (const v of [clave(x + 1, y), clave(x - 1, y), clave(x, y + 1), clave(x, y - 1)]) {
+        if (!dist.has(v) && desde().has(v)) {
+          dist.set(v, dist.get(k)! + 1);
+          cola.push(v);
+        }
+      }
+    }
+    const aSalaLider = Math.min(...[...dist].filter(([k]) => deClave(k)[1] === 3).map(([, d]) => d));
+    expect(aSalaLider).toBeGreaterThan(20);
+  });
+
   it('dentro hay campo eléctrico', () => {
     expect(GRAN_CANARIA.campos?.['gimnasio-electrico']).toEqual({ terreno: 'electrico' });
+  });
+
+  it('los relámpagos lo enseñan todo un instante y la oscuridad vuelve poco a poco', () => {
+    expect(opacidadTrasRayo(0)).toBe(0);
+    expect(opacidadTrasRayo(0.2)).toBe(0);
+    expect(opacidadTrasRayo(0.5)).toBeGreaterThan(0);
+    expect(opacidadTrasRayo(0.5)).toBeLessThan(1);
+    expect(opacidadTrasRayo(2)).toBe(1);
+    for (const t of ENTRE_RAYOS) expect(t).toBeGreaterThan(1);
   });
 });

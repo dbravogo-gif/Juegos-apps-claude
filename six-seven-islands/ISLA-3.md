@@ -128,11 +128,23 @@ Así la subida a las cumbres tiene sentido y la historia de la isla secreta avan
   - Volcanes viejos con malpaís.
   - Hierba alta que no se esquiva para llegar al faro, y una farera que habla de la isla que
     aparece al oeste.
-- **Gimnasio Eléctrico** (`gimnasio-electrico.ts`):
-  - Tres salas separadas por barreras de rayos; cada una la apaga una palanca.
-  - El tercer aprendiz no se esquiva.
+- **Gimnasio Eléctrico** (`gimnasio-electrico.ts`), rehecho el mismo día. El de Roca y el de Aire
+  se parecían, y el primer Eléctrico repetía palancas. El autor eligió «a oscuras con relámpagos»:
+  - Un laberinto de muros bajos de chapa, a oscuras. Solo se ve un círculo alrededor del
+    jugador y, con cada relámpago, todo durante un instante, con su trueno (subsistema
+    «oscuridad»).
+  - Sin palancas.
+  - Los tres aprendices esperan en recovecos junto al camino y no se esquivan.
   - El líder no está: se fue a Agaete y te espera con la de Lucha.
   - Tiene campo eléctrico.
+- **Sin pantalla de final de isla** (autor, 2026-11-22): el barco zarpa sin más.
+- **Arreglos tras el probador:**
+  - el barco de vuelta llega a Morro Jable;
+  - el marinero y la estudiante ya no quedan tapados;
+  - la catedral tiene dos torres y el tejado a dos aguas, que salía en V (también el de
+    Betancuria);
+  - las casas de La Isleta miran a la calle;
+  - la isla solo ocupa lo construido, sin llanura vacía detrás.
 - **Provisional:** todavía no hay criaturas Eléctricas con modelo. La Isleta y los aprendices
   sacan criaturas de Aire, Agua y Bicho hasta que lleguen Tembladera, Chispa de cable, Farito y
   Voltéro (`PLAN-CRIATURAS.md`).

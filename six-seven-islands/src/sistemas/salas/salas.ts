@@ -4,7 +4,7 @@
 // dentro. Los muebles salen de las letras del mapa (LEYENDA) y las estatuas del museo, de sus
 // personajes. Una malla por sala. Lee «partida»; no la cambia.
 
-import { BoxGeometry, ConeGeometry, CylinderGeometry, Group, Mesh, MeshBasicNodeMaterial, PlaneGeometry, SphereGeometry, type BufferGeometry, type Object3D } from 'three/webgpu';
+import { BoxGeometry, BufferGeometry, ConeGeometry, CylinderGeometry, Float32BufferAttribute, Group, Mesh, MeshBasicNodeMaterial, PlaneGeometry, SphereGeometry, type Object3D } from 'three/webgpu';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { MODELO_FINAL_INICIAL, MODELO_INICIAL, figuraCriatura } from '../../arte/criaturas3d';
 import { attribute } from 'three/tsl';
@@ -329,6 +329,11 @@ export function geometriaSala(sala: Mundo, id: string): BufferGeometry {
       // Molino: peana y poste; las aspas, que giran, las pone `Salas`.
       M.cajaRedonda(0.56, 0.28, 0.56, x, SUELO, y, COLORES.balcon, 0.05);
       M.pon(new CylinderGeometry(0.06, 0.09, 1.25, 8).translate(x, SUELO + 0.28 + 0.62, y), COLORES.cal);
+    } else if (cm.c === '=') {
+      // Muro bajo de chapa, con una franja amarilla arriba (el laberinto del gimnasio Eléctrico):
+      // deja ver por encima, con la cámara quieta, lo que hay detrás.
+      M.caja(1, 0.6, 1, x, SUELO, y, '#59606A', 0.94 + (n % 3) * 0.04);
+      M.caja(1, 0.05, 1, x, SUELO + 0.6, y, '#E8B90E');
     } else if (cm.c === 'X') {
       // La compuerta la pone `Salas`, que la hunde al abrirse.
     } else if (cm.c === '|') {
@@ -363,12 +368,21 @@ export function geometriaSala(sala: Mundo, id: string): BufferGeometry {
     M.pon(new CylinderGeometry(0.34, 0.3, 0.1, 9).translate(centroX, SUELO + 2.62, minY + 0.66), COLORES.lava, 1.2);
     M.caja(1, 0.012, 2, centroX, SUELO, minY + 2.5, COLORES.escoria, 0.95);
   } else if (electrico) {
-    // El sitio del líder, vacío: un círculo amarillo con un rayo en zigzag, en la sala de arriba.
+    // El sitio del líder, vacío: un disco amarillo con un rayo oscuro, en la sala de arriba. El
+    // rayo, de dos trozos desplazados (con tres palos rectos se leía como una «I»; probador).
     const cy = minY + 2;
     M.pon(new CylinderGeometry(1.15, 1.15, 0.02, 28).translate(centroX, SUELO + 0.01, cy), '#3A3F46');
     M.pon(new CylinderGeometry(1.0, 1.0, 0.025, 28).translate(centroX, SUELO + 0.015, cy), '#E8B90E');
-    for (const [dx, dz, giro, largo] of [[-0.18, -0.38, 0.5, 0.62], [0.05, 0, -0.9, 0.55], [0.2, 0.36, 0.5, 0.62]] as const) {
-      M.pon(new BoxGeometry(0.16, 0.03, largo).rotateY(giro).translate(centroX + dx, SUELO + 0.03, cy + dz), '#2B2F35');
+    for (const trozo of [
+      [[0.05, -0.75], [0.4, -0.75], [0.1, 0.05], [-0.22, 0.05]],
+      [[-0.02, -0.12], [0.3, -0.12], [-0.2, 0.8], [-0.3, 0.8]],
+    ] as const) {
+      const g = new BufferGeometry();
+      const [a, b, c, d] = trozo.map(([px, pz]) => [centroX + px, SUELO + 0.03, cy + pz]);
+      // Las dos caras, para no depender del orden de los vértices.
+      g.setAttribute('position', new Float32BufferAttribute([...a!, ...b!, ...c!, ...a!, ...c!, ...d!, ...a!, ...c!, ...b!, ...a!, ...d!, ...c!], 3));
+      g.computeVertexNormals();
+      M.pon(g, '#2B2F35');
     }
   } else if (id === 'gimnasio') {
     const cy = (minY + maxY) / 2;
@@ -413,8 +427,7 @@ export class Salas implements Subsistema {
     const viento = new MeshBasicNodeMaterial({ color: '#5BB8DE' });
     const piedraClara = new MaterialDiorama({ color: COLORES.cal, bordes: [-0.1, 0.4], especular: 0.05, rebote: 0.12 });
     const piedraCompuerta = new MaterialDiorama({ color: COLORES.canteria, bordes: [-0.1, 0.4], especular: 0.05, rebote: 0.12 });
-    const rayo = new MeshBasicNodeMaterial({ color: '#FFE14A' });
-    this.materialesExtra.push(piedra, lava, agua, viento, piedraClara, piedraCompuerta, rayo);
+    this.materialesExtra.push(piedra, lava, agua, viento, piedraClara, piedraCompuerta);
     this.lavaMaterial = lava;
     this.piedraMaterial = piedra;
     const cargas: Promise<void>[] = [];
@@ -457,26 +470,6 @@ export class Salas implements Subsistema {
           // se ve de lejos que corta el paso. La de basalto oscuro se confundía con las baldosas
           // (autor, 2026-11-19).
           const losa = new Group();
-          if (id === 'gimnasio-electrico') {
-            // Una barrera de rayos: dos postes de metal y tres hilos amarillos encendidos (sin luz),
-            // que se hunden al bajar su palanca, como las compuertas.
-            for (const lado of [-0.42, 0.42]) {
-              const poste = new BoxGeometry(0.14, ALTO_COMPUERTA, 0.14).translate(lado, ALTO_COMPUERTA / 2, 0);
-              const m = new Mesh(poste, piedra);
-              m.castShadow = true;
-              losa.add(m);
-              this.geometrias.push(poste);
-            }
-            for (const alto of [0.35, 0.75, 1.15]) {
-              const hilo = new BoxGeometry(0.72, 0.05, 0.05).rotateZ(alto === 0.75 ? 0.12 : -0.12).translate(0, alto, 0);
-              losa.add(new Mesh(hilo, rayo));
-              this.geometrias.push(hilo);
-            }
-            losa.position.set(x, SUELO, y);
-            ctx.escena.add(losa);
-            this.compuertas.push({ malla: losa, condicion: cierre.condicion, abierta: partida.estado.condiciones.includes(cierre.condicion) ? 1 : 0 });
-            continue;
-          }
           const g = new BoxGeometry(0.98, ALTO_COMPUERTA, 0.5).translate(0, ALTO_COMPUERTA / 2, 0);
           const cuerpo = new Mesh(g, piedraCompuerta);
           cuerpo.castShadow = true;

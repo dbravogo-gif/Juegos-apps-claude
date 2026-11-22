@@ -49,7 +49,7 @@ export const GUION_ISLA2: Guion = {
       dialogo: {
         lineas: [{ quien: 'Marinero', texto: '¡Has vencido a la líder de Aire! El barco sale hacia Gran Canaria cuando tú digas.' }],
         pregunta: { quien: 'Marinero', texto: '¿Subes al barco?' },
-        efecto: { fin: true, viaje: 3, condicion: 'isla2-completada' },
+        efecto: { viaje: 3, condicion: 'isla2-completada' },
         tras: [{ quien: 'Marinero', texto: '¡Pues arriba! Rumbo a Las Palmas.' }],
       },
     },

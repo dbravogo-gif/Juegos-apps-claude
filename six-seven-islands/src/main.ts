@@ -21,12 +21,13 @@ import { Personaje } from './sistemas/personaje/personaje';
 import { Prueba } from './sistemas/prueba/prueba';
 import { Render } from './sistemas/render/render';
 import { Salas } from './sistemas/salas/salas';
+import { Oscuridad } from './sistemas/oscuridad/oscuridad';
 import { mostrarMapa } from './sistemas/mapa/vista';
 import './estilo.css';
 
 // El juego: la isla 1 para explorar. Con ?vitrina, la vitrina de criaturas de la prueba de arte;
 // con ?catalogo, las piezas propias del mundo en fila para revisarlas; con ?mapa, el plano en 2D.
-const JUEGO: ClaseSubsistema[] = [Render, Entrada, Partida, Mundo, Salas, Personaje, Companera, Camara, Combate, Interfaz, Menu, Inicio, Sonido, Depuracion];
+const JUEGO: ClaseSubsistema[] = [Render, Entrada, Partida, Mundo, Salas, Personaje, Oscuridad, Companera, Camara, Combate, Interfaz, Menu, Inicio, Sonido, Depuracion];
 const VITRINA: ClaseSubsistema[] = [Render, Criaturas, Prueba, Depuracion];
 const CATALOGO: ClaseSubsistema[] = [Render, Catalogo, Depuracion];
 

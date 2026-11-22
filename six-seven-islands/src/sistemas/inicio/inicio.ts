@@ -1,24 +1,20 @@
 // Subsistema «inicio»: la portada de una partida nueva (autor, 2026-11-12). Se elige la persona
 // (cada amigo tiene la suya, hecha con Meshy) y se escribe el nombre. Se enseña mientras «partida»
-// está en modo «titulo»: con una partida guardada no sale, porque se sigue donde se dejó. También
-// la pantalla del final de la isla 1 (F23), en modo «fin», con el gancho hacia la isla 2.
+// está en modo «titulo»: con una partida guardada no sale, porque se sigue donde se dejó. La
+// pantalla del final de cada isla se quitó (autor, 2026-11-22): el barco zarpa sin más.
 // Teclado: flechas para elegir, A (o E, Enter, Espacio) para seguir y X (o Z, Esc) para volver.
 
 import { JUGABLES } from '../../arte/personas';
-import { nombreDe } from '../../core/criatura';
-import { DATOS_COMBATE_PRUEBA as DATOS } from '../../data/combate-prueba';
 import { rutaModelo } from '../../arte/modelos';
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Entrada } from '../entrada/entrada';
 import type { Partida } from '../partida/partida';
 
-type Paso = 'portada' | 'persona' | 'nombre' | 'codigo' | 'fin';
+type Paso = 'portada' | 'persona' | 'nombre' | 'codigo';
 
 /** Lo que se puede hacer en la portada (autor, 2026-11-19). */
 type OpcionPortada = 'continuar' | 'nueva' | 'codigo';
 
-/** Lo que el final no hace caso a las teclas: 1,5 s a 60 pasos por segundo. */
-const BLOQUEO_FIN = 90;
 
 export class Inicio implements Subsistema {
   static readonly id = 'inicio';
@@ -39,7 +35,6 @@ export class Inicio implements Subsistema {
   private pista!: HTMLElement;
   private aviso: HTMLElement | null = null;
   /** Pasos fijos en que el final no hace caso a las teclas, para que no se salte sin leerlo. */
-  private bloqueo = 0;
 
   init(ctx: Ctx): void {
     this.ctx = ctx;
@@ -53,7 +48,6 @@ export class Inicio implements Subsistema {
         <h1 class="inicio-titulo">Six-seven islands</h1>
         <div class="inicio-portada"><p>Un archipiélago de criaturas por descubrir.</p><ul class="inicio-opciones"></ul></div>
         <label class="inicio-codigo" hidden>Código<input type="password" inputmode="numeric" maxlength="12" autocomplete="off" /></label>
-        <div class="inicio-fin" hidden><h2>¡Isla 1 completada!</h2><p class="inicio-fin-texto"></p><ul class="inicio-fin-equipo"></ul><p class="inicio-fin-gancho"></p></div>
         <div class="inicio-personas" hidden></div>
         <label class="inicio-nombre" hidden>¿Cómo te llamas?<input maxlength="16" spellcheck="false" autocomplete="off" /></label>
         <p class="inicio-pista"></p>
@@ -111,8 +105,6 @@ export class Inicio implements Subsistema {
 
   private ir(p: Paso): void {
     this.paso = p;
-    this.raiz.querySelector<HTMLElement>('.inicio-fin')!.hidden = p !== 'fin';
-    this.raiz.querySelector<HTMLElement>('.inicio-titulo')!.hidden = p === 'fin';
     this.raiz.querySelector<HTMLElement>('.inicio-portada')!.hidden = p !== 'portada';
     this.raiz.querySelector<HTMLElement>('.inicio-personas')!.hidden = p !== 'persona';
     this.raiz.querySelector<HTMLElement>('.inicio-nombre')!.hidden = p !== 'nombre';
@@ -122,15 +114,7 @@ export class Inicio implements Subsistema {
       codigo: 'Escribe el código y pulsa Enter. Esc: volver',
       persona: '¿Quién eres? Flechas para elegir, A o Enter para seguir',
       nombre: 'Escribe tu nombre y pulsa Enter. Esc: volver',
-      fin: this.pistaFin(),
     }[p];
-    if (p === 'fin') {
-      this.pintarFin();
-      // 1,5 s sin hacer caso: quien venía pulsando E para pasar el diálogo no se lo salta. La
-      // pista sale cuando ya se puede seguir.
-      this.bloqueo = BLOQUEO_FIN;
-      this.pista.textContent = '';
-    }
     if (p === 'persona') this.pintar();
     if (p === 'portada') this.pintarPortada();
     if (p === 'codigo') {
@@ -142,30 +126,6 @@ export class Inicio implements Subsistema {
       this.campo.focus();
       this.campo.select();
     } else this.campo.blur();
-  }
-
-  /** Qué hace Enter en el final: zarpar (si hay isla a la que ir) o seguir explorando. */
-  private pistaFin(): string {
-    const destino = this.partida.destinoViaje;
-    return destino ? `A: zarpar hacia ${destino.nombre}` : `A: seguir explorando ${this.partida.datos.nombre}`;
-  }
-
-  /** El final: quién eres, tu equipo y lo que viene. */
-  private pintarFin(): void {
-    const pa = this.partida;
-    const raiz = this.raiz;
-    const destino = pa.destinoViaje?.nombre;
-    const final = pa.datos.final;
-    raiz.querySelector('.inicio-fin h2')!.textContent = `¡Isla ${pa.datos.numero} completada!`;
-    raiz.querySelector('.inicio-fin-texto')!.textContent = `${pa.nombre}, has vencido a ${final?.vencido ?? 'su gimnasio'}${destino ? ` y zarpas rumbo a ${destino}` : ''} con tu equipo:`;
-    raiz.querySelector('.inicio-fin-equipo')!.replaceChildren(
-      ...pa.equipo.map((c) => {
-        const li = document.createElement('li');
-        li.textContent = `${nombreDe(c, DATOS)} · Nv. ${c.nivel}`;
-        return li;
-      }),
-    );
-    raiz.querySelector('.inicio-fin-gancho')!.textContent = destino ? (final?.gancho ?? '') : `Continuará en la isla ${pa.datos.numero + 1}.`;
   }
 
   private pintar(): void {
@@ -193,26 +153,13 @@ export class Inicio implements Subsistema {
 
   pasoFijo(): void {
     const modo = this.partida.modo;
-    const visible = modo === 'titulo' || modo === 'fin';
+    const visible = modo === 'titulo';
     if (this.raiz.hidden === visible) this.raiz.hidden = !visible;
     if (!visible) return;
-    if (modo === 'fin' && this.paso !== 'fin') this.ir('fin');
     if (this.paso === 'nombre') return;
     const confirmar = this.entrada.consumir('confirmar');
     const cancelar = this.entrada.consumir('cancelar');
     const dir = this.entrada.pulsacion();
-    if (this.paso === 'fin') {
-      if (this.bloqueo > 0) {
-        if (--this.bloqueo === 0) this.pista.textContent = this.pistaFin();
-        return;
-      }
-      if (confirmar) {
-        this.ctx.eventos.emit('sonido:tocar', { nombre: 'confirmar' });
-        this.ir('portada');
-        this.partida.seguirTrasFin();
-      }
-      return;
-    }
     const sonar = (nombre: string) => this.ctx.eventos.emit('sonido:tocar', { nombre });
     if (this.paso === 'codigo') return;
     if (this.paso === 'portada') {

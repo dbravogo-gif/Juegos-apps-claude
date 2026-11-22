@@ -113,6 +113,11 @@ export class Personaje implements Subsistema {
   private mallasSilueta: Mesh[] = [];
   private opacidad = 0;
   private jugador!: Figura;
+
+  /** Dónde está el jugador ahora, ya dibujado (lo usa la oscuridad para su círculo de luz). */
+  posicionJugador(): Vector3 {
+    return this.jugador.raiz.position;
+  }
   private figuras: Figura[] = [];
   /** Los personajes por id, con hacia dónde miran normalmente, para girarlos al hablar. */
   private porId = new Map<string, { figura: Figura; giro: number; tumbado?: boolean }>();

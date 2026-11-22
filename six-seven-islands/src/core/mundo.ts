@@ -355,6 +355,11 @@ export interface DefInterior {
   corrientes?: Readonly<Record<string, Corriente>>;
   aspas?: Readonly<Record<string, string>>;
   palancas?: Readonly<Record<string, string>>;
+  /**
+   * A oscuras (el gimnasio Eléctrico): solo se ve alrededor del jugador y, con cada relámpago, todo.
+   * Solo se dibuja; las reglas son las de siempre. Sus muros bajos (`=`) dejan ver por encima.
+   */
+  oscura?: boolean;
 }
 
 /**

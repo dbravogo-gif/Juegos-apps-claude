@@ -46,14 +46,19 @@ export interface DatosIsla {
   refugio: string;
   /** Dónde se aparece al llegar en barco: zona y casilla (de la zona) junto al muelle. */
   llegada: { zona: string; x: number; y: number };
+  /** Si se llega desde otra isla por otro muelle: por el número de la isla de la que se viene. */
+  llegadas?: Readonly<Record<number, { zona: string; x: number; y: number }>>;
   /** Solo la isla 1: la sala donde empieza la partida. */
   salaInicial?: string;
   /** El campo de cada gimnasio, por su sala (autor, 2026-11-15): dura todos sus combates. */
   campos?: Readonly<Record<string, Campo>>;
+  /**
+   * El fondo de combate de cada zona o sala (por su id): el nombre del archivo de
+   * src/assets/fondos/, sin extensión. Sin fondo propio, los de Lanzarote (exterior y gimnasio).
+   */
+  fondos?: Readonly<Record<string, string>>;
   /** Los recados, por el id del personaje que los da (HISTORIA.md). */
   recados?: Readonly<Record<string, DefRecado>>;
-  /** La pantalla del final de la isla: a quién has vencido y lo que se ve desde el barco. */
-  final?: { vencido: string; gancho: string };
 }
 
 export const LANZAROTE: DatosIsla = {
@@ -74,7 +79,6 @@ export const LANZAROTE: DatosIsla = {
   // El gimnasio de Roca, con tormenta de arena permanente.
   campos: { gimnasio: { clima: 'arena' } },
   recados: RECADOS_ISLA1,
-  final: { vencido: 'la líder de Roca', gancho: 'Desde la cubierta, a lo lejos, se ve una isla que no sale en ningún mapa… Pero el barco pone rumbo al sur, hacia las dunas.' },
 };
 
 /** Fuerteventura (ISLA-2.md). Fases 1 a 3: de Corralejo a Morro Jable, con el gimnasio de Aire. */
@@ -95,9 +99,24 @@ export const FUERTEVENTURA: DatosIsla = {
   tenderos: new Set(['tendero-corralejo', 'tendero-puerto', 'tendero-morro']),
   refugio: 'refugio-corralejo',
   llegada: { zona: 'corralejo', x: 12, y: 5 },
+  // Desde Gran Canaria se llega al muelle de Morro Jable (probador, 2026-11-22: llegaba a Corralejo).
+  llegadas: { 3: { zona: 'morro', x: 19, y: 19 } },
   // El gimnasio de Aire, con el viento a favor de sus entrenadores (el lado 1).
   campos: { 'gimnasio-aire': { vientoAFavor: 1 } },
-  final: { vencido: 'la líder de Aire', gancho: 'Al pasar frente a Lobos, el viento cambia. Por la proa asoma una isla redonda, con nubes enganchadas en las cumbres.' },
+  // Un fondo por paisaje, no por zona (autor, 2026-11-22: pintarlos cuesta).
+  fondos: {
+    dunas: 'fv-dunas',
+    corralejo: 'fv-costa',
+    puerto: 'fv-costa',
+    ajuy: 'fv-costa',
+    sotavento: 'fv-costa',
+    morro: 'fv-costa',
+    cofete: 'fv-costa',
+    betancuria: 'fv-interior',
+    tindaya: 'fv-interior',
+    'cueva-ajuy': 'fv-cueva',
+    'gimnasio-aire': 'fv-gimnasio-aire',
+  },
 };
 
 /** Gran Canaria (ISLA-3.md). Fase 1: Las Palmas, con el gimnasio Eléctrico, y La Isleta. */
@@ -121,6 +140,7 @@ export const GRAN_CANARIA: DatosIsla = {
   llegada: { zona: 'palmas', x: 26, y: 4 },
   // El gimnasio Eléctrico, con su campo eléctrico (autor, 2026-11-15).
   campos: { 'gimnasio-electrico': { terreno: 'electrico' } },
+  fondos: { palmas: 'gc-ciudad', isleta: 'gc-isleta', 'gimnasio-electrico': 'gc-gimnasio-electrico' },
 };
 
 /** Las islas por su número, de este a oeste. */

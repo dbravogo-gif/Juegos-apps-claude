@@ -25,8 +25,9 @@ export const GUION_ISLA3: Guion = {
       sin: 'vencido:aprendiz-electrico-3',
       dialogo: {
         lineas: [
-          { quien: 'Vigilante', texto: '¡Bienvenido al gimnasio Eléctrico! Cada sala está cerrada por una barrera de rayos.' },
-          { quien: 'Vigilante', texto: 'Cada barrera la apaga una palanca. Búscala en la sala y bájala con E.' },
+          { quien: 'Vigilante', texto: '¡Bienvenido al gimnasio Eléctrico! Aquí dentro está todo a oscuras.' },
+          { quien: 'Vigilante', texto: 'Con cada relámpago se ve el laberinto un instante. Fíjate bien y recuerda el camino.' },
+          { quien: 'Vigilante', texto: 'Y cuidado: los aprendices esperan en la oscuridad.' },
           { quien: 'Vigilante', texto: 'Un consejo: a lo Eléctrico le hace mucho daño la Tierra. Y aquí dentro, el campo eléctrico da más fuerza a sus rayos.' },
           { quien: 'Vigilante', texto: 'Del líder… mejor que te lo cuenten arriba.' },
         ],

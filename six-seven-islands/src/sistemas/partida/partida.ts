@@ -31,7 +31,7 @@ import { DATOS_COMBATE_PRUEBA as DATOS, ESPECIE_INICIAL, ESPECIES_RETIRADAS, MOC
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Entrada } from '../entrada/entrada';
 
-export type Modo = 'titulo' | 'explorar' | 'dialogo' | 'fundido' | 'combate' | 'menu' | 'fin' | 'viaje' | 'nombrar';
+export type Modo = 'titulo' | 'explorar' | 'dialogo' | 'fundido' | 'combate' | 'menu' | 'viaje' | 'nombrar';
 
 /** Pasos fijos de cada mitad del fundido al cruzar una puerta: 0,2 s a negro y 0,2 s de vuelta. */
 export const PASOS_FUNDIDO = 12;
@@ -110,9 +110,7 @@ export class Partida implements Subsistema {
   /** El nombre y la persona del jugador, elegidos al empezar. */
   nombre = 'Dani';
   persona: string = PERSONA_JUGADOR;
-  /** Se ha dicho que sí al barco: al cerrar el diálogo, sale la pantalla del final. */
-  private finPendiente = false;
-  /** Se ha dicho que sí al barco: la isla a la que se zarpa (tras el final, si lo hay). */
+  /** Se ha dicho que sí al barco: la isla a la que se zarpa. */
   private viajePendiente: number | null = null;
   /** Pasos fijos del fundido del viaje. */
   private pasosViaje = 0;
@@ -236,15 +234,6 @@ export class Partida implements Subsistema {
     return { actual: { ...z.origen }, ...(f ? { fuera: { ...f.origen } } : {}) };
   }
 
-  /** Tras la pantalla del final: se sigue explorando Lanzarote. */
-  seguirTrasFin(): void {
-    if (this.viajePendiente !== null) return this.viajar(this.viajePendiente);
-    this.modo = 'explorar';
-    this.espera = ESPERA_TRAS_DIALOGO;
-    this.entrada.olvidar();
-    this.guardar();
-  }
-
   /** Desde la portada: el nombre y la persona elegidos, y a jugar. */
   empezarPartida(nombre: string, persona: string): void {
     // Cada partida nueva con su propio azar (encuentros, valores de las criaturas), salvo con
@@ -270,10 +259,6 @@ export class Partida implements Subsistema {
     }
   }
 
-  /** La isla a la que se va a zarpar, o null: lo usa la pantalla del final. */
-  get destinoViaje(): DatosIsla | null {
-    return this.viajePendiente !== null ? (ISLAS[this.viajePendiente] ?? null) : null;
-  }
 
   /** Zarpa en barco: fundido a negro, se guarda la partida en la isla de destino y se recarga. */
   viajar(n: number): void {
@@ -309,13 +294,14 @@ export class Partida implements Subsistema {
   guardadoEnIsla(n: number): Guardado {
     const destino = ISLAS[n];
     const m = construirMundo(destino.def);
-    const z = m.zonas.get(destino.llegada.zona)!;
+    const llegada = destino.llegadas?.[this.datos.numero] ?? destino.llegada;
+    const z = m.zonas.get(llegada.zona)!;
     const e = crearExploracion(m, this.estado.condiciones);
     e.recogidos = [...this.estado.recogidos];
     e.inicial = this.estado.inicial;
-    e.x = e.desdeX = z.origen.x + destino.llegada.x;
-    e.y = e.desdeY = z.origen.y + destino.llegada.y;
-    e.zona = destino.llegada.zona;
+    e.x = e.desdeX = z.origen.x + llegada.x;
+    e.y = e.desdeY = z.origen.y + llegada.y;
+    e.zona = llegada.zona;
     e.mira = 's';
     const { refugios, ultimo } = refugiosAlViajar(this.refugios, this.datos.numero, this.ultimoRefugio, n, destino.refugio);
     return { ...this.guardado(), isla: n, explorar: e, ultimoRefugio: ultimo, refugios, origenes: { actual: { ...z.origen } } };
@@ -482,7 +468,7 @@ export class Partida implements Subsistema {
     if (this.modo !== 'explorar') this.menuPendiente = false;
     // En combate manda el subsistema «combate»; en el menú, «menu», y en la portada y el final, «inicio».
     // Mientras se escribe el nombre de un amigo, manda la «interfaz».
-    if (this.modo === 'combate' || this.modo === 'menu' || this.modo === 'titulo' || this.modo === 'fin' || this.modo === 'nombrar') return;
+    if (this.modo === 'combate' || this.modo === 'menu' || this.modo === 'titulo' || this.modo === 'nombrar') return;
     if (this.modo === 'viaje') return this.pasoViaje();
     if (this.modo === 'fundido') return this.pasoFundido();
     if (this.modo === 'dialogo') return this.pasoDialogo();
@@ -566,11 +552,7 @@ export class Partida implements Subsistema {
       this.espera = ESPERA_TRAS_DIALOGO;
       this.entrada.olvidar();
       this.ctx.eventos.emit('dialogo:cerrar', { guionId: this.hablando });
-      if (this.finPendiente) {
-        // El final de la isla (F23): lo enseña «inicio»; con Enter se zarpa (o se sigue).
-        this.finPendiente = false;
-        this.modo = 'fin';
-      } else if (this.viajePendiente !== null) {
+      if (this.viajePendiente !== null) {
         this.viajar(this.viajePendiente);
       } else if (this.datos.tenderos.has(this.hablando)) {
         // El tendero, al acabar de hablar, abre la tienda (en el subsistema «menu»).
@@ -818,7 +800,6 @@ export class Partida implements Subsistema {
 
   private aplicar(e: Efecto): void {
     if (e.condicion) cumplir(this.estado, e.condicion);
-    if (e.fin) this.finPendiente = true;
     if (e.viaje !== undefined && ISLAS[e.viaje]) this.viajePendiente = e.viaje;
     if (e.inicial) {
       this.estado.inicial = e.inicial;
