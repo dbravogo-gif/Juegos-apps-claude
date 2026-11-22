@@ -253,7 +253,9 @@ export function geometriaSala(sala: Mundo, id: string): BufferGeometry {
   const cueva = volcanica && ![...sala.casillas.values()].some((c) => c.c === 'L');
   // El gimnasio Eléctrico (gimnasio-electrico.ts): suelo de chapa en dos tonos, sin madera.
   const electrico = id === 'gimnasio-electrico';
-  const suelo = volcanica ? [COLORES.basalto, COLORES.lavaNegra] : electrico ? ['#8E98A2', '#7C8690'] : [COLORES.maderaSuelo, COLORES.maderaSueloOscura];
+  // El terrero de Agaete (gimnasio-lucha.ts): arena en dos tonos, y gradas de madera.
+  const terrero = id === 'gimnasio-lucha';
+  const suelo = volcanica ? [COLORES.basalto, COLORES.lavaNegra] : electrico ? ['#8E98A2', '#7C8690'] : terrero ? ['#D9BD8C', '#D2B583'] : [COLORES.maderaSuelo, COLORES.maderaSueloOscura];
   M.caja(maxX - minX + 1, 0.1, maxY - minY + 1, centroX, SUELO - 0.1, centroY, volcanica ? COLORES.lavaNegra : COLORES.maderaSueloOscura, 0.8);
   // Paredes por tramos, lisas: un solo color, sin juntas entre casillas.
   for (const t of tramosDePared(sala)) {
@@ -332,8 +334,14 @@ export function geometriaSala(sala: Mundo, id: string): BufferGeometry {
     } else if (cm.c === '=') {
       // Muro bajo de chapa, con una franja amarilla arriba (el laberinto del gimnasio Eléctrico):
       // deja ver por encima, con la cámara quieta, lo que hay detrás.
-      M.caja(1, 0.6, 1, x, SUELO, y, '#59606A', 0.94 + (n % 3) * 0.04);
-      M.caja(1, 0.05, 1, x, SUELO + 0.6, y, '#E8B90E');
+      if (terrero) {
+        // La grada del terrero: un banco de madera, más bajo.
+        M.caja(1, 0.42, 1, x, SUELO, y, COLORES.maderaTostada, 0.94 + (n % 3) * 0.04);
+        M.caja(1, 0.05, 1, x, SUELO + 0.42, y, COLORES.balcon);
+      } else {
+        M.caja(1, 0.6, 1, x, SUELO, y, '#59606A', 0.94 + (n % 3) * 0.04);
+        M.caja(1, 0.05, 1, x, SUELO + 0.6, y, '#E8B90E');
+      }
     } else if (cm.c === 'X') {
       // La compuerta la pone `Salas`, que la hunde al abrirse.
     } else if (cm.c === '|') {
@@ -384,6 +392,11 @@ export function geometriaSala(sala: Mundo, id: string): BufferGeometry {
       g.computeVertexNormals();
       M.pon(g, '#2B2F35');
     }
+  } else if (terrero) {
+    // El círculo del terrero, marcado en la arena.
+    const cy = minY + 4.5;
+    M.pon(new CylinderGeometry(3.2, 3.2, 0.012, 40).translate(centroX, SUELO + 0.006, cy), '#B58F5C');
+    M.pon(new CylinderGeometry(3.0, 3.0, 0.016, 40).translate(centroX, SUELO + 0.008, cy), '#DCC291');
   } else if (id === 'gimnasio') {
     const cy = (minY + maxY) / 2;
     M.pon(new CylinderGeometry(1.1, 1.1, 0.02, 24).translate(centroX, SUELO + 0.01, cy), COLORES.rocaGimnasio);

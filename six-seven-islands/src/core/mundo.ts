@@ -120,7 +120,9 @@ export type Condicion =
   /** Ya conoces a Chano, en Corralejo. */
   | 'chano-conocido'
   /** Has conocido al segundo amigo en el Roque Nublo (HISTORIA.md, Gran Canaria). */
-  | 'amigo2-conocido';
+  | 'amigo2-conocido'
+  /** Has dicho que sí a luchar ya con un entrenador que lo pregunta (el terrero de Agaete). */
+  | `listo:${string}`;
 export const TODAS_LAS_CONDICIONES: ReadonlySet<Condicion> = new Set(['inicial-elegida', 'anciano', 'gimnasio-vencido', 'mensaje-rival', 'soldados-fuego']);
 
 export interface Personaje {
@@ -201,13 +203,15 @@ export interface DefZona {
   /** Cómo se dibujan sus casas (por defecto, rurales; en la capital, de balcones). */
   casas?: EstiloCasas;
   /** Qué árbol son sus `T` (por defecto, palmeras). */
-  arboles?: 'palmera' | 'laurel' | 'almendro';
+  arboles?: 'palmera' | 'laurel' | 'almendro' | 'pino';
   /** Qué crece entre sus rocas: secano (por defecto), humedad o volcán. */
   flora?: 'seca' | 'humeda' | 'volcan';
   /** El tiempo que hace: la calima de Las Dunas (unas partículas de polvo; solo se ve). */
-  clima?: 'calima' | 'viento';
+  clima?: 'calima' | 'viento' | 'niebla';
   /** Colores propios del suelo de la zona, por letra; mandan sobre los de la isla. */
   suelo?: Partial<Record<string, string>>;
+  /** El tipo del gimnasio de esta zona, si no es el de la isla (Agaete: Lucha, en Gran Canaria). */
+  gimnasio?: string;
 }
 
 /**

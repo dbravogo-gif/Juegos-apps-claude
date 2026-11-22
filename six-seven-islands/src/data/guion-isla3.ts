@@ -85,6 +85,80 @@ export const GUION_ISLA3: Guion = {
     },
     { dialogo: { lineas: [{ quien: '{amigo2}', texto: 'Nos vemos en Agaete. ¡Entrena, que esos dos pegan fuerte!' }] } },
   ],
+  // Fase 3.
+  'enfermera-tejeda': [{ dialogo: { lineas: [{ quien: 'Enfermera', texto: 'Bienvenido a Tejeda. Aquí arriba se cura todo: el aire, el queso y yo.' }] } }],
+  'tendero-tejeda': [{ dialogo: { lineas: [{ quien: 'Tendero', texto: '¡Buenas! Para el pinar, pociones. La niebla cansa más de lo que parece.' }] } }],
+  'enfermera-agaete': [{ dialogo: { lineas: [{ quien: 'Enfermera', texto: 'Bienvenido a Agaete. Antes del terrero, deja a tu equipo como nuevo.' }] } }],
+  'tendero-agaete': [{ dialogo: { lineas: [{ quien: 'Tendero', texto: '¡Buenas! Los luchadores del terrero no dan tregua: llévate de todo.' }] } }],
+  'marinero-agaete': [
+    {
+      dialogo: {
+        lineas: [
+          { quien: 'Marinero', texto: 'Este barco va a Tenerife. Saldrá en cuanto el capitán vuelva del terrero.' },
+          { quien: 'Marinero', texto: 'Dicen que en Tenerife hay una puerta en el Teide que nadie abre desde hace años.' },
+        ],
+      },
+    },
+  ],
+  'vigilante-lucha': [
+    {
+      sin: 'vencido:luchador-3',
+      dialogo: {
+        lineas: [
+          { quien: 'Vigilante', texto: '¡Bienvenido al terrero de Agaete! Aquí se lucha como en la lucha canaria: con fuerza y con maña.' },
+          { quien: 'Vigilante', texto: 'Los luchadores salen de uno en uno. Antes de cada combate te preguntan si estás listo: si no, ve a curarte.' },
+          { quien: 'Vigilante', texto: 'Un consejo: dentro del terrero te agarran, y tus criaturas pueden quedar confusas. A lo de Lucha le hacen daño el Aire y lo Mental.' },
+        ],
+      },
+    },
+    { dialogo: { lineas: [{ quien: 'Vigilante', texto: 'Has vencido a los tres. Ahora, los líderes: el Eléctrico de Las Palmas y la de Lucha, juntos.' }] } },
+  ],
+  'luchador-1': [
+    {
+      sin: 'listo:luchador-1',
+      dialogo: {
+        lineas: [{ quien: 'Luchador', texto: '¡Bienvenido al terrero! Soy el primero de los tres luchadores. Saludo y respeto, como manda la lucha.' }],
+        pregunta: { quien: 'Luchador', texto: '¿Luchamos ya, o prefieres un momento para curar a tus criaturas?' },
+        efecto: { condicion: 'listo:luchador-1' },
+        tras: [{ quien: 'Luchador', texto: '¡Eso es! ¡Al centro del terrero!' }],
+      },
+    },
+    { dialogo: { lineas: [{ quien: 'Luchador', texto: '¡Otra vez al centro! Esta vez no te suelto.' }] } },
+  ],
+  'luchador-2': [
+    {
+      sin: 'listo:luchador-2',
+      dialogo: {
+        lineas: [{ quien: 'Luchador', texto: 'Soy el segundo. Mi compañero dice que agarras bien. Ya veremos.' }],
+        pregunta: { quien: 'Luchador', texto: '¿Luchamos ya, o vas antes a curarte?' },
+        efecto: { condicion: 'listo:luchador-2' },
+        tras: [{ quien: 'Luchador', texto: '¡Al centro!' }],
+      },
+    },
+    { dialogo: { lineas: [{ quien: 'Luchador', texto: '¿Vuelves? Me gusta. ¡Al centro!' }] } },
+  ],
+  'luchador-3': [
+    {
+      sin: 'listo:luchador-3',
+      dialogo: {
+        lineas: [{ quien: 'Luchador', texto: 'El último. Si me vences, los líderes saldrán a por ti. Los dos.' }],
+        pregunta: { quien: 'Luchador', texto: '¿Estás listo, o necesitas un momento para curarte?' },
+        efecto: { condicion: 'listo:luchador-3' },
+        tras: [{ quien: 'Luchador', texto: '¡Pues adelante!' }],
+      },
+    },
+    { dialogo: { lineas: [{ quien: 'Luchador', texto: '¡Revancha! Esta vez me toca ganar a mí.' }] } },
+  ],
+  'amigo2-agaete': [
+    {
+      dialogo: {
+        lineas: [
+          { quien: '{amigo2}', texto: '¡Aquí estás! Entra cuando quieras: vence a los tres luchadores y saldrán los líderes.' },
+          { quien: '{amigo2}', texto: 'Yo entro contigo al final. Dos contra dos: tú y yo contra los dos líderes.' },
+        ],
+      },
+    },
+  ],
   'farera-isleta': [
     {
       dialogo: {

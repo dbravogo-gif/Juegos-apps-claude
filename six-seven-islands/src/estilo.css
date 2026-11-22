@@ -1553,3 +1553,17 @@ body {
   pointer-events: none;
   z-index: 3;
 }
+
+/* La niebla del pinar de Tamadaba: un velo blanco y jirones anchos y borrosos que pasan despacio. */
+.calima.niebla {
+  background: rgb(236 240 244 / 0.3);
+}
+
+.calima.niebla i {
+  width: 220px;
+  height: 34px;
+  border-radius: 17px;
+  background: radial-gradient(ellipse at center, rgb(255 255 255 / 0.75), rgb(255 255 255 / 0));
+  filter: blur(3px);
+  animation-duration: calc(var(--d, 8s) * 2.2);
+}

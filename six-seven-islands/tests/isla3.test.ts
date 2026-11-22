@@ -84,14 +84,21 @@ describe('Gran Canaria (isla 3), fase 1', () => {
     }
   });
 
-  it('sus salvajes existen y van del nivel 18 al 24 (ISLA-3.md: la isla, del 18 al 25)', () => {
+  it('sus salvajes existen y van del nivel 18 al 27 (ISLA-3.md; el pinar de Tamadaba, el más fuerte)', () => {
     for (const [z, t] of Object.entries(GRAN_CANARIA.encuentros)) {
       expect(zona(z), z).toBeDefined();
       for (const e of t) {
         expect(DATOS.especies[e.especie], e.especie).toBeDefined();
         expect(e.nivel[0]).toBeGreaterThanOrEqual(18);
-        expect(e.nivel[1], z).toBeLessThanOrEqual(24);
+        expect(e.nivel[1], z).toBeLessThanOrEqual(27);
       }
+    }
+  });
+
+  it('en todas las islas, cada puerta lleva a una sala que existe (las casas cueva y las de Tejeda no la tenían)', () => {
+    for (const d of Object.values(ISLAS)) {
+      const salas = new Set(d.interiores.map((i) => i.id));
+      for (const [z, puertas] of Object.entries(d.puertas)) for (const [xy, sala] of Object.entries(puertas)) expect(salas.has(sala), `${d.nombre}: ${z} ${xy} → ${sala}`).toBe(true);
     }
   });
 

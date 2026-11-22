@@ -65,6 +65,59 @@ export const ENTRENADORES_ISLA3: Readonly<Record<string, DefEntrenador>> = {
       'Los de {rama} bajan por la ladera y se pierden entre las nubes.',
     ],
   },
+  // Fase 3: Tejeda, Tamadaba y Agaete.
+  'paseante-tejeda': { equipo: [{ especie: 'c034-2', nivel: 25 }], premio: 700, tras: 'Los bienmesabes, en la dulcería de la plaza. Ya me contarás.' },
+  'pastor-tejeda': {
+    equipo: [{ especie: 'c031-2', nivel: 24 }, { especie: 'c043-2', nivel: 25 }],
+    premio: 700,
+    tras: 'El pinar es largo y hay niebla. Si te pierdes, sigue la senda de piedra.',
+  },
+  'excursionista-tamadaba': {
+    equipo: [{ especie: 'c007-2', nivel: 26 }, { especie: 'c032-2', nivel: 25 }],
+    premio: 740,
+    tras: 'Cuando se levanta la niebla, desde aquí se ve Tenerife entera. Hoy, nada de nada.',
+  },
+  'buscador-tamadaba': {
+    equipo: [{ especie: 'c044-2', nivel: 26 }, { especie: 'c005-2', nivel: 26 }],
+    premio: 760,
+    tras: 'Vale, vale. Las piñas, para ti también, si quieres.',
+  },
+  'guarda-tamadaba': {
+    equipo: [{ especie: 'c013-2', nivel: 26 }, { especie: 'c035-2', nivel: 27 }],
+    premio: 800,
+    tras: 'Respetas el monte. Baja a Agaete: el terrero está junto al mar.',
+  },
+  'pescador-agaete': {
+    equipo: [{ especie: 'c018-1', nivel: 26 }, { especie: 'c037-1', nivel: 27 }],
+    premio: 780,
+    tras: 'Si vas al terrero, que no te agarren por la cintura. Es lo primero que hacen.',
+  },
+  // El terrero de Agaete (gimnasio-lucha.ts): tres luchadores, de uno en uno, que preguntan antes.
+  // Lucha (Kotono y Koloi, la única línea de Lucha que hay) y, mientras, Tierra y Roca.
+  'luchador-1': {
+    equipo: [{ especie: 'c043-2', nivel: 25 }, { especie: 'c034-2', nivel: 25 }],
+    premio: 800,
+    tras: '',
+    pregunta: true,
+    alVencer: ['¡Qué agarre! Me has tumbado limpio.', 'Ahora sale el segundo. Ese no suelta nunca.'],
+  },
+  'luchador-2': {
+    equipo: [{ especie: 'c043-2', nivel: 26 }, { especie: 'c012-2', nivel: 26 }],
+    premio: 840,
+    tras: '',
+    pregunta: true,
+    alVencer: ['¡Me rindo, me rindo! Tienes más maña que fuerza, y eso aquí vale el doble.', 'Queda el último. Es el mejor del terrero después de los líderes.'],
+  },
+  'luchador-3': {
+    equipo: [{ especie: 'c043-2', nivel: 27 }, { especie: 'c062-1', nivel: 27 }, { especie: 'c034-2', nivel: 27 }],
+    premio: 900,
+    tras: '',
+    pregunta: true,
+    alVencer: [
+      '¡Increíble! Has vencido a los tres luchadores del terrero.',
+      'Los líderes ya lo saben. Dicen que vendrán los dos juntos… y que traigas a alguien.',
+    ],
+  },
   // El gimnasio Eléctrico (gimnasio-electrico.ts): el líder no está.
   'aprendiz-electrico-1': {
     equipo: [{ especie: 'c035-1', nivel: 22 }, { especie: 'c018-1', nivel: 22 }],

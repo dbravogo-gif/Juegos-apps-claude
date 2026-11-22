@@ -117,7 +117,7 @@ zonas['guayadeque'] = dict(nombre='Guayadeque', origen=(12, -4), z=z, alturas=al
 # muros de piedra (`=`) y almendros en flor. Se entra por el este (y 14..15, desde Guayadeque) y se
 # sube al norte (x 6..8) hacia el Roque Nublo. La salida al oeste, a Tejeda, en la fase 3.
 z = Z(30, 22, ':'); z.borde('#')
-z.r(29, 14, 1, 2, ','); z.r(6, 0, 3, 1, ',')
+z.r(29, 14, 1, 2, ','); z.r(6, 0, 3, 1, ','); z.r(0, 9, 1, 2, ',')   # y al oeste, a Tejeda (fase 3)
 z.camino([(29,14),(20,14)], ancho=2); z.camino([(20,8),(20,15)], ancho=2)
 z.camino([(7,8),(21,8)], ancho=2); z.camino([(7,0),(7,9)], ancho=2)
 for y in (5, 11, 17): z.r(1, y, 28, 1, '=')                      # los muros de las terrazas
@@ -158,6 +158,74 @@ for y in range(20):
 # Flora de volcán: piedras bajas en los riscos (los cardones tapaban al comandante; 2026-11-22).
 zonas['nublo'] = dict(nombre='Roque Nublo', origen=(-24, -18), z=z, alturas=alt, hierba=True, flora='volcan')
 
+# 6. Tejeda y Artenara (28 × 22, fase 3): el pueblo de la cumbre. Se entra por el este (y 9..10,
+# desde las cumbres) y se sale al norte (x 6..8) hacia el pinar de Tamadaba. Casas cueva en la
+# ladera de arriba, casas blancas en la plaza, el refugio y la tienda, y un mirador al Roque Bentayga.
+z = Z(28, 22, ':'); z.borde('#')
+z.r(27, 9, 1, 2, ','); z.r(6, 0, 3, 1, ',')
+z.r(1, 1, 5, 6, '#'); z.r(10, 1, 17, 4, '#')                     # la ladera de arriba
+z.r(12, 5, 4, 2, ':'); z.r(12, 3, 4, 2, 'J'); z.p(13, 5, 'd'); z.puertas.append((13, 5, 'casa-cueva-tejeda'))
+z.r(20, 5, 4, 2, ':'); z.r(20, 3, 4, 2, 'J'); z.p(21, 5, 'd'); z.puertas.append((21, 5, 'casa-cueva-artenara'))
+z.camino([(27,9),(7,9)], ancho=2); z.camino([(7,0),(7,10)], ancho=2)
+z.camino([(1,15),(26,15)])                                       # la calle, antes que las casas (si no, tapa sus puertas)
+z.edificio(2, 12, 5, 3, 'R', 4, 'refugio-tejeda')
+z.edificio(9, 12, 4, 3, 'S', 10, 'tienda-tejeda')
+z.edificio(16, 12, 4, 3, 'C', 17, 'casa-tejeda')
+z.r(14, 17, 5, 2, '.'); z.p(16, 17, 'Y')                         # la plaza, con su drago
+z.r(21, 17, 6, 4, '"'); z.r(1, 17, 6, 4, '"'); z.r(9, 6, 2, 2, '"')
+z.p(24, 11, 'g')                                                 # el mirador al Bentayga
+for x, y in ((10, 18), (20, 11), (25, 7)): z.p(x, y, 'T')
+alt = []
+for y in range(22):
+    fila = ''
+    for x in range(28):
+        c = z.g[y][x]
+        fila += '4' if c in '#J' and 0 < x < 27 and 0 < y < 21 else '2'
+    alt.append(fila)
+zonas['tejeda'] = dict(nombre='Tejeda', origen=(-46, 2), z=z, alturas=alt, casas='lanzarote', arboles='almendro')
+
+# 7. Tamadaba (36 × 26, fase 3): el pinar del oeste, con niebla y mucha hierba alta, la zona más
+# larga y de salvajes más fuertes. Se entra por abajo (x 20..22, desde Tejeda) y se sale arriba
+# (x 16..18) hacia Agaete. El camino zigzaguea entre pinos; la hierba lo corta dos veces.
+z = Z(36, 26, ':'); z.borde('#')
+z.r(20, 25, 3, 1, ','); z.r(16, 0, 3, 1, ',')
+z.camino([(21,25),(21,20)]); z.camino([(6,20),(21,20)]); z.camino([(6,12),(6,20)]); z.camino([(6,12),(28,12)])
+z.camino([(28,5),(28,12)]); z.camino([(17,5),(28,5)]); z.camino([(17,0),(17,5)])
+z.r(10, 18, 8, 4, '"'); z.r(20, 10, 5, 4, '"'); z.r(2, 2, 8, 7, '"'); z.r(30, 14, 5, 8, '"'); z.r(12, 1, 4, 3, '"')
+z.r(9, 6, 3, 3, '"')
+import random as _r
+_g = _r.Random(7)
+for _ in range(70):
+    x, y = _g.randrange(1, 35), _g.randrange(1, 25)
+    if z.g[y][x] == ':': z.p(x, y, 'T')                          # el pinar
+alt = []
+for y in range(26):
+    fila = ''
+    for x in range(36):
+        fila += '3' if z.g[y][x] != '#' or not (0 < x < 35 and 0 < y < 25) else '4'
+    alt.append(fila)
+zonas['tamadaba'] = dict(nombre='Tamadaba', origen=(-60, -24), z=z, alturas=alt, hierba=True, arboles='pino', clima='niebla', flora='humeda')
+
+# 8. Agaete (34 × 24, fase 3): el pueblo blanco del oeste, con el muelle y el barco a Tenerife (aún no
+# sale), el refugio, la tienda y el terrero de lucha canaria, que es el gimnasio de Lucha. Se entra
+# por abajo (x 16..18, desde Tamadaba). En la costa, el roque con forma de dedo que sale del mar.
+z = Z(34, 24, ':'); z.borde('#')
+z.r(16, 23, 3, 1, ',')
+z.r(0, 0, 34, 5, '~'); z.r(0, 0, 4, 24, '~'); z.r(1, 5, 30, 2, 'a')    # el mar al norte y al oeste, y la playa
+z.r(4, 7, 1, 16, 'a')
+z.r(14, 0, 2, 5, 'P'); z.r(16, 2, 2, 2, 'B')                    # el muelle y el barco
+z.p(2, 9, 'I')                                                  # el roque del dedo, en el agua de la orilla
+z.camino([(17,23),(17,7)], ancho=2); z.camino([(5,10),(32,10)]); z.camino([(5,17),(32,17)])
+z.camino([(14,7),(15,7)])
+z.edificio(6, 7, 5, 3, 'R', 8, 'refugio-agaete')
+z.edificio(20, 7, 4, 3, 'S', 21, 'tienda-agaete')
+z.edificio(22, 12, 9, 5, 'G', 26, 'gimnasio-lucha')            # el terrero
+z.edificio(6, 13, 4, 3, 'C', 7, 'casa-agaete-1')
+z.edificio(11, 13, 4, 3, 'C', 12, 'casa-agaete-2')
+z.r(20, 19, 6, 3, '"'); z.r(6, 19, 7, 3, '"')
+for x, y in ((25, 8), (30, 8), (19, 13), (15, 20)): z.p(x, y, 'T')
+zonas['agaete'] = dict(nombre='Agaete', origen=(-60, -48), z=z, altura=0, hierba=False, casas='lanzarote', gimnasio='lucha')
+
 # Toda la isla, desplazada para que no haya coordenadas negativas (la silueta entera cabe).
 DESPLAZAMIENTO = 60
 DESPLAZAMIENTO_Y = 65
@@ -170,8 +238,9 @@ for v in zonas.values(): v['origen'] = (v['origen'][0] + DESPLAZAMIENTO, v['orig
 # En la fase 1, solo el trozo construido: el resto de la isla, tierra plana y vacía, se veía como
 # una llanura sin nada (probador, 2026-11-22). Crece con cada fase.
 SILUETA = [(15.5,-55.5),(40.5,-55.5),(40.5,-43.5),(38.5,-40.5),(37.5,-35.5),(37.5,-4.5),(41.5,-4.5),
-           (41.5,21.5),(11.5,21.5),(11.5,23.5),(-18.5,23.5),(-18.5,1.5),(-24.5,1.5),(-24.5,-18.5),
-           (9.5,-18.5),(9.5,-22.5),(19.5,-34.5),(19.5,-37.5),(15.5,-40.5)]
+           (41.5,21.5),(11.5,21.5),(11.5,23.5),(-46.5,23.5),(-46.5,1.5),(-56.5,1.5),(-56.5,-24.5),
+           (-56.5,-41.5),(-24.5,-41.5),(-24.5,-18.5),(9.5,-18.5),(9.5,-22.5),(19.5,-34.5),(19.5,-37.5),
+           (15.5,-40.5)]
 mover = lambda pts: [(x + DESPLAZAMIENTO, y + DESPLAZAMIENTO_Y) for x, y in pts]
 SILUETA = mover(SILUETA)
 
@@ -209,12 +278,34 @@ PERSONAJES['nublo'] = [
    # El segundo amigo llega cuando el comandante se va (HISTORIA.md: lo conoces en el Roque Nublo).
    "{ id: 'amigo2-nublo', x: 13, y: 7, mira: 'e', con: 'vencido:comandante-nublo' }",
 ]
+PERSONAJES['tejeda'] = [
+   "{ id: 'paseante-tejeda', x: 22, y: 8, mira: 's', entrenador: { vision: 1, obligatorio: false }, frase: 'Vengo a por dulces de almendra todos los domingos. ¡Y a por un combate!' }",
+   "{ id: 'pastor-tejeda', x: 5, y: 8, mira: 'e', entrenador: { vision: 2, obligatorio: false }, frase: 'El camino del pinar sale de aquí, hacia el norte. Antes, a ver qué tal te defiendes.' }",
+   "{ id: 'guia-tejeda', x: 23, y: 11, mira: 'e', frase: 'Ese roque de enfrente es el Bentayga. Los antiguos subían ahí a pedir lluvia.' }",
+   "{ id: 'vecina-tejeda', x: 15, y: 16, mira: 's', frase: 'Prueba los bienmesabes: almendra, huevo y azúcar. Aquí se hacen como en ningún sitio.' }",
+]
+PERSONAJES['tamadaba'] = [
+   "{ id: 'excursionista-tamadaba', x: 7, y: 15, mira: 'o', entrenador: { vision: 1, obligatorio: false }, frase: 'Con esta niebla no se ve ni el pino de al lado. ¡Pero a ti sí te veo!' }",
+   "{ id: 'buscador-tamadaba', x: 25, y: 13, mira: 'n', entrenador: { vision: 1, obligatorio: false }, frase: 'Busco piñas para el fuego. Y criaturas fuertes: aquí salen las más bravas de la isla.' }",
+   "{ id: 'guarda-tamadaba', x: 29, y: 8, mira: 'o', entrenador: { vision: 1, obligatorio: false }, frase: 'Soy el guarda del pinar. Nadie baja a Agaete sin demostrar que respeta el monte.' }",
+]
+PERSONAJES['agaete'] = [
+   "{ id: 'marinero-agaete', x: 16, y: 6, mira: 'n', frase: 'El barco a Tenerife saldrá pronto.' }",
+   "{ id: 'pescador-agaete', x: 24, y: 5, mira: 's', entrenador: { vision: 2, obligatorio: false }, frase: 'De este muelle salen los barcos grandes. Y yo, a por criaturas. ¡Vamos!' }",
+   "{ id: 'vecina-agaete', x: 10, y: 11, mira: 's', frase: 'Ese roque del agua es el Dedo de Dios. Lleva miles de años señalando al cielo.' }",
+   # El segundo amigo te espera en la puerta del terrero (fase 3): entrará contigo al final.
+   "{ id: 'amigo2-agaete', x: 28, y: 18, mira: 'o', con: 'amigo2-conocido' }",
+]
 OBJETOS = {'isleta': ["{ id: 'superpocion-faro', x: 2, y: 3, objeto: 'superpocion' }", "{ id: 'cubo-isleta', x: 25, y: 9, objeto: 'cubo-blanco' }"],
            'palmas': ["{ id: 'pocion-canteras', x: 8, y: 12, objeto: 'pocion' }"],
            'guayadeque': ["{ id: 'pocion-barranco', x: 9, y: 19, objeto: 'pocion' }"],
-           'cumbres': ["{ id: 'superpocion-almendros', x: 1, y: 10, objeto: 'superpocion' }"]}
+           'cumbres': ["{ id: 'superpocion-almendros', x: 1, y: 10, objeto: 'superpocion' }"],
+           'tejeda': ["{ id: 'pocion-tejeda', x: 25, y: 19, objeto: 'pocion' }"],
+           'tamadaba': ["{ id: 'superpocion-pinar', x: 3, y: 3, objeto: 'superpocion' }", "{ id: 'cubo-pinar', x: 33, y: 23, objeto: 'cubo-blanco' }"],
+           'agaete': ["{ id: 'pocion-agaete', x: 31, y: 22, objeto: 'pocion' }"]}
 LETREROS = {'palmas': {'21,1': 'Una escultura de hierro con forma de ancla.\nLa placa dice: «A los que llegaron por mar».',
                        '25,25': 'Ocho perros de bronce, sentados en la plaza.\nDicen que la isla se llama así por unos perros enormes que vieron los primeros navegantes.'},
+            'tejeda': {'24,11': 'Mirador del Bentayga. Enfrente, un roque enorme sale del barranco como una torre.\nDicen que los antiguos guardaban allí su grano y sus secretos.'},
             'nublo': {'10,10': 'Un mirador sobre el mar de nubes. Al oeste, por encima de las nubes, asoma el Teide.\nY más allá, muy lejos, una sombra en el horizonte. Al parpadear, ya no está.',
                       '24,6': 'Grabado en la piedra: «Desde aquí miraban los antiguos». Debajo, trece círculos pequeños.\nOcho pequeños y cinco grandes, como en el grabado de la arqueóloga de las dunas.'}}
 
@@ -229,6 +320,8 @@ for zid, v in zonas.items():
     t=f"    {{\n      id: '{zid}',\n      nombre: '{v['nombre']}',\n      origen: {{ x: {ox}, y: {oy} }},\n      hierbaObligatoria: {'true' if v.get('hierba') else 'false'},\n"
     if v.get('casas'): t+=f"      casas: '{v['casas']}',\n"
     if v.get('flora'): t+=f"      flora: '{v['flora']}',\n"
+    if v.get('clima'): t+=f"      clima: '{v['clima']}',\n"
+    if v.get('gimnasio'): t+=f"      // El terrero: el gimnasio de Lucha, no el Eléctrico de la isla.\n      gimnasio: '{v['gimnasio']}',\n"
     if v.get('suelo'): t+=f"      // La ciudad, adoquinada: piedra clara y calles algo más oscuras.\n      suelo: {v['suelo']},\n"
     if zid in LETREROS:
         t+="      letreros: {\n"+''.join(f"        '{k}': '{txt.replace(chr(10), chr(92)+'n')}',\n" for k, txt in LETREROS[zid].items())+"      },\n"

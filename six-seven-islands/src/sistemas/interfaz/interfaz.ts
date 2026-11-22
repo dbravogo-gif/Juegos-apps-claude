@@ -181,6 +181,7 @@ export class Interfaz implements Subsistema {
     const visible = !oculta && modo !== 'menu' && !!clima;
     if (this.calima.hidden === visible) this.calima.hidden = !visible;
     this.calima.classList.toggle('viento', clima === 'viento');
+    this.calima.classList.toggle('niebla', clima === 'niebla');
     // La ayuda de las teclas de explorar, tampoco en el menú ni en la tienda (tienen la suya).
     this.ayuda.hidden = this.partida.dialogo !== null || oculta || modo === 'menu';
     if (oculta || modo === 'menu') this.cartel.classList.remove('visible');

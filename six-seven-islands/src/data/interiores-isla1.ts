@@ -62,7 +62,8 @@ const SALAS: Record<string, DefSala> = {
   'casa-capital-4': { nombre: 'Casa de la capital', gente: vive('vecino-capital-4', 'Dicen que desde el faro, de noche, se ve una isla que no sale en los mapas.') },
 };
 
-const TIPO: Partial<Record<Casilla, TipoSala>> = { C: 'casa', R: 'refugio', S: 'tienda', G: 'gimnasio', M: 'museo' };
+// Las casas cueva (`J` con sala propia; Gran Canaria) son casas: por dentro, encaladas, como las de verdad.
+const TIPO: Partial<Record<Casilla, TipoSala>> = { C: 'casa', R: 'refugio', S: 'tienda', G: 'gimnasio', M: 'museo', J: 'casa' };
 
 /** Las casas de balcones (la capital) tienen dos plantas; el museo y el gimnasio, un salón. */
 function plantasDe(z: DefZona, tipo: TipoSala): 1 | 2 {
