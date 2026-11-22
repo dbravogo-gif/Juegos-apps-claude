@@ -91,8 +91,10 @@ export type Condicion =
   | 'inicial-elegida'
   | 'anciano'
   | 'gimnasio-vencido'
-  /** Aún no se cumple: llegará con el barco de Morro Jable a Gran Canaria. */
+  /** Se zarpa por primera vez de Morro Jable a Gran Canaria. */
   | 'isla2-completada'
+  /** Aún no se cumple: llegará con el barco de Agaete a Tenerife. */
+  | 'isla3-completada'
   /** Ya te ha llegado el mensaje del rival al salir del museo (HISTORIA.md). */
   | 'mensaje-rival'
   /** Ya has visto a los soldados y a la silueta en las Montañas del Fuego (HISTORIA.md). */

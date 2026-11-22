@@ -251,7 +251,9 @@ export function geometriaSala(sala: Mundo, id: string): BufferGeometry {
   // La cueva marina (pozas y sin lava): roca vieja y húmeda, sin cuadros ni paredes lisas, que
   // parecían tablas de madera (probador, 2026-11-13).
   const cueva = volcanica && ![...sala.casillas.values()].some((c) => c.c === 'L');
-  const suelo = volcanica ? [COLORES.basalto, COLORES.lavaNegra] : [COLORES.maderaSuelo, COLORES.maderaSueloOscura];
+  // El gimnasio Eléctrico (gimnasio-electrico.ts): suelo de chapa en dos tonos, sin madera.
+  const electrico = id === 'gimnasio-electrico';
+  const suelo = volcanica ? [COLORES.basalto, COLORES.lavaNegra] : electrico ? ['#8E98A2', '#7C8690'] : [COLORES.maderaSuelo, COLORES.maderaSueloOscura];
   M.caja(maxX - minX + 1, 0.1, maxY - minY + 1, centroX, SUELO - 0.1, centroY, volcanica ? COLORES.lavaNegra : COLORES.maderaSueloOscura, 0.8);
   // Paredes por tramos, lisas: un solo color, sin juntas entre casillas.
   for (const t of tramosDePared(sala)) {
@@ -360,6 +362,14 @@ export function geometriaSala(sala: Mundo, id: string): BufferGeometry {
     M.pon(new ConeGeometry(1.2, 1.4, 9).translate(centroX, SUELO + 1.95, minY + 0.62), COLORES.lavaParda);
     M.pon(new CylinderGeometry(0.34, 0.3, 0.1, 9).translate(centroX, SUELO + 2.62, minY + 0.66), COLORES.lava, 1.2);
     M.caja(1, 0.012, 2, centroX, SUELO, minY + 2.5, COLORES.escoria, 0.95);
+  } else if (electrico) {
+    // El sitio del líder, vacío: un círculo amarillo con un rayo en zigzag, en la sala de arriba.
+    const cy = minY + 2;
+    M.pon(new CylinderGeometry(1.15, 1.15, 0.02, 28).translate(centroX, SUELO + 0.01, cy), '#3A3F46');
+    M.pon(new CylinderGeometry(1.0, 1.0, 0.025, 28).translate(centroX, SUELO + 0.015, cy), '#E8B90E');
+    for (const [dx, dz, giro, largo] of [[-0.18, -0.38, 0.5, 0.62], [0.05, 0, -0.9, 0.55], [0.2, 0.36, 0.5, 0.62]] as const) {
+      M.pon(new BoxGeometry(0.16, 0.03, largo).rotateY(giro).translate(centroX + dx, SUELO + 0.03, cy + dz), '#2B2F35');
+    }
   } else if (id === 'gimnasio') {
     const cy = (minY + maxY) / 2;
     M.pon(new CylinderGeometry(1.1, 1.1, 0.02, 24).translate(centroX, SUELO + 0.01, cy), COLORES.rocaGimnasio);
@@ -403,7 +413,8 @@ export class Salas implements Subsistema {
     const viento = new MeshBasicNodeMaterial({ color: '#5BB8DE' });
     const piedraClara = new MaterialDiorama({ color: COLORES.cal, bordes: [-0.1, 0.4], especular: 0.05, rebote: 0.12 });
     const piedraCompuerta = new MaterialDiorama({ color: COLORES.canteria, bordes: [-0.1, 0.4], especular: 0.05, rebote: 0.12 });
-    this.materialesExtra.push(piedra, lava, agua, viento, piedraClara, piedraCompuerta);
+    const rayo = new MeshBasicNodeMaterial({ color: '#FFE14A' });
+    this.materialesExtra.push(piedra, lava, agua, viento, piedraClara, piedraCompuerta, rayo);
     this.lavaMaterial = lava;
     this.piedraMaterial = piedra;
     const cargas: Promise<void>[] = [];
@@ -446,6 +457,26 @@ export class Salas implements Subsistema {
           // se ve de lejos que corta el paso. La de basalto oscuro se confundía con las baldosas
           // (autor, 2026-11-19).
           const losa = new Group();
+          if (id === 'gimnasio-electrico') {
+            // Una barrera de rayos: dos postes de metal y tres hilos amarillos encendidos (sin luz),
+            // que se hunden al bajar su palanca, como las compuertas.
+            for (const lado of [-0.42, 0.42]) {
+              const poste = new BoxGeometry(0.14, ALTO_COMPUERTA, 0.14).translate(lado, ALTO_COMPUERTA / 2, 0);
+              const m = new Mesh(poste, piedra);
+              m.castShadow = true;
+              losa.add(m);
+              this.geometrias.push(poste);
+            }
+            for (const alto of [0.35, 0.75, 1.15]) {
+              const hilo = new BoxGeometry(0.72, 0.05, 0.05).rotateZ(alto === 0.75 ? 0.12 : -0.12).translate(0, alto, 0);
+              losa.add(new Mesh(hilo, rayo));
+              this.geometrias.push(hilo);
+            }
+            losa.position.set(x, SUELO, y);
+            ctx.escena.add(losa);
+            this.compuertas.push({ malla: losa, condicion: cierre.condicion, abierta: partida.estado.condiciones.includes(cierre.condicion) ? 1 : 0 });
+            continue;
+          }
           const g = new BoxGeometry(0.98, ALTO_COMPUERTA, 0.5).translate(0, ALTO_COMPUERTA / 2, 0);
           const cuerpo = new Mesh(g, piedraCompuerta);
           cuerpo.castShadow = true;

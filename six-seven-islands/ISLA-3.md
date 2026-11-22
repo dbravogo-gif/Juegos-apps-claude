@@ -1,7 +1,7 @@
-# Isla 3: Gran Canaria (propuesta, por aprobar)
+# Isla 3: Gran Canaria (en construcción)
 
-2026-11-13. **Es una propuesta: no se construye nada hasta que el autor la apruebe**, como se hizo
-con Fuerteventura. La geografía es de memoria (confianza media-alta) y está simplificada: se toman
+2026-11-13; se empezó el 2026-11-22, cuando el autor pidió seguir («ya te diré correcciones»).
+Lo que no había decidido se construye como está recomendado aquí, y él lo corrige al probarlo. La geografía es de memoria (confianza media-alta) y está simplificada: se toman
 paisajes y nombres de lugares reales, no obras.
 
 ## La idea
@@ -113,17 +113,42 @@ Así la subida a las cumbres tiene sentido y la historia de la isla secreta avan
 
 ## Por fases, publicando cada una
 
+**Fase 1, hecha (2026-11-22).**
+- El barco de Morro Jable sale con la pintadera de Aire. La primera vez sale la pantalla del
+  final de Fuerteventura, que ya vale para cualquier isla.
+- **Las Palmas:**
+  - Arriba, el istmo: Las Canteras al oeste y el puerto al este, con el barco y el parque de
+    Santa Catalina.
+  - Abajo, Triana: el refugio, la tienda y el gimnasio Eléctrico.
+  - Vegueta: la catedral y la plaza de los perros de bronce.
+  - Suelo adoquinado y casas de balcones.
+  - La carretera de las cumbres está cortada, con un obrero que lo explica, hasta la fase 2.
+- **La Isleta:**
+  - El barrio de pescadores y dos calas.
+  - Volcanes viejos con malpaís.
+  - Hierba alta que no se esquiva para llegar al faro, y una farera que habla de la isla que
+    aparece al oeste.
+- **Gimnasio Eléctrico** (`gimnasio-electrico.ts`):
+  - Tres salas separadas por barreras de rayos; cada una la apaga una palanca.
+  - El tercer aprendiz no se esquiva.
+  - El líder no está: se fue a Agaete y te espera con la de Lucha.
+  - Tiene campo eléctrico.
+- **Provisional:** todavía no hay criaturas Eléctricas con modelo. La Isleta y los aprendices
+  sacan criaturas de Aire, Agua y Bicho hasta que lleguen Tembladera, Chispa de cable, Farito y
+  Voltéro (`PLAN-CRIATURAS.md`).
+- **Queda para las fases siguientes:**
+  - conocer al segundo amigo;
+  - el comandante en el Roque Nublo;
+  - la agarrada (C): **sin ella por ahora**, se decide al hacer el terrero.
+
 | Fase | Qué | Coste |
 | --- | --- | --- |
-| 1 | Las Palmas y La Isleta, con el barco desde Morro Jable | alto |
+| 1 | Las Palmas y La Isleta, con el barco desde Morro Jable (**hecha**, 2026-11-22) | alto |
 | 2 | Guayadeque con sus casas cueva, las cumbres y el Roque Nublo (con la historia) | alto |
 | 3 | Tejeda, Tamadaba y Agaete con el gimnasio | alto |
 | 4 | Bandama y Maspalomas, pulido y revisión del probador | medio |
 
-## Lo que tiene que decidir el autor
+## Lo que puede corregir el autor al probarlo
 
-1. Si vale el recorrido.
-2. Los tipos de los dos gimnasios: Eléctrico en Las Palmas y Lucha en Agaete (recomendado), o
-   dos de Lucha, Planta y Eléctrico.
-3. Si la historia abre el segundo gimnasio, con el líder en el Roque Nublo.
-4. Si los niveles valen.
+El recorrido, los niveles y que la historia mande al líder Eléctrico a Agaete se han tomado tal
+como estaban recomendados. Los gimnasios, Eléctrico y Lucha, los decidió él el 2026-11-15.

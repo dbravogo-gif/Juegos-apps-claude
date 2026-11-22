@@ -27,6 +27,7 @@ export interface DefEntrenador {
 /** Cómo se presenta cada clase de entrenador en el diálogo, por el principio de su id. */
 const OFICIO: Readonly<Record<string, string>> = {
   aprendiz: 'Aprendiz',
+  estudiante: 'Estudiante',
   buscador: 'Buscador',
   cabrero: 'Cabrero',
   corredor: 'Corredor',

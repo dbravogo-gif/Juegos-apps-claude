@@ -20,6 +20,11 @@ import { INTERIORES_ISLA2 } from './interiores-isla2';
 import { ENCUENTROS_ISLA2 } from './encuentros-isla2';
 import { ENTRENADORES_ISLA2 } from './entrenadores-isla2';
 import { GUION_ISLA2 } from './guion-isla2';
+import { ISLA_3, PUERTAS_ISLA3 } from './isla3';
+import { INTERIORES_ISLA3 } from './interiores-isla3';
+import { ENCUENTROS_ISLA3 } from './encuentros-isla3';
+import { ENTRENADORES_ISLA3 } from './entrenadores-isla3';
+import { GUION_ISLA3 } from './guion-isla3';
 
 export interface DatosIsla {
   numero: number;
@@ -47,6 +52,8 @@ export interface DatosIsla {
   campos?: Readonly<Record<string, Campo>>;
   /** Los recados, por el id del personaje que los da (HISTORIA.md). */
   recados?: Readonly<Record<string, DefRecado>>;
+  /** La pantalla del final de la isla: a quién has vencido y lo que se ve desde el barco. */
+  final?: { vencido: string; gancho: string };
 }
 
 export const LANZAROTE: DatosIsla = {
@@ -67,6 +74,7 @@ export const LANZAROTE: DatosIsla = {
   // El gimnasio de Roca, con tormenta de arena permanente.
   campos: { gimnasio: { clima: 'arena' } },
   recados: RECADOS_ISLA1,
+  final: { vencido: 'la líder de Roca', gancho: 'Desde la cubierta, a lo lejos, se ve una isla que no sale en ningún mapa… Pero el barco pone rumbo al sur, hacia las dunas.' },
 };
 
 /** Fuerteventura (ISLA-2.md). Fases 1 a 3: de Corralejo a Morro Jable, con el gimnasio de Aire. */
@@ -81,8 +89,7 @@ export const FUERTEVENTURA: DatosIsla = {
   guion: GUION_ISLA2,
   objetivos: [
     { hasta: 'gimnasio2-vencido', texto: 'Cruza la isla hasta Morro Jable y vence al gimnasio de Aire' },
-    // El barco a Gran Canaria aún no sale (la isla 3 está por aprobar, ISLA-3.md).
-    { hasta: 'isla2-completada', texto: 'Explora Tindaya y Cofete mientras el barco a Gran Canaria se prepara' },
+    { hasta: 'isla2-completada', texto: 'Toma el barco a Gran Canaria en el muelle de Morro Jable' },
   ],
   curanderos: { 'enfermera-corralejo': 'refugio-corralejo', 'enfermera-puerto': 'refugio-puerto', 'enfermera-betancuria': 'refugio-betancuria', 'enfermera-morro': 'refugio-morro' },
   tenderos: new Set(['tendero-corralejo', 'tendero-puerto', 'tendero-morro']),
@@ -90,7 +97,31 @@ export const FUERTEVENTURA: DatosIsla = {
   llegada: { zona: 'corralejo', x: 12, y: 5 },
   // El gimnasio de Aire, con el viento a favor de sus entrenadores (el lado 1).
   campos: { 'gimnasio-aire': { vientoAFavor: 1 } },
+  final: { vencido: 'la líder de Aire', gancho: 'Al pasar frente a Lobos, el viento cambia. Por la proa asoma una isla redonda, con nubes enganchadas en las cumbres.' },
+};
+
+/** Gran Canaria (ISLA-3.md). Fase 1: Las Palmas, con el gimnasio Eléctrico, y La Isleta. */
+export const GRAN_CANARIA: DatosIsla = {
+  numero: 3,
+  nombre: 'Gran Canaria',
+  def: ISLA_3,
+  puertas: PUERTAS_ISLA3,
+  interiores: INTERIORES_ISLA3,
+  encuentros: ENCUENTROS_ISLA3,
+  entrenadores: ENTRENADORES_ISLA3,
+  guion: GUION_ISLA3,
+  objetivos: [
+    { hasta: 'vencido:aprendiz-electrico-3', texto: 'Vence a los aprendices del gimnasio Eléctrico, en Las Palmas' },
+    // La carretera de las cumbres se abre en la fase 2 (ISLA-3.md).
+    { hasta: 'isla3-completada', texto: 'Explora La Isleta mientras arreglan la carretera de las cumbres' },
+  ],
+  curanderos: { 'enfermera-palmas': 'refugio-palmas' },
+  tenderos: new Set(['tendero-palmas']),
+  refugio: 'refugio-palmas',
+  llegada: { zona: 'palmas', x: 26, y: 4 },
+  // El gimnasio Eléctrico, con su campo eléctrico (autor, 2026-11-15).
+  campos: { 'gimnasio-electrico': { terreno: 'electrico' } },
 };
 
 /** Las islas por su número, de este a oeste. */
-export const ISLAS: Readonly<Record<number, DatosIsla>> = { 1: LANZAROTE, 2: FUERTEVENTURA };
+export const ISLAS: Readonly<Record<number, DatosIsla>> = { 1: LANZAROTE, 2: FUERTEVENTURA, 3: GRAN_CANARIA };

@@ -152,7 +152,12 @@ Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
 - **Amigos:** sus fotos y GLB de Meshy para las personas jugables, y sus 2 o 3 poses para los
   retratos de diálogo.
 - **Dani con `Idle`** en el GLB (opcional).
-- **Puntuar de 1 a 5** lo último publicado (2026-11-19 y 20):
+- **Criaturas de Gran Canaria con Meshy, las primeras** (2026-11-22): el gimnasio Eléctrico y
+  La Isleta no tienen ni una Eléctrica. Por orden: Pok107–108 Voltéro y Raigón, Pok78–79
+  Tembladera, Pok82–83 Chispa de cable y Pok86 Farito (`PLAN-CRIATURAS.md`).
+- **Puntuar de 1 a 5** lo último publicado (2026-11-19 a 22):
+  - Gran Canaria, fase 1: el barco desde Morro Jable, Las Palmas, La Isleta y el gimnasio
+    Eléctrico (las palancas y que el líder no esté);
   - la evolución con la bola de luz, sin silueta, y con el almendrado sin ver la arena;
   - la evolución nueva, con la isla de su tipo (sube una criatura con el modo desarrollador);
   - el combate: qué hace cada ataque, tipos bajo el nombre y el cursor en el último ataque;
