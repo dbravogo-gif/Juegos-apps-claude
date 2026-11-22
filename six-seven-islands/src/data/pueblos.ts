@@ -30,6 +30,14 @@ export function inicialDelRival(tuya: TipoInicial): TipoInicial {
   return PUEBLOS[tuya].ataca;
 }
 
+/**
+ * Las iniciales de los otros tres amigos (HISTORIA.md: las tres que quedan), en el orden en que los
+ * conoces: el segundo amigo lleva la primera.
+ */
+export function inicialesDeAmigos(tuya: TipoInicial): TipoInicial[] {
+  return (Object.keys(PUEBLOS) as TipoInicial[]).filter((p) => p !== tuya && p !== inicialDelRival(tuya));
+}
+
 /** El pueblo cuya rama te persigue: el que ataca al tuyo. */
 export function puebloQueTePersigue(tuya: TipoInicial): TipoInicial {
   return (Object.keys(PUEBLOS) as TipoInicial[]).find((p) => PUEBLOS[p].ataca === tuya)!;

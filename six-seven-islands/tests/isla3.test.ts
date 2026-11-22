@@ -39,6 +39,18 @@ describe('Gran Canaria (isla 3), fase 1', () => {
     expect(transitable(mf, zf.origen.x + l.x, zf.origen.y + l.y)).toBe(true);
   });
 
+  it('fase 2: de Las Palmas se baja a Guayadeque, se sube por las cumbres y se llega al Roque Nublo', () => {
+    for (const z of ['guayadeque', 'cumbres', 'nublo']) expect([...r].some((k) => m.casillas.get(k)?.zona === z), z).toBe(true);
+    // El comandante no se esquiva: sin pisar lo que ve, no se llega a la cima (fila 8 o menos).
+    const c = zona('nublo').personajes.find((p) => p.id === 'comandante-nublo')!;
+    const ve = new Set(vision(m, 'nublo', c));
+    const cima = (k: number) => m.casillas.get(k)?.zona === 'nublo' && deClave(k)[1] - zona('nublo').origen.y <= 8;
+    expect([...alcanzables(m, [llegada])].some(cima)).toBe(true);
+    expect([...alcanzables(m, [llegada], { prohibidas: ve })].some(cima)).toBe(false);
+    // Y el segundo amigo llega cuando se va.
+    expect(zona('nublo').personajes.find((p) => p.id === 'amigo2-nublo')!.con).toBe('vencido:comandante-nublo');
+  });
+
   it('desde el muelle se llega a La Isleta, a cada puerta, a cada personaje y a cada objeto', () => {
     expect([...r].some((k) => m.casillas.get(k)?.zona === 'isleta')).toBe(true);
     for (const [z, puertas] of Object.entries(PUERTAS_ISLA3)) {
@@ -59,7 +71,8 @@ describe('Gran Canaria (isla 3), fase 1', () => {
     }
     for (const [id, def] of Object.entries(GRAN_CANARIA.entrenadores)) {
       expect(quienEs(id), id).toBeDefined();
-      expect(def.equipo.length, id).toBeGreaterThan(0);
+      // El comandante lucha con criaturas de su pueblo (`rama`), según tu inicial.
+      expect(def.equipo.length + (def.rama?.niveles.length ?? 0), id).toBeGreaterThan(0);
       for (const e of def.equipo) {
         const especie = DATOS.especies[e.especie];
         expect(especie, e.especie).toBeDefined();
@@ -71,13 +84,13 @@ describe('Gran Canaria (isla 3), fase 1', () => {
     }
   });
 
-  it('sus salvajes existen y van del nivel 18 al 20 (ISLA-3.md: la isla, del 18 al 25)', () => {
+  it('sus salvajes existen y van del nivel 18 al 24 (ISLA-3.md: la isla, del 18 al 25)', () => {
     for (const [z, t] of Object.entries(GRAN_CANARIA.encuentros)) {
       expect(zona(z), z).toBeDefined();
       for (const e of t) {
         expect(DATOS.especies[e.especie], e.especie).toBeDefined();
         expect(e.nivel[0]).toBeGreaterThanOrEqual(18);
-        expect(e.nivel[1], z).toBeLessThanOrEqual(20);
+        expect(e.nivel[1], z).toBeLessThanOrEqual(24);
       }
     }
   });

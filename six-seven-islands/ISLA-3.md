@@ -155,8 +155,25 @@ Así la subida a las cumbres tiene sentido y la historia de la isla secreta avan
 
 | Fase | Qué | Coste |
 | --- | --- | --- |
+**Fase 2, hecha (2026-11-22).**
+- Se abre la carretera del sur de Las Palmas.
+- **Guayadeque:** el barranco, entre paredes altas.
+  - Tres casas cueva con su puerta al pie de la roca, una de ellas el restaurante.
+  - Un refugio en la curva y hierba que cruza el camino.
+- **Las cumbres:** la subida en terrazas, con muros de piedra, almendros en flor y tajinastes.
+  La hierba del último paso no se esquiva.
+- **El Roque Nublo:** la cima, con el monolito (pieza `roque`) y el mar de nubes por debajo
+  (`x`). Hay dos miradores que hablan del Teide, de la isla que desaparece y de los trece círculos.
+- **La historia:**
+  - En el paso estrecho de la cima te para el comandante de la rama que te persigue, con un
+    soldado, y luchas contra él con criaturas de su pueblo.
+  - Al vencerlo se van y llega el segundo amigo, al que le pones nombre.
+  - El amigo lleva la primera de las iniciales que quedan y te espera en Agaete para el dos
+    contra dos.
+- El camino del oeste, a Tejeda, se abre en la fase 3.
+
 | 1 | Las Palmas y La Isleta, con el barco desde Morro Jable (**hecha**, 2026-11-22) | alto |
-| 2 | Guayadeque con sus casas cueva, las cumbres y el Roque Nublo (con la historia) | alto |
+| 2 | Guayadeque con sus casas cueva, las cumbres y el Roque Nublo, con la historia (**hecha**, 2026-11-22) | alto |
 | 3 | Tejeda, Tamadaba y Agaete con el gimnasio | alto |
 | 4 | Bandama y Maspalomas, pulido y revisión del probador | medio |
 

@@ -362,6 +362,9 @@ export class Mundo implements Subsistema {
         const orilla = TRANSITABLES.has(m.casillas.get(clave(x, y - 1))?.c ?? '');
         const escala = orilla ? 0.5 : 0.85 + ((r >>> 4) & 3) * 0.07;
         this.subirTapa(k, colocarKit('laurel', r, x + dx, y + dz, suelo, escala, giro));
+      } else if (cm.c === 'T' && zona.arboles === 'almendro') {
+        // Almendros en flor (las cumbres de Gran Canaria).
+        this.subirTapa(k, colocarKit('almendro', r, x + dx, y + dz, suelo, 0.95 + ((r >>> 4) & 3) * 0.08, giro));
       } else if (cm.c === 'T') {
         // Si no, palmeras canarias.
         this.subirTapa(k, colocarKit('palmera', r, x + dx, y + dz, suelo, 0.9 + ((r >>> 4) & 3) * 0.07, giro));
@@ -384,6 +387,11 @@ export class Mundo implements Subsistema {
         colocarKit('cometa', r, x, y, NIVEL_MAR - 0.02, 1, (r % 4) * 0.3 - 0.45);
       } else if (cm.c === 'f') {
         this.subirTapa(k, colocarKit('escultura', r, x, y, suelo, 1, 0));
+      } else if (cm.c === 'I') {
+        this.subirTapa(k, colocarKit('roque', r, x, y, suelo, 1, 0));
+      } else if (cm.c === 'x' && r % 2 === 0) {
+        // El mar de nubes: nubes bajas sobre un suelo blanco, por debajo de la cumbre.
+        colocarKit('nube', r, x + dx * 3, y + dz * 3, suelo + 0.25, 1.5 + (r % 3) * 0.3, giro);
       } else if (cm.c === 'N') {
         // Los molinos miran al sur, a la cámara, con las aspas de frente.
         this.subirTapa(k, colocarKit('molino', r, x, y, suelo, 1, 0));

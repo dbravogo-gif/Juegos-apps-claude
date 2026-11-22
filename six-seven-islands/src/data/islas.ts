@@ -131,16 +131,17 @@ export const GRAN_CANARIA: DatosIsla = {
   guion: GUION_ISLA3,
   objetivos: [
     { hasta: 'vencido:aprendiz-electrico-3', texto: 'Vence a los aprendices del gimnasio Eléctrico, en Las Palmas' },
-    // La carretera de las cumbres se abre en la fase 2 (ISLA-3.md).
-    { hasta: 'isla3-completada', texto: 'Explora La Isleta mientras arreglan la carretera de las cumbres' },
+    { hasta: 'amigo2-conocido', texto: 'Sube por Guayadeque y las cumbres hasta el Roque Nublo' },
+    // El camino del oeste, a Tejeda y Agaete, se abre en la fase 3 (ISLA-3.md).
+    { hasta: 'isla3-completada', texto: 'Sigue hacia Tejeda: el camino del oeste aún está cortado' },
   ],
-  curanderos: { 'enfermera-palmas': 'refugio-palmas' },
+  curanderos: { 'enfermera-palmas': 'refugio-palmas', 'enfermera-guayadeque': 'refugio-guayadeque' },
   tenderos: new Set(['tendero-palmas']),
   refugio: 'refugio-palmas',
   llegada: { zona: 'palmas', x: 26, y: 4 },
   // El gimnasio Eléctrico, con su campo eléctrico (autor, 2026-11-15).
   campos: { 'gimnasio-electrico': { terreno: 'electrico' } },
-  fondos: { palmas: 'gc-ciudad', isleta: 'gc-isleta', 'gimnasio-electrico': 'gc-gimnasio-electrico' },
+  fondos: { palmas: 'gc-ciudad', isleta: 'gc-isleta', 'gimnasio-electrico': 'gc-gimnasio-electrico', guayadeque: 'gc-barranco', cumbres: 'gc-cumbres', nublo: 'gc-cumbres' },
 };
 
 /** Las islas por su número, de este a oeste. */

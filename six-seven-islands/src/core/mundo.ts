@@ -55,6 +55,10 @@ export const LEYENDA = {
   // El kit majorero (Fuerteventura, 2026-11-22): molinos y cabras. No se pisan.
   N: 'molino majorero',
   A: 'cabra',
+  // Gran Canaria (2026-11-22): el Roque Nublo y el mar de nubes que se ve por debajo de las cumbres.
+  // Ninguno se pisa.
+  I: 'roque',
+  x: 'mar de nubes',
   // Interiores: salas pequeñas aparte (ISLA-1.md, «Decisiones técnicas»).
   m: 'suelo',
   '|': 'pared',
@@ -114,7 +118,9 @@ export type Condicion =
   /** Has defendido la estatua ancestral de las dunas de tu rama enemiga (HISTORIA.md, Fuerteventura). */
   | 'estatua-defendida'
   /** Ya conoces a Chano, en Corralejo. */
-  | 'chano-conocido';
+  | 'chano-conocido'
+  /** Has conocido al segundo amigo en el Roque Nublo (HISTORIA.md, Gran Canaria). */
+  | 'amigo2-conocido';
 export const TODAS_LAS_CONDICIONES: ReadonlySet<Condicion> = new Set(['inicial-elegida', 'anciano', 'gimnasio-vencido', 'mensaje-rival', 'soldados-fuego']);
 
 export interface Personaje {
@@ -195,7 +201,7 @@ export interface DefZona {
   /** Cómo se dibujan sus casas (por defecto, rurales; en la capital, de balcones). */
   casas?: EstiloCasas;
   /** Qué árbol son sus `T` (por defecto, palmeras). */
-  arboles?: 'palmera' | 'laurel';
+  arboles?: 'palmera' | 'laurel' | 'almendro';
   /** Qué crece entre sus rocas: secano (por defecto), humedad o volcán. */
   flora?: 'seca' | 'humeda' | 'volcan';
   /** El tiempo que hace: la calima de Las Dunas (unas partículas de polvo; solo se ve). */

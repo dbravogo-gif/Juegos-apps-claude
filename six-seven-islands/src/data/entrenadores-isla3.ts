@@ -32,6 +32,39 @@ export const ENTRENADORES_ISLA3: Readonly<Record<string, DefEntrenador>> = {
     premio: 600,
     tras: 'Vale, sigue hacia el faro. Mi tradición se ha quedado sin tradición.',
   },
+  // Fase 2: Guayadeque, las cumbres y el Roque Nublo.
+  'cabrero-guayadeque': {
+    equipo: [{ especie: 'c034-1', nivel: 22 }, { especie: 'c012-2', nivel: 22 }],
+    premio: 620,
+    tras: 'Las cabras ya se han ido para arriba. Yo me quedo aquí, a la sombra.',
+  },
+  'excursionista-guayadeque': {
+    equipo: [{ especie: 'c005-2', nivel: 23 }, { especie: 'c062-1', nivel: 22 }],
+    premio: 640,
+    tras: 'Si tienes hambre, en la cueva del restaurante ponen un queso de flor buenísimo.',
+  },
+  'montanera-cumbres': {
+    equipo: [{ especie: 'c031-2', nivel: 23 }, { especie: 'c032-2', nivel: 24 }],
+    premio: 680,
+    tras: 'Sigue la senda hacia el norte. El Roque Nublo se ve en cuanto pasas el último muro.',
+  },
+  'corredor-cumbres': {
+    equipo: [{ especie: 'c043-2', nivel: 24 }],
+    premio: 680,
+    tras: 'Arriba hay gente rara con uniforme. No me han dejado pasar a hacer la foto de siempre.',
+  },
+  // El comandante de la rama que te persigue (HISTORIA.md): lucha con criaturas de su pueblo.
+  'comandante-nublo': {
+    equipo: [],
+    rama: { niveles: [24, 25, 26] },
+    premio: 1200,
+    tras: '',
+    alVencer: [
+      '¡Bah! El jefe dijo que eras un crío con suerte. No me dijo que tuvieras tanta.',
+      'Nos vamos… por ahora. Desde aquí ya hemos visto lo que veníamos a ver.',
+      'Los de {rama} bajan por la ladera y se pierden entre las nubes.',
+    ],
+  },
   // El gimnasio Eléctrico (gimnasio-electrico.ts): el líder no está.
   'aprendiz-electrico-1': {
     equipo: [{ especie: 'c035-1', nivel: 22 }, { especie: 'c018-1', nivel: 22 }],
