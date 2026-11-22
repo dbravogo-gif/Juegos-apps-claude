@@ -109,6 +109,8 @@ function estiloDe(z: DefZona): Pick<OpcionesCasa, 'estilo' | 'blanca'> {
   switch (z.casas ?? (z.id === 'capital' ? 'balcones' : 'rural')) {
     case 'lanzarote':
       return { estilo: 'lanzarote' };
+    case 'majorera':
+      return { estilo: 'majorera' };
     case 'balcones-blanca':
       return { estilo: 'balcones', blanca: true };
     case 'balcones':
@@ -293,7 +295,7 @@ export class Mundo implements Subsistema {
             uso === 'museo'
               ? { estilo: deZona.estilo === 'lanzarote' ? 'lanzarote' : 'rural', techo: 'teja' }
               : uso === 'gimnasio'
-                ? { estilo: 'balcones', blanca: deZona.blanca, techo: 'azotea', emblema: m.isla.gimnasio === 'roca' ? 'volcan' : m.isla.gimnasio === 'aire' ? 'molino' : 'sol' }
+                ? { estilo: 'balcones', blanca: deZona.blanca, techo: 'azotea', emblema: m.isla.gimnasio === 'roca' ? 'volcan' : m.isla.gimnasio === 'aire' ? 'molino' : m.isla.gimnasio === 'electrico' ? 'rayo' : 'sol' }
                 : deZona;
           const geometria = casaCanaria({ ...estilo, uso, ancho: e.ancho, fondo: e.fondo, puerta, huecosPuerta, semilla: pseudo(e.casillas[0]) });
           const casa = new Mesh(geometria, this.materialColores);
@@ -382,6 +384,11 @@ export class Mundo implements Subsistema {
         colocarKit('cometa', r, x, y, NIVEL_MAR - 0.02, 1, (r % 4) * 0.3 - 0.45);
       } else if (cm.c === 'f') {
         this.subirTapa(k, colocarKit('escultura', r, x, y, suelo, 1, 0));
+      } else if (cm.c === 'N') {
+        // Los molinos miran al sur, a la cámara, con las aspas de frente.
+        this.subirTapa(k, colocarKit('molino', r, x, y, suelo, 1, 0));
+      } else if (cm.c === 'A') {
+        colocarKit('cabra', r, x + dx, y + dz, suelo, 1, giro);
       } else if (cm.c === 'K') {
         // Las crestas de las dunas: un lomo redondo por casilla, de altura algo distinta, estirado
         // hacia las crestas vecinas para que la fila se lea como un lomo seguido y no como bolas.

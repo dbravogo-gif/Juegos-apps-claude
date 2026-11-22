@@ -50,6 +50,8 @@ const NATURALEZA = (): Muestra[][] => [
     { nombre: 'Boya', geometria: piezaKit('boya', 0) },
     { nombre: 'Barca', geometria: piezaKit('barca', 0) },
     { nombre: 'Barca', geometria: piezaKit('barca', 1) },
+    { nombre: 'Molino majorero', geometria: piezaKit('molino', 0) },
+    { nombre: 'Cabra', geometria: piezaKit('cabra', 0) },
   ],
 ];
 

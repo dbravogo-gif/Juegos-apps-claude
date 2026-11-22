@@ -578,6 +578,62 @@ export function bocaCueva(ancho: number, fondo: number, puerta: number, semilla:
   return M.fusionar();
 }
 
+/**
+ * Un molino majorero (Fuerteventura; 2026-11-22): la torre redonda y encalada (o de piedra, según
+ * la variante), con su puerta verde, el capirote de madera y cuatro aspas de listones que miran al
+ * sur, hacia la cámara. Solo se ve: no se gira (las aspas que se giran son las del gimnasio de Aire).
+ */
+export function molino(semilla: number): BufferGeometry {
+  const M = new Montaje();
+  const piedra = semilla % 2 === 1;
+  const torre = piedra ? '#B49A78' : COLORES.cal;
+  M.pon(new CylinderGeometry(0.27, 0.34, 1.5, 12).translate(0, 0.75, 0), torre);
+  M.pon(new CylinderGeometry(0.36, 0.37, 0.1, 12).translate(0, 0.05, 0), piedra ? '#8E7558' : COLORES.canteria);
+  M.pon(new BoxGeometry(0.22, 0.42, 0.06).translate(0, 0.21, 0.32), COLORES.carpinteriaVerde);
+  M.pon(new BoxGeometry(0.12, 0.14, 0.05).translate(0, 1.0, 0.29), '#2B2320');
+  // El capirote, de madera, y el eje que sale hacia delante.
+  M.pon(new ConeGeometry(0.33, 0.42, 12).translate(0, 1.71, 0), COLORES.maderaTostada);
+  M.pon(new CylinderGeometry(0.04, 0.04, 0.42, 6).rotateX(Math.PI / 2).translate(0, 1.55, 0.36), '#4D4B54');
+  // Cuatro aspas en cruz, cada una con su larguero y su bastidor de listones, algo girada según la
+  // variante: los molinos no se paran todos igual.
+  const giro = semilla % 3 * 0.25 + 0.3;
+  for (let i = 0; i < 4; i++) {
+    const a = giro + (i * Math.PI) / 2;
+    const brazo = (g: BufferGeometry) => g.rotateZ(a).translate(0, 1.55, 0.55);
+    M.pon(brazo(new BoxGeometry(0.04, 0.95, 0.03).translate(0, 0.48, 0)), COLORES.maderaTostada);
+    M.pon(brazo(new BoxGeometry(0.2, 0.62, 0.012).translate(0.11, 0.6, 0.005)), COLORES.crema, 0.95);
+    for (const y of [0.35, 0.6, 0.85]) M.pon(brazo(new BoxGeometry(0.22, 0.025, 0.02).translate(0.11, y, 0.02)), COLORES.maderaTostada, 0.9);
+  }
+  return M.fusionar();
+}
+
+/**
+ * Una cabra majorera (2026-11-22): cuerpo, patas, cuello, cabeza con cuernos hacia atrás y barba.
+ * Tres capas según la variante: parda, blanca y negra con manchas. Mira hacia +x; el giro la orienta.
+ */
+export function cabra(semilla: number): BufferGeometry {
+  const M = new Montaje();
+  const [pelo, mancha] = ([['#7A5638', '#3B2A20'], ['#E9E3D7', '#B9A78E'], ['#2E2A28', '#E9E3D7']] as const)[semilla % 3]!;
+  // Cada capa, con el cuerpo y los cuernos algo distintos: no son clones.
+  const largo = 0.4 + (semilla % 3) * 0.03;
+  const cuerno = 0.13 + (semilla % 3) * 0.025;
+  M.pon(new BoxGeometry(largo, 0.2, 0.18).translate(0, 0.32, 0), pelo);
+  M.pon(new BoxGeometry(0.16, 0.12, 0.185).translate(-0.06, 0.37, 0), mancha, 0.96);
+  for (const [x, z] of [[0.15, 0.06], [0.15, -0.06], [-0.15, 0.06], [-0.15, -0.06]] as const) {
+    M.pon(new BoxGeometry(0.05, 0.23, 0.05).translate(x, 0.115, z), pelo, 0.9);
+    M.pon(new BoxGeometry(0.055, 0.04, 0.055).translate(x, 0.02, z), '#2B2320');
+  }
+  M.pon(new BoxGeometry(0.08, 0.16, 0.09).rotateZ(-0.5).translate(0.23, 0.45, 0), pelo);
+  M.pon(new BoxGeometry(0.16, 0.1, 0.1).translate(0.31, 0.53, 0), pelo, 1.04);
+  M.pon(new BoxGeometry(0.03, 0.06, 0.03).translate(0.36, 0.45, 0), mancha);
+  for (const z of [-0.035, 0.035]) {
+    M.pon(new ConeGeometry(0.02, cuerno, 5).rotateZ(1.1).translate(0.25, 0.62, z), '#5A4A3A');
+    M.pon(new BoxGeometry(0.03, 0.05, 0.08).translate(0.28, 0.57, z * 2.4), pelo, 0.92);
+  }
+  M.pon(new BoxGeometry(0.06, 0.08, 0.04).rotateZ(0.6).translate(-0.23, 0.42, 0), pelo, 0.9);
+  return M.fusionar();
+}
+
 /** Todas las piezas del kit, por nombre. */
 export const KIT = {
   laurel,
@@ -606,6 +662,8 @@ export const KIT = {
   duna: lomoDuna,
   escultura,
   cometa,
+  molino,
+  cabra,
 } satisfies Record<string, (semilla: number) => BufferGeometry>;
 
 export type PiezaKit = keyof typeof KIT;
@@ -640,6 +698,8 @@ export const VARIANTES: Record<PiezaKit, number> = {
   duna: 2,
   escultura: 2,
   cometa: 3,
+  molino: 2,
+  cabra: 3,
 };
 
 /** La geometría de una variante de una pieza del kit. */

@@ -32,6 +32,8 @@ const PRESUPUESTO: Record<PiezaKit, number> = {
   duna: 200,
   escultura: 400,
   cometa: 300,
+  molino: 900,
+  cabra: 300,
 };
 /** Lo que puede salirse de su casilla cada pieza, desde el centro: las copas grandes se salen. */
 const RADIO: Record<PiezaKit, number> = {
@@ -61,6 +63,9 @@ const RADIO: Record<PiezaKit, number> = {
   duna: 0.8,
   escultura: 0.5,
   cometa: 0.8,
+  // Las aspas se salen de la casilla, por encima: el molino va siempre fuera del camino.
+  molino: 0.95,
+  cabra: 0.45,
 };
 
 describe('kit canario de naturaleza', () => {

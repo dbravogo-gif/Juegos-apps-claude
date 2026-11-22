@@ -8,7 +8,7 @@ import { BoxGeometry, BufferAttribute, BufferGeometry, CylinderGeometry, RingGeo
 import { COLORES } from '../../arte/paleta';
 import { Montaje, abollar, azar, elegir, triangulo } from '../../arte/montaje';
 
-export type EstiloCasa = 'rural' | 'balcones' | 'lanzarote';
+export type EstiloCasa = 'rural' | 'balcones' | 'lanzarote' | 'majorera';
 /** `bar`: por fuera como una tienda (toldo y cajas), pero sin sus colores ni su emblema. */
 export type UsoCasa = 'casa' | 'refugio' | 'tienda' | 'bar' | 'museo' | 'gimnasio';
 
@@ -16,12 +16,13 @@ export interface OpcionesCasa {
   /**
    * Rural: blanca, de una planta, con teja. De balcones: fachada de color y dos plantas.
    * Lanzarote: blanca, de una planta, con azotea, chimenea redonda y carpintería verde o azul.
+   * Majorera (Fuerteventura): baja, de piedra parda, con azotea de barro y cantería clara.
    */
   estilo: EstiloCasa;
   /** Las de balcones, blancas, de azotea y sin cantería en las esquinas (la capital de Lanzarote). */
   blanca?: boolean;
   /** Lo que lleva pintado en la azotea el gimnasio: el sol (Luz) o un volcán (Roca). */
-  emblema?: 'sol' | 'volcan' | 'molino';
+  emblema?: 'sol' | 'volcan' | 'molino' | 'rayo';
   uso?: UsoCasa;
   /** Ancho de la fachada y fondo del solar, en casillas. La fachada mira al sur (+z). */
   ancho: number;
@@ -55,26 +56,29 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
   const M = new Montaje();
   const rural = op.estilo === 'rural';
   const lanzarote = op.estilo === 'lanzarote';
-  const unaPlanta = rural || lanzarote;
+  const majorera = op.estilo === 'majorera';
+  const unaPlanta = rural || lanzarote || majorera;
   const uso = op.uso ?? 'casa';
   const W = op.ancho - 2 * MARGEN;
   const D = op.fondo - 2 * MARGEN;
-  const H = lanzarote ? 1.55 : rural ? 1.65 : 2.95;
+  const H = lanzarote ? 1.55 : majorera ? 1.4 : rural ? 1.65 : 2.95;
   const frente = D / 2;
 
   const fachadas = [COLORES.fachadaOcre, COLORES.fachadaAzul, COLORES.fachadaSalmon, COLORES.fachadaVerde, COLORES.fachadaAmarilla];
-  const pared = uso === 'museo' || unaPlanta || op.blanca ? COLORES.cal : uso === 'gimnasio' ? COLORES.fachadaAmarilla : elegir(r, fachadas);
+  // La majorera, de piedra parda sin encalar (las de servicio, encaladas: el refugio y la tienda se
+  // distinguen igual por su color).
+  const pared = majorera && !['refugio', 'tienda', 'museo', 'gimnasio'].includes(uso) ? elegir(r, ['#B49A78', '#A88D6B', '#BCA281']) : uso === 'museo' || unaPlanta || op.blanca ? COLORES.cal : uso === 'gimnasio' ? COLORES.fachadaAmarilla : elegir(r, fachadas);
   // El refugio y la tienda, con la carpintería (y en Lanzarote, el zócalo) de su color: coral y azul.
   // Antes solo cambiaba la puerta y se confundían con las casas (autor, 2026-11-19).
   const acento = uso === 'refugio' ? COLORES.acentoCoral : uso === 'tienda' ? COLORES.toldoAzul : null;
-  const maderaCasa = lanzarote
+  const maderaCasa = lanzarote || majorera
     ? elegir(r, [COLORES.carpinteriaVerde, COLORES.carpinteriaVerde, COLORES.carpinteriaAzul])
     : rural
       ? elegir(r, [COLORES.carpinteriaVerde, COLORES.carpinteriaVerde, COLORES.carpinteriaAzul, COLORES.balcon])
       : elegir(r, op.blanca ? [COLORES.carpinteriaVerde, COLORES.carpinteriaAzul, COLORES.balcon] : [COLORES.balcon, COLORES.carpinteriaVerde]);
   const madera = acento ?? maderaCasa;
   // En Lanzarote, el zócalo va pintado del color de la carpintería.
-  const zocalo = lanzarote ? madera : rural ? elegir(r, [COLORES.zocaloOcre, COLORES.canteria, COLORES.carpinteriaVerde]) : COLORES.canteria;
+  const zocalo = lanzarote ? madera : majorera ? '#8E7558' : rural ? elegir(r, [COLORES.zocaloOcre, COLORES.canteria, COLORES.carpinteriaVerde]) : COLORES.canteria;
   const singular = uso === 'museo' || uso === 'gimnasio';
 
   // Muros y zócalo redondeados, como de juguete, y cantería en las esquinas, a soga y tizón
@@ -95,9 +99,9 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
   }
   // En Lanzarote no hay teja: todo es azotea (probador, 2026-11-10). El museo pide teja, pero en
   // Lanzarote también la lleva plana.
-  const azotea = lisa || (op.techo ? op.techo === 'azotea' : !rural && r() < 0.5);
+  const azotea = lisa || majorera || (op.techo ? op.techo === 'azotea' : !rural && r() < 0.5);
   if (!unaPlanta) M.caja(W + 0.06, 0.08, D + 0.06, 0, 1.38, 0, COLORES.cal); // imposta entre plantas
-  if (azotea) M.caja(W + 0.14, 0.14, D + 0.14, 0, H - 0.06, 0, COLORES.cal); // cornisa
+  if (azotea) M.caja(W + 0.14, 0.14, D + 0.14, 0, H - 0.06, 0, majorera ? '#9A7B58' : COLORES.cal); // cornisa (en la majorera, de barro)
 
   // Fachada: puerta con escalón, ventanas a los lados y macetas.
   const ventana = (x: number, y: number, an: number, al: number) => {
@@ -236,7 +240,7 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
     // Azotea con pretil, el cuarto de la azotea y un depósito de agua. El suelo de la azotea va
     // por encima de la cornisa, que es una caja maciza y la taparía.
     // En Lanzarote, la azotea es blanca, pero no tanto como el pretil, para que se lea su forma.
-    M.caja(W - 0.02, 0.04, D - 0.02, 0, H + 0.08, 0, lisa ? COLORES.azoteaBlanca : COLORES.azotea);
+    M.caja(W - 0.02, 0.04, D - 0.02, 0, H + 0.08, 0, lisa ? COLORES.azoteaBlanca : majorera ? '#A3845F' : COLORES.azotea);
     for (const s of [-1, 1]) {
       // El pretil de delante y el de detrás cubren las esquinas; los de los lados caben entre
       // ellos, sin solaparse (las caras de arriba titilaban).
@@ -265,6 +269,13 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
       const y = H + 0.135;
       M.pon(new CylinderGeometry(0.22, 0.22, 0.03, 14).translate(0, y, 0.1), COLORES.toldoAzul);
       for (let i = 0; i < 4; i++) M.pon(new BoxGeometry(0.28, 0.03, 1.1).translate(0, y, 0.7).rotateY((i * Math.PI) / 2 + 0.4).translate(0, 0, 0.1), COLORES.toldoAzul);
+    } else if (uso === 'gimnasio' && op.emblema === 'rayo') {
+      // Un rayo amarillo en zigzag sobre un disco oscuro: el gimnasio Eléctrico (Gran Canaria).
+      const y = H + 0.135;
+      M.pon(new CylinderGeometry(0.85, 0.85, 0.03, 22).translate(0, y, 0.2), '#3A3F46');
+      // Dos trozos convexos: el de arriba (hacia el fondo, −z) y el de abajo, desplazado.
+      M.pon(plano([[0.05, -0.8], [0.42, -0.8], [0.12, 0.02], [-0.22, 0.02]], y + 0.02), COLORES.amarilloLuz);
+      M.pon(plano([[-0.02, -0.12], [0.32, -0.12], [-0.22, 0.85], [-0.32, 0.85]], y + 0.025), COLORES.amarilloLuz);
     } else if (uso === 'gimnasio') {
       // Un sol pintado en la azotea: el gimnasio de tipo Luz se reconoce desde arriba.
       M.pon(new CylinderGeometry(0.75, 0.75, 0.03, 20).translate(0, H + 0.135, 0.2), COLORES.solPintado);
@@ -274,6 +285,15 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
       }
     }
     const lado = r() < 0.5 ? -1 : 1;
+    if (majorera) {
+      // La majorera: sin cuarto en la azotea, una chimenea baja de piedra y un aljibe al lado.
+      const x = lado * (W / 2 - 0.4);
+      const z = -D / 2 + 0.4;
+      M.caja(0.26, 0.42, 0.26, x, H + 0.12, z, '#8E7558');
+      M.caja(0.34, 0.05, 0.34, x, H + 0.54, z, '#9A7B58');
+      M.pon(new CylinderGeometry(0.2, 0.22, 0.24, 10).translate(-x * 0.7, H + 0.24, z + 0.15), COLORES.cal, 0.95);
+      return M.fusionar();
+    }
     if (lanzarote) {
       // La chimenea redonda de Lanzarote, con su sombrerete, en vez del cuarto de la azotea.
       const x = lado * (W / 2 - 0.45);
