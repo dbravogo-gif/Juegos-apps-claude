@@ -171,7 +171,7 @@ export class Interfaz implements Subsistema {
     if (this.objetivo.textContent !== texto) this.objetivo.textContent = texto;
     // En combate, en la portada y en el final no se ve nada de la exploración.
     const modo = this.partida.modo;
-    const oculta = modo === 'combate' || modo === 'titulo' || modo === 'fin';
+    const oculta = modo === 'combate' || modo === 'titulo';
     // El objetivo tampoco, con el menú o la tienda abiertos.
     this.objetivo.hidden = !objetivo || oculta || modo === 'menu';
     this.pintarDialogo();

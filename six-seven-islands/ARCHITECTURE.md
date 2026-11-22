@@ -139,6 +139,7 @@ export class Sistema implements Subsistema {
 | `mundo` | `src/sistemas/mundo/` | La isla en 3D, toda por código: terreno en terrazas por alturas, cumbres, mar, casas canarias (`canario.ts`) y kit de naturaleza (`kit.ts`), con los estilos y colores de cada isla, instanciado por trozos de 12 × 12, pasos cerrados y objetos. Publica `tapas`, la altura de lo más alto de cada casilla. Lee «partida»; no la cambia |
 | `criaturas` | `src/sistemas/criaturas/` | El generador de criaturas por piezas y su animación procedural. Se pide con `crear(aspecto)` y se anima con `accion(criatura, accion)` |
 | `personaje` | `src/sistemas/personaje/` | El jugador y los personajes de la isla y de los interiores (KayKit, animados), que se giran hacia el jugador al hablar; la silueta cuando algo tapa al jugador (con las `tapas` de «mundo») y las líneas de visión; más adelante, el generador y la personalización (F12) |
+| `oscuridad` | `src/sistemas/oscuridad/` | Las salas a oscuras: capa negra con un círculo de luz en el jugador y relámpagos con trueno |
 | `salas` | `src/sistemas/salas/` | Los interiores en 3D, por código: dioramas pequeños lejos de la isla, con la pared de delante baja, paredes y mostradores por tramos, muebles según las letras del mapa y los pedestales del museo con el modelo de cada inicial en piedra. Una malla por sala |
 | `companera` | `src/sistemas/companera/` | La inicial elegida, que va una casilla detrás del jugador por su mismo camino (`rastro.ts`). Lee «partida» y «personaje» |
 | `combate` | `src/sistemas/combate/` | El combate, en una arena aparte: fondo pintado, dos plataformas y las criaturas en diagonal; fichas de vida, mensajes y menú de ataques con teclado; presenta los eventos del núcleo con sus animaciones. Por ahora con datos provisionales (`data/combate-prueba.ts`) y solo con el primer entrenador. Emite `combate:fin` |
@@ -271,7 +272,7 @@ y `?semilla=n`. Mientras exista la vitrina de F04: `?vista=combate|todas|explora
   de destino, junto a su muelle, y se recarga la página. Así cada isla se monta desde cero con
   todos los subsistemas, sin tener que desmontar la anterior. El guardado lleva `isla`.
 
-## Gimnasios: compuertas, palancas y viento
+## Gimnasios: compuertas, palancas, viento y oscuridad
 
 Todo en el núcleo (`core/mundo.ts` y `core/explorar.ts`), igual en zonas e interiores:
 - **Compuertas** (`cierres`, por casilla `"x,y"`): cerradas hasta cumplir su condición. Se dibujan
@@ -281,6 +282,9 @@ Todo en el núcleo (`core/mundo.ts` y `core/explorar.ts`), igual en zonas e inte
   empujado en su dirección (`empuje`) hasta que la casilla siguiente no se pueda pisar. Con
   `alterna` y `aspas`, la dirección cambia mientras se cumple `aspas:<id>`.
 - **Aspas de molino** (`H`, `aspas`): no se pisan; usarlas pone o quita `aspas:<id>`.
+- **Salas a oscuras** (`oscura` del interior; el gimnasio Eléctrico): solo se dibujan así. El
+  subsistema «oscuridad» pone una capa negra bajo la interfaz, con un círculo de luz en el jugador
+  y relámpagos cada pocos segundos (`ENTRE_RAYOS`). Sus muros bajos de chapa son `=`.
 - Vencer a cualquiera cumple `vencido:<id>`. Las salas los dibujan en vivo (`salas.ts`).
 - **Rocas grabadas y esculturas** (`g` y `f`, `letreros`): no se pisan; al mirarlas se lee su texto
   (cada línea, una caja). Sirven de letreros en cualquier zona: los pies grabados de Tindaya y

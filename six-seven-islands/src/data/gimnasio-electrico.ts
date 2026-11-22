@@ -1,43 +1,43 @@
-// El gimnasio Eléctrico de Las Palmas (2026-11-22; ISLA-3.md), hecho a mano. Tres salas, una
-// encima de otra, separadas por paredes con una barrera de rayos (`X`) cada una. Cada barrera la
-// apaga una palanca (`p`): la de abajo está en la sala de la entrada y la de en medio, en la sala
-// de en medio. El tercer aprendiz vigila el paso a la última sala, así que no se esquiva.
-// Arriba, los generadores (`k`) y el sitio del líder, vacío: no está (autor, 2026-11-15). Se ha
-// ido a Agaete y te espera en el terrero, con la líder de Lucha (fase 3).
+// El gimnasio Eléctrico de Las Palmas (autor, 2026-11-22: «a oscuras con relámpagos»; distinto de
+// los de Roca y Aire, que se parecían). Un laberinto de muros bajos de chapa (`=`), a oscuras: solo
+// se ve un poco alrededor del jugador y, con cada relámpago, todo un instante (`oscura`; lo dibuja
+// el subsistema «oscuridad»). Sin palancas. Los aprendices esperan en recovecos junto al camino y
+// te sorprenden al pasar; el tercero, al final, no se esquiva. Arriba, el sitio del líder, vacío:
+// no está (autor, 2026-11-15). Se ha ido a Agaete y te espera en el terrero, con la de Lucha.
+// El laberinto salió de un generador con semilla (algoritmo de Prim, semilla 294): 28 casillas de
+// camino y 10 desvíos, varios desde la entrada.
 
 import type { DefInterior } from '../core/mundo';
 
 export const GIMNASIO_ELECTRICO: DefInterior = {
   id: 'gimnasio-electrico',
   nombre: 'Gimnasio Eléctrico',
+  oscura: true,
   mapa: [
-    '|||||||||||||||||',
-    '|kmmmmmmmmmmmmmk|',
-    '|mmmmmmmmmmmmmmm|',
-    '|kmmmmmmmmmmmmmk|',
-    '|||||||||X|||||||',
-    '|mmmmmmmmmmmmmmm|',
-    '|mmmkmmmmmmmkmmm|',
-    '|mmmmmmmmmmmmmmp|',
-    '|mmmmmmmmmmmmmmm|',
-    '|||||||X|||||||||',
-    '|mmmmmmmmmmmmmmm|',
-    '|pmmmmmmmmmmmmmm|',
-    '|mmmkmmmmmmmkmmm|',
-    '|mmmmmmmmmmmmmmm|',
-    '|mmmmmmmmmmmmmmm|',
-    '||||||||d||||||||',
+    '|||||||||||||||||||',
+    '|mmmmmmmmmmmmmmmmm|',
+    '|mmmmmmmmmmmmmmmmm|',
+    '|mmmmmmmmmmmmmmmmm|',
+    '|========m========|',
+    '|m=mmmmmmm=m=m=m=m|',
+    '|m=======m=m=m=m=m|',
+    '|m=mmm=m=mmmmmmm=m|',
+    '|m===m=m===m===m=m|',
+    '|m=m=mmm=m=m=m=mmm|',
+    '|m=m===m=m===m===m|',
+    '|mmmmmmmmm=mmm=m=m|',
+    '|m=======m===m=m=m|',
+    '|m=mmmmmmmmm=mmmmm|',
+    '|==========m===m==|',
+    '|mmmmmmmmmmmmmmmmm|',
+    '|||||||||d|||||||||',
   ],
-  entrada: { x: 8, y: 14 },
+  entrada: { x: 9, y: 15 },
   personajes: [
-    { id: 'vigilante-electrico', x: 6, y: 14, mira: 'e' },
-    { id: 'aprendiz-electrico-1', x: 4, y: 10, mira: 'o', entrenador: { vision: 3, obligatorio: false }, frase: '¿La palanca? Detrás de mí. Pero antes, una descarga.' },
-    { id: 'aprendiz-electrico-2', x: 12, y: 7, mira: 'e', entrenador: { vision: 2, obligatorio: false }, frase: 'Esta palanca apaga la barrera de arriba. Si me vences, claro.' },
-    { id: 'aprendiz-electrico-3', x: 12, y: 5, mira: 'o', entrenador: { vision: 4, obligatorio: true }, frase: 'Por aquí se sube a ver al líder. Bueno… a ver dónde estaría el líder.' },
+    { id: 'vigilante-electrico', x: 8, y: 15, mira: 'e' },
+    { id: 'aprendiz-electrico-1', x: 16, y: 15, mira: 'o', entrenador: { vision: 3, obligatorio: true }, frase: '¡Bu! ¿Te he asustado? Aquí dentro, las criaturas eléctricas se ven antes que las personas.' },
+    { id: 'aprendiz-electrico-2', x: 15, y: 6, mira: 's', entrenador: { vision: 3, obligatorio: true }, frase: '¡Te pillé! Con el último relámpago te vi venir de lejos.' },
+    { id: 'aprendiz-electrico-3', x: 8, y: 5, mira: 'e', entrenador: { vision: 2, obligatorio: true }, frase: 'Ya casi llegas a la sala del líder. Bueno… a donde estaría el líder.' },
   ],
-  cierres: {
-    '7,9': { condicion: 'palanca:electrico-1', aviso: 'Una barrera de rayos cierra el paso. Zumba que da miedo. Tiene que haber una palanca.' },
-    '9,4': { condicion: 'palanca:electrico-2', aviso: 'Otra barrera de rayos. La palanca de abajo no la apaga.' },
-  },
-  palancas: { '1,11': 'electrico-1', '15,7': 'electrico-2' },
+  objetos: [{ id: 'superpocion-laberinto', x: 1, y: 5, objeto: 'superpocion' }],
 };

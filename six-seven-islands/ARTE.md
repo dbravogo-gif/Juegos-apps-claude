@@ -179,9 +179,11 @@ Se revisan de cerca en `?catalogo` (plantas, rocas y muro) y `?catalogo=edificio
 - **En diagonal, como en los juegos del género** (autor, 2026-11-10): tu criatura en la esquina
   de delante a la izquierda y la rival en la del fondo a la derecha, giradas la una hacia la
   otra (la tuya, de tres cuartos de espaldas; la rival, de tres cuartos de frente).
-- **Arena aparte** con la cámara quieta: un fondo pintado detrás (`public/fondos/`), dos
+- **Arena aparte** con la cámara quieta: un fondo pintado detrás (`src/assets/fondos/`), dos
   plataformas de jable y las criaturas sin la luz del juego, que sí proyectan sombra.
-- **Dos fondos para todo el juego:** exterior y gimnasio, generados por el autor.
+- **Un fondo por paisaje** (autor, 2026-11-22), pintado por él: cada isla dice cuál usa cada zona
+  (`fondos` en `src/data/islas.ts`). Sin el suyo, el exterior o el gimnasio de Lanzarote. La lista
+  de los que faltan, con lo que se ve en cada uno, está en `src/assets/fondos/LEEME.md`.
 - **Salida:** el cubo de captura cae girando en su plataforma, rebota una vez, tiembla y se
   abre en un destello de luz con chispas doradas, del que sale la criatura con un rebote
   (autor, 2026-11-10).

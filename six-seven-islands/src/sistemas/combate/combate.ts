@@ -101,6 +101,10 @@ const CUBO: [number, number] = [0, 0];
 const CAIDA = 2.6;
 const REBOTE = 0.5;
 /** Segundos de cada fundido, al entrar y al salir. */
+/** Los fondos de combate que hay en src/assets/fondos/, por nombre sin extensión (solo los que existen). */
+const URL_FONDOS = new Map(
+  Object.entries(import.meta.glob<string>('../../assets/fondos/*.{webp,jpg,jpeg,png}', { eager: true, query: '?url', import: 'default' })).map(([ruta, url]) => [ruta.replace(/^.*\//, '').replace(/\.[^.]+$/, ''), url]),
+);
 const FUNDIDO = 0.55;
 /** Los bolsillos que se abren en combate: lo que cura y los cubos (objetos clave y técnicas, no). */
 const BOLSILLOS_COMBATE: readonly IdBolsillo[] = ['botiquin', 'cubos'];
@@ -192,9 +196,9 @@ export class Combate implements Subsistema {
   private materialDestello!: MeshBasicNodeMaterial;
   private esferaDestello = new SphereGeometry(0.5, 20, 14);
   private fondoProvisional!: Texture;
-  private fondoPintado: Texture | null = null;
+  /** Los fondos pintados que ya se han cargado, por nombre (sin extensión). */
+  private fondos = new Map<string, Texture>();
   /** El fondo pintado de los gimnasios (un interior con su volcán; probador, 2026-11-13). */
-  private fondoGimnasio: Texture | null = null;
   private guardado: { fondo: Color | Texture | null; niebla: Fog | null } | null = null;
 
   private fase: Fase = 'fuera';
@@ -256,20 +260,18 @@ export class Combate implements Subsistema {
     this.montarArena();
     this.montarInterfaz();
     this.fondoProvisional = fondoProvisional();
-    // Si el autor ya ha subido los fondos pintados, se usan; si no, el provisional hecho por código.
-    // Dentro de un gimnasio, el del gimnasio; en el resto, el exterior.
-    const cargar = (archivo: string, listo: (t: Texture) => void) =>
-      new TextureLoader().load(
-        `${import.meta.env.BASE_URL}fondos/${archivo}`,
-        (t) => {
-          t.colorSpace = SRGBColorSpace;
-          listo(t);
-        },
-        undefined,
-        () => undefined,
-      );
-    cargar('combate-exterior.webp', (t) => (this.fondoPintado = t));
-    cargar('combate-gimnasio.webp', (t) => (this.fondoGimnasio = t));
+    // Los fondos pintados por el autor (src/assets/fondos/): los dos de Lanzarote, que valen para
+    // todo, y los de cada paisaje de esta isla (DatosIsla.fondos). Solo se piden los que existen; si
+    // falta uno, el de Lanzarote, y sin ninguno, el provisional hecho por código.
+    const nombres = new Set(['combate-exterior', 'combate-gimnasio', ...Object.values(this.partida.datos.fondos ?? {})]);
+    for (const nombre of nombres) {
+      const url = URL_FONDOS.get(nombre);
+      if (!url) continue;
+      new TextureLoader().load(url, (t) => {
+        t.colorSpace = SRGBColorSpace;
+        this.fondos.set(nombre, t);
+      });
+    }
     // Hablar con un entrenador no vencido (o que te vea) acaba en combate (F16).
     ctx.eventos.on('dialogo:cerrar', ({ guionId }) => {
       const inicial = this.partida.estado.inicial;
@@ -518,7 +520,9 @@ export class Combate implements Subsistema {
       const campo = this.estado?.campo;
       this.clima.hidden = !(campo?.clima === 'arena' || campo?.vientoAFavor !== undefined);
       this.clima.classList.toggle('viento', campo?.vientoAFavor !== undefined && campo.clima !== 'arena');
-      escena.background = (enGimnasio ? this.fondoGimnasio : null) ?? this.fondoPintado ?? this.fondoProvisional;
+      const e = this.partida.estado;
+      const propio = this.partida.datos.fondos?.[e.dentro ?? e.zona];
+      escena.background = (propio && this.fondos.get(propio)) || this.fondos.get(enGimnasio ? 'combate-gimnasio' : 'combate-exterior') || this.fondoProvisional;
       escena.fog = null;
       this.ajustarFondo();
       this.render.enfocar(ARENA.x, 0, ARENA.z);
@@ -1558,8 +1562,7 @@ export class Combate implements Subsistema {
     this.arena.removeFromParent();
     for (const m of this.materiales) m.dispose();
     this.fondoProvisional.dispose();
-    this.fondoPintado?.dispose();
-    this.fondoGimnasio?.dispose();
+    for (const t of this.fondos.values()) t.dispose();
   }
 }
 

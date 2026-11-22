@@ -45,7 +45,7 @@ z.camino([(1,22),(27,22)])                                      # la calle de Ve
 z.camino([(27,8),(27,28)])                                      # el paseo del mar
 z.camino([(1,28),(27,28)])                                      # la calle de abajo
 z.r(19, 1, 5, 2, '.'); z.r(19, 5, 6, 2, '.')                    # el parque de Santa Catalina
-for x, y in ((19, 1), (23, 1), (20, 6), (24, 6), (12, 3), (12, 11)): z.p(x, y, 'T')
+for x, y in ((19, 1), (23, 1), (20, 6), (12, 3), (12, 11)): z.p(x, y, 'T')   # sin la de (24,6): tapaba al marinero
 z.p(21, 1, 'f')                                                 # una escultura en el parque
 z.edificio(11, 9, 4, 3, 'R', 12, 'refugio-palmas')
 z.edificio(19, 10, 4, 3, 'S', 20, 'tienda-palmas')
@@ -71,9 +71,10 @@ z.r(0, 0, 30, 2, '~'); z.r(0, 2, 2, 16, '~'); z.r(27, 2, 3, 13, '~')   # el mar 
 z.r(2, 2, 2, 5, 'a'); z.r(25, 9, 2, 5, 'a')                     # la cala del faro y la del barrio
 z.camino([(11,21),(11,15)], ancho=3)                            # la entrada
 z.camino([(13,16),(23,16)]); z.camino([(23,11),(23,16)])        # al barrio de pescadores
-z.edificio(16, 18, 4, 2, 'C', 17, 'casa-isleta-1')
-z.edificio(21, 18, 4, 2, 'C', 22, 'casa-isleta-2')
-z.camino([(17,17),(22,17)])
+# Las casas, al norte de la calle y de cara a ella (antes, de espaldas al barrio; probador).
+z.edificio(14, 14, 3, 2, 'C', 15, 'casa-isleta-1')
+z.edificio(18, 14, 4, 2, 'C', 19, 'casa-isleta-2')
+z.r(14, 18, 10, 3, '.'); z.p(14, 20, 'T'); z.p(22, 20, 'T')    # la plazoleta del barrio, con palmeras en las esquinas
 z.camino([(11,15),(11,12)])
 z.camino([(5,12),(11,12)]); z.camino([(5,4),(5,12)]); z.camino([(5,4),(9,4)])   # la senda del faro, por el oeste
 z.r(3, 3, 2, 2, 'F')                                            # el faro
@@ -82,7 +83,7 @@ z.r(6, 9, 5, 2, ';'); z.r(12, 9, 4, 4, ';')                     # malpaís al pi
 z.r(5, 6, 1, 6, '"'); z.r(2, 8, 3, 6, '"'); z.r(6, 13, 4, 3, '"')    # hierba alta: la de la senda no se esquiva
 z.r(20, 3, 6, 5, '"'); z.r(21, 8, 2, 3, '"')
 z.r(1, 18, 9, 3, '#'); z.r(25, 15, 4, 6, '#')                   # roca en las esquinas
-z.p(14, 18, 'T'); z.p(25, 16, ':')
+z.p(24, 17, 'T'); z.p(25, 16, ':')
 zonas['isleta'] = dict(nombre='La Isleta', origen=(14, -58), z=z, altura=0, hierba=True, casas='lanzarote', flora='volcan')
 
 # Toda la isla, desplazada para que no haya coordenadas negativas (la silueta entera cabe).
@@ -94,10 +95,10 @@ for v in zonas.values(): v['origen'] = (v['origen'][0] + DESPLAZAMIENTO, v['orig
 # el este (Telde) hasta Maspalomas, sube por el oeste (Mogán, Aldea) hasta Agaete y vuelve por el
 # norte (Gáldar, Arucas). El mar de Las Palmas y de La Isleta queda fuera: si no, la tierra de detrás
 # lo encerraba como un canal (probador, Fuerteventura).
-SILUETA = [(15.5,-55.5),(40.5,-55.5),(40.5,-43.5),(38.5,-40.5),(37.5,-35.5),(37.5,-6.5),(44.5,4.5),
-           (44.5,24.5),(34.5,40.5),(16.5,52.5),(-6.5,54.5),(-26.5,46.5),(-40.5,30.5),(-46.5,8.5),
-           (-44.5,-12.5),(-34.5,-22.5),(-14.5,-25.5),(4.5,-23.5),(9.5,-22.5),(19.5,-34.5),(19.5,-37.5),
-           (15.5,-40.5)]
+# En la fase 1, solo el trozo construido: el resto de la isla, tierra plana y vacía, se veía como
+# una llanura sin nada (probador, 2026-11-22). Crece con cada fase.
+SILUETA = [(15.5,-55.5),(40.5,-55.5),(40.5,-43.5),(38.5,-40.5),(37.5,-35.5),(37.5,-4.5),(9.5,-4.5),
+           (9.5,-22.5),(19.5,-34.5),(19.5,-37.5),(15.5,-40.5)]
 mover = lambda pts: [(x + DESPLAZAMIENTO, y + DESPLAZAMIENTO_Y) for x, y in pts]
 SILUETA = mover(SILUETA)
 
@@ -105,10 +106,10 @@ PERSONAJES = {
  'palmas': [
    "{ id: 'marinero-palmas', x: 24, y: 5, mira: 'e', frase: 'Este barco va y viene de Morro Jable.' }",
    "{ id: 'surfista-canteras', x: 8, y: 6, mira: 'e', entrenador: { vision: 4, obligatorio: false }, frase: '¡Las Canteras tiene la mejor ola de la ciudad! Y yo, el mejor equipo de la playa.' }",
-   "{ id: 'estudiante-triana', x: 23, y: 15, mira: 'o', entrenador: { vision: 4, obligatorio: false }, frase: 'Estudio la electricidad de las criaturas. ¿Me dejas hacer un experimento contigo?' }",
+   "{ id: 'estudiante-triana', x: 24, y: 13, mira: 'o', entrenador: { vision: 4, obligatorio: false }, frase: 'Estudio la electricidad de las criaturas. ¿Me dejas hacer un experimento contigo?' }",
    "{ id: 'guia-vegueta', x: 18, y: 21, mira: 'e', frase: 'Esta es la catedral de Santa Ana. Tardaron casi cuatrocientos años en terminarla.' }",
-   "{ id: 'vecina-palmas', x: 13, y: 15, mira: 's', frase: 'En el gimnasio de Triana hay chispazos todo el día. Dicen que el líder ni aparece.' }",
-   "{ id: 'nino-palmas', x: 21, y: 8, mira: 'n', frase: '¡Mira el barco! Dicen que el de Agaete va hasta Tenerife.' }",
+   "{ id: 'vecina-palmas', x: 14, y: 13, mira: 's', frase: 'En el gimnasio de Triana hay chispazos todo el día. Dicen que el líder ni aparece.' }",
+   "{ id: 'nino-palmas', x: 21, y: 8, mira: 'n', frase: '¡Mira las barcas! Dicen que el barco grande de Agaete va hasta Tenerife.' }",
    # La carretera del sur, cortada hasta la fase 2 (ISLA-3.md).
    "{ id: 'obrero-palmas', x: 16, y: 30, mira: 'n', frase: 'La carretera de las cumbres está cortada: se ha venido abajo media ladera. Vuelve dentro de unos días.' }",
  ],
@@ -117,7 +118,7 @@ PERSONAJES = {
    "{ id: 'excursionista-isleta', x: 10, y: 13, mira: 'n', entrenador: { vision: 3, obligatorio: false }, frase: 'Estos volcanes están dormidos. ¡Mis criaturas, no!' }",
    "{ id: 'buscador-isleta', x: 7, y: 4, mira: 'o', entrenador: { vision: 2, obligatorio: false }, frase: 'Nadie llega al faro sin pasar por mí. Es tradición. Bueno, es mi tradición.' }",
    "{ id: 'farera-isleta', x: 4, y: 5, mira: 's', frase: 'Desde lo alto del faro se ven Tenerife y el Teide. Y algunas mañanas, algo más allá…' }",
-   "{ id: 'vecino-isleta', x: 19, y: 15, mira: 's', frase: 'El barrio entero es de pescadores. Huele a mar y a pescado frito todo el día.' }",
+   "{ id: 'vecino-isleta', x: 17, y: 17, mira: 's', frase: 'El barrio entero es de pescadores. Huele a mar y a pescado frito todo el día.' }",
  ],
 }
 OBJETOS = {'isleta': ["{ id: 'superpocion-faro', x: 2, y: 3, objeto: 'superpocion' }", "{ id: 'cubo-isleta', x: 25, y: 9, objeto: 'cubo-blanco' }"],

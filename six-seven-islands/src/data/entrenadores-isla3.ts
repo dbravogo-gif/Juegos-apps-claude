@@ -25,7 +25,7 @@ export const ENTRENADORES_ISLA3: Readonly<Record<string, DefEntrenador>> = {
   'excursionista-isleta': {
     equipo: [{ especie: 'c013-2', nivel: 21 }, { especie: 'c012-2', nivel: 22 }],
     premio: 580,
-    tras: 'Desde el volcán grande se ve el puerto entero. Sube, que merece la pena.',
+    tras: 'Antes se subía al volcán grande. Ahora está cerrado, por las piedras sueltas. ¡Una pena!',
   },
   'buscador-isleta': {
     equipo: [{ especie: 'c043-2', nivel: 22 }, { especie: 'c005-2', nivel: 22 }],
@@ -36,13 +36,12 @@ export const ENTRENADORES_ISLA3: Readonly<Record<string, DefEntrenador>> = {
   'aprendiz-electrico-1': {
     equipo: [{ especie: 'c035-1', nivel: 22 }, { especie: 'c018-1', nivel: 22 }],
     premio: 620,
-    tras: 'Baja la palanca y la barrera se apaga. ¡Sin tocar los hilos!',
-    alVencer: ['Venga, la palanca es tuya. Bájala con E.'],
+    tras: 'Un truco: cuando caiga el relámpago, no mires a tus pies. Mira lejos.',
   },
   'aprendiz-electrico-2': {
     equipo: [{ especie: 'c032-2', nivel: 23 }],
     premio: 640,
-    tras: 'La palanca de aquí apaga la barrera de arriba. La de abajo ya la apagaste tú.',
+    tras: 'La sala del líder está arriba, en el centro. El camino da muchas vueltas.',
   },
   'aprendiz-electrico-3': {
     equipo: [{ especie: 'c044-2', nivel: 24 }, { especie: 'c035-2', nivel: 25 }],
