@@ -671,9 +671,23 @@ export function roque(semilla: number): BufferGeometry {
   base(0.75, 0, 0, semilla);
   base(0.45, 0.55, 0.25, semilla + 1);
   base(0.4, -0.5, -0.2, semilla + 2);
-  // El monolito: un prisma de seis caras, más estrecho arriba, abollado como la roca.
-  M.ponDegradado(abollar(new CylinderGeometry(0.32, 0.5, 4.2, 6, 4), 0.1, semilla + 3).rotateZ(0.06).translate(0.05, 2.3, 0), '#7C6A57', '#B39C80');
-  M.ponDegradado(abollar(new CylinderGeometry(0.16, 0.26, 1.7, 6, 2), 0.1, semilla + 4).translate(0.62, 1.05, 0.2), '#7C6A57', '#A48E74');
+  // El monolito: tres bloques de roca apilados, cada uno algo movido y girado, muy abollados, y la
+  // cima redondeada. Con un solo prisma liso parecía una losa (probador, 2026-11-23).
+  const bloques: [number, number, number, number, number][] = [
+    // radio abajo, radio arriba, alto, desplazamiento x, giro
+    [0.52, 0.46, 1.6, 0, 0],
+    [0.46, 0.44, 1.5, 0.06, 0.5],
+    [0.44, 0.36, 1.2, 0.03, 1.1],
+  ];
+  let y = 0.35;
+  bloques.forEach(([abajo, arriba, alto, dx, giro], i) => {
+    const g = abollar(new CylinderGeometry(arriba, abajo, alto, 8, 3), 0.2, semilla + 3 + i).rotateY(giro).rotateZ(0.04 * (i - 1));
+    M.ponDegradado(g.translate(dx, y + alto / 2, 0), i === 0 ? '#6F5E4E' : '#7C6A57', i === 2 ? '#B9A285' : '#A48E74');
+    y += alto - 0.08;
+  });
+  M.ponDegradado(abollar(new SphereGeometry(0.37, 8, 5, 0, Math.PI * 2, 0, Math.PI / 2), 0.18, semilla + 6).translate(0.03, y - 0.04, 0), '#A48E74', '#C2AC8E');
+  // El Fraile, la aguja más baja de al lado.
+  M.ponDegradado(abollar(new CylinderGeometry(0.14, 0.27, 1.7, 7, 3), 0.18, semilla + 7).translate(0.66, 1.05, 0.22), '#6F5E4E', '#A48E74');
   return M.fusionar();
 }
 
