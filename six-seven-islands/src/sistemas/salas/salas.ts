@@ -255,7 +255,14 @@ export function geometriaSala(sala: Mundo, id: string): BufferGeometry {
   const electrico = id === 'gimnasio-electrico';
   // El terrero de Agaete (gimnasio-lucha.ts): arena en dos tonos, y gradas de madera.
   const terrero = id === 'gimnasio-lucha';
-  const suelo = volcanica ? [COLORES.basalto, COLORES.lavaNegra] : electrico ? ['#8E98A2', '#7C8690'] : terrero ? ['#D9BD8C', '#D2B583'] : [COLORES.maderaSuelo, COLORES.maderaSueloOscura];
+  // Las casas cueva de Gran Canaria: excavadas en la roca y encaladas por dentro, sin ventanas
+  // (solo la puerta da a la calle) y con suelo de barro. Antes eran una casa más, con ventanas
+  // (probador, 2026-11-23).
+  const casaCueva = !volcanica && /(^|-)cueva(-|$)/.test(id);
+  const suelo = volcanica ? [COLORES.basalto, COLORES.lavaNegra] : electrico ? ['#8E98A2', '#7C8690'] : terrero ? ['#D9BD8C', '#D2B583'] : casaCueva ? ['#B4704A', '#AA6743'] : [COLORES.maderaSuelo, COLORES.maderaSueloOscura];
+  // La arena del terrero y el barro de la cueva, con grano en vez de cuadros: en dos tonos
+  // alternos parecían un damero (probador, 2026-11-23).
+  const granulado = terrero || casaCueva;
   M.caja(maxX - minX + 1, 0.1, maxY - minY + 1, centroX, SUELO - 0.1, centroY, volcanica ? COLORES.lavaNegra : COLORES.maderaSueloOscura, 0.8);
   // Paredes por tramos, lisas: un solo color, sin juntas entre casillas.
   for (const t of tramosDePared(sala)) {
@@ -265,13 +272,15 @@ export function geometriaSala(sala: Mundo, id: string): BufferGeometry {
     const cx = (t.x0 + t.x1) / 2;
     const cz = (t.y0 + t.y1) / 2;
     const fila = t.y0 === t.y1;
-    if (cueva) {
-      // Roca abollada, un bloque por casilla, de altura algo distinta: pared de cueva.
+    if (cueva || casaCueva) {
+      // Roca abollada, un bloque por casilla, de altura algo distinta: pared de cueva. En la casa
+      // cueva, encalada.
       for (let px = t.x0; px <= t.x1; px++) {
         for (let pz = t.y0; pz <= t.y1; pz++) {
           const v = (px * 5 + pz * 11) % 4;
           const h = alto * (0.85 + v * 0.08);
-          M.pon(abollar(new BoxGeometry(1.08, h, 1.08, 2, 3, 2), 0.14, px * 31 + pz).translate(px, SUELO + h / 2, pz), v % 2 ? COLORES.basalto : '#3E4A4A', 0.9 + v * 0.05);
+          const color = casaCueva ? (v % 2 ? COLORES.cal : '#E6DED0') : v % 2 ? COLORES.basalto : '#3E4A4A';
+          M.pon(abollar(new BoxGeometry(1.08, h, 1.08, 2, 3, 2), casaCueva ? 0.1 : 0.14, px * 31 + pz).translate(px, SUELO + h / 2, pz), color, 0.9 + v * 0.05);
         }
       }
       continue;
@@ -307,8 +316,10 @@ export function geometriaSala(sala: Mundo, id: string): BufferGeometry {
     }
     // Bajo las compuertas y en los puentes, basalto más claro sobre la colada.
     // En la cueva, arena húmeda y oscura de un solo tono, con alguna piedra: nada de cuadros.
-    const colorSuelo = cueva ? '#3B3836' : cm.c === 'X' || cm.c === 'u' ? COLORES.basaltoClaro : (x + y) % 2 ? suelo[0] : suelo[1];
-    M.pon(new PlaneGeometry(1, 1).rotateX(-Math.PI / 2).translate(x, SUELO + 0.002, y), colorSuelo, cueva ? 0.9 + (n % 3) * 0.06 : 0.96 + (n % 3) * 0.03);
+    const colorSuelo = cueva ? '#3B3836' : cm.c === 'X' || cm.c === 'u' ? COLORES.basaltoClaro : granulado ? suelo[0]! : (x + y) % 2 ? suelo[0] : suelo[1];
+    // El grano: un tono solo, con una variación mínima y sin patrón (con el de `n` se leía damero).
+    const grano = (((x * 73856093) ^ (y * 19349663)) >>> 0) % 4;
+    M.pon(new PlaneGeometry(1, 1).rotateX(-Math.PI / 2).translate(x, SUELO + 0.002, y), colorSuelo, cueva ? 0.9 + (n % 3) * 0.06 : granulado ? 0.975 + grano * 0.01 : 0.96 + (n % 3) * 0.03);
     if (cueva && n === 2) M.pon(abollar(new SphereGeometry(0.5, 7, 4), 0.25, n + x).scale(0.18, 0.07, 0.14).translate(x - 0.25, SUELO, y + 0.2), COLORES.basalto);
     if (cm.c === '#' && volcanica) {
       // Columna de basalto hexagonal, de altura variable, como las de los acantilados.
@@ -345,8 +356,8 @@ export function geometriaSala(sala: Mundo, id: string): BufferGeometry {
     } else if (cm.c === 'X') {
       // La compuerta la pone `Salas`, que la hunde al abrirse.
     } else if (cm.c === '|') {
-      if (y === minY && !volcanica) {
-        // Ventanas en la pared del fondo, una de cada tres casillas.
+      if (y === minY && !volcanica && !casaCueva) {
+        // Ventanas en la pared del fondo, una de cada tres casillas (en la roca, ninguna).
         if ((x - minX) % 3 === 2 && x < maxX) {
           M.caja(0.62, 0.72, 0.06, x, SUELO + 0.95, y + 0.5, COLORES.canteria);
           M.caja(0.5, 0.6, 0.08, x, SUELO + 1.01, y + 0.5, COLORES.cristal);

@@ -202,3 +202,13 @@ nivel: de nota a regla, y de regla a prueba o hook.
   - En local (127.0.0.1) todo responde al instante: un retardo de red solo se ve emulándolo.
   - También tapaba los botones el aviso fijo «Hay una versión nueva», pegado abajo. Ahora va arriba;
     comprobado con `elementFromPoint` que el botón principal queda libre.
+- **2026-11-23 · Escena de historia que se podía saltar y combate que se bloqueaba** (Six-seven
+  islands, Gran Canaria; lo vio el probador).
+  - El Roque Nublo era un desvío sin cierre: se llegaba a Tejeda sin conocer al segundo amigo, y el
+    terrero daba por conocido a alguien a quien no habías visto.
+  - Barrera: `tests/isla3.test.ts` recorre la isla con los personajes en su sitio
+    (`sinTemporales: false`) y exige que Tejeda no se alcance sin `amigo2-conocido`. Cada escena
+    obligatoria de una isla nueva, con su prueba de «no se salta».
+  - El dos contra dos se colgaba al caer todas tus criaturas: el núcleo sí seguía con el aliado,
+    pero la interfaz abría el menú con `activa(0)!`. Un estado nuevo del núcleo (aquí, un hueco
+    vacío) obliga a revisar cada `!` de la interfaz que lo lee.

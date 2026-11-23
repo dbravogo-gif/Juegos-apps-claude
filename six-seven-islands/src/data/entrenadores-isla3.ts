@@ -59,10 +59,12 @@ export const ENTRENADORES_ISLA3: Readonly<Record<string, DefEntrenador>> = {
     rama: { niveles: [24, 25, 26] },
     premio: 1200,
     tras: '',
+    // Nada más irse, llega tu segundo amigo (antes había que ir a hablarle; probador, 2026-11-23).
+    luego: 'amigo2-nublo',
     alVencer: [
       '¡Bah! El jefe dijo que eras un crío con suerte. No me dijo que tuvieras tanta.',
       'Nos vamos… por ahora. Desde aquí ya hemos visto lo que veníamos a ver.',
-      'Los de {rama} bajan por la ladera y se pierden entre las nubes.',
+      'Los soldados de {rama} bajan por la ladera y se pierden entre las nubes.',
     ],
   },
   // Fase 3: Tejeda, Tamadaba y Agaete.
@@ -144,7 +146,9 @@ export const ENTRENADORES_ISLA3: Readonly<Record<string, DefEntrenador>> = {
     condicion: 'gimnasio3-vencido',
     medalla: 3,
     pregunta: true,
-    pareja: { entrenador: 'lider-electrico', nombres: ['La líder de Lucha', 'El líder Eléctrico'], nivelAliado: 29, extraAliado: [{ especie: 'c032-2', nivel: 28 }] },
+    // Tu amigo, dos niveles por encima de los líderes: con dos criaturas contra cinco caía enseguida
+    // (probador, 2026-11-23).
+    pareja: { entrenador: 'lider-electrico', nombres: ['La líder de Lucha', 'El líder Eléctrico'], nivelAliado: 31, extraAliado: [{ especie: 'c032-2', nivel: 30 }] },
     alVencer: [
       '¡Qué combate! Así se lucha en Gran Canaria: juntos.',
       'Toma: las dos mitades de la pintadera de Gran Canaria. Una por cada gimnasio, unidas por vosotros dos.',

@@ -163,8 +163,9 @@ Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
   Tembladera, Pok82–83 Chispa de cable y Pok86 Farito (`PLAN-CRIATURAS.md`).
 - **Puntuar de 1 a 5** lo último publicado (2026-11-19 a 22):
   - Gran Canaria entera: el barco desde Morro Jable, Las Palmas, La Isleta, el gimnasio
-    Eléctrico a oscuras, Guayadeque, las cumbres, el Roque Nublo (el comandante y el segundo
-    amigo), Tejeda, el pinar de Tamadaba, Agaete y el terrero con el dos contra dos final;
+    Eléctrico a oscuras (ahora el relámpago solo alumbra lo de alrededor), Guayadeque, las
+    cumbres, el Roque Nublo (el comandante y el segundo amigo, que llega solo), Tejeda, el pinar
+    de Tamadaba, Agaete y el terrero con el dos contra dos final (si es justo de dificultad);
   - la evolución con la bola de luz, sin silueta, y con el almendrado sin ver la arena;
   - la evolución nueva, con la isla de su tipo (sube una criatura con el modo desarrollador);
   - el combate: qué hace cada ataque, tipos bajo el nombre y el cursor en el último ataque;

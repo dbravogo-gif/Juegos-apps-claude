@@ -1,12 +1,11 @@
 # Estado de Six-seven islands
 
-Actualizado: 2026-11-22. Solo el presente; el historial está en git. Máximo 40 líneas.
+Actualizado: 2026-11-23. Solo el presente; el historial está en git. Máximo 40 líneas.
 
 ## Fase actual
 
-Gran Canaria (`ISLA-3.md`): fases 1 a 3 hechas. Se juega entera, de Las Palmas al terrero de
-Agaete, con el dos contra dos final junto al segundo amigo. Bandama y Maspalomas, hechas. Queda la
-revisión del probador y el barco a Tenerife (la isla 4, sin diseñar).
+Gran Canaria (`ISLA-3.md`): hecha entera, fases 1 a 4, con lo del probador arreglado
+(2026-11-23). Queda el barco a Tenerife: la isla 4 (`ISLA-4.md`) espera la aprobación del autor.
 
 ## Hecho
 
@@ -24,8 +23,9 @@ revisión del probador y el barco a Tenerife (la isla 4, sin diseñar).
    Pok42, Pok48–49 y el dinosaurio), con `herramientas/criaturas/juego.py` (ARCHITECTURE.md). Las iniciales,
    con sus tres formas; las criaturas evolucionan tras el combate, con el Sello.
 
-4. Gran Canaria, fase 4 (`ISLA-3.md`); después, diseñar Tenerife (`ISLA-4.md`, por aprobar). Las criaturas Eléctricas, cuando el autor las haga
-   en Meshy: la isla y el gimnasio las usan provisionales.
+4. Tenerife (`ISLA-4.md`), en cuanto el autor la apruebe y elija la mecánica del gimnasio de
+   Agua. Las criaturas Eléctricas, cuando el autor las haga en Meshy: la isla y el gimnasio las
+   usan provisionales.
 5. Música grabada lista: falta que el autor suba las pistas (`src/assets/musica/LEEME.md`).
 
 ## Pendiente del autor

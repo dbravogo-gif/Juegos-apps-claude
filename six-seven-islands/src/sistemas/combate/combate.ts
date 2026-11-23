@@ -32,7 +32,7 @@ import {
   type Texture,
 } from 'three/webgpu';
 import { describirMovimiento } from '../../core/describir';
-import { iniciarCombate, objetivoDe, reemplazar, resolverTurno, type Accion, type EstadoCombate, type Evento, type FichaCombate, type Ref, type Resultado } from '../../core/combate';
+import { delAliado, iniciarCombate, objetivoDe, reemplazar, resolverTurno, type Accion, type EstadoCombate, type Evento, type FichaCombate, type Ref, type Resultado } from '../../core/combate';
 import { crearCriatura, nombreDe, objetoUtil } from '../../core/criatura';
 import type { Criatura } from '../../core/modelo';
 import { CALIDAD_ZONA, MEDIA_BLANCA, MEDIA_VERDE, zonaBarra } from '../../core/captura';
@@ -262,6 +262,8 @@ export class Combate implements Subsistema {
   private nPropias = 0;
   private nombresRival: string[] = [];
   private nombreAliado = '';
+  /** En el dos contra dos, desde qué índice del equipo rival las criaturas son del segundo rival. */
+  private corteRival = Infinity;
   private movElegido = 0;
   private plataformas: Mesh[] = [];
 
@@ -270,7 +272,7 @@ export class Combate implements Subsistema {
   private texto!: HTMLParagraphElement;
   private menu!: HTMLDivElement;
   private botones: HTMLSpanElement[] = [];
-  private fichas: { nombre: HTMLElement; nivel: HTMLElement; chips: HTMLElement; relleno: HTMLElement; numeros: HTMLElement | null }[] = [];
+  private fichas: { dueno: HTMLElement; nombre: HTMLElement; nivel: HTMLElement; chips: HTMLElement; relleno: HTMLElement; numeros: HTMLElement | null }[] = [];
   /** El último ataque elegido por cada criatura (uid → id del ataque): el cursor vuelve a él (autor, 2026-11-19). */
   private ultimoAtaque = new Map<string, string>();
   private velo!: HTMLDivElement;
@@ -376,10 +378,10 @@ export class Combate implements Subsistema {
     raiz.hidden = true;
     raiz.innerHTML = `
       <div class="calima combate-clima" hidden aria-hidden="true"></div>
-      <div class="combate-ficha propia"><p class="combate-nombre"></p><p class="combate-nivel"></p><p class="combate-chips"></p><div class="combate-vida"><div class="combate-relleno"></div></div><p class="combate-numeros"></p></div>
-      <div class="combate-ficha propia2"><p class="combate-nombre"></p><p class="combate-nivel"></p><p class="combate-chips"></p><div class="combate-vida"><div class="combate-relleno"></div></div><p class="combate-numeros"></p></div>
-      <div class="combate-ficha rival"><p class="combate-nombre"></p><p class="combate-nivel"></p><p class="combate-chips"></p><div class="combate-vida"><div class="combate-relleno"></div></div></div>
-      <div class="combate-ficha rival2"><p class="combate-nombre"></p><p class="combate-nivel"></p><p class="combate-chips"></p><div class="combate-vida"><div class="combate-relleno"></div></div></div>
+      <div class="combate-ficha propia"><p class="combate-dueno" hidden></p><p class="combate-nombre"></p><p class="combate-nivel"></p><p class="combate-chips"></p><div class="combate-vida"><div class="combate-relleno"></div></div><p class="combate-numeros"></p></div>
+      <div class="combate-ficha propia2"><p class="combate-dueno" hidden></p><p class="combate-nombre"></p><p class="combate-nivel"></p><p class="combate-chips"></p><div class="combate-vida"><div class="combate-relleno"></div></div><p class="combate-numeros"></p></div>
+      <div class="combate-ficha rival"><p class="combate-dueno" hidden></p><p class="combate-nombre"></p><p class="combate-nivel"></p><p class="combate-chips"></p><div class="combate-vida"><div class="combate-relleno"></div></div></div>
+      <div class="combate-ficha rival2"><p class="combate-dueno" hidden></p><p class="combate-nombre"></p><p class="combate-nivel"></p><p class="combate-chips"></p><div class="combate-vida"><div class="combate-relleno"></div></div></div>
       <div class="combate-caja"><p class="combate-texto" aria-live="assertive"></p><div class="combate-menu" hidden></div></div>
       <div class="combate-tipos" hidden></div>
       <div class="combate-barra" hidden><i class="blanca"></i><i class="verde"></i><b class="flecha"></b></div>
@@ -408,6 +410,7 @@ export class Combate implements Subsistema {
     zona('verde', MEDIA_VERDE);
     for (const ficha of raiz.querySelectorAll('.combate-ficha')) {
       this.fichas.push({
+        dueno: ficha.querySelector('.combate-dueno')!,
         nombre: ficha.querySelector('.combate-nombre')!,
         nivel: ficha.querySelector('.combate-nivel')!,
         chips: ficha.querySelector('.combate-chips')!,
@@ -448,6 +451,7 @@ export class Combate implements Subsistema {
     this.nPropias = propias.length;
     this.nombresRival = op.nombresRival ?? [];
     this.nombreAliado = op.nombreAliado ?? '';
+    this.corteRival = op.activosRival?.[1] ?? Infinity;
     for (const pl of this.plataformas) pl.visible = pl.userData.formato === this.formato;
     const conAliado = aliado.length
       ? { aliadoDesde: propias.length, activosIniciales: [[propias.findIndex((c) => c.vida > 0), propias.length + Math.max(0, aliado.findIndex((c) => c.vida > 0))], op.activosRival ?? [0, 1]] as [number[], number[]] }
@@ -664,6 +668,8 @@ export class Combate implements Subsistema {
           if (pareja) this.partida.vencerA(pareja.entrenador);
           this.partida.vencerA(this.entrenador);
         }
+        // Quien pregunta antes de luchar, si te ha vencido, vuelve a preguntar (probador, 2026-11-23).
+        if (e.fin !== 'victoria' && this.entrenador) this.partida.olvidarListo(this.entrenador);
         this.partida.terminarCombate();
         if (e.fin === 'derrota') this.partida.volverAlRefugio();
         this.ctx.eventos.emit('combate:fin', { resultado: e.fin ?? 'victoria' });
@@ -747,6 +753,19 @@ export class Combate implements Subsistema {
   }
 
   /** La criatura activa de un lado. */
+  /** De cuál de los dos rivales es una criatura (dos contra dos): 0, el primero; 1, el segundo. */
+  private duenoRival(uid: string): number {
+    const i = this.estado?.lados[1].equipo.findIndex((c) => c.uid === uid) ?? -1;
+    return i >= this.corteRival ? 1 : 0;
+  }
+
+  /** Si una criatura de tu lado es de tu amigo. */
+  private esDelAliado(uid: string): boolean {
+    const l = this.estado?.lados[0];
+    const i = l?.equipo.findIndex((c) => c.uid === uid) ?? -1;
+    return !!l && i >= 0 && delAliado(l, i);
+  }
+
   private activa(lado: 0 | 1): Criatura | undefined {
     return this.activaEn(lado * 2);
   }
@@ -810,8 +829,8 @@ export class Combate implements Subsistema {
           this.encolar({
             texto:
               this.formato === 2 && lado === 1
-                ? `¡${this.nombresRival[ev.ref.hueco] ?? 'El rival'} saca a ${ev.ficha.nombre}!`
-                : this.formato === 2 && ev.ref.hueco === 1
+                ? `¡${this.nombresRival[this.duenoRival(uid)] ?? 'El rival'} saca a ${ev.ficha.nombre}!`
+                : this.formato === 2 && this.esDelAliado(uid)
                   ? `¡${this.nombreAliado} saca a ${ev.ficha.nombre}!`
                   : lado === 1
                     ? `¡${this.entrenador?.startsWith('lider') ? 'La líder' : 'El entrenador'} saca a ${ev.ficha.nombre}!`
@@ -1125,7 +1144,12 @@ export class Combate implements Subsistema {
       this.flecha.style.left = `${this.posicionFlecha() * 100}%`;
     } else if (this.fase === 'mensajes') {
       if (this.estado?.fin) this.terminar();
-      else this.abrirMenu(this.estado?.pendientes.length ? 'forzado' : 'raiz');
+      else if (this.estado?.pendientes.length) this.abrirMenu('forzado');
+      // Dos contra dos con un amigo: si han caído todas las tuyas, tu amigo sigue solo (no decides nada).
+      else if (!this.activa(0)) {
+        this.texto.textContent = `${this.nombreAliado} sigue luchando...`;
+        this.seguir(resolverTurno(this.estado!, { 0: [] }, DATOS));
+      } else this.abrirMenu('raiz');
     }
     this.animarLuchadores();
     this.animarParticulas(dt);
@@ -1291,6 +1315,12 @@ export class Combate implements Subsistema {
   private pintarEntrada(p: number, ficha: FichaCombate): void {
     const f = this.fichas[p]!;
     f.nombre.parentElement!.style.display = '';
+    // En el dos contra dos, de quién es cada una (probador, 2026-11-23: no se sabía).
+    const dueno = this.formato !== 2 ? '' : p === 0 ? 'Tuya' : p === 1 ? `De ${this.nombreAliado.replace(/^Tu /, 'tu ')}` : (this.nombresRival[this.duenoRival(ficha.uid)] ?? '');
+    f.dueno.textContent = dueno;
+    f.dueno.hidden = !dueno;
+    f.dueno.classList.toggle('aliada', p === 1);
+    f.dueno.classList.toggle('rival', p >= 2);
     f.nombre.textContent = ficha.nombre;
     f.nivel.textContent = `Nv. ${ficha.nivel}`;
     f.chips.innerHTML = chipsTipos(DATOS.especies[ficha.especie].tipos);

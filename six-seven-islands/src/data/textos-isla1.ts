@@ -29,5 +29,11 @@ export const AMIGOS: ReadonlyMap<string, string> = new Map([
   ['amigo2-nublo', 'amigo2'],
 ]);
 
+/**
+ * Lo que dice un amigo antes de que le pongas nombre (probador, 2026-11-23: te lo pedía sin que
+ * hubiera dicho nada). Quien no está aquí, se nombra nada más hablarle.
+ */
+export const PRESENTACION: ReadonlyMap<string, readonly string[]> = new Map([['amigo2-nublo', ['¡Eh! ¡Espera, no te vayas!', '¿No me reconoces? ¡Soy yo!']]]);
+
 /** El nombre del tipo de cada inicial, para los textos («la de Roca»). */
 export const NOMBRE_TIPO_INICIAL: Readonly<Record<string, string>> = { planta: 'Planta', infernal: 'Infernal', roca: 'Roca', tierra: 'Tierra', agua: 'Agua' };

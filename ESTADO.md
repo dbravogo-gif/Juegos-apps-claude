@@ -1,6 +1,6 @@
 # Estado
 
-Actualizado: 2026-11-22. Solo el presente; el historial está en git. Máximo 40 líneas.
+Actualizado: 2026-11-23. Solo el presente; el historial está en git. Máximo 40 líneas.
 
 **Modo de gasto vigente: normal.**
 
@@ -33,7 +33,8 @@ Gasto pequeño aprobado por el autor para Meshy (arte de criaturas). Concepto y 
 
 1. Andamiaje, núcleo y combate 2 contra 2 hechos (`F01` a `F03`). De Leyendas, solo reglas.
 2. Arte de criaturas con Meshy (imagen 2D y después 3D). Islas de este a oeste: Lanzarote y
-   Fuerteventura se juegan enteras; Gran Canaria, fase 1 (`six-seven-islands/ISLA-3.md`).
+   Fuerteventura y Gran Canaria se juegan enteras; Tenerife, por aprobar
+   (`six-seven-islands/ISLA-4.md`).
 
 ## Pendiente del autor
 

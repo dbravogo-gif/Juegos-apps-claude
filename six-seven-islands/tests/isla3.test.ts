@@ -2,8 +2,8 @@
 // Desde el muelle se llega a todo; las zonas se tocan; los entrenadores ven por donde se pasa; el
 // gimnasio se resuelve con sus dos palancas y el tercer aprendiz no se esquiva.
 import { describe, expect, it } from 'vitest';
-import { alcanzables, clave, construirInterior, construirMundo, deClave, transitable, vision } from '../src/core/mundo';
-import { ENTRE_RAYOS, opacidadTrasRayo } from '../src/sistemas/oscuridad/oscuridad';
+import { alcanzables, clave, construirInterior, construirMundo, deClave, transitable, vision, type Condicion } from '../src/core/mundo';
+import { alcanceDelRayo, ENTRE_RAYOS, opacidadTrasRayo } from '../src/sistemas/oscuridad/oscuridad';
 import { ISLAS, FUERTEVENTURA, GRAN_CANARIA } from '../src/data/islas';
 import { ISLA_3, PUERTAS_ISLA3 } from '../src/data/isla3';
 import { GIMNASIO_ELECTRICO } from '../src/data/gimnasio-electrico';
@@ -12,6 +12,7 @@ import { MEDALLAS } from '../src/data/medallas';
 import { GUION_ISLA2 } from '../src/data/guion-isla2';
 import { DATOS_COMBATE_PRUEBA as DATOS } from '../src/data/combate-prueba';
 import { quienEs } from '../src/data/entrenadores-isla1';
+import { objetivoActual } from '../src/core/guion';
 
 const m = construirMundo(ISLA_3);
 const zona = (id: string) => m.zonas.get(id)!;
@@ -170,11 +171,15 @@ describe('gimnasio Eléctrico de Las Palmas (a oscuras, autor, 2026-11-22)', () 
     expect(GRAN_CANARIA.campos?.['gimnasio-electrico']).toEqual({ terreno: 'electrico' });
   });
 
-  it('los relámpagos lo enseñan todo un instante y la oscuridad vuelve poco a poco', () => {
-    expect(opacidadTrasRayo(0)).toBe(0);
-    expect(opacidadTrasRayo(0.2)).toBe(0);
-    expect(opacidadTrasRayo(0.5)).toBeGreaterThan(0);
-    expect(opacidadTrasRayo(0.5)).toBeLessThan(1);
+  it('los relámpagos alumbran un instante lo de alrededor, no la sala entera, y la oscuridad vuelve negra', () => {
+    // A medias: se intuyen los muros, pero el laberinto no se lee de un vistazo (probador, 2026-11-23).
+    // Lejos, casi nada (con 0,35 y 0,68 se leía entero en la captura); cerca, un círculo grande.
+    expect(opacidadTrasRayo(0)).toBeGreaterThanOrEqual(0.8);
+    expect(opacidadTrasRayo(0)).toBeLessThan(0.95);
+    expect(alcanceDelRayo(0)).toBeGreaterThan(2.5);
+    expect(alcanceDelRayo(2)).toBe(1);
+    expect(opacidadTrasRayo(0.4)).toBeGreaterThan(opacidadTrasRayo(0));
+    expect(opacidadTrasRayo(0.4)).toBeLessThan(1);
     expect(opacidadTrasRayo(2)).toBe(1);
     for (const t of ENTRE_RAYOS) expect(t).toBeGreaterThan(1);
   });
@@ -202,5 +207,34 @@ describe('el terrero de Agaete (fase 3)', () => {
     expect(l.condicion).toBe('gimnasio3-vencido');
     expect(l.medalla).toBe(3);
     expect(MEDALLAS.find((m) => m.isla === 3)?.condicion).toBe('gimnasio3-vencido');
+  });
+});
+
+// Lo que encontró el probador (2026-11-23): el Roque Nublo se podía saltar y el objetivo se atrasaba.
+describe('el Roque Nublo no se salta (probador, 2026-11-23)', () => {
+  /** Desde la llegada, con estas condiciones y sin pasar por los personajes que estén. */
+  const llega = (destino: string, condiciones: string[]) => {
+    const op = { condiciones: new Set(condiciones as Condicion[]), sinTemporales: false };
+    const hasta = alcanzables(m, [llegada], op);
+    return [...hasta].some((k) => m.casillas.get(k)?.zona === destino);
+  };
+  it('los soldados cortan la carretera de Tejeda hasta conocer al segundo amigo', () => {
+    expect(llega('nublo', [])).toBe(true);
+    expect(llega('tejeda', [])).toBe(false);
+    expect(llega('agaete', [])).toBe(false);
+    expect(llega('tejeda', ['amigo2-conocido'])).toBe(true);
+  });
+
+  it('al vencer al comandante, tu amigo llega y habla él solo', () => {
+    expect(GRAN_CANARIA.entrenadores['comandante-nublo']!.luego).toBe('amigo2-nublo');
+    const amigo = zona('nublo').personajes.find((p) => p.id === 'amigo2-nublo')!;
+    expect(amigo.con).toBe('vencido:comandante-nublo');
+  });
+
+  it('el objetivo es el siguiente al último cumplido: saltarse el gimnasio Eléctrico no lo atrasa', () => {
+    const o = GRAN_CANARIA.objetivos;
+    expect(objetivoActual(o, [])).toBe(o[0]!.texto);
+    expect(objetivoActual(o, ['amigo2-conocido'])).toBe(o[2]!.texto);
+    expect(objetivoActual(o, ['amigo2-conocido', 'vencido:luchador-3', 'gimnasio3-vencido'])).toBe(o[4]!.texto);
   });
 });

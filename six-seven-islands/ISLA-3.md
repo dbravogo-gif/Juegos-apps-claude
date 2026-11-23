@@ -206,6 +206,31 @@ amigo.
   oasis con palmeras, el faro, la playa y una Superpoción.
 - Las dos tienen salvajes un poco más fuertes (23 a 27) y entrenadores.
 
+**Revisión del probador, arreglada (2026-11-23).**
+- **El dos contra dos se bloqueaba** al caer todas tus criaturas: ahora tu amigo sigue solo hasta el
+  final. Los relevos ya dicen el líder correcto, y las fichas, de quién es cada criatura.
+- **El Roque Nublo se podía saltar:** dos soldados de la rama cortan la carretera de Tejeda hasta
+  que conoces a tu amigo. Al vencer al comandante, tu amigo llega solo: dice algo, le pones nombre
+  y habla. Antes había que ir a buscarlo y pedía el nombre sin haber dicho nada.
+- **El objetivo** es el siguiente al último cumplido: si te saltas el gimnasio Eléctrico, no se
+  queda atrasado.
+- **Las preguntas** son de sí o no («¿Luchamos ya?»). Si pierdes contra quien pregunta, vuelve a
+  preguntar. Tras la victoria, los líderes y tu amigo se despiden.
+- **Caras:** tu amigo, siempre con la misma figura y el color de su inicial. Los líderes, con el
+  color de su tipo, y la de Lucha con figura de luchadora.
+- **Aspecto:**
+  - el comandante ya no queda tapado por el muro de la cima;
+  - detrás del Roque Nublo, un mar de nubes en vez del mar;
+  - la casa cueva, de roca encalada, sin ventanas y con suelo de barro;
+  - el terrero, con suelo de arena;
+  - la niebla de Tamadaba, más espesa;
+  - en el gimnasio Eléctrico, negro del todo; el relámpago alumbra solo lo de alrededor.
+- Tu amigo, dos niveles por encima de los líderes: con dos criaturas contra cinco caía enseguida.
+- **Queda, sin arreglar:**
+  - los interiores siguen siendo una sala flotando sobre fondo beige, como en todas las islas;
+  - el Roque Nublo es un prisma liso;
+  - el borde de Bandama da al mar, y está bien: está junto a la costa este.
+
 | 1 | Las Palmas y La Isleta, con el barco desde Morro Jable (**hecha**, 2026-11-22) | alto |
 | 2 | Guayadeque con sus casas cueva, las cumbres y el Roque Nublo, con la historia (**hecha**, 2026-11-22) | alto |
 | 3 | Tejeda, Tamadaba y Agaete con el gimnasio | alto |

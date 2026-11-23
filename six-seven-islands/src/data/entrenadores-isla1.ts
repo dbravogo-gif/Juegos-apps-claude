@@ -33,6 +33,8 @@ export interface DefEntrenador {
   pareja?: { entrenador: string; nombres: [string, string]; nivelAliado: number; extraAliado?: readonly { especie: string; nivel: number }[] };
   /** Un soldado de la rama que te persigue: lucha con criaturas de su pueblo, a estos niveles. */
   rama?: { niveles: readonly number[] };
+  /** Quien te habla nada más acabar lo que dice el vencido (el segundo amigo, tras el comandante). */
+  luego?: string;
 }
 
 /** Cómo se presenta cada clase de entrenador en el diálogo, por el principio de su id. */
