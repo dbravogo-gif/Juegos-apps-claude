@@ -152,6 +152,9 @@ Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
 - **Amigos:** sus fotos y GLB de Meshy para las personas jugables, y sus 2 o 3 poses para los
   retratos de diálogo.
 - **Dani con `Idle`** en el GLB (opcional).
+- **Tenerife (`ISLA-4.md`, propuesta, 2026-11-23):** aprobar el recorrido, elegir la mecánica del
+  gimnasio de Agua (A mareas, B bucear con aire, C regata) y decir si el tercer amigo sale en La
+  Laguna.
 - **Fondos de combate** (2026-11-22): los 8 de la lista «para pintar ya» de
   `src/assets/fondos/LEEME.md` (Fuerteventura y Gran Canaria, uno por paisaje), subidos con su
   nombre a esa carpeta.
