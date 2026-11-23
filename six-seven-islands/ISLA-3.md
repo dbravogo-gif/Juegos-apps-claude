@@ -197,13 +197,19 @@ amigo.
 - En los ataques a una sola criatura eliges a cuál de las dos rivales.
 - Al ganar: las dos mitades de la pintadera de Gran Canaria (`gimnasio3-vencido`) y el dinero de
   la líder de Lucha. El líder Eléctrico no lucha solo.
-- **Queda:** el barco a Tenerife (aún no sale; la isla 4 está sin diseñar) y la fase 4 (Bandama,
-  Maspalomas, pulido y probador).
+- **Queda:** el barco a Tenerife. Aún no sale: la isla 4 está sin diseñar.
+
+**Fase 4, hecha (2026-11-23).** Las dos opcionales, que no hacen falta para llegar al terrero:
+- **Bandama:** desde Guayadeque, por el este. La caldera es un cráter redondo: la senda sube al
+  borde y baja al fondo, que tiene hierba, una finca con su casa y una Superpoción.
+- **Maspalomas:** desde las cumbres, bajando al sur. Tiene dunas pequeñas con calima, la charca del
+  oasis con palmeras, el faro, la playa y una Superpoción.
+- Las dos tienen salvajes un poco más fuertes (23 a 27) y entrenadores.
 
 | 1 | Las Palmas y La Isleta, con el barco desde Morro Jable (**hecha**, 2026-11-22) | alto |
 | 2 | Guayadeque con sus casas cueva, las cumbres y el Roque Nublo, con la historia (**hecha**, 2026-11-22) | alto |
 | 3 | Tejeda, Tamadaba y Agaete con el gimnasio | alto |
-| 4 | Bandama y Maspalomas, pulido y revisión del probador | medio |
+| 4 | Bandama y Maspalomas (**hechas**, 2026-11-23), pulido y revisión del probador | medio |
 
 ## Lo que puede corregir el autor al probarlo
 

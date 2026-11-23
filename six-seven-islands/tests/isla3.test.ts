@@ -41,6 +41,13 @@ describe('Gran Canaria (isla 3), fase 1', () => {
     expect(transitable(mf, zf.origen.x + l.x, zf.origen.y + l.y)).toBe(true);
   });
 
+  it('fase 4: a Bandama se llega desde Guayadeque y a Maspalomas desde las cumbres, y sin ellas se llega igual al terrero', () => {
+    for (const z of ['bandama', 'maspalomas']) expect([...r].some((k) => m.casillas.get(k)?.zona === z), z).toBe(true);
+    const prohibidas = new Set([...m.casillas].filter(([, c]) => c.zona === 'bandama' || c.zona === 'maspalomas').map(([k]) => k));
+    const sin = alcanzables(m, [llegada], { prohibidas });
+    expect([...sin].some((k) => m.casillas.get(k)?.zona === 'agaete')).toBe(true);
+  });
+
   it('fase 2: de Las Palmas se baja a Guayadeque, se sube por las cumbres y se llega al Roque Nublo', () => {
     for (const z of ['guayadeque', 'cumbres', 'nublo']) expect([...r].some((k) => m.casillas.get(k)?.zona === z), z).toBe(true);
     // El comandante no se esquiva: sin pisar lo que ve, no se llega a la cima (fila 8 o menos).

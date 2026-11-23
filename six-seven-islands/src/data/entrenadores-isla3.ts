@@ -92,6 +92,22 @@ export const ENTRENADORES_ISLA3: Readonly<Record<string, DefEntrenador>> = {
     premio: 780,
     tras: 'Si vas al terrero, que no te agarren por la cintura. Es lo primero que hacen.',
   },
+  // Fase 4, las opcionales: Bandama y Maspalomas.
+  'excursionista-bandama': {
+    equipo: [{ especie: 'c007-2', nivel: 25 }, { especie: 'c031-2', nivel: 25 }],
+    premio: 700,
+    tras: 'Baja al fondo de la caldera: la finca tiene las mejores uvas de la isla.',
+  },
+  'surfista-maspalomas': {
+    equipo: [{ especie: 'c018-1', nivel: 26 }, { especie: 'c035-2', nivel: 27 }],
+    premio: 780,
+    tras: 'El faro de aquí guía a los barcos de Tenerife. Algún día iré hasta allí con la tabla.',
+  },
+  'buscador-maspalomas': {
+    equipo: [{ especie: 'c044-2', nivel: 27 }, { especie: 'c005-2', nivel: 26 }],
+    premio: 780,
+    tras: 'Si cavas en las dunas, a veces sale una criatura dormida. ¡Ojo con despertarla!',
+  },
   // El terrero de Agaete (gimnasio-lucha.ts): tres luchadores, de uno en uno, que preguntan antes.
   // Lucha (Kotono y Koloi, la única línea de Lucha que hay) y, mientras, Tierra y Roca.
   'luchador-1': {

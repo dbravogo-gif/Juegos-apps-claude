@@ -29,6 +29,8 @@ const SALAS: Record<string, DefSala> = {
   'tienda-agaete': { nombre: 'Tienda de Agaete', gente: vive('tendero-agaete') },
   'casa-agaete-1': { nombre: 'Casa de Agaete', gente: vive('vecino-agaete-1', 'En el terrero luchan los mejores de la isla. Sin golpes: solo fuerza, maña y agarres.') },
   'casa-agaete-2': { nombre: 'Casa de Agaete', gente: vive('vecina-agaete-2', 'En el valle de Agaete crece café. ¡Café en Canarias! Pruébalo antes de irte.') },
+  // Fase 4.
+  'casa-bandama': { nombre: 'La finca de la caldera', gente: vive('vecina-bandama', 'Vivir en el fondo de un volcán dormido da mucha paz. Bueno… casi siempre.') },
   'casa-isleta-2': { nombre: 'Casa de La Isleta', gente: vive('vecina-isleta-2', 'Mi marido sale a pescar de madrugada. Las criaturas del mar le siguen la barca.') },
 };
 
