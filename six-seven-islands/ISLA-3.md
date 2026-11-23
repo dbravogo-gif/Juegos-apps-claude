@@ -225,10 +225,10 @@ amigo.
   - el terrero, con suelo de arena;
   - la niebla de Tamadaba, más espesa;
   - en el gimnasio Eléctrico, negro del todo; el relámpago alumbra solo lo de alrededor.
+  - el Roque Nublo, de tres bloques de roca abollados con la cima redonda (era un prisma liso).
 - Tu amigo, dos niveles por encima de los líderes: con dos criaturas contra cinco caía enseguida.
 - **Queda, sin arreglar:**
   - los interiores siguen siendo una sala flotando sobre fondo beige, como en todas las islas;
-  - el Roque Nublo es un prisma liso;
   - el borde de Bandama da al mar, y está bien: está junto a la costa este.
 
 | 1 | Las Palmas y La Isleta, con el barco desde Morro Jable (**hecha**, 2026-11-22) | alto |
