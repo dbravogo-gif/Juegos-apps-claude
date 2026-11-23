@@ -47,6 +47,19 @@ export const ENCUENTROS_ISLA3: TablaEncuentros = {
     { especie: 'c035-2', nivel: [25, 27], peso: 15 },
     { especie: 'c005-2', nivel: [24, 27], peso: 15 },
   ],
+  // Fase 4, las opcionales: el fondo de la caldera de Bandama y las dunas de Maspalomas.
+  bandama: [
+    { especie: 'c007-2', nivel: [23, 26], peso: 30 },
+    { especie: 'c031-2', nivel: [23, 26], peso: 25 },
+    { especie: 'c034-2', nivel: [24, 26], peso: 25 },
+    { especie: 'c062-1', nivel: [24, 26], peso: 20 },
+  ],
+  maspalomas: [
+    { especie: 'c044-2', nivel: [25, 27], peso: 30 },
+    { especie: 'c037-1', nivel: [25, 27], peso: 25 },
+    { especie: 'c005-2', nivel: [25, 27], peso: 25 },
+    { especie: 'c013-2', nivel: [25, 27], peso: 20 },
+  ],
   agaete: [
     { especie: 'c018-1', nivel: [25, 27], peso: 35 },
     { especie: 'c035-2', nivel: [25, 27], peso: 35 },

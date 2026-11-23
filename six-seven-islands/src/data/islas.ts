@@ -143,7 +143,7 @@ export const GRAN_CANARIA: DatosIsla = {
   // El gimnasio Eléctrico, con su campo eléctrico (autor, 2026-11-15).
   // El agarre del terrero: tus criaturas pueden quedar confusas (autor, 2026-11-15).
   campos: { 'gimnasio-electrico': { terreno: 'electrico' }, 'gimnasio-lucha': { agarre: true } },
-  fondos: { palmas: 'gc-ciudad', isleta: 'gc-isleta', 'gimnasio-electrico': 'gc-gimnasio-electrico', guayadeque: 'gc-barranco', cumbres: 'gc-cumbres', nublo: 'gc-cumbres', tejeda: 'gc-cumbres', tamadaba: 'gc-pinar', agaete: 'gc-isleta', 'gimnasio-lucha': 'gc-terrero' },
+  fondos: { palmas: 'gc-ciudad', isleta: 'gc-isleta', 'gimnasio-electrico': 'gc-gimnasio-electrico', guayadeque: 'gc-barranco', cumbres: 'gc-cumbres', nublo: 'gc-cumbres', tejeda: 'gc-cumbres', tamadaba: 'gc-pinar', agaete: 'gc-isleta', 'gimnasio-lucha': 'gc-terrero', bandama: 'gc-cumbres', maspalomas: 'fv-dunas' },
 };
 
 /** Las islas por su número, de este a oeste. */

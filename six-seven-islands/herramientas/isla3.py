@@ -97,6 +97,7 @@ z.r(1, 1, 8, 15, '#'); z.r(21, 1, 8, 24, '#'); z.r(1, 23, 20, 2, '#')    # las p
 z.r(4, 9, 5, 2, ':'); z.r(4, 7, 4, 2, 'J'); z.p(5, 9, 'd'); z.puertas.append((5, 9, 'casa-cueva-1'))
 z.r(21, 8, 4, 2, ':'); z.r(21, 6, 4, 2, 'J'); z.p(22, 8, 'd'); z.puertas.append((22, 8, 'casa-cueva-2'))
 z.r(21, 15, 5, 2, ':'); z.r(21, 13, 5, 2, 'J'); z.p(23, 15, 'd'); z.puertas.append((23, 15, 'restaurante-cueva'))
+z.r(26, 15, 4, 2, ',')                                           # el paso a Bandama (fase 4, opcional)
 z.camino([(13,0),(13,20)], ancho=3)                              # el fondo del barranco
 z.camino([(0,20),(15,20)], ancho=2)                              # la curva hacia el oeste
 z.edificio(16, 17, 4, 3, 'R', 17, 'refugio-guayadeque')
@@ -126,6 +127,7 @@ z.r(7, 6, 2, 1, '"')                                            # la hierba del 
 z.r(22, 12, 6, 2, '"'); z.r(11, 9, 5, 2, '"'); z.r(2, 6, 4, 4, '"'); z.r(10, 2, 8, 2, '"'); z.r(19, 9, 1, 2, '"')
 for x, y in ((25, 16), (15, 15), (4, 13), (12, 13), (24, 7), (3, 2), (22, 2), (26, 19), (9, 19)): z.p(x, y, 'T')
 z.r(1, 18, 28, 3, '#'); z.r(1, 12, 3, 5, '#')
+z.r(24, 17, 2, 5, ',')                                           # la bajada a Maspalomas (fase 4, opcional)
 alt = []
 for y in range(22):
     fila = ''
@@ -226,6 +228,44 @@ z.r(20, 19, 6, 3, '"'); z.r(6, 19, 7, 3, '"')
 for x, y in ((25, 8), (30, 8), (19, 13), (15, 20)): z.p(x, y, 'T')
 zonas['agaete'] = dict(nombre='Agaete', origen=(-60, -48), z=z, altura=0, hierba=False, casas='lanzarote', gimnasio='lucha')
 
+# 9. Bandama (24 × 20, fase 4, opcional): la caldera, un cráter redondo y hondo con una finca en el
+# fondo. Se entra por el oeste (y 9..10, desde Guayadeque); la senda sube al borde y baja al fondo.
+z = Z(24, 20, ':'); z.borde('#')
+z.r(0, 9, 1, 2, ',')
+cx, cy = 13, 10
+for y in range(1, 19):
+    for x in range(1, 23):
+        d = ((x - cx) ** 2 + (y - cy) ** 2) ** 0.5
+        if 5.5 <= d < 8: z.p(x, y, '#')                          # las paredes del cráter
+        elif d < 5.5: z.p(x, y, '"' if (x + y) % 5 else ':')     # el fondo, con hierba
+z.camino([(0,9),(4,9)], ancho=2); z.camino([(4,9),(4,3)]); z.camino([(4,3),(13,3)]); z.camino([(13,3),(13,6)])   # sube al borde y baja
+z.edificio(11, 9, 4, 2, 'C', 12, 'casa-bandama')                 # la finca del fondo
+z.camino([(12,7),(12,8)]); z.camino([(13,6),(13,8)])
+for x, y in ((15, 13), (10, 13), (2, 15), (20, 3)): z.p(x, y, 'T')
+alt = []
+for y in range(20):
+    fila = ''
+    for x in range(24):
+        d = ((x - cx) ** 2 + (y - cy) ** 2) ** 0.5
+        c = z.g[y][x]
+        fila += '3' if c == '#' and 5.5 <= d < 8 else '1' if d < 5.5 else '2' if (x == 4 or y == 3) and c == ',' else '1'
+    alt.append(fila)
+zonas['bandama'] = dict(nombre='Bandama', origen=(42, 2), z=z, alturas=alt, hierba=True, flora='humeda')
+
+# 10. Maspalomas (30 × 18, fase 4, opcional): el sur. Se baja desde las cumbres (arriba, x 18..19).
+# Dunas pequeñas (para no repetir las de Fuerteventura), la charca del oasis con palmeras, el faro
+# y la playa con el mar al sur.
+z = Z(30, 18, 'D'); z.borde('K')
+z.r(18, 0, 2, 1, ':')
+z.r(0, 14, 30, 4, '~'); z.r(1, 12, 28, 2, 'a')                   # el mar y la playa
+z.r(17, 1, 4, 3, ':'); z.camino([(18,1),(18,11)], ancho=2)       # la bajada hasta la playa
+z.r(3, 3, 6, 4, '~'); z.r(2, 2, 8, 1, ':'); z.r(2, 7, 8, 1, ':'); z.r(2, 3, 1, 4, ':'); z.r(9, 3, 1, 4, ':')   # la charca
+for x, y in ((2, 2), (9, 2), (2, 7), (9, 7)): z.p(x, y, 'T')
+z.r(24, 9, 2, 2, 'F')                                            # el faro
+z.r(23, 11, 4, 1, ':')
+for x, y, w, h in ((12, 3, 3, 1), (22, 4, 4, 1), (11, 8, 4, 1), (21, 7, 2, 1)): z.r(x, y, w, h, 'K')   # crestas
+zonas['maspalomas'] = dict(nombre='Maspalomas', origen=(-12, 24), z=z, altura=0, hierba=True, clima='calima')
+
 # Toda la isla, desplazada para que no haya coordenadas negativas (la silueta entera cabe).
 DESPLAZAMIENTO = 60
 DESPLAZAMIENTO_Y = 65
@@ -238,7 +278,7 @@ for v in zonas.values(): v['origen'] = (v['origen'][0] + DESPLAZAMIENTO, v['orig
 # En la fase 1, solo el trozo construido: el resto de la isla, tierra plana y vacía, se veía como
 # una llanura sin nada (probador, 2026-11-22). Crece con cada fase.
 SILUETA = [(15.5,-55.5),(40.5,-55.5),(40.5,-43.5),(38.5,-40.5),(37.5,-35.5),(37.5,-4.5),(41.5,-4.5),
-           (41.5,21.5),(11.5,21.5),(11.5,23.5),(-46.5,23.5),(-46.5,1.5),(-56.5,1.5),(-56.5,-24.5),
+           (41.5,1.5),(65.5,1.5),(65.5,21.5),(17.5,21.5),(17.5,41.5),(-12.5,41.5),(-12.5,23.5),(-46.5,23.5),(-46.5,1.5),(-56.5,1.5),(-56.5,-24.5),
            (-56.5,-41.5),(-24.5,-41.5),(-24.5,-18.5),(9.5,-18.5),(9.5,-22.5),(19.5,-34.5),(19.5,-37.5),
            (15.5,-40.5)]
 mover = lambda pts: [(x + DESPLAZAMIENTO, y + DESPLAZAMIENTO_Y) for x, y in pts]
@@ -296,13 +336,24 @@ PERSONAJES['agaete'] = [
    # El segundo amigo te espera en la puerta del terrero (fase 3): entrará contigo al final.
    "{ id: 'amigo2-agaete', x: 28, y: 18, mira: 'o', con: 'amigo2-conocido' }",
 ]
+PERSONAJES['bandama'] = [
+   "{ id: 'excursionista-bandama', x: 8, y: 2, mira: 's', entrenador: { vision: 1, obligatorio: false }, frase: 'Desde el borde de la caldera se ve el mar y las cumbres a la vez. ¡Y a ti!' }",
+   "{ id: 'agricultor-bandama', x: 14, y: 12, mira: 'n', frase: 'En el fondo de la caldera se cultivan viñas desde hace siglos. Aquí no llega el viento.' }",
+]
+PERSONAJES['maspalomas'] = [
+   "{ id: 'surfista-maspalomas', x: 8, y: 12, mira: 'e', entrenador: { vision: 4, obligatorio: false }, frase: 'Aquí abajo siempre hace sol. ¡Y siempre hay alguien con quien luchar!' }",
+   "{ id: 'buscador-maspalomas', x: 20, y: 6, mira: 'o', entrenador: { vision: 1, obligatorio: false }, frase: 'Las dunas de aquí se mueven con el viento. Las criaturas que viven en ellas, también.' }",
+   "{ id: 'farero-maspalomas', x: 23, y: 11, mira: 'e', frase: 'Este faro guía a los barcos que van a Tenerife. Algunas noches se ve otra luz, más al oeste, que no es de ningún faro.' }",
+]
 OBJETOS = {'isleta': ["{ id: 'superpocion-faro', x: 2, y: 3, objeto: 'superpocion' }", "{ id: 'cubo-isleta', x: 25, y: 9, objeto: 'cubo-blanco' }"],
            'palmas': ["{ id: 'pocion-canteras', x: 8, y: 12, objeto: 'pocion' }"],
            'guayadeque': ["{ id: 'pocion-barranco', x: 9, y: 19, objeto: 'pocion' }"],
            'cumbres': ["{ id: 'superpocion-almendros', x: 1, y: 10, objeto: 'superpocion' }"],
            'tejeda': ["{ id: 'pocion-tejeda', x: 25, y: 19, objeto: 'pocion' }"],
            'tamadaba': ["{ id: 'superpocion-pinar', x: 3, y: 3, objeto: 'superpocion' }", "{ id: 'cubo-pinar', x: 33, y: 23, objeto: 'cubo-blanco' }"],
-           'agaete': ["{ id: 'pocion-agaete', x: 31, y: 22, objeto: 'pocion' }"]}
+           'agaete': ["{ id: 'pocion-agaete', x: 31, y: 22, objeto: 'pocion' }"],
+           'bandama': ["{ id: 'superpocion-caldera', x: 16, y: 8, objeto: 'superpocion' }"],
+           'maspalomas': ["{ id: 'superpocion-oasis', x: 6, y: 2, objeto: 'superpocion' }"]}
 LETREROS = {'palmas': {'21,1': 'Una escultura de hierro con forma de ancla.\nLa placa dice: «A los que llegaron por mar».',
                        '25,25': 'Ocho perros de bronce, sentados en la plaza.\nDicen que la isla se llama así por unos perros enormes que vieron los primeros navegantes.'},
             'tejeda': {'24,11': 'Mirador del Bentayga. Enfrente, un roque enorme sale del barranco como una torre.\nDicen que los antiguos guardaban allí su grano y sus secretos.'},

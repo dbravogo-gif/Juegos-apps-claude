@@ -5,8 +5,8 @@ Actualizado: 2026-11-22. Solo el presente; el historial está en git. Máximo 40
 ## Fase actual
 
 Gran Canaria (`ISLA-3.md`): fases 1 a 3 hechas. Se juega entera, de Las Palmas al terrero de
-Agaete, con el dos contra dos final junto al segundo amigo. Queda la fase 4 (Bandama, Maspalomas,
-pulido y probador) y el barco a Tenerife (la isla 4, sin diseñar).
+Agaete, con el dos contra dos final junto al segundo amigo. Bandama y Maspalomas, hechas. Queda la
+revisión del probador y el barco a Tenerife (la isla 4, sin diseñar).
 
 ## Hecho
 
