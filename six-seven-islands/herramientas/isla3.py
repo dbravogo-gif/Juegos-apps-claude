@@ -146,7 +146,8 @@ z.r(12, 19, 3, 1, ',')
 z.r(0, 0, 34, 4, 'x'); z.r(0, 0, 6, 20, 'x'); z.r(28, 0, 6, 20, 'x')     # el mar de nubes
 z.r(6, 4, 22, 1, '#'); z.r(6, 4, 1, 16, '#'); z.r(27, 4, 1, 16, '#')     # el borde de la cumbre
 z.camino([(13,19),(13,13)]); z.camino([(13,13),(20,13)]); z.camino([(20,13),(20,10)]); z.camino([(17,10),(20,10)])
-z.r(7, 9, 20, 1, '#'); z.r(16, 9, 2, 1, ',')                   # la cima, tras un paso estrecho: ahí espera el comandante
+# El muro de la cima, bajo (`=`): con un risco alto delante, el comandante quedaba tapado (probador, 2026-11-23).
+z.r(7, 9, 20, 1, '='); z.r(16, 9, 2, 1, ',')                   # la cima, tras un paso estrecho: ahí espera el comandante
 z.r(15, 6, 4, 2, '#'); z.p(16, 6, 'I')                          # el monolito, sobre su peña
 z.r(9, 14, 3, 4, '"'); z.r(22, 10, 4, 6, '"'); z.r(8, 6, 5, 3, '"'); z.r(13, 15, 1, 2, '"')
 z.p(10, 10, 'g'); z.p(24, 6, 'g')                               # los miradores
@@ -159,6 +160,11 @@ for y in range(20):
     alt.append(fila)
 # Flora de volcán: piedras bajas en los riscos (los cardones tapaban al comandante; 2026-11-22).
 zonas['nublo'] = dict(nombre='Roque Nublo', origen=(-24, -18), z=z, alturas=alt, hierba=True, flora='volcan')
+
+# 5b. El mar de nubes, al norte del Roque Nublo (34 × 20): solo nubes, no se pisa ni se entra. Detrás
+# del monolito se veía el mar abierto, con una barca (probador, 2026-11-23).
+z = Z(34, 20, 'x')
+zonas['nubes-nublo'] = dict(nombre='Mar de nubes', origen=(-24, -38), z=z, alturas=['1' * 34] * 20)
 
 # 6. Tejeda y Artenara (28 × 22, fase 3): el pueblo de la cumbre. Se entra por el este (y 9..10,
 # desde las cumbres) y se sale al norte (x 6..8) hacia el pinar de Tamadaba. Casas cueva en la
@@ -310,13 +316,17 @@ PERSONAJES['cumbres'] = [
    "{ id: 'montanera-cumbres', x: 22, y: 9, mira: 'o', entrenador: { vision: 2, obligatorio: false }, frase: 'Desde aquí arriba se ven las nubes por debajo. ¡Y a ti, por encima de mis criaturas no!' }",
    "{ id: 'corredor-cumbres', x: 9, y: 4, mira: 'o', entrenador: { vision: 2, obligatorio: false }, frase: 'Subo corriendo hasta el Roque todos los días. ¿Me echas una carrera? Mejor un combate.' }",
    "{ id: 'vecino-cumbres', x: 18, y: 15, mira: 's', frase: 'En enero, todos estos almendros se ponen blancos y rosas. Parece que ha nevado.' }",
+   # La carretera de Tejeda, cortada por los soldados hasta que conoces al segundo amigo en el Roque
+   # Nublo: si no, se podía saltar la escena (probador, 2026-11-23).
+   "{ id: 'soldado-cumbres-1', x: 1, y: 9, mira: 'e', uniforme: 'perseguidor', sin: 'amigo2-conocido', frase: 'Órdenes del comandante: la carretera de Tejeda está cerrada. Él está arriba, en el Roque.' }",
+   "{ id: 'soldado-cumbres-2', x: 1, y: 10, mira: 'e', uniforme: 'perseguidor', sin: 'amigo2-conocido', frase: 'Por aquí no se pasa. Si tienes algo que decir, súbeselo al comandante.' }",
 ]
 PERSONAJES['nublo'] = [
    # El comandante de la rama que te persigue (HISTORIA.md): te para en la senda; al vencerlo se va.
    "{ id: 'comandante-nublo', x: 19, y: 8, mira: 'o', entrenador: { vision: 3, obligatorio: true }, uniforme: 'perseguidor', sin: 'vencido:comandante-nublo' }",
    "{ id: 'soldado-nublo', x: 20, y: 8, mira: 'o', uniforme: 'perseguidor', sin: 'vencido:comandante-nublo', frase: 'Órdenes del comandante: aquí arriba no sube nadie.' }",
    # El segundo amigo llega cuando el comandante se va (HISTORIA.md: lo conoces en el Roque Nublo).
-   "{ id: 'amigo2-nublo', x: 13, y: 7, mira: 'e', con: 'vencido:comandante-nublo' }",
+   "{ id: 'amigo2-nublo', x: 14, y: 8, mira: 'e', con: 'vencido:comandante-nublo', uniforme: 'amigo2' }",
 ]
 PERSONAJES['tejeda'] = [
    "{ id: 'paseante-tejeda', x: 22, y: 8, mira: 's', entrenador: { vision: 1, obligatorio: false }, frase: 'Vengo a por dulces de almendra todos los domingos. ¡Y a por un combate!' }",
@@ -334,10 +344,10 @@ PERSONAJES['agaete'] = [
    "{ id: 'pescador-agaete', x: 24, y: 5, mira: 's', entrenador: { vision: 2, obligatorio: false }, frase: 'De este muelle salen los barcos grandes. Y yo, a por criaturas. ¡Vamos!' }",
    "{ id: 'vecina-agaete', x: 10, y: 11, mira: 's', frase: 'Ese roque del agua es el Dedo de Dios. Lleva miles de años señalando al cielo.' }",
    # El segundo amigo te espera en la puerta del terrero (fase 3): entrará contigo al final.
-   "{ id: 'amigo2-agaete', x: 28, y: 18, mira: 'o', con: 'amigo2-conocido' }",
+   "{ id: 'amigo2-agaete', x: 28, y: 18, mira: 'o', con: 'amigo2-conocido', uniforme: 'amigo2' }",
 ]
 PERSONAJES['bandama'] = [
-   "{ id: 'excursionista-bandama', x: 8, y: 2, mira: 's', entrenador: { vision: 1, obligatorio: false }, frase: 'Desde el borde de la caldera se ve el mar y las cumbres a la vez. ¡Y a ti!' }",
+   "{ id: 'excursionista-bandama', x: 3, y: 6, mira: 'e', entrenador: { vision: 1, obligatorio: false }, frase: 'Desde el borde de la caldera se ve el mar y las cumbres a la vez. ¡Y a ti!' }",
    "{ id: 'agricultor-bandama', x: 14, y: 12, mira: 'n', frase: 'En el fondo de la caldera se cultivan viñas desde hace siglos. Aquí no llega el viento.' }",
 ]
 PERSONAJES['maspalomas'] = [
@@ -348,7 +358,7 @@ PERSONAJES['maspalomas'] = [
 OBJETOS = {'isleta': ["{ id: 'superpocion-faro', x: 2, y: 3, objeto: 'superpocion' }", "{ id: 'cubo-isleta', x: 25, y: 9, objeto: 'cubo-blanco' }"],
            'palmas': ["{ id: 'pocion-canteras', x: 8, y: 12, objeto: 'pocion' }"],
            'guayadeque': ["{ id: 'pocion-barranco', x: 9, y: 19, objeto: 'pocion' }"],
-           'cumbres': ["{ id: 'superpocion-almendros', x: 1, y: 10, objeto: 'superpocion' }"],
+           'cumbres': ["{ id: 'superpocion-almendros', x: 1, y: 6, objeto: 'superpocion' }"],
            'tejeda': ["{ id: 'pocion-tejeda', x: 25, y: 19, objeto: 'pocion' }"],
            'tamadaba': ["{ id: 'superpocion-pinar', x: 3, y: 3, objeto: 'superpocion' }", "{ id: 'cubo-pinar', x: 33, y: 23, objeto: 'cubo-blanco' }"],
            'agaete': ["{ id: 'pocion-agaete', x: 31, y: 22, objeto: 'pocion' }"],

@@ -36,7 +36,8 @@ import type { GLTF } from 'three/addons/loaders/GLTFLoader.js';
 import { PASOS_POR_CASILLA, posicionVisual } from '../../core/explorar';
 import { Suavizado } from './suavizado';
 import { DE_ENCUENTROS, clave, deClave, enIsla, presente, vision, type Direccion, type Mundo as MundoLogico, type Personaje as DefPersonaje } from '../../core/mundo';
-import { colorUniforme, puebloQueTePersigue, type TipoInicial } from '../../data/pueblos';
+import { TIPOS } from '../../data/tipos';
+import { colorUniforme, inicialesDeAmigos, puebloQueTePersigue, type TipoInicial } from '../../data/pueblos';
 import { AMIGOS } from '../../data/textos-isla1';
 import { COLORES } from '../../arte/paleta';
 import { alturaSuelo } from '../../arte/escala';
@@ -76,6 +77,8 @@ const QUEMADO = [1, 0.66, 0.58] as const;
 /** La silueta negra del jefe, antes de descubrirse (HISTORIA.md). */
 const SILUETA = [0.05, 0.05, 0.07] as const;
 
+const rgb = (hex: number): [number, number, number] => [((hex >> 16) & 255) / 255, ((hex >> 8) & 255) / 255, (hex & 255) / 255];
+
 /** Los líderes de gimnasio: `lider-gimnasio` (Lanzarote) y `lider-<tipo>` en las demás islas. */
 const esLider = (p: DefPersonaje): boolean => p.id.startsWith('lider-');
 
@@ -85,13 +88,16 @@ function modeloDe(p: DefPersonaje): string {
   if (p.id === 'anciano' || p.id === 'doctora') return 'Mage';
   // Las líderes, con la figura de maga y más grandes (abajo): antes llevaban la misma que sus
   // aprendices o que el vigilante y no se distinguían (probador, 2026-11-13).
-  if (esLider(p)) return 'Mage';
+  // La de Lucha, con la figura del luchador (los dos líderes del terrero eran iguales; probador,
+  // 2026-11-23); todas, además, teñidas del color de su tipo (abajo).
+  if (esLider(p)) return p.id === 'lider-lucha' ? 'Barbarian' : 'Mage';
   // La silueta del jefe tiene la figura de Chano, en negro: una pista sutil (HISTORIA.md).
   if (p.silueta) return 'Barbarian';
   // El viejo que te vigila: capucha, con ropa del color de tu pueblo (no se confunde con el farero).
   if (p.id.startsWith('viejo-')) return 'Rogue_Hooded';
-  // Tu amigo, el mismo en el bar y en el muelle: así se reconoce.
-  if (AMIGOS.has(p.id)) return 'Rogue';
+  // Tu amigo, el mismo en el bar y en el muelle: así se reconoce. El segundo, igual pero teñido del
+  // color de su inicial (antes cambiaba de figura y se confundía con el vigilante; probador, 2026-11-23).
+  if (AMIGOS.has(p.id) || p.uniforme === 'amigo2') return 'Rogue';
   // Los soldados de uniforme, con la armadura gris: se tiñe bien del color de su pueblo (con la capa
   // verde de otras figuras, el tinte salía verdoso).
   if (p.uniforme === 'perseguidor') return 'Knight';
@@ -194,9 +200,12 @@ export class Personaje implements Subsistema {
           }
           const persona = PERSONA_DE[p.id];
           const nombre = modeloDe(p);
-          const tinte = p.silueta ? SILUETA : p.quemado ? QUEMADO : undefined;
-          // La silueta, negra del todo (mezcla completa); multiplicando, quedaba verde oscuro.
-          const f = persona ? await this.figuraPersona(persona) : this.figura(await cargar(nombre), nombre, tinte, p.silueta ? { mezcla: 1 } : {});
+          const tipoLider = esLider(p) ? TIPOS.find((t) => `lider-${t.id}` === p.id) : undefined;
+          const tinte = p.silueta ? SILUETA : p.quemado ? QUEMADO : tipoLider ? rgb(tipoLider.color) : undefined;
+          // La silueta, negra del todo (mezcla completa); multiplicando, quedaba verde oscuro. Los
+          // líderes, con la ropa del color de su tipo y la cara sin teñir, como los uniformes.
+          const op = p.silueta ? { mezcla: 1 } : tipoLider ? { cabezaSinTinte: true, mezcla: 0.55 } : {};
+          const f = persona ? await this.figuraPersona(persona) : this.figura(await cargar(nombre), nombre, tinte, op);
           this.defs.set(p.id, p);
           if (p.con || p.sin) this.condicionados.push({ p, raiz: f.raiz });
           const k = enIsla(mapa, z.id, p.x, p.y);
@@ -483,7 +492,8 @@ export class Personaje implements Subsistema {
     for (const u of this.uniformados) {
       if (u.hecho) continue;
       u.hecho = true;
-      void this.hacerUniformado(u, colorUniforme(u.p.uniforme === 'tuyo' ? inicial : puebloQueTePersigue(inicial)), ctx);
+      const pueblo = u.p.uniforme === 'tuyo' ? inicial : u.p.uniforme === 'amigo2' ? inicialesDeAmigos(inicial)[0]! : puebloQueTePersigue(inicial);
+      void this.hacerUniformado(u, colorUniforme(pueblo), ctx);
     }
   }
 

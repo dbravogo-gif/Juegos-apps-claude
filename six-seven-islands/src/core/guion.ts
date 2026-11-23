@@ -144,3 +144,15 @@ function siguienteTramo(s: EstadoDialogo, tramo: EstadoDialogo['tramo']): void {
   s.revelado = 0;
   s.opcion = 1;
 }
+
+/**
+ * El objetivo que toca: el siguiente al último cumplido. Así, si te saltas uno que no hace falta
+ * (el gimnasio Eléctrico de Las Palmas), no se queda atrasado (probador, 2026-11-23).
+ */
+export function objetivoActual(objetivos: readonly { hasta: string; texto: string }[], condiciones: readonly string[]): string | null {
+  let ultimo = -1;
+  objetivos.forEach((o, i) => {
+    if (condiciones.includes(o.hasta)) ultimo = i;
+  });
+  return objetivos[ultimo + 1]?.texto ?? null;
+}

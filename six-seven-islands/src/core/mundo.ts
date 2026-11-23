@@ -152,10 +152,10 @@ export interface Personaje {
   con?: Condicion;
   sin?: Condicion;
   /**
-   * Va teñido del color de un pueblo (HISTORIA.md): el de la rama que te persigue, o el tuyo (Chano,
-   * que dice defender a tu pueblo).
+   * Va teñido del color de un pueblo (HISTORIA.md): el de la rama que te persigue, el tuyo (Chano,
+   * que dice defender a tu pueblo) o el de la inicial de tu segundo amigo (así se le reconoce).
    */
-  uniforme?: 'perseguidor' | 'tuyo';
+  uniforme?: 'perseguidor' | 'tuyo' | 'amigo2';
   /** Se dibuja en negro, sin dejar ver quién es (el jefe, antes de descubrirse). */
   silueta?: boolean;
 }

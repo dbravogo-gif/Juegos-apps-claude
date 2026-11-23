@@ -103,7 +103,7 @@ export const GUION_ISLA2: Guion = {
         lineas: [
           { quien: 'Señor', texto: '¡Eh, tú! Esa cría desciende de una leyenda… Eres el nuevo elegido de {pueblo}, ¿a que sí?' },
           { quien: 'Chano', texto: 'Me llamo Chano. Hace muchos años luché junto al último elegido de tu pueblo. ¡Qué tiempos!' },
-          { quien: 'Chano', texto: 'Ándate con ojo: los de {rama} andan revueltos por las dunas. Si me necesitas, por aquí ando.' },
+          { quien: 'Chano', texto: 'Ándate con ojo: los soldados de {rama} andan revueltos por las dunas. Si me necesitas, por aquí ando.' },
         ],
         efecto: { condicion: 'chano-conocido' },
       },
@@ -114,7 +114,7 @@ export const GUION_ISLA2: Guion = {
     {
       dialogo: {
         lineas: [
-          { quien: 'Chano', texto: '¡Uf, llego tarde! He visto a los de {rama} huir por las dunas. ¿Estás bien?' },
+          { quien: 'Chano', texto: '¡Uf, llego tarde! He visto a los soldados de {rama} huir por las dunas. ¿Estás bien?' },
           { quien: 'Chano', texto: 'Menos mal que estabas tú. Esa estatua… mejor que no caiga en malas manos.' },
           { quien: 'Chano', texto: 'Sigue hacia el sur, elegido. Yo me quedo vigilando la excavación.' },
         ],

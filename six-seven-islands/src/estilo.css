@@ -1250,13 +1250,35 @@ body {
 
 /* El dos contra dos: la segunda rival debajo de la primera y la del amigo encima de la tuya. */
 .combate-ficha.rival2 {
-  top: 122px;
+  top: 134px;
   left: 32px;
 }
 
+/* Con hueco para la etiqueta de dueño de la ficha de debajo (la tapaba). */
 .combate-ficha.propia2 {
   right: 32px;
-  bottom: 308px;
+  bottom: 322px;
+}
+
+/* De quién es cada criatura en el dos contra dos: una etiqueta sobre el borde de la ficha. */
+.combate-dueno {
+  position: absolute;
+  top: -11px;
+  left: 14px;
+  margin: 0;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: #3b2a20;
+  color: #fff6ea;
+  font: 700 12px/1.4 system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+.combate-dueno.aliada {
+  background: #2f6f9f;
+}
+
+.combate-dueno.rival {
+  background: #9f3a2f;
 }
 
 .combate-nombre {
@@ -1565,16 +1587,18 @@ body {
   z-index: 3;
 }
 
-/* La niebla del pinar de Tamadaba: un velo blanco y jirones anchos y borrosos que pasan despacio. */
+/* La niebla del pinar de Tamadaba: un velo blanco, más espeso hacia los bordes (el centro, donde va
+   el jugador, se ve), y jirones anchos y borrosos que pasan despacio. Con un velo plano y jirones
+   pequeños parecían unas pocas rayas (probador, 2026-11-23). */
 .calima.niebla {
-  background: rgb(236 240 244 / 0.3);
+  background: radial-gradient(ellipse at center, rgb(236 240 244 / 0.14) 25%, rgb(236 240 244 / 0.62) 100%);
 }
 
 .calima.niebla i {
-  width: 220px;
-  height: 34px;
-  border-radius: 17px;
-  background: radial-gradient(ellipse at center, rgb(255 255 255 / 0.75), rgb(255 255 255 / 0));
-  filter: blur(3px);
+  width: 380px;
+  height: 64px;
+  border-radius: 32px;
+  background: radial-gradient(ellipse at center, rgb(255 255 255 / 0.7), rgb(255 255 255 / 0));
+  filter: blur(6px);
   animation-duration: calc(var(--d, 8s) * 2.2);
 }

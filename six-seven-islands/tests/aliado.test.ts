@@ -79,4 +79,19 @@ describe('dos contra dos con un aliado', () => {
     expect(e.lados[0].equipo[1]!.exp).toBe(antes);
     expect(e.lados[0].equipo[0]!.exp).toBeGreaterThan(tuya.exp);
   });
+
+  it('si caen todas las tuyas, el combate sigue con el aliado solo (sin decisiones tuyas)', () => {
+    let e = combate([cr('agua1', 2)], [cr('planta1', 70), cr('planta1', 70)], [cr('rama', 25), cr('rama', 25)]);
+    let solo = 0;
+    for (let i = 0; i < 60 && !e.fin; i++) {
+      expect(e.pendientes).toEqual([]);
+      const tuya = e.lados[0].activos[0]!;
+      if (tuya < 0 || e.lados[0].equipo[tuya]!.vida <= 0) {
+        solo++;
+        e = resolverTurno(e, { 0: [] }, D).estado;
+      } else e = resolverTurno(e, { 0: [{ tipo: 'movimiento', indice: 0, objetivo: { lado: 1, hueco: 0 } }] }, D).estado;
+    }
+    expect(solo).toBeGreaterThan(0);
+    expect(e.fin).toBe('victoria');
+  });
 });

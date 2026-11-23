@@ -75,7 +75,7 @@ export const GUION_ISLA3: Guion = {
       sin: 'amigo2-conocido',
       dialogo: {
         lineas: [
-          { quien: '{amigo2}', texto: '¡Uf, llego tarde! Vi a los de {rama} subir y vine corriendo. ¿Estás bien?' },
+          { quien: '{amigo2}', texto: '¡Uf, llego tarde! Vi a los soldados de {rama} subir y vine corriendo. ¿Estás bien?' },
           { quien: '{amigo2}', texto: 'Me eligió una cría de {inicialAmigo2} hace poco. Desde entonces no paro de recorrer islas.' },
           { quien: '{amigo2}', texto: '¿Has oído lo de Agaete? Los dos líderes de la isla te esperan juntos: dos contra dos.' },
           { quien: '{amigo2}', texto: 'Tú solo no puedes con los dos. ¿Vamos juntos? Te espero en el terrero.' },
@@ -117,20 +117,26 @@ export const GUION_ISLA3: Guion = {
     {
       sin: 'listo:luchador-1',
       dialogo: {
-        lineas: [{ quien: 'Luchador', texto: '¡Bienvenido al terrero! Soy el primero de los tres luchadores. Saludo y respeto, como manda la lucha.' }],
-        pregunta: { quien: 'Luchador', texto: '¿Luchamos ya, o prefieres un momento para curar a tus criaturas?' },
+        lineas: [
+          { quien: 'Luchador', texto: '¡Bienvenido al terrero! Soy el primero de los tres luchadores. Saludo y respeto, como manda la lucha.' },
+          { quien: 'Luchador', texto: 'Si antes quieres curar a tus criaturas, dime que no y vuelve cuando estés.' },
+        ],
+        pregunta: { quien: 'Luchador', texto: '¿Luchamos ya?' },
         efecto: { condicion: 'listo:luchador-1' },
         tras: [{ quien: 'Luchador', texto: '¡Eso es! ¡Al centro del terrero!' }],
       },
     },
-    { dialogo: { lineas: [{ quien: 'Luchador', texto: '¡Otra vez al centro! Esta vez no te suelto.' }] } },
+    { dialogo: { lineas: [{ quien: 'Luchador', texto: '¡Al centro! Esta vez no te suelto.' }] } },
   ],
   'luchador-2': [
     {
       sin: 'listo:luchador-2',
       dialogo: {
-        lineas: [{ quien: 'Luchador', texto: 'Soy el segundo. Mi compañero dice que agarras bien. Ya veremos.' }],
-        pregunta: { quien: 'Luchador', texto: '¿Luchamos ya, o vas antes a curarte?' },
+        lineas: [
+          { quien: 'Luchador', texto: 'Soy el segundo. Mi compañero dice que agarras bien. Ya veremos.' },
+          { quien: 'Luchador', texto: 'Si antes quieres curarte, dime que no y vuelve cuando estés.' },
+        ],
+        pregunta: { quien: 'Luchador', texto: '¿Luchamos ya?' },
         efecto: { condicion: 'listo:luchador-2' },
         tras: [{ quien: 'Luchador', texto: '¡Al centro!' }],
       },
@@ -141,8 +147,11 @@ export const GUION_ISLA3: Guion = {
     {
       sin: 'listo:luchador-3',
       dialogo: {
-        lineas: [{ quien: 'Luchador', texto: 'El último. Si me vences, los líderes saldrán a por ti. Los dos.' }],
-        pregunta: { quien: 'Luchador', texto: '¿Estás listo, o necesitas un momento para curarte?' },
+        lineas: [
+          { quien: 'Luchador', texto: 'El último. Si me vences, los líderes saldrán a por ti. Los dos.' },
+          { quien: 'Luchador', texto: 'Si antes quieres curarte, dime que no y vuelve cuando estés.' },
+        ],
+        pregunta: { quien: 'Luchador', texto: '¿Luchamos ya?' },
         efecto: { condicion: 'listo:luchador-3' },
         tras: [{ quien: 'Luchador', texto: '¡Pues adelante!' }],
       },
@@ -152,21 +161,35 @@ export const GUION_ISLA3: Guion = {
   // La entrada de los dos líderes en el terrero (fase 3b).
   'lider-lucha': [
     {
+      con: 'gimnasio3-vencido',
+      dialogo: {
+        lineas: [
+          { quien: 'Líder', texto: '¡Qué luchada! Hacía años que nadie nos tumbaba a los dos juntos.' },
+          { quien: 'Líder', texto: 'El barco de Tenerife sale de aquí, de Agaete. Allí os espera el gimnasio de Agua.' },
+        ],
+      },
+    },
+    {
       sin: 'listo:lider-lucha',
       dialogo: {
         lineas: [
           { quien: 'Líder', texto: '¡Así que tú has tumbado a mis tres luchadores! Soy la líder del terrero, la de Lucha.' },
           { quien: 'Líder', texto: 'Y este es el líder Eléctrico de Las Palmas. Lleva días aquí, esperándote.' },
           { quien: 'Líder', texto: 'En Gran Canaria la pintadera se gana con los dos gimnasios a la vez. Dos contra dos: vosotros contra nosotros.' },
+          { quien: 'Líder', texto: 'Si antes queréis curaros, decidme que no y volved cuando estéis.' },
         ],
-        pregunta: { quien: 'Líder', texto: '¿Estáis listos, o vais antes a curaros?' },
+        pregunta: { quien: 'Líder', texto: '¿Empezamos ya?' },
         efecto: { condicion: 'listo:lider-lucha' },
         tras: [{ quien: 'Líder', texto: '¡Al centro del terrero! ¡Que empiece la luchada!' }],
       },
     },
-    { dialogo: { lineas: [{ quien: 'Líder', texto: '¿Otra vez? ¡Eso es tener raza! Al centro.' }] } },
+    { dialogo: { lineas: [{ quien: 'Líder', texto: '¡Al centro del terrero!' }] } },
   ],
   'lider-electrico': [
+    {
+      con: 'gimnasio3-vencido',
+      dialogo: { lineas: [{ quien: 'Líder', texto: 'Me vuelvo a Las Palmas. Si pasas por allí, mis aprendices ya saben quién eres.' }] },
+    },
     {
       dialogo: {
         lineas: [
@@ -177,6 +200,10 @@ export const GUION_ISLA3: Guion = {
     },
   ],
   'amigo2-terrero': [
+    {
+      con: 'gimnasio3-vencido',
+      dialogo: { lineas: [{ quien: '{amigo2}', texto: '¡Lo hemos conseguido! Media pintadera cada uno... no, toda para ti. Te la has ganado.' }, { quien: '{amigo2}', texto: 'Yo me quedo entrenando por aquí. ¡Nos vemos en Tenerife!' }] },
+    },
     {
       dialogo: {
         lineas: [

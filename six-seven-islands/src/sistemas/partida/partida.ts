@@ -10,14 +10,14 @@
 // ?semilla=N fija el azar de una partida nueva (sin ella, cada partida nueva es distinta).
 
 import { avanzar, cambiarDePiso, crearExploracion, cumplir, entrar, interactuar, salir, type EstadoExplorar, type EventoExplorar } from '../../core/explorar';
-import { abrirDialogo, elegirDialogo, lineaActual, pasoDialogo, pulsar, type Dialogo, type Efecto, type EstadoDialogo, type Tecla } from '../../core/guion';
+import { abrirDialogo, elegirDialogo, lineaActual, objetivoActual, pasoDialogo, pulsar, type Dialogo, type Efecto, type EstadoDialogo, type Tecla } from '../../core/guion';
 import { TODAS_LAS_CONDICIONES, clave, construirInterior, construirMundo, deClave, enIsla, entrenadorQueVe, transitable, type Condicion, type Direccion, type Mundo } from '../../core/mundo';
 import { PERSONA_JUGADOR, PERSONAS } from '../../arte/personas';
 import { ISLAS, LANZAROTE, type DatosIsla } from '../../data/islas';
 import { NOMBRE_OBJETO } from '../../data/textos-isla1';
 import { quienEs } from '../../data/entrenadores-isla1';
 import { puntoRecado } from '../../core/recados';
-import { AMIGOS, NOMBRE_TIPO_INICIAL } from '../../data/textos-isla1';
+import { AMIGOS, NOMBRE_TIPO_INICIAL, PRESENTACION } from '../../data/textos-isla1';
 import { PUEBLOS, inicialDelRival, inicialesDeAmigos, puebloQueTePersigue, type TipoInicial } from '../../data/pueblos';
 import { crearCriatura, curarDelTodo } from '../../core/criatura';
 import { expParaNivel } from '../../core/progreso';
@@ -30,6 +30,9 @@ import type { Criatura } from '../../core/modelo';
 import { DATOS_COMBATE_PRUEBA as DATOS, ESPECIE_INICIAL, ESPECIES_RETIRADAS, MOCHILA_INICIAL } from '../../data/combate-prueba';
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Entrada } from '../entrada/entrada';
+
+/** El id del diálogo con el que un amigo se presenta antes de ponerle nombre. */
+const PRESENTARSE = 'presentarse';
 
 export type Modo = 'titulo' | 'explorar' | 'dialogo' | 'fundido' | 'combate' | 'menu' | 'viaje' | 'nombrar';
 
@@ -115,7 +118,9 @@ export class Partida implements Subsistema {
   /** Pasos fijos del fundido del viaje. */
   private pasosViaje = 0;
   /** Lo que dice el entrenador recién vencido, al volver del combate (compuertas, pintadera). */
-  private trasCombate: { lineas: string[]; quien?: string; medalla?: number } | null = null;
+  private trasCombate: { lineas: string[]; quien?: string; medalla?: number; luego?: string } | null = null;
+  /** Quien habla al acabar lo que dice el vencido (`luego` de su entrenador). */
+  private hablaLuego: string | null = null;
   /** Un entrenador acaba de ver al jugador: cuando pase la exclamación, habla. */
   private alerta: { zona: string; personaje: string; pasos: number } | null = null;
   private pasosSinGuardar = 0;
@@ -451,7 +456,7 @@ export class Partida implements Subsistema {
 
   /** El objetivo que se enseña en pantalla, o null si no queda ninguno. */
   objetivo(): string | null {
-    return this.datos.objetivos.find((o) => !this.estado.condiciones.includes(o.hasta))?.texto ?? null;
+    return objetivoActual(this.datos.objetivos, this.estado.condiciones);
   }
 
   /** El mapa donde está el jugador: la isla o el interior. */
@@ -529,7 +534,7 @@ export class Partida implements Subsistema {
     // Nada más volver, el vencido habla: el líder da su pintadera y los demás, su consejo (antes
     // solo salía si se le volvía a hablar; probador, 2026-11-13).
     const quien = quienEs(id);
-    this.trasCombate = def.alVencer?.length ? { lineas: [...def.alVencer], quien, medalla: def.medalla } : { lineas: [def.tras], quien };
+    this.trasCombate = def.alVencer?.length ? { lineas: [...def.alVencer], quien, medalla: def.medalla, luego: def.luego } : { lineas: [def.tras], quien, luego: def.luego };
     return { premio: def.premio };
   }
 
@@ -552,7 +557,13 @@ export class Partida implements Subsistema {
       this.espera = ESPERA_TRAS_DIALOGO;
       this.entrada.olvidar();
       this.ctx.eventos.emit('dialogo:cerrar', { guionId: this.hablando });
-      if (this.viajePendiente !== null) {
+      const luego = this.hablaLuego;
+      this.hablaLuego = null;
+      if (this.hablando === PRESENTARSE && this.porNombrar) {
+        this.pedirNombre();
+      } else if (this.hablando === 'tras-combate' && luego) {
+        this.atender({ tipo: 'hablar', zona: this.estado.zona, personaje: luego });
+      } else if (this.viajePendiente !== null) {
         this.viajar(this.viajePendiente);
       } else if (this.datos.tenderos.has(this.hablando)) {
         // El tendero, al acabar de hablar, abre la tienda (en el subsistema «menu»).
@@ -626,9 +637,10 @@ export class Partida implements Subsistema {
         const amigo = AMIGOS.get(ev.personaje);
         if (amigo && !this.amigos[amigo]) {
           this.porNombrar = ev;
-          this.modo = 'nombrar';
-          this.entrada.olvidar();
-          this.ctx.eventos.emit('amigo:nombrar', { id: ev.personaje });
+          // Primero dice algo (aún sin nombre) y, al acabar, se le pone.
+          const presentacion = PRESENTACION.get(ev.personaje);
+          if (presentacion) this.abrir({ lineas: presentacion.map((texto) => ({ quien: '¿?', texto })) }, PRESENTARSE);
+          else this.pedirNombre();
           break;
         }
         // Un recado (HISTORIA.md): pide, da el premio al cumplirlo y luego da las gracias.
@@ -707,7 +719,7 @@ export class Partida implements Subsistema {
         .replaceAll('{amigo}', this.amigos.amigo ?? 'tu amigo')
         .replaceAll('{inicial}', tuya ? NOMBRE_TIPO_INICIAL[tuya] : '')
         .replaceAll('{inicialRival}', tuya ? NOMBRE_TIPO_INICIAL[inicialDelRival(tuya)] : '')
-        .replaceAll('{amigo2}', this.amigos.amigo2 ?? 'tu amiga')
+        .replaceAll('{amigo2}', this.amigos.amigo2 ?? 'tu amigo')
         .replaceAll('{inicialAmigo2}', tuya ? NOMBRE_TIPO_INICIAL[inicialesDeAmigos(tuya)[0]!] : '')
         .replaceAll('{comandante}', tuya ? PUEBLOS[puebloQueTePersigue(tuya)].comandante : 'el comandante')
         .replaceAll('{rama}', tuya ? PUEBLOS[puebloQueTePersigue(tuya)].rama : 'la rama')
@@ -720,6 +732,18 @@ export class Partida implements Subsistema {
     this.modo = 'dialogo';
     this.entrada.olvidar();
     this.ctx.eventos.emit('dialogo:abrir', { guionId });
+  }
+
+  private pedirNombre(): void {
+    this.modo = 'nombrar';
+    this.entrada.olvidar();
+    this.ctx.eventos.emit('amigo:nombrar', { id: this.porNombrar?.tipo === 'hablar' ? this.porNombrar.personaje : '' });
+  }
+
+  /** Has perdido contra quien pregunta antes de luchar: la próxima vez vuelve a preguntar. */
+  olvidarListo(id: string): void {
+    const i = this.estado.condiciones.indexOf(`listo:${id}`);
+    if (i >= 0) this.estado.condiciones.splice(i, 1);
   }
 
   /** Lo llama «interfaz» al escribir el nombre de un amigo (o null si se cancela). */
@@ -758,6 +782,7 @@ export class Partida implements Subsistema {
     const t = this.trasCombate;
     this.trasCombate = null;
     if (t) {
+      this.hablaLuego = t.luego ?? null;
       this.abrir({ lineas: t.lineas.map((texto) => ({ quien: t.quien, texto })) }, 'tras-combate');
       if (t.medalla !== undefined) {
         this.ctx.eventos.emit('sonido:tocar', { nombre: 'nivel' });
