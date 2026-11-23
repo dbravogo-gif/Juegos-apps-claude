@@ -429,6 +429,16 @@ export class Mundo implements Subsistema {
     // Conos volcánicos dentro de las zonas (Q): cada grupo de casillas es un volcán a su medida,
     // para que las Montañas del Fuego tengan montañas que se ven desde el camino (probador,
     // 2026-11-10). Más alto cuanto más grande; la silueta del jugador sabe hasta dónde tapa.
+    // El barco de línea en cada grupo de `B` (junto al muelle), flotando y a lo largo del grupo.
+    for (const grupo of gruposDe(m, 'B')) {
+      const xs = grupo.map((k) => deClave(k)[0]);
+      const ys = grupo.map((k) => deClave(k)[1]);
+      const ancho = Math.max(...xs) - Math.min(...xs) + 1;
+      const fondo = Math.max(...ys) - Math.min(...ys) + 1;
+      const cx = (Math.min(...xs) + Math.max(...xs)) / 2;
+      const cz = (Math.min(...ys) + Math.max(...ys)) / 2;
+      colocarKit('barco', pseudo(grupo[0]), cx, cz, NIVEL_MAR - 0.05, 0.85, fondo > ancho ? Math.PI / 2 : 0);
+    }
     for (const grupo of gruposDe(m, 'Q')) {
       const xs = grupo.map((k) => deClave(k)[0]);
       const ys = grupo.map((k) => deClave(k)[1]);
