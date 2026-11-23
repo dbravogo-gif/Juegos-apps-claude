@@ -25,6 +25,12 @@ export interface DefEntrenador {
    * dice que sí (su diálogo cumple `listo:<id>`); si no, te deja ir a curarte.
    */
   pregunta?: boolean;
+  /**
+   * Lucha junto a otro entrenador, dos contra dos, y tú con tu segundo amigo al lado (los líderes del
+   * terrero de Agaete). El amigo lleva la primera de las iniciales que quedan, evolucionada a
+   * `nivelAliado`, y `extraAliado`. `nombres`: quién saca a cada rival (este y el otro).
+   */
+  pareja?: { entrenador: string; nombres: [string, string]; nivelAliado: number; extraAliado?: readonly { especie: string; nivel: number }[] };
   /** Un soldado de la rama que te persigue: lucha con criaturas de su pueblo, a estos niveles. */
   rama?: { niveles: readonly number[] };
 }

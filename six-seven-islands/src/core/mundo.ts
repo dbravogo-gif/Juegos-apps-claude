@@ -121,6 +121,8 @@ export type Condicion =
   | 'chano-conocido'
   /** Has conocido al segundo amigo en el Roque Nublo (HISTORIA.md, Gran Canaria). */
   | 'amigo2-conocido'
+  /** Has vencido a los dos líderes de Gran Canaria en el terrero: la pintadera entera. */
+  | 'gimnasio3-vencido'
   /** Has dicho que sí a luchar ya con un entrenador que lo pregunta (el terrero de Agaete). */
   | `listo:${string}`;
 export const TODAS_LAS_CONDICIONES: ReadonlySet<Condicion> = new Set(['inicial-elegida', 'anciano', 'gimnasio-vencido', 'mensaje-rival', 'soldados-fuego']);
