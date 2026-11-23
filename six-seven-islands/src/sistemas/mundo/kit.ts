@@ -695,6 +695,26 @@ export function pino(semilla: number): BufferGeometry {
   return M.fusionar();
 }
 
+/**
+ * El barco de línea entre islas (2026-11-23; el probador: «no hay barco en ningún muelle»): casco
+ * blanco con la línea de flotación azul, dos cubiertas con ventanas, el puente y una chimenea. Mira
+ * hacia +x; ocupa unas dos casillas de largo. Va en las `B` del mapa, junto al muelle.
+ */
+export function barco(semilla: number): BufferGeometry {
+  const M = new Montaje();
+  const color = ['#2E5E8E', '#B23A3A'][semilla % 2]!;
+  M.pon(new BoxGeometry(2.2, 0.45, 0.9).translate(0, 0.15, 0), COLORES.cal);
+  M.pon(new ConeGeometry(0.45, 0.6, 4).rotateZ(-Math.PI / 2).rotateX(Math.PI / 4).scale(1, 0.75, 1).translate(1.38, 0.15, 0), COLORES.cal);
+  M.pon(new BoxGeometry(2.24, 0.12, 0.94).translate(0, -0.02, 0), color);
+  M.pon(new BoxGeometry(1.5, 0.32, 0.72).translate(-0.15, 0.53, 0), COLORES.cal, 0.97);
+  for (let i = 0; i < 6; i++) M.pon(new BoxGeometry(0.12, 0.1, 0.74).translate(-0.75 + i * 0.24, 0.56, 0), '#2B3A4A');
+  M.pon(new BoxGeometry(0.55, 0.26, 0.6).translate(0.25, 0.82, 0), COLORES.cal);
+  M.pon(new BoxGeometry(0.5, 0.08, 0.62).translate(0.27, 0.86, 0), '#2B3A4A');
+  // Cada naviera, su chimenea: de su color y en otro sitio.
+  M.pon(new CylinderGeometry(0.11, 0.13, 0.4, 10).translate(-0.45 - (semilla % 2) * 0.25, 0.9, 0), color);
+  return M.fusionar();
+}
+
 /** Todas las piezas del kit, por nombre. */
 export const KIT = {
   laurel,
@@ -728,6 +748,7 @@ export const KIT = {
   almendro,
   roque,
   pino,
+  barco,
 } satisfies Record<string, (semilla: number) => BufferGeometry>;
 
 export type PiezaKit = keyof typeof KIT;
@@ -767,6 +788,7 @@ export const VARIANTES: Record<PiezaKit, number> = {
   almendro: 3,
   roque: 1,
   pino: 3,
+  barco: 2,
 };
 
 /** La geometría de una variante de una pieza del kit. */
