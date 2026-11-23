@@ -32,5 +32,9 @@ export const GIMNASIO_LUCHA: DefInterior = {
     { id: 'luchador-1', x: 8, y: 4, mira: 's', entrenador: { vision: 0, obligatorio: false }, sin: 'vencido:luchador-1' },
     { id: 'luchador-2', x: 6, y: 4, mira: 's', entrenador: { vision: 0, obligatorio: false }, con: 'vencido:luchador-1', sin: 'vencido:luchador-2' },
     { id: 'luchador-3', x: 10, y: 4, mira: 's', entrenador: { vision: 0, obligatorio: false }, con: 'vencido:luchador-2', sin: 'vencido:luchador-3' },
+    // Al vencer al tercero, entran los dos líderes y tu amigo (ISLA-3.md, fase 3b): dos contra dos.
+    { id: 'lider-lucha', x: 7, y: 3, mira: 's', entrenador: { vision: 0, obligatorio: false }, con: 'vencido:luchador-3' },
+    { id: 'lider-electrico', x: 9, y: 3, mira: 's', entrenador: { vision: 0, obligatorio: false }, con: 'vencido:luchador-3' },
+    { id: 'amigo2-terrero', x: 8, y: 6, mira: 'n', con: 'vencido:luchador-3' },
   ],
 };

@@ -32,7 +32,7 @@ import {
   type Texture,
 } from 'three/webgpu';
 import { describirMovimiento } from '../../core/describir';
-import { iniciarCombate, reemplazar, resolverTurno, type Accion, type EstadoCombate, type Evento, type FichaCombate, type Resultado } from '../../core/combate';
+import { iniciarCombate, objetivoDe, reemplazar, resolverTurno, type Accion, type EstadoCombate, type Evento, type FichaCombate, type Ref, type Resultado } from '../../core/combate';
 import { crearCriatura, nombreDe, objetoUtil } from '../../core/criatura';
 import type { Criatura } from '../../core/modelo';
 import { CALIDAD_ZONA, MEDIA_BLANCA, MEDIA_VERDE, zonaBarra } from '../../core/captura';
@@ -42,7 +42,7 @@ import { perdidaPorDerrota } from '../../core/economia';
 import { BOLSILLOS, bolsilloDe, type IdBolsillo } from '../../data/bolsillos';
 import { vidaMaxima } from '../../core/estadisticas';
 import { gruposContra } from '../../core/tipos';
-import { ESPECIE_RAMA, inicialDelRival, puebloQueTePersigue, type TipoInicial } from '../../data/pueblos';
+import { ESPECIE_RAMA, inicialDelRival, inicialesDeAmigos, puebloQueTePersigue, type TipoInicial } from '../../data/pueblos';
 import { MaterialDiorama } from '../../arte/material';
 import { figuraCriatura } from '../../arte/criaturas3d';
 import { crearEscenarioEvolucion } from './escenario-evolucion';
@@ -63,6 +63,14 @@ const ARENA = new Vector3(600, 0, 600);
 /** Dónde va cada criatura, respecto a la arena: la tuya delante a la izquierda, la rival al fondo. */
 // La tuya, más adentro y atrás que al principio: su círculo se salía de la vista (autor, 2026-11-19).
 const SITIO: [Vector3, Vector3] = [new Vector3(-1.6, 0, 1.1), new Vector3(2.35, 0, -1.85)];
+/**
+ * En el dos contra dos (el terrero de Agaete), por posición (lado × 2 + hueco): las dos tuyas
+ * delante, la tuya a la izquierda y la del amigo a su lado; las dos rivales al fondo.
+ */
+// Las rivales, más al centro: a la derecha las tapaban tus fichas (2026-11-23).
+const SITIO2: readonly Vector3[] = [new Vector3(-2.15, 0, 0.9), new Vector3(-0.35, 0, 1.65), new Vector3(0.35, 0, -2.55), new Vector3(2.15, 0, -2.3)];
+/** En el dos contra dos, la cámara algo más atrás y más alta: caben las cuatro. */
+const CAMARA2 = new Vector3(0.1, 3.4, 10.9);
 /** El tamaño de siempre en cada lado; cada criatura lo multiplica según su altura (escalaPorAltura). */
 const TAMANO: [number, number] = [1.0, 0.95];
 /**
@@ -106,6 +114,17 @@ const URL_FONDOS = new Map(
   Object.entries(import.meta.glob<string>('../../assets/fondos/*.{webp,jpg,jpeg,png}', { eager: true, query: '?url', import: 'default' })).map(([ruta, url]) => [ruta.replace(/^.*\//, '').replace(/\.[^.]+$/, ''), url]),
 );
 const FUNDIDO = 0.55;
+
+/** La forma de una especie a un nivel: evoluciona mientras el nivel llegue al de su evolución. */
+function formaA(especie: string, nivel: number): string {
+  let e = especie;
+  for (let i = 0; i < 4; i++) {
+    const ev = DATOS.especies[e]?.evoluciona?.find((x) => nivel >= x.nivel);
+    if (!ev) break;
+    e = ev.a;
+  }
+  return e;
+}
 /** Los bolsillos que se abren en combate: lo que cura y los cubos (objetos clave y técnicas, no). */
 const BOLSILLOS_COMBATE: readonly IdBolsillo[] = ['botiquin', 'cubos'];
 /** Segundos que tarda la flecha de la barra de captura en cruzarla de lado a lado. */
@@ -146,7 +165,7 @@ const ESTADISTICA: Record<string, string> = { fuerza: 'la fuerza', escudo: 'el e
 
 type Fase = 'fuera' | 'entrando' | 'mensajes' | 'menu' | 'barra' | 'saliendo';
 /** Qué menú está abierto: el principal, los ataques, la mochila, el equipo o el cambio obligado. */
-type Menu = 'raiz' | 'ataques' | 'mochila' | 'equipo' | 'forzado';
+type Menu = 'raiz' | 'ataques' | 'mochila' | 'equipo' | 'forzado' | 'objetivo';
 
 interface Opcion {
   html: string;
@@ -204,7 +223,8 @@ export class Combate implements Subsistema {
   private fase: Fase = 'fuera';
   private reloj = 0;
   private estado: EstadoCombate | null = null;
-  private luchadores: (Luchador | null)[] = [null, null];
+  /** Por posición: lado × 2 + hueco (en el 1 contra 1, la 0 y la 2). */
+  private luchadores: (Luchador | null)[] = [null, null, null, null];
   private cola: Paso[] = [];
   private paso: Paso | null = null;
   private tPaso = 0;
@@ -236,7 +256,14 @@ export class Combate implements Subsistema {
   private flecha!: HTMLElement;
   private lanzamiento: { objeto: string; t: number } | null = null;
   private particulas: { malla: Mesh; vel: Vector3; vida: number }[] = [];
-  private vidaVista: [number, number] = [0, 0];
+  private vidaVista = [0, 0, 0, 0];
+  /** El dos contra dos: formato, cuántas del lado 0 son tuyas (el resto, del amigo) y quién saca a cada rival. */
+  private formato: 1 | 2 = 1;
+  private nPropias = 0;
+  private nombresRival: string[] = [];
+  private nombreAliado = '';
+  private movElegido = 0;
+  private plataformas: Mesh[] = [];
 
   // Interfaz.
   private raiz!: HTMLDivElement;
@@ -290,6 +317,22 @@ export class Combate implements Subsistema {
             : def.rival
             ? [crearCriatura(DATOS, ESPECIE_INICIAL[inicialDelRival(inicial as TipoInicial)], def.rival.nivel, rng), ...(def.rival.extra ?? []).map((e) => crearCriatura(DATOS, e.especie, e.nivel, rng))]
             : def.equipo.map((e) => crearCriatura(DATOS, e.especie, e.nivel, rng));
+      // Los dos líderes juntos (el terrero de Agaete): dos contra dos, con tu segundo amigo al lado.
+      if (def.pareja) {
+        const otro = this.partida.datos.entrenadores[def.pareja.entrenador];
+        const delOtro = (otro?.equipo ?? []).map((e) => crearCriatura(DATOS, e.especie, e.nivel, rng));
+        const tipo = inicialesDeAmigos(inicial as TipoInicial)[0]!;
+        const nivel = def.pareja.nivelAliado;
+        const aliado = [crearCriatura(DATOS, formaA(ESPECIE_INICIAL[tipo] ?? ESPECIE_INICIAL.roca!, nivel), nivel, rng), ...(def.pareja.extraAliado ?? []).map((e) => crearCriatura(DATOS, e.especie, e.nivel, rng))];
+        void this.empezar([...equipo, ...delOtro], guionId, {
+          formato: 2,
+          aliado,
+          activosRival: [0, equipo.length],
+          nombresRival: def.pareja.nombres,
+          nombreAliado: this.partida.amigos.amigo2 ?? 'Tu amigo',
+        });
+        return;
+      }
       void this.empezar(equipo, guionId);
     });
     ctx.eventos.on('evolucion:fuera', () => void this.evolucionarFuera());
@@ -310,12 +353,19 @@ export class Combate implements Subsistema {
     const arriba = new MaterialDiorama({ color: '#E9D6A8', bordes: [-0.05, 0.4], rebote: 0.15 });
     const canto = new MaterialDiorama({ color: '#B9976A', bordes: [-0.05, 0.4] });
     this.materiales.push(arriba, canto);
-    for (const [i, s] of SITIO.entries()) {
-      const r = i === 0 ? 1.15 : 1.0;
+    // Las del 1 contra 1 y, aparte, las cuatro del dos contra dos (más pequeñas): se ven las de su formato.
+    const losas: [Vector3, number, 1 | 2][] = [
+      ...SITIO.map((s, i): [Vector3, number, 1 | 2] => [s, i === 0 ? 1.15 : 1.0, 1]),
+      ...SITIO2.map((s, i): [Vector3, number, 1 | 2] => [s, i < 2 ? 0.88 : 0.8, 2]),
+    ];
+    for (const [s, r, formato] of losas) {
       const losa = new Mesh(new CylinderGeometry(r, r * 1.04, 0.14, 40), [canto, arriba, canto]);
       losa.position.set(s.x, -0.07, s.z);
       losa.receiveShadow = true;
+      losa.userData.formato = formato;
+      losa.visible = formato === 1;
       this.arena.add(losa);
+      this.plataformas.push(losa);
     }
     this.ctx.escena.add(this.arena);
   }
@@ -326,8 +376,10 @@ export class Combate implements Subsistema {
     raiz.hidden = true;
     raiz.innerHTML = `
       <div class="calima combate-clima" hidden aria-hidden="true"></div>
-      <div class="combate-ficha rival"><p class="combate-nombre"></p><p class="combate-nivel"></p><p class="combate-chips"></p><div class="combate-vida"><div class="combate-relleno"></div></div></div>
       <div class="combate-ficha propia"><p class="combate-nombre"></p><p class="combate-nivel"></p><p class="combate-chips"></p><div class="combate-vida"><div class="combate-relleno"></div></div><p class="combate-numeros"></p></div>
+      <div class="combate-ficha propia2"><p class="combate-nombre"></p><p class="combate-nivel"></p><p class="combate-chips"></p><div class="combate-vida"><div class="combate-relleno"></div></div><p class="combate-numeros"></p></div>
+      <div class="combate-ficha rival"><p class="combate-nombre"></p><p class="combate-nivel"></p><p class="combate-chips"></p><div class="combate-vida"><div class="combate-relleno"></div></div></div>
+      <div class="combate-ficha rival2"><p class="combate-nombre"></p><p class="combate-nivel"></p><p class="combate-chips"></p><div class="combate-vida"><div class="combate-relleno"></div></div></div>
       <div class="combate-caja"><p class="combate-texto" aria-live="assertive"></p><div class="combate-menu" hidden></div></div>
       <div class="combate-tipos" hidden></div>
       <div class="combate-barra" hidden><i class="blanca"></i><i class="verde"></i><b class="flecha"></b></div>
@@ -363,14 +415,17 @@ export class Combate implements Subsistema {
         numeros: ficha.querySelector('.combate-numeros'),
       });
     }
-    // fichas[0] es la rival (arriba) y fichas[1] la tuya: se ordenan por lado.
-    this.fichas.reverse();
+    // Por posición: 0 la tuya, 1 la del amigo, 2 y 3 las rivales (en el 1 contra 1, solo la 0 y la 2).
   }
 
   // ——— Entrar y salir ———
 
   /** Empieza un combate contra un entrenador (`entrenador`, su id) o una criatura salvaje (null). */
-  private async empezar(rival: Criatura[], entrenador: string | null): Promise<void> {
+  private async empezar(
+    rival: Criatura[],
+    entrenador: string | null,
+    op: { formato?: 1 | 2; aliado?: Criatura[]; activosRival?: number[]; nombresRival?: string[]; nombreAliado?: string } = {},
+  ): Promise<void> {
     if (this.fase !== 'fuera' || !this.partida.equipo.some((c) => c.vida > 0)) return;
     this.fase = 'entrando';
     this.entrenador = entrenador;
@@ -386,8 +441,19 @@ export class Combate implements Subsistema {
     // Dentro de un gimnasio, su campo (tormenta de arena, viento…) en los combates contra entrenadores.
     const sala = this.partida.estado.dentro;
     const campo = entrenador && sala ? this.partida.datos.campos?.[sala] : undefined;
+    // En el dos contra dos, tu equipo y, detrás, el del amigo (aliado): empiezan tu primera y la suya.
+    this.formato = op.formato ?? 1;
+    const propias = structuredClone(this.partida.equipo);
+    const aliado = op.aliado ?? [];
+    this.nPropias = propias.length;
+    this.nombresRival = op.nombresRival ?? [];
+    this.nombreAliado = op.nombreAliado ?? '';
+    for (const pl of this.plataformas) pl.visible = pl.userData.formato === this.formato;
+    const conAliado = aliado.length
+      ? { aliadoDesde: propias.length, activosIniciales: [[propias.findIndex((c) => c.vida > 0), propias.length + Math.max(0, aliado.findIndex((c) => c.vida > 0))], op.activosRival ?? [0, 1]] as [number[], number[]] }
+      : {};
     const r = iniciarCombate(
-      { equipos: [structuredClone(this.partida.equipo), rival], formato: 1, salvaje: entrenador === null, control: ['jugador', 'ia'], rng, experiencia: true, rebeldes, ...(campo ? { campo } : {}) },
+      { equipos: [[...propias, ...aliado], rival], formato: this.formato, salvaje: entrenador === null, control: ['jugador', 'ia'], rng, experiencia: true, rebeldes, ...(campo ? { campo } : {}), ...conAliado },
       DATOS,
     );
     this.estado = r.estado;
@@ -418,7 +484,7 @@ export class Combate implements Subsistema {
       ),
     );
     for (const l of this.luchadores) l?.raiz.removeFromParent();
-    this.luchadores = [null, null];
+    this.luchadores = [null, null, null, null];
     // Destello y fundido a negro; en negro, se cambia a la arena.
     this.encolar({ duracion: 0.45, saltable: false, animar: (t) => (this.velo.style.cssText = `opacity:${Math.sin(t * Math.PI * 3) ** 2 * 0.85};background:#fff`) });
     this.encolar({ duracion: FUNDIDO, saltable: false, animar: (t) => (this.velo.style.cssText = `opacity:${t};background:#1d1720`) });
@@ -441,6 +507,9 @@ export class Combate implements Subsistema {
       return ev ? [{ uid: c.uid, a: ev.a }] : [];
     });
     if (!evoluciones.length) return;
+    this.formato = 1;
+    this.nPropias = this.partida.equipo.length;
+    for (const pl of this.plataformas) pl.visible = pl.userData.formato === 1;
     this.fase = 'entrando';
     this.entrenador = null;
     this.ctx.eventos.emit('combate:rival', { entrenador: null, soloEvolucion: true });
@@ -497,14 +566,15 @@ export class Combate implements Subsistema {
   }
 
   /** Pone en su plataforma la figura de una criatura, en lugar de la que hubiera. */
-  private ponerLuchador(lado: number, uid: string): void {
+  private ponerLuchador(p: number, uid: string): void {
     const f = this.figuras.get(uid);
     if (!f) return;
-    this.luchadores[lado]?.raiz.removeFromParent();
+    const lado = (p >> 1) as 0 | 1;
+    this.luchadores[p]?.raiz.removeFromParent();
     const alto = this.altos.get(uid) ?? TAMANO[lado];
     // Centradas en su círculo por el centro del cuerpo (figuraCriatura), sin desplazarlas (autor).
     const ajuste = new Vector3();
-    this.luchadores[lado] = { raiz: f, giro: GIRO[lado], extra: new Vector3(), escala: 0, visible: false, alto, ajuste };
+    this.luchadores[p] = { raiz: f, giro: GIRO[lado], extra: new Vector3(), escala: 0, visible: false, alto, ajuste };
     this.arena.add(f);
   }
 
@@ -529,7 +599,7 @@ export class Combate implements Subsistema {
       this.ajustarFondo();
       this.render.enfocar(ARENA.x, 0, ARENA.z);
       this.colocarCamara();
-      for (const lado of [0, 1] as const) this.pintarFicha(lado, true);
+      for (let p = 0; p < 4; p++) this.pintarFicha(p, true);
     } else if (this.guardado) {
       for (const r of this.restosEvolucion) {
         r.grupo.removeFromParent();
@@ -560,7 +630,7 @@ export class Combate implements Subsistema {
 
   private colocarCamara(): void {
     const c = this.ctx.camara;
-    c.position.copy(ARENA).add(CAMARA);
+    c.position.copy(ARENA).add(this.formato === 2 ? CAMARA2 : CAMARA);
     c.lookAt(ARENA.clone().add(MIRA));
   }
 
@@ -569,7 +639,7 @@ export class Combate implements Subsistema {
     const paneles = [caja, ...this.fichas.map((f) => f.nombre.parentElement!)];
     // Antes de volver: las que han subido de nivel y ya pueden, evolucionan (si no has perdido).
     const fin = this.estado!;
-    if (fin.fin !== 'derrota') for (const { uid, a } of evolucionesTrasCombate(this.nivelesAntes, fin.lados[0].equipo, DATOS)) this.encolarEvolucion(uid, a);
+    if (fin.fin !== 'derrota') for (const { uid, a } of evolucionesTrasCombate(this.nivelesAntes, fin.lados[0].equipo.slice(0, this.nPropias), DATOS)) this.encolarEvolucion(uid, a);
     this.encolar({ duracion: FUNDIDO, saltable: false, animar: (t) => (this.velo.style.cssText = `opacity:${t};background:#1d1720`) });
     this.encolar({
       // En negro: vuelta a la isla. Solo queda el velo, que se aclara.
@@ -581,13 +651,19 @@ export class Combate implements Subsistema {
         this.raiz.hidden = false;
         for (const p of paneles) p.style.visibility = 'hidden';
         for (const l of this.luchadores) l?.raiz.removeFromParent();
-        this.luchadores = [null, null];
+        this.luchadores = [null, null, null, null];
         const e = this.estado!;
         // El equipo vuelve a «partida» como ha quedado: vida, PP, estados y experiencia.
-        this.partida.equipo = e.lados[0].equipo;
+        // Sin las del amigo, que van detrás de las tuyas.
+        this.partida.equipo = e.lados[0].equipo.slice(0, this.nPropias);
         if (e.fin !== 'derrota') this.partida.subidasFuera.clear();
         if (e.capturada && this.partida.equipo.length < MAX_EQUIPO) this.partida.equipo.push(e.capturada);
-        if (e.fin === 'victoria' && this.entrenador) this.partida.vencerA(this.entrenador);
+        if (e.fin === 'victoria' && this.entrenador) {
+          // Con dos líderes, primero el otro: lo que dice al volver es lo del principal.
+          const pareja = this.partida.datos.entrenadores[this.entrenador]?.pareja;
+          if (pareja) this.partida.vencerA(pareja.entrenador);
+          this.partida.vencerA(this.entrenador);
+        }
         this.partida.terminarCombate();
         if (e.fin === 'derrota') this.partida.volverAlRefugio();
         this.ctx.eventos.emit('combate:fin', { resultado: e.fin ?? 'victoria' });
@@ -672,8 +748,29 @@ export class Combate implements Subsistema {
 
   /** La criatura activa de un lado. */
   private activa(lado: 0 | 1): Criatura | undefined {
-    const l = this.estado?.lados[lado];
-    return l ? l.equipo[l.activos[0]] : undefined;
+    return this.activaEn(lado * 2);
+  }
+
+  /** La criatura de una posición (lado × 2 + hueco), si la hay. */
+  private activaEn(p: number): Criatura | undefined {
+    const l = this.estado?.lados[p >> 1];
+    const i = l?.activos[p & 1];
+    return l && i !== undefined && i >= 0 ? l.equipo[i] : undefined;
+  }
+
+  private pos(r: Ref): number {
+    return r.lado * 2 + r.hueco;
+  }
+
+  /** Dónde está cada posición en la arena, según el formato. */
+  private sitio(p: number): Vector3 {
+    return this.formato === 2 ? SITIO2[p]! : SITIO[(p >> 1) as 0 | 1];
+  }
+
+  /** El centro del otro lado: hacia allí se lanzan los ataques. */
+  private centroRival(lado: number): Vector3 {
+    const otro = 1 - lado;
+    return this.formato === 2 ? this.sitio(otro * 2).clone().add(this.sitio(otro * 2 + 1)).multiplyScalar(0.5) : this.sitio(otro * 2).clone();
   }
 
   /** Convierte los eventos del núcleo en la función: mensajes y animaciones, en orden. */
@@ -684,6 +781,7 @@ export class Combate implements Subsistema {
       switch (ev.tipo) {
         case 'entrada': {
           const lado = ev.ref.lado;
+          const p = this.pos(ev.ref);
           const uid = ev.ficha.uid;
           if (lado === 1 && this.estado?.salvaje) {
             // La salvaje ya está ahí: aparece de un salto, sin cubo.
@@ -693,11 +791,11 @@ export class Combate implements Subsistema {
               duracion: 1.3,
               saltable: false,
               empezar: () => {
-                this.ponerLuchador(lado, uid);
-                this.pintarEntrada(lado, ev.ficha);
+                this.ponerLuchador(p, uid);
+                this.pintarEntrada(p, ev.ficha);
               },
               animar: (t) => {
-                const l = this.luchadores[lado]!;
+                const l = this.luchadores[p]!;
                 l.visible = true;
                 l.escala = rebote(Math.min(1, t * 1.6));
               },
@@ -710,22 +808,29 @@ export class Combate implements Subsistema {
           let destello: Mesh | null = null;
           const abierto = { chispas: false };
           this.encolar({
-            texto: lado === 1 ? `¡${this.entrenador?.startsWith('lider') ? 'La líder' : 'El entrenador'} saca a ${ev.ficha.nombre}!` : `¡Adelante, ${ev.ficha.nombre}!`,
+            texto:
+              this.formato === 2 && lado === 1
+                ? `¡${this.nombresRival[ev.ref.hueco] ?? 'El rival'} saca a ${ev.ficha.nombre}!`
+                : this.formato === 2 && ev.ref.hueco === 1
+                  ? `¡${this.nombreAliado} saca a ${ev.ficha.nombre}!`
+                  : lado === 1
+                    ? `¡${this.entrenador?.startsWith('lider') ? 'La líder' : 'El entrenador'} saca a ${ev.ficha.nombre}!`
+                    : `¡Adelante, ${ev.ficha.nombre}!`,
             sonido: 'salida',
             duracion: 1.9,
             saltable: false,
             empezar: () => {
-              this.ponerLuchador(lado, uid);
-              this.pintarEntrada(lado, ev.ficha);
+              this.ponerLuchador(p, uid);
+              this.pintarEntrada(p, ev.ficha);
               cubo = figuraCubo(CUBO[lado], this.materialCubo);
-              cubo.position.copy(SITIO[lado]).setY(CAIDA);
+              cubo.position.copy(this.sitio(p)).setY(CAIDA);
               this.arena.add(cubo);
               destello = new Mesh(this.esferaDestello, this.materialDestello.clone());
               destello.visible = false;
-              destello.position.copy(SITIO[lado]).setY((this.luchadores[lado]?.alto ?? TAMANO[lado]) * 0.45);
+              destello.position.copy(this.sitio(p)).setY((this.luchadores[p]?.alto ?? TAMANO[lado]) * 0.45);
               this.arena.add(destello);
             },
-            animar: (t) => this.animarSalida(lado, t, cubo!, destello!, abierto),
+            animar: (t) => this.animarSalida(p, t, cubo!, destello!, abierto),
           });
           break;
         }
@@ -735,6 +840,7 @@ export class Combate implements Subsistema {
           const mov = DATOS.movimientos[ev.movimiento];
           tipoUsado = mov?.tipo || 'comun';
           const lado = atacante;
+          const p = this.pos(ev.ref);
           const estado = mov?.categoria === 'estado';
           this.encolar({
             texto: `¡${ev.nombre} usa ${mov?.nombre ?? ev.movimiento}!`,
@@ -742,12 +848,12 @@ export class Combate implements Subsistema {
             duracion: 0.75,
             saltable: false,
             animar: (t) => {
-              const l = this.luchadores[lado]!;
+              const l = this.luchadores[p]!;
               if (estado) {
                 l.extra.set(0, Math.sin(t * Math.PI) * 0.25, 0);
                 return;
               }
-              const hacia = SITIO[1 - lado].clone().sub(SITIO[lado]).normalize();
+              const hacia = this.centroRival(lado).sub(this.sitio(p)).normalize();
               const k = t < 0.45 ? -Math.sin((t / 0.45) * Math.PI) * 0.15 : Math.sin(((t - 0.45) / 0.55) * Math.PI) * 0.8;
               l.extra.copy(hacia).multiplyScalar(k);
             },
@@ -756,28 +862,28 @@ export class Combate implements Subsistema {
         }
         case 'danio': {
           if (ev.causa !== 'golpe') {
-            const quien = this.activa(ev.ref.lado as 0 | 1);
+            const quien = this.activaEn(this.pos(ev.ref));
             const nombre = quien ? nombreDe(quien, DATOS) : '';
             const textos: Partial<Record<typeof ev.causa, string>> = {
               quemadura: 'La quemadura le hace daño.',
               arena: `La tormenta de arena golpea a ${nombre}.`,
               confusion: 'Se golpea a sí misma.',
             };
-            this.encolar({ texto: textos[ev.causa] ?? 'Le hace daño.', duracion: 0.9, saltable: true, empezar: () => this.pintarVida(ev.ref.lado, ev.vida, ev.vidaMax) });
+            this.encolar({ texto: textos[ev.causa] ?? 'Le hace daño.', duracion: 0.9, saltable: true, empezar: () => this.pintarVida(this.pos(ev.ref), ev.vida, ev.vidaMax) });
             break;
           }
-          const lado = ev.ref.lado;
+          const p = this.pos(ev.ref);
           const color = COLOR_TIPO.get(tipoUsado) ?? 0xffffff;
           this.encolar({
             duracion: 0.55,
             saltable: false,
             sonido: 'golpe',
             empezar: () => {
-              this.chispas(lado, color);
-              this.pintarVida(lado, ev.vida, ev.vidaMax);
+              this.chispas(p, color);
+              this.pintarVida(p, ev.vida, ev.vidaMax);
             },
             animar: (t) => {
-              const l = this.luchadores[lado]!;
+              const l = this.luchadores[p]!;
               l.visible = t > 0.8 || Math.floor(t * 8) % 2 === 0;
               l.extra.set(Math.sin(t * 40) * 0.06 * (1 - t), 0, 0);
             },
@@ -794,13 +900,13 @@ export class Combate implements Subsistema {
           this.encolar({ texto: `No afecta a ${ev.nombre}…`, duracion: 0.9, saltable: true });
           break;
         case 'etapa': {
-          const lado = ev.ref.lado;
+          const p = this.pos(ev.ref);
           const sube = ev.cambio > 0;
           this.encolar({
             texto: `¡${sube ? 'Sube' : 'Baja'} ${ESTADISTICA[ev.estadistica] ?? ev.estadistica} de ${ev.nombre}!`,
             duracion: 1,
             saltable: true,
-            empezar: () => this.chispas(lado, sube ? 0xffb347 : 0x6fa8ff, sube ? 1 : -1),
+            empezar: () => this.chispas(p, sube ? 0xffb347 : 0x6fa8ff, sube ? 1 : -1),
           });
           break;
         }
@@ -829,14 +935,14 @@ export class Combate implements Subsistema {
           this.encolar({ texto: `${ev.nombre} ya no está confusa.`, duracion: 1, saltable: true });
           break;
         case 'debilitado': {
-          const lado = ev.ref.lado;
+          const p = this.pos(ev.ref);
           this.encolar({
             texto: `¡${ev.nombre} se ha debilitado!`,
             sonido: 'debilitado',
             duracion: 1.1,
             saltable: false,
             animar: (t) => {
-              const l = this.luchadores[lado]!;
+              const l = this.luchadores[p]!;
               l.extra.set(0, -t * 0.5, 0);
               l.escala = 1 - t;
             },
@@ -854,15 +960,18 @@ export class Combate implements Subsistema {
         }
         case 'retirada': {
           const lado = ev.ref.lado;
+          const p = this.pos(ev.ref);
           this.encolar({
             texto: lado === 0 ? `¡${ev.nombre}, vuelve!` : `El entrenador retira a ${ev.nombre}.`,
             duracion: 0.8,
             saltable: false,
-            animar: (t) => (this.luchadores[lado]!.escala = 1 - t),
+            animar: (t) => (this.luchadores[p]!.escala = 1 - t),
           });
           break;
         }
         case 'experiencia': {
+          // Las del amigo no ganan experiencia (núcleo); por si acaso, no se cuentan.
+          if (this.formato === 2 && ev.indice >= this.nPropias) break;
           this.encolar({ texto: `${ev.nombre} gana ${ev.cantidad} puntos de experiencia.`, duracion: 1.1, saltable: true });
           for (const s of ev.subidas) {
             this.encolar({ texto: `¡${ev.nombre} sube al nivel ${s.nivel}!`, sonido: 'nivel', duracion: 1.3, saltable: true, empezar: () => this.pintarSubida(ev.indice, s) });
@@ -871,14 +980,14 @@ export class Combate implements Subsistema {
           break;
         }
         case 'curacion':
-          this.encolar({ texto: 'Recupera vida.', sonido: 'curar', duracion: 0.9, saltable: true, empezar: () => this.pintarVida(ev.ref.lado, ev.vida, ev.vidaMax) });
+          this.encolar({ texto: 'Recupera vida.', sonido: 'curar', duracion: 0.9, saltable: true, empezar: () => this.pintarVida(this.pos(ev.ref), ev.vida, ev.vidaMax) });
           break;
         case 'objetoUsado': {
           const o = DATOS.objetos[ev.objeto];
           const nombre = o?.nombre ?? ev.objeto;
           if (o?.tipo === 'captura') {
             // El cubo vuela hasta la salvaje, que desaparece dentro.
-            this.encolar({ texto: `¡Lanzas un ${nombre}!`, sonido: 'lanzar', duracion: 0.9, saltable: false, animar: (t) => (this.luchadores[1]!.escala = 1 - t) });
+            this.encolar({ texto: `¡Lanzas un ${nombre}!`, sonido: 'lanzar', duracion: 0.9, saltable: false, animar: (t) => (this.luchadores[2]!.escala = 1 - t) });
           } else {
             this.encolar({ texto: ev.lado === 0 ? `Usas ${nombre}.` : `El entrenador usa ${nombre}.`, duracion: 1, saltable: true });
           }
@@ -886,7 +995,7 @@ export class Combate implements Subsistema {
         }
         case 'captura': {
           for (let i = 0; i < ev.sacudidas; i++) {
-            this.encolar({ texto: '…', sonido: 'sacudida', duracion: 0.55, saltable: false, animar: (t) => this.luchadores[1]!.extra.set(Math.sin(t * Math.PI * 2) * 0.12, 0, 0) });
+            this.encolar({ texto: '…', sonido: 'sacudida', duracion: 0.55, saltable: false, animar: (t) => this.luchadores[2]!.extra.set(Math.sin(t * Math.PI * 2) * 0.12, 0, 0) });
           }
           const nombre = this.activa(1) ? nombreDe(this.activa(1)!, DATOS) : 'la criatura';
           if (ev.exito) {
@@ -894,7 +1003,7 @@ export class Combate implements Subsistema {
             this.encolar({ texto: `¡Has capturado a ${nombre}!`, sonido: 'captura', duracion: 1.6, saltable: true });
             if (!cabe) this.encolar({ texto: 'Pero tu equipo está lleno: se queda en libertad.', duracion: 1.6, saltable: true });
           } else {
-            this.encolar({ texto: '¡Oh, no! Se ha escapado.', sonido: 'escapa', duracion: 1.1, saltable: true, animar: (t) => (this.luchadores[1]!.escala = rebote(t)) });
+            this.encolar({ texto: '¡Oh, no! Se ha escapado.', sonido: 'escapa', duracion: 1.1, saltable: true, animar: (t) => (this.luchadores[2]!.escala = rebote(t)) });
           }
           break;
         }
@@ -904,7 +1013,12 @@ export class Combate implements Subsistema {
         case 'fin': {
           const premio = this.entrenador ? (this.partida.datos.entrenadores[this.entrenador]?.premio ?? 0) : 0;
           const textos: Record<string, string> = {
-            victoria: this.entrenador ? `¡Has vencido al entrenador! Te da ${premio} de dinero.` : '¡Has ganado!',
+            victoria:
+              this.formato === 2
+                ? `¡Habéis vencido a los dos líderes! Te dan ${premio} de dinero.`
+                : this.entrenador
+                  ? `¡Has vencido al entrenador! Te da ${premio} de dinero.`
+                  : '¡Has ganado!',
             derrota:
               perdidaPorDerrota(this.partida.dinero) > 0
                 ? `No te quedan criaturas que puedan luchar… Vuelves corriendo al refugio y por el camino se te caen ${perdidaPorDerrota(this.partida.dinero)} de dinero.`
@@ -972,7 +1086,7 @@ export class Combate implements Subsistema {
         o.elegir();
       } else if (cancelar && this.menuActual !== 'raiz' && this.menuActual !== 'forzado') {
         this.ctx.eventos.emit('sonido:tocar', { nombre: 'atras' });
-        this.abrirMenu('raiz');
+        this.abrirMenu(this.menuActual === 'objetivo' ? 'ataques' : 'raiz');
       }
       return;
     }
@@ -1031,7 +1145,7 @@ export class Combate implements Subsistema {
         this.opciones = [
           { html: boton('Luchar'), activa: true, elegir: () => this.abrirMenu('ataques') },
           { html: boton('Mochila'), activa: true, elegir: () => this.abrirMenu('mochila') },
-          { html: boton('Equipo'), activa: e.lados[0].equipo.length > 1, elegir: () => this.abrirMenu('equipo') },
+          { html: boton('Equipo'), activa: (this.formato === 2 ? this.nPropias : e.lados[0].equipo.length) > 1, elegir: () => this.abrirMenu('equipo') },
           { html: boton('Huir'), activa: e.salvaje, elegir: () => this.enviar({ tipo: 'huir' }) },
         ];
         break;
@@ -1045,7 +1159,12 @@ export class Combate implements Subsistema {
             activa: m.pp > 0,
             elegir: () => {
               this.ultimoAtaque.set(c.uid, m.id);
-              this.enviar({ tipo: 'movimiento', indice, objetivo: { lado: 1, hueco: 0 } });
+              // En el dos contra dos, a cuál de las rivales (si quedan dos y el ataque es a una).
+              const vivas = [0, 1].filter((h) => (this.activaEn(2 + h)?.vida ?? 0) > 0);
+              if (this.formato === 2 && vivas.length === 2 && objetivoDe(mov) === 'uno') {
+                this.movElegido = indice;
+                this.abrirMenu('objetivo');
+              } else this.enviar({ tipo: 'movimiento', indice, objetivo: { lado: 1, hueco: vivas[0] ?? 0 } });
             },
           };
         });
@@ -1069,21 +1188,36 @@ export class Combate implements Subsistema {
         if (!this.opciones.length) texto = `◀ ${b.nombre} ▶ ${b.vacio} (X: volver)`;
         break;
       }
+      case 'objetivo': {
+        texto = '¿A cuál atacas? (X: volver)';
+        this.opciones = [0, 1].map((h) => {
+          const r = this.activaEn(2 + h);
+          return {
+            html: boton(r ? nombreDe(r, DATOS) : '—', r ? `Vida ${r.vida}/${vidaMaxima(r, DATOS)}` : ''),
+            activa: (r?.vida ?? 0) > 0,
+            elegir: () => this.enviar({ tipo: 'movimiento', indice: this.movElegido, objetivo: { lado: 1, hueco: h } }),
+          };
+        });
+        break;
+      }
       case 'equipo':
       case 'forzado': {
         texto = cual === 'forzado' ? '¿A quién sacas?' : '¿A quién sacas? (X: volver)';
         const l = e.lados[0];
-        this.opciones = l.equipo.map((x, indice) => ({
+        // Con un amigo al lado, solo las tuyas (las suyas las saca él).
+        const tuyas = l.equipo.map((x, indice) => ({ x, indice })).filter(({ indice }) => this.formato !== 2 || indice < this.nPropias);
+        const hueco = e.pendientes[0] ?? { lado: 0 as const, hueco: 0 };
+        this.opciones = tuyas.map(({ x, indice }) => ({
           html: boton(`${nombreDe(x, DATOS)} · Nv. ${x.nivel}`, `Vida ${x.vida}/${vidaMaxima(x, DATOS)}${l.activos.includes(indice) ? ' · en combate' : ''}`),
           activa: x.vida > 0 && !l.activos.includes(indice),
-          elegir: () => (cual === 'forzado' ? this.seguir(reemplazar(this.estado!, { lado: 0, hueco: 0 }, indice, DATOS)) : this.enviar({ tipo: 'cambio', indice })),
+          elegir: () => (cual === 'forzado' ? this.seguir(reemplazar(this.estado!, hueco, indice, DATOS)) : this.enviar({ tipo: 'cambio', indice })),
         }));
         break;
       }
     }
     this.texto.textContent = texto;
     this.menu.hidden = false;
-    this.menu.classList.toggle('lista', cual === 'mochila' || cual === 'equipo' || cual === 'forzado');
+    this.menu.classList.toggle('lista', cual === 'mochila' || cual === 'equipo' || cual === 'forzado' || cual === 'objetivo');
     this.menu.replaceChildren();
     this.botones = this.opciones.map((o) => {
       const b = document.createElement('span');
@@ -1138,26 +1272,29 @@ export class Combate implements Subsistema {
     }
   }
 
-  private pintarFicha(lado: 0 | 1, deGolpe = false): void {
-    const c = this.activa(lado);
+  private pintarFicha(p: number, deGolpe = false): void {
+    const c = this.activaEn(p);
+    const f = this.fichas[p]!;
+    // Las fichas sin criatura (las de los huecos del dos contra dos, en el 1 contra 1), fuera.
+    f.nombre.parentElement!.style.display = c ? '' : 'none';
     if (!c) return;
-    const f = this.fichas[lado];
     f.nombre.textContent = nombreDe(c, DATOS);
     f.nivel.textContent = `Nv. ${c.nivel}`;
     f.chips.innerHTML = chipsTipos(DATOS.especies[c.especie].tipos);
-    if (deGolpe) this.pintarVida(lado, c.vida, vidaMaxima(c, DATOS), true);
+    if (deGolpe) this.pintarVida(p, c.vida, vidaMaxima(c, DATOS), true);
   }
 
   /**
    * La ficha de la que entra, con la vida que trae al entrar (la del evento). La del estado ya es la
    * del final del turno: al cambiar, salía con el golpe del rival ya restado (autor, 2026-11-19).
    */
-  private pintarEntrada(lado: 0 | 1, ficha: FichaCombate): void {
-    const f = this.fichas[lado];
+  private pintarEntrada(p: number, ficha: FichaCombate): void {
+    const f = this.fichas[p]!;
+    f.nombre.parentElement!.style.display = '';
     f.nombre.textContent = ficha.nombre;
     f.nivel.textContent = `Nv. ${ficha.nivel}`;
     f.chips.innerHTML = chipsTipos(DATOS.especies[ficha.especie].tipos);
-    this.pintarVida(lado, ficha.vida, ficha.vidaMax, true);
+    this.pintarVida(p, ficha.vida, ficha.vidaMax, true);
   }
 
   /** La subida de nivel de la que está en combate, con el nivel y la vida de esa subida (no los del final). */
@@ -1167,14 +1304,14 @@ export class Combate implements Subsistema {
     this.pintarVida(0, s.vida, s.vidaMax, true);
   }
 
-  private pintarVida(lado: number, vida: number, max: number, deGolpe = false): void {
-    const f = this.fichas[lado];
-    const p = Math.max(0, vida / max);
+  private pintarVida(p: number, vida: number, max: number, deGolpe = false): void {
+    const f = this.fichas[p]!;
+    const parte = Math.max(0, vida / max);
     f.relleno.style.transition = deGolpe ? 'none' : '';
-    f.relleno.style.width = `${p * 100}%`;
-    f.relleno.style.background = p > 0.5 ? '#4cc26e' : p > 0.2 ? '#f2c14e' : '#ef5b4f';
+    f.relleno.style.width = `${parte * 100}%`;
+    f.relleno.style.background = parte > 0.5 ? '#4cc26e' : parte > 0.2 ? '#f2c14e' : '#ef5b4f';
     if (f.numeros) f.numeros.textContent = `${Math.max(0, vida)} / ${max}`;
-    this.vidaVista[lado] = vida;
+    this.vidaVista[p] = vida;
   }
 
   // ——— Animación ———
@@ -1184,9 +1321,9 @@ export class Combate implements Subsistema {
    * (hasta 0,6), tiembla un instante y se abre en un destello (desde 0,66) del que sale la
    * criatura con un rebote.
    */
-  private animarSalida(lado: number, t: number, cubo: Group, destello: Mesh, abierto: { chispas: boolean }): void {
+  private animarSalida(p: number, t: number, cubo: Group, destello: Mesh, abierto: { chispas: boolean }): void {
     const suelo = RADIO_CUBO * 1.05;
-    const l = this.luchadores[lado]!;
+    const l = this.luchadores[p]!;
     girarCubo(cubo, this.reloj * (t < 0.6 ? 3 : 1));
     if (t < 0.36) {
       const u = t / 0.36;
@@ -1201,7 +1338,7 @@ export class Combate implements Subsistema {
     const abre = (t - 0.66) / 0.34;
     if (abre >= 0 && !abierto.chispas) {
       abierto.chispas = true;
-      this.chispas(lado, 0xffe39a);
+      this.chispas(p, 0xffe39a);
     }
     if (abre >= 0) {
       cubo.scale.setScalar(Math.max(0, 1 - abre * 5));
@@ -1359,7 +1496,7 @@ export class Combate implements Subsistema {
         this.evolucion = { parable: true, cancelada: false };
         // Fuera la rival y las fichas; la que evoluciona, sola en el centro y de cara.
         for (const l of this.luchadores) l?.raiz.removeFromParent();
-        this.luchadores = [null, null];
+        this.luchadores = [null, null, null, null];
         for (const f of fichas()) f.style.visibility = 'hidden';
         this.ctx.escena.background = FONDO_EVOLUCION;
         for (const o of this.arena.children) {
@@ -1513,10 +1650,10 @@ export class Combate implements Subsistema {
   }
 
   private animarLuchadores(): void {
-    for (const [lado, l] of this.luchadores.entries()) {
+    for (const [p, l] of this.luchadores.entries()) {
       if (!l) continue;
-      const s = SITIO[lado];
-      const respira = 1 + Math.sin(this.reloj * 2.4 + lado * 1.7) * 0.025;
+      const s = this.sitio(p);
+      const respira = 1 + Math.sin(this.reloj * 2.4 + p * 1.7) * 0.025;
       l.raiz.visible = l.visible && l.escala > 0.01;
       l.raiz.position.set(s.x + l.ajuste.x + l.extra.x, s.y + l.extra.y, s.z + l.ajuste.z + l.extra.z);
       l.raiz.rotation.y = l.giro;
@@ -1525,11 +1662,11 @@ export class Combate implements Subsistema {
   }
 
   /** Chispas del color del ataque sobre una criatura; `sube` 1 o -1 para las de subir o bajar. */
-  private chispas(lado: number, color: number, sube = 0): void {
+  private chispas(p: number, color: number, sube = 0): void {
     const mat = new MeshBasicNodeMaterial({ color, transparent: true });
     mat.toneMapped = false;
     this.materiales.push(mat);
-    const centro = SITIO[lado].clone().add(new Vector3(0, (this.luchadores[lado]?.alto ?? TAMANO[lado]) * 0.5, 0));
+    const centro = this.sitio(p).clone().add(new Vector3(0, (this.luchadores[p]?.alto ?? TAMANO[(p >> 1) as 0 | 1]) * 0.5, 0));
     for (let i = 0; i < 14; i++) {
       const a = (i / 14) * Math.PI * 2;
       const malla = new Mesh(new SphereGeometry(0.06 + (i % 3) * 0.02, 6, 4), mat);

@@ -187,7 +187,18 @@ Así la subida a las cumbres tiene sentido y la historia de la isla secreta avan
   - Dentro, el agarre confunde.
 - Las casas cueva, ahora con su sala por dentro, encalada (antes no se podía entrar). Una prueba
   vigila que cada puerta de cada isla lleve a una sala.
-- **Falta (3b):** los dos líderes y el dos contra dos con el segundo amigo.
+**Fase 3b, hecha (2026-11-23).** Al vencer al tercer luchador entran los dos líderes y tu segundo
+amigo.
+- La de Lucha te pregunta si estáis listos. Con un «Sí», empieza el **dos contra dos**: tú y tu
+  amigo contra los dos líderes a la vez, en el terrero, con el agarre.
+- Tu amigo lleva la primera de las iniciales que quedan, ya evolucionada (nivel 29), y un
+  Azurvan. La IA juega por él y saca sus criaturas cuando caen. Tú solo mandas y sacas las tuyas.
+  Sus criaturas no ganan experiencia.
+- En los ataques a una sola criatura eliges a cuál de las dos rivales.
+- Al ganar: las dos mitades de la pintadera de Gran Canaria (`gimnasio3-vencido`) y el dinero de
+  la líder de Lucha. El líder Eléctrico no lucha solo.
+- **Queda:** el barco a Tenerife (aún no sale; la isla 4 está sin diseñar) y la fase 4 (Bandama,
+  Maspalomas, pulido y probador).
 
 | 1 | Las Palmas y La Isleta, con el barco desde Morro Jable (**hecha**, 2026-11-22) | alto |
 | 2 | Guayadeque con sus casas cueva, las cumbres y el Roque Nublo, con la historia (**hecha**, 2026-11-22) | alto |

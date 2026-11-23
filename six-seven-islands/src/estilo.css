@@ -1248,6 +1248,17 @@ body {
   bottom: 196px;
 }
 
+/* El dos contra dos: la segunda rival debajo de la primera y la del amigo encima de la tuya. */
+.combate-ficha.rival2 {
+  top: 122px;
+  left: 32px;
+}
+
+.combate-ficha.propia2 {
+  right: 32px;
+  bottom: 308px;
+}
+
 .combate-nombre {
   display: inline-block;
   margin: 0 0 6px;

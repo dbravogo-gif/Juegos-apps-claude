@@ -7,6 +7,8 @@ import { ENTRE_RAYOS, opacidadTrasRayo } from '../src/sistemas/oscuridad/oscurid
 import { ISLAS, FUERTEVENTURA, GRAN_CANARIA } from '../src/data/islas';
 import { ISLA_3, PUERTAS_ISLA3 } from '../src/data/isla3';
 import { GIMNASIO_ELECTRICO } from '../src/data/gimnasio-electrico';
+import { GIMNASIO_LUCHA } from '../src/data/gimnasio-lucha';
+import { MEDALLAS } from '../src/data/medallas';
 import { GUION_ISLA2 } from '../src/data/guion-isla2';
 import { DATOS_COMBATE_PRUEBA as DATOS } from '../src/data/combate-prueba';
 import { quienEs } from '../src/data/entrenadores-isla1';
@@ -168,5 +170,30 @@ describe('gimnasio Eléctrico de Las Palmas (a oscuras, autor, 2026-11-22)', () 
     expect(opacidadTrasRayo(0.5)).toBeLessThan(1);
     expect(opacidadTrasRayo(2)).toBe(1);
     for (const t of ENTRE_RAYOS) expect(t).toBeGreaterThan(1);
+  });
+});
+
+describe('el terrero de Agaete (fase 3)', () => {
+  const quien = (id: string) => GIMNASIO_LUCHA.personajes.find((p) => p.id === id)!;
+  const def = (id: string) => GRAN_CANARIA.entrenadores[id]!;
+
+  it('los tres luchadores salen de uno en uno y preguntan antes de luchar', () => {
+    expect(quien('luchador-1').sin).toBe('vencido:luchador-1');
+    expect([quien('luchador-2').con, quien('luchador-2').sin]).toEqual(['vencido:luchador-1', 'vencido:luchador-2']);
+    expect([quien('luchador-3').con, quien('luchador-3').sin]).toEqual(['vencido:luchador-2', 'vencido:luchador-3']);
+    for (const id of ['luchador-1', 'luchador-2', 'luchador-3']) expect(def(id).pregunta, id).toBe(true);
+    expect(GRAN_CANARIA.campos?.['gimnasio-lucha']).toEqual({ agarre: true });
+  });
+
+  it('tras el tercero llegan los dos líderes y tu amigo; se lucha dos contra dos y se gana la pintadera', () => {
+    for (const id of ['lider-lucha', 'lider-electrico', 'amigo2-terrero']) expect(quien(id).con, id).toBe('vencido:luchador-3');
+    const l = def('lider-lucha');
+    expect(l.pareja?.entrenador).toBe('lider-electrico');
+    expect(def('lider-electrico').equipo.length).toBeGreaterThan(0);
+    // El Eléctrico no lucha solo: pregunta, y su diálogo no dice que sí.
+    expect(def('lider-electrico').pregunta).toBe(true);
+    expect(l.condicion).toBe('gimnasio3-vencido');
+    expect(l.medalla).toBe(3);
+    expect(MEDALLAS.find((m) => m.isla === 3)?.condicion).toBe('gimnasio3-vencido');
   });
 });

@@ -149,6 +149,43 @@ export const GUION_ISLA3: Guion = {
     },
     { dialogo: { lineas: [{ quien: 'Luchador', texto: '¡Revancha! Esta vez me toca ganar a mí.' }] } },
   ],
+  // La entrada de los dos líderes en el terrero (fase 3b).
+  'lider-lucha': [
+    {
+      sin: 'listo:lider-lucha',
+      dialogo: {
+        lineas: [
+          { quien: 'Líder', texto: '¡Así que tú has tumbado a mis tres luchadores! Soy la líder del terrero, la de Lucha.' },
+          { quien: 'Líder', texto: 'Y este es el líder Eléctrico de Las Palmas. Lleva días aquí, esperándote.' },
+          { quien: 'Líder', texto: 'En Gran Canaria la pintadera se gana con los dos gimnasios a la vez. Dos contra dos: vosotros contra nosotros.' },
+        ],
+        pregunta: { quien: 'Líder', texto: '¿Estáis listos, o vais antes a curaros?' },
+        efecto: { condicion: 'listo:lider-lucha' },
+        tras: [{ quien: 'Líder', texto: '¡Al centro del terrero! ¡Que empiece la luchada!' }],
+      },
+    },
+    { dialogo: { lineas: [{ quien: 'Líder', texto: '¿Otra vez? ¡Eso es tener raza! Al centro.' }] } },
+  ],
+  'lider-electrico': [
+    {
+      dialogo: {
+        lineas: [
+          { quien: 'Líder', texto: 'Perdona por no estar en mi gimnasio. Quería ver cómo luchabas con alguien a tu lado.' },
+          { quien: 'Líder', texto: 'Cuando estéis listos, habla con ella. Luchamos los dos a la vez.' },
+        ],
+      },
+    },
+  ],
+  'amigo2-terrero': [
+    {
+      dialogo: {
+        lineas: [
+          { quien: '{amigo2}', texto: '¡Aquí estoy! Tú manda a la tuya, que yo me encargo de la mía.' },
+          { quien: '{amigo2}', texto: 'Cuando estés listo, habla con la líder de Lucha. ¡A por ellos!' },
+        ],
+      },
+    },
+  ],
   'amigo2-agaete': [
     {
       dialogo: {

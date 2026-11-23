@@ -159,8 +159,9 @@ Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
   La Isleta no tienen ni una Eléctrica. Por orden: Pok107–108 Voltéro y Raigón, Pok78–79
   Tembladera, Pok82–83 Chispa de cable y Pok86 Farito (`PLAN-CRIATURAS.md`).
 - **Puntuar de 1 a 5** lo último publicado (2026-11-19 a 22):
-  - Gran Canaria, fase 1: el barco desde Morro Jable, Las Palmas, La Isleta y el gimnasio
-    Eléctrico a oscuras (que se lea el laberinto con los relámpagos y no frustre);
+  - Gran Canaria entera: el barco desde Morro Jable, Las Palmas, La Isleta, el gimnasio
+    Eléctrico a oscuras, Guayadeque, las cumbres, el Roque Nublo (el comandante y el segundo
+    amigo), Tejeda, el pinar de Tamadaba, Agaete y el terrero con el dos contra dos final;
   - la evolución con la bola de luz, sin silueta, y con el almendrado sin ver la arena;
   - la evolución nueva, con la isla de su tipo (sube una criatura con el modo desarrollador);
   - el combate: qué hace cada ataque, tipos bajo el nombre y el cursor en el último ataque;

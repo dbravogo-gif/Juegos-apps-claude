@@ -72,6 +72,11 @@ export interface LadoCombate {
   control: Control;
   /** Índices del equipo que han salido contra el rival actual: se reparten la experiencia. */
   participantes: number[];
+  /**
+   * Dos contra dos con un amigo (el terrero de Agaete): desde este índice, las criaturas del equipo
+   * son del aliado. Las maneja la IA (acción y reemplazo), no ganan experiencia y no se pueden sacar.
+   */
+  aliadoDesde?: number;
 }
 
 export interface EstadoCombate {
@@ -167,7 +172,14 @@ export interface ParametrosCombate {
   rebeldes?: string[];
   /** El campo del gimnasio donde se lucha. */
   campo?: Campo;
+  /** Las criaturas del lado 0 desde este índice son de un aliado que maneja la IA. */
+  aliadoDesde?: number;
+  /** Los índices de las activas al empezar, por lado (si no, las primeras en pie). */
+  activosIniciales?: [number[], number[]];
 }
+
+/** Si el índice del equipo es de una criatura del aliado. */
+export const delAliado = (l: LadoCombate, indice: number): boolean => l.aliadoDesde !== undefined && indice >= l.aliadoDesde;
 
 /** Sin PP en ningún movimiento: golpe sin tipo y retroceso de un cuarto del daño. */
 export const EMPUJON: Movimiento = {
@@ -250,14 +262,15 @@ export function iniciarCombate(p: ParametrosCombate, datos: DatosJuego): Resulta
     const copia = structuredClone(equipo);
     const vivos = copia.map((_, i) => i).filter((i) => vivo(copia[i]));
     if (vivos.length === 0) throw new Error(`El lado ${l} no tiene ninguna criatura en pie`);
-    const activos = vivos.slice(0, p.formato);
+    const activos = p.activosIniciales?.[l] ?? vivos.slice(0, p.formato);
     return {
       equipo: copia,
       activos,
       etapas: activos.map(etapasCero),
       volatil: activos.map(volatilCero),
       control: p.control[l],
-      participantes: [...activos],
+      participantes: activos.filter((i) => !(l === 0 && p.aliadoDesde !== undefined && i >= p.aliadoDesde)),
+      ...(l === 0 && p.aliadoDesde !== undefined ? { aliadoDesde: p.aliadoDesde } : {}),
     } satisfies LadoCombate;
   }) as [LadoCombate, LadoCombate];
   const e: EstadoCombate = {
@@ -310,6 +323,7 @@ export function validarAccion(e: EstadoCombate, ref: Ref, a: Accion, datos: Dato
     }
     case 'cambio':
       if (!banquillo(e, ref.lado).includes(a.indice)) throw new Error(`La criatura ${a.indice} no puede salir`);
+      if (delAliado(lado, a.indice)) throw new Error('Esa criatura es de tu aliado');
       return;
     case 'huir':
       if (!e.salvaje) throw new Error('No se puede huir de un entrenador');
@@ -379,9 +393,12 @@ export function resolverTurno(estado: EstadoCombate, decisiones: Decisiones, dat
 
   const turnos: Turno[] = [];
   for (const lado of [0, 1] as IdLado[]) {
+    const l = e.lados[lado];
+    // La IA decide por el lado que maneja y por las criaturas del aliado (dos contra dos con un amigo).
+    const decideIA = (hueco: number) => l.control === 'ia' || delAliado(l, l.activos[hueco]!);
     const acciones: (Accion | null | undefined)[] =
-      e.lados[lado].control === 'ia'
-        ? e.lados[lado].activos.map((_, hueco) => (vivo(criaturaEn(e, { lado, hueco })) ? elegirAccionIA(e, { lado, hueco }, datos) : null))
+      l.control === 'ia' || l.aliadoDesde !== undefined
+        ? l.activos.map((_, hueco) => (decideIA(hueco) ? (vivo(criaturaEn(e, { lado, hueco })) ? elegirAccionIA(e, { lado, hueco }, datos) : null) : (decisiones[lado]?.[hueco] ?? null)))
         : (decisiones[lado] ?? []);
     validarDecisiones(e, lado, acciones, datos);
     for (const ref of refsVivas(e, lado)) {
@@ -493,7 +510,7 @@ function meter(e: EstadoCombate, ref: Ref, indice: number, datos: DatosJuego, ev
   lado.activos[ref.hueco] = indice;
   lado.etapas[ref.hueco] = etapasCero();
   lado.volatil[ref.hueco] = volatilCero();
-  if (!lado.participantes.includes(indice)) lado.participantes.push(indice);
+  if (!lado.participantes.includes(indice) && !delAliado(lado, indice)) lado.participantes.push(indice);
   ev.push({ tipo: 'entrada', ref, ficha: fichaDe(lado.equipo[indice], datos) });
 }
 
@@ -717,7 +734,7 @@ function repartirExperiencia(e: EstadoCombate, derrotado: Criatura, datos: Datos
       ev.push({ tipo: 'experiencia', indice: i, nombre: nombreDe(criatura, datos), cantidad, subidas });
     }
   }
-  lado.participantes = lado.activos.filter((i) => i >= 0 && vivo(lado.equipo[i]));
+  lado.participantes = lado.activos.filter((i) => i >= 0 && vivo(lado.equipo[i]) && !delAliado(lado, i));
 }
 
 function finDeTurno(e: EstadoCombate, datos: DatosJuego, ev: Evento[]): void {
@@ -761,12 +778,15 @@ function prepararReemplazos(e: EstadoCombate, datos: DatosJuego, ev: Evento[]): 
     l.activos.forEach((i, hueco) => {
       if (i < 0 || vivo(l.equipo[i])) return;
       const ref = { lado, hueco };
-      if (disponibles === 0) {
+      // Con aliado, cada uno saca de los suyos: el aliado, de los del aliado; tú, de los tuyos.
+      const aliado = delAliado(l, i);
+      const libres = l.aliadoDesde === undefined ? banquillo(e, lado) : banquillo(e, lado).filter((j) => delAliado(l, j) === aliado);
+      if (disponibles === 0 || libres.length === 0) {
         l.activos[hueco] = -1;
         return;
       }
       disponibles -= 1;
-      if (l.control === 'ia') meter(e, ref, elegirReemplazoIA(e, lado, banquillo(e, lado), datos), datos, ev);
+      if (l.control === 'ia' || aliado) meter(e, ref, elegirReemplazoIA(e, lado, libres, datos), datos, ev);
       else {
         e.pendientes.push(ref);
         ev.push({ tipo: 'reemplazoPendiente', ref: { ...ref } });

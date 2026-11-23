@@ -118,6 +118,29 @@ export const ENTRENADORES_ISLA3: Readonly<Record<string, DefEntrenador>> = {
       'Los líderes ya lo saben. Dicen que vendrán los dos juntos… y que traigas a alguien.',
     ],
   },
+  // Los dos líderes, juntos en el terrero (autor, 2026-11-15): dos contra dos, con tu segundo amigo.
+  // La de Lucha manda (da la pintadera entera, las dos mitades); el Eléctrico no lucha solo. Sus
+  // criaturas son provisionales hasta que haya Eléctricas.
+  'lider-lucha': {
+    equipo: [{ especie: 'c043-2', nivel: 29 }, { especie: 'c034-2', nivel: 28 }, { especie: 'c012-2', nivel: 29 }],
+    premio: 1600,
+    tras: 'Las dos mitades de la pintadera ya son tuyas. Guárdalas juntas.',
+    condicion: 'gimnasio3-vencido',
+    medalla: 3,
+    pregunta: true,
+    pareja: { entrenador: 'lider-electrico', nombres: ['La líder de Lucha', 'El líder Eléctrico'], nivelAliado: 29, extraAliado: [{ especie: 'c032-2', nivel: 28 }] },
+    alVencer: [
+      '¡Qué combate! Así se lucha en Gran Canaria: juntos.',
+      'Toma: las dos mitades de la pintadera de Gran Canaria. Una por cada gimnasio, unidas por vosotros dos.',
+    ],
+  },
+  'lider-electrico': {
+    equipo: [{ especie: 'c044-2', nivel: 29 }, { especie: 'c035-2', nivel: 30 }],
+    premio: 0,
+    tras: 'Siento no haberte esperado en Las Palmas. Quería ver de lo que erais capaces juntos.',
+    // No lucha solo: para luchar, hay que hablar con la de Lucha.
+    pregunta: true,
+  },
   // El gimnasio Eléctrico (gimnasio-electrico.ts): el líder no está.
   'aprendiz-electrico-1': {
     equipo: [{ especie: 'c035-1', nivel: 22 }, { especie: 'c018-1', nivel: 22 }],
