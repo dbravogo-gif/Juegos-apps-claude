@@ -38,6 +38,8 @@ export class Camara implements Subsistema {
   private distancia = DISTANCIA;
   /** Con quién se habla ahora, si tiene figura. */
   private hablante: string | null = null;
+  /** Si el fondo puesto es el de las salas (para cambiarlo solo al entrar o salir). */
+  private fondoDentro = false;
   /** El centro de cada sala y a qué distancia cabe entera, para encuadrarla. */
   private centros = new Map<string, Vector3>();
   private distancias = new Map<string, number>();
@@ -105,6 +107,10 @@ export class Camara implements Subsistema {
     else this.mira.lerp(this.objetivo, k);
     const hablando = this.hablante !== null;
     const dentro = this.partida.estado.dentro;
+    if (!!dentro !== this.fondoDentro) {
+      this.fondoDentro = !!dentro;
+      this.render.fondo(ctx, this.fondoDentro);
+    }
     const lejos = dentro ? (this.distancias.get(dentro) ?? DISTANCIA) : DISTANCIA;
     this.elevacion += ((hablando ? ELEVACION_DIALOGO : ELEVACION) - this.elevacion) * k;
     this.distancia += ((hablando ? DISTANCIA_DIALOGO : lejos) - this.distancia) * k;
