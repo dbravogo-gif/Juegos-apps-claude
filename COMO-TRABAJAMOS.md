@@ -74,6 +74,7 @@ cara, te aviso con una estimación.
 | `/nuevo-proyecto` | De la idea a la primera versión: entrevista, documentos y escena de prueba |
 | `/pulir` | Una pasada de sensación de juego: respuesta a cada toque, animación y sonido |
 | `/cierre` | Cierro la tarea: compruebo, actualizo el estado, apunto lo aprendido y te resumo |
+| `/find-skills` o «¿hay una skill para X?» | Busco skills ya hechas, las reviso y te propongo la mejor; solo la instalo si me dices que sí. También la uso yo solo cuando tiene sentido |
 | «revísalo» | El agente `probador` lo prueba como un jugador exigente y lo puntúa |
 | «explícame X» | Te explico cómo funciona una parte con palabras y un esquema, sin código |
 | «¿qué necesitas?» | Te digo qué datos o decisiones me faltan para seguir |
