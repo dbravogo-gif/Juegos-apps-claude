@@ -70,10 +70,9 @@ proyecto nuevo necesita su ruta en `paths`, sus pruebas y su copia en «Montar e
 - `APRENDIDO.md`: errores ya pagados y su barrera. Se mira antes de una tarea parecida.
 - `investigacion/`: lo estudiado, con fuentes. La síntesis está en `00-sintesis.md`.
 - Skills:
-  - `/nuevo-proyecto`: de la idea a la primera versión.
-  - `juego-3d`: producción 3D.
-  - `pulir`: sensación de juego.
-  - `investigar`: protocolo de investigación.
-  - `cierre`: cerrar una tarea.
+  - `/nuevo-proyecto`: de la idea a la primera versión. `juego-3d`: producción 3D.
+  - `pulir`: sensación de juego. `investigar`: investigación. `cierre`: cerrar una tarea.
+  - `find-skills`: buscar skills ya hechas antes de una tarea en un dominio nuevo o de escribir
+    una propia. Se usa siempre que tenga sentido (autor, 2026-11-24); instalar, con su sí.
 
 Este archivo se queda por debajo de 80 líneas y sin historial: el historial va en git.
