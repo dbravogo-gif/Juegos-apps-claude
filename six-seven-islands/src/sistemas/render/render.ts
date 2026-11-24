@@ -2,12 +2,15 @@
 // WebGPU si el navegador lo tiene; si no, Three.js cae solo a WebGL2. Colores: src/arte/paleta.ts.
 
 import {
+  CanvasTexture,
   Color,
   DirectionalLight,
   Fog,
   HemisphereLight,
   NeutralToneMapping,
   PCFShadowMap,
+  SRGBColorSpace,
+  type Texture,
   Vector3,
   WebGPURenderer,
 } from 'three/webgpu';
@@ -43,6 +46,26 @@ export interface Contadores {
   densidad: number;
 }
 
+/**
+ * El fondo de las salas: oscuro, con un halo cálido en el centro, como una casa de muñecas en un
+ * escenario. Con el cielo melocotón de fuera, la sala flotaba en un vacío beige que llenaba media
+ * pantalla (probador, 2026-11-23).
+ */
+function crearFondoSala(): Texture {
+  const lienzo = document.createElement('canvas');
+  lienzo.width = lienzo.height = 256;
+  const c = lienzo.getContext('2d')!;
+  const g = c.createRadialGradient(128, 118, 10, 128, 128, 182);
+  g.addColorStop(0, '#4D3B31');
+  g.addColorStop(0.55, '#2D221E');
+  g.addColorStop(1, '#161011');
+  c.fillStyle = g;
+  c.fillRect(0, 0, 256, 256);
+  const t = new CanvasTexture(lienzo);
+  t.colorSpace = SRGBColorSpace;
+  return t;
+}
+
 export class Render implements Subsistema {
   static readonly id = 'render';
   static readonly deps: readonly string[] = [];
@@ -52,6 +75,8 @@ export class Render implements Subsistema {
   sol!: DirectionalLight;
   private relleno!: HemisphereLight;
   private quitarOyente: (() => void) | null = null;
+  private cielo = new Color(COLORES.cieloMelocoton);
+  private fondoSala: Texture | null = null;
 
   async init(ctx: Ctx): Promise<void> {
     const lienzo = document.getElementById('lienzo') as HTMLCanvasElement;
@@ -71,7 +96,7 @@ export class Render implements Subsistema {
     this.renderer.shadowMap.type = PCFShadowMap;
 
     const escena = ctx.escena;
-    escena.background = new Color(COLORES.cieloMelocoton);
+    escena.background = this.cielo;
     escena.fog = new Fog(COLORES.cieloMelocoton, 45, 110);
 
     // Relleno azulado del cielo y rebote del suelo; el sol de tarde entra de lado a ~48°
@@ -94,6 +119,11 @@ export class Render implements Subsistema {
     escena.add(this.sol.target);
 
     this.quitarOyente = ctx.eventos.on('calidad:cambio', () => this.aplicarCalidad(ctx));
+  }
+
+  /** Fuera, el cielo; dentro de una sala, su fondo oscuro. Lo llama la cámara al entrar y salir. */
+  fondo(ctx: Ctx, dentro: boolean): void {
+    ctx.escena.background = dentro ? (this.fondoSala ??= crearFondoSala()) : this.cielo;
   }
 
   private readonly foco = new Vector3();
@@ -155,6 +185,7 @@ export class Render implements Subsistema {
 
   dispose(): void {
     this.quitarOyente?.();
+    this.fondoSala?.dispose();
     this.sol.shadow.map?.dispose();
     this.renderer.dispose();
   }
