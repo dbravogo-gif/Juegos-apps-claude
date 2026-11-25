@@ -33,23 +33,24 @@ import {
 } from 'three/webgpu';
 import { describirMovimiento } from '../../core/describir';
 import { delAliado, iniciarCombate, objetivoDe, reemplazar, resolverTurno, type Accion, type EstadoCombate, type Evento, type FichaCombate, type Ref, type Resultado } from '../../core/combate';
-import { crearCriatura, nombreDe, objetoUtil } from '../../core/criatura';
+import { nombreDe, objetoUtil } from '../../core/criatura';
 import type { Criatura } from '../../core/modelo';
 import { CALIDAD_ZONA, MEDIA_BLANCA, MEDIA_VERDE, zonaBarra } from '../../core/captura';
 import { crearRng } from '../../core/rng';
-import { evolucionar, evolucionesPosibles, evolucionesTrasCombate, formaAlNivel, type SubidaNivel } from '../../core/progreso';
+import { evolucionar, evolucionesPosibles, evolucionesTrasCombate, type SubidaNivel } from '../../core/progreso';
 import { perdidaPorDerrota } from '../../core/economia';
 import { BOLSILLOS, bolsilloDe, type IdBolsillo } from '../../data/bolsillos';
 import { vidaMaxima } from '../../core/estadisticas';
 import { gruposContra } from '../../core/tipos';
-import { ESPECIE_RAMA, inicialDelRival, inicialesDeAmigos, puebloQueTePersigue, type TipoInicial } from '../../data/pueblos';
+import type { TipoInicial } from '../../data/pueblos';
 import { MaterialDiorama } from '../../arte/material';
 import { figuraCriatura } from '../../arte/criaturas3d';
 import { crearEscenarioEvolucion } from './escenario-evolucion';
 import { escalaPorAltura } from '../../arte/escala-criaturas';
 import { RADIO_CUBO, figuraCubo, girarCubo } from '../../arte/cubos';
 import { attribute, dot, mix, normalView, positionViewDirection, pow, vec3 } from 'three/tsl';
-import { DATOS_COMBATE_PRUEBA, ENTRENADOR_PRUEBA, ESPECIE_INICIAL, MODELO_DE, RIVAL_DE } from '../../data/combate-prueba';
+import { DATOS_COMBATE_PRUEBA, ESPECIE_INICIAL, MODELO_DE } from '../../data/combate-prueba';
+import { equipoDeEntrenador } from '../../data/equipos';
 import { TIPOS } from '../../data/tipos';
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Entrada } from '../entrada/entrada';
@@ -115,16 +116,6 @@ const URL_FONDOS = new Map(
 );
 const FUNDIDO = 0.55;
 
-/** La forma de una especie a un nivel: evoluciona mientras el nivel llegue al de su evolución. */
-function formaA(especie: string, nivel: number): string {
-  let e = especie;
-  for (let i = 0; i < 4; i++) {
-    const ev = DATOS.especies[e]?.evoluciona?.find((x) => nivel >= x.nivel);
-    if (!ev) break;
-    e = ev.a;
-  }
-  return e;
-}
 /** Los bolsillos que se abren en combate: lo que cura y los cubos (objetos clave y técnicas, no). */
 const BOLSILLOS_COMBATE: readonly IdBolsillo[] = ['botiquin', 'cubos'];
 /** Segundos que tarda la flecha de la barra de captura en cruzarla de lado a lado. */
@@ -311,26 +302,13 @@ export class Combate implements Subsistema {
       // Quien pregunta antes de luchar, solo si le has dicho que sí.
       if (def.pregunta && !this.partida.estado.condiciones.includes(`listo:${guionId}`)) return;
       const rng = crearRng(`rival-${guionId}`);
-      // El primer entrenador saca la inicial que pierde contra la tuya.
-      // Tu rival (el amigo) saca la inicial del pueblo al que ataca el tuyo (HISTORIA.md).
-      const equipo =
-        guionId === ENTRENADOR_PRUEBA
-          ? [crearCriatura(DATOS, ESPECIE_INICIAL[RIVAL_DE[inicial] ?? 'roca'], 5, rng)]
-          : def.rama
-            ? def.rama.niveles.map((nivel) => crearCriatura(DATOS, formaAlNivel(DATOS, ESPECIE_RAMA[puebloQueTePersigue(inicial as TipoInicial)], nivel), nivel, rng))
-            : def.rival
-            ? [crearCriatura(DATOS, formaAlNivel(DATOS, ESPECIE_INICIAL[inicialDelRival(inicial as TipoInicial)], def.rival.nivel), def.rival.nivel, rng), ...(def.rival.extra ?? []).map((e) => crearCriatura(DATOS, e.especie, e.nivel, rng))]
-            : def.equipo.map((e) => crearCriatura(DATOS, e.especie, e.nivel, rng));
+      // El equipo según tu inicial (data/equipos.ts, el mismo que usa el simulador de partida).
+      const { rivales: equipo, pareja } = equipoDeEntrenador(guionId, this.partida.datos.entrenadores, inicial as TipoInicial, rng);
       // Los dos líderes juntos (el terrero de Agaete): dos contra dos, con tu segundo amigo al lado.
-      if (def.pareja) {
-        const otro = this.partida.datos.entrenadores[def.pareja.entrenador];
-        const delOtro = (otro?.equipo ?? []).map((e) => crearCriatura(DATOS, e.especie, e.nivel, rng));
-        const tipo = inicialesDeAmigos(inicial as TipoInicial)[0]!;
-        const nivel = def.pareja.nivelAliado;
-        const aliado = [crearCriatura(DATOS, formaA(ESPECIE_INICIAL[tipo] ?? ESPECIE_INICIAL.roca!, nivel), nivel, rng), ...(def.pareja.extraAliado ?? []).map((e) => crearCriatura(DATOS, e.especie, e.nivel, rng))];
-        void this.empezar([...equipo, ...delOtro], guionId, {
+      if (def.pareja && pareja) {
+        void this.empezar([...equipo, ...pareja.delOtro], guionId, {
           formato: 2,
-          aliado,
+          aliado: pareja.aliado,
           activosRival: [0, equipo.length],
           nombresRival: def.pareja.nombres,
           nombreAliado: this.partida.amigos.amigo2 ?? 'Tu amigo',

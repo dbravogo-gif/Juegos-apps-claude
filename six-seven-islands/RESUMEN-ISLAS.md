@@ -141,7 +141,13 @@ arreglado y publicado.
   - B: solo un ataque más fuerte al evolucionar, que sustituye al más flojo;
   - C: dejarlo así.
 
-**D3. La dificultad: hay que entrenar a la fuerza.**
+**D3. La dificultad: hay que entrenar a la fuerza.** El simulador de partida lo confirma con
+números (`EQUILIBRIO.md`, `npm run equilibrio`):
+- Con los niveles a los que se llega, la líder de Roca gana casi siempre; también la de Aire y el
+  tercer aprendiz Eléctrico.
+- El comandante, en cambio, depende de tu inicial. Con Agua saca tres formas evolucionadas, porque
+  su rama evoluciona al 24, y con Planta o Fuego es un paseo.
+- El simulador es algo pesimista (nunca cambia de criatura), pero la tendencia es clara.
 - **El problema:** pasa en Fuerteventura y al llegar a Gran Canaria. Las Dunas obligan a unos 9
   combates seguidos sin curar.
 - **Las opciones:**
