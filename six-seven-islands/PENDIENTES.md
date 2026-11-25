@@ -135,8 +135,8 @@ Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
 - **Leer `RESUMEN-ISLAS.md`** (2026-11-25) y decir qué cambiar de cada isla. Ahí están también las
   decisiones de la revisión (D1 a D9) y las de Tenerife (T1 a T3).
 - **Probar lo de la revisión** (2026-11-25, `REVISION.md`), puntuando de 1 a 5:
-  - la vitrina 3D (Equipo → Datos → derecha);
-  - los tres sonidos nuevos en Opciones → Probar sonidos (choque, fallo y pintadera);
+  - los tres sonidos nuevos en Opciones → Probar sonidos (choque, fallo y pintadera). El choque
+    no se oía (2026-11-25: era demasiado grave para un portátil); ya está más agudo;
   - la sacudida al acertar un golpe muy eficaz;
   - Puerto del Rosario y Morro Jable, ahora con jardines y esculturas;
   - capturar una salvaje (Mochila → Cubos): ahora se ve el cubo volar, sacudirse y cerrarse;
@@ -175,8 +175,7 @@ Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
   La Isleta no tienen ni una Eléctrica. Por orden: Pok107–108 Voltéro y Raigón, Pok78–79
   Tembladera, Pok82–83 Chispa de cable y Pok86 Farito (`PLAN-CRIATURAS.md`).
 - **Puntuar de 1 a 5** lo último publicado (2026-11-19 a 25):
-  - la vitrina 3D (Menú → Equipo → una criatura → Datos, y →): si se ven bien los detalles, el
-    tamaño junto a ti y la pose;
+  - la vitrina 3D: «funciona bien» (autor, 2026-11-25);
   - Gran Canaria entera: el barco desde Morro Jable, Las Palmas, La Isleta, el gimnasio
     Eléctrico a oscuras (ahora el relámpago solo alumbra lo de alrededor), Guayadeque, las
     cumbres, el Roque Nublo (el comandante y el segundo amigo, que llega solo), Tejeda, el pinar

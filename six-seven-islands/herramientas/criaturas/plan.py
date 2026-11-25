@@ -18,7 +18,7 @@ RAIZ = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 # Objetivos por tipo principal de las 188 de la lista (CRIATURAS.md, «Por tipo principal»).
 OBJETIVO = {
-    'Común': 16, 'Agua': 21, 'Tierra': 11, 'Planta': 17, 'Aire': 11, 'Eléctrico': 11, 'Hielo': 8,
+    'Común': 16, 'Agua': 21, 'Tierra': 10, 'Planta': 17, 'Aire': 12, 'Eléctrico': 11, 'Hielo': 8,
     'Infernal': 16, 'Lucha': 9, 'Mental': 8, 'Oscuridad': 8, 'Espectral': 7, 'Acero': 6, 'Roca': 10,
     'Ancestral': 4, 'Bicho': 13, 'Veneno': 12,
 }
@@ -157,10 +157,11 @@ ESPECIES = [
     # Fuerteventura
     (44, None, ['Aire', 'Aire/Tierra'], 'fv-dunas', ['fv-sotavento'],
      'Remolino de jable: bolita de arena y semillas que rueda con el viento; la 2.ª, torbellino de arena con cara. Sustituye al remolino provisional del gimnasio de Aire.'),
-    (9, None, ['Tierra', 'Tierra', 'Tierra/Aire'], 'fv-dunas', ['fv-sotavento', 'fv-cofete', 'gc-maspalomas'],
-     'Lisa de duna: lagartija que nada bajo la arena; la 2.ª, con aletas de arena; la 3.ª, con velas que planean sobre las dunas.'),
-    (38, None, ['Común', 'Común'], 'fv-dunas', ['fv-betancuria', 'gc-bandama', 'tf-laguna', 'tf-orotava'],
-     'Conejo de jable, bajito y orejudo; la 2.ª, conejo grande que excava madrigueras.'),
+    # Tipos del autor (2026-11-25, con sus imágenes): la 3.ª de la lisa, solo Aire; la 2.ª del conejo, Común/Oscuridad.
+    (9, None, ['Tierra', 'Tierra', 'Aire'], 'fv-dunas', ['fv-sotavento', 'fv-cofete', 'gc-maspalomas'],
+     'Lisa de duna: lagartija que nada bajo la arena; la 2.ª, con cresta de púas; la 3.ª, con velas que planean sobre las dunas.'),
+    (38, None, ['Común', 'Común/Oscuridad'], 'fv-dunas', ['fv-betancuria', 'gc-bandama', 'tf-laguna', 'tf-orotava'],
+     'Conejo de jable, bajito, orejudo y enfadado; la 2.ª, conejo salvaje y rabioso, de garras largas.'),
     (29, None, ['Bicho', 'Bicho'], 'fv-dunas*', ['fv-betancuria', 'fv-ajuy'],
      'Cigarrón: langosta que llega con el viento de África; la 2.ª, grande, hace sonar las alas.'),
     (54, None, ['Común', 'Común'], 'fv-betancuria', ['fv-tindaya'],
