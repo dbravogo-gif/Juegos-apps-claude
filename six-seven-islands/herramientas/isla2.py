@@ -92,7 +92,15 @@ z.r(18, 16, 5, 4, '.'); z.p(20, 17, 'Y')                        # la plaza con s
 z.r(26, 0, 6, 26, '~'); z.r(26, 12, 4, 2, 'P'); z.r(28, 15, 2, 2, 'B')
 z.p(24, 10, 'f'); z.p(22, 18, 'f')                              # esculturas, la ciudad las tiene por las calles
 z.p(8, 17, 'N')                                                 # un molino a la salida del pueblo
-zonas['puerto'] = dict(nombre='Puerto del Rosario', origen=(38, 56), z=z, altura=0, casas='majorera')
+# Los huecos de tierra del plano medio, vestidos (revisión visual con juego-3d, 2026-11-25): la
+# plaza del norte con palmeras y una escultura, un jardín con drago al oeste y tuneras al sur. La
+# senda que vigila el paseante (x 17..20, y 22) queda libre.
+for x in (3, 7, 10): z.p(x, 2, 'T')
+z.p(20, 2, 'f'); z.r(22, 1, 2, 2, 'U')
+z.r(3, 14, 7, 2, '.'); z.p(6, 14, 'Y'); z.p(11, 15, 'U')
+for x in (3, 7): z.p(x, 23, 'T')
+z.r(12, 23, 3, 2, 'U'); z.p(10, 23, 'f')
+zonas['puerto'] = dict(nombre='Puerto del Rosario', origen=(38, 56), z=z, altura=0, casas='majorera', suelo="{ '.': '#B4B46E' }", nota_suelo='Los jardines, de un verde seco: con el color de la isla no se distinguían de la tierra.')
 
 # 4. Betancuria (34 × 30): la antigua capital, en un valle entre montañas peladas. Entrada al
 # este (y 4..5, desde Puerto del Rosario); salida al oeste (y 22..23, hacia Ajuy). El pueblito con
@@ -157,7 +165,12 @@ z.edificio(22, 11, 4, 3, 'C', 23, 'casa-morro-2')
 z.r(29, 18, 2, 2, 'F')                                          # el faro
 z.r(18, 20, 2, 3, 'P'); z.r(20, 21, 2, 2, 'B')                  # el muelle y el barco
 for x, y in ((8, 11), (13, 11), (19, 11), (30, 10)): z.p(x, y, 'T')
-zonas['morro'] = dict(nombre='Morro Jable', origen=(6-30, 120), z=z, altura=0, casas='lanzarote')
+# Más vida entre calles (revisión visual, 2026-11-25): palmeras arriba, dos jardines con tuneras entre
+# la calle de las casas y la de la playa, y una escultura. La vecina (11, 15) sigue en su sitio.
+for x in (3, 7, 11, 20, 31): z.p(x, 2, 'T')
+z.r(2, 15, 7, 2, '.'); z.p(4, 15, 'U'); z.p(7, 16, 'U')
+z.r(20, 15, 10, 2, '.'); z.p(22, 15, 'T'); z.p(27, 16, 'T'); z.p(25, 15, 'f')
+zonas['morro'] = dict(nombre='Morro Jable', origen=(6-30, 120), z=z, altura=0, casas='lanzarote', suelo="{ '.': '#B4B46E' }", nota_suelo='Los jardines, de un verde seco: con el color de la isla no se distinguían de la tierra.')
 
 
 # 8. Tindaya (26 × 20, opcional): la montaña sagrada, al oeste de Las Dunas (entrada al este, y
@@ -287,7 +300,10 @@ OBJETOS = {'dunas': ["{ id: 'pocion-horno', x: 33, y: 11, objeto: 'pocion' }", "
            'tindaya': ["{ id: 'superpocion-tindaya', x: 1, y: 17, objeto: 'superpocion' }"],
            'cofete': ["{ id: 'superpocion-cofete', x: 5, y: 16, objeto: 'superpocion' }"]}
 LETREROS = {'puerto': {'24,10': 'Una escultura moderna. La placa dice: «El viento que no se ve».\nPor más vueltas que le das, no sabes qué es.',
-                       '22,18': 'Otra escultura. La placa dice: «Paciencia».\nUn niño dice que es un perro; su madre, que es el mar.'},
+                       '22,18': 'Otra escultura. La placa dice: «Paciencia».\nUn niño dice que es un perro; su madre, que es el mar.',
+                       '20,2': 'Una escultura de hierro oxidado. La placa dice: «Barco de cal».\nDe lejos parece un barco; de cerca, un montón de piedras.',
+                       '10,23': 'Una escultura de piedra blanca. La placa dice: «La que espera».\nMira al mar, como si alguien fuera a volver.'},
+            'morro': {'25,15': 'Una escultura con forma de vela. La placa dice: «Alisio».\nCuando sopla el viento, silba.'},
             'tindaya': {'7,9': 'Unos pies tallados en la roca, de hace muchísimo tiempo.\nTodos miran hacia el oeste, hacia el mar.',
                         '10,9': 'Más pies grabados. Junto a ellos, el dibujo de una isla con una nube encima.\nAlguien quiso dejar dicho algo que vio.'}}
 CIERRES = {}
@@ -303,7 +319,7 @@ for zid, v in zonas.items():
     t=f"    {{\n      id: '{zid}',\n      nombre: '{v['nombre']}',\n      origen: {{ x: {ox}, y: {oy} }},\n      hierbaObligatoria: {'true' if v.get('hierba') else 'false'},\n"
     if zid in CIERRES: t+=f"      {CIERRES[zid]}\n"
     if v.get('casas'): t+=f"      casas: '{v['casas']}',\n"
-    if v.get('suelo'): t+=f"      // Arena negra, como la playa de Ajuy.\n      suelo: {v['suelo']},\n"
+    if v.get('suelo'): t+=f"      // {v.get('nota_suelo', 'Arena negra, como la playa de Ajuy.')}\n      suelo: {v['suelo']},\n"
     if v.get('clima'): t+=f"      clima: '{v['clima']}',\n"
     if zid in LETREROS:
         t+="      letreros: {\n"+''.join(f"        '{k}': '{txt.replace(chr(10), chr(92)+'n')}',\n" for k, txt in LETREROS[zid].items())+"      },\n"

@@ -99,3 +99,47 @@ descanso antes de cada pico, enseñar antes de examinar, recompensa en las ramas
 - **Los objetivos,** de 4 a 5 para la isla, uno por cada tramo con nombre, como en Gran Canaria.
 - **El gimnasio de Agua,** sea cual sea, con su mecánica presentada primero sin aprendices (la
   primera marea o la primera bolsa de aire) y después con ellos.
+
+## 3. El aspecto (skill `juego-3d` y su rúbrica visual)
+
+Datos: unas 50 capturas en partida, en escritorio (1280 × 800), de cada zona de las tres islas, los
+cuatro gimnasios, la cueva de Ajuy, un combate y el menú; con los contadores del render en las
+zonas más cargadas. Aquí el render es WebGL2 por software: los FPS no valen, los contadores sí.
+La nota de la rúbrica la pone el `probador` en la etapa 5 (R3: no la pone quien construye).
+
+### Lo que pasa la revisión
+
+- **Dirección de arte:** cada isla tiene su paleta y su kit de piezas, y se reconoce:
+  - Lanzarote, con picón negro, malpaís y casas blancas;
+  - Fuerteventura, con tierra clara, dunas y casas majoreras;
+  - Gran Canaria, con adoquín en Las Palmas, almendros en las cumbres y pinar con niebla.
+- **La interfaz:** el objetivo, el cartel de zona y la ayuda de teclas caben y no tapan el camino.
+  El objetivo más largo, el nuevo de Fuerteventura, se lee entero. El combate y el menú tienen
+  jerarquía clara.
+- **La luz:**
+  - sol con sombras y relleno de cielo y suelo;
+  - mapeo tonal neutro;
+  - las sombras dan el contacto con el suelo.
+  - **Falta la luz de contorno** que pide la rúbrica para un 2. Opinión: con la cámara alta y
+    figuras pequeñas apenas se notaría, y costaría otra luz, así que no la propongo.
+- **El rendimiento, dentro del presupuesto de escritorio:**
+
+  | Medida | Peor caso | Límite |
+  | --- | --- | --- |
+  | Llamadas de dibujo | 237 (Montañas del Fuego) | 300 |
+  | Triángulos | 591.000 (La Geria) | 750.000 |
+  | Memoria de texturas | 108 MB (combate) | 256 MB |
+
+### Problemas
+
+| # | Problema | Qué hago |
+| --- | --- | --- |
+| 1 | **Puerto del Rosario y Morro Jable, vacíos en el plano medio:** grandes huecos de tierra lisa entre calles (la rúbrica lo da como fallo si el diseño no lo justifica) | **Arreglado** en `herramientas/isla2.py`: palmeras, tuneras, dos jardines y tres esculturas con su placa, sin tocar calles, puertas ni la visión del entrenador |
+| 2 | **Los jardines de Fuerteventura no se veían:** la hierba corta tenía casi el color de la tierra | **Arreglado** en las dos ciudades: verde seco (`suelo` de la zona) |
+| 3 | **«Zona inicial» y «Capital»** en el cartel: nombres provisionales | Ya está en D6 |
+| 4 | **El gimnasio Eléctrico, negro casi entero entre relámpagos** | Es la mecánica que eligió el autor; se queda. Lo juzga él al jugarlo |
+| 5 | **La calima de las Dunas** no salió en las capturas: no puedo juzgar si deja ver las crestas | Por mirar en el iPhone del autor |
+
+**Barrera nueva (R6):** el gancho de prueba `window.__JUEGO__.poner` acepta una inicial que no existe
+(«fuego» en vez de «infernal») y eso colgaba el juego al teñir los uniformes. Ahora la rechaza con
+un mensaje que dice las válidas. Solo afecta a las pruebas: en la partida la inicial sale del museo.

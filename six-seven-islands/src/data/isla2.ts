@@ -163,9 +163,13 @@ export const ISLA_2: DefIsla = {
       origen: { x: 98, y: 66 },
       hierbaObligatoria: false,
       casas: 'majorera',
+      // Los jardines, de un verde seco: con el color de la isla no se distinguían de la tierra.
+      suelo: { '.': '#B4B46E' },
       letreros: {
         '24,10': 'Una escultura moderna. La placa dice: «El viento que no se ve».\nPor más vueltas que le das, no sabes qué es.',
         '22,18': 'Otra escultura. La placa dice: «Paciencia».\nUn niño dice que es un perro; su madre, que es el mar.',
+        '20,2': 'Una escultura de hierro oxidado. La placa dice: «Barco de cal».\nDe lejos parece un barco; de cerca, un montón de piedras.',
+        '10,23': 'Una escultura de piedra blanca. La placa dice: «La que espera».\nMira al mar, como si alguien fuera a volver.',
       },
       personajes: [
         { id: 'viejo-puerto', x: 25, y: 11, mira: 'e', uniforme: 'tuyo' },
@@ -176,8 +180,8 @@ export const ISLA_2: DefIsla = {
       altura: 0,
       mapa: [
         '#############,,,##########~~~~~~',
-        '#::::::::::::,,,::::::::::~~~~~~',
-        '#::::::::::::,,,::::::::::~~~~~~',
+        '#::::::::::::,,,::::::UU::~~~~~~',
+        '#::T:::T::T::,,,::::f:UU::~~~~~~',
         '#::::::::::::,,,::::::::T:~~~~~~',
         '#:RRRRR::::::,,,::SSSS::::~~~~~~',
         '#:RRRRR::::::,,,::SSSS::::~~~~~~',
@@ -189,8 +193,8 @@ export const ISLA_2: DefIsla = {
         '#::d:::::::::,,,:::d::::::~~~~~~',
         ',,,,,,,,,,,,,,,,,,,,,,,,,,PPPP~~',
         ',,,,,,,,,,,,,,,,,,,,,,,,,,PPPP~~',
-        '#::::::::::::,,,::::::::::~~~~~~',
-        '#::::::::::::,,,::::::::::~~BB~~',
+        '#::...Y...:::,,,::::::::::~~~~~~',
+        '#::.......:U:,,,::::::::::~~BB~~',
         '#::::::::::::,,,::.....:T:~~BB~~',
         '#:CCCC::N::::,,,::..Y..:::~~~~~~',
         '#:CCCC:::::::,,,::....f:::~~~~~~',
@@ -198,8 +202,8 @@ export const ISLA_2: DefIsla = {
         '#::d:::::::::,,,::::::::::~~~~~~',
         '#,,,,,,,,,,,,,,,,,,,,:::::~~~~~~',
         '#:::::::::::::::::::::::::~~~~~~',
-        '#:::::::::::::::::::::::T:~~~~~~',
-        '#:::::::::::::::::::::::::~~~~~~',
+        '#::T:::T::f:UUU:::::::::T:~~~~~~',
+        '#:::::::::::UUU:::::::::::~~~~~~',
         '##########################~~~~~~',
       ],
     },
@@ -341,6 +345,11 @@ export const ISLA_2: DefIsla = {
       origen: { x: 36, y: 130 },
       hierbaObligatoria: false,
       casas: 'lanzarote',
+      // Los jardines, de un verde seco: con el color de la isla no se distinguían de la tierra.
+      suelo: { '.': '#B4B46E' },
+      letreros: {
+        '25,15': 'Una escultura con forma de vela. La placa dice: «Alisio».\nCuando sopla el viento, silba.',
+      },
       personajes: [
         { id: 'marinero-morro', x: 17, y: 19, mira: 's', frase: 'El barco a Gran Canaria saldrá pronto. Dicen que primero hay que vencer al gimnasio de Aire.' },
         { id: 'vecina-morro', x: 11, y: 15, mira: 'n', frase: 'En el gimnasio de Aire, el viento te lleva de un lado a otro. ¡Fíjate en las aspas!' },
@@ -349,7 +358,7 @@ export const ISLA_2: DefIsla = {
       mapa: [
         '###############,,,################',
         '#::::::::::::::,,,:::::::::::::::#',
-        '#::::::::::::::,,,:::::::::::::::#',
+        '#::T:::T:::T:::,,,::T::::::::::T:#',
         '#::::::::::::::,,,::::GGGGGGG::::#',
         '#::::::::::::::,,,::::GGGGGGG::::#',
         '#:RRRRR::SSSS::,,,::::GGGGGGG::::#',
@@ -362,8 +371,8 @@ export const ISLA_2: DefIsla = {
         '#:CCCC:::::::::,,,::::CCCC:::::::#',
         '#:CCCC:::::::::,,,::::CCCC:::::::#',
         '#,,d,,,,,,,,,,,,,,,,,,,d,,,,,,,,,#',
-        '#::::::::::::::,,,:::::::::::::::#',
-        '#::::::::::::::,,,:::::::::::::::#',
+        '#:..U....::::::,,,::..T..f....:::#',
+        '#:.....U.::::::,,,::.......T..:::#',
         '#,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#',
         '#aaaaaaaaaaaaaaaaaaaaaaaaaaaaFFaa#',
         '#aaaaaaaaaaaaaaaaaaaaaaaaaaaaFFaa#',
