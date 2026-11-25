@@ -133,6 +133,9 @@ arreglado y publicado.
   - C: que ese combate no se pueda perder.
 - Antes de aplicarla, compruebo con una simulación que la de Agua pasa a ganar casi siempre y que
   las demás no quedan demasiado fáciles.
+- **Va con esto** (probador, 2026-11-25): en su partida la inicial desobedeció 3 de 4 turnos y
+  perdió con el primer entrenador. La probabilidad es del 45 % (la desobediencia hasta el anciano
+  es tuya), así que 3 de 4 fue mala suerte; el simulador ya la cuenta en el 1 % de arriba.
 
 **D2. Los ataques no avanzan.**
 - **El problema:** del nivel 13 al 34 ninguna criatura aprende nada, y el ataque más fuerte del
@@ -185,3 +188,44 @@ arreglado y publicado.
 **D6. Los nombres que faltan:** tu pueblo y la capital de Lanzarote.
 - **A, recomendada:** Playa Blanca y Arrecife, los lugares reales, como en el resto del juego;
 - B: otros que elijas tú.
+
+**D7. Tamaños que no se leen** (probador, 2026-11-25).
+- **La compañera:** mide unos 30 px y no se reconoce. Va a 0,6 de alto frente a 1,25 de las
+  personas, como dice `ARTE.md`.
+- **Las salvajes pequeñas en combate:** Quillflare ocupa el 10 % del alto de la pantalla. `ARTE.md`
+  pide entre un tercio y la mitad, pero la escala por altura las encoge hasta 0,6.
+- **Las opciones:**
+  - **A, recomendada:**
+    - la compañera, a 0,85;
+    - en combate, ninguna criatura por debajo de un cuarto del alto de la pantalla.
+    - La diferencia de tamaños se sigue viendo, solo que más comprimida.
+  - B: solo la compañera;
+  - C: dejarlo.
+
+**D8. Momentos que faltan** (probador, 2026-11-25).
+- **Recibir la inicial:** aparece de golpe, diminuta, sin primer plano ni nombre.
+- **El Equipo, en el menú y en combate:** solo texto, sin retratos. La rúbrica lo da como fallo.
+- **Las opciones:**
+  - **A, recomendada:**
+    - al recibir la inicial, cámara cerca, el cubo que se abre, su nombre y un sonido, como al
+      sacarla en combate;
+    - un retrato de cada criatura en el Equipo, sacado de su modelo 3D;
+  - B: solo el momento de la inicial;
+  - C: dejarlo.
+- Coste: medio. Los retratos se dibujan una vez al cargar.
+
+**D9. Lo que aún parece de prototipo** (probador, 2026-11-25).
+- **Los pasos cerrados:** son cajas coral lisas, también la «barrera de fuego» de La Geria. Hay
+  tres en los primeros minutos.
+- **Sotavento, Ajuy y Cofete:** rectángulos de hierba sobre arena lisa. La rúbrica lo da como
+  fallo.
+- **El gimnasio de Aire:** es el interior de una casa con flechas y molinillos.
+- **Los jardines de Puerto del Rosario y Morro Jable:** rectángulos verdes sin nada encima.
+- **Las opciones:**
+  - **A, recomendada:** vestirlo todo, en este orden:
+    1. los pasos cerrados, cada uno con su forma (valla, rocas, llamas);
+    2. las tres zonas;
+    3. el gimnasio;
+    4. los jardines.
+  - B: solo los pasos cerrados;
+  - C: dejarlo para después de Tenerife.

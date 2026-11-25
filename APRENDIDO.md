@@ -232,3 +232,11 @@ nivel: de nota a regla, y de regla a prueba o hook.
     validan lo que reciben, como ya hacía `salvaje` con las especies.
   - De paso: con render por software, `viajar(n)` tarda más de un minuto (el fundido va por
     fotogramas). Se espera al evento `load`, no un tiempo fijo.
+- **2026-11-25 · La captura llevaba semanas sin cubo y la portada borraba sin preguntar**
+  (Six-seven islands, probador de la etapa 5).
+  - Al lanzar, la salvaje encogía y las sacudidas movían una criatura invisible: el texto («…»)
+    decía una cosa y la escena, otra. Las capturas por software tardan segundos y la animación
+    dura uno; las revisiones miraban el antes y el después.
+  - Barrera: el probador mira en el código las animaciones cortas (`.claude/agents/probador.md`).
+  - Borrar la partida tenía dos entradas y solo una preguntaba. Todo lo que borra datos del
+    jugador pregunta antes, con el cursor en «No».

@@ -13,7 +13,7 @@ import type { Partida } from '../partida/partida';
 type Paso = 'portada' | 'persona' | 'nombre' | 'codigo';
 
 /** Lo que se puede hacer en la portada (autor, 2026-11-19). */
-type OpcionPortada = 'continuar' | 'nueva' | 'codigo';
+type OpcionPortada = 'continuar' | 'nueva' | 'codigo' | 'noBorrar' | 'siBorrar';
 
 
 export class Inicio implements Subsistema {
@@ -32,6 +32,8 @@ export class Inicio implements Subsistema {
   private listaPortada!: HTMLUListElement;
   private opcionesPortada: OpcionPortada[] = [];
   private eleccionPortada = 0;
+  /** «Partida nueva» con una guardada: antes de borrarla se pregunta, como en Opciones (probador, 2026-11-25). */
+  private confirmandoBorrado = false;
   private pista!: HTMLElement;
   private aviso: HTMLElement | null = null;
   /** Pasos fijos en que el final no hace caso a las teclas, para que no se salte sin leerlo. */
@@ -112,7 +114,8 @@ export class Inicio implements Subsistema {
     this.pista.textContent = {
       portada: 'Flechas para elegir, A o Enter para seguir',
       codigo: 'Escribe el código y pulsa Enter. Esc: volver',
-      persona: '¿Quién eres? Flechas para elegir, A o Enter para seguir',
+      // Con una sola persona jugable no hay nada que elegir (probador, 2026-11-25).
+      persona: JUGABLES.length > 1 ? '¿Quién eres? Flechas para elegir, A o Enter para seguir' : '¿Quién eres? A o Enter para seguir',
       nombre: 'Escribe tu nombre y pulsa Enter. Esc: volver',
     }[p];
     if (p === 'persona') this.pintar();
@@ -134,12 +137,16 @@ export class Inicio implements Subsistema {
 
   /** Las opciones de la portada: continuar (si hay partida), partida nueva y el código. */
   private pintarPortada(): void {
-    this.opcionesPortada = [...(this.partida.hayGuardado ? (['continuar'] as const) : []), 'nueva', 'codigo'];
+    this.opcionesPortada = this.confirmandoBorrado
+      ? ['noBorrar', 'siBorrar']
+      : [...(this.partida.hayGuardado ? (['continuar'] as const) : []), 'nueva', 'codigo'];
     this.eleccionPortada = Math.min(this.eleccionPortada, this.opcionesPortada.length - 1);
     const texto: Record<OpcionPortada, string> = {
       continuar: 'Continuar',
       nueva: this.partida.hayGuardado ? 'Partida nueva (borra la guardada)' : 'Partida nueva',
       codigo: this.partida.desarrollador ? 'Código (ya estás en el modo desarrollador)' : 'Código',
+      noBorrar: '¿Borrar la partida guardada? No, volver',
+      siBorrar: 'Sí, borrarla y empezar de cero',
     };
     this.listaPortada.replaceChildren(
       ...this.opcionesPortada.map((o, i) => {
@@ -174,9 +181,22 @@ export class Inicio implements Subsistema {
         const o = this.opcionesPortada[this.eleccionPortada];
         if (o === 'continuar') this.partida.continuar();
         else if (o === 'codigo') this.ir('codigo');
-        // Con una partida guardada, «Partida nueva» la borra y vuelve aquí, ya sin ella.
-        else if (this.partida.hayGuardado) this.partida.partidaNueva();
-        else this.ir('persona');
+        else if (o === 'noBorrar') this.volverDeBorrar();
+        // Confirmado: se borra y vuelve aquí, ya sin ella.
+        else if (o === 'siBorrar') {
+          this.confirmandoBorrado = false;
+          this.eleccionPortada = 0;
+          this.partida.partidaNueva();
+        }
+        // Con una partida guardada, primero se pregunta (el cursor empieza en «No»).
+        else if (this.partida.hayGuardado) {
+          this.confirmandoBorrado = true;
+          this.eleccionPortada = 0;
+          this.pintarPortada();
+        } else this.ir('persona');
+      } else if (cancelar && this.confirmandoBorrado) {
+        sonar('atras');
+        this.volverDeBorrar();
       }
       return;
     }
@@ -192,6 +212,13 @@ export class Inicio implements Subsistema {
       sonar('atras');
       this.ir('portada');
     }
+  }
+
+  /** Sin borrar: la portada de siempre, con el cursor en «Partida nueva». */
+  private volverDeBorrar(): void {
+    this.confirmandoBorrado = false;
+    this.eleccionPortada = this.partida.hayGuardado ? 1 : 0;
+    this.pintarPortada();
   }
 
   dispose(): void {

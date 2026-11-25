@@ -76,6 +76,7 @@ export class Interfaz implements Subsistema {
     const raiz = document.createElement('div');
     raiz.className = 'interfaz';
     raiz.innerHTML = `
+      <div class="calima" hidden aria-hidden="true"></div>
       <div class="zona-cartel" aria-live="polite"></div>
       <p class="objetivo" aria-live="polite"></p>
       <div class="dialogo" role="dialog" aria-live="assertive" hidden>
@@ -84,7 +85,6 @@ export class Interfaz implements Subsistema {
         <p class="dialogo-opciones" hidden><span class="opcion">Sí</span><span class="opcion">No</span></p>
         <span class="dialogo-seguir" aria-hidden="true">▼</span>
       </div>
-      <div class="calima" hidden aria-hidden="true"></div>
       <label class="nombrar" hidden><span>¿Cómo se llama tu amigo?</span><input maxlength="16" spellcheck="false" autocomplete="off" /><small>Escribe y pulsa Enter · Esc: ahora no</small></label>
       <div class="medalla-ganada" hidden><div class="medalla-dibujo"></div><p></p></div>
       <div class="fundido"></div>
