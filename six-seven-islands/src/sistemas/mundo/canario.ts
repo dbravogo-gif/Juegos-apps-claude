@@ -4,7 +4,7 @@
 // por vértice, para dibujarlas con un solo material. Funciones puras y deterministas: la misma
 // semilla da siempre la misma pieza.
 
-import { BoxGeometry, BufferAttribute, BufferGeometry, CylinderGeometry, RingGeometry, SphereGeometry } from 'three/webgpu';
+import { BoxGeometry, BufferAttribute, BufferGeometry, ConeGeometry, CylinderGeometry, RingGeometry, SphereGeometry } from 'three/webgpu';
 import { COLORES } from '../../arte/paleta';
 import { Montaje, abollar, azar, elegir, triangulo } from '../../arte/montaje';
 
@@ -269,6 +269,17 @@ export function casaCanaria(op: OpcionesCasa): BufferGeometry {
       const y = H + 0.135;
       M.pon(new CylinderGeometry(0.22, 0.22, 0.03, 14).translate(0, y, 0.1), COLORES.toldoAzul);
       for (let i = 0; i < 4; i++) M.pon(new BoxGeometry(0.28, 0.03, 1.1).translate(0, y, 0.7).rotateY((i * Math.PI) / 2 + 0.4).translate(0, 0, 0.1), COLORES.toldoAzul);
+      // Y un torreón con aspas de verdad, de frente a la cámara: pintadas, solo se veían desde
+      // arriba, y por fuera era una casona como otra cualquiera (probador, 2026-11-24).
+      const e = 1.6; // en una azotea tan grande, a tamaño de molino se perdían
+      M.pon(new CylinderGeometry(0.2 * e, 0.26 * e, 0.75 * e, 10).translate(0, y + 0.37 * e, -0.45), COLORES.cal);
+      M.pon(new ConeGeometry(0.28 * e, 0.3 * e, 10).translate(0, y + 0.9 * e, -0.45), COLORES.toldoAzul);
+      M.pon(new CylinderGeometry(0.08 * e, 0.08 * e, 0.16 * e, 8).rotateX(Math.PI / 2).translate(0, y + 0.62 * e, -0.45 + 0.27 * e), COLORES.maderaTostada);
+      for (let i = 0; i < 4; i++) {
+        const giro = (i * Math.PI) / 2 + 0.35;
+        M.pon(new BoxGeometry(0.035 * e, 0.95 * e, 0.04 * e).translate(0, 0.5 * e, 0).rotateZ(giro).translate(0, y + 0.62 * e, -0.45 + 0.35 * e), COLORES.maderaTostada);
+        M.pon(new BoxGeometry(0.2 * e, 0.7 * e, 0.02 * e).translate(0.11 * e, 0.6 * e, 0).rotateZ(giro).translate(0, y + 0.62 * e, -0.45 + 0.34 * e), '#F3EBDD');
+      }
     } else if (uso === 'gimnasio' && op.emblema === 'rayo') {
       // Un rayo amarillo en zigzag sobre un disco oscuro: el gimnasio Eléctrico (Gran Canaria).
       const y = H + 0.135;

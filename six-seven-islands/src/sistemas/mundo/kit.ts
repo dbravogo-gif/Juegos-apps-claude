@@ -469,21 +469,37 @@ export function barca(semilla: number): BufferGeometry {
 export function estatuaEnterrada(semilla: number): BufferGeometry {
   const M = new Montaje();
   const piedra = '#B9AE9C';
-  M.pon(new BoxGeometry(0.62, 0.7, 0.5).rotateZ(0.18).translate(0.02, 0.29, 0), piedra, 0.95);
-  // La cabeza, con el hocico hacia delante y dos cuernos hacia atrás.
-  M.pon(new SphereGeometry(0.24, 9, 7).scale(1, 0.9, 1.1).translate(0.12, 0.72, 0.02), piedra);
-  M.pon(new BoxGeometry(0.2, 0.14, 0.26).translate(0.14, 0.66, 0.24), piedra, 0.92);
-  for (const s of [-1, 1]) M.pon(new ConeGeometry(0.05, 0.3, 6).rotateX(-0.9).translate(0.12 + s * 0.12, 0.92, -0.12), piedra, 0.88);
-  // Las estacas en las esquinas y la cuerda roja entre ellas.
-  const esquinas: [number, number][] = [[-0.46, -0.46], [0.46, -0.46], [0.46, 0.46], [-0.46, 0.46]];
-  for (const [x, z] of esquinas) M.pon(new CylinderGeometry(0.02, 0.02, 0.42, 5).translate(x, 0.21, z), COLORES.maderaTostada);
-  for (let i = 0; i < 4; i++) {
-    const [x0, z0] = esquinas[i];
-    const [x1, z1] = esquinas[(i + 1) % 4];
-    const largo = Math.hypot(x1 - x0, z1 - z0);
-    M.pon(new BoxGeometry(largo, 0.015, 0.015).rotateY(-Math.atan2(z1 - z0, x1 - x0)).translate((x0 + x1) / 2, 0.36, (z0 + z1) / 2), COLORES.geranio);
+  const sombra = '#5E5248';
+  // El foso de la excavación: arena removida, más oscura, alrededor de la estatua.
+  M.pon(new CylinderGeometry(0.56, 0.6, 0.03, 12).translate(0, 0.015, 0), '#B08C5E');
+  // El cuerpo, medio enterrado e inclinado, más alto que una persona: de un palmo no se leía como
+  // estatua (probador, 2026-11-24).
+  M.pon(abollar(new BoxGeometry(0.56, 0.95, 0.46, 1, 2, 1), 0.025, semilla).rotateZ(0.12).translate(0.02, 0.42, 0), piedra, 0.95);
+  M.pon(new BoxGeometry(0.5, 0.08, 0.5).rotateZ(0.12).translate(0.06, 0.88, 0), piedra, 0.85);
+  // La cabeza de la criatura ancestral: hocico largo, cuencas de los ojos y dos cuernos hacia atrás.
+  M.pon(new SphereGeometry(0.27, 9, 6).scale(1, 0.9, 1.05).translate(0.1, 1.12, 0.02), piedra);
+  M.pon(new BoxGeometry(0.22, 0.17, 0.3).translate(0.12, 1.05, 0.27), piedra, 0.93);
+  M.pon(new SphereGeometry(0.035, 5, 3).translate(0.12, 1.02, 0.43), sombra);
+  for (const s of [-1, 1]) {
+    M.pon(new SphereGeometry(0.05, 5, 4).translate(0.1 + s * 0.13, 1.17, 0.24), sombra);
+    M.pon(new ConeGeometry(0.06, 0.42, 6).rotateX(-1.0).rotateZ(s * 0.35).translate(0.1 + s * 0.17, 1.36, -0.16), piedra, 0.88);
   }
-  return M.fusionar().rotateY((semilla % 4) * 0.2);
+  // Las estacas en las esquinas, la cuerda roja alrededor y la cuadrícula que cruza el foso.
+  const R = 0.46;
+  const esquinas: [number, number][] = [[-R, -R], [R, -R], [R, R], [-R, R]];
+  for (const [x, z] of esquinas) M.pon(new CylinderGeometry(0.022, 0.022, 0.4, 5).translate(x, 0.2, z), COLORES.maderaTostada);
+  const cuerda = (x0: number, z0: number, x1: number, z1: number, y: number) => {
+    const largo = Math.hypot(x1 - x0, z1 - z0);
+    M.pon(new BoxGeometry(largo, 0.014, 0.014).rotateY(-Math.atan2(z1 - z0, x1 - x0)).translate((x0 + x1) / 2, y, (z0 + z1) / 2), COLORES.geranio);
+  };
+  for (let i = 0; i < 4; i++) cuerda(...esquinas[i]!, ...esquinas[(i + 1) % 4]!, 0.34);
+  cuerda(-R, 0, R, 0, 0.05);
+  cuerda(0, -R, 0, R, 0.05);
+  // Un cubo y una pala apoyados en una esquina.
+  M.pon(new CylinderGeometry(0.08, 0.065, 0.14, 8).translate(-0.4, 0.07, 0.26), '#6B7C8F');
+  M.pon(new BoxGeometry(0.03, 0.42, 0.03).rotateZ(0.5).translate(0.36, 0.2, -0.3), COLORES.maderaTostada);
+  M.pon(new BoxGeometry(0.12, 0.14, 0.02).rotateZ(0.5).translate(0.45, 0.03, -0.3), '#7D848C');
+  return M.fusionar().rotateY((semilla % 4) * 0.12);
 }
 
 /**
