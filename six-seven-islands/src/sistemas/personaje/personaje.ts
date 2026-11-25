@@ -81,6 +81,32 @@ const rgb = (hex: number): [number, number, number] => [((hex >> 16) & 255) / 25
 
 /** Los líderes de gimnasio: `lider-gimnasio` (Lanzarote) y `lider-<tipo>` en las demás islas. */
 const esLider = (p: DefPersonaje): boolean => p.id.startsWith('lider-');
+/** El color de la ropa de cada vecino según su oficio; sin oficio conocido, uno de varios, fijo por id. */
+const OFICIOS: readonly [RegExp, number][] = [
+  [/^madre/, 0x9b6fb5],
+  [/camarer/, 0x8e3b46],
+  [/tender/, 0xc0583c],
+  [/enfermer/, 0xe39ab0],
+  [/doctora/, 0xeeeae2],
+  [/^anciano|anciana/, 0x8f8a80],
+  [/pescador|marinero|farer|redera/, 0x2e5d8c],
+  [/surfista/, 0x2aa3b8],
+  [/agricultor|cabrer|pastor/, 0x8a6a3e],
+  [/arqueolog/, 0xb59a62],
+  [/vigilante|guarda|guardiana/, 0x4f5d75],
+  [/guia/, 0xd08a2c],
+  [/escultor/, 0x6f6a8f],
+  [/nino/, 0xe0b23a],
+];
+const VARIOS = [0xc9a227, 0x5b8c5a, 0xb86b4b, 0x6b7fb8, 0x9a5b8c, 0x4f8f8f];
+export function colorDeOficio(id: string): number {
+  const oficio = OFICIOS.find(([re]) => re.test(id));
+  if (oficio) return oficio[1];
+  let h = 0;
+  for (const ch of id) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  return VARIOS[h % VARIOS.length]!;
+}
+
 /** Los jefes de los soldados de la rama (`comandante-nublo`). */
 const esComandante = (p: DefPersonaje): boolean => p.id.startsWith('comandante-');
 
@@ -203,10 +229,15 @@ export class Personaje implements Subsistema {
           const persona = PERSONA_DE[p.id];
           const nombre = modeloDe(p);
           const tipoLider = esLider(p) ? TIPOS.find((t) => `lider-${t.id}` === p.id) : undefined;
-          const tinte = p.silueta ? SILUETA : p.quemado ? QUEMADO : tipoLider ? rgb(tipoLider.color) : undefined;
+          // Los vecinos, del color de su oficio (eran todos la misma figura de capucha verde: la
+          // madre, el camarero y el tendero parecían la misma persona; probador, 2026-11-24).
+          const vecino = !persona && !p.entrenador && nombre === 'Rogue_Hooded' && !p.id.startsWith('viejo-');
+          const sabio = nombre === 'Mage' && !tipoLider;
+          const tinte = p.silueta ? SILUETA : p.quemado ? QUEMADO : tipoLider ? rgb(tipoLider.color) : vecino || sabio ? rgb(colorDeOficio(p.id)) : undefined;
           // La silueta, negra del todo (mezcla completa); multiplicando, quedaba verde oscuro. Los
-          // líderes, con la ropa del color de su tipo y la cara sin teñir, como los uniformes.
-          const op = p.silueta ? { mezcla: 1 } : tipoLider ? { cabezaSinTinte: true, mezcla: 0.55 } : {};
+          // líderes, con la ropa del color de su tipo y la cara sin teñir, como los uniformes. La
+          // doctora y el anciano, sin el sombrero de mago: de cerca solo se les veía el sombrero.
+          const op = p.silueta ? { mezcla: 1 } : tipoLider ? { cabezaSinTinte: true, mezcla: 0.55 } : vecino ? { soloVerde: true } : sabio ? { cabezaSinTinte: true, mezcla: 0.5, sinSombrero: true } : {};
           const f = persona ? await this.figuraPersona(persona) : this.figura(await cargar(nombre), nombre, tinte, op);
           this.defs.set(p.id, p);
           if (p.con || p.sin) this.condicionados.push({ p, raiz: f.raiz });
@@ -337,19 +368,19 @@ export class Personaje implements Subsistema {
   }
 
   /** Una figurita: copia del modelo con su esqueleto, sin armas, a escala y con sus animaciones. */
-  private figura(gltf: GLTF, nombre: string, tinte?: readonly [number, number, number], op: { cabezaSinTinte?: boolean; mezcla?: number; sinTinte?: RegExp } = {}): Figura {
+  private figura(gltf: GLTF, nombre: string, tinte?: readonly [number, number, number], op: { cabezaSinTinte?: boolean; mezcla?: number; sinTinte?: RegExp; soloVerde?: boolean; sinSombrero?: boolean } = {}): Figura {
     const base = nombre.split('_')[0];
     const copia = clonarConEsqueleto(gltf.scene);
     copia.traverse((o) => {
       if (!(o as Mesh).isMesh) return;
       // Solo las piezas del cuerpo («Rogue_Body», «Mage_Hat»…); fuera armas, escudos y libros.
-      o.visible = o.name.startsWith(`${base}_`) && !o.name.includes('Shield');
+      o.visible = o.name.startsWith(`${base}_`) && !o.name.includes('Shield') && !(op.sinSombrero && o.name.endsWith('_Hat'));
     });
     // Los uniformes (cabeza sin teñir) mezclan su color con la ropa; el resto de tintes multiplican.
     // El bárbaro (Chano, la líder de Lucha) lleva los brazos al aire y un casco enorme: teñidos,
     // desde arriba parecía un fantasma azul (probador, 2026-11-24). Brazos y casco, sin teñir.
     const sinTinte = op.sinTinte ?? (base === 'Barbarian' ? /head|arm|hat/i : /head/i);
-    this.materiales.push(...aMaterialDelJuego(copia, { bordes: [-0.25, 0.5], especular: 0.1, dureza: 16, contraluz: 0.35 }, tinte, op.cabezaSinTinte ? (m) => sinTinte.test(m.name) : undefined, op.mezcla));
+    this.materiales.push(...aMaterialDelJuego(copia, { bordes: [-0.25, 0.5], especular: 0.1, dureza: 16, contraluz: 0.35 }, tinte, op.cabezaSinTinte ? (m) => sinTinte.test(m.name) : undefined, op.mezcla, op.soloVerde));
     const caja = new Box3();
     copia.updateWorldMatrix(true, true);
     copia.traverse((o) => {

@@ -200,9 +200,12 @@ function colorTimanfaya(x: number, y: number, c: Color): Color {
   return c.copy(TIMANFAYA[i]).lerp(TIMANFAYA[i + 1], t - i);
 }
 
-/** Casillas de una planta: su suelo es el de alrededor, para que no quede un cuadro de otro color. */
-/** Lo que se pone encima del suelo: debajo, el suelo es del color del de alrededor. */
-const PLANTAS: ReadonlySet<string> = new Set(['T', 'U', 'Y', 'b', 'O', 't']);
+/**
+ * Lo que se pone encima del suelo (plantas, sombrillas, cabras): debajo, el suelo es del color del
+ * de alrededor, para que no quede un cuadro de otro color (bajo las cabras de Cofete se veía uno;
+ * probador, 2026-11-24).
+ */
+const PLANTAS: ReadonlySet<string> = new Set(['T', 'U', 'Y', 'b', 'O', 't', 'A']);
 
 /** El suelo más repetido alrededor de una planta (sin contar plantas ni edificios), si hay. */
 function sueloAlrededor(m: Mundo, x: number, y: number): CasillaMundo | undefined {
@@ -417,8 +420,16 @@ function decoracionDe(m: Mundo, claves: number[]): Record<NombreDeco, Matrix4[]>
       }
     } else if (cm.c === 'D') {
       // La arena de duna, que es de encuentros, lleva una mata seca y baja por casilla: así se
-      // distingue de la tierra dura, como la hierba alta del resto (probador, 2026-11-13).
-      matas.push(new Matrix4().compose(v.set(x + j(4) * 2, base + 0.04, y + j(12) * 2), IDENT, new Vector3(0.75, 0.5 + ((r >>> 3) & 3) * 0.08, 0.75)));
+      // distingue de la tierra dura, como la hierba alta del resto (probador, 2026-11-13). Cada una
+      // girada, de su tamaño y más suelta, y en una de cada tres casillas otra más pequeña: en
+      // rejilla y todas iguales se leía como un estampado (probador, 2026-11-24).
+      const tam = 0.6 + ((r >>> 3) & 7) * 0.05;
+      giro.setFromAxisAngle(arriba, ((r >>> 9) & 63) * 0.1);
+      matas.push(new Matrix4().compose(v.set(x + j(4) * 2.5, base + 0.04, y + j(12) * 2.5), giro, new Vector3(tam, 0.45 + ((r >>> 15) & 3) * 0.1, tam)));
+      if (r % 3 === 0) {
+        giro.setFromAxisAngle(arriba, ((r >>> 18) & 63) * 0.1);
+        matas.push(new Matrix4().compose(v.set(x - j(4) * 2.2 + 0.25, base + 0.03, y - j(12) * 2.2 - 0.2), giro, new Vector3(0.45, 0.35, 0.45)));
+      }
     } else if (cm.c === ';' || cm.c === 'L' || (cm.c === 'Q' && bordeDe(m, x, y, 'Q'))) {
       // El malpaís (se pisa) y las coladas (no) llevan las mismas lajas de lava; también el borde
       // de los conos, que asoman por su falda como lava a su pie.
