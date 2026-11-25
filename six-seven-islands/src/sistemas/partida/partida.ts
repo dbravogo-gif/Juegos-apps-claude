@@ -862,6 +862,8 @@ export class Partida implements Subsistema {
     const p = e as EstadoParcial;
     for (const c of p.condiciones ?? []) cumplir(this.estado, c);
     if (p.inicial !== undefined) {
+      // Una inicial que no existe («fuego» en vez de «infernal») colgaba el juego al teñir uniformes.
+      if (!(p.inicial in PUEBLOS)) throw new Error(`Inicial desconocida: «${p.inicial}». Valen: ${Object.keys(PUEBLOS).join(', ')}`);
       this.estado.inicial = p.inicial;
       this.formarEquipo();
     }
