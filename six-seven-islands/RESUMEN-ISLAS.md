@@ -141,23 +141,31 @@ arreglado y publicado.
   - B: solo un ataque más fuerte al evolucionar, que sustituye al más flojo;
   - C: dejarlo así.
 
-**D3. La dificultad: hay que entrenar a la fuerza.** El simulador de partida lo confirma con
-números (`EQUILIBRIO.md`, `npm run equilibrio`):
-- Con los niveles a los que se llega, la líder de Roca gana casi siempre; también la de Aire y el
-  tercer aprendiz Eléctrico.
-- El comandante, en cambio, depende de tu inicial. Con Agua saca tres formas evolucionadas, porque
-  su rama evoluciona al 24, y con Planta o Fuego es un paseo.
-- El simulador es algo pesimista (nunca cambia de criatura), pero la tendencia es clara.
-- **El problema:** pasa en Fuerteventura y al llegar a Gran Canaria. Las Dunas obligan a unos 9
-  combates seguidos sin curar.
+**D3. La dificultad: hay que entrenar a la fuerza.** El simulador lo confirma con números
+(`EQUILIBRIO.md`) y explica por qué (`REVISION.md`, apartado 1):
+- **Los jefes:** te tumban en 2 o 3 golpes. Sus estrellas son especies mucho más fuertes que las
+  tuyas y van por encima de tu nivel.
+- **El reparto de experiencia:** entre tres criaturas te deja de 2 a 4 niveles por detrás.
+- **El comandante:** con Agua es casi imposible y con las demás iniciales, un paseo.
+- **Las Dunas:** obligan a unos 9 combates seguidos sin curar.
 - **Las opciones:**
   - **A, recomendada:**
-    - bajar un nivel a la líder de Aire y al tercer aprendiz Eléctrico;
-    - poner un manantial que cura en el horno de cal de las dunas;
-    - que la hierba marcada como obligatoria lo sea de verdad, para que se gane experiencia por el
-      camino;
-  - B: solo el manantial;
+    - la experiencia llega a todo el equipo: las que no luchan ganan la mitad;
+    - ajusto con el simulador los niveles de los jefes y de las salvajes hasta el objetivo de
+      abajo;
+    - un manantial que cura en el horno de cal de las dunas;
+    - la hierba marcada como obligatoria lo es de verdad;
+  - B: solo ajustar los niveles de los jefes hasta el objetivo;
   - C: dejarlo, que haya que entrenar.
+- **El objetivo, con el jugador normal:**
+  - la criatura de un jefe cae en 2 a 4 golpes y tú aguantas al menos 3 de los suyos;
+  - se gana a la primera entre el 40 y el 70 % de las veces;
+  - ninguna salvaje del camino pide más de 6 golpes.
+- **La estrella de la líder de Roca:** Ishiradon al nivel 12, que pusiste tú como excepción. Con
+  la inicial de Fuego te tumba en 1 o 2 golpes.
+  - **A, recomendada:** dejarla, pero al nivel con que se llega;
+  - B: cambiarla por Ishiro;
+  - C: dejarla como está.
 
 **D4. La tienda vende lo mismo en todas las islas.**
 - **Las opciones:**
