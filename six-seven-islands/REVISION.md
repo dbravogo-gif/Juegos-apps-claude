@@ -218,6 +218,19 @@ Sin errores en consola ni bloqueos.
 | 6 | **Al perder antes del primer refugio decía «Vuelves corriendo al refugio» y salías en casa** | «Vuelves corriendo a casa» mientras tu sitio de curar sea tu casa |
 | 7 | **«¿Quién eres? Flechas para elegir» con una sola persona** | Sin «Flechas para elegir» mientras haya una sola persona jugable |
 
+**Comprobado en el juego** (build de producción, 1280 × 800, teclado):
+- la captura con éxito: el cubo con chispas donde estaba la salvaje, sacudiéndose en la plataforma
+  durante el «…» y cerrado al capturarla;
+- la portada: pregunta; «No» y X vuelven sin borrar; «Sí» borra y al recargar ya no está
+  «Continuar»;
+- en Tamadaba, el objetivo y la ayuda se ven nítidos por encima de la niebla;
+- el mapa: «El Jable» y «Capital» suben encima del marcador;
+- Probar sonidos: la última opción, entera, con la ayuda de teclas debajo;
+- la pista de «¿Quién eres?».
+
+Sin errores en consola. **Sin ver en imagen:** la captura fallida (el cubo que se abre) y el texto al
+perder; los dos compilan y pasan las pruebas.
+
 ### Para el autor
 
 Lo que cambia el aspecto o el alcance va a `RESUMEN-ISLAS.md`, D7 a D9:
