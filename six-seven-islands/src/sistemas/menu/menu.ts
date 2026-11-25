@@ -18,6 +18,7 @@
 import { curarDelTodo, nombreDe, objetoUtil, usarObjeto } from '../../core/criatura';
 import { calcularEstadisticas, vidaMaxima } from '../../core/estadisticas';
 import { exportarCodigo, importarCodigo } from '../../core/guardado';
+import { enVenta } from '../../core/economia';
 import { ESTADISTICAS, type Criatura, type Estadistica } from '../../core/modelo';
 import { evolucionesPosibles, expParaNivel } from '../../core/progreso';
 import { svgMochila } from '../../arte/mochila';
@@ -627,8 +628,7 @@ export class Menu implements Subsistema {
         this.titulo.textContent = `Tienda · ${dinero} de dinero`;
         this.avisar('Esc: salir');
         this.opciones = [
-          ...Object.values(DATOS.objetos)
-            .filter((o) => o.precio !== undefined)
+          ...enVenta(DATOS.objetos, this.partida.datos.numero)
             .map((o) => ({
               texto: `${o.nombre} · ${o.precio}`,
               detalle: `${o.descripcion} Tienes ${this.partida.mochila[o.id] ?? 0}.`,

@@ -1,7 +1,7 @@
 // El dinero y la primera hierba (probador, 2026-11-12): al perder se cae el 10 % del dinero, y en
 // El Golfo la criatura de Planta sale poco y floja, para que la inicial de Agua pueda empezar.
 import { describe, expect, it } from 'vitest';
-import { perdidaPorDerrota } from '../src/core/economia';
+import { enVenta, perdidaPorDerrota } from '../src/core/economia';
 import { ENCUENTROS_ISLA1 } from '../src/data/encuentros-isla1';
 import { DATOS_COMBATE_PRUEBA as DATOS } from '../src/data/combate-prueba';
 
@@ -24,5 +24,17 @@ describe('la primera hierba (El Golfo)', () => {
       expect(e.peso / total, e.especie).toBeLessThanOrEqual(0.1);
       expect(e.nivel[1], e.especie).toBeLessThanOrEqual(3);
     }
+  });
+});
+
+describe('la tienda (probador, 2026-11-24)', () => {
+  it('la Superpoción es premio en Lanzarote y Fuerteventura y se vende desde Gran Canaria', () => {
+    const ids = (isla: number) => enVenta(DATOS.objetos, isla).map((o) => o.id);
+    expect(ids(1)).toEqual(expect.arrayContaining(['pocion', 'cubo-blanco']));
+    expect(ids(1)).not.toContain('superpocion');
+    expect(ids(2)).not.toContain('superpocion');
+    expect(ids(3)).toContain('superpocion');
+    // Lo que no tiene precio (el almendrado del modo desarrollador) no se vende nunca.
+    expect(ids(9)).not.toContain('almendrado');
   });
 });

@@ -209,6 +209,10 @@ nivel: de nota a regla, y de regla a prueba o hook.
   - Barrera: `tests/isla3.test.ts` recorre la isla con los personajes en su sitio
     (`sinTemporales: false`) y exige que Tejeda no se alcance sin `amigo2-conocido`. Cada escena
     obligatoria de una isla nueva, con su prueba de «no se salta».
+  - **Se repitió el 2026-11-24** en una isla ya hecha: la estatua de Las Dunas y Chano en
+    Corralejo se esquivaban dando un rodeo. Barrera general: `tests/escenas.test.ts`, una tabla
+    con cada escena que te para al verte; exige que no haya camino de un lado al otro sin pisar su
+    vista. Una escena nueva entra en la tabla.
   - El dos contra dos se colgaba al caer todas tus criaturas: el núcleo sí seguía con el aliado,
     pero la interfaz abría el menú con `activa(0)!`. Un estado nuevo del núcleo (aquí, un hueco
     vacío) obliga a revisar cada `!` de la interfaz que lo lee.

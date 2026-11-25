@@ -74,7 +74,7 @@ export const LEYENDA = {
   j: 'juguetes',
   n: 'cocina',
   q: 'sofá',
-  // Gimnasios (2026-11-13): una palanca que abre una compuerta (no se pisa; se usa con E).
+  // Gimnasios (2026-11-13): una palanca que abre una compuerta (no se pisa; se usa con A).
   p: 'palanca',
 } as const;
 

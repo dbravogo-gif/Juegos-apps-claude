@@ -2,13 +2,14 @@
 // pueden; las iniciales, a los niveles 16 y 34, con sus tres formas del autor.
 import { describe, expect, it } from 'vitest';
 import { crearCriatura } from '../src/core/criatura';
-import { evolucionesTrasCombate } from '../src/core/progreso';
+import { evolucionesTrasCombate, formaAlNivel } from '../src/core/progreso';
 import { crearRng } from '../src/core/rng';
 import { DATOS_COMBATE_PRUEBA as DATOS, MODELO_DE, NIVELES_EVOLUCION_INICIAL } from '../src/data/combate-prueba';
 import { ENCUENTROS_ISLA1 } from '../src/data/encuentros-isla1';
 import { ENCUENTROS_ISLA2 } from '../src/data/encuentros-isla2';
 import { ENTRENADORES_ISLA1 } from '../src/data/entrenadores-isla1';
 import { ENTRENADORES_ISLA2 } from '../src/data/entrenadores-isla2';
+import { ESPECIE_RAMA } from '../src/data/pueblos';
 
 const MODELOS = Object.keys(import.meta.glob('../public/modelos/**/*.glb')).map((r) => r.replace('../public/modelos/', ''));
 const rng = crearRng(7);
@@ -71,6 +72,24 @@ describe('evoluciones a su tiempo (autor, 2026-11-19)', () => {
       for (const [zona, lista] of Object.entries(tabla)) {
         for (const { especie, nivel } of lista) expect(nivel[0], `${zona}: ${especie}`).toBeGreaterThanOrEqual(desde.get(especie) ?? 0);
       }
+    }
+  });
+});
+
+describe('los equipos por nivel llevan la forma de su nivel (probador, 2026-11-24)', () => {
+  it('la especie de cada rama sube de forma con el nivel, y no antes', () => {
+    for (const especie of Object.values(ESPECIE_RAMA)) {
+      const ev = DATOS.especies[especie]!.evoluciona![0]!;
+      expect(formaAlNivel(DATOS, especie, ev.nivel - 1)).toBe(especie);
+      expect(formaAlNivel(DATOS, especie, ev.nivel)).toBe(ev.a);
+    }
+  });
+
+  it('el comandante del Roque Nublo ya no lleva primeras formas al 26', () => {
+    for (const especie of Object.values(ESPECIE_RAMA)) {
+      const forma = formaAlNivel(DATOS, especie, 26);
+      // Todas las ramas evolucionan antes del 26 salvo la de Agua (Aculiso, al 30).
+      if ((DATOS.especies[especie]!.evoluciona![0]!.nivel) <= 26) expect(forma, especie).not.toBe(especie);
     }
   });
 });

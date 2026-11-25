@@ -117,8 +117,9 @@ export const DATOS_COMBATE_PRUEBA: DatosJuego = {
   // Pocos y flojos al principio (autor, 2026-11-11).
   objetos: {
     pocion: { id: 'pocion', nombre: 'Poción', descripcion: 'Cura 20 puntos de vida.', tipo: 'curar', cantidad: 20, precio: 300 },
-    // En Fuerteventura, solo como premio de las zonas opcionales (Tindaya y Cofete), no en tiendas.
-    superpocion: { id: 'superpocion', nombre: 'Superpoción', descripcion: 'Cura 50 puntos de vida.', tipo: 'curar', cantidad: 50, precio: 700 },
+    // En Fuerteventura, solo como premio de las zonas opcionales (Tindaya y Cofete); en las tiendas,
+    // desde Gran Canaria.
+    superpocion: { id: 'superpocion', nombre: 'Superpoción', descripcion: 'Cura 50 puntos de vida.', tipo: 'curar', cantidad: 50, precio: 700, desdeIsla: 3 },
     // Solo en el modo desarrollador (autor, 2026-11-19): el dulce de almendra canario.
     almendrado: { id: 'almendrado', nombre: 'Almendrado', descripcion: 'Dulce de almendra: sube un nivel. Solo en el modo desarrollador.', tipo: 'nivel' },
     'cubo-blanco': { id: 'cubo-blanco', nombre: 'Cubo blanco', descripcion: 'El cubo de captura más sencillo.', tipo: 'captura', bonus: 1, precio: 200 },

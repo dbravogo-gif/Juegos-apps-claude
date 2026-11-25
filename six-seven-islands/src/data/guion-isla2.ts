@@ -74,7 +74,7 @@ export const GUION_ISLA2: Guion = {
       dialogo: {
         lineas: [
           { quien: 'Vigilante', texto: '¡Bienvenido al gimnasio de Aire! Aquí manda el viento: las corrientes del suelo te llevan.' },
-          { quien: 'Vigilante', texto: 'Las aspas de los molinos cambian hacia dónde sopla una corriente. Gíralas con E.' },
+          { quien: 'Vigilante', texto: 'Las aspas de los molinos cambian hacia dónde sopla una corriente. Gíralas con A.' },
           { quien: 'Vigilante', texto: 'Un consejo: a lo de Aire le hacen mucho daño la Roca, el Hielo y lo Eléctrico.' },
         ],
       },
@@ -114,7 +114,7 @@ export const GUION_ISLA2: Guion = {
     {
       dialogo: {
         lineas: [
-          { quien: 'Chano', texto: '¡Uf, llego tarde! He visto a los soldados de {rama} huir por las dunas. ¿Estás bien?' },
+          { quien: 'Chano', texto: '¡Qué jaleo! He visto a los soldados de {rama} salir corriendo por las dunas. ¿Estás bien?' },
           { quien: 'Chano', texto: 'Menos mal que estabas tú. Esa estatua… mejor que no caiga en malas manos.' },
           { quien: 'Chano', texto: 'Sigue hacia el sur, elegido. Yo me quedo vigilando la excavación.' },
         ],

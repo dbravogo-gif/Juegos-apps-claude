@@ -37,7 +37,7 @@ import { crearCriatura, nombreDe, objetoUtil } from '../../core/criatura';
 import type { Criatura } from '../../core/modelo';
 import { CALIDAD_ZONA, MEDIA_BLANCA, MEDIA_VERDE, zonaBarra } from '../../core/captura';
 import { crearRng } from '../../core/rng';
-import { evolucionar, evolucionesPosibles, evolucionesTrasCombate, type SubidaNivel } from '../../core/progreso';
+import { evolucionar, evolucionesPosibles, evolucionesTrasCombate, formaAlNivel, type SubidaNivel } from '../../core/progreso';
 import { perdidaPorDerrota } from '../../core/economia';
 import { BOLSILLOS, bolsilloDe, type IdBolsillo } from '../../data/bolsillos';
 import { vidaMaxima } from '../../core/estadisticas';
@@ -215,6 +215,8 @@ export class Combate implements Subsistema {
   private materialDestello!: MeshBasicNodeMaterial;
   private esferaDestello = new SphereGeometry(0.5, 20, 14);
   private fondoProvisional!: Texture;
+  /** Las salas pintadas por código de los gimnasios sin fondo propio, por tipo. */
+  private salas = new Map<string, Texture>();
   /** Los fondos pintados que ya se han cargado, por nombre (sin extensión). */
   private fondos = new Map<string, Texture>();
   /** El fondo pintado de los gimnasios (un interior con su volcán; probador, 2026-11-13). */
@@ -315,9 +317,9 @@ export class Combate implements Subsistema {
         guionId === ENTRENADOR_PRUEBA
           ? [crearCriatura(DATOS, ESPECIE_INICIAL[RIVAL_DE[inicial] ?? 'roca'], 5, rng)]
           : def.rama
-            ? def.rama.niveles.map((nivel) => crearCriatura(DATOS, ESPECIE_RAMA[puebloQueTePersigue(inicial as TipoInicial)], nivel, rng))
+            ? def.rama.niveles.map((nivel) => crearCriatura(DATOS, formaAlNivel(DATOS, ESPECIE_RAMA[puebloQueTePersigue(inicial as TipoInicial)], nivel), nivel, rng))
             : def.rival
-            ? [crearCriatura(DATOS, ESPECIE_INICIAL[inicialDelRival(inicial as TipoInicial)], def.rival.nivel, rng), ...(def.rival.extra ?? []).map((e) => crearCriatura(DATOS, e.especie, e.nivel, rng))]
+            ? [crearCriatura(DATOS, formaAlNivel(DATOS, ESPECIE_INICIAL[inicialDelRival(inicial as TipoInicial)], def.rival.nivel), def.rival.nivel, rng), ...(def.rival.extra ?? []).map((e) => crearCriatura(DATOS, e.especie, e.nivel, rng))]
             : def.equipo.map((e) => crearCriatura(DATOS, e.especie, e.nivel, rng));
       // Los dos líderes juntos (el terrero de Agaete): dos contra dos, con tu segundo amigo al lado.
       if (def.pareja) {
@@ -582,6 +584,19 @@ export class Combate implements Subsistema {
     this.arena.add(f);
   }
 
+  /**
+   * El fondo de un gimnasio sin el suyo pintado: una sala con estandartes del color de su tipo. Antes
+   * salía el del gimnasio de Roca, con su volcán, en los de Aire, Eléctrico y Lucha (probador,
+   * 2026-11-24). El de Roca (`gimnasio`, sin tipo en el nombre) sigue con el pintado.
+   */
+  private salaDeGimnasio(sala: string): Texture | undefined {
+    const tipo = TIPOS.find((t) => sala === `gimnasio-${t.id}`);
+    if (!tipo) return undefined;
+    let t = this.salas.get(tipo.id);
+    if (!t) this.salas.set(tipo.id, (t = fondoDeSala(tipo.color)));
+    return t;
+  }
+
   private mostrarArena(si: boolean): void {
     const escena = this.ctx.escena;
     this.arena.visible = si;
@@ -598,7 +613,7 @@ export class Combate implements Subsistema {
       this.clima.classList.toggle('viento', campo?.vientoAFavor !== undefined && campo.clima !== 'arena');
       const e = this.partida.estado;
       const propio = this.partida.datos.fondos?.[e.dentro ?? e.zona];
-      escena.background = (propio && this.fondos.get(propio)) || this.fondos.get(enGimnasio ? 'combate-gimnasio' : 'combate-exterior') || this.fondoProvisional;
+      escena.background = (propio && this.fondos.get(propio)) || (enGimnasio && this.salaDeGimnasio(e.dentro!)) || this.fondos.get(enGimnasio ? 'combate-gimnasio' : 'combate-exterior') || this.fondoProvisional;
       escena.fog = null;
       this.ajustarFondo();
       this.render.enfocar(ARENA.x, 0, ARENA.z);
@@ -1731,6 +1746,7 @@ export class Combate implements Subsistema {
     this.arena.removeFromParent();
     for (const m of this.materiales) m.dispose();
     this.fondoProvisional.dispose();
+    for (const t of this.salas.values()) t.dispose();
     for (const t of this.fondos.values()) t.dispose();
   }
 }
@@ -1769,6 +1785,91 @@ function fondoProvisional(): Texture {
   suelo.addColorStop(1, '#f1dfb8');
   g.fillStyle = suelo;
   g.fillRect(0, 250, 1024, 326);
+  const t = new CanvasTexture(lienzo);
+  t.colorSpace = SRGBColorSpace;
+  return t;
+}
+
+/** Mezcla dos colores (0xRRGGBB) y los devuelve en CSS: `t` = 0, el primero; 1, el segundo. */
+function mezclaCss(a: number, b: number, t: number): string {
+  const c = (d: number) => Math.round(((a >> d) & 255) * (1 - t) + ((b >> d) & 255) * t);
+  return `rgb(${c(16)}, ${c(8)}, ${c(0)})`;
+}
+
+/**
+ * Una sala de gimnasio pintada por código, con el color de su tipo: pared con pilastras y dos
+ * estandartes arriba (el tercio del horizonte) y, abajo, el suelo de tablas casi liso con el círculo
+ * del combate, donde van las criaturas. Como los fondos pintados: 16:9 y sin nada en el centro.
+ */
+function fondoDeSala(color: number): Texture {
+  const W = 1024;
+  const H = 576;
+  const SUELO = 300;
+  const lienzo = document.createElement('canvas');
+  lienzo.width = W;
+  lienzo.height = H;
+  const g = lienzo.getContext('2d')!;
+  const crema = 0xf3e6d0;
+  // La pared, del crema al tono del tipo, más oscura abajo.
+  const pared = g.createLinearGradient(0, 0, 0, SUELO);
+  pared.addColorStop(0, mezclaCss(crema, color, 0.18));
+  pared.addColorStop(1, mezclaCss(crema, color, 0.34));
+  g.fillStyle = pared;
+  g.fillRect(0, 0, W, SUELO);
+  // Pilastras.
+  for (let x = 40; x < W; x += 188) {
+    g.fillStyle = mezclaCss(crema, 0xffffff, 0.45);
+    g.fillRect(x, 0, 34, SUELO);
+    g.fillStyle = 'rgba(60, 40, 30, 0.12)';
+    g.fillRect(x + 34, 0, 8, SUELO);
+  }
+  // Dos estandartes del color del tipo, con un círculo claro.
+  for (const cx of [300, 724]) {
+    g.fillStyle = mezclaCss(color, 0x000000, 0.12);
+    g.beginPath();
+    g.moveTo(cx - 52, 24);
+    g.lineTo(cx + 52, 24);
+    g.lineTo(cx + 52, 196);
+    g.lineTo(cx, 226);
+    g.lineTo(cx - 52, 196);
+    g.closePath();
+    g.fill();
+    g.fillStyle = 'rgba(255, 248, 235, 0.85)';
+    g.beginPath();
+    g.arc(cx, 112, 30, 0, Math.PI * 2);
+    g.fill();
+    g.fillStyle = mezclaCss(color, 0x000000, 0.12);
+    g.beginPath();
+    g.arc(cx, 112, 16, 0, Math.PI * 2);
+    g.fill();
+    g.fillStyle = 'rgba(70, 45, 30, 0.55)';
+    g.fillRect(cx - 62, 18, 124, 8);
+  }
+  // El zócalo.
+  g.fillStyle = mezclaCss(color, 0x2a1d18, 0.6);
+  g.fillRect(0, SUELO - 16, W, 16);
+  // El suelo de tablas, hacia un punto de fuga en el centro.
+  const suelo = g.createLinearGradient(0, SUELO, 0, H);
+  suelo.addColorStop(0, '#cfae80');
+  suelo.addColorStop(1, '#e6cda2');
+  g.fillStyle = suelo;
+  g.fillRect(0, SUELO, W, H - SUELO);
+  g.strokeStyle = 'rgba(110, 75, 45, 0.16)';
+  g.lineWidth = 2;
+  for (let i = -8; i <= 8; i++) {
+    g.beginPath();
+    g.moveTo(W / 2 + i * 40, SUELO);
+    g.lineTo(W / 2 + i * 150, H);
+    g.stroke();
+  }
+  // El círculo del combate, pintado en el suelo.
+  g.strokeStyle = mezclaCss(color, 0xffffff, 0.15);
+  g.globalAlpha = 0.55;
+  g.lineWidth = 6;
+  g.beginPath();
+  g.ellipse(W / 2, 455, 400, 78, 0, 0, Math.PI * 2);
+  g.stroke();
+  g.globalAlpha = 1;
   const t = new CanvasTexture(lienzo);
   t.colorSpace = SRGBColorSpace;
   return t;
