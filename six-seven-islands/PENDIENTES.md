@@ -134,11 +134,14 @@ Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
 
 - **Leer `RESUMEN-ISLAS.md`** (2026-11-25) y decir qué cambiar de cada isla. Ahí están también las
   decisiones de jugabilidad de la revisión (D1 a D6) y las de Tenerife (T1 a T3).
-- **Herramientas para la revisión** (2026-11-25), antes de rehacerla:
-  - las skills que se instalan (propuesta en el mensaje del 2026-11-25: `rpg`, `level-design` y las
-    de Three.js de CloudAI-X);
-  - si se da una clave de la API de Meshy para que Claude genere las criaturas (gasta créditos);
-  - los fondos de combate: OpenArt solo tiene 5 créditos; o se compran o los sigue pintando él.
+- **Probar lo de la revisión** (2026-11-25, `REVISION.md`), puntuando de 1 a 5:
+  - la vitrina 3D (Equipo → Datos → derecha);
+  - los tres sonidos nuevos en Opciones → Probar sonidos (choque, fallo y pintadera);
+  - la sacudida al acertar un golpe muy eficaz;
+  - Puerto del Rosario y Morro Jable, ahora con jardines y esculturas.
+- **Meshy y fondos** (decidido el 2026-11-25): él dice cuándo crear criaturas y aprueba antes las
+  imágenes de concepto (las hace gratis con ChatGPT o Gemini); los fondos los pinta él; la música
+  la sube él.
 
 - **Gran Canaria (`ISLA-3.md`):** aprobar el recorrido y los niveles, y decir si se suma la
   agarrada de lucha canaria antes de los combates del terrero.

@@ -12,8 +12,9 @@ de Fuerteventura y Gran Canaria. Los cambios de jugabilidad importantes están e
 `RESUMEN-ISLAS.md` (D1 a D6), esperando al autor.
 
 2026-11-25: vitrina 3D en la ficha; skills `rpg`, `level-design` y `threejs-*` instaladas; el
-simulador de partida (`npm run equilibrio`, `EQUILIBRIO.md`). Siguiente: rehacer la revisión con
-esas herramientas.
+simulador de partida (`npm run equilibrio`, `EQUILIBRIO.md`). Revisión con esas herramientas en
+`REVISION.md`: etapas 1 a 4 hechas y publicadas (dificultad, islas, aspecto, sensación). Etapa 5,
+el probador independiente, en marcha. Lo de jugabilidad sigue en D1 a D6, esperando al autor.
 
 ## Hecho
 
