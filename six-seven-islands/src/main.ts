@@ -13,6 +13,7 @@ import { Depuracion } from './sistemas/depuracion/depuracion';
 import { Entrada } from './sistemas/entrada/entrada';
 import { Interfaz } from './sistemas/interfaz/interfaz';
 import { Menu } from './sistemas/menu/menu';
+import { Estudio } from './sistemas/estudio/estudio';
 import { Inicio } from './sistemas/inicio/inicio';
 import { Sonido } from './sistemas/sonido/sonido';
 import { Mundo } from './sistemas/mundo/mundo';
@@ -27,7 +28,7 @@ import './estilo.css';
 
 // El juego: la isla 1 para explorar. Con ?vitrina, la vitrina de criaturas de la prueba de arte;
 // con ?catalogo, las piezas propias del mundo en fila para revisarlas; con ?mapa, el plano en 2D.
-const JUEGO: ClaseSubsistema[] = [Render, Entrada, Partida, Mundo, Salas, Personaje, Oscuridad, Companera, Camara, Combate, Interfaz, Menu, Inicio, Sonido, Depuracion];
+const JUEGO: ClaseSubsistema[] = [Render, Entrada, Partida, Mundo, Salas, Personaje, Oscuridad, Companera, Camara, Combate, Interfaz, Menu, Estudio, Inicio, Sonido, Depuracion];
 const VITRINA: ClaseSubsistema[] = [Render, Criaturas, Prueba, Depuracion];
 const CATALOGO: ClaseSubsistema[] = [Render, Catalogo, Depuracion];
 

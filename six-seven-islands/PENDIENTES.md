@@ -169,7 +169,9 @@ Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
 - **Criaturas de Gran Canaria con Meshy, las primeras** (2026-11-22): el gimnasio Eléctrico y
   La Isleta no tienen ni una Eléctrica. Por orden: Pok107–108 Voltéro y Raigón, Pok78–79
   Tembladera, Pok82–83 Chispa de cable y Pok86 Farito (`PLAN-CRIATURAS.md`).
-- **Puntuar de 1 a 5** lo último publicado (2026-11-19 a 22):
+- **Puntuar de 1 a 5** lo último publicado (2026-11-19 a 25):
+  - la vitrina 3D (Menú → Equipo → una criatura → Datos, y →): si se ven bien los detalles, el
+    tamaño junto a ti y la pose;
   - Gran Canaria entera: el barco desde Morro Jable, Las Palmas, La Isleta, el gimnasio
     Eléctrico a oscuras (ahora el relámpago solo alumbra lo de alrededor), Guayadeque, las
     cumbres, el Roque Nublo (el comandante y el segundo amigo, que llega solo), Tejeda, el pinar

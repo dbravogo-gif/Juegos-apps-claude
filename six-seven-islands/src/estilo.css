@@ -592,6 +592,33 @@ body {
   animation: menu-entra 0.18s ease-out;
 }
 
+/* La vitrina 3D de la ficha (autor, 2026-11-25): sin velo, con su nombre arriba y las teclas abajo;
+   la criatura, en el estudio que hay detrás. */
+.menu-juego.en-vitrina {
+  background: linear-gradient(180deg, rgb(24 18 30 / 0.42) 0%, rgb(24 18 30 / 0) 22%, rgb(24 18 30 / 0) 82%, rgb(24 18 30 / 0.32) 100%);
+  align-items: stretch;
+}
+
+.menu-juego.en-vitrina .menu-titulo,
+.menu-juego.en-vitrina .menu-lista {
+  display: none;
+}
+
+.menu-juego.en-vitrina .menu-detalle {
+  justify-content: flex-start;
+}
+
+.menu-juego.en-vitrina .menu-columna {
+  justify-content: flex-end;
+}
+
+.menu-vitrina-cabeza {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-shadow: 0 1px 6px rgb(24 18 30 / 0.55);
+}
+
 @keyframes menu-entra {
   from {
     opacity: 0;

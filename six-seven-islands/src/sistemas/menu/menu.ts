@@ -41,6 +41,7 @@ type Pantalla =
   | 'equipo'
   | 'criatura'
   | 'datos'
+  | 'vitrina'
   | 'mover'
   | 'mochila'
   | 'objetivo'
@@ -72,6 +73,7 @@ const ATRAS: Partial<Record<Pantalla, Pantalla>> = {
   equipo: 'principal',
   criatura: 'equipo',
   datos: 'equipo',
+  vitrina: 'datos',
   mover: 'equipo',
   objetivo: 'mochila',
   medallero: 'principal',
@@ -294,11 +296,17 @@ export class Menu implements Subsistema {
     this.lienzo.hidden = p !== 'mapa';
     this.area.hidden = p !== 'exportar' && p !== 'importar';
     this.nota.textContent = '';
+    // La vitrina 3D (subsistema «estudio»): junto a la ficha de Datos y, con →, a pantalla completa.
+    this.raiz.classList.toggle('en-vitrina', p === 'vitrina');
+    const enEstudio = this.partida.equipo[this.elegida];
+    if ((p === 'datos' || p === 'vitrina') && enEstudio) this.ctx.eventos.emit('estudio:mostrar', { especie: enEstudio.especie, modo: p === 'datos' ? 'ficha' : 'grande' });
+    else this.ctx.eventos.emit('estudio:cerrar', {});
     const pies: Partial<Record<Pantalla, string>> = {
       tienda: '',
       compra: '',
       mochila: '← → bolsillo · ↑ ↓ objeto · A: usar · X: volver',
-      datos: '← → otra criatura · X: volver',
+      datos: '↑ ↓ otra criatura · →: verla en 3D · X: volver',
+      vitrina: '← → girar · ↑ ↓ acercar · A: pose · X: volver',
       medallero: 'Flechas: ver otra isla · X: volver',
       mapa: 'X: volver',
       exportar: 'Enter: copiar · Esc: volver',
@@ -369,6 +377,10 @@ export class Menu implements Subsistema {
       case 'datos':
         this.titulo.textContent = 'Datos';
         this.opciones = [{ texto: 'Volver', activa: true, elegir: () => this.irEquipo(this.elegida) }];
+        break;
+      case 'vitrina':
+        this.titulo.textContent = '';
+        this.opciones = [];
         break;
       case 'mover':
         this.titulo.textContent = `Mover a ${nombreDe(equipo[this.elegida], DATOS)}`;
@@ -755,6 +767,9 @@ export class Menu implements Subsistema {
       case 'datos':
         if (equipo[this.elegida]) hijos.push(this.datos(equipo[this.elegida]));
         break;
+      case 'vitrina':
+        if (equipo[this.elegida]) hijos.push(this.cabeceraVitrina(equipo[this.elegida]));
+        break;
       case 'mochila':
         hijos.push(this.bolsa(previa.startsWith('mochila') ? 'cambia' : 'entra', o));
         break;
@@ -838,6 +853,18 @@ export class Menu implements Subsistema {
   }
 
   /** La ficha completa de una criatura: tipos, temperamento, experiencia, estadísticas y movimientos. */
+  /** En la vitrina, arriba: su nombre, su nivel, sus tipos y lo que mide de verdad. */
+  private cabeceraVitrina(c: Criatura): HTMLElement {
+    const esp = DATOS.especies[c.especie];
+    const caja = el('div', 'menu-vitrina-cabeza');
+    const cabeza = el('div', 'menu-cabeza');
+    cabeza.append(el('h2', undefined, nombreDe(c, DATOS)), el('span', 'menu-nivel', `Nv. ${c.nivel}`), chipsTipo(esp.tipos));
+    const mide = esp.altura ? `Mide ${esp.altura.toLocaleString('es-ES')} m. Aléjate del todo para verla junto a ti.` : '';
+    caja.append(cabeza);
+    if (mide) caja.append(el('p', 'menu-dato', mide));
+    return caja;
+  }
+
   private datos(c: Criatura): HTMLElement {
     const caja = el('div', 'menu-ficha menu-datos');
     const esp = DATOS.especies[c.especie];
@@ -1010,6 +1037,17 @@ export class Menu implements Subsistema {
       this.espera--;
       confirmar = false;
     }
+    // En la vitrina, las flechas mantenidas las lee el estudio (girar y acercar); A, la pose.
+    if (this.pantalla === 'vitrina') {
+      if (cancelar) {
+        this.ctx.eventos.emit('sonido:tocar', { nombre: 'atras' });
+        this.abrir('datos');
+      } else if (confirmar) {
+        this.ctx.eventos.emit('estudio:pose', {});
+        this.ctx.eventos.emit('sonido:tocar', { nombre: 'seleccion' });
+      }
+      return;
+    }
     if (dir) {
       const lado = dir === 'e' ? 1 : dir === 'o' ? -1 : 0;
       if (REJILLA.has(this.pantalla)) {
@@ -1022,11 +1060,17 @@ export class Menu implements Subsistema {
       } else if (lado && this.pantalla === 'medallero') {
         // El medallero se ve en rejilla: ← y → también pasan de isla.
         this.mover((this.eleccion + lado + this.opciones.length) % this.opciones.length);
-      } else if (lado && this.pantalla === 'datos' && this.partida.equipo.length > 1) {
-        const n = this.partida.equipo.length;
-        this.elegida = (this.elegida + lado + n) % n;
-        this.ctx.eventos.emit('sonido:tocar', { nombre: 'seleccion' });
-        this.abrir('datos');
+      } else if (this.pantalla === 'datos') {
+        // → la vitrina 3D (autor, 2026-11-25); ↑ ↓, otra criatura del equipo (antes, ← →).
+        if (dir === 'e') {
+          this.ctx.eventos.emit('sonido:tocar', { nombre: 'seleccion' });
+          this.abrir('vitrina');
+        } else if (!lado && this.partida.equipo.length > 1) {
+          const n = this.partida.equipo.length;
+          this.elegida = (this.elegida + (dir === 's' ? 1 : -1) + n) % n;
+          this.ctx.eventos.emit('sonido:tocar', { nombre: 'seleccion' });
+          this.abrir('datos');
+        }
       } else if (!lado && this.opciones.length) {
         // Las listas dan la vuelta, como en los juegos de siempre.
         const n = this.opciones.length;

@@ -1,9 +1,11 @@
 # Deja un GLB de Meshy solo con su textura de color, reducida a 1K: la luz va pintada en ella y
-# el juego no usa relieve ni metal. Uso: python3 -I herramientas/aligerar-glb.py entrada.glb salida.glb
+# el juego no usa relieve ni metal. Uso: python3 -I herramientas/aligerar-glb.py entrada.glb salida.glb [lado]
+# Con `lado` (2048), la versión detallada de la vitrina de la ficha (herramientas/criaturas/detalle.py).
 import io, json, struct, sys
 from PIL import Image
 
 entrada, salida = sys.argv[1], sys.argv[2]
+lado = int(sys.argv[3]) if len(sys.argv) > 3 else 1024
 datos = open(entrada, 'rb').read()
 j_len, _ = struct.unpack_from('<II', datos, 12)
 g = json.loads(datos[20:20 + j_len])
@@ -29,9 +31,9 @@ mat.pop('occlusionTexture', None)
 mat.pop('emissiveTexture', None)
 for m in g['materials'][1:]:
     raise SystemExit('más de un material: revisar a mano')
-# Textura de color a 1K en JPEG.
+# Textura de color a 1K (o al lado pedido) en JPEG.
 im = Image.open(io.BytesIO(vista(g['images'][img_color]['bufferView']))).convert('RGB')
-im = im.resize((1024, 1024), Image.LANCZOS)
+im = im.resize((lado, lado), Image.LANCZOS)
 buf = io.BytesIO(); im.save(buf, 'JPEG', quality=88, optimize=True)
 nueva_img = buf.getvalue()
 
