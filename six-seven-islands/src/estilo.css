@@ -148,9 +148,11 @@ body {
   z-index: 4;
 }
 
+/* Por debajo de la píldora del objetivo: un objetivo largo se montaba con el cartel (probador,
+   2026-11-24). */
 .zona-cartel {
   position: absolute;
-  top: 28px;
+  top: 62px;
   left: 50%;
   transform: translate(-50%, -12px);
   padding: 10px 28px;

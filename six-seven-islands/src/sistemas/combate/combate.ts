@@ -1317,10 +1317,25 @@ export class Combate implements Subsistema {
     // Las fichas sin criatura (las de los huecos del dos contra dos, en el 1 contra 1), fuera.
     f.nombre.parentElement!.style.display = c ? '' : 'none';
     if (!c) return;
+    this.pintarDueno(p, c.uid);
     f.nombre.textContent = nombreDe(c, DATOS);
     f.nivel.textContent = `Nv. ${c.nivel}`;
     f.chips.innerHTML = chipsTipos(DATOS.especies[c.especie].tipos);
     if (deGolpe) this.pintarVida(p, c.vida, vidaMaxima(c, DATOS), true);
+  }
+
+  /**
+   * En el dos contra dos, de quién es cada una (probador, 2026-11-23: no se sabía). También al pintar
+   * la ficha de golpe: en la primera imagen del combate, la del segundo rival salía sin ella
+   * (probador, 2026-11-24).
+   */
+  private pintarDueno(p: number, uid: string): void {
+    const f = this.fichas[p]!;
+    const dueno = this.formato !== 2 ? '' : p === 0 ? 'Tuya' : p === 1 ? `De ${this.nombreAliado.replace(/^Tu /, 'tu ')}` : (this.nombresRival[this.duenoRival(uid)] ?? '');
+    f.dueno.textContent = dueno;
+    f.dueno.hidden = !dueno;
+    f.dueno.classList.toggle('aliada', p === 1);
+    f.dueno.classList.toggle('rival', p >= 2);
   }
 
   /**
@@ -1330,12 +1345,7 @@ export class Combate implements Subsistema {
   private pintarEntrada(p: number, ficha: FichaCombate): void {
     const f = this.fichas[p]!;
     f.nombre.parentElement!.style.display = '';
-    // En el dos contra dos, de quién es cada una (probador, 2026-11-23: no se sabía).
-    const dueno = this.formato !== 2 ? '' : p === 0 ? 'Tuya' : p === 1 ? `De ${this.nombreAliado.replace(/^Tu /, 'tu ')}` : (this.nombresRival[this.duenoRival(ficha.uid)] ?? '');
-    f.dueno.textContent = dueno;
-    f.dueno.hidden = !dueno;
-    f.dueno.classList.toggle('aliada', p === 1);
-    f.dueno.classList.toggle('rival', p >= 2);
+    this.pintarDueno(p, ficha.uid);
     f.nombre.textContent = ficha.nombre;
     f.nivel.textContent = `Nv. ${ficha.nivel}`;
     f.chips.innerHTML = chipsTipos(DATOS.especies[ficha.especie].tipos);
