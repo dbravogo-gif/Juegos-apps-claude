@@ -26,7 +26,7 @@ import { svgPintadera } from '../../arte/pintaderas';
 import { BOLSILLOS, bolsilloDe } from '../../data/bolsillos';
 import { DATOS_COMBATE_PRUEBA as DATOS } from '../../data/combate-prueba';
 import { ISLAS } from '../../data/islas';
-import { MEDALLAS, medallasGanadas } from '../../data/medallas';
+import { MEDALLAS, medallasGanadas, nombreVisible } from '../../data/medallas';
 import { TIPOS } from '../../data/tipos';
 import { dibujarPlano } from '../mapa/dibujo';
 import { planoIsla, type Plano } from '../mapa/plano';
@@ -304,7 +304,7 @@ export class Menu implements Subsistema {
       exportar: 'Enter: copiar · Esc: volver',
       importar: 'Enter: importar · Esc: volver',
     };
-    this.pie.textContent = pies[p] ?? (REJILLA.has(p) ? 'Flechas: elegir · A: aceptar · X: volver' : '↑ ↓ elegir · A: aceptar · X: volver');
+    this.pie.textContent = sinCortes(pies[p] ?? (REJILLA.has(p) ? 'Flechas: elegir · A: aceptar · X: volver' : '↑ ↓ elegir · A: aceptar · X: volver'));
     if (p !== 'importar') this.area.blur();
     const equipo = this.partida.equipo;
     const ganadas = medallasGanadas(this.partida.estado.condiciones).length;
@@ -414,7 +414,7 @@ export class Menu implements Subsistema {
       case 'medallero':
         this.titulo.textContent = 'Medallero';
         // Las islas se recorren para ver cada pintadera; elegir no hace nada.
-        this.opciones = MEDALLAS.map((m) => ({ texto: m.nombre, activa: true, dato: m.isla, elegir: () => undefined }));
+        this.opciones = MEDALLAS.map((m) => ({ texto: nombreVisible(m), activa: true, dato: m.isla, elegir: () => undefined }));
         break;
       case 'mapa':
         this.titulo.textContent = 'Mapa';
@@ -426,7 +426,7 @@ export class Menu implements Subsistema {
         this.opciones = [
           {
             texto: `Sonido: ${sonidoActivo() ? 'activado' : 'silenciado'}`,
-            detalle: 'Enter para activarlo o silenciarlo. Se recuerda en este navegador.',
+            detalle: 'A para activarlo o silenciarlo. Se recuerda en este navegador.',
             activa: true,
             elegir: () => {
               this.ctx.eventos.emit('sonido:alternar', {});
@@ -601,7 +601,7 @@ export class Menu implements Subsistema {
         this.titulo.textContent = 'Probar sonidos';
         this.opciones = (Object.keys(EFECTOS) as NombreEfecto[]).map((n) => ({
           texto: NOMBRE_EFECTO[n],
-          detalle: 'Enter: escuchar.',
+          detalle: 'A: escuchar.',
           activa: true,
           elegir: () => this.ctx.eventos.emit('sonido:tocar', { nombre: n }),
         }));
@@ -700,7 +700,7 @@ export class Menu implements Subsistema {
 
   /** Una nota al pie: en la tienda, que no tiene panel, va bajo las opciones. */
   private avisar(texto: string): void {
-    if (ESTILO_TIENDA.has(this.pantalla)) this.pie.textContent = texto;
+    if (ESTILO_TIENDA.has(this.pantalla)) this.pie.textContent = sinCortes(texto);
     else this.nota.textContent = texto;
   }
 
@@ -866,8 +866,11 @@ export class Menu implements Subsistema {
       const fila = el('div', 'menu-estadistica');
       const b = el('span', 'menu-vida');
       const r = el('i');
-      r.style.width = `${(est[e] / tope) * 100}%`;
-      r.style.background = e === 'vida' ? '#4cc26e' : '#f2a65a';
+      // La vida, la que le queda (con 8 / 25 la barra salía llena: era la vida máxima frente a la
+      // estadística más alta; probador, 2026-11-24). El resto, frente a la más alta.
+      const parte = e === 'vida' ? c.vida / Math.max(1, est.vida) : est[e] / tope;
+      r.style.width = `${Math.max(0, Math.min(1, parte)) * 100}%`;
+      r.style.background = e !== 'vida' ? '#f2a65a' : parte > 0.5 ? '#4cc26e' : parte > 0.2 ? '#f2c14e' : '#e5534b';
       b.append(r);
       fila.append(el('span', undefined, NOMBRE_ESTADISTICA[e]), el('b', undefined, e === 'vida' ? `${c.vida} / ${est.vida}` : String(est[e])), b);
       tabla.append(fila);
@@ -877,7 +880,7 @@ export class Menu implements Subsistema {
     for (const m of c.movimientos) {
       const def = DATOS.movimientos[m.id];
       const li = el('li');
-      li.append(el('b', undefined, def.nombre), chipTipo(def.tipo), el('small', undefined, `${NOMBRE_CATEGORIA[def.categoria] ?? ''} · Poder ${def.poder || '—'} · Precisión ${def.precision ?? '—'} · PP ${m.pp}/${def.pp}`));
+      li.append(el('b', undefined, def.nombre), chipTipo(def.tipo), el('small', undefined, sinCortes(`${NOMBRE_CATEGORIA[def.categoria] ?? ''} · Poder ${def.poder || '—'} · Precisión ${def.precision ?? '—'} · PP ${m.pp}/${def.pp}`)));
       movs.append(li);
     }
     caja.append(movs);
@@ -903,7 +906,7 @@ export class Menu implements Subsistema {
   private textoObjeto(o: Opcion | undefined): HTMLElement[] {
     if (typeof o?.dato !== 'string') return [el('p', 'menu-ayuda', BOLSILLOS[this.bolsillo].vacio)];
     const obj = DATOS.objetos[o.dato];
-    const uso = obj.tipo === 'captura' ? 'Se lanza en combate, contra una criatura salvaje.' : obj.tipo === 'clave' ? 'Un objeto importante: no se gasta.' : o.activa ? 'Enter: usar.' : 'Ahora no le hace falta a nadie.';
+    const uso = obj.tipo === 'captura' ? 'Se lanza en combate, contra una criatura salvaje.' : obj.tipo === 'clave' ? 'Un objeto importante: no se gasta.' : o.activa ? 'A: usar.' : 'Ahora no le hace falta a nadie.';
     return [el('h2', undefined, obj.nombre), el('p', 'menu-ayuda', obj.descripcion), el('p', 'menu-dato', `Tienes ${this.partida.mochila[o.dato] ?? 0}. ${uso}`)];
   }
 
@@ -915,7 +918,7 @@ export class Menu implements Subsistema {
     for (const m of MEDALLAS) {
       const fig = el('figure', m.isla === elegida ? 'elegida' : undefined);
       fig.innerHTML = svgPintadera(m.isla, ganadas.has(m.isla));
-      fig.append(el('figcaption', undefined, m.nombre));
+      fig.append(el('figcaption', undefined, nombreVisible(m)));
       rejilla.append(fig);
     }
     const m = MEDALLAS.find((x) => x.isla === elegida)!;
@@ -923,8 +926,10 @@ export class Menu implements Subsistema {
       ? `Ganada al vencer al gimnasio de ${m.gimnasio}.`
       : m.condicion
         ? `Por conseguir: vence al gimnasio de ${m.gimnasio ?? 'la isla'}.`
-        : 'Aún no se puede llegar a esta isla.';
-    caja.append(el('h2', 'menu-encabezado', `Medallero · ${ganadas.size} de ${MEDALLAS.length}`), rejilla, el('p', 'menu-ayuda', `Pintadera de ${m.nombre}. ${estado}`));
+        : m.secreta
+          ? 'Una isla que no sale en ningún mapa.'
+          : 'Aún no se puede llegar a esta isla.';
+    caja.append(el('h2', 'menu-encabezado', `Medallero · ${ganadas.size} de ${MEDALLAS.length}`), rejilla, el('p', 'menu-ayuda', m.secreta ? estado : `Pintadera de ${m.nombre}. ${estado}`));
     return caja;
   }
 
@@ -1062,4 +1067,15 @@ export class Menu implements Subsistema {
     for (const q of this.quitar) q();
     this.raiz.remove();
   }
+}
+
+/**
+ * Un texto de partes separadas por «·» que solo se parte entre partes: «X: volver» o «PP 35/35» se
+ * partían por la mitad en una columna estrecha (probador, 2026-11-24).
+ */
+function sinCortes(texto: string): string {
+  return texto
+    .split(' · ')
+    .map((parte) => parte.replaceAll(' ', '\u00a0'))
+    .join(' · ');
 }

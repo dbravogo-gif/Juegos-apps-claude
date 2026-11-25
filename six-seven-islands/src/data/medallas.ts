@@ -15,6 +15,16 @@ export interface DefMedalla {
   gimnasio: string | null;
   /** La condición que la da (vencer al gimnasio), o null si la isla aún no existe. */
   condicion: Condicion | null;
+  /** La isla escondida (DISENO.md): no se dice su nombre hasta descubrirla. */
+  secreta?: boolean;
+}
+
+/**
+ * El nombre que se enseña: el de la isla secreta, oculto. El medallero decía «El Hierro» desde el
+ * principio y destripaba el final (probador, 2026-11-24).
+ */
+export function nombreVisible(m: DefMedalla): string {
+  return m.secreta ? '¿?' : m.nombre;
 }
 
 export const MEDALLAS: readonly DefMedalla[] = [
@@ -26,7 +36,7 @@ export const MEDALLAS: readonly DefMedalla[] = [
   { isla: 6, nombre: 'La Palma', gimnasio: null, condicion: null },
   // La última, en la isla escondida (autor, 2026-11-15): siete en total. La de Gran Canaria es una
   // sola pintadera partida a la mitad, una por cada uno de sus dos gimnasios.
-  { isla: 7, nombre: 'El Hierro', gimnasio: null, condicion: null },
+  { isla: 7, nombre: 'El Hierro', gimnasio: null, condicion: null, secreta: true },
 ];
 
 /** Las medallas ganadas con estas condiciones cumplidas. */

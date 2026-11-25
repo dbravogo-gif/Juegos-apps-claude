@@ -1,7 +1,7 @@
 // El medallero (autor, 2026-11-12): una pintadera por isla, que se gana en su gimnasio.
 import { describe, expect, it } from 'vitest';
 import { ISLAS_CON_PINTADERA, svgPintadera } from '../src/arte/pintaderas';
-import { MEDALLAS, medallasGanadas } from '../src/data/medallas';
+import { MEDALLAS, medallasGanadas, nombreVisible } from '../src/data/medallas';
 
 describe('medallero', () => {
   it('hay una medalla por cada una de las 7 islas, El Hierro la última, y cada una tiene su pintadera', () => {
@@ -23,5 +23,14 @@ describe('medallero', () => {
   it('la de Lanzarote se gana al vencer al gimnasio de Roca', () => {
     expect(medallasGanadas([])).toEqual([]);
     expect(medallasGanadas(['inicial-elegida', 'gimnasio-vencido']).map((m) => m.nombre)).toEqual(['Lanzarote']);
+  });
+});
+
+describe('la isla secreta no se destripa (probador, 2026-11-24)', () => {
+  it('el medallero no dice el nombre de la séptima isla', () => {
+    const septima = MEDALLAS.find((m) => m.isla === 7)!;
+    expect(septima.secreta).toBe(true);
+    expect(nombreVisible(septima)).not.toBe(septima.nombre);
+    expect(MEDALLAS.filter((m) => m.isla < 7).every((m) => nombreVisible(m) === m.nombre)).toBe(true);
   });
 });

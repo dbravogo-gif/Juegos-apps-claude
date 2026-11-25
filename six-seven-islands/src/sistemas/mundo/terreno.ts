@@ -418,6 +418,15 @@ function decoracionDe(m: Mundo, claves: number[]): Record<NombreDeco, Matrix4[]>
       for (let i = 0; i < 3; i++) {
         matas.push(new Matrix4().compose(v.set(x + j(i * 5) * 2, base + 0.12, y + j(i * 5 + 3) * 2), IDENT, new Vector3(1, 0.8 + ((r >>> i) & 3) * 0.15, 1)));
       }
+      // En el borde de la hierba alta, una mata más que asoma hacia fuera (sin salir de la casilla
+      // más que un poco): la hierba eran alfombras de bordes rectos (probador, 2026-11-24).
+      for (const [dx, dz] of [[1, 0], [-1, 0], [0, 1], [0, -1]] as const) {
+        if (m.casillas.get(clave(x + dx, y + dz))?.c === '"') continue;
+        const lado = j(dx * 7 + dz * 13 + 20) * 2.6;
+        const sale = 0.42 + j(dx * 3 + dz * 5 + 24) * 0.3;
+        giro.setFromAxisAngle(arriba, ((r >>> (dx + 2 + (dz + 2) * 3)) & 15) * 0.4);
+        matas.push(new Matrix4().compose(v.set(x + dx * sale + (dz ? lado : 0), base + 0.1, y + dz * sale + (dx ? lado : 0)), giro, new Vector3(0.7, 0.55 + ((r >>> (dx + dz + 9)) & 3) * 0.1, 0.7)));
+      }
     } else if (cm.c === 'D') {
       // La arena de duna, que es de encuentros, lleva una mata seca y baja por casilla: así se
       // distingue de la tierra dura, como la hierba alta del resto (probador, 2026-11-13). Cada una
