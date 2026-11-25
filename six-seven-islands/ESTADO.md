@@ -8,8 +8,12 @@ Gran Canaria (`ISLA-3.md`): hecha entera, fases 1 a 4, con lo del probador arreg
 (2026-11-23). Queda el barco a Tenerife: la isla 4 (`ISLA-4.md`) espera la aprobación del autor.
 
 Revisión de todo el juego (2026-11-24, encargo del autor): arreglados los fallos y lo visual
-de Fuerteventura y Gran Canaria. Los cambios de jugabilidad importantes, a preguntar al autor;
-falta el informe de Lanzarote y los sistemas.
+de Fuerteventura y Gran Canaria. Los cambios de jugabilidad importantes están en
+`RESUMEN-ISLAS.md` (D1 a D6), esperando al autor.
+
+2026-11-25: vitrina 3D en la ficha; skills `rpg`, `level-design` y `threejs-*` instaladas; el
+simulador de partida (`npm run equilibrio`, `EQUILIBRIO.md`). Siguiente: rehacer la revisión con
+esas herramientas.
 
 ## Hecho
 

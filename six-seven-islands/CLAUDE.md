@@ -18,6 +18,10 @@ Vitest.
 
 - `npm test`
 - `npm run build`
+- `npm run equilibrio`: el simulador de partida (`herramientas/simular/`, skill `rpg`) juega las
+  islas con el núcleo y escribe `EQUILIBRIO.md`: niveles, dinero y probabilidad de ganar a cada
+  jefe. Se pasa tras tocar niveles, ataques, experiencia o entrenadores. Un entrenador nuevo va en
+  `herramientas/simular/ruta.ts` (una prueba lo exige).
 - `node ../herramientas/capturar.mjs <carpeta o url> --dispositivo escritorio --pasos "..."`
 - `node herramientas/mapa.ts`: dibuja el mapa por casillas de la isla 1 (`isla-1-casillas.svg`)
   para revisar el diseño de nivel; con `la-palma-casillas.svg la-palma`, el de La Palma.
