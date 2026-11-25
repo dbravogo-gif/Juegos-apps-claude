@@ -401,6 +401,8 @@ export const ISLA_1: DefIsla = {
       nombre: 'Famara',
       origen: { x: 27, y: 58 },
       hierbaObligatoria: false,
+      // La recompensa de la rama opcional (skill level-design, 2026-11-25): en la punta de la playa.
+      objetos: [{ id: 'pocion-famara', x: 3, y: 5, objeto: 'pocion' }],
       personajes: [
         { id: 'pescador-famara', x: 20, y: 6, mira: 'o', entrenador: { vision: 4, obligatorio: false }, frase: 'Aquí pican las viejas. ¿Tú qué buscas, criaturas o pescado?' },
         { id: 'pulpero-famara', x: 2, y: 6, mira: 'e', entrenador: { vision: 4, obligatorio: false }, frase: 'Los pulpos se esconden entre las rocas. Igual que algunas criaturas, ¿eh?' },

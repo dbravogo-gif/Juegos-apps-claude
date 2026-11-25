@@ -57,3 +57,45 @@ Lo apunto en las decisiones D1 a D3 de `RESUMEN-ISLAS.md`, con un objetivo para 
   de los suyos (2 de la estrella);
 - el jugador simulado gana a la primera entre el 40 y el 70 % de las veces;
 - y ninguna salvaje del camino pide más de 6 golpes.
+
+## 2. Las islas (skill `level-design`)
+
+Datos: el recorrido del simulador (`herramientas/simular/ruta.ts`) cruzado con los refugios, las
+casillas de encuentros del camino más corto, los entrenadores, los objetos y los objetivos de cada
+isla. Las comprobaciones son las de la skill: recorrido y cierres, ritmo en dientes de sierra con
+descanso antes de cada pico, enseñar antes de examinar, recompensa en las ramas y orientación.
+
+### Lo que pasa la revisión
+
+- **Cierres y atascos:** ya los vigilan las pruebas. El mapa de cada isla se recorre en orden
+  (`tests/mundo.test.ts`, `tests/isla2.test.ts`, `tests/isla3.test.ts`), las escenas no se saltan
+  (`tests/escenas.test.ts`) y el gimnasio de Aire no tiene sitio del que no se vuelva.
+- **Descanso antes de cada jefe:** hay refugio en la misma zona o en la anterior antes de los
+  cuatro gimnasios y del comandante (Guayadeque, a una zona corta). El terrero de Agaete es el
+  mejor ejemplo: cada luchador te pregunta si quieres curarte antes.
+- **Enseñar antes de examinar:** ninguna mecánica de gimnasio castiga la primera vez.
+  - Roca: el tercer aprendiz dice dónde está la palanca.
+  - Aire: el primer aprendiz explica las aspas antes de que hagan falta, y las corrientes solo
+    empujan.
+  - Eléctrico: a oscuras desde la entrada, pero cada relámpago enseña el plano entero.
+- **Ritmo de Lanzarote y Gran Canaria:** alterna pueblos con refugio y zonas de combate de longitud
+  media. Lanzarote empieza enseñando (casa, bar, museo y un combate obligatorio flojo).
+
+### Problemas
+
+| # | Problema | Regla de la skill | Qué hago |
+| --- | --- | --- | --- |
+| 1 | **Las Dunas:** 88 casillas de encuentros sin refugio en medio, unos 9 combates salvajes seguidos más los entrenadores | Nunca muchos picos seguidos | Ya está en D3 (el manantial del horno de cal) |
+| 2 | **Famara** (rama opcional) no daba nada: las demás ramas dan una superpoción o un cubo | Las ramas recompensan | **Arreglado:** una poción en la punta de la playa (la isla 1 admite 4 en el suelo; hay 3) |
+| 3 | **Fuerteventura tenía 2 objetivos para 9 zonas:** «Cruza la isla hasta Morro Jable» durante toda la isla | Orientar con hitos, no con muros | **Arreglado:** un objetivo intermedio (Puerto del Rosario y Betancuria, hasta vencer al guarda) y el siguiente nombra Ajuy y Sotavento |
+| 4 | **La hierba obligatoria de Gran Canaria casi no lo es:** el camino más corto pisa 2 casillas en Guayadeque y 1 en las cumbres | Lo marcado como obligatorio, obligatorio | Ya está en D3 |
+| 5 | **El puzle de Aire se resuelve en un minuto:** se presenta y se examina a la vez, sin giro | Presentar, desarrollar, girar, examinar | Ya está en D5 |
+| 6 | **Hitos en las Dunas con calima:** la orientación depende de lo que se ve | Guiar con puntos de referencia | Por comprobar con capturas en la etapa 3 |
+
+### Para Tenerife
+
+- **Los refugios:** la propuesta (`ISLA-4.md`) solo pone uno, en Santa Cruz. Faltan en Puerto de
+  la Cruz, antes del gimnasio, y cerca de Las Cañadas, la zona alta y larga.
+- **Los objetivos,** de 4 a 5 para la isla, uno por cada tramo con nombre, como en Gran Canaria.
+- **El gimnasio de Agua,** sea cual sea, con su mecánica presentada primero sin aprendices (la
+  primera marea o la primera bolsa de aire) y después con ellos.

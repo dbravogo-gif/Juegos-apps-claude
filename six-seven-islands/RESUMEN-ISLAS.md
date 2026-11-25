@@ -21,11 +21,12 @@ Contesta como quieras, por ejemplo: «Lanzarote: quitar X. Decisión 1: A».
    criatura empieza a obedecerte; antes desobedece la mitad de las veces.
 4. Montañas del Fuego, la zona larga: lava, malpaís y un mirador. **Escena:** los soldados de la
    rama que te persigue, con una silueta misteriosa.
-5. El Jable (opcional): arenal con muros de piedra en zigzag.
+5. El Jable: arenal con muros de piedra en zigzag. Se cruza a la fuerza, pero sus combates se
+   pueden esquivar.
 6. La capital, sin nombre todavía: el **gimnasio de Roca**, una cueva volcánica en tres
    terrazas con puentes de basalto y una palanca. Al vencer a la líder ganas la pintadera y se abre
    el barco.
-7. Famara (opcional): playa con bañistas y dos pescadores.
+7. Famara (opcional): playa con bañistas, dos pescadores y una poción.
 
 **Niveles:**
 - salvajes, del 3 al 8;
@@ -107,7 +108,8 @@ El barco a Tenerife todavía no sale.
 - líder, del 36 al 38.
 
 **Lo que tienes que decidir:**
-- **T1. El recorrido:** si vale tal cual.
+- **T1. El recorrido:** si vale tal cual. Al construirla añadiré refugio en Puerto de la Cruz y
+  cerca de Las Cañadas (la revisión pide descanso antes del gimnasio y de las zonas largas).
 - **T2. El gimnasio de Agua:**
   - **A, recomendada: las mareas.** Piscinas naturales donde la marea sube y baja cada pocos
     pasos; hay que planear el camino.
