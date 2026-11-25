@@ -92,7 +92,8 @@ export const FUERTEVENTURA: DatosIsla = {
   entrenadores: ENTRENADORES_ISLA2,
   guion: GUION_ISLA2,
   objetivos: [
-    { hasta: 'gimnasio2-vencido', texto: 'Cruza la isla hasta Morro Jable y vence al gimnasio de Aire' },
+    { hasta: 'vencido:guarda-betancuria', texto: 'Cruza las dunas y Puerto del Rosario hasta el valle de Betancuria' },
+    { hasta: 'gimnasio2-vencido', texto: 'Baja por Ajuy y Sotavento a Morro Jable y vence al gimnasio de Aire' },
     { hasta: 'isla2-completada', texto: 'Toma el barco a Gran Canaria en el muelle de Morro Jable' },
   ],
   curanderos: { 'enfermera-corralejo': 'refugio-corralejo', 'enfermera-puerto': 'refugio-puerto', 'enfermera-betancuria': 'refugio-betancuria', 'enfermera-morro': 'refugio-morro' },

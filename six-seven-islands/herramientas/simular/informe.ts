@@ -2,7 +2,7 @@
 // Una fila por jefe y por inicial, como pide la skill `rpg`: niveles, dinero y probabilidad de ganar.
 
 import { ISLAS } from '../../src/data/islas';
-import { INICIALES, PERFILES, probabilidadDeGanar, probabilidadPrimerCombate, progresion, type Hito } from './simulador';
+import { INICIALES, PERFILES, golpesContra, probabilidadDeGanar, probabilidadPrimerCombate, progresion, type Hito } from './simulador';
 
 const pct = (x: number) => `${Math.round(x * 100)} %`;
 const NOMBRE_JEFE: Record<string, string> = {
@@ -45,6 +45,19 @@ export function informe(fecha: string): string {
       const normal = probabilidadDeGanar(h.isla, h.jefe, ini, h.nivelInicial, h.nivelCompanera);
       const delante = probabilidadDeGanar(h.isla, h.jefe, ini, h.nivelSola, h.nivelCompanera);
       l.push(`| ${NOMBRE_JEFE[h.jefe] ?? h.jefe} | ${h.nivelesRival.join('/')} | ${h.nivelInicial} / ${h.nivelCompanera} (${h.nivelSola}) | ${h.salvajes} | ${h.entrenadores} | ${h.dinero} | ${pct(normal)} | ${pct(delante)} |`);
+    }
+    l.push('');
+  }
+
+  l.push('## Golpes contra cada jefe (skill `rpg`)', '');
+  l.push('Tu inicial al nivel con que llegas (perfil «normal») contra cada criatura del jefe: cuántos golpes de tu mejor ataque la tumban y cuántos suyos te tumban a ti. Entre paréntesis, la suma de sus estadísticas base (lo fuerte que es la especie). Objetivo orientativo de la skill: el rival cae en 2 a 4 golpes y tú aguantas de 5 a 8; un jefe, algo más.', '');
+  for (const ini of INICIALES) {
+    l.push(`### Inicial de ${ini}`, '');
+    l.push('| Jefe | Tu inicial | Sus criaturas: tus golpes · los suyos |', '| --- | --- | --- |');
+    for (const h of progresion('normal', ini)) {
+      if (h.jefe === 'entrenador-barrera') continue;
+      const g = golpesContra(h.isla, h.jefe, ini, h.nivelInicial);
+      l.push(`| ${NOMBRE_JEFE[h.jefe] ?? h.jefe} | ${g.tuya.nombre} ${h.nivelInicial} (${g.tuya.sumaBase}) | ${g.filas.map((f) => `${f.rival} ${f.nivel} (${f.sumaBase}): ${f.tuyos} · ${f.suyos}`).join('; ')} |`);
     }
     l.push('');
   }

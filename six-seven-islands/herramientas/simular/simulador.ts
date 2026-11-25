@@ -27,7 +27,7 @@ import {
 import { crearCriatura } from '../../src/core/criatura';
 import { calcularDanio } from '../../src/core/danio';
 import { PROB_ENCUENTRO } from '../../src/core/encuentros';
-import { vidaMaxima } from '../../src/core/estadisticas';
+import { calcularEstadisticas, vidaMaxima } from '../../src/core/estadisticas';
 import type { Criatura } from '../../src/core/modelo';
 import { DE_ENCUENTROS, TRANSITABLES, clave, construirMundo, deClave, enIsla } from '../../src/core/mundo';
 import { expGanada, expParaNivel, formaAlNivel } from '../../src/core/progreso';
@@ -279,6 +279,54 @@ export function probabilidadPrimerCombate(inicial: TipoInicial, n = 300): number
     if (luchar([mia], rivales, rng, { rebeldes: [mia.uid], pociones: { n: 2, objeto: 'pocion' } })) ganadas++;
   }
   return ganadas / n;
+}
+
+const SIN_ETAPAS = { fuerza: 0, escudo: 0, magia: 0, resMagica: 0, celeridad: 0, precision: 0, evasion: 0 };
+
+/** El daño medio del mejor ataque de `a` contra `b` (sin críticos, tirada media, con su precisión). */
+function mejorDanio(a: Criatura, b: Criatura): number {
+  return Math.max(
+    1,
+    ...a.movimientos.map((m) => {
+      const mov = DATOS.movimientos[m.id]!;
+      return mov.categoria === 'estado' ? 0 : calcularDanio({ criatura: a, etapas: SIN_ETAPAS }, { criatura: b, etapas: SIN_ETAPAS }, mov, DATOS, false, 92, 1).danio * ((mov.precision ?? 100) / 100);
+    }),
+  );
+}
+
+/** La suma de las estadísticas base de una forma: lo fuerte que es la especie, sin contar el nivel. */
+export function sumaBase(especie: string): number {
+  return Object.values(DATOS.especies[especie]!.base).reduce((s, x) => s + x, 0);
+}
+
+export interface Golpes {
+  rival: string;
+  nivel: number;
+  sumaBase: number;
+  /** Golpes de tu inicial para tumbarla y golpes suyos para tumbar a tu inicial. */
+  tuyos: number;
+  suyos: number;
+}
+
+/**
+ * La tabla de golpes de la skill `rpg`: tu inicial a ese nivel contra cada criatura del jefe.
+ * Objetivo orientativo: un rival normal cae en 2 a 4 golpes y tú aguantas de 5 a 8.
+ */
+export function golpesContra(isla: number, jefe: string, inicial: TipoInicial, nivel: number): { tuya: { nombre: string; sumaBase: number }; filas: Golpes[] } {
+  const rng = crearRng(`golpes-${jefe}-${inicial}`);
+  const yo = crearCriatura(DATOS, formaAlNivel(DATOS, ESPECIE_INICIAL[inicial]!, nivel), nivel, rng);
+  const { rivales, pareja } = equipoDeEntrenador(jefe, ISLAS[isla]!.entrenadores, inicial, rng);
+  const vida = (c: Criatura) => calcularEstadisticas(c, DATOS).vida;
+  return {
+    tuya: { nombre: DATOS.especies[yo.especie]!.nombre, sumaBase: sumaBase(yo.especie) },
+    filas: [...rivales, ...(pareja?.delOtro ?? [])].map((r) => ({
+      rival: DATOS.especies[r.especie]!.nombre,
+      nivel: r.nivel,
+      sumaBase: sumaBase(r.especie),
+      tuyos: Math.ceil(vida(r) / mejorDanio(yo, r)),
+      suyos: Math.ceil(vida(yo) / mejorDanio(r, yo)),
+    })),
+  };
 }
 
 /** Los recorridos, para las pruebas. */
