@@ -216,3 +216,10 @@ nivel: de nota a regla, y de regla a prueba o hook.
   - El dos contra dos se colgaba al caer todas tus criaturas: el núcleo sí seguía con el aliado,
     pero la interfaz abría el menú con `activa(0)!`. Un estado nuevo del núcleo (aquí, un hueco
     vacío) obliga a revisar cada `!` de la interfaz que lo lee.
+- **2026-11-24 · Una revisión larga en segundo plano se perdió tres veces** (Six-seven islands, la
+  revisión de Lanzarote y los sistemas).
+  - Dos reinicios del contenedor mataron al agente, y la tercera vez se agotó el límite de cinco
+    horas del plan. La primera vez no había apuntado nada fuera de su memoria.
+  - Barrera: `.claude/agents/probador.md` le pide apuntar en un archivo al acabar cada zona; al
+    relanzarlo, se le pasan sus notas y no repite lo hecho. Para medir dificultad, mejor una
+    simulación con el núcleo (segundos) que combates jugados con render por software (minutos).
