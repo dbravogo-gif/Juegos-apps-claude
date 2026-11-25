@@ -143,3 +143,42 @@ La nota de la rúbrica la pone el `probador` en la etapa 5 (R3: no la pone quien
 **Barrera nueva (R6):** el gancho de prueba `window.__JUEGO__.poner` acepta una inicial que no existe
 («fuego» en vez de «infernal») y eso colgaba el juego al teñir los uniformes. Ahora la rechaza con
 un mensaje que dice las válidas. Solo afecta a las pruebas: en la partida la inicial sale del museo.
+
+## 4. La sensación y la interfaz (skills `pulir` y de diseño)
+
+### Las acciones y su respuesta
+
+| Tamaño | Acción | Respuesta | Estado |
+| --- | --- | --- | --- |
+| Pequeña | Andar | Paso por casillas; pisadas distintas en hierba, malpaís y arena | Bien |
+| Pequeña | Menús: mover, aceptar, volver | Un clic distinto para cada una | Bien |
+| Pequeña | Hablar | Pitido por letra con variación de tono | Bien |
+| Pequeña | **Chocar con una pared** | Nada: con teclado no se sabía si la pulsación había llegado | **Hecho:** golpe sordo, una vez por intento (no en bucle) |
+| Mediana | Objeto, puerta, curar, comprar, subir de nivel | Sonido propio y cartel o animación | Bien |
+| Mediana | Golpe en combate | Chispas del color del tipo, parpadeo, temblor, barra de vida y sonido | Bien |
+| Mediana | **Golpe muy eficaz o crítico** | Lo mismo que un golpe normal, más el texto | **Hecho:** sacudida de cámara (trauma², tope de 0,12 unidades) |
+| Fallo | **Ataque que falla o no afecta** | Solo texto | **Hecho:** sonido grave que baja |
+| Fallo | Criatura debilitada, huir | Sonido propio | Bien |
+| Grande | Evolución, captura | Escena propia con sonido por tipo | Bien |
+| Grande | **Ganar la pintadera** | Tarjeta animada, sin sonido | **Hecho:** fanfarria que sube dos octavas |
+
+- **Silencio:** se activa en Opciones y se recuerda.
+- **Escuchar los efectos:** Opciones → Probar sonidos. Ahí están los tres nuevos.
+- **Movimiento reducido:** la sacudida no se hace si el sistema pide menos movimiento
+  (`prefers-reduced-motion`).
+- **Sin comprobar con imagen:** la sacudida. Aquí el combate va muy lento para cazar un golpe
+  eficaz en una captura; lo valora el autor al jugar. Comprobado: compila, las pruebas pasan y
+  en un combate de prueba no hay errores.
+- **No puedo oírlo:** los tres sonidos los valora el autor.
+
+### La interfaz
+
+- **Contraste de la ayuda de teclas:**
+  - era crema sobre marrón al 55 %; sobre una azotea blanca quedaba en 3,4:1, por debajo del 4,5:1
+    recomendado;
+  - **arreglado:** con el fondo al 70 % queda en 5,2:1 (calculado con la fórmula de WCAG).
+- **Tamaños de letra:** de 11 a 56 px. Lo más pequeño son las etiquetas del menú (11 px) y los datos
+  de los ataques (12 px). En un portátil se leen, pero justas. Lo juzga el probador en la etapa 5;
+  si hace falta, se suben a 12 y 13 px.
+- **Textos:** el objetivo y los carteles son cortos y en el idioma del juego. La ayuda de teclas
+  usa los nombres de las teclas (A, Z, X), como el resto de menús.

@@ -60,7 +60,9 @@ export type EventoExplorar =
   | { tipo: 'aspas'; id: string; activas: boolean }
   | { tipo: 'letrero'; texto: string }
   /** Ha terminado un paso sobre terreno de encuentros: quien juega sortea si sale una criatura. */
-  | { tipo: 'hierba'; zona: string; terreno: string };
+  | { tipo: 'hierba'; zona: string; terreno: string }
+  /** Se intenta andar contra algo que no se cruza: una vez por intento, para que suene el golpe. */
+  | { tipo: 'choque' };
 
 export function crearExploracion(m: Mundo, condiciones: Condicion[] = []): EstadoExplorar {
   const { zona, x, y } = m.isla.inicio;
@@ -119,9 +121,11 @@ export function avanzar(m: Mundo, e: EstadoExplorar, dir: Direccion | null): Eve
     eventos.push({ tipo: 'escalera', sube: cm.c === 'e' });
     return eventos;
   }
-  if (cm?.c === 'X' && e.avisoEn !== k) {
-    const aviso = cierreEn(m, k)?.aviso;
-    if (aviso) eventos.push({ tipo: 'aviso', texto: aviso });
+  // Contra lo que no se cruza, una sola vez mientras se empuja: el aviso del paso cerrado, si lo
+  // tiene, y si no, el choque (con teclado hace falta notar que la pulsación ha llegado).
+  if (e.avisoEn !== k) {
+    const aviso = cm?.c === 'X' ? cierreEn(m, k)?.aviso : undefined;
+    eventos.push(aviso ? { tipo: 'aviso', texto: aviso } : { tipo: 'choque' });
     e.avisoEn = k;
   }
   return eventos;

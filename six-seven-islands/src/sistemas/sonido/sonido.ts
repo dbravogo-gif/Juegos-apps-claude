@@ -69,6 +69,13 @@ export const EFECTOS = {
   curar: { onda: 'sine', desde: 523, hasta: 523, duracion: 0.12, volumen: 0.2, notas: [0, 4, 7, 12] },
   comprar: { onda: 'square', desde: 1318, hasta: 1318, duracion: 0.06, volumen: 0.12, notas: [0, 5] },
   huir: { onda: 'triangle', desde: 300, hasta: 900, duracion: 0.3, volumen: 0.16 },
+  // Revisión de sensación (skill pulir, 2026-11-25): lo que tenía respuesta solo en texto o en imagen.
+  // Andar contra una pared: un golpe sordo y corto, una vez por intento.
+  choque: { onda: 'sine', desde: 150, hasta: 70, duracion: 0.08, volumen: 0.22 },
+  // Un ataque que falla o no afecta: grave y bajando, como piden los fallos.
+  fallo: { onda: 'triangle', desde: 330, hasta: 140, duracion: 0.28, volumen: 0.16 },
+  // La pintadera del gimnasio, el momento grande de cada isla: una fanfarria que sube dos octavas.
+  medalla: { onda: 'triangle', desde: 523, hasta: 523, duracion: 0.15, volumen: 0.2, notas: [0, 4, 7, 12, 7, 12, 16, 19, 24] },
   // La evolución de Acero (autor, 2026-11-20): un golpe de metal contra metal. Parciales que no
   // casan entre sí, como una campana, y un chasquido seco al principio.
   metal: { onda: 'sine', desde: 760, hasta: 740, duracion: 0.55, volumen: 0.07, variacion: 0.06, acorde: [1, 2.76, 5.4, 8.93], con: 'chasquido' },
@@ -242,6 +249,7 @@ export class Sonido implements Subsistema {
       ev.on('encuentro:inicio', () => this.tocar('encuentro')),
       ev.on('entrenador:visto', () => this.tocar('exclamacion')),
       ev.on('objeto:recogido', () => this.tocar('objeto')),
+      ev.on('medalla:ganada', () => this.tocar('medalla')),
     );
   }
 
