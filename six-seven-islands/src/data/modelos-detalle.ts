@@ -1,0 +1,37 @@
+// GENERADO por herramientas/criaturas/detalle.py: no se edita a mano.
+// La versión detallada (textura a 2K) de las criaturas cuyo original de Meshy la tiene, para
+// la vitrina de la ficha. Las que no están aquí usan su modelo del juego.
+
+export const MODELO_DETALLE: Readonly<Record<string, string>> = {
+  'c031-1': 'criaturas/detalle/031-1.glb',
+  'c031-2': 'criaturas/detalle/031-2.glb',
+  'c032-1': 'criaturas/detalle/032-1.glb',
+  'c032-2': 'criaturas/detalle/032-2.glb',
+  'c037-1': 'criaturas/detalle/037-1.glb',
+  'c037-2': 'criaturas/detalle/037-2.glb',
+  'c007-1': 'criaturas/detalle/007-1.glb',
+  'c007-2': 'criaturas/detalle/007-2.glb',
+  'c007-3': 'criaturas/detalle/007-3.glb',
+  'c013-1': 'criaturas/detalle/013-1.glb',
+  'c013-2': 'criaturas/detalle/013-2.glb',
+  'c013-3': 'criaturas/detalle/013-3.glb',
+  'c043-1': 'criaturas/detalle/043-1.glb',
+  'c043-2': 'criaturas/detalle/043-2.glb',
+  'c012-1': 'criaturas/detalle/012-1.glb',
+  'c012-2': 'criaturas/detalle/012-2.glb',
+  'c012-3': 'criaturas/detalle/012-3.glb',
+  'c034-1': 'criaturas/detalle/034-1.glb',
+  'c034-2': 'criaturas/detalle/034-2.glb',
+  'c005-1': 'criaturas/detalle/005-1.glb',
+  'c005-2': 'criaturas/detalle/005-2.glb',
+  'c005-3': 'criaturas/detalle/005-3.glb',
+  'c035-1': 'criaturas/detalle/035-1.glb',
+  'c035-2': 'criaturas/detalle/035-2.glb',
+  'c018-1': 'criaturas/detalle/018-1.glb',
+  'c018-2': 'criaturas/detalle/018-2.glb',
+  'c018-3': 'criaturas/detalle/018-3.glb',
+  'c044-1': 'criaturas/detalle/044-1.glb',
+  'c044-2': 'criaturas/detalle/044-2.glb',
+  'c062-1': 'criaturas/detalle/062-1.glb',
+  'c062-2': 'criaturas/detalle/062-2.glb',
+};

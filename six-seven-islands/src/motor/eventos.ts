@@ -41,6 +41,11 @@ export interface MapaEventos {
   'combate:rival': { entrenador: string | null; soloEvolucion?: boolean };
   /** Que suene un efecto de la tabla EFECTOS de «sonido». */
   'sonido:tocar': { nombre: string };
+  /** La vitrina 3D de una criatura (subsistema «estudio»): junto a su ficha o a pantalla completa. */
+  'estudio:mostrar': { especie: string; modo: 'ficha' | 'grande' };
+  'estudio:cerrar': Record<string, never>;
+  /** En la vitrina, la criatura hace su pose (A). */
+  'estudio:pose': Record<string, never>;
   /** Activar o silenciar el sonido. */
   'sonido:alternar': Record<string, never>;
 }
