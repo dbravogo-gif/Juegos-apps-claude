@@ -449,11 +449,13 @@ body {
   color: #6b5a4f;
 }
 
-/* La calima de Las Dunas: unas motas de polvo que cruzan de derecha a izquierda (interfaz). */
+/* La calima de Las Dunas: unas motas de polvo que cruzan de derecha a izquierda (interfaz). Por
+   debajo del resto de la interfaz (va la primera y sin subir de capa): con z-index 4 tapaba el
+   objetivo y la ayuda, y en la niebla de Tamadaba la ayuda bajaba a 2,15:1 (probador, 2026-11-25). */
 .calima {
   position: fixed;
   inset: 0;
-  z-index: 4;
+  z-index: 0;
   overflow: hidden;
   pointer-events: none;
 }
@@ -1143,6 +1145,14 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  /* La lista es la que se desplaza: en las largas (Probar sonidos) el título y la ayuda de teclas se
+     quedan a la vista y la elegida se ve entera (probador, 2026-11-25). Se estira sobre el relleno
+     de la columna para no recortar la elegida, que se adelanta 12 px, ni su sombra. */
+  min-height: 0;
+  overflow-y: auto;
+  margin: -6px -16px -20px;
+  padding: 6px 16px 20px;
+  scroll-padding-block: 6px 20px;
 }
 
 .menu-op {

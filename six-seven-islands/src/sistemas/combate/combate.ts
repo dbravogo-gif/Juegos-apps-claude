@@ -47,7 +47,8 @@ import { MaterialDiorama } from '../../arte/material';
 import { figuraCriatura } from '../../arte/criaturas3d';
 import { crearEscenarioEvolucion } from './escenario-evolucion';
 import { escalaPorAltura } from '../../arte/escala-criaturas';
-import { RADIO_CUBO, figuraCubo, girarCubo } from '../../arte/cubos';
+import { CUBOS, RADIO_CUBO, figuraCubo, girarCubo } from '../../arte/cubos';
+import { SALA_INICIAL } from '../../data/interiores-isla1';
 import { attribute, dot, mix, normalView, positionViewDirection, pow, vec3 } from 'three/tsl';
 import { DATOS_COMBATE_PRUEBA, ESPECIE_INICIAL, MODELO_DE } from '../../data/combate-prueba';
 import { equipoDeEntrenador } from '../../data/equipos';
@@ -205,6 +206,8 @@ export class Combate implements Subsistema {
   private arena = new Group();
   private materiales: Material[] = [];
   private materialCubo!: MaterialDiorama;
+  /** El cubo de captura lanzado, desde que sale hasta que se abre o acaba el combate. */
+  private cuboCaptura: Group | null = null;
   private materialDestello!: MeshBasicNodeMaterial;
   private esferaDestello = new SphereGeometry(0.5, 20, 14);
   private fondoProvisional!: Texture;
@@ -471,6 +474,7 @@ export class Combate implements Subsistema {
     );
     for (const l of this.luchadores) l?.raiz.removeFromParent();
     this.luchadores = [null, null, null, null];
+    this.quitarCuboCaptura();
     // Destello y fundido a negro; en negro, se cambia a la arena.
     this.encolar({ duracion: 0.45, saltable: false, animar: (t) => (this.velo.style.cssText = `opacity:${Math.sin(t * Math.PI * 3) ** 2 * 0.85};background:#fff`) });
     this.encolar({ duracion: FUNDIDO, saltable: false, animar: (t) => (this.velo.style.cssText = `opacity:${t};background:#1d1720`) });
@@ -664,6 +668,7 @@ export class Combate implements Subsistema {
         for (const p of paneles) p.style.visibility = 'hidden';
         for (const l of this.luchadores) l?.raiz.removeFromParent();
         this.luchadores = [null, null, null, null];
+        this.quitarCuboCaptura();
         const e = this.estado!;
         // El equipo vuelve a «partida» como ha quedado: vida, PP, estados y experiencia.
         // Sin las del amigo, que van detrás de las tuyas.
@@ -1016,24 +1021,61 @@ export class Combate implements Subsistema {
           const o = DATOS.objetos[ev.objeto];
           const nombre = o?.nombre ?? ev.objeto;
           if (o?.tipo === 'captura') {
-            // El cubo vuela hasta la salvaje, que desaparece dentro.
-            this.encolar({ texto: `¡Lanzas un ${nombre}!`, sonido: 'lanzar', duracion: 0.9, saltable: false, animar: (t) => (this.luchadores[2]!.escala = 1 - t) });
+            // El cubo vuela en arco hasta la salvaje, que encoge dentro con unas chispas, y cae a
+            // su plataforma (probador, 2026-11-25: antes no salía ningún cubo y la plataforma se
+            // quedaba vacía mientras se sacudía).
+            const hecho = { chispas: false };
+            this.encolar({
+              texto: `¡Lanzas un ${nombre}!`,
+              sonido: 'lanzar',
+              duracion: 1.1,
+              saltable: false,
+              empezar: () => {
+                this.quitarCuboCaptura();
+                this.cuboCaptura = figuraCubo(nivelCubo(ev.objeto), this.materialCubo);
+                this.cuboCaptura.position.copy(this.sitio(0)).setY(1);
+                this.arena.add(this.cuboCaptura);
+              },
+              animar: (t) => this.animarLanzamiento(t, hecho),
+            });
           } else {
             this.encolar({ texto: ev.lado === 0 ? `Usas ${nombre}.` : `El entrenador usa ${nombre}.`, duracion: 1, saltable: true });
           }
           break;
         }
         case 'captura': {
+          // Se sacude el cubo, con la salvaje dentro.
           for (let i = 0; i < ev.sacudidas; i++) {
-            this.encolar({ texto: '…', sonido: 'sacudida', duracion: 0.55, saltable: false, animar: (t) => this.luchadores[2]!.extra.set(Math.sin(t * Math.PI * 2) * 0.12, 0, 0) });
+            this.encolar({
+              texto: '…',
+              sonido: 'sacudida',
+              duracion: 0.55,
+              saltable: false,
+              animar: (t) => {
+                if (this.cuboCaptura) this.cuboCaptura.rotation.z = Math.sin(t * Math.PI * 2) * 0.4;
+              },
+            });
           }
           const nombre = this.activa(1) ? nombreDe(this.activa(1)!, DATOS) : 'la criatura';
           if (ev.exito) {
             const cabe = this.partida.equipo.length < MAX_EQUIPO;
-            this.encolar({ texto: `¡Has capturado a ${nombre}!`, sonido: 'captura', duracion: 1.6, saltable: true });
+            // El cubo se queda cerrado en la plataforma y suelta unas chispas que suben.
+            this.encolar({ texto: `¡Has capturado a ${nombre}!`, sonido: 'captura', duracion: 1.6, saltable: true, empezar: () => this.chispasCubo(0xffe39a, 1) });
             if (!cabe) this.encolar({ texto: 'Pero tu equipo está lleno: se queda en libertad.', duracion: 1.6, saltable: true });
           } else {
-            this.encolar({ texto: '¡Oh, no! Se ha escapado.', sonido: 'escapa', duracion: 1.1, saltable: true, animar: (t) => (this.luchadores[2]!.escala = rebote(t)) });
+            // El cubo se abre y la salvaje sale de un rebote.
+            this.encolar({
+              texto: '¡Oh, no! Se ha escapado.',
+              sonido: 'escapa',
+              duracion: 1.1,
+              saltable: true,
+              empezar: () => this.chispasCubo(0xfffbe8, 0),
+              animar: (t) => {
+                if (this.cuboCaptura) this.cuboCaptura.scale.setScalar(Math.max(0, 1 - t * 4));
+                this.luchadores[2]!.escala = rebote(t);
+                if (t >= 1) this.quitarCuboCaptura();
+              },
+            });
           }
           break;
         }
@@ -1042,6 +1084,8 @@ export class Combate implements Subsistema {
           break;
         case 'fin': {
           const premio = this.entrenador ? (this.partida.datos.entrenadores[this.entrenador]?.premio ?? 0) : 0;
+          // Antes del primer refugio se despierta en casa, no en un refugio (probador, 2026-11-25).
+          const vuelta = this.partida.ultimoRefugio === SALA_INICIAL ? 'Vuelves corriendo a casa' : 'Vuelves corriendo al refugio';
           const textos: Record<string, string> = {
             victoria:
               this.formato === 2
@@ -1051,8 +1095,8 @@ export class Combate implements Subsistema {
                   : '¡Has ganado!',
             derrota:
               perdidaPorDerrota(this.partida.dinero) > 0
-                ? `No te quedan criaturas que puedan luchar… Vuelves corriendo al refugio y por el camino se te caen ${perdidaPorDerrota(this.partida.dinero)} de dinero.`
-                : 'No te quedan criaturas que puedan luchar… Vuelves corriendo al refugio.',
+                ? `No te quedan criaturas que puedan luchar… ${vuelta} y por el camino se te caen ${perdidaPorDerrota(this.partida.dinero)} de dinero.`
+                : `No te quedan criaturas que puedan luchar… ${vuelta}.`,
           };
           if (textos[ev.resultado]) this.encolar({ texto: textos[ev.resultado], duracion: 1.8, saltable: true });
           break;
@@ -1409,6 +1453,53 @@ export class Combate implements Subsistema {
   }
 
   /**
+   * El lanzamiento del cubo de captura, con t de 0 a 1: vuela en arco desde tu lado hasta media
+   * altura de la salvaje (hasta 0,5), la salvaje encoge dentro con unas chispas (hasta 0,8) y el
+   * cubo cae a su plataforma.
+   */
+  private animarLanzamiento(t: number, hecho: { chispas: boolean }): void {
+    const cubo = this.cuboCaptura;
+    const l = this.luchadores[2];
+    if (!cubo || !l) return;
+    const desde = this.sitio(0);
+    const hasta = this.sitio(2);
+    const centro = l.alto * 0.5;
+    const suelo = RADIO_CUBO * 1.05;
+    girarCubo(cubo, this.reloj * (t < 0.8 ? 4 : 1.5));
+    if (t < 0.5) {
+      const u = t / 0.5;
+      cubo.position.lerpVectors(desde, hasta, u);
+      cubo.position.y = 1 + (centro - 1) * u + Math.sin(u * Math.PI) * 1.4;
+      return;
+    }
+    if (!hecho.chispas) {
+      hecho.chispas = true;
+      this.chispas(2, 0xfffbe8);
+    }
+    if (t < 0.8) {
+      cubo.position.copy(hasta).setY(centro);
+      l.escala = 1 - (t - 0.5) / 0.3;
+      return;
+    }
+    l.escala = 0;
+    const u = (t - 0.8) / 0.2;
+    cubo.position.copy(hasta).setY(centro + (suelo - centro) * u * u);
+  }
+
+  /** Chispas desde el cubo de captura (o desde la salvaje, si no hay cubo). */
+  private chispasCubo(color: number, sube: number): void {
+    this.chispas(2, color, sube, this.cuboCaptura?.position);
+  }
+
+  private quitarCuboCaptura(): void {
+    const cubo = this.cuboCaptura;
+    if (!cubo) return;
+    cubo.removeFromParent();
+    cubo.traverse((o) => (o as Mesh).geometry?.dispose());
+    this.cuboCaptura = null;
+  }
+
+  /**
    * La evolución, en la arena (autor, 2026-11-19; propia, no la del género; revisada con el probador):
    * - de noche, el Sello se dibuja en el suelo: los trece círculos del cubo de Metatrón, que se tocan,
    *   y después las líneas que unen sus centros, del color del tipo de la forma nueva;
@@ -1713,11 +1804,11 @@ export class Combate implements Subsistema {
   }
 
   /** Chispas del color del ataque sobre una criatura; `sube` 1 o -1 para las de subir o bajar. */
-  private chispas(p: number, color: number, sube = 0): void {
+  private chispas(p: number, color: number, sube = 0, desde?: Vector3): void {
     const mat = new MeshBasicNodeMaterial({ color, transparent: true });
     mat.toneMapped = false;
     this.materiales.push(mat);
-    const centro = this.sitio(p).clone().add(new Vector3(0, (this.luchadores[p]?.alto ?? TAMANO[(p >> 1) as 0 | 1]) * 0.5, 0));
+    const centro = desde?.clone() ?? this.sitio(p).clone().add(new Vector3(0, (this.luchadores[p]?.alto ?? TAMANO[(p >> 1) as 0 | 1]) * 0.5, 0));
     for (let i = 0; i < 14; i++) {
       const a = (i / 14) * Math.PI * 2;
       const malla = new Mesh(new SphereGeometry(0.06 + (i % 3) * 0.02, 6, 4), mat);
@@ -1755,6 +1846,11 @@ export class Combate implements Subsistema {
     for (const t of this.salas.values()) t.dispose();
     for (const t of this.fondos.values()) t.dispose();
   }
+}
+
+/** El color del cubo que se lanza, por su objeto: «cubo-verde» es el verde; si no hay, el blanco. */
+function nivelCubo(objeto: string): number {
+  return Math.max(0, CUBOS.findIndex((c) => `cubo-${c.nombre.toLowerCase()}` === objeto));
 }
 
 /** Sale con un pequeño rebote, como al lanzarla. */

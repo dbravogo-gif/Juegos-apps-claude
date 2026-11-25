@@ -223,3 +223,20 @@ nivel: de nota a regla, y de regla a prueba o hook.
   - Barrera: `.claude/agents/probador.md` le pide apuntar en un archivo al acabar cada zona; al
     relanzarlo, se le pasan sus notas y no repite lo hecho. Para medir dificultad, mejor una
     simulación con el núcleo (segundos) que combates jugados con render por software (minutos).
+- **2026-11-25 · Un gancho de prueba aceptaba datos imposibles y colgaba el juego** (Six-seven
+  islands, capturas de la revisión visual).
+  - `window.__JUEGO__.poner({ inicial: 'fuego' })`: la inicial de Fuego se llama `infernal`. El
+    juego se colgaba al teñir los uniformes y parecía un fallo del viaje en barco; costó varias
+    vueltas verlo.
+  - Barrera: `poner` rechaza una inicial desconocida y dice las válidas. Los ganchos de prueba
+    validan lo que reciben, como ya hacía `salvaje` con las especies.
+  - De paso: con render por software, `viajar(n)` tarda más de un minuto (el fundido va por
+    fotogramas). Se espera al evento `load`, no un tiempo fijo.
+- **2026-11-25 · La captura llevaba semanas sin cubo y la portada borraba sin preguntar**
+  (Six-seven islands, probador de la etapa 5).
+  - Al lanzar, la salvaje encogía y las sacudidas movían una criatura invisible: el texto («…»)
+    decía una cosa y la escena, otra. Las capturas por software tardan segundos y la animación
+    dura uno; las revisiones miraban el antes y el después.
+  - Barrera: el probador mira en el código las animaciones cortas (`.claude/agents/probador.md`).
+  - Borrar la partida tenía dos entradas y solo una preguntaba. Todo lo que borra datos del
+    jugador pregunta antes, con el cursor en «No».

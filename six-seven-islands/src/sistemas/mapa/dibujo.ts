@@ -107,8 +107,21 @@ export function dibujarPlano(ctx: CanvasRenderingContext2D, p: Plano, op: Opcion
     ctx.fill();
   }
 
-  // 5. Nombres de las zonas.
-  for (const e of p.etiquetas) etiqueta(ctx, e.texto, e.x * px, e.y * px, Math.max(11, px * 1.5));
+  // 5. Nombres de las zonas. Si el jugador cae sobre uno, el nombre sube justo encima de su aro:
+  // el aro tapaba letras («El J◎ble», probador, 2026-11-25).
+  const tamNombre = Math.max(11, px * 1.5);
+  const alcanceAro = radio + Math.max(2.5, px * 0.45) + Math.max(1.5, px * 0.2);
+  for (const e of p.etiquetas) {
+    const x = e.x * px;
+    let y = e.y * px;
+    if (jugador) {
+      const { x0, w, h } = cajaEtiqueta(ctx, e.texto, x, tamNombre);
+      const tapa =
+        jugador[0] + alcanceAro > x0 && jugador[0] - alcanceAro < x0 + w && jugador[1] + alcanceAro > y - h / 2 && jugador[1] - alcanceAro < y + h / 2;
+      if (tapa) y = jugador[1] - alcanceAro - h / 2 - 2;
+    }
+    etiqueta(ctx, e.texto, x, y, tamNombre);
+  }
 
   // …y su aro encima, que se ve aunque un nombre le caiga encima.
   if (jugador) {
@@ -192,11 +205,15 @@ function detalle(ctx: CanvasRenderingContext2D, d: Detalle, X: number, Y: number
   }
 }
 
-function etiqueta(ctx: CanvasRenderingContext2D, texto: string, x: number, y: number, tam: number, alinear: 'centro' | 'izquierda' = 'centro'): void {
+/** Dónde cae la píldora de un nombre: su borde izquierdo, su ancho y su alto. */
+function cajaEtiqueta(ctx: CanvasRenderingContext2D, texto: string, x: number, tam: number, alinear: 'centro' | 'izquierda' = 'centro'): { x0: number; w: number; h: number } {
   ctx.font = `700 ${tam}px ${FUENTE}`;
   const w = ctx.measureText(texto).width + tam * 1.1;
-  const h = tam * 1.6;
-  const x0 = alinear === 'centro' ? x - w / 2 : x;
+  return { x0: alinear === 'centro' ? x - w / 2 : x, w, h: tam * 1.6 };
+}
+
+function etiqueta(ctx: CanvasRenderingContext2D, texto: string, x: number, y: number, tam: number, alinear: 'centro' | 'izquierda' = 'centro'): void {
+  const { x0, w, h } = cajaEtiqueta(ctx, texto, x, tam, alinear);
   ctx.fillStyle = 'rgba(43, 35, 64, 0.78)';
   ctx.beginPath();
   ctx.roundRect(x0, y - h / 2, w, h, h / 2);

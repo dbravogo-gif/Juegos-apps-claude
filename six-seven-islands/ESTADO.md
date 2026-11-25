@@ -7,13 +7,12 @@ Actualizado: 2026-11-25. Solo el presente; el historial está en git. Máximo 40
 Gran Canaria (`ISLA-3.md`): hecha entera, fases 1 a 4, con lo del probador arreglado
 (2026-11-23). Queda el barco a Tenerife: la isla 4 (`ISLA-4.md`) espera la aprobación del autor.
 
-Revisión de todo el juego (2026-11-24, encargo del autor): arreglados los fallos y lo visual
-de Fuerteventura y Gran Canaria. Los cambios de jugabilidad importantes están en
-`RESUMEN-ISLAS.md` (D1 a D6), esperando al autor.
-
 2026-11-25: vitrina 3D en la ficha; skills `rpg`, `level-design` y `threejs-*` instaladas; el
-simulador de partida (`npm run equilibrio`, `EQUILIBRIO.md`). Siguiente: rehacer la revisión con
-esas herramientas.
+simulador de partida (`npm run equilibrio`, `EQUILIBRIO.md`). Revisión de todo el juego con esas
+herramientas, terminada (`REVISION.md`, etapas 1 a 5): lo pequeño, arreglado y publicado (entre
+otras cosas, la captura ya tiene cubo y la portada pregunta antes de borrar). El probador da 1,4 de
+media en la rúbrica visual: no es premium. Lo que cambia cómo se juega o cómo se ve está en
+`RESUMEN-ISLAS.md` (D1 a D9), esperando al autor.
 
 ## Hecho
 

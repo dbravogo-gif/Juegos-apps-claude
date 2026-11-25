@@ -3,7 +3,7 @@
 Encargo del autor: rehacer la revisión de todo el juego con las skills instaladas el 2026-11-25
 (`rpg`, `level-design`, `threejs-*`) y el simulador de partida. Se hace por etapas y cada una deja
 aquí sus hallazgos. Lo pequeño se arregla y se publica; lo que cambia cómo se juega va a las
-decisiones del autor (`RESUMEN-ISLAS.md`, D1 a D6).
+decisiones del autor (`RESUMEN-ISLAS.md`, D1 a D9).
 
 ## 1. Dificultad y progresión (skill `rpg` y simulador)
 
@@ -182,3 +182,76 @@ un mensaje que dice las válidas. Solo afecta a las pruebas: en la partida la in
   si hace falta, se suben a 12 y 13 px.
 - **Textos:** el objetivo y los carteles son cortos y en el idioma del juego. La ayuda de teclas
   usa los nombres de las teclas (A, Z, X), como el resto de menús.
+
+## 5. Revisión independiente (agente `probador`)
+
+Jugó con teclado real el principio entero (casa, madre, bar, museo, inicial, El Golfo, un salvaje
+y el entrenador obligatorio) y el resto con los ganchos de prueba, a 1280 × 800 en calidad media.
+Sin errores en consola ni bloqueos.
+
+### La nota
+
+- **Rúbrica visual: media 1,4, no llega a premium** (el listón es 2 en todo).
+  - 2 en dirección de arte, mundo, interfaz y rendimiento;
+  - 1 en protagonista, obstáculos, recompensas, materiales, luz y efectos.
+- **Fallos automáticos de la rúbrica:**
+  - vacío sin justificar en Sotavento, Ajuy y Cofete;
+  - el Equipo son tarjetas de datos, sin retratos;
+  - el HUD se lavaba en la niebla de Tamadaba y se cortaba en Probar sonidos (los dos, arreglados).
+- **Jugabilidad, de 1 a 5:** funciona 4, se entiende 3, se siente bien 2, intención visual 3.
+- **Lo de las etapas 2 a 4:** la poción de Famara, los objetivos de Fuerteventura, los sonidos
+  nuevos y la ayuda de teclas, bien. Puerto del Rosario y Morro Jable, mejor pero a medias: los
+  jardines son rectángulos verdes sin nada encima.
+- **Las sospechas de la revisión anterior:** confirmadas la captura sin cubo, los pasos cerrados de
+  bloques lisos, la compañera pequeña, el marcador del mapa y la falta de retratos. Descartada la
+  pantalla negra al perder: hay fundido y despiertas curado.
+
+### Arreglado
+
+| # | Problema | Arreglo |
+| --- | --- | --- |
+| 1 | **La captura no tenía cubo:** la salvaje encogía hasta desaparecer y las sacudidas movían una criatura invisible sobre una plataforma vacía | El cubo vuela en arco desde tu lado, la salvaje encoge dentro con chispas, cae a la plataforma y es él el que se sacude. Si se escapa, se abre y la salvaje sale de un rebote; si no, suelta chispas doradas que suben. Color según el cubo lanzado |
+| 2 | **La portada borraba la partida guardada sin preguntar** («Partida nueva (borra la guardada)») | Pregunta antes, como Opciones, con el cursor en «No, volver». X también vuelve |
+| 3 | **La niebla de Tamadaba tapaba el objetivo y la ayuda** (la ayuda bajaba a 2,15:1) | La capa de calima y niebla va por debajo del resto de la interfaz |
+| 4 | **El marcador del mapa tapaba el nombre de la zona** («El J◎ble») | Si el jugador cae sobre un nombre, el nombre sube justo encima del marcador |
+| 5 | **Probar sonidos: la elegida quedaba cortada y la ayuda de teclas desaparecía** | Se desplaza solo la lista; el título y la ayuda se quedan a la vista |
+| 6 | **Al perder antes del primer refugio decía «Vuelves corriendo al refugio» y salías en casa** | «Vuelves corriendo a casa» mientras tu sitio de curar sea tu casa |
+| 7 | **«¿Quién eres? Flechas para elegir» con una sola persona** | Sin «Flechas para elegir» mientras haya una sola persona jugable |
+
+**Comprobado en el juego** (build de producción, 1280 × 800, teclado):
+- la captura con éxito: el cubo con chispas donde estaba la salvaje, sacudiéndose en la plataforma
+  durante el «…» y cerrado al capturarla;
+- la portada: pregunta; «No» y X vuelven sin borrar; «Sí» borra y al recargar ya no está
+  «Continuar»;
+- en Tamadaba, el objetivo y la ayuda se ven nítidos por encima de la niebla;
+- el mapa: «El Jable» y «Capital» suben encima del marcador;
+- Probar sonidos: la última opción, entera, con la ayuda de teclas debajo;
+- la pista de «¿Quién eres?».
+
+Sin errores en consola. **Sin ver en imagen:** la captura fallida (el cubo que se abre) y el texto al
+perder; los dos compilan y pasan las pruebas.
+
+### Para el autor
+
+Lo que cambia el aspecto o el alcance va a `RESUMEN-ISLAS.md`, D7 a D9:
+- **D7:** tamaños que no se leen (compañera, salvajes pequeñas en combate);
+- **D8:** momentos que faltan (recibir la inicial, retratos en el Equipo);
+- **D9:** lo que aún parece de prototipo (pasos cerrados, Sotavento, Ajuy y Cofete, gimnasio de Aire).
+
+Además:
+- **En el primer combate la inicial desobedeció 3 de 4 turnos** y el probador perdió con el
+  primer entrenador. La probabilidad es del 45 % (`PROB_DESOBEDIENCIA`), así que fue mala suerte
+  en pocos turnos; el simulador ya la cuenta. Va con D1.
+- **Baja, sin decisión:**
+  - el combate del pinar usa el fondo de Lanzarote hasta que pintes `gc-pinar`;
+  - las copas de las palmeras tapan al jugador sin silueta;
+  - los personajes vistos desde arriba se quedan en pelo o capucha.
+
+### Sin probar
+
+- Ningún sonido (aquí no hay audio).
+- La sacudida de cámara.
+- La calidad alta.
+- Los FPS reales.
+- La calima de las Dunas en movimiento.
+- Safari.
