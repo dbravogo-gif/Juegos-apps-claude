@@ -26,6 +26,9 @@ directorio que te indiquen, o a uno temporal.
 3. **Si el juego expone `window.__JUEGO__`,** úsalo para leer el estado y comprobar que la
    entrada produce movimiento y progreso.
 4. **Aquí no hay GPU** (WebGL2 por software): no juzgues la fluidez por los FPS.
+5. **Apunta a medida que avanzas,** en un archivo de notas dentro de tu carpeta de trabajo: un
+   apartado al acabar cada zona o sistema. El contenedor se reinicia y el plan tiene un límite de
+   uso; una revisión que solo vive en tu memoria se pierde entera (2026-11-24, dos veces).
 
 ## Qué puntúas
 
