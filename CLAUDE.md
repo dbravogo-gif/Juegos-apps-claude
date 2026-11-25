@@ -72,6 +72,7 @@ proyecto nuevo necesita su ruta en `paths`, sus pruebas y su copia en «Montar e
 - Skills:
   - `/nuevo-proyecto`: de la idea a la primera versión. `juego-3d`: producción 3D.
   - `pulir`: sensación de juego. `investigar`: investigación. `cierre`: cerrar una tarea.
+  - De terceros (`CREDITS.md`): `rpg` (equilibrio), `level-design` y `threejs-*` (técnica 3D).
   - `find-skills`: buscar skills ya hechas antes de una tarea en un dominio nuevo o de escribir
     una propia. Se usa siempre que tenga sentido (autor, 2026-11-24); instalar, con su sí.
 
