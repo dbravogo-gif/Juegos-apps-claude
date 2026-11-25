@@ -240,3 +240,8 @@ nivel: de nota a regla, y de regla a prueba o hook.
   - Barrera: el probador mira en el código las animaciones cortas (`.claude/agents/probador.md`).
   - Borrar la partida tenía dos entradas y solo una preguntaba. Todo lo que borra datos del
     jugador pregunta antes, con el cursor en «No».
+- **2026-11-25 · Di por publicada una etapa cuyo despliegue había fallado** (Six-seven islands,
+  etapa 4 de la revisión).
+  - El flujo «Publicar juegos» pasó las pruebas pero falló al desplegar en Pages: un fallo
+    pasajero de GitHub. Dije «publicado» por haber fusionado el PR, sin mirar el flujo.
+  - Barrera: la skill `cierre` pide ver el flujo en verde antes de decir «publicado».

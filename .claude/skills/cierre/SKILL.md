@@ -16,6 +16,9 @@ description: Cierra una tarea o una sesión de trabajo - comprueba, actualiza el
 5. **Reglas:** repasa de la R1 a la R12 contra lo hecho en la tarea. Todo incumplimiento que no
    se avisó se declara ahora como excepción.
 6. **Commit y push** a la rama asignada, con un mensaje que diga qué cambió y por qué.
+   - Si se fusiona en `main`, «publicado» se dice solo cuando el flujo «Publicar juegos» de ese
+     commit acaba en verde. Si falla por GitHub (no por las pruebas), se dice y se vuelve a lanzar
+     o se espera al siguiente push, que publica `main` entero (2026-11-25).
 7. **Mensaje final** (regla R11), corto:
    - el resultado y su prueba,
    - las excepciones,
