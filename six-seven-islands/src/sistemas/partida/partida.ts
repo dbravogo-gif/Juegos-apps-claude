@@ -783,7 +783,9 @@ export class Partida implements Subsistema {
     this.trasCombate = null;
     if (t) {
       this.hablaLuego = t.luego ?? null;
-      this.abrir({ lineas: t.lineas.map((texto) => ({ quien: t.quien, texto })) }, 'tras-combate');
+      // Entre paréntesis, la acotación del narrador: sin nombre encima (salía como si la dijera el
+      // soldado; probador, 2026-11-24).
+      this.abrir({ lineas: t.lineas.map((texto) => (/^\(.*\)$/.test(texto) ? { texto: texto.slice(1, -1) } : { quien: t.quien, texto })) }, 'tras-combate');
       if (t.medalla !== undefined) {
         this.ctx.eventos.emit('sonido:tocar', { nombre: 'nivel' });
         this.ctx.eventos.emit('medalla:ganada', { isla: t.medalla });

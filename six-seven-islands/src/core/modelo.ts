@@ -105,6 +105,8 @@ interface ObjetoBase {
   descripcion: string;
   /** Precio en tienda. Sin precio, no se vende. */
   precio?: number;
+  /** Desde qué isla lo venden las tiendas (por defecto, desde la primera). */
+  desdeIsla?: number;
 }
 
 export type Objeto = ObjetoBase &

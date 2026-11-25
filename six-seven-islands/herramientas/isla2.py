@@ -43,9 +43,12 @@ z.edificio(3, 5, 5, 3, 'R', 5, 'refugio-corralejo')
 z.edificio(16, 5, 4, 3, 'S', 17, 'tienda-corralejo')
 z.edificio(3, 10, 4, 3, 'C', 4, 'casa-corralejo-1')
 z.edificio(17, 10, 4, 3, 'C', 18, 'casa-corralejo-2')
-for x, y in ((9, 10), (15, 10), (21, 6), (9, 15), (15, 16)): z.p(x, y, 'T')   # palmeras
+for x, y in ((9, 10), (15, 10), (21, 6), (8, 17), (17, 17)): z.p(x, y, 'T')   # palmeras
 z.p(2, 4, 'O'); z.p(3, 4, 't'); z.p(7, 4, 'O'); z.p(8, 4, 't')              # sombrillas en la playa
 z.r(1, 15, 6, 4, 'U'); z.r(19, 15, 6, 4, 'U')                   # tuneras a los lados de la salida
+# La salida se estrecha entre tuneras: se pasa por delante de Chano, que te para (no se salta; probador,
+# 2026-11-24). Las palmeras, lejos de él: una le tapaba en su presentación.
+z.r(7, 15, 4, 1, 'U'); z.r(15, 15, 4, 1, 'U')
 zonas['corralejo'] = dict(nombre='Corralejo', origen=(40, 0), z=z, altura=0, casas='lanzarote')
 
 # 2. Las Dunas (40 × 36): el desierto. Toda la arena (D) tiene criaturas; las crestas (K) no se
@@ -64,6 +67,9 @@ z.r(3, 16, 8, 4, ':')                                           # el campamento 
 z.r(0, 17, 3, 2, ':')                                           # salida al oeste, hacia Tindaya (opcional)
 z.p(6, 17, 'E')                                                 # la estatua medio enterrada
 z.r(22, 23, 6, 3, ':'); z.r(12, 30, 6, 3, ':'); z.r(17, 33, 5, 2, ':')
+# Una cresta cierra el campamento por el este: solo se sale por donde están los soldados, así que la
+# escena de la estatua no se salta (probador, 2026-11-24). Al irse ellos, el paso queda libre.
+z.r(11, 15, 1, 2, 'K'); z.r(11, 19, 1, 2, 'K')
 zonas['dunas'] = dict(nombre='Las Dunas', origen=(33, 20), z=z, altura=0, hierba=True, clima='calima')
 
 # 3. Puerto del Rosario (32 × 26): la capital, en la costa este. Entrada arriba (x 13..15, desde
@@ -254,7 +260,7 @@ PERSONAJES = {
            # huyen, y entonces llega Chano, «tarde» (HISTORIA.md).
            "{ id: 'soldado-dunas-1', x: 10, y: 17, mira: 'o', entrenador: { vision: 3, obligatorio: false }, uniforme: 'perseguidor', sin: 'estatua-defendida' }",
            "{ id: 'soldado-dunas-2', x: 10, y: 18, mira: 'o', escena: { vision: 3 }, uniforme: 'perseguidor', sin: 'estatua-defendida' }",
-           "{ id: 'chano-dunas', x: 9, y: 16, mira: 'o', uniforme: 'tuyo', con: 'estatua-defendida' }"],
+           "{ id: 'chano-dunas', x: 5, y: 19, mira: 'e', uniforme: 'tuyo', con: 'estatua-defendida' }"],
  'puerto': ["{ id: 'viejo-puerto', x: 25, y: 11, mira: 'e', uniforme: 'tuyo' }",
             "{ id: 'escultor-puerto', x: 17, y: 13, mira: 's', frase: 'Esta ciudad está llena de esculturas por la calle. Algún día pondrán una mía.' }",
             "{ id: 'vecina-puerto', x: 9, y: 21, mira: 'n', frase: 'De aquí salían los barcos de la cal. Hoy salen los de turistas.' }",

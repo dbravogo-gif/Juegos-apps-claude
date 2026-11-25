@@ -34,7 +34,13 @@ function puntuar(e: EstadoCombate, ref: Ref, obj: Ref, mov: Movimiento, datos: D
   let p = 0;
   for (const f of mov.efectos ?? []) {
     if (f.tipo === 'estado' && !d.estado) p += 0.35;
-    if (f.tipo === 'etapa') p += f.a === 'propio' ? (e.lados[ref.lado].etapas[ref.hueco][f.estadistica] < 2 ? 0.2 : 0) : 0.15;
+    // Subirse una estadística o bajársela al rival, solo mientras sirva: hasta +2 y −2. Antes la IA
+    // repetía Mirada fija sin fin cuando sus golpes hacían poco (probador, 2026-11-24).
+    if (f.tipo === 'etapa') {
+      const sube = f.a === 'propio' && f.cambio > 0 && e.lados[ref.lado].etapas[ref.hueco][f.estadistica] < 2;
+      const baja = f.a === 'objetivo' && f.cambio < 0 && e.lados[obj.lado].etapas[obj.hueco][f.estadistica] > -2;
+      p += sube ? 0.2 : baja ? 0.15 : 0;
+    }
     if (f.tipo === 'curar') p += c.vida < vidaMaxima(c, datos) / 2 ? 0.6 : 0;
     if (f.tipo === 'proteger') p += 0.1;
   }

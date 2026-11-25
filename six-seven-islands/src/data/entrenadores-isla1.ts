@@ -11,7 +11,7 @@ export interface DefEntrenador {
   tras: string;
   /** Lo que se consigue al vencerle (la líder abre el barco). */
   condicion?: Condicion;
-  /** Lo que dice nada más vencerle, al volver del combate (abrir una compuerta, dar la pintadera). */
+  /** Lo que dice nada más vencerle, al volver del combate (abrir una compuerta, dar la pintadera). Una línea entre paréntesis la cuenta el narrador. */
   alVencer?: readonly string[];
   /** La isla cuya pintadera da (los líderes de gimnasio). */
   medalla?: number;
@@ -115,7 +115,7 @@ export const ENTRENADORES_ISLA1: Readonly<Record<string, DefEntrenador>> = {
       '¡Qué combate! Tienes la cabeza tan dura como el basalto.',
       'Toma: la pintadera de Lanzarote. Con ella, todo el archipiélago sabrá que has vencido al gimnasio de Roca.',
       'Esta pintadera es una pieza de algo más grande. Guárdala bien: hay quien lleva años buscándolas.',
-      '{nombre} recibe la pintadera de Lanzarote.',
+      '({nombre} recibe la pintadera de Lanzarote.)',
       'Ve al puerto: con la pintadera, el marinero te llevará a Fuerteventura.',
     ],
     medalla: 1,

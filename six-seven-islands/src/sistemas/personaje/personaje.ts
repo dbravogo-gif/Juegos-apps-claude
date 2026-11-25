@@ -81,6 +81,8 @@ const rgb = (hex: number): [number, number, number] => [((hex >> 16) & 255) / 25
 
 /** Los líderes de gimnasio: `lider-gimnasio` (Lanzarote) y `lider-<tipo>` en las demás islas. */
 const esLider = (p: DefPersonaje): boolean => p.id.startsWith('lider-');
+/** Los jefes de los soldados de la rama (`comandante-nublo`). */
+const esComandante = (p: DefPersonaje): boolean => p.id.startsWith('comandante-');
 
 /** Qué modelo de KayKit hace de cada personaje, hasta que lleguen las personas de Meshy. */
 function modeloDe(p: DefPersonaje): string {
@@ -335,7 +337,7 @@ export class Personaje implements Subsistema {
   }
 
   /** Una figurita: copia del modelo con su esqueleto, sin armas, a escala y con sus animaciones. */
-  private figura(gltf: GLTF, nombre: string, tinte?: readonly [number, number, number], op: { cabezaSinTinte?: boolean; mezcla?: number } = {}): Figura {
+  private figura(gltf: GLTF, nombre: string, tinte?: readonly [number, number, number], op: { cabezaSinTinte?: boolean; mezcla?: number; sinTinte?: RegExp } = {}): Figura {
     const base = nombre.split('_')[0];
     const copia = clonarConEsqueleto(gltf.scene);
     copia.traverse((o) => {
@@ -344,7 +346,10 @@ export class Personaje implements Subsistema {
       o.visible = o.name.startsWith(`${base}_`) && !o.name.includes('Shield');
     });
     // Los uniformes (cabeza sin teñir) mezclan su color con la ropa; el resto de tintes multiplican.
-    this.materiales.push(...aMaterialDelJuego(copia, { bordes: [-0.25, 0.5], especular: 0.1, dureza: 16, contraluz: 0.35 }, tinte, op.cabezaSinTinte ? (m) => /head/i.test(m.name) : undefined, op.mezcla));
+    // El bárbaro (Chano, la líder de Lucha) lleva los brazos al aire y un casco enorme: teñidos,
+    // desde arriba parecía un fantasma azul (probador, 2026-11-24). Brazos y casco, sin teñir.
+    const sinTinte = op.sinTinte ?? (base === 'Barbarian' ? /head|arm|hat/i : /head/i);
+    this.materiales.push(...aMaterialDelJuego(copia, { bordes: [-0.25, 0.5], especular: 0.1, dureza: 16, contraluz: 0.35 }, tinte, op.cabezaSinTinte ? (m) => sinTinte.test(m.name) : undefined, op.mezcla));
     const caja = new Box3();
     copia.updateWorldMatrix(true, true);
     copia.traverse((o) => {
@@ -493,18 +498,27 @@ export class Personaje implements Subsistema {
       if (u.hecho) continue;
       u.hecho = true;
       const pueblo = u.p.uniforme === 'tuyo' ? inicial : u.p.uniforme === 'amigo2' ? inicialesDeAmigos(inicial)[0]! : puebloQueTePersigue(inicial);
-      void this.hacerUniformado(u, colorUniforme(pueblo), ctx);
+      // Los soldados, de un tono oscuro de su color: el de Tierra, dorado, se perdía en la arena de
+      // las dunas (probador, 2026-11-24). Su comandante, del color vivo y más grande (abajo).
+      const color = colorUniforme(pueblo);
+      const oscuro = u.p.uniforme === 'perseguidor' && !esComandante(u.p);
+      void this.hacerUniformado(u, oscuro ? (color.map((c) => c * 0.55) as [number, number, number]) : color, ctx);
     }
   }
 
   private async hacerUniformado(u: { p: DefPersonaje; mapa: MundoLogico; zona: string }, tinte: readonly [number, number, number], ctx: Ctx): Promise<void> {
     const nombre = modeloDe(u.p);
     // Los soldados, de su color bien vivo; Chano y el viejo, más suave (probador: salían pálidos).
-    const f = this.figura(await cargarModelo(rutaModelo(`kaykit/${nombre}.glb`)), nombre, tinte, { cabezaSinTinte: true, mezcla: u.p.uniforme === 'perseguidor' ? 0.78 : 0.55 });
+    // El comandante, con el casco de acero sin teñir: con el color de Roca, apenas se distinguía de
+    // sus soldados.
+    const op = { cabezaSinTinte: true, mezcla: u.p.uniforme === 'perseguidor' ? 0.78 : 0.55, sinTinte: esComandante(u.p) ? /head|helmet/i : undefined };
+    const f = this.figura(await cargarModelo(rutaModelo(`kaykit/${nombre}.glb`)), nombre, tinte, op);
     const k = enIsla(u.mapa, u.zona, u.p.x, u.p.y);
     const [x, y] = deClave(k);
     f.raiz.position.set(x, alturaSuelo(u.mapa.casillas.get(k)!.h), y);
     f.raiz.rotation.y = GIRO[u.p.mira];
+    // El comandante no era distinto de sus soldados (probador, 2026-11-24): más grande, como un líder.
+    if (esComandante(u.p)) f.raiz.scale.setScalar(1.3);
     this.porId.set(u.p.id, { figura: f, giro: GIRO[u.p.mira] });
     ctx.escena.add(f.raiz);
     this.objetos.push(f.raiz);

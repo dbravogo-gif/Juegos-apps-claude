@@ -94,6 +94,21 @@ export function evolucionesPosibles(c: Criatura, datos: DatosJuego): Evolucion[]
 }
 
 /**
+ * La forma que corresponde a una especie a un nivel: la primera evolución mientras se tenga su
+ * nivel. Para los equipos que se hacen por nivel (los soldados de la rama, el rival): el comandante
+ * llevaba primeras formas al 26 y era el combate más fácil de la isla (probador, 2026-11-24).
+ */
+export function formaAlNivel(datos: DatosJuego, especie: string, nivel: number): string {
+  let actual = especie;
+  for (let i = 0; i < 5; i++) {
+    const ev = (datos.especies[actual]?.evoluciona ?? [])[0];
+    if (!ev || nivel < ev.nivel) break;
+    actual = ev.a;
+  }
+  return actual;
+}
+
+/**
  * Las que evolucionan al acabar un combate, como en el género: en pie, que hayan subido de nivel en
  * él y que ya tengan el nivel de su evolución. Si hay varias evoluciones posibles, la primera (las
  * ramificadas, más adelante). Una que no evolucionó (se paró) lo intentará al volver a subir.

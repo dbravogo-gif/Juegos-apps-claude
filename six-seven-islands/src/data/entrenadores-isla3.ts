@@ -64,7 +64,7 @@ export const ENTRENADORES_ISLA3: Readonly<Record<string, DefEntrenador>> = {
     alVencer: [
       '¡Bah! El jefe dijo que eras un crío con suerte. No me dijo que tuvieras tanta.',
       'Nos vamos… por ahora. Desde aquí ya hemos visto lo que veníamos a ver.',
-      'Los soldados de {rama} bajan por la ladera y se pierden entre las nubes.',
+      '(Los soldados de {rama} bajan por la ladera y se pierden entre las nubes.)',
     ],
   },
   // Fase 3: Tejeda, Tamadaba y Agaete.

@@ -65,7 +65,7 @@ export const ENTRENADORES_ISLA2: Readonly<Record<string, DefEntrenador>> = {
     alVencer: [
       '¡Me has dejado sin aliento! Has dominado el viento de mi gimnasio.',
       'Toma: la pintadera de Fuerteventura. Ya llevas dos.',
-      '{nombre} recibe la pintadera de Fuerteventura.',
+      '({nombre} recibe la pintadera de Fuerteventura.)',
       'Ya han venido dos veces a pedírmela unos tipos de uniforme. Cuídala bien.',
       'El barco a Gran Canaria aún no sale… pero el viento ya sopla hacia allí.',
     ],
@@ -79,7 +79,7 @@ export const ENTRENADORES_ISLA2: Readonly<Record<string, DefEntrenador>> = {
     premio: 320,
     tras: 'El jefe se va a enfadar muchísimo…',
     condicion: 'estatua-defendida',
-    alVencer: ['¡Otra vez tú! ¡Retirada, que el jefe se va a enfadar!', 'Los soldados de {rama} huyen por las dunas, sin la estatua.'],
+    alVencer: ['¡Otra vez tú! ¡Retirada, que el jefe se va a enfadar!', '(Los soldados de {rama} huyen por las dunas, sin la estatua.)'],
   },
   'buscador-dunas': {
     equipo: [{ especie: 'c013-1', nivel: 12 }, { especie: 'c012-1', nivel: 13 }],
