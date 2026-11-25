@@ -36,15 +36,16 @@ Del autor, 2026-11-10. Es la «lista de reglas» a la que nos referimos al dise�
 
 **Por tipo principal** (las 188 que no son iniciales; criaturas, no especies). Lucha, del autor
 el 2026-11-12: se quitan 1 de Planta, 2 de Tierra, 1 de Roca, 2 de Aire y 3 de Bicho, y esas 9
-son de Lucha.
+son de Lucha. La 3.ª forma de la lisa de duna, solo Aire (autor, 2026-11-25): 1 de Tierra pasa a
+Aire.
 
 | Tipo | Criaturas | Tipo | Criaturas |
 | --- | --- | --- | --- |
 | Común | 16 | Mental | 8 |
 | Agua | 21 | Oscuridad | 8 |
-| Tierra | 11 | Espectral | 7 |
+| Tierra | 10 | Espectral | 7 |
 | Planta | 17 | Acero | 6 |
-| Aire | 11 | Roca | 10 |
+| Aire | 12 | Roca | 10 |
 | Eléctrico | 11 | Ancestral | 4 |
 | Hielo | 8 | Bicho | 13 |
 | Infernal | 16 | Veneno | 12 |

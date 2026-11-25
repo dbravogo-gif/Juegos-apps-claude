@@ -154,39 +154,39 @@ Pok48. Aerund, 1.ª forma de 2 · YA HECHA
 Pok49. Tailsan, 2.ª forma de 2 · YA HECHA
 
 Pok50. Lisa de duna, 1.ª forma de 3
-   Tipo: Tierra (la línea: Tierra → Tierra → Tierra/Aire)
+   Tipo: Tierra (la línea: Tierra → Tierra → Aire)
    Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante físico.
    Estadísticas como: Trapinch (la línea: Trapinch → Vibrava → Flygon). Solo de referencia: que no se parezca.
    Zona: Las Dunas, Fuerteventura (niveles 10-13)
-   Idea: Lisa de duna: lagartija que nada bajo la arena; la 2.ª, con aletas de arena; la 3.ª, con velas que planean sobre las dunas.
+   Idea: Lisa de duna: lagartija que nada bajo la arena; la 2.ª, con cresta de púas; la 3.ª, con velas que planean sobre las dunas.
 
 Pok51. Lisa de duna, 2.ª forma de 3
-   Tipo: Tierra (la línea: Tierra → Tierra → Tierra/Aire)
+   Tipo: Tierra (la línea: Tierra → Tierra → Aire)
    Fuerza: quintil 2 de 5, floja. Papel: equilibrada.
    Estadísticas como: Vibrava (la línea: Trapinch → Vibrava → Flygon). Solo de referencia: que no se parezca.
    Zona: Las Dunas, Fuerteventura (niveles 10-13)
-   Idea: Lisa de duna: lagartija que nada bajo la arena; la 2.ª, con aletas de arena; la 3.ª, con velas que planean sobre las dunas.
+   Idea: Lisa de duna: lagartija que nada bajo la arena; la 2.ª, con cresta de púas; la 3.ª, con velas que planean sobre las dunas.
 
 Pok52. Lisa de duna, 3.ª forma de 3
-   Tipo: Tierra/Aire (la línea: Tierra → Tierra → Tierra/Aire)
+   Tipo: Aire (la línea: Tierra → Tierra → Aire)
    Fuerza: quintil 4 de 5, fuerte. Papel: equilibrada.
    Estadísticas como: Flygon (la línea: Trapinch → Vibrava → Flygon). Solo de referencia: que no se parezca.
    Zona: Las Dunas, Fuerteventura (niveles 10-13)
-   Idea: Lisa de duna: lagartija que nada bajo la arena; la 2.ª, con aletas de arena; la 3.ª, con velas que planean sobre las dunas.
+   Idea: Lisa de duna: lagartija que nada bajo la arena; la 2.ª, con cresta de púas; la 3.ª, con velas que planean sobre las dunas.
 
 Pok53. Conejo de jable, 1.ª forma de 2
-   Tipo: Común (la línea: Común → Común)
+   Tipo: Común (la línea: Común → Común/Oscuridad)
    Fuerza: quintil 1 de 5, de las más flojas. Papel: equilibrada.
    Estadísticas como: Bidoof (la línea: Bidoof → Bibarel). Solo de referencia: que no se parezca.
    Zona: Las Dunas, Fuerteventura (niveles 10-13)
-   Idea: Conejo de jable, bajito y orejudo; la 2.ª, conejo grande que excava madrigueras.
+   Idea: Conejo de jable, bajito, orejudo y enfadado; la 2.ª, conejo salvaje y rabioso, de garras largas.
 
 Pok54. Conejo de jable, 2.ª forma de 2
-   Tipo: Común (la línea: Común → Común)
+   Tipo: Común/Oscuridad (la línea: Común → Común/Oscuridad)
    Fuerza: quintil 3 de 5, media. Papel: atacante físico.
    Estadísticas como: Bibarel (la línea: Bidoof → Bibarel). Solo de referencia: que no se parezca.
    Zona: Las Dunas, Fuerteventura (niveles 10-13)
-   Idea: Conejo de jable, bajito y orejudo; la 2.ª, conejo grande que excava madrigueras.
+   Idea: Conejo de jable, bajito, orejudo y enfadado; la 2.ª, conejo salvaje y rabioso, de garras largas.
 
 Pok55. Cigarrón, 1.ª forma de 2
    Tipo: Bicho (la línea: Bicho → Bicho)

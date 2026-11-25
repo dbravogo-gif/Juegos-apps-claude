@@ -44,7 +44,8 @@ export const EFECTOS = {
   confirmar: { onda: 'square', desde: 660, hasta: 990, duracion: 0.07, volumen: 0.14 },
   atras: { onda: 'square', desde: 520, hasta: 330, duracion: 0.07, volumen: 0.12 },
   hablar: { onda: 'triangle', desde: 600, hasta: 600, duracion: 0.035, volumen: 0.1, variacion: 0.08 },
-  puerta: { onda: 'sine', desde: 180, hasta: 90, duracion: 0.16, volumen: 0.3 },
+  // Triángulo y no senoidal: a 180 Hz una senoidal pura casi no sale por un portátil (como el choque).
+  puerta: { onda: 'triangle', desde: 180, hasta: 90, duracion: 0.16, volumen: 0.3 },
   // Pasos sobre el terreno de encuentros. Hierba: dos o tres roces agudos y suaves, como hojas que
   // se apartan. Malpaís: muchos chasquidos cortos de grava, con una pisada sorda debajo. Arena: un
   // siseo blando.
@@ -70,8 +71,10 @@ export const EFECTOS = {
   comprar: { onda: 'square', desde: 1318, hasta: 1318, duracion: 0.06, volumen: 0.12, notas: [0, 5] },
   huir: { onda: 'triangle', desde: 300, hasta: 900, duracion: 0.3, volumen: 0.16 },
   // Revisión de sensación (skill pulir, 2026-11-25): lo que tenía respuesta solo en texto o en imagen.
-  // Andar contra una pared: un golpe sordo y corto, una vez por intento.
-  choque: { onda: 'sine', desde: 150, hasta: 70, duracion: 0.08, volumen: 0.22 },
+  // Andar contra una pared: un golpe sordo y corto, una vez por intento. Era una senoidal de 150 a
+  // 70 Hz y el autor no la oía (2026-11-25): los altavoces de un portátil apenas dan esos graves.
+  // Triángulo más agudo: sus armónicos sí salen.
+  choque: { onda: 'triangle', desde: 320, hasta: 160, duracion: 0.09, volumen: 0.3 },
   // Un ataque que falla o no afecta: grave y bajando, como piden los fallos.
   fallo: { onda: 'triangle', desde: 330, hasta: 140, duracion: 0.28, volumen: 0.16 },
   // La pintadera del gimnasio, el momento grande de cada isla: una fanfarria que sube dos octavas.

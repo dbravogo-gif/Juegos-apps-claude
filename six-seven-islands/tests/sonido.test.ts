@@ -24,6 +24,15 @@ describe('sonido', () => {
     }
   });
 
+  it('todos los efectos se oyen en un portátil: ninguna senoidal pura empieza por debajo de 200 Hz', () => {
+    // El choque era una senoidal de 150 a 70 Hz y el autor no la oía (2026-11-25): los altavoces
+    // pequeños apenas dan esos graves. Por debajo de 200 Hz, triángulo, cuadrada o ruido, que tienen
+    // armónicos más agudos.
+    for (const [nombre, d] of Object.entries(EFECTOS) as [string, { onda: string; desde: number }][]) {
+      if (d.onda === 'sine') expect(d.desde, nombre).toBeGreaterThanOrEqual(200);
+    }
+  });
+
   it('los efectos que suenan con otro lo nombran bien, y ninguno es atronador', () => {
     for (const [nombre, d] of Object.entries(EFECTOS)) {
       const con = (d as { con?: string }).con;

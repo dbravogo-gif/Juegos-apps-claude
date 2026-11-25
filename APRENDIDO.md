@@ -245,3 +245,9 @@ nivel: de nota a regla, y de regla a prueba o hook.
   - El flujo «Publicar juegos» pasó las pruebas pero falló al desplegar en Pages: un fallo
     pasajero de GitHub. Dije «publicado» por haber fusionado el PR, sin mirar el flujo.
   - Barrera: la skill `cierre` pide ver el flujo en verde antes de decir «publicado».
+- **2026-11-25 · Un efecto de sonido que no se oía en el portátil del autor** (Six-seven islands,
+  el choque contra la pared).
+  - Era una senoidal de 150 a 70 Hz: en el juego se disparaba bien, pero los altavoces pequeños
+    apenas dan esos graves. Aquí no hay audio, así que solo lo podía notar el autor.
+  - Barrera: una prueba (`tests/sonido.test.ts`) prohíbe senoidales puras por debajo de 200 Hz;
+    para lo grave, triángulo, cuadrada o ruido, que tienen armónicos agudos.

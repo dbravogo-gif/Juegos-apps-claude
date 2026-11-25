@@ -33,15 +33,15 @@ Todas cuadran: si no, el script no genera nada.
 | --- | --- | --- | --- |
 | Común | 16 | 16 | 0 |
 | Agua | 21 | 21 | 8 |
-| Tierra | 11 | 11 | 7 |
+| Tierra | 10 | 10 | 7 |
 | Planta | 17 | 17 | 4 |
-| Aire | 11 | 11 | 9 |
+| Aire | 12 | 12 | 8 |
 | Eléctrico | 11 | 11 | 0 |
 | Hielo | 8 | 8 | 1 |
 | Infernal | 16 | 16 | 1 |
 | Lucha | 9 | 9 | 1 |
 | Mental | 8 | 8 | 6 |
-| Oscuridad | 8 | 8 | 3 |
+| Oscuridad | 8 | 8 | 4 |
 | Espectral | 7 | 7 | 2 |
 | Acero | 6 | 6 | 2 |
 | Roca | 10 | 10 | 3 |
@@ -257,11 +257,11 @@ nombre lo pone el autor. La idea va en la primera forma de cada especie.
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Pok48. Aerund | 044-1 (hecha) | 1.ª | Aire | Cottonee (Q1, TF) | 0,4 m | Las Dunas | Remolino de jable: bolita de arena y semillas que rueda con el viento; la 2.ª, torbellino de arena con cara. Sustituye al remolino provisional del gimnasio de Aire. |
 | Pok49. Tailsan | 044-2 (hecha) | 2.ª | Aire/Tierra | Whimsicott (Q4, TF) | 1,2 m |  |  |
-| Pok50. Lisa de duna | 009-1 | 1.ª | Tierra | Trapinch (Q1, AF) | 0,5 m | Las Dunas | Lisa de duna: lagartija que nada bajo la arena; la 2.ª, con aletas de arena; la 3.ª, con velas que planean sobre las dunas. |
+| Pok50. Lisa de duna | 009-1 | 1.ª | Tierra | Trapinch (Q1, AF) | 0,5 m | Las Dunas | Lisa de duna: lagartija que nada bajo la arena; la 2.ª, con cresta de púas; la 3.ª, con velas que planean sobre las dunas. |
 | Pok51. Lisa de duna | 009-2 | 2.ª | Tierra | Vibrava (Q2, EN) | 1,1 m |  |  |
-| Pok52. Lisa de duna | 009-3 | 3.ª | Tierra/Aire | Flygon (Q4, EN) | 2,0 m |  |  |
-| Pok53. Conejo de jable | 038-1 | 1.ª | Común | Bidoof (Q1, EN) | 0,4 m | Las Dunas | Conejo de jable, bajito y orejudo; la 2.ª, conejo grande que excava madrigueras. |
-| Pok54. Conejo de jable | 038-2 | 2.ª | Común | Bibarel (Q3, AF) | 0,9 m |  |  |
+| Pok52. Lisa de duna | 009-3 | 3.ª | Aire | Flygon (Q4, EN) | 2,0 m |  |  |
+| Pok53. Conejo de jable | 038-1 | 1.ª | Común | Bidoof (Q1, EN) | 0,4 m | Las Dunas | Conejo de jable, bajito, orejudo y enfadado; la 2.ª, conejo salvaje y rabioso, de garras largas. |
+| Pok54. Conejo de jable | 038-2 | 2.ª | Común/Oscuridad | Bibarel (Q3, AF) | 0,9 m |  |  |
 | Pok55. Cigarrón | 029-1 | 1.ª | Bicho | Kricketot (Q1, TF) | 0,3 m | Las Dunas (rara) | Cigarrón: langosta que llega con el viento de África; la 2.ª, grande, hace sonar las alas. |
 | Pok56. Cigarrón | 029-2 | 2.ª | Bicho | Kricketune (Q2, AF) | 0,8 m |  |  |
 | Pok57. Dromedario | 054-1 | 1.ª | Común | Deerling (Q2, AF) | 1,0 m | Betancuria | Dromedario majorero: cría torpe de patas largas; la 2.ª, dromedario adulto con alforjas. |
