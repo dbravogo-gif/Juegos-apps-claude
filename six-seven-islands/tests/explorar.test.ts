@@ -108,6 +108,27 @@ describe('exploración por casillas', () => {
     expect(clave(e.x, e.y)).not.toBe(objetivo);
   });
 
+  it('andar contra una pared choca una vez mientras se empuja, y otra al volver a intentarlo', () => {
+    const e = crearExploracion(m);
+    const DIRS: [Direccion, number, number][] = [['n', 0, -1], ['s', 0, 1], ['e', 1, 0], ['o', -1, 0]];
+    let hallado: [number, number, Direccion] | null = null;
+    for (const [k, cm] of m.casillas) {
+      if (cm.zona !== 'inicial' || hallado) continue;
+      const [x, y] = deClave(k);
+      if (!transitable(m, x, y)) continue;
+      for (const [d, dx, dy] of DIRS) if (m.casillas.get(clave(x + dx, y + dy))?.c === '#') hallado = [x, y, d];
+    }
+    expect(hallado).not.toBeNull();
+    const [x, y, d] = hallado!;
+    e.x = e.desdeX = x;
+    e.y = e.desdeY = y;
+    const choques = () => [...avanzar(m, e, d), ...avanzar(m, e, d), ...avanzar(m, e, d)].filter((v) => v.tipo === 'choque');
+    expect(choques()).toHaveLength(1);
+    expect(clave(e.x, e.y)).toBe(clave(x, y));
+    avanzar(m, e, null);
+    expect(choques()).toHaveLength(1);
+  });
+
   it('entrar por una puerta lo avisa', () => {
     const e = crearExploracion(m);
     const ev = pulsar(e, 'n');

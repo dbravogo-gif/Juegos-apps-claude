@@ -300,7 +300,8 @@ body {
   margin: 0;
   padding: 6px 12px;
   border-radius: 999px;
-  background: rgb(59 42 32 / 0.55);
+  /* Al 70 %: al 55 %, sobre una azotea blanca, el texto bajaba a 3,4:1 de contraste; ahora, 5,2:1 (revisión, 2026-11-25). */
+  background: rgb(59 42 32 / 0.7);
   color: var(--crema);
   font: 500 13px/1.2 system-ui, -apple-system, 'Segoe UI', sans-serif;
 }

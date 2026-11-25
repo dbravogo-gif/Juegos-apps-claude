@@ -612,6 +612,9 @@ export class Partida implements Subsistema {
       case 'aviso':
         this.abrir({ lineas: [{ texto: ev.texto }] }, 'aviso');
         break;
+      case 'choque':
+        this.ctx.eventos.emit('sonido:tocar', { nombre: 'choque' });
+        break;
       case 'objeto':
         this.mochila[ev.objeto] = (this.mochila[ev.objeto] ?? 0) + 1;
         this.ctx.eventos.emit('objeto:recogido', { id: ev.id, objeto: ev.objeto });

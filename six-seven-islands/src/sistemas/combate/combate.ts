@@ -115,6 +115,8 @@ const URL_FONDOS = new Map(
   Object.entries(import.meta.glob<string>('../../assets/fondos/*.{webp,jpg,jpeg,png}', { eager: true, query: '?url', import: 'default' })).map(([ruta, url]) => [ruta.replace(/^.*\//, '').replace(/\.[^.]+$/, ''), url]),
 );
 const FUNDIDO = 0.55;
+/** Lo más que se mueve la cámara al sacudirse, en unidades del mundo. */
+const SACUDIDA_MAXIMA = 0.12;
 
 /** Los bolsillos que se abren en combate: lo que cura y los cubos (objetos clave y técnicas, no). */
 const BOLSILLOS_COMBATE: readonly IdBolsillo[] = ['botiquin', 'cubos'];
@@ -631,6 +633,19 @@ export class Combate implements Subsistema {
     c.lookAt(ARENA.clone().add(MIRA));
   }
 
+  /**
+   * Sacude la cámara con la curva trauma² (de 1 a 0) y un tope pequeño, para que nunca tape la
+   * decisión siguiente. Ruido de senos, sin azar. Nada si el sistema pide menos movimiento.
+   */
+  private sacudirCamara(trauma: number): void {
+    this.colocarCamara();
+    if (trauma <= 0 || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const fuerza = trauma * trauma * SACUDIDA_MAXIMA;
+    const fase = trauma * 60;
+    this.ctx.camara.position.x += Math.sin(fase * 1.7) * fuerza;
+    this.ctx.camara.position.y += Math.sin(fase * 2.3 + 1) * fuerza * 0.6;
+  }
+
   private terminar(): void {
     const caja = this.raiz.querySelector<HTMLElement>('.combate-caja')!;
     const paneles = [caja, ...this.fichas.map((f) => f.nombre.parentElement!)];
@@ -886,6 +901,8 @@ export class Combate implements Subsistema {
           }
           const p = this.pos(ev.ref);
           const color = COLOR_TIPO.get(tipoUsado) ?? 0xffffff;
+          // Los golpes muy eficaces y los críticos sacuden la cámara (skill pulir, 2026-11-25).
+          const fuerte = ev.eficacia > 1 || ev.critico;
           this.encolar({
             duracion: 0.55,
             saltable: false,
@@ -898,6 +915,7 @@ export class Combate implements Subsistema {
               const l = this.luchadores[p]!;
               l.visible = t > 0.8 || Math.floor(t * 8) % 2 === 0;
               l.extra.set(Math.sin(t * 40) * 0.06 * (1 - t), 0, 0);
+              if (fuerte) this.sacudirCamara(1 - t);
             },
           });
           if (ev.critico) this.encolar({ texto: '¡Un golpe crítico!', duracion: 0.9, saltable: true });
@@ -906,10 +924,10 @@ export class Combate implements Subsistema {
           break;
         }
         case 'falla':
-          this.encolar({ texto: `¡${ev.nombre} ha fallado!`, duracion: 0.9, saltable: true });
+          this.encolar({ texto: `¡${ev.nombre} ha fallado!`, sonido: 'fallo', duracion: 0.9, saltable: true });
           break;
         case 'sinEfecto':
-          this.encolar({ texto: `No afecta a ${ev.nombre}…`, duracion: 0.9, saltable: true });
+          this.encolar({ texto: `No afecta a ${ev.nombre}…`, sonido: 'fallo', duracion: 0.9, saltable: true });
           break;
         case 'etapa': {
           const p = this.pos(ev.ref);
