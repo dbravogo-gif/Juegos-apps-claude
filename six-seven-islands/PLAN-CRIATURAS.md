@@ -93,10 +93,10 @@ Gimnasio de **Aire**, en Morro Jable, líder 20-21.
 | Zona | Niveles | Especies |
 | --- | --- | --- |
 | Las Dunas | 10-13 | **«Remolino de jable»** · **«Lisa de duna»** · **«Conejo de jable»** · **Chestil → Winstal** (rara) |
-| Betancuria | 12-14 | «Conejo de jable» · Chestil → Winstal · **Marach → Camwee** · **Trebar → Bardin → Barduno** · **«Guirre»** |
-| Ajuy | 13-15 | Aerund → Marwen · Chestil → Winstal · Trebar → Bardin → Barduno · **Seacumber → Seabrune** |
+| Betancuria | 12-14 | «Conejo de jable» · Chestil → Winstal · **Marach → Camwee** · **Perstin → Presin → Presarox** · **«Guirre»** |
+| Ajuy | 13-15 | Aerund → Marwen · Chestil → Winstal · Perstin → Presin → Presarox · **Seacumber → Seabrune** |
 | Cueva de Ajuy | 13-15 | **Pioto → Pitohui → Pitox** · **Geods → Beetlex** · «Escolopendra» (rara) |
-| Tindaya (opcional) | 14-16 | Marach → Camwee · Trebar → Bardin → Barduno · «Guirre» · **«Piedra de Tindaya»** (rara) |
+| Tindaya (opcional) | 14-16 | Marach → Camwee · Perstin → Presin → Presarox · «Guirre» · **«Piedra de Tindaya»** (rara) |
 | Sotavento | 15-17 | Aerund → Marwen · «Remolino de jable» · «Lisa de duna» · Seacumber → Seabrune · **Fisilla → Polisilla** |
 | Cofete (opcional) | 17-19 | «Lisa de duna» · Seacumber → Seabrune · **«Escolopendra»** · **Euphi → Euphoraz** |
 
@@ -184,7 +184,7 @@ Gimnasio de **Infernal/Ancestral**, en Valverde, al final de la Bajada, líder 5
 | Zona | Niveles | Especies |
 | --- | --- | --- |
 | Orchilla (llegada) | 47-50 | Aerund → Marwen · Seacumber → Seabrune · «Morena» · **Sanbor → Borondis → Atlantea** (rara) |
-| La Dehesa | 48-51 | Trebar → Bardin → Barduno · «Guirre» · «Curandera» |
+| La Dehesa | 48-51 | Perstin → Presin → Presarox · «Guirre» · «Curandera» |
 | La Cumbre (camino de la Bajada) | 50-53 | Caprún → Roquén → Terracorn · Magmín → Lavtún → Teidrón · **Guanchín → Menceyor → Achamán** · **«Tostador de gofio»** |
 | El Garoé | 51-53 | «Silbador» · «Duende de laurisilva» · Esporín → Micelord · **«Curandera»** |
 | Frontera (opcional) | 50-54 | Guanchín → Menceyor → Achamán · «Tostador de gofio» · **«Lagarto gigante»** (rara) |
@@ -266,9 +266,9 @@ nombre lo pone el autor. La idea va en la primera forma de cada especie.
 | Pok56. Winstal | 029-2 | 2.ª | Bicho | Kricketune (Q2, AF) | 0,8 m |  |  |
 | Pok57. Marach | 054-1 | 1.ª | Común | Deerling (Q2, AF) | 1,0 m | Betancuria | Dromedario majorero: cría torpe de patas largas; la 2.ª, dromedario adulto con alforjas. |
 | Pok58. Camwee | 054-2 | 2.ª | Común | Sawsbuck (Q3, AF) | 2,2 m |  |  |
-| Pok59. Trebar | 011-1 | 1.ª | Común | Lillipup (Q1, AF) | 0,4 m | Betancuria | Perro bardino: cachorro atigrado; la 2.ª, perro pastor; la 3.ª, gran perro de ganado de melena gruesa. |
-| Pok60. Bardin | 011-2 | 2.ª | Común | Herdier (Q2, AF) | 0,8 m |  |  |
-| Pok61. Barduno | 011-3 | 3.ª | Común | Stoutland (Q4, AF) | 1,3 m |  |  |
+| Pok59. Perstin | 011-1 | 1.ª | Común | Lillipup (Q1, AF) | 0,4 m | Betancuria | Presa canario: cachorro de manchas grises; la 2.ª, perro joven y fuerte; la 3.ª, gran presa canario musculoso, con las patas como de piedra. |
+| Pok60. Presin | 011-2 | 2.ª | Común | Herdier (Q2, AF) | 0,8 m |  |  |
+| Pok61. Presarox | 011-3 | 3.ª | Común | Stoutland (Q4, AF) | 1,3 m |  |  |
 | Pok62. Cernícalo | 004-1 | 1.ª | Aire | Starly (Q1, AF) | 0,3 m | Betancuria | Guirre: polluelo blanco; la 2.ª, joven de plumas pardas; la 3.ª, gran guirre de cara amarilla. Sustituye al guirre provisional del gimnasio de Aire. |
 | Pok63. Guirre | 004-2 | 2.ª | Aire | Staravia (Q2, AF) | 0,8 m |  |  |
 | Pok64. Guirre | 004-3 | 3.ª | Aire | Staraptor (Q3, AF) | 1,5 m |  |  |

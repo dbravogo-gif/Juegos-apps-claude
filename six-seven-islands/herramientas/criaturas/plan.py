@@ -166,8 +166,9 @@ ESPECIES = [
      'Cigarrón: langosta que llega con el viento de África; la 2.ª, grande, hace sonar las alas.'),
     (54, 'Marach → Camwee', ['Común', 'Común'], 'fv-betancuria', ['fv-tindaya'],
      'Dromedario majorero: cría torpe de patas largas; la 2.ª, dromedario adulto con alforjas.'),
-    (11, 'Trebar → Bardin → Barduno', ['Común', 'Común', 'Común'], 'fv-betancuria', ['fv-ajuy', 'fv-tindaya', 'eh-dehesa'],
-     'Perro bardino: cachorro atigrado; la 2.ª, perro pastor; la 3.ª, gran perro de ganado de melena gruesa.'),
+    # Presa canario y no bardino (autor, 2026-11-26), con sus nombres nuevos.
+    (11, 'Perstin → Presin → Presarox', ['Común', 'Común', 'Común'], 'fv-betancuria', ['fv-ajuy', 'fv-tindaya', 'eh-dehesa'],
+     'Presa canario: cachorro de manchas grises; la 2.ª, perro joven y fuerte; la 3.ª, gran presa canario musculoso, con las patas como de piedra.'),
     (4, 'Cernícalo → ? → ?', ['Aire', 'Aire', 'Aire'], 'fv-betancuria', ['fv-tindaya', 'tf-teno', 'eh-dehesa'],
      'Guirre: polluelo blanco; la 2.ª, joven de plumas pardas; la 3.ª, gran guirre de cara amarilla. Sustituye al guirre provisional del gimnasio de Aire.'),
     (51, 'Seacumber → Seabrune', ['Agua', 'Agua/Oscuridad'], 'fv-ajuy', ['fv-sotavento', 'fv-cofete', 'gc-agaete', 'tf-puerto', 'eh-orchilla'],
@@ -319,7 +320,7 @@ ESPECIES = [
 APODO = {
     43: 'Musaraña luchadora', 13: 'Erizo de fuego', 12: 'Basalto', 94: 'Leyenda verde', 92: 'Leyenda de roca',
     91: 'Leyenda de tierra', 93: 'Leyenda del agua', 44: 'Remolino de jable', 9: 'Lisa de duna',
-    38: 'Conejo de jable', 29: 'Cigarrón', 54: 'Dromedario', 11: 'Perro bardino', 4: 'Guirre',
+    38: 'Conejo de jable', 29: 'Cigarrón', 54: 'Dromedario', 11: 'Presa canario', 4: 'Guirre',
     51: 'Erizo negro', 17: 'Murciélago de cueva', 61: 'Escarabajo de escoria', 79: 'Escolopendra',
     52: 'Carabela', 82: 'Piedra de Tindaya', 50: 'Cardón', 67: 'Tembladera', 41: 'Chicharro',
     57: 'Chispa de cable', 56: 'Enredo', 80: 'Farito', 81: 'Boya', 3: 'Perdiz', 39: 'Almendrita',

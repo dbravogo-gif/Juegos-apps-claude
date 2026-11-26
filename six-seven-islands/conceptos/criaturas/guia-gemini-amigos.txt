@@ -191,26 +191,26 @@ Pok58. Camwee, 2.ª forma de 2
    Zona: Betancuria, Fuerteventura (niveles 12-14)
    Idea: Dromedario majorero: cría torpe de patas largas; la 2.ª, dromedario adulto con alforjas.
 
-Pok59. Trebar, 1.ª forma de 3
+Pok59. Perstin, 1.ª forma de 3
    Tipo: Común (la línea: Común → Común → Común)
    Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante físico.
    Estadísticas como: Lillipup (la línea: Lillipup → Herdier → Stoutland). Solo de referencia: que no se parezca.
    Zona: Betancuria, Fuerteventura (niveles 12-14)
-   Idea: Perro bardino: cachorro atigrado; la 2.ª, perro pastor; la 3.ª, gran perro de ganado de melena gruesa.
+   Idea: Presa canario: cachorro de manchas grises; la 2.ª, perro joven y fuerte; la 3.ª, gran presa canario musculoso, con las patas como de piedra.
 
-Pok60. Bardin, 2.ª forma de 3
+Pok60. Presin, 2.ª forma de 3
    Tipo: Común (la línea: Común → Común → Común)
    Fuerza: quintil 2 de 5, floja. Papel: atacante físico.
    Estadísticas como: Herdier (la línea: Lillipup → Herdier → Stoutland). Solo de referencia: que no se parezca.
    Zona: Betancuria, Fuerteventura (niveles 12-14)
-   Idea: Perro bardino: cachorro atigrado; la 2.ª, perro pastor; la 3.ª, gran perro de ganado de melena gruesa.
+   Idea: Presa canario: cachorro de manchas grises; la 2.ª, perro joven y fuerte; la 3.ª, gran presa canario musculoso, con las patas como de piedra.
 
-Pok61. Barduno, 3.ª forma de 3
+Pok61. Presarox, 3.ª forma de 3
    Tipo: Común (la línea: Común → Común → Común)
    Fuerza: quintil 4 de 5, fuerte. Papel: atacante físico.
    Estadísticas como: Stoutland (la línea: Lillipup → Herdier → Stoutland). Solo de referencia: que no se parezca.
    Zona: Betancuria, Fuerteventura (niveles 12-14)
-   Idea: Perro bardino: cachorro atigrado; la 2.ª, perro pastor; la 3.ª, gran perro de ganado de melena gruesa.
+   Idea: Presa canario: cachorro de manchas grises; la 2.ª, perro joven y fuerte; la 3.ª, gran presa canario musculoso, con las patas como de piedra.
 
 Pok62. Cernícalo, 1.ª forma de 3
    Tipo: Aire (la línea: Aire → Aire → Aire)

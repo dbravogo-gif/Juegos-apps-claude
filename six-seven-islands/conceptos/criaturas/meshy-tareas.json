@@ -23,5 +23,30 @@
   "id": "01a217ac-22c1-7041-9d47-b14d2dc66125",
   "base": "Pok54. Conejo de jable",
   "modo": "dificil"
+ },
+ "55": {
+  "id": "01a218fc-477e-71a5-9d51-44104d82e854",
+  "base": "Pok55. Chestil",
+  "modo": "dificil"
+ },
+ "57": {
+  "id": "01a218fc-4ea3-750b-a56e-20e9d9a45258",
+  "base": "Pok57. Marach",
+  "modo": "normal"
+ },
+ "58": {
+  "id": "01a218fc-54a3-7587-aa54-73fc5bd36981",
+  "base": "Pok58. Camwee",
+  "modo": "normal"
+ },
+ "59": {
+  "id": "01a218fc-5894-729c-8982-d983e8328b80",
+  "base": "Pok59. Perstin",
+  "modo": "normal"
+ },
+ "60": {
+  "id": "01a218fc-5caf-700a-ac4b-1a26a44c5bc4",
+  "base": "Pok60. Presin",
+  "modo": "normal"
  }
 }
