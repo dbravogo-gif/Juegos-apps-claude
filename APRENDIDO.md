@@ -245,6 +245,9 @@ nivel: de nota a regla, y de regla a prueba o hook.
   - El flujo «Publicar juegos» pasó las pruebas pero falló al desplegar en Pages: un fallo
     pasajero de GitHub. Dije «publicado» por haber fusionado el PR, sin mirar el flujo.
   - Barrera: la skill `cierre` pide ver el flujo en verde antes de decir «publicado».
+  - Volvió a pasar el 2026-11-26 (PR #161). Relanzar el trabajo fallido no sirvió: el primer
+    intento sí había subido su paquete y el segundo encontró dos. Lo que funciona es una
+    publicación nueva lanzada a mano; está en la skill `cierre`.
 - **2026-11-25 · Un efecto de sonido que no se oía en el portátil del autor** (Six-seven islands,
   el choque contra la pared).
   - Era una senoidal de 150 a 70 Hz: en el juego se disparaba bien, pero los altavoces pequeños
