@@ -37,6 +37,8 @@ export interface Guardado {
   refugios?: Record<string, string>;
   /** Los nombres que el jugador ha puesto a sus amigos, por su id (desde el 2026-11-15). */
   amigos?: Record<string, string>;
+  /** Si el repartidor de experiencia está encendido (desde el 2026-11-26; si falta, apagado). */
+  repartir?: boolean;
 }
 
 /**

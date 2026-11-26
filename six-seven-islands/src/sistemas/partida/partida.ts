@@ -99,6 +99,8 @@ export class Partida implements Subsistema {
   /** El equipo (hasta 6) y la mochila (objeto → cuántos). Se llenan al elegir la inicial. */
   equipo: Criatura[] = [];
   mochila: Record<string, number> = {};
+  /** El repartidor de experiencia, encendido o apagado desde la mochila (D3, 2026-11-26). */
+  repartir = false;
   /** Al perder, se vuelve curado a esta sala: el último sitio donde curaron al equipo. */
   ultimoRefugio = LANZAROTE.refugio;
   /** El último refugio de cada isla visitada, para volver a él al regresar en barco. */
@@ -123,6 +125,11 @@ export class Partida implements Subsistema {
   private hablaLuego: string | null = null;
   /** Un entrenador acaba de ver al jugador: cuando pase la exclamación, habla. */
   private alerta: { zona: string; personaje: string; pasos: number } | null = null;
+  /**
+   * Si ya se ha mirado, al cargar, si te ve alguien con escena (no un entrenador). Al bajar del barco
+   * no se da ningún paso, y Chano, en el muelle de Las Palmas, se podía perder (2026-11-26).
+   */
+  private vistaAlCargar = false;
   private pasosSinGuardar = 0;
   /** Z o Esc pulsado mientras se anda (o con una flecha apretada): el menú se abre al acabar el paso. */
   private menuPendiente = false;
@@ -222,6 +229,7 @@ export class Partida implements Subsistema {
       refugios: { ...this.refugios },
       amigos: { ...this.amigos },
       vencidos: [...this.vencidos],
+      ...(this.repartir ? { repartir: true } : {}),
       rng: structuredClone(this.ctx.rng),
       dinero: this.dinero,
       nombre: this.nombre,
@@ -447,6 +455,7 @@ export class Partida implements Subsistema {
     this.ultimoRefugio = this.interiores.has(g.ultimoRefugio) ? g.ultimoRefugio : this.datos.refugio;
     this.refugios = { ...g.refugios };
     this.amigos = { ...g.amigos };
+    this.repartir = g.repartir ?? false;
     this.vencidos = g.vencidos;
     this.dinero = g.dinero ?? 0;
     this.nombre = g.nombre ?? 'Dani';
@@ -482,6 +491,15 @@ export class Partida implements Subsistema {
       this.entrada.consumir('confirmar');
     }
     if (++this.pasosSinGuardar >= PASOS_GUARDADO) this.guardar();
+    if (!this.vistaAlCargar && this.estado.paso === 0) {
+      this.vistaAlCargar = true;
+      const quien = entrenadorQueVe(this.activo(), this.estado.x, this.estado.y, this.vencidos, this.estado.condiciones);
+      const conEscena = quien && this.activo().zonas.get(quien.zona)?.personajes.find((p) => p.id === quien.personaje)?.escena;
+      if (quien && conEscena) {
+        this.alerta = { ...quien, pasos: PASOS_ALERTA };
+        this.ctx.eventos.emit('entrenador:visto', { id: quien.personaje });
+      }
+    }
     if (this.alerta) {
       // Quieto mientras sale la exclamación; luego, el entrenador habla y reta.
       this.entrada.olvidar();
@@ -834,6 +852,10 @@ export class Partida implements Subsistema {
   private aplicar(e: Efecto): void {
     if (e.condicion) cumplir(this.estado, e.condicion);
     if (e.viaje !== undefined && ISLAS[e.viaje]) this.viajePendiente = e.viaje;
+    if (e.objeto && DATOS.objetos[e.objeto]) {
+      this.mochila[e.objeto] = (this.mochila[e.objeto] ?? 0) + 1;
+      this.ctx.eventos.emit('sonido:tocar', { nombre: 'nivel' });
+    }
     if (e.inicial) {
       this.estado.inicial = e.inicial;
       this.formarEquipo();

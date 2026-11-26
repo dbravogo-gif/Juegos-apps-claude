@@ -245,3 +245,32 @@ The baby first evolution of this same creature: a tiny chubby forest fawn-lion c
   de esos kits.
 - **Encaja con `ARTE.md`:** el mundo es tranquilo y sencillo, y la audacia va en las criaturas.
 
+## El flujo con la API (2026-11-26)
+
+Decidido con el autor: él hace las imágenes 2D, gratis, con ChatGPT o Gemini, y Claude las pasa a
+3D con la API de Meshy y las mete en el juego.
+
+1. **El autor sube o envía la imagen.** Va a `conceptos/criaturas/meshy/` como «PokN. Nombre»,
+   con el número de `PLAN-CRIATURAS.md`. Las que manda por el chat las guarda Claude ahí, sin
+   metadatos.
+2. **Claude la pasa a 3D:** `python3 herramientas/criaturas/meshy.py --solo N[,N…] [--dificiles N,…]`.
+   - Mira el saldo y avisa del coste antes de crear nada.
+   - Apunta cada tarea en `tareas.json`: si algo se corta, se retoma sin volver a pagar.
+   - **Normales:** Smart Topology T2.5 con la textura sacada de la imagen (Meshy N1), 15
+     créditos.
+   - **Difíciles** (pelo, membranas, mucho detalle): Meshy 7.1 con remallado a unos 30.000
+     triángulos y textura Meshy 7, 30 créditos.
+3. **Claude la mete en el juego:** `python3 herramientas/criaturas/juego.py` aligera el modelo a
+   `public/modelos/criaturas/` y escribe sus datos. Para una línea nueva hacen falta sus niveles
+   de evolución y sus ataques en `juego.py`, y la estadística de su referencia en
+   `estadisticas.py`.
+4. **La hierba:** donde una criatura hacía de sustituta, se pone la de verdad.
+
+**Lo que hace falta en el entorno:**
+- la clave de la API, guardada como secreto de red para `api.meshy.ai` (nunca en un archivo);
+- el host `assets.meshy.ai` permitido, porque de ahí se descargan los modelos.
+
+**La API gasta los créditos del plan del autor**, comprobado con `/balance`: no hay que comprar
+créditos aparte. La primera tanda, la lisa de duna y el conejo de jable (Pok50 a Pok54), costó
+105 créditos, de 2.625 a 2.520. Salieron muy fieles a las imágenes, también el pelo y las garras
+del conejo grande.

@@ -86,6 +86,8 @@ export interface EstadoCombate {
   salvaje: boolean;
   /** Si el lado 0 gana experiencia (no en los retos entre amigos). */
   experiencia: boolean;
+  /** El repartidor de experiencia encendido: el resto del equipo se lleva la mitad (D3). */
+  repartir?: boolean;
   lados: [LadoCombate, LadoCombate];
   /** Huecos de un lado controlado por un jugador que esperan su criatura de refresco. */
   pendientes: Ref[];
@@ -147,7 +149,7 @@ export type Evento =
   | { tipo: 'estado'; ref: Ref; nombre: string; estado: EstadoAlterado }
   | { tipo: 'etapa'; ref: Ref; nombre: string; estadistica: EstadisticaCombate; cambio: number }
   | { tipo: 'debilitado'; ref: Ref; nombre: string }
-  | { tipo: 'experiencia'; indice: number; nombre: string; cantidad: number; subidas: SubidaNivel[] }
+  | { tipo: 'experiencia'; indice: number; nombre: string; cantidad: number; subidas: SubidaNivel[]; repartida?: true }
   | { tipo: 'objetoUsado'; lado: IdLado; objeto: string; objetivo: number | null }
   | { tipo: 'captura'; exito: boolean; sacudidas: number }
   | { tipo: 'huida'; exito: boolean }
@@ -168,6 +170,11 @@ export interface ParametrosCombate {
   rng: EstadoRng;
   /** Si el lado 0 gana experiencia. Obligatorio: en los retos entre amigos, `false`. */
   experiencia: boolean;
+  /**
+   * El repartidor de experiencia (autor, 2026-11-26, D3; como en los primeros juegos del género):
+   * las que han luchado se llevan la mitad y el resto del equipo en pie, la otra mitad.
+   */
+  repartir?: boolean;
   /** Uids de las criaturas que pueden desobedecer (F25): la inicial, hasta el anciano. */
   rebeldes?: string[];
   /** El campo del gimnasio donde se lucha. */
@@ -279,6 +286,7 @@ export function iniciarCombate(p: ParametrosCombate, datos: DatosJuego): Resulta
     turno: 0,
     salvaje: p.salvaje,
     experiencia: p.experiencia,
+    ...(p.repartir ? { repartir: true } : {}),
     lados,
     pendientes: [],
     intentosHuida: 0,
@@ -722,17 +730,28 @@ function debilitar(e: EstadoCombate, ref: Ref, datos: DatosJuego, ev: Evento[]):
   if (ref.lado === 1 && e.experiencia) repartirExperiencia(e, c, datos, ev);
 }
 
-/** La experiencia de un rival caído se reparte entre las criaturas del lado 0 que salieron contra él. */
+/**
+ * La experiencia de un rival caído se reparte entre las criaturas del lado 0 que salieron contra él.
+ * Con el repartidor encendido (y alguien más en pie), ellas se llevan la mitad y el resto del equipo
+ * propio en pie se reparte la otra mitad; las del aliado, nunca.
+ */
 function repartirExperiencia(e: EstadoCombate, derrotado: Criatura, datos: DatosJuego, ev: Evento[]): void {
   const lado = e.lados[0];
   const vivos = lado.participantes.filter((i) => vivo(lado.equipo[i]));
-  if (vivos.length) {
-    const cantidad = Math.max(1, Math.floor(expGanada(derrotado, datos, !e.salvaje) / vivos.length));
-    for (const i of vivos) {
+  const resto = e.repartir ? lado.equipo.map((_, i) => i).filter((i) => !vivos.includes(i) && vivo(lado.equipo[i]) && !delAliado(lado, i)) : [];
+  const total = expGanada(derrotado, datos, !e.salvaje);
+  const dar = (indices: number[], puntos: number, repartida: boolean) => {
+    const cantidad = Math.max(1, Math.floor(puntos / indices.length));
+    for (const i of indices) {
       const { criatura, subidas } = aplicarExperiencia(lado.equipo[i], cantidad, datos);
       lado.equipo[i] = criatura;
-      ev.push({ tipo: 'experiencia', indice: i, nombre: nombreDe(criatura, datos), cantidad, subidas });
+      ev.push({ tipo: 'experiencia', indice: i, nombre: nombreDe(criatura, datos), cantidad, subidas, ...(repartida ? { repartida: true as const } : {}) });
     }
+  };
+  if (vivos.length) {
+    const mitad = resto.length ? total / 2 : total;
+    dar(vivos, mitad, false);
+    if (resto.length) dar(resto, total - mitad, true);
   }
   lado.participantes = lado.activos.filter((i) => i >= 0 && vivo(lado.equipo[i]) && !delAliado(lado, i));
 }

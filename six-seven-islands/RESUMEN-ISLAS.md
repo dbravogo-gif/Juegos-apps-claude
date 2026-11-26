@@ -88,26 +88,25 @@ Contesta como quieras, por ejemplo: «Lanzarote: quitar X. Decisión 1: A».
 
 El barco a Tenerife todavía no sale.
 
-## 4. Tenerife (propuesta, sin construir)
+## 4. Tenerife (recorrido del autor, 2026-11-26; sin construir)
 
-Recorrido rehecho con tus respuestas del 2026-11-26; el detalle está en `ISLA-4.md`. **Falta que
-lo apruebes** antes de construir.
+Dos ramas desde Santa Cruz, una detrás de otra. El detalle está en `ISLA-4.md`.
 
-1. **Santa Cruz:** llegada en barco desde Agaete.
-2. **La Laguna** y **Anaga** (la laurisilva). Después se vuelve a Santa Cruz.
-3. **La guagua 111**, hacia el sur, parada a parada:
-   - **Radazul**, con zona de buceo;
-   - **Abades**: el sanatorio abandonado, con leyendas y capirotes;
-   - **Buzanada**, pequeña y de paso.
-4. **El resto, rodeando el Teide:**
-   - Los Cristianos;
-   - Los Gigantes (opcional);
-   - Teno y Masca;
-   - la Cueva del Viento;
+1. **Primera rama, el norte:**
+   - Santa Cruz (llegada en barco desde Agaete);
+   - La Laguna;
+   - Anaga, la laurisilva;
    - Puerto de la Cruz, con el **gimnasio de Agua, la regata**;
-   - La Orotava;
-   - **Las Cañadas**, con la puerta del Sello;
-   - y bajada a Los Cristianos para coger el barco a La Gomera.
+   - La Matanza, con sus guachinches;
+   - la romería de Tegueste.
+2. **Segunda rama, el sur, en la guagua 111:**
+   - Radazul, con zona de buceo;
+   - Abades: el sanatorio abandonado, con leyendas y capirotes;
+   - Buzanada, pequeña y de paso;
+   - Los Cristianos;
+   - Los Gigantes;
+   - la subida al Teide, con la puerta del Sello.
+3. **El barco a la siguiente isla** sale del puerto de Los Cristianos.
 
 **Decidido:**
 - **T2, el gimnasio de Agua:** un minijuego de regata, pero que no ahorre combates.
@@ -129,14 +128,18 @@ lo apruebes** antes de construir.
   tendrán animaciones.
 - **D3, la dificultad:** se verá más adelante.
   - Hace falta un **repartir experiencia** como el de los primeros juegos del género, desde el
-    principio de Gran Canaria.
+    principio de Gran Canaria. Aprobado el 2026-11-26: un objeto clave que te dan al llegar a
+    Gran Canaria y que se enciende y se apaga en la Mochila. Encendido, las que luchan se llevan la
+    mitad de la experiencia y las demás se reparten la otra mitad. **Hecho:** te lo da Chano en el
+    muelle de Las Palmas, nada más bajar del barco.
   - Las Dunas pueden ser largas.
   - **Todas las ciudades tienen refugio.** Comprobado: lo tienen las diez ciudades. En Playa
     Blanca cura tu madre. Los caseríos (Ajuy, Cofete, La Isleta y Bandama) no tienen.
 - **D4, las tiendas:** venden más y mejor cuanto más avanzada es la zona.
   - Alguna tienda especial vende cosas más fuertes de lo que toca y MT; dónde, se verá.
-  - Tiendas de Lanzarote: cubos y pociones, poco más.
-  - Gran Canaria: además, algún cubo especial (por ejemplo, para capturar Bichos).
+  - El orden de los cubos se queda (2026-11-26): blanco, verde, azul, rojo y morado.
+  - Tiendas de Lanzarote: cubos blancos y pociones, poco más (Arrecife no tiene tienda: se le pone).
+  - Gran Canaria: además, cubos verdes y algún cubo especial (por ejemplo, para capturar Bichos).
 - **D5, el gimnasio de Aire:** opción A, aspas trampa y una corriente que te lanza contra un
   aprendiz.
 - **D6, los nombres:** opción A, Playa Blanca y Arrecife. **Hecho.**

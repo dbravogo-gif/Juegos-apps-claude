@@ -206,6 +206,8 @@ export class Combate implements Subsistema {
   private arena = new Group();
   private materiales: Material[] = [];
   private materialCubo!: MaterialDiorama;
+  /** Si ya se ha dicho lo que gana el resto del equipo con el repartidor, en esta tanda de experiencia. */
+  private repartoContado = false;
   /** El cubo de captura lanzado, desde que sale hasta que se abre o acaba el combate. */
   private cuboCaptura: Group | null = null;
   private materialDestello!: MeshBasicNodeMaterial;
@@ -442,7 +444,7 @@ export class Combate implements Subsistema {
       ? { aliadoDesde: propias.length, activosIniciales: [[propias.findIndex((c) => c.vida > 0), propias.length + Math.max(0, aliado.findIndex((c) => c.vida > 0))], op.activosRival ?? [0, 1]] as [number[], number[]] }
       : {};
     const r = iniciarCombate(
-      { equipos: [[...propias, ...aliado], rival], formato: this.formato, salvaje: entrenador === null, control: ['jugador', 'ia'], rng, experiencia: true, rebeldes, ...(campo ? { campo } : {}), ...conAliado },
+      { equipos: [[...propias, ...aliado], rival], formato: this.formato, salvaje: entrenador === null, control: ['jugador', 'ia'], rng, experiencia: true, repartir: this.partida.repartir && (this.partida.mochila.repartidor ?? 0) > 0, rebeldes, ...(campo ? { campo } : {}), ...conAliado },
       DATOS,
     );
     this.estado = r.estado;
@@ -1007,7 +1009,10 @@ export class Combate implements Subsistema {
         case 'experiencia': {
           // Las del amigo no ganan experiencia (núcleo); por si acaso, no se cuentan.
           if (this.formato === 2 && ev.indice >= this.nPropias) break;
-          this.encolar({ texto: `${ev.nombre} gana ${ev.cantidad} puntos de experiencia.`, duracion: 1.1, saltable: true });
+          // Con el repartidor, lo del resto del equipo en un solo mensaje (luego, sus subidas una a una).
+          if (!ev.repartida) this.encolar({ texto: `${ev.nombre} gana ${ev.cantidad} puntos de experiencia.`, duracion: 1.1, saltable: true });
+          else if (!this.repartoContado) this.encolar({ texto: `El resto del equipo gana ${ev.cantidad} puntos de experiencia cada una.`, duracion: 1.3, saltable: true });
+          this.repartoContado = !!ev.repartida;
           for (const s of ev.subidas) {
             this.encolar({ texto: `¡${ev.nombre} sube al nivel ${s.nivel}!`, sonido: 'nivel', duracion: 1.3, saltable: true, empezar: () => this.pintarSubida(ev.indice, s) });
             for (const m of s.aprendidos) this.encolar({ texto: `¡${ev.nombre} aprende ${DATOS.movimientos[m]?.nombre ?? m}!`, duracion: 1.2, saltable: true });

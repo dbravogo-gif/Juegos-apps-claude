@@ -1,5 +1,9 @@
 # Criaturas del autor: imágenes 2D y modelos de Meshy
 
+Desde el 2026-11-26, el autor solo pone la imagen y Claude hace el `.glb` con la API de Meshy
+(`herramientas/criaturas/meshy.py`; el flujo, en `prompts-meshy.md`). `tareas.json` guarda las
+tareas de Meshy, para no pagar dos veces.
+
 Aquí sube el autor lo que va generando, tal cual sale (autor, 2026-11-17):
 
 - la imagen 2D (`.webp`, `.png` o `.jpg`, la que salga) y el modelo (`.glb`) de cada criatura;

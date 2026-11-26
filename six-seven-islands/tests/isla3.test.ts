@@ -10,6 +10,8 @@ import { GIMNASIO_ELECTRICO } from '../src/data/gimnasio-electrico';
 import { GIMNASIO_LUCHA } from '../src/data/gimnasio-lucha';
 import { MEDALLAS } from '../src/data/medallas';
 import { GUION_ISLA2 } from '../src/data/guion-isla2';
+import { GUION_ISLA3 } from '../src/data/guion-isla3';
+import { bolsilloDe } from '../src/data/bolsillos';
 import { DATOS_COMBATE_PRUEBA as DATOS } from '../src/data/combate-prueba';
 import { quienEs } from '../src/data/entrenadores-isla1';
 import { objetivoActual } from '../src/core/guion';
@@ -25,6 +27,20 @@ const vecinas = (k: number) => {
 };
 
 describe('Gran Canaria (isla 3), fase 1', () => {
+  it('al bajar del barco, Chano te ve y te da el repartidor de experiencia, una sola vez (D3)', () => {
+    const z = zona('palmas');
+    const chano = GRAN_CANARIA.def.zonas.find((x) => x.id === 'palmas')!.personajes.find((p) => p.id === 'chano-palmas')!;
+    expect(chano.escena).toBeDefined();
+    const llegada = clave(z.origen.x + GRAN_CANARIA.llegada.x, z.origen.y + GRAN_CANARIA.llegada.y);
+    expect(vision(m, 'palmas', chano)).toContain(llegada);
+    const entradas = GUION_ISLA3['chano-palmas']!;
+    expect(entradas[0]!.sin).toBe('repartidor-recibido');
+    expect(entradas[0]!.dialogo.efecto).toEqual({ condicion: 'repartidor-recibido', objeto: 'repartidor' });
+    // Es un objeto clave: va en su bolsillo y no se usa en combate.
+    expect(DATOS.objetos.repartidor!.tipo).toBe('clave');
+    expect(bolsilloDe(DATOS.objetos.repartidor!)).toBe('clave');
+  });
+
   it('está registrada con su número, se llega en barco desde Morro Jable y la llegada se pisa', () => {
     expect(ISLAS[3]).toBe(GRAN_CANARIA);
     expect(transitable(m, zona('palmas').origen.x + GRAN_CANARIA.llegada.x, zona('palmas').origen.y + GRAN_CANARIA.llegada.y)).toBe(true);

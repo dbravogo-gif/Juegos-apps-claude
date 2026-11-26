@@ -119,6 +119,7 @@ export type Condicion =
   | 'estatua-defendida'
   /** Ya conoces a Chano, en Corralejo. */
   | 'chano-conocido'
+  | 'repartidor-recibido'
   /** Has conocido al segundo amigo en el Roque Nublo (HISTORIA.md, Gran Canaria). */
   | 'amigo2-conocido'
   /** Has vencido a los dos líderes de Gran Canaria en el terrero: la pintadera entera. */

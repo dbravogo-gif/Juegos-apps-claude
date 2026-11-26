@@ -133,7 +133,7 @@ propuesta de Claude y qué frena mientras siga abierto.
 Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
 
 - **Contestado el 2026-11-26:** las decisiones D1 a D8 y T1 a T3 (`RESUMEN-ISLAS.md`). Queda D9
-  (lo que parece de prototipo) y aprobar el recorrido nuevo de Tenerife (`ISLA-4.md`).
+  (lo que parece de prototipo).
 - **Pasar la escena de recibir la inicial** (D8): la abrazas o le acercas la mano para que la
   huela.
 - **Probar lo de la revisión** (2026-11-25, `REVISION.md`), puntuando de 1 a 5:
@@ -143,11 +143,13 @@ Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
   - Puerto del Rosario y Morro Jable, ahora con jardines y esculturas;
   - capturar una salvaje (Mochila → Cubos): ahora se ve el cubo volar, sacudirse y cerrarse;
   - en la portada, «Partida nueva» con una guardada: ahora pregunta antes de borrar.
-- **Clave de la API de Meshy** (2026-11-26), para que Claude pase a 3D las imágenes que envíe el
-  autor (Pok50-54 ya están en `conceptos/criaturas/meshy`): crearla en Meshy (exige plan de pago)
-  y guardarla en la configuración del entorno de Claude Code, como secreto de red de
-  `api.meshy.ai`. Claude mira el saldo antes de gastar: según la documentación, la API usa créditos
-  prepagados que pueden ser aparte de los del plan.
+- **Imágenes de criaturas** (2026-11-26): el autor las hace (ChatGPT o Gemini) y las envía o las
+  sube como «PokN. Nombre»; Claude las pasa a 3D con la API de Meshy (créditos de su plan) y las
+  mete en el juego (`prompts-meshy.md`, «El flujo con la API»). Hechas Pok50 a Pok54. La clave de
+  Meshy ya está guardada en el entorno; la escrita en el chat conviene borrarla en Meshy y crear
+  otra, que se guarda igual.
+- **Puntuar de 1 a 5** las criaturas nuevas (la lisa de duna y el conejo de jable) en Las Dunas,
+  y Chano con el repartidor al llegar a Las Palmas.
 - **Meshy y fondos** (decidido el 2026-11-25): él dice cuándo crear criaturas y aprueba antes las
   imágenes de concepto (las hace gratis con ChatGPT o Gemini); los fondos los pinta él; la música
   la sube él.
@@ -172,9 +174,9 @@ Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
 - **Amigos:** sus fotos y GLB de Meshy para las personas jugables, y sus 2 o 3 poses para los
   retratos de diálogo.
 - **Dani con `Idle`** en el GLB (opcional).
-- **Tenerife (`ISLA-4.md`, rehecha el 2026-11-26 con sus respuestas):** aprobar el recorrido nuevo
-  (norte desde Santa Cruz, la guagua 111 al sur y la vuelta al Teide). Gimnasio: la regata, sin
-  ahorrar combates. Sin tercer amigo.
+- **Tenerife (`ISLA-4.md`):** recorrido decidido por el autor el 2026-11-26, en dos ramas desde
+  Santa Cruz (norte y, en la guagua 111, el sur hasta el Teide). Falta que dé la salida para
+  construirla.
 - **Fondos de combate** (2026-11-22): los 8 de la lista «para pintar ya» de
   `src/assets/fondos/LEEME.md` (Fuerteventura y Gran Canaria, uno por paisaje), subidos con su
   nombre a esa carpeta.
