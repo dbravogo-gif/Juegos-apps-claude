@@ -11,8 +11,11 @@ Gran Canaria (`ISLA-3.md`): hecha entera, fases 1 a 4, con lo del probador arreg
 simulador de partida (`npm run equilibrio`, `EQUILIBRIO.md`). Revisión de todo el juego con esas
 herramientas, terminada (`REVISION.md`, etapas 1 a 5): lo pequeño, arreglado y publicado (entre
 otras cosas, la captura ya tiene cubo y la portada pregunta antes de borrar). El probador da 1,4 de
-media en la rúbrica visual: no es premium. Lo que cambia cómo se juega o cómo se ve está en
-`RESUMEN-ISLAS.md` (D1 a D9), esperando al autor.
+media en la rúbrica visual: no es premium.
+
+2026-11-26: el autor contesta D1 a D8 y T1 a T3 (`RESUMEN-ISLAS.md`). Hechos D6 (nombres) y D1
+(iniciales); refugios comprobados. Quedan por pasos: D7 tamaños, D3 repartir experiencia, D5
+gimnasio de Aire, D8 miniaturas y D4 tiendas (esta, tras saber el orden de los cubos). Tenerife, rehecha (`ISLA-4.md`), espera su aprobación.
 
 ## Hecho
 
@@ -30,9 +33,8 @@ media en la rúbrica visual: no es premium. Lo que cambia cómo se juega o cómo
    Pok42, Pok48–49 y el dinosaurio), con `herramientas/criaturas/juego.py` (ARCHITECTURE.md). Las iniciales,
    con sus tres formas; las criaturas evolucionan tras el combate, con el Sello.
 
-4. Tenerife (`ISLA-4.md`), en cuanto el autor la apruebe y elija la mecánica del gimnasio de
-   Agua. Las criaturas Eléctricas, cuando el autor las haga en Meshy: la isla y el gimnasio las
-   usan provisionales.
+4. Tenerife (`ISLA-4.md`), en cuanto el autor apruebe el recorrido nuevo. Las criaturas
+   Eléctricas, cuando el autor las haga en Meshy: la isla y el gimnasio las usan provisionales.
 5. Música grabada lista: falta que el autor suba las pistas (`src/assets/musica/LEEME.md`).
 
 ## Pendiente del autor

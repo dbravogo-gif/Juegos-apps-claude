@@ -108,7 +108,7 @@ En la calle se dice «los del Hoyo», «los de la Colada»…, como se habla en 
 En la tabla de tipos, cada pueblo pierde contra el pueblo al que ataca. Una prueba lo vigila.
 - **Tu rival** lleva la inicial del pueblo al que ataca el tuyo, que te gana en tipos.
 - **Te persigue** la rama del pueblo que ataca al tuyo.
-- **Los otros tres amigos** llevan las tres iniciales que quedan.
+- **El segundo amigo** lleva otra de las iniciales que quedan. Como mucho hay 2 amigos en el juego (autor, 2026-11-26).
 
 ## 3. Las cinco ramas
 
@@ -130,8 +130,8 @@ Los comandantes son la cara visible de cada rama. El jefe de la rama que te pers
 
 - **Tú,** el nuevo elegido de tu pueblo. Tu compañera te elige en el museo.
 - **Tu rival,** amigo de toda la vida y elegido del pueblo al que ataca el tuyo.
-- **Los otros tres amigos.** Les pones el nombre al conocerlos y te los encuentras en distintas
-  islas.
+- **El segundo amigo,** el único más (autor, 2026-11-26: como mucho 2 amigos; conocer a cuatro
+  sería repetitivo). Le pones el nombre al conocerlo, en Gran Canaria.
 - **Chano,** el jefe secreto. Es un señor simpático que dice defender a tu pueblo.
   - Aparece en varias islas: te cura, te aconseja y te anima.
   - Lleva ropa de tu color hasta que se descubre (ver la decisión 2).
@@ -181,7 +181,6 @@ Los comandantes son la cara visible de cada rama. El jefe de la rama que te pers
    - En Las Cañadas está la puerta del Sello, sellada. El líder te explica que hace años que nadie
      entra, porque falta la pieza de El Hierro.
    - La silueta vuelve a aparecer junto a la puerta.
-   - Conoces al tercer amigo.
 5. **La Gomera.**
    - En el Garajonay os perdéis entre la niebla y os encontráis silbando, con el silbo de verdad.
    - El amigo del pueblo que te ataca duda, porque su rama le pide que se una a ellos. Al final se

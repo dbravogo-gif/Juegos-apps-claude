@@ -11,7 +11,7 @@ Contesta como quieras, por ejemplo: «Lanzarote: quitar X. Decisión 1: A».
 ## 1. Lanzarote (hecha)
 
 **Recorrido, de sur a este:**
-1. Tu pueblo, sin nombre todavía (en el juego pone «Zona inicial»):
+1. Playa Blanca, tu pueblo (D6):
    - tu casa con tu madre;
    - el bar, donde desayunas con tu amigo (que será tu rival);
    - el museo, donde eliges la inicial entre cuatro estatuas.
@@ -23,7 +23,7 @@ Contesta como quieras, por ejemplo: «Lanzarote: quitar X. Decisión 1: A».
    rama que te persigue, con una silueta misteriosa.
 5. El Jable: arenal con muros de piedra en zigzag. Se cruza a la fuerza, pero sus combates se
    pueden esquivar.
-6. La capital, sin nombre todavía: el **gimnasio de Roca**, una cueva volcánica en tres
+6. Arrecife, la capital (D6): el **gimnasio de Roca**, una cueva volcánica en tres
    terrazas con puentes de basalto y una palanca. Al vencer a la líder ganas la pintadera y se abre
    el barco.
 7. Famara (opcional): playa con bañistas, dos pescadores y una poción.
@@ -90,142 +90,60 @@ El barco a Tenerife todavía no sale.
 
 ## 4. Tenerife (propuesta, sin construir)
 
-**Recorrido:**
-1. Santa Cruz: llegada, con una rambla.
-2. Anaga (opcional): laurisilva con niebla.
-3. La Laguna: conoces al **tercer amigo**, que estudia allí.
-4. El valle de La Orotava.
-5. Puerto de la Cruz: el **gimnasio de Agua**.
-6. La Cueva del Viento.
-7. Teno y Masca: el barranco.
-8. Los Gigantes (opcional).
-9. Las Cañadas: **la puerta del Sello**, cerrada porque falta la pieza de El Hierro.
-10. Los Cristianos: el barco a La Gomera.
+Recorrido rehecho con tus respuestas del 2026-11-26; el detalle está en `ISLA-4.md`. **Falta que
+lo apruebes** antes de construir.
 
-**Niveles:**
-- salvajes, del 26 al 35;
-- entrenadores, del 30 al 37;
-- líder, del 36 al 38.
+1. **Santa Cruz:** llegada en barco desde Agaete.
+2. **La Laguna** y **Anaga** (la laurisilva). Después se vuelve a Santa Cruz.
+3. **La guagua 111**, hacia el sur, parada a parada:
+   - **Radazul**, con zona de buceo;
+   - **Abades**: el sanatorio abandonado, con leyendas y capirotes;
+   - **Buzanada**, pequeña y de paso.
+4. **El resto, rodeando el Teide:**
+   - Los Cristianos;
+   - Los Gigantes (opcional);
+   - Teno y Masca;
+   - la Cueva del Viento;
+   - Puerto de la Cruz, con el **gimnasio de Agua, la regata**;
+   - La Orotava;
+   - **Las Cañadas**, con la puerta del Sello;
+   - y bajada a Los Cristianos para coger el barco a La Gomera.
 
-**Lo que tienes que decidir:**
-- **T1. El recorrido:** si vale tal cual. Al construirla añadiré refugio en Puerto de la Cruz y
-  cerca de Las Cañadas (la revisión pide descanso antes del gimnasio y de las zonas largas).
-- **T2. El gimnasio de Agua:**
-  - **A, recomendada: las mareas.** Piscinas naturales donde la marea sube y baja cada pocos
-    pasos; hay que planear el camino.
-  - **B: bucear.** Pasos de aire contados, de bolsa en bolsa.
-  - **C: la regata.** Ganar a los aprendices cruzando en barca te ahorra el combate.
-- **T3. El tercer amigo:** si sale en La Laguna.
+**Decidido:**
+- **T2, el gimnasio de Agua:** un minijuego de regata, pero que no ahorre combates.
+- **T3, los amigos:** como mucho 2 en todo el juego, tu rival y el segundo amigo. En Tenerife no
+  hay tercer amigo.
 
 ---
 
-## Decisiones de jugabilidad pendientes
+## Decisiones de la revisión (contestadas por el autor el 2026-11-26)
 
-Salen de la revisión de todo el juego (2026-11-24). Lo que no cambia cómo se juega ya está
-arreglado y publicado.
-
-**D1. El primer combate con la inicial de Agua.**
-- **El problema:** se pierde casi siempre. Gana el 1 % de las veces, porque a nivel 5 Cronti
-  solo tiene ataques comunes y el rival es de Roca.
-- **Las opciones:**
-  - **A, recomendada:** todas las iniciales aprenden su ataque de tipo al nivel 5, no al 7;
-  - B: ese rival, un nivel menos y sin Caparazón;
-  - C: que ese combate no se pueda perder.
-- Antes de aplicarla, compruebo con una simulación que la de Agua pasa a ganar casi siempre y que
-  las demás no quedan demasiado fáciles.
-- **Va con esto** (probador, 2026-11-25): en su partida la inicial desobedeció 3 de 4 turnos y
-  perdió con el primer entrenador. La probabilidad es del 45 % (la desobediencia hasta el anciano
-  es tuya), así que 3 de 4 fue mala suerte; el simulador ya la cuenta en el 1 % de arriba.
-
-**D2. Los ataques no avanzan.**
-- **El problema:** del nivel 13 al 34 ninguna criatura aprende nada, y el ataque más fuerte del
-  juego pega 55.
-- **Las opciones:**
-  - **A, recomendada:** dos o tres ataques nuevos por línea entre el 15 y el 30 (de 60 a 90),
-    con la pantalla para olvidar uno;
-  - B: solo un ataque más fuerte al evolucionar, que sustituye al más flojo;
-  - C: dejarlo así.
-
-**D3. La dificultad: hay que entrenar a la fuerza.** El simulador lo confirma con números
-(`EQUILIBRIO.md`) y explica por qué (`REVISION.md`, apartado 1):
-- **Los jefes:** te tumban en 2 o 3 golpes. Sus estrellas son especies mucho más fuertes que las
-  tuyas y van por encima de tu nivel.
-- **El reparto de experiencia:** entre tres criaturas te deja de 2 a 4 niveles por detrás.
-- **El comandante:** con Agua es casi imposible y con las demás iniciales, un paseo.
-- **Las Dunas:** obligan a unos 9 combates seguidos sin curar.
-- **Las opciones:**
-  - **A, recomendada:**
-    - la experiencia llega a todo el equipo: las que no luchan ganan la mitad;
-    - ajusto con el simulador los niveles de los jefes y de las salvajes hasta el objetivo de
-      abajo;
-    - un manantial que cura en el horno de cal de las dunas;
-    - la hierba marcada como obligatoria lo es de verdad;
-  - B: solo ajustar los niveles de los jefes hasta el objetivo;
-  - C: dejarlo, que haya que entrenar.
-- **El objetivo, con el jugador normal:**
-  - la criatura de un jefe cae en 2 a 4 golpes y tú aguantas al menos 3 de los suyos;
-  - se gana a la primera entre el 40 y el 70 % de las veces;
-  - ninguna salvaje del camino pide más de 6 golpes.
-- **La estrella de la líder de Roca:** Ishiradon al nivel 12, que pusiste tú como excepción. Con
-  la inicial de Fuego te tumba en 1 o 2 golpes.
-  - **A, recomendada:** dejarla, pero al nivel con que se llega;
-  - B: cambiarla por Ishiro;
-  - C: dejarla como está.
-
-**D4. La tienda vende lo mismo en todas las islas.**
-- **Las opciones:**
-  - **A, recomendada:** cada isla añade algo:
-    - el cubo verde en Fuerteventura;
-    - el cubo azul, las curas de veneno y quemadura y revivir en Gran Canaria;
-  - B: solo los cubos;
-  - C: dejarlo.
-
-**D5. El puzle del gimnasio de Aire se resuelve en un minuto.**
-- **Las opciones:**
-  - **A, recomendada:** unas aspas trampa y una corriente que te lanza contra un aprendiz;
-  - B: dejarlo como está.
-
-**D6. Los nombres que faltan:** tu pueblo y la capital de Lanzarote.
-- **A, recomendada:** Playa Blanca y Arrecife, los lugares reales, como en el resto del juego;
-- B: otros que elijas tú.
-
-**D7. Tamaños que no se leen** (probador, 2026-11-25).
-- **La compañera:** mide unos 30 px y no se reconoce. Va a 0,6 de alto frente a 1,25 de las
-  personas, como dice `ARTE.md`.
-- **Las salvajes pequeñas en combate:** Quillflare ocupa el 10 % del alto de la pantalla. `ARTE.md`
-  pide entre un tercio y la mitad, pero la escala por altura las encoge hasta 0,6.
-- **Las opciones:**
-  - **A, recomendada:**
-    - la compañera, a 0,85;
-    - en combate, ninguna criatura por debajo de un cuarto del alto de la pantalla.
-    - La diferencia de tamaños se sigue viendo, solo que más comprimida.
-  - B: solo la compañera;
-  - C: dejarlo.
-
-**D8. Momentos que faltan** (probador, 2026-11-25).
-- **Recibir la inicial:** aparece de golpe, diminuta, sin primer plano ni nombre.
-- **El Equipo, en el menú y en combate:** solo texto, sin retratos. La rúbrica lo da como fallo.
-- **Las opciones:**
-  - **A, recomendada:**
-    - al recibir la inicial, cámara cerca, el cubo que se abre, su nombre y un sonido, como al
-      sacarla en combate;
-    - un retrato de cada criatura en el Equipo, sacado de su modelo 3D;
-  - B: solo el momento de la inicial;
-  - C: dejarlo.
-- Coste: medio. Los retratos se dibujan una vez al cargar.
-
-**D9. Lo que aún parece de prototipo** (probador, 2026-11-25).
-- **Los pasos cerrados:** son cajas coral lisas, también la «barrera de fuego» de La Geria. Hay
-  tres en los primeros minutos.
-- **Sotavento, Ajuy y Cofete:** rectángulos de hierba sobre arena lisa. La rúbrica lo da como
-  fallo.
-- **El gimnasio de Aire:** es el interior de una casa con flechas y molinillos.
-- **Los jardines de Puerto del Rosario y Morro Jable:** rectángulos verdes sin nada encima.
-- **Las opciones:**
-  - **A, recomendada:** vestirlo todo, en este orden:
-    1. los pasos cerrados, cada uno con su forma (valla, rocas, llamas);
-    2. las tres zonas;
-    3. el gimnasio;
-    4. los jardines.
-  - B: solo los pasos cerrados;
-  - C: dejarlo para después de Tenerife.
+- **D1, el primer combate:** no a todas las iniciales.
+  - Cada una gana su primer ataque de tipo entre los niveles 7 y 9.
+  - La de Agua empieza con un ataque de Agua de 30 de potencia, para que pueda ganar su primer
+    combate. Se comprueba con el simulador.
+  - **Hecho:** Chapoteo (30) para Cronti. Primer ataque de tipo: Planta al 7, Infernal y Tierra
+    al 8, Roca y Agua al 9. La de Agua pasa de ganar el primer combate el 0 % al 99 %; Planta sigue
+    siendo la más difícil (49 %).
+- **D2, los ataques:** se quedan como están. El autor sabe que van atrasados; espera a decidir si
+  tendrán animaciones.
+- **D3, la dificultad:** se verá más adelante.
+  - Hace falta un **repartir experiencia** como el de los primeros juegos del género, desde el
+    principio de Gran Canaria.
+  - Las Dunas pueden ser largas.
+  - **Todas las ciudades tienen refugio.** Comprobado: lo tienen las diez ciudades. En Playa
+    Blanca cura tu madre. Los caseríos (Ajuy, Cofete, La Isleta y Bandama) no tienen.
+- **D4, las tiendas:** venden más y mejor cuanto más avanzada es la zona.
+  - Alguna tienda especial vende cosas más fuertes de lo que toca y MT; dónde, se verá.
+  - Tiendas de Lanzarote: cubos y pociones, poco más.
+  - Gran Canaria: además, algún cubo especial (por ejemplo, para capturar Bichos).
+- **D5, el gimnasio de Aire:** opción A, aspas trampa y una corriente que te lanza contra un
+  aprendiz.
+- **D6, los nombres:** opción A, Playa Blanca y Arrecife. **Hecho.**
+- **D7, los tamaños:** un tamaño mínimo para todo, para que se vea bien: la compañera y las
+  criaturas pequeñas.
+- **D8, los momentos:**
+  - la escena de recibir la inicial (la abrazas o le acercas la mano para que la huela) la
+    pasará el autor;
+  - en el Equipo, una miniatura de cada criatura (las hace Claude).
+- **D9, lo que parece de prototipo:** queda pendiente.

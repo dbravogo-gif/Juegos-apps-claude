@@ -54,12 +54,12 @@ const SALAS: Record<string, DefSala> = {
   'casa-geria-2': { nombre: 'Casa de La Geria', gente: vive('vecina-geria', 'Mi abuelo decía que el picón guarda el rocío de la noche para las plantas.') },
   'refugio-geria': { nombre: 'Refugio de La Geria', gente: vive('enfermera') },
   'tienda-geria': { nombre: 'Tienda de La Geria', gente: vive('tendero') },
-  'refugio-capital': { nombre: 'Refugio de la capital', gente: vive('enfermera-capital') },
+  'refugio-capital': { nombre: 'Refugio de Arrecife', gente: vive('enfermera-capital') },
   gimnasio: { nombre: 'Gimnasio de Roca', gente: vive('lider-gimnasio') },
-  'casa-capital-1': { nombre: 'Casa de la capital', gente: vive('vecino-capital-1', 'Desde el balcón se ve el puerto. Hoy no ha salido ningún barco.') },
-  'casa-capital-2': { nombre: 'Casa de la capital', gente: vive('vecina-capital-2', '¿Vas al gimnasio? La líder entrena desde que sale el sol.') },
-  'casa-capital-3': { nombre: 'Casa de la capital', juguetes: true, gente: vive('nino-capital', '¡Arriba están mis juguetes! No subas, que lo tengo todo ordenado.') },
-  'casa-capital-4': { nombre: 'Casa de la capital', gente: vive('vecino-capital-4', 'Dicen que desde el faro, de noche, se ve una isla que no sale en los mapas.') },
+  'casa-capital-1': { nombre: 'Casa de Arrecife', gente: vive('vecino-capital-1', 'Desde el balcón se ve el puerto. Hoy no ha salido ningún barco.') },
+  'casa-capital-2': { nombre: 'Casa de Arrecife', gente: vive('vecina-capital-2', '¿Vas al gimnasio? La líder entrena desde que sale el sol.') },
+  'casa-capital-3': { nombre: 'Casa de Arrecife', juguetes: true, gente: vive('nino-capital', '¡Arriba están mis juguetes! No subas, que lo tengo todo ordenado.') },
+  'casa-capital-4': { nombre: 'Casa de Arrecife', gente: vive('vecino-capital-4', 'Dicen que desde el faro, de noche, se ve una isla que no sale en los mapas.') },
 };
 
 // Las casas cueva (`J` con sala propia; Gran Canaria) son casas: por dentro, encaladas, como las de verdad.

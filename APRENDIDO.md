@@ -254,3 +254,8 @@ nivel: de nota a regla, y de regla a prueba o hook.
     apenas dan esos graves. Aquí no hay audio, así que solo lo podía notar el autor.
   - Barrera: una prueba (`tests/sonido.test.ts`) prohíbe senoidales puras por debajo de 200 Hz;
     para lo grave, triángulo, cuadrada o ruido, que tienen armónicos agudos.
+- **2026-11-26 · Un cambio hecho a mano en un archivo generado se perdió** (Six-seven islands, la
+  poción de Famara).
+  - Se puso en `src/data/isla1.ts`, que genera `herramientas/isla1.py`, y desapareció al regenerar
+  para cambiar los nombres de Lanzarote. Se vio en el diff antes de subir.
+  - Barrera: `tests/generados.test.ts` regenera las tres islas y falla si no coinciden con el juego.

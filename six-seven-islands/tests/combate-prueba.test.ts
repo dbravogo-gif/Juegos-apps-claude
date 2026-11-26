@@ -1,5 +1,6 @@
 // El primer combate: cada inicial contra la de su amigo termina. Al nivel 5 solo tienen ataques
-// comunes; al 7 aprenden el de su tipo, que es muy eficaz contra la de su amigo.
+// comunes (Cronti, además, Chapoteo); entre el 7 y el 9 aprenden el de su tipo, que es muy eficaz
+// contra la de su amigo (autor, 2026-11-26, D1).
 
 import { describe, expect, it } from 'vitest';
 import { iniciarCombate, resolverTurno, type Evento } from '../src/core/combate';
@@ -11,7 +12,7 @@ import { MODELO_INICIAL } from '../src/arte/criaturas3d';
 
 describe('combate de prueba', () => {
   for (const inicial of Object.keys(ESPECIE_INICIAL)) {
-    it(`${inicial} contra ${RIVAL_DE[inicial]}: termina, y al 7 su ataque de tipo es muy eficaz`, () => {
+    it(`${inicial} contra ${RIVAL_DE[inicial]}: termina, y al 9 su ataque de tipo es muy eficaz`, () => {
       // Cada inicial tiene modelo; la de Tierra, provisional en combate hasta que llegue el suyo.
       expect(MODELO_INICIAL[inicial] ?? (inicial === 'tierra' ? MODELO_DE[ESPECIE_INICIAL[inicial]] : undefined)).toBeDefined();
       const rng = crearRng(`prueba-${inicial}`);
@@ -28,7 +29,7 @@ describe('combate de prueba', () => {
       // El evento «usa» trae el id del movimiento, no su nombre: la pantalla busca el nombre.
       for (const e of eventos) if (e.tipo === 'usa') expect(DATOS.movimientos[e.movimiento], e.movimiento).toBeDefined();
       expect(eventos.some((e) => e.tipo === 'danio' && e.ref.lado === 1)).toBe(true);
-      const deTipo = crearCriatura(DATOS, ESPECIE_INICIAL[inicial], 7, rng).movimientos.map((m) => DATOS.movimientos[m.id]).find((m) => m.tipo !== 'comun')!;
+      const deTipo = crearCriatura(DATOS, ESPECIE_INICIAL[inicial], 9, rng).movimientos.map((m) => DATOS.movimientos[m.id]).find((m) => m.tipo !== 'comun')!;
       expect(eficacia(DATOS.tipos, deTipo.tipo, DATOS.especies[b.especie].tipos)).toBeGreaterThan(1);
     });
   }

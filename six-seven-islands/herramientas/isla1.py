@@ -42,7 +42,7 @@ z.edificio(17, 9, 4, 3, 'S', 18, 'bar')                         # el bar de la p
 z.p(22, 9, 'T')                                                 # la palmera
 z.p(20, 12, 'O'); z.p(21, 12, 'U')                              # la sombrilla de la terraza y una tunera
 z.r(1, 4, 1, 2, 'U'); z.r(7, 3, 4, 2, 'V')                      # unas viñas en hoyos
-zonas['inicial'] = dict(nombre='Zona inicial', origen=(38, 100), z=z, altura=0, casas='lanzarote')
+zonas['inicial'] = dict(nombre='Playa Blanca', origen=(38, 100), z=z, altura=0, casas='lanzarote')
 
 # 2. Zona de combates (15 × 52), El Golfo: costa oeste. Abajo x 11..13 (zona 1); arriba x 1..3.
 # De sur a norte (autor, 2026-11-08): playa de arena negra; barrera de piedra con el entrenador;
@@ -158,7 +158,7 @@ z.r(1, 20, 6, 1, '~')                                                    # el ch
 # El mar del puerto, abierto al este y al sur: con el borde de roca parecía un canal (2026-11-15).
 z.r(33, 1, 1, 27, '~'); z.r(1, 27, 33, 1, '~')
 for x in (8, 12, 16, 20): z.p(x, 20, 'T')                                # paseo de palmeras
-zonas['capital'] = dict(nombre='Capital', origen=(68, 18), z=z, altura=1, casas='balcones-blanca')
+zonas['capital'] = dict(nombre='Arrecife', origen=(68, 18), z=z, altura=1, casas='balcones-blanca')
 
 # 7. Famara (28 × 18), zona opcional (autor, 2026-11-11): la playa del norte, al pie del Risco de
 # Famara, con bañistas (uno, un guiri quemado) y dos entrenadores que pescan o cogen pulpos. Se
@@ -201,7 +201,7 @@ PERSONAJES = {
               "{ id: 'entrenador-llano', x: 2, y: 18, mira: 'e', entrenador: { vision: 5, obligatorio: false }, frase: 'En el llano, las criaturas se esconden entre la hierba seca.' }"],
  'pueblo': ["{ id: 'anciano', x: 11, y: 13, mira: 's', frase: 'Esa criatura no te hace caso, ¿verdad? Siéntate, que te cuento su historia.' }",
             "{ id: 'guarda-fuego', x: 7, y: 3, mira: 'e', frase: 'En las Montañas del Fuego, quien no va bien acompañado se pierde entre la lava.' }"],
- 'fuego': ["{ id: 'entrenador-salida-fuego', x: 37, y: 21, mira: 'o', entrenador: { vision: 3, obligatorio: true }, frase: 'Si quieres llegar a la capital, antes tendrás que vencerme.' }",
+ 'fuego': ["{ id: 'entrenador-salida-fuego', x: 37, y: 21, mira: 'o', entrenador: { vision: 3, obligatorio: true }, frase: 'Si quieres llegar a Arrecife, antes tendrás que vencerme.' }",
            "{ id: 'excursionista', x: 10, y: 10, mira: 'o', entrenador: { vision: 5, obligatorio: false }, frase: 'Aquí la tierra quema: un palmo bajo el suelo, se podría asar pescado.' }",
            "{ id: 'entrenador-centro', x: 26, y: 14, mira: 'n', entrenador: { vision: 2, obligatorio: false }, frase: 'Entreno entre los volcanes. El calor me hace más fuerte.' }",
            "{ id: 'entrenador-caldera', x: 19, y: 20, mira: 'e', entrenador: { vision: 5, obligatorio: false }, frase: 'Esta caldera es mi escondite. ¿Cómo la has encontrado?' }",
@@ -225,7 +225,9 @@ PERSONAJES = {
              "{ id: 'amigo-muelle', x: 24, y: 10, mira: 's', entrenador: { vision: 2, obligatorio: false }, con: 'gimnasio-vencido' }",
              "{ id: 'farero', x: 21, y: 13, mira: 'e' }"],
 }
-OBJETOS = {'fuego': ["{ id: 'pocion-caldera', x: 25, y: 22, objeto: 'pocion' }"], 'jable': ["{ id: 'pocion-jable', x: 21, y: 6, objeto: 'pocion' }"]}
+OBJETOS = {'fuego': ["{ id: 'pocion-caldera', x: 25, y: 22, objeto: 'pocion' }"], 'jable': ["{ id: 'pocion-jable', x: 21, y: 6, objeto: 'pocion' }"],
+           # La recompensa de la rama opcional (skill level-design, 2026-11-25): en la punta de la playa.
+           'famara': ["{ id: 'pocion-famara', x: 3, y: 5, objeto: 'pocion' }"]}
 CIERRES = {
  'inicial': "cierre: { condicion: 'inicial-elegida', aviso: 'Antes de salir, pasa por el museo y elige a tu compañera.' },",
  'pueblo': "cierre: {\n        condicion: 'anciano',\n        aviso: 'Tu criatura aún no te escucha. En las Montañas del Fuego os perderíais: habla antes con el anciano de la plaza.',\n      },",

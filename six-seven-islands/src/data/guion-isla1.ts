@@ -49,7 +49,7 @@ function estatua(tipo: string): Guion[string] {
     tras: [
       { quien: DOCTORA, texto: '¡Buena elección! Su descendiente es todavía una cría, pero tiene el mismo carácter.' },
       { quien: DOCTORA, texto: 'Vaya… no parece hacerte mucho caso. Al principio les pasa a todas. El anciano del pueblo te ayudará.' },
-      { texto: 'Ya puedes salir de la zona inicial.' },
+      { texto: 'Ya puedes salir de Playa Blanca.' },
     ],
   };
   return [{ sin: 'inicial-elegida', dialogo: elegir }, { dialogo: { lineas: HISTORIA[tipo] } }];
