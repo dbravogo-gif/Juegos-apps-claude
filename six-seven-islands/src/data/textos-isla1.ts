@@ -7,8 +7,8 @@ import type { Condicion } from '../core/mundo';
 export const OBJETIVOS: readonly { hasta: Condicion; texto: string }[] = [
   { hasta: 'inicial-elegida', texto: 'Desayuna con tu amigo en el bar y elige compañera en el museo' },
   { hasta: 'anciano', texto: 'Habla con el anciano en la plaza de La Geria, al norte de El Golfo' },
-  { hasta: 'gimnasio-vencido', texto: 'Cruza las Montañas del Fuego y vence al gimnasio de Roca, en la capital' },
-  { hasta: 'isla1-completada', texto: 'Ve al muelle de la capital: el barco te lleva a Fuerteventura' },
+  { hasta: 'gimnasio-vencido', texto: 'Cruza las Montañas del Fuego y vence al gimnasio de Roca, en Arrecife' },
+  { hasta: 'isla1-completada', texto: 'Ve al muelle de Arrecife: el barco te lleva a Fuerteventura' },
 ];
 
 /** Nombre con artículo de cada objeto, para «Has encontrado…». */

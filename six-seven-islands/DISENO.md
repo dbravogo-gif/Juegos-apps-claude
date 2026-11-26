@@ -252,12 +252,12 @@ turno. El servicio de tiempo real gratuito se elige al llegar a esa fase.
 Está en `ISLA-1.md`: inspirada en Lanzarote desde el 2026-11-10. La versión de La Palma se
 guarda para la isla 6 (`LA-PALMA.md`). Son seis zonas:
 
-1. Zona inicial con el museo y la elección.
+1. Playa Blanca con el museo y la elección.
 2. Zona de combates (El Golfo).
 3. Pueblo con el anciano (La Geria).
 4. Zona larga (las Montañas del Fuego; en La Palma, el bosque).
 5. Zona opcional de encuentros (El Jable), añadida el 2026-11-10.
-6. Capital con el gimnasio y el puerto.
+6. Arrecife con el gimnasio y el puerto.
 
 Sustituye al plan anterior (2026-11-08). De lo que aquel plan tenía y esta idea no, el autor
 decidió el 2026-11-08: los rivales solo hablan, el 2 contra 2 llega más adelante, hay un recado

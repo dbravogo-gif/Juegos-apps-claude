@@ -11,7 +11,7 @@ isla 1 (zonas, reglas y orden de la zona de combates) se mantiene; cambia el pai
 2026-11-10 el autor pidió una isla más larga, no más ancha: más contenido y más tiempo para
 completarla. Por eso hay una zona más, El Jable, entre las Montañas del Fuego y la capital.
 
-1. **Zona inicial** (sur): pueblo blanco junto a una playa dorada.
+1. **Playa Blanca** (sur; antes «Zona inicial», autor 2026-11-26): pueblo blanco junto a una playa dorada.
    - La casa del jugador, otra casa igual, una palmera y el museo.
    - Unas tuneras y unas viñas en sus hoyos.
    - El paso se cierra hasta elegir la inicial.
@@ -53,12 +53,12 @@ se añade El Jable. Lo juzga el autor al probarlo.
 
 | Zona | Casillas |
 | --- | --- |
-| 1. Zona inicial | 24 × 18 |
+| 1. Playa Blanca | 24 × 18 |
 | 2. El Golfo | 15 × 52 (antes, 15 × 44) |
 | 3. La Geria | 28 × 22 |
 | 4. Montañas del Fuego | 48 × 26 |
 | 5. El Jable | 24 × 22 (nueva) |
-| 6. Capital | 34 × 28 |
+| 6. Arrecife | 34 × 28 |
 | 7. Famara | 28 × 18 (opcional) |
 
 ## La forma de la isla

@@ -53,7 +53,7 @@ export const ISLA_1: DefIsla = {
   zonas: [
     {
       id: 'inicial',
-      nombre: 'Zona inicial',
+      nombre: 'Playa Blanca',
       origen: { x: 38, y: 176 },
       hierbaObligatoria: false,
       cierre: { condicion: 'inicial-elegida', aviso: 'Antes de salir, pasa por el museo y elige a tu compañera.' },
@@ -248,7 +248,7 @@ export const ISLA_1: DefIsla = {
       hierbaObligatoria: true,
       flora: 'volcan',
       personajes: [
-        { id: 'entrenador-salida-fuego', x: 37, y: 21, mira: 'o', entrenador: { vision: 3, obligatorio: true }, frase: 'Si quieres llegar a la capital, antes tendrás que vencerme.' },
+        { id: 'entrenador-salida-fuego', x: 37, y: 21, mira: 'o', entrenador: { vision: 3, obligatorio: true }, frase: 'Si quieres llegar a Arrecife, antes tendrás que vencerme.' },
         { id: 'excursionista', x: 10, y: 10, mira: 'o', entrenador: { vision: 5, obligatorio: false }, frase: 'Aquí la tierra quema: un palmo bajo el suelo, se podría asar pescado.' },
         { id: 'entrenador-centro', x: 26, y: 14, mira: 'n', entrenador: { vision: 2, obligatorio: false }, frase: 'Entreno entre los volcanes. El calor me hace más fuerte.' },
         { id: 'entrenador-caldera', x: 19, y: 20, mira: 'e', entrenador: { vision: 5, obligatorio: false }, frase: 'Esta caldera es mi escondite. ¿Cómo la has encontrado?' },
@@ -352,7 +352,7 @@ export const ISLA_1: DefIsla = {
     },
     {
       id: 'capital',
-      nombre: 'Capital',
+      nombre: 'Arrecife',
       origen: { x: 68, y: 94 },
       hierbaObligatoria: false,
       cierre: { condicion: 'gimnasio-vencido', aviso: 'El barco solo lleva a quien ha vencido al gimnasio.' },
@@ -401,8 +401,6 @@ export const ISLA_1: DefIsla = {
       nombre: 'Famara',
       origen: { x: 27, y: 58 },
       hierbaObligatoria: false,
-      // La recompensa de la rama opcional (skill level-design, 2026-11-25): en la punta de la playa.
-      objetos: [{ id: 'pocion-famara', x: 3, y: 5, objeto: 'pocion' }],
       personajes: [
         { id: 'pescador-famara', x: 20, y: 6, mira: 'o', entrenador: { vision: 4, obligatorio: false }, frase: 'Aquí pican las viejas. ¿Tú qué buscas, criaturas o pescado?' },
         { id: 'pulpero-famara', x: 2, y: 6, mira: 'e', entrenador: { vision: 4, obligatorio: false }, frase: 'Los pulpos se esconden entre las rocas. Igual que algunas criaturas, ¿eh?' },
@@ -410,6 +408,7 @@ export const ISLA_1: DefIsla = {
         { id: 'banista-famara', x: 6, y: 10, mira: 's', postura: 'tumbado', frase: 'Aquí se viene a no hacer nada. Y a ver cómo se pone el sol detrás del risco.' },
         { id: 'guiri-famara', x: 18, y: 10, mira: 's', postura: 'tumbado', quemado: true, frase: '¡Hola, amigo! En mi país ahora nieva... Creo que me he quemado un poquito.' },
       ],
+      objetos: [{ id: 'pocion-famara', x: 3, y: 5, objeto: 'pocion' }],
       alturas: [
         '0000000000000000000000444444',
         '0000000000000000000000444444',

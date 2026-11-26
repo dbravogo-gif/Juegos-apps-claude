@@ -11,7 +11,7 @@ Contesta como quieras, por ejemplo: «Lanzarote: quitar X. Decisión 1: A».
 ## 1. Lanzarote (hecha)
 
 **Recorrido, de sur a este:**
-1. Tu pueblo, sin nombre todavía (en el juego pone «Zona inicial»):
+1. Playa Blanca, tu pueblo (D6):
    - tu casa con tu madre;
    - el bar, donde desayunas con tu amigo (que será tu rival);
    - el museo, donde eliges la inicial entre cuatro estatuas.
@@ -23,7 +23,7 @@ Contesta como quieras, por ejemplo: «Lanzarote: quitar X. Decisión 1: A».
    rama que te persigue, con una silueta misteriosa.
 5. El Jable: arenal con muros de piedra en zigzag. Se cruza a la fuerza, pero sus combates se
    pueden esquivar.
-6. La capital, sin nombre todavía: el **gimnasio de Roca**, una cueva volcánica en tres
+6. Arrecife, la capital (D6): el **gimnasio de Roca**, una cueva volcánica en tres
    terrazas con puentes de basalto y una palanca. Al vencer a la líder ganas la pintadera y se abre
    el barco.
 7. Famara (opcional): playa con bañistas, dos pescadores y una poción.
