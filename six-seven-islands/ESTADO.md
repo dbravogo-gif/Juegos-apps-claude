@@ -13,9 +13,9 @@ herramientas, terminada (`REVISION.md`, etapas 1 a 5): lo pequeño, arreglado y 
 otras cosas, la captura ya tiene cubo y la portada pregunta antes de borrar). El probador da 1,4 de
 media en la rúbrica visual: no es premium.
 
-2026-11-26: el autor contesta D1 a D8 y T1 a T3 (`RESUMEN-ISLAS.md`). Se aplican por pasos: D6
-nombres, D1 iniciales, D7 tamaños, D3 repartir experiencia y refugios, D5 gimnasio de Aire, D8
-miniaturas y D4 tiendas. Tenerife, rehecha (`ISLA-4.md`), espera su aprobación.
+2026-11-26: el autor contesta D1 a D8 y T1 a T3 (`RESUMEN-ISLAS.md`). Hechos D6 (nombres) y D1
+(iniciales); refugios comprobados. Quedan por pasos: D7 tamaños, D3 repartir experiencia, D5
+gimnasio de Aire, D8 miniaturas y D4 tiendas (esta, tras saber el orden de los cubos). Tenerife, rehecha (`ISLA-4.md`), espera su aprobación.
 
 ## Hecho
 

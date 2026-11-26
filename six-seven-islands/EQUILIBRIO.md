@@ -1,6 +1,6 @@
 # Equilibrio de Six-seven islands
 
-Generado el 2026-11-25 con `npm run equilibrio` (`herramientas/simular/`). No se edita a mano.
+Generado el 2026-11-26 con `npm run equilibrio` (`herramientas/simular/`). No se edita a mano.
 
 **Cómo se calcula** (supuestos, para leer los números con cuidado):
 
@@ -16,8 +16,8 @@ La inicial sola a nivel 5, que aún desobedece (hasta el anciano), con 2 pocione
 
 | Inicial | Gana |
 | --- | --- |
-| agua | 0 % |
-| planta | 47 % |
+| agua | 99 % |
+| planta | 49 % |
 | infernal | 85 % |
 | roca | 100 % |
 | tierra | 89 % |
@@ -30,7 +30,7 @@ Niveles: la inicial / cada compañera; entre paréntesis, si toda la experiencia
 
 | Jefe | Su nivel | Tus niveles | Salvajes | Entrenadores | Dinero | Ganas a la primera | Con la inicial por delante |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Primer entrenador (El Golfo) | 5 | 5, sola | 0 | 0 | 0 | 0 % | — |
+| Primer entrenador (El Golfo) | 5 | 5, sola | 0 | 0 | 0 | 99 % | — |
 | Líder de Roca (Lanzarote) | 11/11/12 | 10 / 8 (12) | 11 | 10 | 2130 | 0 % | 0 % |
 | Líder de Aire (Fuerteventura) | 20/21/22 | 16 / 13 (20) | 31 | 26 | 8930 | 0 % | 0 % |
 | 3.er aprendiz Eléctrico (llegada a Gran Canaria) | 24/25 | 18 / 14 (23) | 31 | 31 | 12190 | 0 % | 0 % |
@@ -41,7 +41,7 @@ Niveles: la inicial / cada compañera; entre paréntesis, si toda la experiencia
 
 | Jefe | Su nivel | Tus niveles | Salvajes | Entrenadores | Dinero | Ganas a la primera | Con la inicial por delante |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Primer entrenador (El Golfo) | 5 | 5, sola | 0 | 0 | 0 | 47 % | — |
+| Primer entrenador (El Golfo) | 5 | 5, sola | 0 | 0 | 0 | 49 % | — |
 | Líder de Roca (Lanzarote) | 11/11/12 | 10 / 8 (12) | 11 | 10 | 2130 | 0 % | 0 % |
 | Líder de Aire (Fuerteventura) | 20/21/22 | 16 / 13 (20) | 31 | 26 | 8930 | 0 % | 0 % |
 | 3.er aprendiz Eléctrico (llegada a Gran Canaria) | 24/25 | 18 / 14 (23) | 31 | 31 | 12190 | 0 % | 0 % |

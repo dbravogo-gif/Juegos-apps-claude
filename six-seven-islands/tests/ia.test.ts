@@ -26,8 +26,9 @@ function elegidos(e: ReturnType<typeof combate>): string[] {
 
 describe('la IA no malgasta turnos', () => {
   it('baja el escudo del rival mientras sirve, y a −2 deja de hacerlo', () => {
-    // Cronti contra Armalito, de Roca: Topetazo apenas le hace nada, así que primero le baja el escudo.
-    const e = combate('inicial-roca', 'inicial-agua');
+    // Tsubomi contra Armalito, de Roca: Topetazo apenas le hace nada, así que primero le baja el escudo.
+    // (Era Cronti, que desde el 2026-11-26 empieza con Chapoteo, muy eficaz contra la Roca.)
+    const e = combate('inicial-roca', 'inicial-tierra');
     expect(elegidos(e)).toContain('mirada-fija');
     e.lados[0].etapas[0]!.escudo = -2;
     expect(elegidos(e)).not.toContain('mirada-fija');

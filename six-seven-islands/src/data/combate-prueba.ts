@@ -20,6 +20,9 @@ const base = (vida: number, fuerza: number, escudo: number, magia: number, resMa
 const movimientos: Movimiento[] = [
   { id: 'topetazo', nombre: 'Topetazo', tipo: 'comun', categoria: 'fisico', poder: 40, precision: 100, pp: 35 },
   { id: 'mirada-fija', nombre: 'Mirada fija', tipo: 'comun', categoria: 'estado', poder: 0, precision: 100, pp: 30, objetivo: 'rivales', efectos: [{ tipo: 'etapa', a: 'objetivo', estadistica: 'escudo', cambio: -1, prob: 100 }] },
+  // El ataque flojo de Agua con que empieza Cronti (autor, 2026-11-26, D1): sin él perdía siempre su
+  // primer combate, contra uno de Roca, con solo ataques comunes.
+  { id: 'chapoteo', nombre: 'Chapoteo', tipo: 'agua', categoria: 'fisico', poder: 30, precision: 100, pp: 30 },
   { id: 'remojon', nombre: 'Remojón', tipo: 'agua', categoria: 'magico', poder: 40, precision: 100, pp: 25 },
   { id: 'ola-de-cresta', nombre: 'Ola de cresta', tipo: 'agua', categoria: 'fisico', poder: 55, precision: 95, pp: 15 },
   { id: 'latigazo-de-musgo', nombre: 'Latigazo de musgo', tipo: 'planta', categoria: 'fisico', poder: 45, precision: 100, pp: 25 },
@@ -56,11 +59,11 @@ const especies: Especie[] = [
   // Empiezan con un ataque común y uno de estado; el de su tipo llega al nivel 7 y el segundo al 13
   // (autor, 2026-11-19). La de fuego aprende al 9 su ataque flojo de Acero, antes del gimnasio de
   // Roca. Cuatro como mucho: aún no hay pantalla para olvidar uno (tests/ataques.test.ts).
-  { id: 'inicial-agua', nombre: 'Cronti', tipos: ['agua'], base: base(50, 65, 64, 44, 48, 43), expBase: 60, ratioCaptura: 45, aprende: enNiveles([1, 'topetazo'], [1, 'mirada-fija'], [7, 'remojon'], [13, 'ola-de-cresta']), altura: 0.4, descripcion: '' },
+  { id: 'inicial-agua', nombre: 'Cronti', tipos: ['agua'], base: base(50, 65, 64, 44, 48, 43), expBase: 60, ratioCaptura: 45, aprende: enNiveles([1, 'topetazo'], [1, 'chapoteo'], [9, 'remojon'], [13, 'ola-de-cresta']), altura: 0.4, descripcion: '' },
   { id: 'inicial-planta', nombre: 'Lisza', tipos: ['planta'], base: base(36, 39, 36, 77, 50, 76), expBase: 60, ratioCaptura: 45, aprende: enNiveles([1, 'topetazo'], [1, 'mirada-fija'], [7, 'latigazo-de-musgo'], [13, 'esporas-de-hoja']), altura: 0.4, descripcion: '' },
-  { id: 'inicial-infernal', nombre: 'Nokoribi', tipos: ['infernal'], base: base(59, 33, 59, 65, 62, 36), expBase: 60, ratioCaptura: 45, aprende: enNiveles([1, 'topetazo'], [1, 'barrito'], [7, 'soplo-de-brasas'], [9, 'trompazo-de-hierro']), altura: 0.4, descripcion: '' },
-  { id: 'inicial-tierra', nombre: 'Tsubomi', tipos: ['tierra'], base: base(48, 36, 48, 63, 57, 62), expBase: 60, ratioCaptura: 45, aprende: enNiveles([1, 'topetazo'], [1, 'mirada-fija'], [7, 'arenazo'], [13, 'pisoton']), altura: 0.4, descripcion: '' },
-  { id: 'inicial-roca', nombre: 'Armalito', tipos: ['roca'], base: base(59, 71, 68, 33, 54, 29), expBase: 60, ratioCaptura: 45, aprende: enNiveles([1, 'topetazo'], [1, 'caparazon'], [7, 'rodada-de-piedra'], [13, 'pisoton']), altura: 0.4, descripcion: '' },
+  { id: 'inicial-infernal', nombre: 'Nokoribi', tipos: ['infernal'], base: base(59, 33, 59, 65, 62, 36), expBase: 60, ratioCaptura: 45, aprende: enNiveles([1, 'topetazo'], [1, 'barrito'], [8, 'soplo-de-brasas'], [9, 'trompazo-de-hierro']), altura: 0.4, descripcion: '' },
+  { id: 'inicial-tierra', nombre: 'Tsubomi', tipos: ['tierra'], base: base(48, 36, 48, 63, 57, 62), expBase: 60, ratioCaptura: 45, aprende: enNiveles([1, 'topetazo'], [1, 'mirada-fija'], [8, 'arenazo'], [13, 'pisoton']), altura: 0.4, descripcion: '' },
+  { id: 'inicial-roca', nombre: 'Armalito', tipos: ['roca'], base: base(59, 71, 68, 33, 54, 29), expBase: 60, ratioCaptura: 45, aprende: enNiveles([1, 'topetazo'], [1, 'caparazon'], [9, 'rodada-de-piedra'], [13, 'pisoton']), altura: 0.4, descripcion: '' },
 ];
 
 /** A qué nivel evolucionan las iniciales: a la 2.ª forma y a la 3.ª. */

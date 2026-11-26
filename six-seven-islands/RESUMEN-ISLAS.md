@@ -122,20 +122,24 @@ lo apruebes** antes de construir.
   - Cada una gana su primer ataque de tipo entre los niveles 7 y 9.
   - La de Agua empieza con un ataque de Agua de 30 de potencia, para que pueda ganar su primer
     combate. Se comprueba con el simulador.
+  - **Hecho:** Chapoteo (30) para Cronti. Primer ataque de tipo: Planta al 7, Infernal y Tierra
+    al 8, Roca y Agua al 9. La de Agua pasa de ganar el primer combate el 0 % al 99 %; Planta sigue
+    siendo la más difícil (49 %).
 - **D2, los ataques:** se quedan como están. El autor sabe que van atrasados; espera a decidir si
   tendrán animaciones.
 - **D3, la dificultad:** se verá más adelante.
   - Hace falta un **repartir experiencia** como el de los primeros juegos del género, desde el
     principio de Gran Canaria.
   - Las Dunas pueden ser largas.
-  - **Todas las ciudades tienen refugio.** Se comprueba.
+  - **Todas las ciudades tienen refugio.** Comprobado: lo tienen las diez ciudades. En Playa
+    Blanca cura tu madre. Los caseríos (Ajuy, Cofete, La Isleta y Bandama) no tienen.
 - **D4, las tiendas:** venden más y mejor cuanto más avanzada es la zona.
   - Alguna tienda especial vende cosas más fuertes de lo que toca y MT; dónde, se verá.
   - Tiendas de Lanzarote: cubos y pociones, poco más.
   - Gran Canaria: además, algún cubo especial (por ejemplo, para capturar Bichos).
 - **D5, el gimnasio de Aire:** opción A, aspas trampa y una corriente que te lanza contra un
   aprendiz.
-- **D6, los nombres:** opción A, Playa Blanca y Arrecife.
+- **D6, los nombres:** opción A, Playa Blanca y Arrecife. **Hecho.**
 - **D7, los tamaños:** un tamaño mínimo para todo, para que se vea bien: la compañera y las
   criaturas pequeñas.
 - **D8, los momentos:**
