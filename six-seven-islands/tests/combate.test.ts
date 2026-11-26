@@ -28,7 +28,7 @@ const conMovs = (c: Criatura, ...ids: string[]): Criatura => ({ ...c, movimiento
 function combate(
   a: Criatura[],
   b: Criatura[],
-  opciones: { formato?: 1 | 2; salvaje?: boolean; control?: [Control, Control]; semilla?: number | string; experiencia?: boolean } = {},
+  opciones: { formato?: 1 | 2; salvaje?: boolean; control?: [Control, Control]; semilla?: number | string; experiencia?: boolean; repartir?: boolean } = {},
 ): EstadoCombate {
   return iniciarCombate(
     {
@@ -38,6 +38,7 @@ function combate(
       control: opciones.control ?? ['jugador', 'jugador'],
       rng: crearRng(opciones.semilla ?? 67),
       experiencia: opciones.experiencia ?? true,
+      ...(opciones.repartir ? { repartir: true } : {}),
     },
     D,
   ).estado;
@@ -243,6 +244,36 @@ describe('salvajes, objetos y cambios', () => {
     expect(con.estado.fin).toBe('victoria');
     expect(tipos(con.eventos)).toContain('experiencia');
     expect(tipos(jugar(false).eventos)).not.toContain('experiencia');
+  });
+
+  it('con el repartidor, las que luchan se llevan la mitad y el resto en pie se reparte la otra (D3)', () => {
+    const jugar = (repartir: boolean) => {
+      const rival = cr('rama', 3);
+      rival.vida = 1;
+      const caida = cr('rama', 10);
+      caida.vida = 0;
+      const e = combate([cr('agua1', 30), cr('planta1', 10), cr('rama', 10), caida], [rival], { control: ['jugador', 'ia'], repartir });
+      return resolverTurno(e, { 0: [mover(0)] }, D).eventos.filter((x) => x.tipo === 'experiencia');
+    };
+    const sin = jugar(false);
+    expect(sin.map((x) => x.indice)).toEqual([0]);
+    const total = sin[0].cantidad;
+    const con = jugar(true);
+    // La que luchó, la mitad; las dos en pie que no salieron, un cuarto cada una; la caída, nada.
+    expect(con.map((x) => [x.indice, x.cantidad, x.repartida ?? false])).toEqual([
+      [0, Math.floor(total / 2), false],
+      [1, Math.floor(total / 2 / 2), true],
+      [2, Math.floor(total / 2 / 2), true],
+    ]);
+  });
+
+  it('con el repartidor y nadie más en pie, la que lucha se lo lleva todo', () => {
+    const rival = cr('rama', 3);
+    rival.vida = 1;
+    const sola = combate([cr('agua1', 30)], [rival], { control: ['jugador', 'ia'], repartir: true });
+    const solaSin = combate([cr('agua1', 30)], [{ ...rival }], { control: ['jugador', 'ia'] });
+    const exp = (e: EstadoCombate) => resolverTurno(e, { 0: [mover(0)] }, D).eventos.filter((x) => x.tipo === 'experiencia').map((x) => x.cantidad);
+    expect(exp(sola)).toEqual(exp(solaSin));
   });
 });
 

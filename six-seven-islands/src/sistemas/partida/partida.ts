@@ -99,6 +99,8 @@ export class Partida implements Subsistema {
   /** El equipo (hasta 6) y la mochila (objeto → cuántos). Se llenan al elegir la inicial. */
   equipo: Criatura[] = [];
   mochila: Record<string, number> = {};
+  /** El repartidor de experiencia, encendido o apagado desde la mochila (D3, 2026-11-26). */
+  repartir = false;
   /** Al perder, se vuelve curado a esta sala: el último sitio donde curaron al equipo. */
   ultimoRefugio = LANZAROTE.refugio;
   /** El último refugio de cada isla visitada, para volver a él al regresar en barco. */
@@ -222,6 +224,7 @@ export class Partida implements Subsistema {
       refugios: { ...this.refugios },
       amigos: { ...this.amigos },
       vencidos: [...this.vencidos],
+      ...(this.repartir ? { repartir: true } : {}),
       rng: structuredClone(this.ctx.rng),
       dinero: this.dinero,
       nombre: this.nombre,
@@ -447,6 +450,7 @@ export class Partida implements Subsistema {
     this.ultimoRefugio = this.interiores.has(g.ultimoRefugio) ? g.ultimoRefugio : this.datos.refugio;
     this.refugios = { ...g.refugios };
     this.amigos = { ...g.amigos };
+    this.repartir = g.repartir ?? false;
     this.vencidos = g.vencidos;
     this.dinero = g.dinero ?? 0;
     this.nombre = g.nombre ?? 'Dani';
@@ -834,6 +838,10 @@ export class Partida implements Subsistema {
   private aplicar(e: Efecto): void {
     if (e.condicion) cumplir(this.estado, e.condicion);
     if (e.viaje !== undefined && ISLAS[e.viaje]) this.viajePendiente = e.viaje;
+    if (e.objeto && DATOS.objetos[e.objeto]) {
+      this.mochila[e.objeto] = (this.mochila[e.objeto] ?? 0) + 1;
+      this.ctx.eventos.emit('sonido:tocar', { nombre: 'nivel' });
+    }
     if (e.inicial) {
       this.estado.inicial = e.inicial;
       this.formarEquipo();

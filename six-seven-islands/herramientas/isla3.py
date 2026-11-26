@@ -293,6 +293,8 @@ SILUETA = mover(SILUETA)
 PERSONAJES = {
  'palmas': [
    "{ id: 'marinero-palmas', x: 24, y: 5, mira: 'e', frase: 'Este barco va y viene de Morro Jable.' }",
+   # Chano te espera en el muelle con el repartidor de experiencia (autor, 2026-11-26, D3).
+   "{ id: 'chano-palmas', x: 26, y: 7, mira: 'n', escena: { vision: 3 }, uniforme: 'tuyo' }",
    "{ id: 'surfista-canteras', x: 8, y: 6, mira: 'e', entrenador: { vision: 4, obligatorio: false }, frase: '¡Las Canteras tiene la mejor ola de la ciudad! Y yo, el mejor equipo de la playa.' }",
    "{ id: 'estudiante-triana', x: 24, y: 13, mira: 'o', entrenador: { vision: 4, obligatorio: false }, frase: 'Estudio la electricidad de las criaturas. ¿Me dejas hacer un experimento contigo?' }",
    "{ id: 'guia-vegueta', x: 18, y: 21, mira: 'e', frase: 'Esta es la catedral de Santa Ana. Tardaron casi cuatrocientos años en terminarla.' }",

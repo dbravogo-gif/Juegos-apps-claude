@@ -125,6 +125,8 @@ export const DATOS_COMBATE_PRUEBA: DatosJuego = {
     superpocion: { id: 'superpocion', nombre: 'Superpoción', descripcion: 'Cura 50 puntos de vida.', tipo: 'curar', cantidad: 50, precio: 700, desdeIsla: 3 },
     // Solo en el modo desarrollador (autor, 2026-11-19): el dulce de almendra canario.
     almendrado: { id: 'almendrado', nombre: 'Almendrado', descripcion: 'Dulce de almendra: sube un nivel. Solo en el modo desarrollador.', tipo: 'nivel' },
+    // El primer objeto clave (autor, 2026-11-26, D3): te lo da Chano al llegar a Gran Canaria.
+    repartidor: { id: 'repartidor', nombre: 'Repartidor de experiencia', descripcion: 'Encendido, las que luchan se llevan la mitad de la experiencia y el resto del equipo se reparte la otra mitad.', tipo: 'clave', precio: 0 },
     'cubo-blanco': { id: 'cubo-blanco', nombre: 'Cubo blanco', descripcion: 'El cubo de captura más sencillo.', tipo: 'captura', bonus: 1, precio: 200 },
   },
 };

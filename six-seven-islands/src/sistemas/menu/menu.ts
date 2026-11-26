@@ -406,6 +406,20 @@ export class Menu implements Subsistema {
         this.opciones = objetos.map(([id, n]) => {
           const o = DATOS.objetos[id];
           const curativo = o.tipo === 'curar' || o.tipo === 'remedio' || o.tipo === 'revivir' || o.tipo === 'nivel';
+          // El repartidor se enciende y se apaga aquí (D3).
+          if (id === 'repartidor' && !destino) {
+            return {
+              texto: `${o.nombre} · ${this.partida.repartir ? 'encendido' : 'apagado'}`,
+              activa: true,
+              dato: id,
+              elegir: () => {
+                this.partida.repartir = !this.partida.repartir;
+                this.ctx.eventos.emit('sonido:tocar', { nombre: this.partida.repartir ? 'confirmar' : 'atras' });
+                this.partida.guardar();
+                this.abrir('mochila');
+              },
+            };
+          }
           return {
             texto: `${o.nombre} ×${n}`,
             activa: curativo && (destino ? objetoUtil(destino, id, DATOS) : equipo.some((c) => objetoUtil(c, id, DATOS))),
@@ -937,6 +951,7 @@ export class Menu implements Subsistema {
     if (typeof o?.dato !== 'string') return [el('p', 'menu-ayuda', BOLSILLOS[this.bolsillo].vacio)];
     const obj = DATOS.objetos[o.dato];
     const uso = obj.tipo === 'captura' ? 'Se lanza en combate, contra una criatura salvaje.' : obj.tipo === 'clave' ? 'Un objeto importante: no se gasta.' : o.activa ? 'A: usar.' : 'Ahora no le hace falta a nadie.';
+    if (o.dato === 'repartidor') return [el('h2', undefined, obj.nombre), el('p', 'menu-ayuda', obj.descripcion), el('p', 'menu-dato', `Está ${this.partida.repartir ? 'encendido' : 'apagado'}. A: ${this.partida.repartir ? 'apagarlo' : 'encenderlo'}.`)];
     return [el('h2', undefined, obj.nombre), el('p', 'menu-ayuda', obj.descripcion), el('p', 'menu-dato', `Tienes ${this.partida.mochila[o.dato] ?? 0}. ${uso}`)];
   }
 

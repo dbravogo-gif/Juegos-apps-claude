@@ -14,6 +14,23 @@ export const GUION_ISLA3: Guion = {
       },
     },
   ],
+  // Chano te espera al bajar del barco con el repartidor de experiencia (autor, 2026-11-26, D3).
+  'chano-palmas': [
+    {
+      sin: 'repartidor-recibido',
+      dialogo: {
+        lineas: [
+          { quien: 'Chano', texto: '¡Elegido! Sabía que llegarías a Gran Canaria. Aquí los combates son de otro nivel.' },
+          { quien: 'Chano', texto: 'Toma esto. Era del último elegido de tu pueblo: reparte lo aprendido entre todo el equipo.' },
+          { texto: 'Recibes el Repartidor de experiencia.' },
+          { quien: 'Chano', texto: 'Se enciende y se apaga en la mochila, en los objetos clave.' },
+          { quien: 'Chano', texto: 'Encendido, las que luchan se llevan la mitad de la experiencia y las demás, la otra mitad. Yo me quedo por el puerto.' },
+        ],
+        efecto: { condicion: 'repartidor-recibido', objeto: 'repartidor' },
+      },
+    },
+    { dialogo: { lineas: [{ quien: 'Chano', texto: 'Si tus criaturas se quedan atrás, enciende el repartidor. Si quieres que una crezca deprisa, apágalo.' }] } },
+  ],
   'enfermera-palmas': [
     { dialogo: { lineas: [{ quien: 'Enfermera', texto: 'Bienvenido al refugio de Las Palmas. En la ciudad grande también curamos gratis.' }] } },
   ],

@@ -19,6 +19,8 @@ export interface Efecto {
   inicial?: string;
   /** Viajar en barco a esta isla (por su número), al cerrar el diálogo. */
   viaje?: number;
+  /** Un objeto que se recibe (uno). El diálogo dice cuál. */
+  objeto?: string;
 }
 
 export interface Dialogo {
