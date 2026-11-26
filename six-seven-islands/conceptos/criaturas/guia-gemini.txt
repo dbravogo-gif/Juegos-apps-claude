@@ -2,7 +2,7 @@ INSTRUCCIONES PARA GEMINI
 
 Vamos a generar las criaturas de mi juego de una en una, con el mismo estilo de imagen que ya
 usamos en esta conversación. Abajo tienes la lista completa, numerada. Es mi plan: 203 criaturas,
-de las que 46 ya están hechas.
+de las que 51 ya están hechas.
 
 CÓMO VAMOS
 - Al empezar, y cada vez que te diga «siguiente», dime cuál toca, con este formato:
@@ -133,91 +133,66 @@ Pok48. Aerund, 1.ª forma de 2 · YA HECHA
 
 Pok49. Tailsan, 2.ª forma de 2 · YA HECHA
 
-Pok50. Lisa de duna, 1.ª forma de 3
-   Tipo: Tierra (la línea: Tierra → Tierra → Aire)
-   Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante físico.
-   Estadísticas como: Trapinch (la línea: Trapinch → Vibrava → Flygon). Solo de referencia: que no se parezca.
-   Zona: Las Dunas, Fuerteventura (niveles 10-13)
-   Idea: Lisa de duna: lagartija que nada bajo la arena; la 2.ª, con cresta de púas; la 3.ª, con velas que planean sobre las dunas.
+Pok50. Lisa de duna, 1.ª forma de 3 · YA HECHA
 
-Pok51. Lisa de duna, 2.ª forma de 3
-   Tipo: Tierra (la línea: Tierra → Tierra → Aire)
-   Fuerza: quintil 2 de 5, floja. Papel: equilibrada.
-   Estadísticas como: Vibrava (la línea: Trapinch → Vibrava → Flygon). Solo de referencia: que no se parezca.
-   Zona: Las Dunas, Fuerteventura (niveles 10-13)
-   Idea: Lisa de duna: lagartija que nada bajo la arena; la 2.ª, con cresta de púas; la 3.ª, con velas que planean sobre las dunas.
+Pok51. Lisa de duna, 2.ª forma de 3 · YA HECHA
 
-Pok52. Lisa de duna, 3.ª forma de 3
-   Tipo: Aire (la línea: Tierra → Tierra → Aire)
-   Fuerza: quintil 4 de 5, fuerte. Papel: equilibrada.
-   Estadísticas como: Flygon (la línea: Trapinch → Vibrava → Flygon). Solo de referencia: que no se parezca.
-   Zona: Las Dunas, Fuerteventura (niveles 10-13)
-   Idea: Lisa de duna: lagartija que nada bajo la arena; la 2.ª, con cresta de púas; la 3.ª, con velas que planean sobre las dunas.
+Pok52. Lisa de duna, 3.ª forma de 3 · YA HECHA
 
-Pok53. Conejo de jable, 1.ª forma de 2
-   Tipo: Común (la línea: Común → Común/Oscuridad)
-   Fuerza: quintil 1 de 5, de las más flojas. Papel: equilibrada.
-   Estadísticas como: Bidoof (la línea: Bidoof → Bibarel). Solo de referencia: que no se parezca.
-   Zona: Las Dunas, Fuerteventura (niveles 10-13)
-   Idea: Conejo de jable, bajito, orejudo y enfadado; la 2.ª, conejo salvaje y rabioso, de garras largas.
+Pok53. Conejo de jable, 1.ª forma de 2 · YA HECHA
 
-Pok54. Conejo de jable, 2.ª forma de 2
-   Tipo: Común/Oscuridad (la línea: Común → Común/Oscuridad)
-   Fuerza: quintil 3 de 5, media. Papel: atacante físico.
-   Estadísticas como: Bibarel (la línea: Bidoof → Bibarel). Solo de referencia: que no se parezca.
-   Zona: Las Dunas, Fuerteventura (niveles 10-13)
-   Idea: Conejo de jable, bajito, orejudo y enfadado; la 2.ª, conejo salvaje y rabioso, de garras largas.
+Pok54. Conejo de jable, 2.ª forma de 2 · YA HECHA
 
-Pok55. Cigarrón, 1.ª forma de 2
+Pok55. Chestil, 1.ª forma de 2
    Tipo: Bicho (la línea: Bicho → Bicho)
    Fuerza: quintil 1 de 5, de las más flojas. Papel: tanque físico.
    Estadísticas como: Kricketot (la línea: Kricketot → Kricketune). Solo de referencia: que no se parezca.
    Zona: Las Dunas (rara), Fuerteventura (niveles 10-13)
    Idea: Cigarrón: langosta que llega con el viento de África; la 2.ª, grande, hace sonar las alas.
 
-Pok56. Cigarrón, 2.ª forma de 2
+Pok56. Winstal, 2.ª forma de 2
    Tipo: Bicho (la línea: Bicho → Bicho)
    Fuerza: quintil 2 de 5, floja. Papel: atacante físico.
    Estadísticas como: Kricketune (la línea: Kricketot → Kricketune). Solo de referencia: que no se parezca.
    Zona: Las Dunas (rara), Fuerteventura (niveles 10-13)
    Idea: Cigarrón: langosta que llega con el viento de África; la 2.ª, grande, hace sonar las alas.
 
-Pok57. Dromedario, 1.ª forma de 2
+Pok57. Marach, 1.ª forma de 2
    Tipo: Común (la línea: Común → Común)
    Fuerza: quintil 2 de 5, floja. Papel: atacante físico.
    Estadísticas como: Deerling (la línea: Deerling → Sawsbuck). Solo de referencia: que no se parezca.
    Zona: Betancuria, Fuerteventura (niveles 12-14)
    Idea: Dromedario majorero: cría torpe de patas largas; la 2.ª, dromedario adulto con alforjas.
 
-Pok58. Dromedario, 2.ª forma de 2
+Pok58. Camwee, 2.ª forma de 2
    Tipo: Común (la línea: Común → Común)
    Fuerza: quintil 3 de 5, media. Papel: atacante físico.
    Estadísticas como: Sawsbuck (la línea: Deerling → Sawsbuck). Solo de referencia: que no se parezca.
    Zona: Betancuria, Fuerteventura (niveles 12-14)
    Idea: Dromedario majorero: cría torpe de patas largas; la 2.ª, dromedario adulto con alforjas.
 
-Pok59. Perro bardino, 1.ª forma de 3
+Pok59. Trebar, 1.ª forma de 3
    Tipo: Común (la línea: Común → Común → Común)
    Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante físico.
    Estadísticas como: Lillipup (la línea: Lillipup → Herdier → Stoutland). Solo de referencia: que no se parezca.
    Zona: Betancuria, Fuerteventura (niveles 12-14)
    Idea: Perro bardino: cachorro atigrado; la 2.ª, perro pastor; la 3.ª, gran perro de ganado de melena gruesa.
 
-Pok60. Perro bardino, 2.ª forma de 3
+Pok60. Bardin, 2.ª forma de 3
    Tipo: Común (la línea: Común → Común → Común)
    Fuerza: quintil 2 de 5, floja. Papel: atacante físico.
    Estadísticas como: Herdier (la línea: Lillipup → Herdier → Stoutland). Solo de referencia: que no se parezca.
    Zona: Betancuria, Fuerteventura (niveles 12-14)
    Idea: Perro bardino: cachorro atigrado; la 2.ª, perro pastor; la 3.ª, gran perro de ganado de melena gruesa.
 
-Pok61. Perro bardino, 3.ª forma de 3
+Pok61. Barduno, 3.ª forma de 3
    Tipo: Común (la línea: Común → Común → Común)
    Fuerza: quintil 4 de 5, fuerte. Papel: atacante físico.
    Estadísticas como: Stoutland (la línea: Lillipup → Herdier → Stoutland). Solo de referencia: que no se parezca.
    Zona: Betancuria, Fuerteventura (niveles 12-14)
    Idea: Perro bardino: cachorro atigrado; la 2.ª, perro pastor; la 3.ª, gran perro de ganado de melena gruesa.
 
-Pok62. Guirre, 1.ª forma de 3
+Pok62. Cernícalo, 1.ª forma de 3
    Tipo: Aire (la línea: Aire → Aire → Aire)
    Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante físico.
    Estadísticas como: Starly (la línea: Starly → Staravia → Staraptor). Solo de referencia: que no se parezca.
@@ -238,54 +213,54 @@ Pok64. Guirre, 3.ª forma de 3
    Zona: Betancuria, Fuerteventura (niveles 12-14)
    Idea: Guirre: polluelo blanco; la 2.ª, joven de plumas pardas; la 3.ª, gran guirre de cara amarilla. Sustituye al guirre provisional del gimnasio de Aire.
 
-Pok65. Erizo negro, 1.ª forma de 2
+Pok65. Seacumber, 1.ª forma de 2
    Tipo: Agua (la línea: Agua → Agua/Oscuridad)
    Fuerza: quintil 2 de 5, floja. Papel: atacante físico.
    Estadísticas como: Corphish (la línea: Corphish → Crawdaunt). Solo de referencia: que no se parezca.
    Zona: Ajuy, Fuerteventura (niveles 13-15)
    Idea: Erizo negro de los charcos, redondo y de púas cortas; la 2.ª, grande y de púas larguísimas.
 
-Pok66. Erizo negro, 2.ª forma de 2
+Pok66. Seabrune, 2.ª forma de 2
    Tipo: Agua/Oscuridad (la línea: Agua → Agua/Oscuridad)
    Fuerza: quintil 3 de 5, media. Papel: atacante físico.
    Estadísticas como: Crawdaunt (la línea: Corphish → Crawdaunt). Solo de referencia: que no se parezca.
    Zona: Ajuy, Fuerteventura (niveles 13-15)
    Idea: Erizo negro de los charcos, redondo y de púas cortas; la 2.ª, grande y de púas larguísimas.
 
-Pok67. Murciélago de cueva, 1.ª forma de 3
+Pok67. Pioto, 1.ª forma de 3
    Tipo: Veneno (la línea: Veneno → Veneno/Aire → Veneno/Aire)
    Fuerza: quintil 1 de 5, de las más flojas. Papel: equilibrada.
    Estadísticas como: Zubat (la línea: Zubat → Golbat → Crobat). Solo de referencia: que no se parezca.
    Zona: Cueva de Ajuy, Fuerteventura (niveles 13-15)
-   Idea: Murciélago orejudo de cueva, de ojos grandes; la 2.ª y la 3.ª, más grandes, con alas como capas.
+   Idea: Polluelo insectívoro; la 2.ª, pitohui joven; la 3.ª, ave del paraíso que desprende veneno de las alas, con aguijones o garras como rasgo propio.
 
-Pok68. Murciélago de cueva, 2.ª forma de 3
+Pok68. Pitohui, 2.ª forma de 3
    Tipo: Veneno/Aire (la línea: Veneno → Veneno/Aire → Veneno/Aire)
    Fuerza: quintil 3 de 5, media. Papel: equilibrada.
    Estadísticas como: Golbat (la línea: Zubat → Golbat → Crobat). Solo de referencia: que no se parezca.
    Zona: Cueva de Ajuy, Fuerteventura (niveles 13-15)
-   Idea: Murciélago orejudo de cueva, de ojos grandes; la 2.ª y la 3.ª, más grandes, con alas como capas.
+   Idea: Polluelo insectívoro; la 2.ª, pitohui joven; la 3.ª, ave del paraíso que desprende veneno de las alas, con aguijones o garras como rasgo propio.
 
-Pok69. Murciélago de cueva, 3.ª forma de 3
+Pok69. Pitox, 3.ª forma de 3
    Tipo: Veneno/Aire (la línea: Veneno → Veneno/Aire → Veneno/Aire)
    Fuerza: quintil 4 de 5, fuerte. Papel: equilibrada.
    Estadísticas como: Crobat (la línea: Zubat → Golbat → Crobat). Solo de referencia: que no se parezca.
    Zona: Cueva de Ajuy, Fuerteventura (niveles 13-15)
-   Idea: Murciélago orejudo de cueva, de ojos grandes; la 2.ª y la 3.ª, más grandes, con alas como capas.
+   Idea: Polluelo insectívoro; la 2.ª, pitohui joven; la 3.ª, ave del paraíso que desprende veneno de las alas, con aguijones o garras como rasgo propio.
 
-Pok70. Escarabajo de escoria, 1.ª forma de 2
+Pok70. Geods, 1.ª forma de 2
    Tipo: Roca (la línea: Roca → Roca/Bicho)
    Fuerza: quintil 2 de 5, floja. Papel: atacante físico.
    Estadísticas como: Anorith (la línea: Anorith → Armaldo). Solo de referencia: que no se parezca.
    Zona: Cueva de Ajuy, Fuerteventura (niveles 13-15)
-   Idea: Escarabajo de escoria volcánica que rueda por la cueva; la 2.ª, erguido y con brazos de basalto.
+   Idea: Geoda con forma de fósil; la 2.ª, escarabajo atlas o hércules cristalino, con geodas.
 
-Pok71. Escarabajo de escoria, 2.ª forma de 2
+Pok71. Beetlex, 2.ª forma de 2
    Tipo: Roca/Bicho (la línea: Roca → Roca/Bicho)
    Fuerza: quintil 4 de 5, fuerte. Papel: atacante físico.
    Estadísticas como: Armaldo (la línea: Anorith → Armaldo). Solo de referencia: que no se parezca.
    Zona: Cueva de Ajuy, Fuerteventura (niveles 13-15)
-   Idea: Escarabajo de escoria volcánica que rueda por la cueva; la 2.ª, erguido y con brazos de basalto.
+   Idea: Geoda con forma de fósil; la 2.ª, escarabajo atlas o hércules cristalino, con geodas.
 
 Pok72. Escolopendra, sin evolución
    Tipo: Veneno/Bicho
@@ -294,14 +269,14 @@ Pok72. Escolopendra, sin evolución
    Zona: Cofete (opcional), Fuerteventura (niveles 17-19)
    Idea: Escolopendra: ciempiés gigante de las piedras, con colores de aviso.
 
-Pok73. Carabela, 1.ª forma de 2
+Pok73. Fisilla, 1.ª forma de 2
    Tipo: Veneno (la línea: Veneno → Veneno/Agua)
    Fuerza: quintil 2 de 5, floja. Papel: equilibrada.
    Estadísticas como: Shellos (la línea: Shellos → Gastrodon). Solo de referencia: que no se parezca.
    Zona: Sotavento, Fuerteventura (niveles 15-17)
    Idea: Carabela: medusa con una vela azul que flota en la laguna; la 2.ª, colonia grande con vela de colores.
 
-Pok74. Carabela, 2.ª forma de 2
+Pok74. Polisilla, 2.ª forma de 2
    Tipo: Veneno/Agua (la línea: Veneno → Veneno/Agua)
    Fuerza: quintil 3 de 5, media. Papel: tanque especial.
    Estadísticas como: Gastrodon (la línea: Shellos → Gastrodon). Solo de referencia: que no se parezca.
@@ -315,14 +290,14 @@ Pok75. Piedra de Tindaya, sin evolución
    Zona: Tindaya (opcional) (rara), Fuerteventura (niveles 14-16)
    Idea: Piedra de la montaña sagrada: roca clara con grabados que flota y medita.
 
-Pok76. Cardón, 1.ª forma de 2
+Pok76. Euphi, 1.ª forma de 2
    Tipo: Planta (la línea: Planta → Planta/Veneno)
    Fuerza: quintil 2 de 5, floja. Papel: atacante especial.
    Estadísticas como: Cacnea (la línea: Cacnea → Cacturne). Solo de referencia: que no se parezca.
    Zona: Cofete (opcional), Fuerteventura (niveles 17-19)
    Idea: Cardón de Jandía: brote de cardón de brazos cortos; la 2.ª, gran cardón con brazos de candelabro y savia tóxica.
 
-Pok77. Cardón, 2.ª forma de 2
+Pok77. Euphoraz, 2.ª forma de 2
    Tipo: Planta/Veneno (la línea: Planta → Planta/Veneno)
    Fuerza: quintil 3 de 5, media. Papel: atacante especial.
    Estadísticas como: Cacturne (la línea: Cacnea → Cacturne). Solo de referencia: que no se parezca.
@@ -331,75 +306,75 @@ Pok77. Cardón, 2.ª forma de 2
 
 == GRAN CANARIA ==
 
-Pok78. Tembladera, 1.ª forma de 2
+Pok78. Ampert, 1.ª forma de 2
    Tipo: Eléctrico (la línea: Eléctrico → Eléctrico/Agua)
    Fuerza: quintil 2 de 5, floja. Papel: atacante especial.
    Estadísticas como: Psyduck (la línea: Psyduck → Golduck). Solo de referencia: que no se parezca.
    Zona: La Isleta, Gran Canaria (niveles 18-20)
    Idea: Tembladera: raya eléctrica de la arena del puerto; la 2.ª, grande, con alas que chispean.
 
-Pok79. Tembladera, 2.ª forma de 2
+Pok79. Plasmon, 2.ª forma de 2
    Tipo: Eléctrico/Agua (la línea: Eléctrico → Eléctrico/Agua)
    Fuerza: quintil 4 de 5, fuerte. Papel: atacante especial.
    Estadísticas como: Golduck (la línea: Psyduck → Golduck). Solo de referencia: que no se parezca.
    Zona: La Isleta, Gran Canaria (niveles 18-20)
    Idea: Tembladera: raya eléctrica de la arena del puerto; la 2.ª, grande, con alas que chispean.
 
-Pok80. Chicharro, 1.ª forma de 2
+Pok80. Nageel, 1.ª forma de 2
    Tipo: Agua (la línea: Agua → Agua)
    Fuerza: quintil 1 de 5, de las más flojas. Papel: tanque físico.
    Estadísticas como: Magikarp (la línea: Magikarp → Gyarados). Solo de referencia: que no se parezca.
    Zona: La Isleta, Gran Canaria (niveles 18-20)
-   Idea: Chicharro: pez flaco y torpe del muelle que no sirve para nada; la 2.ª, un marrajo enorme y temible.
+   Idea: Anguila abisal; la 2.ª, un leviatán.
 
-Pok81. Chicharro, 2.ª forma de 2
+Pok81. Levarok, 2.ª forma de 2
    Tipo: Agua (la línea: Agua → Agua)
    Fuerza: quintil 4 de 5, fuerte. Papel: atacante físico.
    Estadísticas como: Gyarados (la línea: Magikarp → Gyarados). Solo de referencia: que no se parezca.
    Zona: La Isleta, Gran Canaria (niveles 18-20)
-   Idea: Chicharro: pez flaco y torpe del muelle que no sirve para nada; la 2.ª, un marrajo enorme y temible.
+   Idea: Anguila abisal; la 2.ª, un leviatán.
 
 Pok82. Chispa de cable, 1.ª forma de 2
-   Tipo: Eléctrico (la línea: Eléctrico → Eléctrico/Bicho)
+   Tipo: Eléctrico/Agua (la línea: Eléctrico/Agua → Eléctrico/Agua)
    Fuerza: quintil 2 de 5, floja. Papel: atacante especial.
    Estadísticas como: Joltik (la línea: Joltik → Galvantula). Solo de referencia: que no se parezca.
    Zona: La Isleta, Gran Canaria (niveles 18-20)
-   Idea: Chispa de cable: bichito que vive en los enchufes del puerto; la 2.ª, escarabajo con antenas de cobre que suelta descargas.
+   Idea: 
 
 Pok83. Chispa de cable, 2.ª forma de 2
-   Tipo: Eléctrico/Bicho (la línea: Eléctrico → Eléctrico/Bicho)
+   Tipo: Eléctrico/Agua (la línea: Eléctrico/Agua → Eléctrico/Agua)
    Fuerza: quintil 3 de 5, media. Papel: atacante especial.
    Estadísticas como: Galvantula (la línea: Joltik → Galvantula). Solo de referencia: que no se parezca.
    Zona: La Isleta, Gran Canaria (niveles 18-20)
-   Idea: Chispa de cable: bichito que vive en los enchufes del puerto; la 2.ª, escarabajo con antenas de cobre que suelta descargas.
+   Idea: 
 
 Pok84. Enredo, 1.ª forma de 2
-   Tipo: Veneno (la línea: Veneno → Veneno)
+   Tipo: Acero (la línea: Acero → Acero)
    Fuerza: quintil 2 de 5, floja. Papel: equilibrada.
    Estadísticas como: Trubbish (la línea: Trubbish → Garbodor). Solo de referencia: que no se parezca.
    Zona: La Isleta, Gran Canaria (niveles 18-20)
    Idea: Enredo: bola de redes de pesca viejas y plástico; la 2.ª, gran mole de redes. Sustituye a Basún, descartado.
 
 Pok85. Enredo, 2.ª forma de 2
-   Tipo: Veneno (la línea: Veneno → Veneno)
+   Tipo: Acero (la línea: Acero → Acero)
    Fuerza: quintil 3 de 5, media. Papel: tanque físico.
    Estadísticas como: Garbodor (la línea: Trubbish → Garbodor). Solo de referencia: que no se parezca.
    Zona: La Isleta, Gran Canaria (niveles 18-20)
    Idea: Enredo: bola de redes de pesca viejas y plástico; la 2.ª, gran mole de redes. Sustituye a Basún, descartado.
 
 Pok86. Farito, sin evolución
-   Tipo: Eléctrico
+   Tipo: Eléctrico/Espectral
    Fuerza: quintil 3 de 5, media. Papel: atacante especial.
    Estadísticas como: Plusle. Solo de referencia: que no se parezca.
    Zona: La Isleta (rara), Gran Canaria (niveles 18-20)
-   Idea: Farito: criatura con forma de faro pequeño que lanza destellos. Hace pareja con la boya en combates dobles.
+   Idea: Electrón, energía difusa, que parece que no ocupa espacio.
 
-Pok87. Boya, sin evolución
-   Tipo: Eléctrico/Agua
+Pok87. Galvallo, sin evolución
+   Tipo: Eléctrico/Lucha
    Fuerza: quintil 3 de 5, media. Papel: atacante especial.
    Estadísticas como: Minun. Solo de referencia: que no se parezca.
    Zona: Maspalomas (opcional) (rara), Gran Canaria (niveles 22-26)
-   Idea: Boya luminosa con cara que parpadea. Hace pareja con el farito en combates dobles.
+   Idea: Gallo de pelea.
 
 Pok88. Perdiz, 1.ª forma de 3
    Tipo: Común (la línea: Común → Común/Aire → Común/Aire)

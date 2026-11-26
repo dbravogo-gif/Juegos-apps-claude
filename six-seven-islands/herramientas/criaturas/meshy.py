@@ -5,7 +5,7 @@
 #
 # La clave no está en ningún archivo: el proxy de la sesión la añade a las peticiones a
 # api.meshy.ai (secreto de red del entorno). Gasta créditos del plan de Meshy del autor: mira el
-# saldo antes y apunta cada tarea en tareas.json, para no pagar dos veces si algo se corta.
+# saldo antes y apunta cada tarea en conceptos/criaturas/meshy-tareas.json, para no pagar dos veces si algo se corta.
 #
 # Uso:
 #   python3 herramientas/criaturas/meshy.py --saldo
@@ -25,7 +25,7 @@ import urllib.request
 
 RAIZ = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', '..'))
 CARPETA = os.path.join(RAIZ, 'conceptos', 'criaturas', 'meshy')
-TAREAS = os.path.join(CARPETA, 'tareas.json')
+TAREAS = os.path.join(RAIZ, 'conceptos', 'criaturas', 'meshy-tareas.json')
 API = 'https://api.meshy.ai/openapi/v1'
 # El proxy cambia esta cabecera por la clave de verdad.
 CABECERAS = {'Authorization': 'Bearer proxy-injected', 'Content-Type': 'application/json'}
