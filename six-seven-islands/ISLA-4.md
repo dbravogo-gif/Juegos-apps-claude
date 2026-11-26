@@ -4,8 +4,8 @@
 - el gimnasio, de Agua, en el Puerto de la Cruz, con el líder a nivel 36-38
   (`herramientas/criaturas/plan.py`);
 - la Liga, al final del juego, dentro del Teide;
-- la historia de la isla (`HISTORIA.md`): la puerta del Sello cerrada en Las Cañadas, la silueta
-  junto a ella y el tercer amigo.
+- la historia de la isla (`HISTORIA.md`): la puerta del Sello cerrada en Las Cañadas y la silueta
+  junto a ella. Sin tercer amigo: como mucho 2 en todo el juego (autor, 2026-11-26).
 
 La geografía es de memoria (confianza media-alta) y está simplificada: paisajes y nombres de
 lugares reales, nada de obras.
@@ -13,48 +13,66 @@ lugares reales, nada de obras.
 ## La idea
 
 Tenerife es la isla del Teide. Se ve desde todas partes y es a donde quiere llegar todo el mundo.
-El recorrido va del norte verde (laurisilva, valles, el puerto) al sur seco, rodeando el volcán, y
-termina subiendo a Las Cañadas, al pie del Teide.
+El recorrido empieza por el norte de Santa Cruz (La Laguna y la laurisilva), baja al sur en la
+guagua 111 y rodea el volcán por el oeste y el norte hasta subir a Las Cañadas.
 
-## El recorrido
+## El recorrido (rehecho con el autor, 2026-11-26)
 
-El barco de Agaete llega a **Santa Cruz**, al noreste, como el de verdad. Son 9 zonas en el camino y
-2 opcionales.
+El barco de Agaete llega a **Santa Cruz**, al noreste, como el de verdad.
 
-1. **Santa Cruz** (llegada): ciudad con puerto, refugio y tienda. Tiene la segunda ciudad grande,
-   así que conviene que no repita Las Palmas: rambla con árboles y edificios modernos bajos.
-2. **Anaga** (opcional): montes de laurisilva con niebla y caminos estrechos. Tiene las salvajes
-   más raras del norte.
-3. **La Laguna:** la ciudad antigua de calles rectas y casas de colores, con universidad. Aquí
-   conoces al **tercer amigo**, que estudia allí y lleva la última inicial que queda.
-4. **El valle de La Orotava:** bajada entre plataneras y casas con balcones de madera. El Teide,
-   al fondo.
-5. **Puerto de la Cruz:** el pueblo de costa, con las piscinas naturales de agua de mar y el
-   **gimnasio de Agua**.
-6. **La Cueva del Viento:** tubos de lava larguísimos, oscuros y húmedos, con interior de cueva.
-   Lo más hondo (una leyenda) queda para más adelante.
-7. **Teno y Masca:** el barranco más profundo de la isla. Se baja a pie hasta el mar.
+**Norte, ida y vuelta desde Santa Cruz:**
+1. **Santa Cruz** (llegada): ciudad con puerto, refugio y tienda. Rambla con árboles y edificios
+   modernos bajos, para no repetir Las Palmas.
+2. **La Laguna:** la ciudad antigua de calles rectas y casas de colores, con universidad. Refugio
+   y tienda.
+3. **Anaga:** montes de laurisilva con niebla y caminos estrechos, con las salvajes más raras del
+   norte. Ya no es opcional: está en el camino. Desde aquí se vuelve a Santa Cruz.
+
+**Sur, en la guagua 111.** Se coge en Santa Cruz y baja por la autopista parando en cada zona. Al
+terminar una, la siguiente guagua te deja en la próxima parada:
+
+4. **Radazul:** el puerto deportivo, con **zona de buceo**: unas casillas de agua donde se bucea y
+   salen salvajes de Agua que no hay en otro sitio.
+5. **Abades:** el sanatorio abandonado y su iglesia, entre cardones, junto a la playa.
+   - Se construyó para enfermos de lepra y nunca llegó a usarse (de memoria, confianza
+     media-alta). Alrededor hay leyendas, así que es la zona de misterio de la isla: criaturas
+     Espectrales y entrenadores con capirote.
+   - Se trata con respeto: leyenda y misterio, nada que se burle de la enfermedad ni de quien la
+     sufrió.
+6. **Buzanada:** el pueblo del interior de Arona, pequeño y de paso. Refugio.
+
+**El resto, rodeando el Teide:**
+
+7. **Los Cristianos:** el puerto del sur, con refugio y tienda. El barco a La Gomera está, pero
+   no sale hasta terminar la isla.
 8. **Los Gigantes** (opcional): acantilados enormes sobre el mar, con una playa a sus pies.
-9. **Las Cañadas:** la subida al pie del Teide, un desierto de lava y piedras de colores. Aquí está
-   la **puerta del Sello**, sellada. El líder te explica que nadie entra desde hace años porque
-   falta la pieza de El Hierro, y la silueta vuelve a aparecer junto a la puerta.
-10. **Los Cristianos:** el puerto del sur, con el barco a La Gomera.
+9. **Teno y Masca:** el barranco más profundo de la isla, a pie hasta el mar.
+10. **La Cueva del Viento:** tubos de lava larguísimos, oscuros y húmedos. Lo más hondo, una
+    leyenda, queda para más adelante.
+11. **Puerto de la Cruz:** el pueblo de costa, con las piscinas naturales y el **gimnasio de
+    Agua**. Refugio y tienda antes del gimnasio.
+12. **El valle de La Orotava:** plataneras y casas con balcones de madera, con el Teide al fondo.
+13. **Las Cañadas:** la subida al pie del Teide, un desierto de lava y piedras de colores, con
+    refugio cerca.
+    - Allí está la **puerta del Sello**, sellada. El líder te explica que nadie entra desde hace
+      años porque falta la pieza de El Hierro.
+    - La silueta vuelve a aparecer junto a la puerta.
+    - Al terminar, se baja a Los Cristianos y sale el barco a La Gomera.
 
-## El gimnasio de Agua: la mecánica (la elige el autor)
+**Refugios:** en todas las ciudades (autor), y además antes del gimnasio y de las zonas largas,
+como pide la revisión.
 
-Tiene que ser distinta de las tres que hay:
-- palanca y compuertas (Roca);
-- corrientes que empujan (Aire);
-- laberinto a oscuras (Eléctrico).
+## El gimnasio de Agua: la regata (autor, 2026-11-26)
 
-Las opciones:
-- **A, recomendada: las mareas.** El gimnasio son piscinas naturales. La marea sube y baja cada
-  pocos pasos: unas casillas se inundan y otras quedan secas. Hay que planear el camino con la
-  marea, esperando en las rocas altas. Es muy de Puerto de la Cruz y no se parece a ninguna.
-- **B: bajo el agua, con aire.** Se bucea entre algas. Hay pocos pasos de aire y hay que ir de una
-  bolsa de aire a otra; si se acaba, vuelves a la última bolsa.
-- **C: la regata.** Los aprendices te retan a cruzar la piscina en barca antes que ellos, y si
-  ganas no hace falta luchar. Al final, el líder lucha.
+Es distinto de los tres que hay: palanca y compuertas (Roca), corrientes que empujan (Aire) y
+laberinto a oscuras (Eléctrico).
+
+- El gimnasio son piscinas naturales. Cada tramo se cruza en una regata de barquillos contra un
+  aprendiz.
+- **No ahorra combates** (autor): si ganas la regata, llegas a su roca y lucháis; si la pierdes,
+  vuelves al principio del tramo.
+- Al final, el líder.
+- El manejo de la regata (viento, ritmo o rumbo) se propone al construir la fase del gimnasio.
 
 ## Niveles (propuesta)
 
@@ -68,9 +86,12 @@ Las opciones:
 
 1. **El Teide:** un volcán enorme que se vea desde todas las zonas, como fondo de la isla.
 2. **Plataneras y casas con balcones de madera:** ya hay piezas (`b` y las casas de balcones).
-3. **Piscinas naturales** para el gimnasio, si es la opción A.
-4. **Las Cañadas:** lava con piedras de colores y la puerta del Sello.
-5. **Fondos de combate:** cuatro nuevos.
+3. **Piscinas naturales** para el gimnasio y la regata.
+4. **La guagua 111:** la parada, la guagua y el viaje de una parada a la siguiente.
+5. **Buceo en Radazul:** casillas de agua donde se bucea, con sus salvajes.
+6. **Abades:** el sanatorio y su iglesia, y entrenadores con capirote.
+7. **Las Cañadas:** lava con piedras de colores y la puerta del Sello.
+8. **Fondos de combate:** cuatro nuevos, más quizá uno de Abades.
    - laurisilva (Anaga);
    - valle (La Orotava y La Laguna);
    - costa (Puerto de la Cruz, Los Gigantes y Los Cristianos);
@@ -82,13 +103,12 @@ Las opciones:
 
 | Fase | Qué | Coste |
 | --- | --- | --- |
-| 1 | Santa Cruz y La Laguna, con el barco desde Agaete y el tercer amigo | alto |
-| 2 | La Orotava y Puerto de la Cruz, con el gimnasio de Agua | alto |
-| 3 | La Cueva del Viento, Teno y Masca, Las Cañadas (la puerta del Sello) y Los Cristianos | alto |
-| 4 | Anaga y Los Gigantes, pulido y revisión del probador | medio |
+| 1 | Santa Cruz, La Laguna y Anaga, con el barco desde Agaete | alto |
+| 2 | La guagua 111: Radazul (con buceo), Abades y Buzanada | alto |
+| 3 | Los Cristianos, Los Gigantes, Teno y Masca, y la Cueva del Viento | alto |
+| 4 | Puerto de la Cruz con el gimnasio de Agua, La Orotava y Las Cañadas | alto |
+| 5 | Pulido y revisión del probador | medio |
 
 ## Lo que tiene que decidir el autor
 
-1. Si vale el recorrido.
-2. La mecánica del gimnasio de Agua: A, B, C u otra.
-3. Si el tercer amigo aparece en La Laguna.
+1. Si vale este recorrido. Hasta entonces no se construye nada.
