@@ -248,6 +248,8 @@ nivel: de nota a regla, y de regla a prueba o hook.
   - Volvió a pasar el 2026-11-26 (PR #161). Relanzar el trabajo fallido no sirvió: el primer
     intento sí había subido su paquete y el segundo encontró dos. Lo que funciona es una
     publicación nueva lanzada a mano; está en la skill `cierre`.
+  - Siguió pasando (cuatro veces en dos días, también a mano). Barrera, con el sí del autor: el flujo
+    espera 20 s antes de desplegar y, si falla, reintenta una vez al minuto.
 - **2026-11-25 · Un efecto de sonido que no se oía en el portátil del autor** (Six-seven islands,
   el choque contra la pared).
   - Era una senoidal de 150 a 70 Hz: en el juego se disparaba bien, pero los altavoces pequeños
