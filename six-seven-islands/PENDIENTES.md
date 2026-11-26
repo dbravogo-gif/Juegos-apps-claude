@@ -133,7 +133,7 @@ propuesta de Claude y qué frena mientras siga abierto.
 Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
 
 - **Contestado el 2026-11-26:** las decisiones D1 a D8 y T1 a T3 (`RESUMEN-ISLAS.md`). Queda D9
-  (lo que parece de prototipo) y aprobar el recorrido nuevo de Tenerife (`ISLA-4.md`).
+  (lo que parece de prototipo).
 - **Pasar la escena de recibir la inicial** (D8): la abrazas o le acercas la mano para que la
   huela.
 - **Probar lo de la revisión** (2026-11-25, `REVISION.md`), puntuando de 1 a 5:
@@ -172,9 +172,9 @@ Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
 - **Amigos:** sus fotos y GLB de Meshy para las personas jugables, y sus 2 o 3 poses para los
   retratos de diálogo.
 - **Dani con `Idle`** en el GLB (opcional).
-- **Tenerife (`ISLA-4.md`, rehecha el 2026-11-26 con sus respuestas):** aprobar el recorrido nuevo
-  (norte desde Santa Cruz, la guagua 111 al sur y la vuelta al Teide). Gimnasio: la regata, sin
-  ahorrar combates. Sin tercer amigo.
+- **Tenerife (`ISLA-4.md`):** recorrido decidido por el autor el 2026-11-26, en dos ramas desde
+  Santa Cruz (norte y, en la guagua 111, el sur hasta el Teide). Falta que dé la salida para
+  construirla.
 - **Fondos de combate** (2026-11-22): los 8 de la lista «para pintar ya» de
   `src/assets/fondos/LEEME.md` (Fuerteventura y Gran Canaria, uno por paisaje), subidos con su
   nombre a esa carpeta.
