@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.despliegue.outputs.page_url }}
+      url: ${{ steps.despliegue.outputs.page_url || steps.despliegue2.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -78,5 +78,17 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: web
+      # A veces GitHub aún no tiene registrado el paquete recién subido y el despliegue falla con
+      # «No artifacts named github-pages» (cuatro veces el 2026-11-25 y 26, con las pruebas en verde).
+      # Se espera un poco antes y, si falla, se reintenta una vez más tarde (autor, 2026-11-26).
+      - name: Esperar a que GitHub registre el paquete
+        run: sleep 20
       - id: despliegue
+        continue-on-error: true
+        uses: actions/deploy-pages@v4
+      - name: Esperar antes de reintentar
+        if: steps.despliegue.outcome == 'failure'
+        run: sleep 60
+      - id: despliegue2
+        if: steps.despliegue.outcome == 'failure'
         uses: actions/deploy-pages@v4
