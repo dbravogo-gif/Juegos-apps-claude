@@ -125,6 +125,11 @@ export class Partida implements Subsistema {
   private hablaLuego: string | null = null;
   /** Un entrenador acaba de ver al jugador: cuando pase la exclamación, habla. */
   private alerta: { zona: string; personaje: string; pasos: number } | null = null;
+  /**
+   * Si ya se ha mirado, al cargar, si te ve alguien con escena (no un entrenador). Al bajar del barco
+   * no se da ningún paso, y Chano, en el muelle de Las Palmas, se podía perder (2026-11-26).
+   */
+  private vistaAlCargar = false;
   private pasosSinGuardar = 0;
   /** Z o Esc pulsado mientras se anda (o con una flecha apretada): el menú se abre al acabar el paso. */
   private menuPendiente = false;
@@ -486,6 +491,15 @@ export class Partida implements Subsistema {
       this.entrada.consumir('confirmar');
     }
     if (++this.pasosSinGuardar >= PASOS_GUARDADO) this.guardar();
+    if (!this.vistaAlCargar && this.estado.paso === 0) {
+      this.vistaAlCargar = true;
+      const quien = entrenadorQueVe(this.activo(), this.estado.x, this.estado.y, this.vencidos, this.estado.condiciones);
+      const conEscena = quien && this.activo().zonas.get(quien.zona)?.personajes.find((p) => p.id === quien.personaje)?.escena;
+      if (quien && conEscena) {
+        this.alerta = { ...quien, pasos: PASOS_ALERTA };
+        this.ctx.eventos.emit('entrenador:visto', { id: quien.personaje });
+      }
+    }
     if (this.alerta) {
       // Quieto mientras sale la exclamación; luego, el entrenador habla y reta.
       this.entrada.olvidar();

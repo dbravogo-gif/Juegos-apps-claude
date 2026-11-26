@@ -130,7 +130,8 @@ Dos ramas desde Santa Cruz, una detrás de otra. El detalle está en `ISLA-4.md`
   - Hace falta un **repartir experiencia** como el de los primeros juegos del género, desde el
     principio de Gran Canaria. Aprobado el 2026-11-26: un objeto clave que te dan al llegar a
     Gran Canaria y que se enciende y se apaga en la Mochila. Encendido, las que luchan se llevan la
-    mitad de la experiencia y las demás se reparten la otra mitad.
+    mitad de la experiencia y las demás se reparten la otra mitad. **Hecho:** te lo da Chano en el
+    muelle de Las Palmas, nada más bajar del barco.
   - Las Dunas pueden ser largas.
   - **Todas las ciudades tienen refugio.** Comprobado: lo tienen las diez ciudades. En Playa
     Blanca cura tu madre. Los caseríos (Ajuy, Cofete, La Isleta y Bandama) no tienen.

@@ -1,0 +1,27 @@
+{
+ "50": {
+  "id": "01a217ac-04fa-778d-bdb5-4c0a45af9473",
+  "base": "Pok50. Lisa de duna",
+  "modo": "normal"
+ },
+ "51": {
+  "id": "01a217ac-0d4f-7653-a8ff-f066644df189",
+  "base": "Pok51. Lisa de duna",
+  "modo": "normal"
+ },
+ "52": {
+  "id": "01a217ac-154e-76e5-b019-0652eeba63c4",
+  "base": "Pok52. Lisa de duna",
+  "modo": "dificil"
+ },
+ "53": {
+  "id": "01a217ac-1d1d-711e-a0e3-d4d7b56039d0",
+  "base": "Pok53. Conejo de jable",
+  "modo": "normal"
+ },
+ "54": {
+  "id": "01a217ac-22c1-7041-9d47-b14d2dc66125",
+  "base": "Pok54. Conejo de jable",
+  "modo": "dificil"
+ }
+}

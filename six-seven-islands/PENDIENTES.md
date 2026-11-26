@@ -143,11 +143,13 @@ Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
   - Puerto del Rosario y Morro Jable, ahora con jardines y esculturas;
   - capturar una salvaje (Mochila → Cubos): ahora se ve el cubo volar, sacudirse y cerrarse;
   - en la portada, «Partida nueva» con una guardada: ahora pregunta antes de borrar.
-- **Clave de la API de Meshy** (2026-11-26), para que Claude pase a 3D las imágenes que envíe el
-  autor (Pok50-54 ya están en `conceptos/criaturas/meshy`): crearla en Meshy (exige plan de pago)
-  y guardarla en la configuración del entorno de Claude Code, como secreto de red de
-  `api.meshy.ai`. Claude mira el saldo antes de gastar: según la documentación, la API usa créditos
-  prepagados que pueden ser aparte de los del plan.
+- **Imágenes de criaturas** (2026-11-26): el autor las hace (ChatGPT o Gemini) y las envía o las
+  sube como «PokN. Nombre»; Claude las pasa a 3D con la API de Meshy (créditos de su plan) y las
+  mete en el juego (`prompts-meshy.md`, «El flujo con la API»). Hechas Pok50 a Pok54. La clave de
+  Meshy ya está guardada en el entorno; la escrita en el chat conviene borrarla en Meshy y crear
+  otra, que se guarda igual.
+- **Puntuar de 1 a 5** las criaturas nuevas (la lisa de duna y el conejo de jable) en Las Dunas,
+  y Chano con el repartidor al llegar a Las Palmas.
 - **Meshy y fondos** (decidido el 2026-11-25): él dice cuándo crear criaturas y aprueba antes las
   imágenes de concepto (las hace gratis con ChatGPT o Gemini); los fondos los pinta él; la música
   la sube él.

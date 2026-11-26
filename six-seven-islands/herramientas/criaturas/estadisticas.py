@@ -39,4 +39,10 @@ BASE = {
     'Walrein': (110, 80, 90, 95, 90, 65),
     'Cottonee': (40, 27, 60, 37, 50, 66),
     'Whimsicott': (60, 67, 85, 77, 75, 116),
+    # 2026-11-26 (de memoria, confianza alta): la lisa de duna y el conejo de jable.
+    'Trapinch': (45, 100, 45, 45, 45, 10),
+    'Vibrava': (50, 70, 50, 50, 50, 70),
+    'Flygon': (80, 100, 80, 80, 80, 100),
+    'Bidoof': (59, 45, 40, 35, 40, 31),
+    'Bibarel': (79, 85, 60, 55, 60, 71),
 }

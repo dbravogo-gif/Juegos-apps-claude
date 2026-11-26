@@ -72,6 +72,16 @@ export const ESPECIES_CRIATURAS: readonly Especie[] = [
   { id: 'c044-1', nombre: 'Aerund', tipos: ['aire'], base: base(40, 27, 60, 37, 50, 66), expBase: 55, ratioCaptura: 200, aprende: [{ nivel: 1, movimiento: 'topetazo' }, { nivel: 1, movimiento: 'mirada-fija' }, { nivel: 5, movimiento: 'rafaga' }, { nivel: 10, movimiento: 'arenazo' }], evoluciona: [{ a: 'c044-2', nivel: 24 }], altura: 0.4, descripcion: '' },
   // Pok49: Whimsicott (Q4, TF).
   { id: 'c044-2', nombre: 'Tailsan', tipos: ['aire', 'tierra'], base: base(60, 67, 85, 77, 75, 116), expBase: 170, ratioCaptura: 60, aprende: [{ nivel: 1, movimiento: 'rafaga' }, { nivel: 1, movimiento: 'arenazo' }, { nivel: 1, movimiento: 'picado' }, { nivel: 1, movimiento: 'pisoton' }], altura: 1.2, descripcion: '' },
+  // Pok50: Trapinch (Q1, AF).
+  { id: 'c009-1', nombre: 'Lisa de duna', tipos: ['tierra'], base: base(45, 100, 45, 45, 45, 10), expBase: 55, ratioCaptura: 200, aprende: [{ nivel: 1, movimiento: 'topetazo' }, { nivel: 1, movimiento: 'mirada-fija' }, { nivel: 7, movimiento: 'arenazo' }, { nivel: 12, movimiento: 'pisoton' }], evoluciona: [{ a: 'c009-2', nivel: 20 }], altura: 0.5, descripcion: '' },
+  // Pok51: Vibrava (Q2, EN).
+  { id: 'c009-2', nombre: 'Lisa de duna', tipos: ['tierra'], base: base(50, 70, 50, 50, 50, 70), expBase: 75, ratioCaptura: 150, aprende: [{ nivel: 1, movimiento: 'arenazo' }, { nivel: 1, movimiento: 'pisoton' }, { nivel: 1, movimiento: 'topetazo' }, { nivel: 1, movimiento: 'mirada-fija' }], evoluciona: [{ a: 'c009-3', nivel: 32 }], altura: 1.1, descripcion: '' },
+  // Pok52: Flygon (Q4, EN).
+  { id: 'c009-3', nombre: 'Lisa de duna', tipos: ['aire'], base: base(80, 100, 80, 80, 80, 100), expBase: 170, ratioCaptura: 60, aprende: [{ nivel: 1, movimiento: 'rafaga' }, { nivel: 1, movimiento: 'picado' }, { nivel: 1, movimiento: 'arenazo' }, { nivel: 1, movimiento: 'pisoton' }], altura: 2.0, descripcion: '' },
+  // Pok53: Bidoof (Q1, EN).
+  { id: 'c038-1', nombre: 'Conejo de jable', tipos: ['comun'], base: base(59, 45, 40, 35, 40, 31), expBase: 55, ratioCaptura: 200, aprende: [{ nivel: 1, movimiento: 'topetazo' }, { nivel: 1, movimiento: 'mirada-fija' }, { nivel: 6, movimiento: 'barrito' }], evoluciona: [{ a: 'c038-2', nivel: 15 }], altura: 0.4, descripcion: '' },
+  // Pok54: Bibarel (Q3, AF).
+  { id: 'c038-2', nombre: 'Conejo de jable', tipos: ['comun', 'oscuridad'], base: base(79, 85, 60, 55, 60, 71), expBase: 140, ratioCaptura: 90, aprende: [{ nivel: 1, movimiento: 'topetazo' }, { nivel: 1, movimiento: 'barrito' }, { nivel: 1, movimiento: 'mirada-fija' }, { nivel: 1, movimiento: 'caparazon' }], altura: 0.9, descripcion: '' },
   // Pok131: Cranidos (Q2, AF).
   { id: 'c062-1', nombre: 'Ishiro', tipos: ['roca'], base: base(67, 125, 40, 30, 30, 58), expBase: 75, ratioCaptura: 150, aprende: [{ nivel: 1, movimiento: 'topetazo' }, { nivel: 1, movimiento: 'mirada-fija' }, { nivel: 7, movimiento: 'rodada-de-piedra' }], evoluciona: [{ a: 'c062-2', nivel: 30 }], altura: 0.9, descripcion: '' },
   // Pok132: Rampardos (Q4, AF).
@@ -109,6 +119,11 @@ export const MODELO_CRIATURA: Readonly<Record<string, string>> = {
   'c018-3': 'criaturas/018-3.glb',
   'c044-1': 'criaturas/044-1.glb',
   'c044-2': 'criaturas/044-2.glb',
+  'c009-1': 'criaturas/009-1.glb',
+  'c009-2': 'criaturas/009-2.glb',
+  'c009-3': 'criaturas/009-3.glb',
+  'c038-1': 'criaturas/038-1.glb',
+  'c038-2': 'criaturas/038-2.glb',
   'c062-1': 'criaturas/062-1.glb',
   'c062-2': 'criaturas/062-2.glb',
 };
