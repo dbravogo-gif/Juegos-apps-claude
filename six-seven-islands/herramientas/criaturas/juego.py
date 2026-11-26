@@ -30,7 +30,7 @@ POR_QUINTIL = {'Q1': (55, 200), 'Q2': (75, 150), 'Q3': (140, 90), 'Q4': (170, 60
 
 # Nivel al que evoluciona cada forma a la siguiente, por línea (número de la lista de referencia).
 EVOLUCION = {31: [20], 32: [22], 37: [30], 7: [14, 32], 62: [30], 13: [18, 36], 43: [20], 12: [16, 34], 34: [24], 5: [22, 30], 35: [25], 18: [32, 44], 44: [24],
-             9: [20, 32], 38: [15]}
+             9: [20, 32], 38: [15], 29: [14], 54: [22], 11: [16, 30]}
 
 # Ataques por forma: (nivel, ataque), con los que ya existen en combate-prueba.ts. La 1.ª forma
 # empieza solo con ataques comunes y aprende los de su tipo a los pocos niveles; cuatro como mucho,
@@ -77,6 +77,14 @@ ATAQUES = {
         [(1, 'rafaga'), (1, 'picado'), (1, 'arenazo'), (1, 'pisoton')]],
     38: [[(1, 'topetazo'), (1, 'mirada-fija'), (6, 'barrito')],
          [(1, 'topetazo'), (1, 'barrito'), (1, 'mirada-fija'), (1, 'caparazon')]],
+    # 2026-11-26: el cigarrón, el dromedario y el presa canario (Meshy, desde las imágenes del autor).
+    29: [[(1, 'topetazo'), (1, 'mirada-fija'), (7, 'chirrido-de-elitros')],
+         [(1, 'chirrido-de-elitros'), (1, 'tenaza-de-quitina'), (1, 'topetazo'), (1, 'mirada-fija')]],
+    54: [[(1, 'topetazo'), (1, 'mirada-fija'), (8, 'pisoton')],
+         [(1, 'topetazo'), (1, 'pisoton'), (1, 'barrito'), (1, 'mirada-fija')]],
+    11: [[(1, 'topetazo'), (1, 'mirada-fija'), (6, 'barrito')],
+         [(1, 'topetazo'), (1, 'barrito'), (1, 'mirada-fija'), (1, 'pisoton')],
+         [(1, 'topetazo'), (1, 'barrito'), (1, 'pisoton'), (1, 'mirada-fija')]],
 }
 
 # Nombres provisionales de las formas que aún no tienen el suyo (el autor los pone).

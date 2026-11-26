@@ -45,4 +45,12 @@ BASE = {
     'Flygon': (80, 100, 80, 80, 80, 100),
     'Bidoof': (59, 45, 40, 35, 40, 31),
     'Bibarel': (79, 85, 60, 55, 60, 71),
+    # 2026-11-26 (de memoria, confianza alta): el cigarrón, el dromedario y el presa canario.
+    'Kricketot': (37, 25, 41, 25, 41, 25),
+    'Kricketune': (77, 85, 51, 55, 51, 65),
+    'Deerling': (60, 60, 50, 40, 50, 75),
+    'Sawsbuck': (80, 100, 70, 60, 70, 95),
+    'Lillipup': (45, 60, 45, 25, 45, 55),
+    'Herdier': (65, 80, 65, 35, 65, 60),
+    'Stoutland': (85, 110, 90, 45, 90, 80),
 }
