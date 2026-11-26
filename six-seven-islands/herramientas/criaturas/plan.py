@@ -19,8 +19,8 @@ RAIZ = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', '..'))
 # Objetivos por tipo principal de las 188 de la lista (CRIATURAS.md, «Por tipo principal»).
 OBJETIVO = {
     'Común': 16, 'Agua': 21, 'Tierra': 10, 'Planta': 17, 'Aire': 12, 'Eléctrico': 11, 'Hielo': 8,
-    'Infernal': 16, 'Lucha': 9, 'Mental': 8, 'Oscuridad': 8, 'Espectral': 7, 'Acero': 6, 'Roca': 10,
-    'Ancestral': 4, 'Bicho': 13, 'Veneno': 12,
+    'Infernal': 16, 'Lucha': 9, 'Mental': 8, 'Oscuridad': 8, 'Espectral': 7, 'Acero': 8, 'Roca': 10,
+    'Ancestral': 4, 'Bicho': 13, 'Veneno': 10,
 }
 
 # Coste en Meshy por criatura (prompts-meshy.md, comprobado el 2026-11-07): Image to 3D con Smart
@@ -162,42 +162,45 @@ ESPECIES = [
      'Lisa de duna: lagartija que nada bajo la arena; la 2.ª, con cresta de púas; la 3.ª, con velas que planean sobre las dunas.'),
     (38, None, ['Común', 'Común/Oscuridad'], 'fv-dunas', ['fv-betancuria', 'gc-bandama', 'tf-laguna', 'tf-orotava'],
      'Conejo de jable, bajito, orejudo y enfadado; la 2.ª, conejo salvaje y rabioso, de garras largas.'),
-    (29, None, ['Bicho', 'Bicho'], 'fv-dunas*', ['fv-betancuria', 'fv-ajuy'],
+    (29, 'Chestil → Winstal', ['Bicho', 'Bicho'], 'fv-dunas*', ['fv-betancuria', 'fv-ajuy'],
      'Cigarrón: langosta que llega con el viento de África; la 2.ª, grande, hace sonar las alas.'),
-    (54, None, ['Común', 'Común'], 'fv-betancuria', ['fv-tindaya'],
+    (54, 'Marach → Camwee', ['Común', 'Común'], 'fv-betancuria', ['fv-tindaya'],
      'Dromedario majorero: cría torpe de patas largas; la 2.ª, dromedario adulto con alforjas.'),
-    (11, None, ['Común', 'Común', 'Común'], 'fv-betancuria', ['fv-ajuy', 'fv-tindaya', 'eh-dehesa'],
+    (11, 'Trebar → Bardin → Barduno', ['Común', 'Común', 'Común'], 'fv-betancuria', ['fv-ajuy', 'fv-tindaya', 'eh-dehesa'],
      'Perro bardino: cachorro atigrado; la 2.ª, perro pastor; la 3.ª, gran perro de ganado de melena gruesa.'),
-    (4, None, ['Aire', 'Aire', 'Aire'], 'fv-betancuria', ['fv-tindaya', 'tf-teno', 'eh-dehesa'],
+    (4, 'Cernícalo → ? → ?', ['Aire', 'Aire', 'Aire'], 'fv-betancuria', ['fv-tindaya', 'tf-teno', 'eh-dehesa'],
      'Guirre: polluelo blanco; la 2.ª, joven de plumas pardas; la 3.ª, gran guirre de cara amarilla. Sustituye al guirre provisional del gimnasio de Aire.'),
-    (51, None, ['Agua', 'Agua/Oscuridad'], 'fv-ajuy', ['fv-sotavento', 'fv-cofete', 'gc-agaete', 'tf-puerto', 'eh-orchilla'],
+    (51, 'Seacumber → Seabrune', ['Agua', 'Agua/Oscuridad'], 'fv-ajuy', ['fv-sotavento', 'fv-cofete', 'gc-agaete', 'tf-puerto', 'eh-orchilla'],
      'Erizo negro de los charcos, redondo y de púas cortas; la 2.ª, grande y de púas larguísimas.'),
-    (17, None, ['Veneno', 'Veneno/Aire', 'Veneno/Aire'], 'fv-cueva', ['gc-guayadeque', 'tf-cueva'],
-     'Murciélago orejudo de cueva, de ojos grandes; la 2.ª y la 3.ª, más grandes, con alas como capas.'),
-    (61, None, ['Roca', 'Roca/Bicho'], 'fv-cueva', [],
-     'Escarabajo de escoria volcánica que rueda por la cueva; la 2.ª, erguido y con brazos de basalto.'),
+    # Excel del autor (2026-11-26): de murciélago a ave venenosa.
+    (17, 'Pioto → Pitohui → Pitox', ['Veneno', 'Veneno/Aire', 'Veneno/Aire'], 'fv-cueva', ['gc-guayadeque', 'tf-cueva'],
+     'Polluelo insectívoro; la 2.ª, pitohui joven; la 3.ª, ave del paraíso que desprende veneno de las alas, con aguijones o garras como rasgo propio.'),
+    (61, 'Geods → Beetlex', ['Roca', 'Roca/Bicho'], 'fv-cueva', [],
+     'Geoda con forma de fósil; la 2.ª, escarabajo atlas o hércules cristalino, con geodas.'),
     (79, None, ['Veneno/Bicho'], 'fv-cofete', ['fv-cueva*'],
      'Escolopendra: ciempiés gigante de las piedras, con colores de aviso.'),
-    (52, None, ['Veneno', 'Veneno/Agua'], 'fv-sotavento', ['gc-maspalomas'],
+    (52, 'Fisilla → Polisilla', ['Veneno', 'Veneno/Agua'], 'fv-sotavento', ['gc-maspalomas'],
      'Carabela: medusa con una vela azul que flota en la laguna; la 2.ª, colonia grande con vela de colores.'),
     (82, None, ['Roca/Mental'], 'fv-tindaya*', [],
      'Piedra de la montaña sagrada: roca clara con grabados que flota y medita.'),
-    (50, None, ['Planta', 'Planta/Veneno'], 'fv-cofete', [],
+    (50, 'Euphi → Euphoraz', ['Planta', 'Planta/Veneno'], 'fv-cofete', [],
      'Cardón de Jandía: brote de cardón de brazos cortos; la 2.ª, gran cardón con brazos de candelabro y savia tóxica.'),
 
     # Gran Canaria
-    (67, None, ['Eléctrico', 'Eléctrico/Agua'], 'gc-isleta', ['gc-agaete', 'tf-puerto'],
+    (67, 'Ampert → Plasmon', ['Eléctrico', 'Eléctrico/Agua'], 'gc-isleta', ['gc-agaete', 'tf-puerto'],
      'Tembladera: raya eléctrica de la arena del puerto; la 2.ª, grande, con alas que chispean.'),
-    (41, None, ['Agua', 'Agua'], 'gc-isleta', ['gc-agaete'],
-     'Chicharro: pez flaco y torpe del muelle que no sirve para nada; la 2.ª, un marrajo enorme y temible.'),
-    (57, None, ['Eléctrico', 'Eléctrico/Bicho'], 'gc-isleta', [],
-     'Chispa de cable: bichito que vive en los enchufes del puerto; la 2.ª, escarabajo con antenas de cobre que suelta descargas.'),
-    (56, None, ['Veneno', 'Veneno'], 'gc-isleta', [],
+    (41, 'Nageel → Levarok', ['Agua', 'Agua'], 'gc-isleta', ['gc-agaete'],
+     'Anguila abisal; la 2.ª, un leviatán.'),
+    # Excel del autor (2026-11-26): Eléctrico/Agua las dos formas; quitó la idea anterior.
+    (57, None, ['Eléctrico/Agua', 'Eléctrico/Agua'], 'gc-isleta', [],
+     ''),
+    (56, None, ['Acero', 'Acero'], 'gc-isleta', [],
      'Enredo: bola de redes de pesca viejas y plástico; la 2.ª, gran mole de redes. Sustituye a Basún, descartado.'),
-    (80, None, ['Eléctrico'], 'gc-isleta*', [],
-     'Farito: criatura con forma de faro pequeño que lanza destellos. Hace pareja con la boya en combates dobles.'),
-    (81, None, ['Eléctrico/Agua'], 'gc-maspalomas*', [],
-     'Boya luminosa con cara que parpadea. Hace pareja con el farito en combates dobles.'),
+    # Excel del autor (2026-11-26): «Fantasma» es Espectral en el juego. Las dos, algo más fuertes (NOTA_REF).
+    (80, None, ['Eléctrico/Espectral'], 'gc-isleta*', [],
+     'Electrón, energía difusa, que parece que no ocupa espacio.'),
+    (81, 'Galvallo', ['Eléctrico/Lucha'], 'gc-maspalomas*', [],
+     'Gallo de pelea.'),
     (3, None, ['Común', 'Común/Aire', 'Común/Aire'], 'gc-cumbres', ['gc-bandama', 'gc-nublo', 'tf-orotava', 'lp-garafia'],
      'Perdiz moruna: polluelo; la 2.ª, perdiz de collar; la 3.ª, gran perdiz de cresta roja.'),
     (39, None, ['Planta', 'Planta'], 'gc-cumbres', ['gc-bandama', 'gc-tejeda'],
@@ -335,17 +338,25 @@ APODO = {
 
 
 def nombre_especie(n, nombre):
-    return nombre or f'«{APODO[n]}»'
+    # Con nombres a medias («Cernícalo → ? → ?»), la línea sigue con su apodo.
+    return nombre if nombre and '?' not in nombre else f'«{APODO[n]}»'
 
 
 def nombre_forma(nombre, i, total):
-    """El nombre de la forma i si la línea los tiene todos («Cronti → Chicront → Krantacor»)."""
+    """
+    El nombre de la forma i si la línea los tiene todos («Cronti → Chicront → Krantacor»). Un «?» deja
+    esa forma con su apodo («Cernícalo → ? → ?»: el autor solo ha nombrado la 1.ª).
+    """
     partes = (nombre or '').split(' → ')
-    return partes[i] if len(partes) == total else None
+    return partes[i] if len(partes) == total and partes[i] != '?' else None
 
 
 def miles(x):
     return f'{x:,}'.replace(',', '.')
+
+
+# Notas del autor a la referencia de estadísticas (Excel, 2026-11-26): se enseñan junto a ella.
+NOTA_REF = {80: 'algo más fuerte, al nivel de Hitmontop', 81: 'algo más fuerte, al nivel de Hitmontop'}
 
 
 # Altura de cada forma, en metros (propuesta, 2026-11-17; las de lámina, de la lámina). El juego
@@ -692,7 +703,7 @@ def excel(filas, c, ruta):
         t = f['tipos'].split('/')
         ws.append([f['orden'], f['pok'], NOMBRE_ISLA[f['isla']], f['zona'], f['tambien'], f['n'], f['archivo'],
                    f['especie'], f['forma'], t[0], t[1] if len(t) > 1 else '', 'sí' if f['autor'] else '',
-                   f['ref'], f['quintil'], f['papel'], f['altura'], f['idea'],
+                   f"{f['ref']} ({NOTA_REF[f['n']]})" if f['n'] in NOTA_REF else f['ref'], f['quintil'], f['papel'], f['altura'], f['idea'],
                    'sí' if f['tiene_imagen'] or f['hecha'] else 'no', 'sí' if f['tiene_modelo'] or f['hecha'] else 'no'])
         if f['tiene_modelo']:
             for celda in ws[ws.max_row]:

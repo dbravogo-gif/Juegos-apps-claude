@@ -255,7 +255,7 @@ Decidido con el autor: él hace las imágenes 2D, gratis, con ChatGPT o Gemini, 
    metadatos.
 2. **Claude la pasa a 3D:** `python3 herramientas/criaturas/meshy.py --solo N[,N…] [--dificiles N,…]`.
    - Mira el saldo y avisa del coste antes de crear nada.
-   - Apunta cada tarea en `tareas.json`: si algo se corta, se retoma sin volver a pagar.
+   - Apunta cada tarea en `conceptos/criaturas/meshy-tareas.json`: si algo se corta, se retoma sin volver a pagar.
    - **Normales:** Smart Topology T2.5 con la textura sacada de la imagen (Meshy N1), 15
      créditos.
    - **Difíciles** (pelo, membranas, mucho detalle): Meshy 7.1 con remallado a unos 30.000

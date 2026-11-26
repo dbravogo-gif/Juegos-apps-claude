@@ -21,8 +21,8 @@ modelo se llaman «PokN. Nombre» (autor, 2026-11-17): N es su número en esta l
 nunca, y el nombre es el suyo o su apodo. Se suben a `conceptos/criaturas/meshy/`. Para que Gemini te las vaya
 diciendo de una en una: `conceptos/criaturas/guia-gemini.txt`, que lleva sus instrucciones arriba.
 
-**Coste.** Faltan 157 criaturas (hay 46 hechas). A 15 créditos cada una
-(Smart Topology y textura, precio comprobado el 2026-11-07), son unos 2.355 créditos sin
+**Coste.** Faltan 152 criaturas (hay 51 hechas). A 15 créditos cada una
+(Smart Topology y textura, precio comprobado el 2026-11-07), son unos 2.280 créditos sin
 contar repeticiones. Por isla, en la tabla de abajo.
 
 ## Las cuentas
@@ -32,24 +32,24 @@ Todas cuadran: si no, el script no genera nada.
 | Tipo principal | Objetivo | En el plan | Como secundario |
 | --- | --- | --- | --- |
 | Común | 16 | 16 | 0 |
-| Agua | 21 | 21 | 8 |
+| Agua | 21 | 21 | 9 |
 | Tierra | 10 | 10 | 7 |
 | Planta | 17 | 17 | 4 |
 | Aire | 12 | 12 | 8 |
 | Eléctrico | 11 | 11 | 0 |
 | Hielo | 8 | 8 | 1 |
 | Infernal | 16 | 16 | 1 |
-| Lucha | 9 | 9 | 1 |
+| Lucha | 9 | 9 | 2 |
 | Mental | 8 | 8 | 6 |
 | Oscuridad | 8 | 8 | 4 |
-| Espectral | 7 | 7 | 2 |
-| Acero | 6 | 6 | 2 |
+| Espectral | 7 | 7 | 3 |
+| Acero | 8 | 8 | 2 |
 | Roca | 10 | 10 | 3 |
 | Ancestral | 4 | 4 | 5 |
-| Bicho | 13 | 13 | 3 |
-| Veneno | 12 | 12 | 3 |
+| Bicho | 13 | 13 | 2 |
+| Veneno | 10 | 10 | 3 |
 
-- **Sin tipo secundario:** el 69 % de las 188 de la lista (objetivo, 60 %).
+- **Sin tipo secundario:** el 68 % de las 188 de la lista (objetivo, 60 %).
 - **Especies por hierba:** de 3 a 4 en Lanzarote y de 3 a 6 después, con una rara como mucho.
 - **Gimnasios:** cada uno tiene al menos 3 especies de su tipo antes de llegar (Lanzarote, 1: la
   roca nueva, que la líder usa evolucionada).
@@ -57,13 +57,13 @@ Todas cuadran: si no, el script no genera nada.
 | Isla | Especies nuevas | Criaturas | Por generar | Créditos |
 | --- | --- | --- | --- | --- |
 | Lanzarote | 42 | 42 | 0 | 0 |
-| Fuerteventura | 15 | 30 | 28 | 420 |
-| Gran Canaria | 25 | 37 | 37 | 555 |
+| Fuerteventura | 26 | 30 | 23 | 345 |
+| Gran Canaria | 27 | 37 | 37 | 555 |
 | Tenerife | 25 | 40 | 38 | 570 |
 | La Gomera | 14 | 23 | 23 | 345 |
 | La Palma | 11 | 17 | 17 | 255 |
 | El Hierro | 12 | 14 | 14 | 210 |
-| **Total** | | **203** | **157** | **2.355** |
+| **Total** | | **203** | **152** | **2.280** |
 
 Lanzarote incluye las 15 iniciales. Las leyendas, desde la mitad del viaje (autor, 2026-11-20).
 
@@ -92,15 +92,15 @@ Gimnasio de **Aire**, en Morro Jable, líder 20-21.
 
 | Zona | Niveles | Especies |
 | --- | --- | --- |
-| Las Dunas | 10-13 | **«Remolino de jable»** · **«Lisa de duna»** · **«Conejo de jable»** · **«Cigarrón»** (rara) |
-| Betancuria | 12-14 | «Conejo de jable» · «Cigarrón» · **«Dromedario»** · **«Perro bardino»** · **«Guirre»** |
-| Ajuy | 13-15 | Aerund → Marwen · «Cigarrón» · «Perro bardino» · **«Erizo negro»** |
-| Cueva de Ajuy | 13-15 | **«Murciélago de cueva»** · **«Escarabajo de escoria»** · «Escolopendra» (rara) |
-| Tindaya (opcional) | 14-16 | «Dromedario» · «Perro bardino» · «Guirre» · **«Piedra de Tindaya»** (rara) |
-| Sotavento | 15-17 | Aerund → Marwen · «Remolino de jable» · «Lisa de duna» · «Erizo negro» · **«Carabela»** |
-| Cofete (opcional) | 17-19 | «Lisa de duna» · «Erizo negro» · **«Escolopendra»** · **«Cardón»** |
+| Las Dunas | 10-13 | **«Remolino de jable»** · **«Lisa de duna»** · **«Conejo de jable»** · **Chestil → Winstal** (rara) |
+| Betancuria | 12-14 | «Conejo de jable» · Chestil → Winstal · **Marach → Camwee** · **Trebar → Bardin → Barduno** · **«Guirre»** |
+| Ajuy | 13-15 | Aerund → Marwen · Chestil → Winstal · Trebar → Bardin → Barduno · **Seacumber → Seabrune** |
+| Cueva de Ajuy | 13-15 | **Pioto → Pitohui → Pitox** · **Geods → Beetlex** · «Escolopendra» (rara) |
+| Tindaya (opcional) | 14-16 | Marach → Camwee · Trebar → Bardin → Barduno · «Guirre» · **«Piedra de Tindaya»** (rara) |
+| Sotavento | 15-17 | Aerund → Marwen · «Remolino de jable» · «Lisa de duna» · Seacumber → Seabrune · **Fisilla → Polisilla** |
+| Cofete (opcional) | 17-19 | «Lisa de duna» · Seacumber → Seabrune · **«Escolopendra»** · **Euphi → Euphoraz** |
 
-Para el gimnasio, de Aire: «Guirre», «Lisa de duna», «Murciélago de cueva», Ravich → Azurvan, Aerund → Marwen, «Remolino de jable».
+Para el gimnasio, de Aire: «Guirre», «Lisa de duna», Pioto → Pitohui → Pitox, Ravich → Azurvan, Aerund → Marwen, «Remolino de jable».
 
 ### Gran Canaria
 
@@ -108,19 +108,19 @@ Gimnasio de **Eléctrico y Lucha**, Eléctrico en Las Palmas y Lucha en Agaete; 
 
 | Zona | Niveles | Especies |
 | --- | --- | --- |
-| La Isleta | 18-20 | **«Tembladera»** · **«Chicharro»** · **«Chispa de cable»** · **«Enredo»** · **«Farito»** (rara) |
+| La Isleta | 18-20 | **Ampert → Plasmon** · **Nageel → Levarok** · **«Chispa de cable»** · **«Enredo»** · **«Farito»** (rara) |
 | Bandama (opcional) | 19-21 | «Conejo de jable» · «Perdiz» · «Almendrita» · **«Bomba volcánica»** (rara) |
-| Guayadeque | 20-22 | «Murciélago de cueva» · **«Tabona»** · **«Cantero»** · **Tibicán** (rara) |
+| Guayadeque | 20-22 | Pioto → Pitohui → Pitox · **«Tabona»** · **«Cantero»** · **Tibicán** (rara) |
 | Las cumbres | 21-23 | **«Perdiz»** · **«Almendrita»** · «Cantero» · **«Burro»** · Briso → Alisor → Alisior |
 | Roque Nublo | 22-24 | «Perdiz» · **Caprún → Roquén → Terracorn** · **Briso → Alisor → Alisior** · Voltéro → Raigón |
 | Tejeda y Artenara | 22-25 | «Almendrita» · «Burro» · **Voltéro → Raigón** · **«Bailador de isa»** · **«Saltador de garrote»** |
-| Maspalomas (opcional) | 22-26 | «Lisa de duna» · «Carabela» · **«Boya»** (rara) · **«Lisa de la charca»** |
+| Maspalomas (opcional) | 22-26 | «Lisa de duna» · Fisilla → Polisilla · **Galvallo** (rara) · **«Lisa de la charca»** |
 | Tamadaba | 24-27 | Tibicán (rara) · «Burro» · Caprún → Roquén → Terracorn · **«Piña luchadora»** |
-| Agaete | 25-27 | «Erizo negro» · «Tembladera» · «Chicharro» · «Bailador de isa» · «Saltador de garrote» |
+| Agaete | 25-27 | Seacumber → Seabrune · Ampert → Plasmon · Nageel → Levarok · «Bailador de isa» · «Saltador de garrote» |
 
-Para el gimnasio, de Eléctrico: Briso → Alisor → Alisior, Voltéro → Raigón, «Chispa de cable», «Tembladera», «Farito», «Boya».
+Para el gimnasio, de Eléctrico: Briso → Alisor → Alisior, Voltéro → Raigón, «Chispa de cable», Ampert → Plasmon, «Farito», Galvallo.
 
-Para el gimnasio, de Lucha: «Burro», «Piña luchadora», Kotono → Koloi, «Bailador de isa», «Saltador de garrote».
+Para el gimnasio, de Lucha: «Burro», «Piña luchadora», Kotono → Koloi, «Bailador de isa», «Saltador de garrote», Galvallo.
 
 ### Tenerife
 
@@ -131,8 +131,8 @@ Gimnasio de **Agua**, en el Puerto de la Cruz, líder 36-38; la Liga, en el Teid
 | Anaga | 26-29 | Ravich → Azurvan · **«Mariposa de laurisilva»** · **«Gato del monte»** · **«Hurón»** |
 | La Laguna | 27-29 | «Conejo de jable» · «Gato del monte» · **«Farol»** · **«Aldaba»** (rara) |
 | Valle de La Orotava | 28-31 | «Conejo de jable» · «Perdiz» · «Gato del monte» · «Hurón» |
-| Puerto de la Cruz | 29-32 | «Erizo negro» · «Tembladera» · **«Tortuga boba»** · **«Vieja»** |
-| Cueva del Viento | 30-33 | «Murciélago de cueva» · **«Tortuga gigante»** · **Ishiro → Ishiradon** · **«Ánima de lava»** (rara) |
+| Puerto de la Cruz | 29-32 | Seacumber → Seabrune · Ampert → Plasmon · **«Tortuga boba»** · **«Vieja»** |
+| Cueva del Viento | 30-33 | Pioto → Pitohui → Pitox · **«Tortuga gigante»** · **Ishiro → Ishiradon** · **«Ánima de lava»** (rara) |
 | Teno y Masca | 31-34 | «Guirre» · Caprún → Roquén → Terracorn · Voltéro → Raigón · **«Guincho»** |
 | Los Gigantes (costa) | 32-35 | «Tortuga boba» · **«Delfín»** · **«Morena»** · **«Calamar gigante»** (rara) |
 | Las Cañadas | 33-36 | **Magmín → Lavtún → Teidrón** · **«Neverita»** · **«Escarcha»** · **«Tajinaste»** |
@@ -141,7 +141,7 @@ Gimnasio de **Agua**, en el Puerto de la Cruz, líder 36-38; la Liga, en el Teid
 | Cueva del Viento, lo más hondo (leyenda) | tras la Liga | **«Leyenda del agua»** |
 | Cueva del Hielo del Teide (leyenda) | tras la Liga | **«Guardián del hielo»** |
 
-Para el gimnasio, de Agua: «Tortuga boba», Salmito → Salmarín → Salmástil, Aerund → Marwen, Aculiso → Sierpajable, «Chicharro», «Lisa de la charca», «Morena», «Erizo negro», «Carabela», «Delfín», «Tembladera», «Vieja», «Boya», «Calamar gigante».
+Para el gimnasio, de Agua: «Tortuga boba», Salmito → Salmarín → Salmástil, Aerund → Marwen, Aculiso → Sierpajable, Nageel → Levarok, «Lisa de la charca», «Morena», Seacumber → Seabrune, Fisilla → Polisilla, «Chispa de cable», «Delfín», Ampert → Plasmon, «Vieja», «Calamar gigante».
 
 ### La Gomera
 
@@ -175,7 +175,7 @@ Gimnasio de **Planta**, en La Caldera de Taburiente, líder 50-51.
 | El observatorio del Roque (leyenda) | tras la Liga | **«Guardián de las estrellas»** |
 | El fondo de La Caldera (leyenda) | tras la Liga | **«Leyenda de tierra»** |
 
-Para el gimnasio, de Planta: Dragosil → Dragombo → Dragalis, «Duende de laurisilva», «Tajinaste», «Piña luchadora», «Almendrita», Esporín → Micelord, «Flor de cumbre», «Cardón», «Bejeque», «Tunera».
+Para el gimnasio, de Planta: Dragosil → Dragombo → Dragalis, «Duende de laurisilva», «Tajinaste», «Piña luchadora», «Almendrita», Esporín → Micelord, «Flor de cumbre», Euphi → Euphoraz, «Bejeque», «Tunera».
 
 ### El Hierro
 
@@ -183,8 +183,8 @@ Gimnasio de **Infernal/Ancestral**, en Valverde, al final de la Bajada, líder 5
 
 | Zona | Niveles | Especies |
 | --- | --- | --- |
-| Orchilla (llegada) | 47-50 | Aerund → Marwen · «Erizo negro» · «Morena» · **Sanbor → Borondis → Atlantea** (rara) |
-| La Dehesa | 48-51 | «Perro bardino» · «Guirre» · «Curandera» |
+| Orchilla (llegada) | 47-50 | Aerund → Marwen · Seacumber → Seabrune · «Morena» · **Sanbor → Borondis → Atlantea** (rara) |
+| La Dehesa | 48-51 | Trebar → Bardin → Barduno · «Guirre» · «Curandera» |
 | La Cumbre (camino de la Bajada) | 50-53 | Caprún → Roquén → Terracorn · Magmín → Lavtún → Teidrón · **Guanchín → Menceyor → Achamán** · **«Tostador de gofio»** |
 | El Garoé | 51-53 | «Silbador» · «Duende de laurisilva» · Esporín → Micelord · **«Curandera»** |
 | Frontera (opcional) | 50-54 | Guanchín → Menceyor → Achamán · «Tostador de gofio» · **«Lagarto gigante»** (rara) |
@@ -257,49 +257,49 @@ nombre lo pone el autor. La idea va en la primera forma de cada especie.
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Pok48. Aerund | 044-1 (hecha) | 1.ª | Aire | Cottonee (Q1, TF) | 0,4 m | Las Dunas | Remolino de jable: bolita de arena y semillas que rueda con el viento; la 2.ª, torbellino de arena con cara. Sustituye al remolino provisional del gimnasio de Aire. |
 | Pok49. Tailsan | 044-2 (hecha) | 2.ª | Aire/Tierra | Whimsicott (Q4, TF) | 1,2 m |  |  |
-| Pok50. Lisa de duna | 009-1 | 1.ª | Tierra | Trapinch (Q1, AF) | 0,5 m | Las Dunas | Lisa de duna: lagartija que nada bajo la arena; la 2.ª, con cresta de púas; la 3.ª, con velas que planean sobre las dunas. |
-| Pok51. Lisa de duna | 009-2 | 2.ª | Tierra | Vibrava (Q2, EN) | 1,1 m |  |  |
-| Pok52. Lisa de duna | 009-3 | 3.ª | Aire | Flygon (Q4, EN) | 2,0 m |  |  |
-| Pok53. Conejo de jable | 038-1 | 1.ª | Común | Bidoof (Q1, EN) | 0,4 m | Las Dunas | Conejo de jable, bajito, orejudo y enfadado; la 2.ª, conejo salvaje y rabioso, de garras largas. |
-| Pok54. Conejo de jable | 038-2 | 2.ª | Común/Oscuridad | Bibarel (Q3, AF) | 0,9 m |  |  |
-| Pok55. Cigarrón | 029-1 | 1.ª | Bicho | Kricketot (Q1, TF) | 0,3 m | Las Dunas (rara) | Cigarrón: langosta que llega con el viento de África; la 2.ª, grande, hace sonar las alas. |
-| Pok56. Cigarrón | 029-2 | 2.ª | Bicho | Kricketune (Q2, AF) | 0,8 m |  |  |
-| Pok57. Dromedario | 054-1 | 1.ª | Común | Deerling (Q2, AF) | 1,0 m | Betancuria | Dromedario majorero: cría torpe de patas largas; la 2.ª, dromedario adulto con alforjas. |
-| Pok58. Dromedario | 054-2 | 2.ª | Común | Sawsbuck (Q3, AF) | 2,2 m |  |  |
-| Pok59. Perro bardino | 011-1 | 1.ª | Común | Lillipup (Q1, AF) | 0,4 m | Betancuria | Perro bardino: cachorro atigrado; la 2.ª, perro pastor; la 3.ª, gran perro de ganado de melena gruesa. |
-| Pok60. Perro bardino | 011-2 | 2.ª | Común | Herdier (Q2, AF) | 0,8 m |  |  |
-| Pok61. Perro bardino | 011-3 | 3.ª | Común | Stoutland (Q4, AF) | 1,3 m |  |  |
-| Pok62. Guirre | 004-1 | 1.ª | Aire | Starly (Q1, AF) | 0,3 m | Betancuria | Guirre: polluelo blanco; la 2.ª, joven de plumas pardas; la 3.ª, gran guirre de cara amarilla. Sustituye al guirre provisional del gimnasio de Aire. |
+| Pok50. Lisa de duna | 009-1 (hecha) | 1.ª | Tierra | Trapinch (Q1, AF) | 0,5 m | Las Dunas | Lisa de duna: lagartija que nada bajo la arena; la 2.ª, con cresta de púas; la 3.ª, con velas que planean sobre las dunas. |
+| Pok51. Lisa de duna | 009-2 (hecha) | 2.ª | Tierra | Vibrava (Q2, EN) | 1,1 m |  |  |
+| Pok52. Lisa de duna | 009-3 (hecha) | 3.ª | Aire | Flygon (Q4, EN) | 2,0 m |  |  |
+| Pok53. Conejo de jable | 038-1 (hecha) | 1.ª | Común | Bidoof (Q1, EN) | 0,4 m | Las Dunas | Conejo de jable, bajito, orejudo y enfadado; la 2.ª, conejo salvaje y rabioso, de garras largas. |
+| Pok54. Conejo de jable | 038-2 (hecha) | 2.ª | Común/Oscuridad | Bibarel (Q3, AF) | 0,9 m |  |  |
+| Pok55. Chestil | 029-1 | 1.ª | Bicho | Kricketot (Q1, TF) | 0,3 m | Las Dunas (rara) | Cigarrón: langosta que llega con el viento de África; la 2.ª, grande, hace sonar las alas. |
+| Pok56. Winstal | 029-2 | 2.ª | Bicho | Kricketune (Q2, AF) | 0,8 m |  |  |
+| Pok57. Marach | 054-1 | 1.ª | Común | Deerling (Q2, AF) | 1,0 m | Betancuria | Dromedario majorero: cría torpe de patas largas; la 2.ª, dromedario adulto con alforjas. |
+| Pok58. Camwee | 054-2 | 2.ª | Común | Sawsbuck (Q3, AF) | 2,2 m |  |  |
+| Pok59. Trebar | 011-1 | 1.ª | Común | Lillipup (Q1, AF) | 0,4 m | Betancuria | Perro bardino: cachorro atigrado; la 2.ª, perro pastor; la 3.ª, gran perro de ganado de melena gruesa. |
+| Pok60. Bardin | 011-2 | 2.ª | Común | Herdier (Q2, AF) | 0,8 m |  |  |
+| Pok61. Barduno | 011-3 | 3.ª | Común | Stoutland (Q4, AF) | 1,3 m |  |  |
+| Pok62. Cernícalo | 004-1 | 1.ª | Aire | Starly (Q1, AF) | 0,3 m | Betancuria | Guirre: polluelo blanco; la 2.ª, joven de plumas pardas; la 3.ª, gran guirre de cara amarilla. Sustituye al guirre provisional del gimnasio de Aire. |
 | Pok63. Guirre | 004-2 | 2.ª | Aire | Staravia (Q2, AF) | 0,8 m |  |  |
 | Pok64. Guirre | 004-3 | 3.ª | Aire | Staraptor (Q3, AF) | 1,5 m |  |  |
-| Pok65. Erizo negro | 051-1 | 1.ª | Agua | Corphish (Q2, AF) | 0,3 m | Ajuy | Erizo negro de los charcos, redondo y de púas cortas; la 2.ª, grande y de púas larguísimas. |
-| Pok66. Erizo negro | 051-2 | 2.ª | Agua/Oscuridad | Crawdaunt (Q3, AF) | 0,8 m |  |  |
-| Pok67. Murciélago de cueva | 017-1 | 1.ª | Veneno | Zubat (Q1, EN) | 0,3 m | Cueva de Ajuy | Murciélago orejudo de cueva, de ojos grandes; la 2.ª y la 3.ª, más grandes, con alas como capas. |
-| Pok68. Murciélago de cueva | 017-2 | 2.ª | Veneno/Aire | Golbat (Q3, EN) | 0,8 m |  |  |
-| Pok69. Murciélago de cueva | 017-3 | 3.ª | Veneno/Aire | Crobat (Q4, EN) | 1,5 m |  |  |
-| Pok70. Escarabajo de escoria | 061-1 | 1.ª | Roca | Anorith (Q2, AF) | 0,5 m | Cueva de Ajuy | Escarabajo de escoria volcánica que rueda por la cueva; la 2.ª, erguido y con brazos de basalto. |
-| Pok71. Escarabajo de escoria | 061-2 | 2.ª | Roca/Bicho | Armaldo (Q4, AF) | 1,4 m |  |  |
+| Pok65. Seacumber | 051-1 | 1.ª | Agua | Corphish (Q2, AF) | 0,3 m | Ajuy | Erizo negro de los charcos, redondo y de púas cortas; la 2.ª, grande y de púas larguísimas. |
+| Pok66. Seabrune | 051-2 | 2.ª | Agua/Oscuridad | Crawdaunt (Q3, AF) | 0,8 m |  |  |
+| Pok67. Pioto | 017-1 | 1.ª | Veneno | Zubat (Q1, EN) | 0,3 m | Cueva de Ajuy | Polluelo insectívoro; la 2.ª, pitohui joven; la 3.ª, ave del paraíso que desprende veneno de las alas, con aguijones o garras como rasgo propio. |
+| Pok68. Pitohui | 017-2 | 2.ª | Veneno/Aire | Golbat (Q3, EN) | 0,8 m |  |  |
+| Pok69. Pitox | 017-3 | 3.ª | Veneno/Aire | Crobat (Q4, EN) | 1,5 m |  |  |
+| Pok70. Geods | 061-1 | 1.ª | Roca | Anorith (Q2, AF) | 0,5 m | Cueva de Ajuy | Geoda con forma de fósil; la 2.ª, escarabajo atlas o hércules cristalino, con geodas. |
+| Pok71. Beetlex | 061-2 | 2.ª | Roca/Bicho | Armaldo (Q4, AF) | 1,4 m |  |  |
 | Pok72. Escolopendra | 079 | única | Veneno/Bicho | Seviper (Q3, AE) | 1,8 m | Cofete (opcional) | Escolopendra: ciempiés gigante de las piedras, con colores de aviso. |
-| Pok73. Carabela | 052-1 | 1.ª | Veneno | Shellos (Q2, EN) | 0,4 m | Sotavento | Carabela: medusa con una vela azul que flota en la laguna; la 2.ª, colonia grande con vela de colores. |
-| Pok74. Carabela | 052-2 | 2.ª | Veneno/Agua | Gastrodon (Q3, TE) | 1,2 m |  |  |
+| Pok73. Fisilla | 052-1 | 1.ª | Veneno | Shellos (Q2, EN) | 0,4 m | Sotavento | Carabela: medusa con una vela azul que flota en la laguna; la 2.ª, colonia grande con vela de colores. |
+| Pok74. Polisilla | 052-2 | 2.ª | Veneno/Agua | Gastrodon (Q3, TE) | 1,2 m |  |  |
 | Pok75. Piedra de Tindaya | 082 | única | Roca/Mental | Lunatone (Q3, AE) | 1,0 m | Tindaya (opcional) (rara) | Piedra de la montaña sagrada: roca clara con grabados que flota y medita. |
-| Pok76. Cardón | 050-1 | 1.ª | Planta | Cacnea (Q2, AE) | 0,4 m | Cofete (opcional) | Cardón de Jandía: brote de cardón de brazos cortos; la 2.ª, gran cardón con brazos de candelabro y savia tóxica. |
-| Pok77. Cardón | 050-2 | 2.ª | Planta/Veneno | Cacturne (Q3, AE) | 1,8 m |  |  |
+| Pok76. Euphi | 050-1 | 1.ª | Planta | Cacnea (Q2, AE) | 0,4 m | Cofete (opcional) | Cardón de Jandía: brote de cardón de brazos cortos; la 2.ª, gran cardón con brazos de candelabro y savia tóxica. |
+| Pok77. Euphoraz | 050-2 | 2.ª | Planta/Veneno | Cacturne (Q3, AE) | 1,8 m |  |  |
 
 ### Gran Canaria
 
 | Pokédex | Id interno | Forma | Tipos | Estadísticas de | Altura | Zona | Idea |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Pok78. Tembladera | 067-1 | 1.ª | Eléctrico | Psyduck (Q2, AE) | 0,5 m | La Isleta | Tembladera: raya eléctrica de la arena del puerto; la 2.ª, grande, con alas que chispean. |
-| Pok79. Tembladera | 067-2 | 2.ª | Eléctrico/Agua | Golduck (Q4, AE) | 1,6 m |  |  |
-| Pok80. Chicharro | 041-1 | 1.ª | Agua | Magikarp (Q1, TF) | 0,4 m | La Isleta | Chicharro: pez flaco y torpe del muelle que no sirve para nada; la 2.ª, un marrajo enorme y temible. |
-| Pok81. Chicharro | 041-2 | 2.ª | Agua | Gyarados (Q4, AF) | 4,0 m |  |  |
-| Pok82. Chispa de cable | 057-1 | 1.ª | Eléctrico | Joltik (Q2, AE) | 0,1 m | La Isleta | Chispa de cable: bichito que vive en los enchufes del puerto; la 2.ª, escarabajo con antenas de cobre que suelta descargas. |
-| Pok83. Chispa de cable | 057-2 | 2.ª | Eléctrico/Bicho | Galvantula (Q3, AE) | 0,8 m |  |  |
-| Pok84. Enredo | 056-1 | 1.ª | Veneno | Trubbish (Q2, EN) | 0,6 m | La Isleta | Enredo: bola de redes de pesca viejas y plástico; la 2.ª, gran mole de redes. Sustituye a Basún, descartado. |
-| Pok85. Enredo | 056-2 | 2.ª | Veneno | Garbodor (Q3, TF) | 1,9 m |  |  |
-| Pok86. Farito | 080 | única | Eléctrico | Plusle (Q3, AE) | 0,4 m | La Isleta (rara) | Farito: criatura con forma de faro pequeño que lanza destellos. Hace pareja con la boya en combates dobles. |
-| Pok87. Boya | 081 | única | Eléctrico/Agua | Minun (Q3, AE) | 0,4 m | Maspalomas (opcional) (rara) | Boya luminosa con cara que parpadea. Hace pareja con el farito en combates dobles. |
+| Pok78. Ampert | 067-1 | 1.ª | Eléctrico | Psyduck (Q2, AE) | 0,5 m | La Isleta | Tembladera: raya eléctrica de la arena del puerto; la 2.ª, grande, con alas que chispean. |
+| Pok79. Plasmon | 067-2 | 2.ª | Eléctrico/Agua | Golduck (Q4, AE) | 1,6 m |  |  |
+| Pok80. Nageel | 041-1 | 1.ª | Agua | Magikarp (Q1, TF) | 0,4 m | La Isleta | Anguila abisal; la 2.ª, un leviatán. |
+| Pok81. Levarok | 041-2 | 2.ª | Agua | Gyarados (Q4, AF) | 4,0 m |  |  |
+| Pok82. Chispa de cable | 057-1 | 1.ª | Eléctrico/Agua | Joltik (Q2, AE) | 0,1 m | La Isleta |  |
+| Pok83. Chispa de cable | 057-2 | 2.ª | Eléctrico/Agua | Galvantula (Q3, AE) | 0,8 m |  |  |
+| Pok84. Enredo | 056-1 | 1.ª | Acero | Trubbish (Q2, EN) | 0,6 m | La Isleta | Enredo: bola de redes de pesca viejas y plástico; la 2.ª, gran mole de redes. Sustituye a Basún, descartado. |
+| Pok85. Enredo | 056-2 | 2.ª | Acero | Garbodor (Q3, TF) | 1,9 m |  |  |
+| Pok86. Farito | 080 | única | Eléctrico/Espectral | Plusle (Q3, AE) | 0,4 m | La Isleta (rara) | Electrón, energía difusa, que parece que no ocupa espacio. |
+| Pok87. Galvallo | 081 | única | Eléctrico/Lucha | Minun (Q3, AE) | 0,4 m | Maspalomas (opcional) (rara) | Gallo de pelea. |
 | Pok88. Perdiz | 003-1 | 1.ª | Común | Pidove (Q1, AF) | 0,3 m | Las cumbres | Perdiz moruna: polluelo; la 2.ª, perdiz de collar; la 3.ª, gran perdiz de cresta roja. |
 | Pok89. Perdiz | 003-2 | 2.ª | Común/Aire | Tranquill (Q2, AF) | 0,6 m |  |  |
 | Pok90. Perdiz | 003-3 | 3.ª | Común/Aire | Unfezant (Q3, AF) | 1,2 m |  |  |
