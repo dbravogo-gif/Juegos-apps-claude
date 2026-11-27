@@ -1,6 +1,6 @@
 # Equilibrio de Six-seven islands
 
-Generado el 2026-11-26 con `npm run equilibrio` (`herramientas/simular/`). No se edita a mano.
+Generado el 2026-11-27 con `npm run equilibrio` (`herramientas/simular/`). No se edita a mano.
 
 **Cómo se calcula** (supuestos, para leer los números con cuidado):
 
@@ -145,7 +145,7 @@ Nivel de la inicial al llegar a cada jefe; entre paréntesis, si toda la experie
 | Líder de Roca (Lanzarote) | 8 (9) | 10 (12) | 10 (13) |
 | Líder de Aire (Fuerteventura) | 12 (16) | 16 (20) | 18 (23) |
 | 3.er aprendiz Eléctrico (llegada a Gran Canaria) | 14 (18) | 18 (23) | 20 (25) |
-| Comandante (Roque Nublo) | 16 (20) | 22 (28) | 24 (30) |
+| Comandante (Roque Nublo) | 16 (20) | 22 (28) | 24 (31) |
 | Los dos líderes, 2 contra 2 (Agaete) | 19 (25) | 27 (34) | 29 (37) |
 
 ## El dinero que hay en cada isla

@@ -145,9 +145,13 @@ Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
   - en la portada, «Partida nueva» con una guardada: ahora pregunta antes de borrar.
 - **Imágenes de criaturas** (2026-11-26): el autor las hace (ChatGPT o Gemini) y las envía o las
   sube como «PokN. Nombre»; Claude las pasa a 3D con la API de Meshy (créditos de su plan) y las
-  mete en el juego (`prompts-meshy.md`, «El flujo con la API»). Hechas Pok50 a Pok55 y Pok57 a
-  Pok60. Falta reenviar la de **Presarox** (Pok61): llegó al chat pero no como archivo. Y decidir si
-  **Camwee** (Pok58) lleva dos jorobas, como en su dibujo, o una, como un dromedario. La clave de
+  mete en el juego (`prompts-meshy.md`, «El flujo con la API»). Hechas Pok50 a Pok75 (2026-11-27).
+  Camwee se queda con dos jorobas (autor). Pendiente:
+  - **Pok78 a Pok81** (Ampert, Plasmon, Nageel y Levarok): Meshy las rechazó por el tope mensual de
+    la clave (402); hay que subirlo en la página de claves de Meshy, o esperar al mes que viene.
+  - **Los nombres de Pok50 a Pok54** (la lisa de duna y el conejo de jable): en el juego salen con el
+    apodo, porque sus imágenes llegaron por el chat sin nombre.
+  - **Subir las imágenes a `conceptos/criaturas/meshy/`**, no a `conceptos/criaturas/`. La clave de
   Meshy ya está guardada en el entorno; la escrita en el chat conviene borrarla en Meshy y crear
   otra, que se guarda igual.
 - **Puntuar de 1 a 5** las criaturas nuevas (la lisa de duna y el conejo de jable) en Las Dunas,

@@ -30,7 +30,8 @@ POR_QUINTIL = {'Q1': (55, 200), 'Q2': (75, 150), 'Q3': (140, 90), 'Q4': (170, 60
 
 # Nivel al que evoluciona cada forma a la siguiente, por línea (número de la lista de referencia).
 EVOLUCION = {31: [20], 32: [22], 37: [30], 7: [14, 32], 62: [30], 13: [18, 36], 43: [20], 12: [16, 34], 34: [24], 5: [22, 30], 35: [25], 18: [32, 44], 44: [24],
-             9: [20, 32], 38: [15], 29: [14], 54: [22], 11: [16, 30]}
+             9: [20, 32], 38: [15], 29: [14], 54: [22], 11: [16, 30],
+             4: [14, 30], 51: [24], 17: [20, 32], 61: [26], 52: [24]}
 
 # Ataques por forma: (nivel, ataque), con los que ya existen en combate-prueba.ts. La 1.ª forma
 # empieza solo con ataques comunes y aprende los de su tipo a los pocos niveles; cuatro como mucho,
@@ -85,6 +86,22 @@ ATAQUES = {
     11: [[(1, 'topetazo'), (1, 'mirada-fija'), (6, 'barrito')],
          [(1, 'topetazo'), (1, 'barrito'), (1, 'mirada-fija'), (1, 'pisoton')],
          [(1, 'topetazo'), (1, 'barrito'), (1, 'pisoton'), (1, 'mirada-fija')]],
+    # 2026-11-27: las que subió el autor a GitHub. Aún no hay ataques Eléctricos, Mentales ni de
+    # Oscuridad (D2: los ataques los decide el autor); usan los que hay.
+    4: [[(1, 'topetazo'), (1, 'mirada-fija'), (6, 'rafaga')],
+        [(1, 'rafaga'), (1, 'picado'), (1, 'topetazo'), (1, 'mirada-fija')],
+        [(1, 'picado'), (1, 'rafaga'), (1, 'topetazo'), (1, 'barrito')]],
+    51: [[(1, 'topetazo'), (1, 'caparazon'), (6, 'remojon')],
+         [(1, 'remojon'), (1, 'ola-de-cresta'), (1, 'caparazon'), (1, 'topetazo')]],
+    17: [[(1, 'topetazo'), (1, 'mirada-fija'), (6, 'savia-toxica')],
+         [(1, 'savia-toxica'), (1, 'rafaga'), (1, 'topetazo'), (1, 'mirada-fija')],
+         [(1, 'savia-toxica'), (1, 'picado'), (1, 'rafaga'), (1, 'mirada-fija')]],
+    61: [[(1, 'topetazo'), (1, 'caparazon'), (6, 'rodada-de-piedra')],
+         [(1, 'rodada-de-piedra'), (1, 'tenaza-de-quitina'), (1, 'polvo-de-picon'), (1, 'caparazon')]],
+    79: [[(1, 'topetazo'), (1, 'mirada-fija'), (5, 'savia-toxica'), (8, 'tenaza-de-quitina')]],
+    52: [[(1, 'topetazo'), (1, 'mirada-fija'), (6, 'savia-toxica')],
+         [(1, 'savia-toxica'), (1, 'remojon'), (1, 'ola-de-cresta'), (1, 'mirada-fija')]],
+    82: [[(1, 'topetazo'), (1, 'caparazon'), (5, 'rodada-de-piedra'), (8, 'polvo-de-picon')]],
 }
 
 # Nombres provisionales de las formas que aún no tienen el suyo (el autor los pone).

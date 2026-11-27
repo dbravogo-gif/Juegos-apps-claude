@@ -48,5 +48,85 @@
   "id": "01a218fc-5caf-700a-ac4b-1a26a44c5bc4",
   "base": "Pok60. Presin",
   "modo": "normal"
+ },
+ "56": {
+  "id": "01a21de8-5892-7093-8aa6-848d44c731cc",
+  "base": "Pok56. Winstal",
+  "modo": "dificil"
+ },
+ "61": {
+  "id": "01a21de8-6073-73b5-9127-67516b457c3e",
+  "base": "Pok61. Presarox",
+  "modo": "normal"
+ },
+ "62": {
+  "id": "01a21de8-644c-758f-b75f-db131f62378f",
+  "base": "Pok62. Gare",
+  "modo": "normal"
+ },
+ "63": {
+  "id": "01a21de8-6a33-7107-b1f1-9444b2b7be91",
+  "base": "Pok63. Guirral",
+  "modo": "normal"
+ },
+ "64": {
+  "id": "01a21de8-6da5-709d-b340-96b045303402",
+  "base": "Pok64. Guirrenton",
+  "modo": "normal"
+ },
+ "65": {
+  "id": "01a21de8-718e-7403-a885-ea87fb60e589",
+  "base": "Pok65. Seacumber",
+  "modo": "normal"
+ },
+ "66": {
+  "id": "01a21de8-757b-7167-83bf-87363628ff1d",
+  "base": "Pok66. Seabrune",
+  "modo": "normal"
+ },
+ "67": {
+  "id": "01a21de8-7b0e-7058-b337-3949235d0841",
+  "base": "Pok67. Pioto",
+  "modo": "normal"
+ },
+ "68": {
+  "id": "01a21de8-7ef1-7579-a97c-447432fdf627",
+  "base": "Pok68. Pitohui",
+  "modo": "normal"
+ },
+ "69": {
+  "id": "01a21de8-82f0-746c-a668-46ffd35fc3d9",
+  "base": "Pok69. Pitox",
+  "modo": "normal"
+ },
+ "70": {
+  "id": "01a21de8-857c-7295-8f95-4ff6b622bbdd",
+  "base": "Pok70. Geods",
+  "modo": "normal"
+ },
+ "71": {
+  "id": "01a21de8-8956-72c7-9d50-d8ae1203977e",
+  "base": "Pok71. Beetlex",
+  "modo": "normal"
+ },
+ "72": {
+  "id": "01a21de8-8c34-7152-bd28-fad0afd8e3ab",
+  "base": "Pok72. Escolper",
+  "modo": "dificil"
+ },
+ "73": {
+  "id": "01a21de8-929b-7576-b9a4-6ad4ba512318",
+  "base": "Pok73. Fisilla",
+  "modo": "normal"
+ },
+ "74": {
+  "id": "01a21de8-9625-76df-a486-733873a46328",
+  "base": "Pok74. Polisilla",
+  "modo": "dificil"
+ },
+ "75": {
+  "id": "01a21de8-9b43-76ec-b871-067661808672",
+  "base": "Pok75. Petrowstal",
+  "modo": "dificil"
  }
 }

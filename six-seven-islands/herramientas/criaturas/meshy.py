@@ -21,6 +21,7 @@ import re
 import ssl
 import sys
 import time
+import urllib.error
 import urllib.request
 
 RAIZ = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', '..'))
@@ -84,18 +85,28 @@ def main():
     print(f'Por hacer: {", ".join(f"Pok{n}" for n in lista) or "ninguna"}. Coste nuevo: unos {coste} créditos.')
     if coste > saldo:
         sys.exit('No hay saldo suficiente.')
-    # Crea las tareas que falten (las ya creadas se retoman, sin volver a pagar).
+    # Crea las tareas que falten (las ya creadas se retoman, sin volver a pagar). Si Meshy rechaza una
+    # (402: sin créditos o tope mensual de la clave), no se crean más, pero se descargan las ya
+    # pagadas (2026-11-27: con un tope en la clave, el script se paraba sin bajar nada).
     for n, (base, ruta) in lista.items():
         if str(n) in tareas:
             continue
         ext = os.path.splitext(ruta)[1].lower()
         uri = f'data:{TIPOS[ext]};base64,' + base64.b64encode(open(ruta, 'rb').read()).decode()
         cuerpo = {'image_url': uri, **(DIFICIL if n in dificiles else NORMAL)}
-        tareas[str(n)] = {'id': pedir('POST', '/image-to-3d', cuerpo)['result'], 'base': base, 'modo': 'dificil' if n in dificiles else 'normal'}
+        try:
+            id_tarea = pedir('POST', '/image-to-3d', cuerpo)['result']
+        except urllib.error.HTTPError as e:
+            motivo = e.read().decode(errors='replace')[:300]
+            print(f'Pok{n}: Meshy no crea la tarea ({e.code}): {motivo}. No se crean más; se bajan las ya pagadas.')
+            break
+        tareas[str(n)] = {'id': id_tarea, 'base': base, 'modo': 'dificil' if n in dificiles else 'normal'}
         json.dump(tareas, open(TAREAS, 'w'), indent=1, ensure_ascii=False)
         print(f'Pok{n}: tarea creada ({tareas[str(n)]["modo"]}).')
     # Espera y descarga.
     for n in lista:
+        if str(n) not in tareas:
+            continue
         t = tareas[str(n)]
         while True:
             d = pedir('GET', f'/image-to-3d/{t["id"]}')
