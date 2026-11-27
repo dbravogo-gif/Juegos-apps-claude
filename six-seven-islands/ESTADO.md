@@ -16,7 +16,9 @@ media en la rúbrica visual: no es premium.
 2026-11-26: el autor contesta D1 a D8 y T1 a T3 (`RESUMEN-ISLAS.md`). Hechos D6 (nombres), D1
 (iniciales) y D3 (repartidor, que da Chano en Las Palmas); refugios comprobados. Primeras criaturas
 pasadas a 3D por Claude con la API de Meshy: la lisa de duna y el conejo de jable (Pok50-54), Chestil,
-Marach, Camwee, Perstin y Presin (Pok55, Pok57-60), ya en la hierba de Fuerteventura y Gran Canaria. Quedan por pasos: D7 tamaños, D5
+Marach, Camwee, Perstin y Presin (Pok55, Pok57-60) y, el 2026-11-27, Pok56 y Pok61 a Pok75: 57
+criaturas en el juego, en la hierba de Fuerteventura y Gran Canaria. Pok78-81, a la espera del tope de
+la clave de Meshy. Quedan por pasos: D7 tamaños, D5
 gimnasio de Aire, D8 miniaturas y D4 tiendas (cubos en su orden de siempre). Tenerife: recorrido
 del autor en dos ramas (`ISLA-4.md`); se construye cuando dé la salida. Tenerife, rehecha (`ISLA-4.md`), espera su aprobación.
 

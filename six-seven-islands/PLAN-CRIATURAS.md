@@ -21,8 +21,8 @@ modelo se llaman «PokN. Nombre» (autor, 2026-11-17): N es su número en esta l
 nunca, y el nombre es el suyo o su apodo. Se suben a `conceptos/criaturas/meshy/`. Para que Gemini te las vaya
 diciendo de una en una: `conceptos/criaturas/guia-gemini.txt`, que lleva sus instrucciones arriba.
 
-**Coste.** Faltan 152 criaturas (hay 51 hechas). A 15 créditos cada una
-(Smart Topology y textura, precio comprobado el 2026-11-07), son unos 2.280 créditos sin
+**Coste.** Faltan 147 criaturas (hay 56 hechas). A 15 créditos cada una
+(Smart Topology y textura, precio comprobado el 2026-11-07), son unos 2.205 créditos sin
 contar repeticiones. Por isla, en la tabla de abajo.
 
 ## Las cuentas
@@ -57,13 +57,13 @@ Todas cuadran: si no, el script no genera nada.
 | Isla | Especies nuevas | Criaturas | Por generar | Créditos |
 | --- | --- | --- | --- | --- |
 | Lanzarote | 42 | 42 | 0 | 0 |
-| Fuerteventura | 26 | 30 | 23 | 345 |
+| Fuerteventura | 27 | 30 | 18 | 270 |
 | Gran Canaria | 27 | 37 | 37 | 555 |
 | Tenerife | 25 | 40 | 38 | 570 |
 | La Gomera | 14 | 23 | 23 | 345 |
 | La Palma | 11 | 17 | 17 | 255 |
 | El Hierro | 12 | 14 | 14 | 210 |
-| **Total** | | **203** | **152** | **2.280** |
+| **Total** | | **203** | **147** | **2.205** |
 
 Lanzarote incluye las 15 iniciales. Las leyendas, desde la mitad del viaje (autor, 2026-11-20).
 
@@ -262,16 +262,16 @@ nombre lo pone el autor. La idea va en la primera forma de cada especie.
 | Pok52. Lisa de duna | 009-3 (hecha) | 3.ª | Aire | Flygon (Q4, EN) | 2,0 m |  |  |
 | Pok53. Conejo de jable | 038-1 (hecha) | 1.ª | Común | Bidoof (Q1, EN) | 0,4 m | Las Dunas | Conejo de jable, bajito, orejudo y enfadado; la 2.ª, conejo salvaje y rabioso, de garras largas. |
 | Pok54. Conejo de jable | 038-2 (hecha) | 2.ª | Común/Oscuridad | Bibarel (Q3, AF) | 0,9 m |  |  |
-| Pok55. Chestil | 029-1 | 1.ª | Bicho | Kricketot (Q1, TF) | 0,3 m | Las Dunas (rara) | Cigarrón: langosta que llega con el viento de África; la 2.ª, grande, hace sonar las alas. |
+| Pok55. Chestil | 029-1 (hecha) | 1.ª | Bicho | Kricketot (Q1, TF) | 0,3 m | Las Dunas (rara) | Cigarrón: langosta que llega con el viento de África; la 2.ª, grande, hace sonar las alas. |
 | Pok56. Winstal | 029-2 | 2.ª | Bicho | Kricketune (Q2, AF) | 0,8 m |  |  |
-| Pok57. Marach | 054-1 | 1.ª | Común | Deerling (Q2, AF) | 1,0 m | Betancuria | Dromedario majorero: cría torpe de patas largas; la 2.ª, dromedario adulto con alforjas. |
-| Pok58. Camwee | 054-2 | 2.ª | Común | Sawsbuck (Q3, AF) | 2,2 m |  |  |
-| Pok59. Perstin | 011-1 | 1.ª | Común | Lillipup (Q1, AF) | 0,4 m | Betancuria | Presa canario: cachorro de manchas grises; la 2.ª, perro joven y fuerte; la 3.ª, gran presa canario musculoso, con las patas como de piedra. |
-| Pok60. Presin | 011-2 | 2.ª | Común | Herdier (Q2, AF) | 0,8 m |  |  |
+| Pok57. Marach | 054-1 (hecha) | 1.ª | Común | Deerling (Q2, AF) | 1,0 m | Betancuria | Dromedario majorero: cría torpe de patas largas; la 2.ª, dromedario adulto con alforjas. |
+| Pok58. Camwee | 054-2 (hecha) | 2.ª | Común | Sawsbuck (Q3, AF) | 2,2 m |  |  |
+| Pok59. Perstin | 011-1 (hecha) | 1.ª | Común | Lillipup (Q1, AF) | 0,4 m | Betancuria | Presa canario: cachorro de manchas grises; la 2.ª, perro joven y fuerte; la 3.ª, gran presa canario musculoso, con las patas como de piedra. |
+| Pok60. Presin | 011-2 (hecha) | 2.ª | Común | Herdier (Q2, AF) | 0,8 m |  |  |
 | Pok61. Presarox | 011-3 | 3.ª | Común | Stoutland (Q4, AF) | 1,3 m |  |  |
-| Pok62. Cernícalo | 004-1 | 1.ª | Aire | Starly (Q1, AF) | 0,3 m | Betancuria | Guirre: polluelo blanco; la 2.ª, joven de plumas pardas; la 3.ª, gran guirre de cara amarilla. Sustituye al guirre provisional del gimnasio de Aire. |
-| Pok63. Guirre | 004-2 | 2.ª | Aire | Staravia (Q2, AF) | 0,8 m |  |  |
-| Pok64. Guirre | 004-3 | 3.ª | Aire | Staraptor (Q3, AF) | 1,5 m |  |  |
+| Pok62. Gare | 004-1 | 1.ª | Aire | Starly (Q1, AF) | 0,3 m | Betancuria | Guirre: polluelo blanco; la 2.ª, joven de plumas pardas; la 3.ª, gran guirre de cara amarilla. Sustituye al guirre provisional del gimnasio de Aire. |
+| Pok63. Guirral | 004-2 | 2.ª | Aire | Staravia (Q2, AF) | 0,8 m |  |  |
+| Pok64. Guirrenton | 004-3 | 3.ª | Aire | Staraptor (Q3, AF) | 1,5 m |  |  |
 | Pok65. Seacumber | 051-1 | 1.ª | Agua | Corphish (Q2, AF) | 0,3 m | Ajuy | Erizo negro de los charcos, redondo y de púas cortas; la 2.ª, grande y de púas larguísimas. |
 | Pok66. Seabrune | 051-2 | 2.ª | Agua/Oscuridad | Crawdaunt (Q3, AF) | 0,8 m |  |  |
 | Pok67. Pioto | 017-1 | 1.ª | Veneno | Zubat (Q1, EN) | 0,3 m | Cueva de Ajuy | Polluelo insectívoro; la 2.ª, pitohui joven; la 3.ª, ave del paraíso que desprende veneno de las alas, con aguijones o garras como rasgo propio. |
@@ -279,10 +279,10 @@ nombre lo pone el autor. La idea va en la primera forma de cada especie.
 | Pok69. Pitox | 017-3 | 3.ª | Veneno/Aire | Crobat (Q4, EN) | 1,5 m |  |  |
 | Pok70. Geods | 061-1 | 1.ª | Roca | Anorith (Q2, AF) | 0,5 m | Cueva de Ajuy | Geoda con forma de fósil; la 2.ª, escarabajo atlas o hércules cristalino, con geodas. |
 | Pok71. Beetlex | 061-2 | 2.ª | Roca/Bicho | Armaldo (Q4, AF) | 1,4 m |  |  |
-| Pok72. Escolopendra | 079 | única | Veneno/Bicho | Seviper (Q3, AE) | 1,8 m | Cofete (opcional) | Escolopendra: ciempiés gigante de las piedras, con colores de aviso. |
+| Pok72. Escolper | 079 | única | Veneno/Bicho | Seviper (Q3, AE) | 1,8 m | Cofete (opcional) | Escolopendra: ciempiés gigante de las piedras, con colores de aviso. |
 | Pok73. Fisilla | 052-1 | 1.ª | Veneno | Shellos (Q2, EN) | 0,4 m | Sotavento | Carabela: medusa con una vela azul que flota en la laguna; la 2.ª, colonia grande con vela de colores. |
 | Pok74. Polisilla | 052-2 | 2.ª | Veneno/Agua | Gastrodon (Q3, TE) | 1,2 m |  |  |
-| Pok75. Piedra de Tindaya | 082 | única | Roca/Mental | Lunatone (Q3, AE) | 1,0 m | Tindaya (opcional) (rara) | Piedra de la montaña sagrada: roca clara con grabados que flota y medita. |
+| Pok75. Petrowstal | 082 | única | Roca/Mental | Lunatone (Q3, AE) | 1,0 m | Tindaya (opcional) (rara) | Piedra de la montaña sagrada: roca clara con grabados que flota y medita. |
 | Pok76. Euphi | 050-1 | 1.ª | Planta | Cacnea (Q2, AE) | 0,4 m | Cofete (opcional) | Cardón de Jandía: brote de cardón de brazos cortos; la 2.ª, gran cardón con brazos de candelabro y savia tóxica. |
 | Pok77. Euphoraz | 050-2 | 2.ª | Planta/Veneno | Cacturne (Q3, AE) | 1,8 m |  |  |
 

@@ -2,7 +2,7 @@ INSTRUCCIONES PARA GEMINI
 
 Vamos a generar las criaturas de mi juego de una en una, con el mismo estilo de imagen que ya
 usamos en esta conversación. Abajo tienes la lista completa, numerada. Es mi plan: 203 criaturas,
-de las que 51 ya están hechas.
+de las que 56 ya están hechas.
 
 CÓMO VAMOS
 - Al empezar, y cada vez que te diga «siguiente», dime cuál toca, con este formato:
@@ -143,12 +143,7 @@ Pok53. Conejo de jable, 1.ª forma de 2 · YA HECHA
 
 Pok54. Conejo de jable, 2.ª forma de 2 · YA HECHA
 
-Pok55. Chestil, 1.ª forma de 2
-   Tipo: Bicho (la línea: Bicho → Bicho)
-   Fuerza: quintil 1 de 5, de las más flojas. Papel: tanque físico.
-   Estadísticas como: Kricketot (la línea: Kricketot → Kricketune). Solo de referencia: que no se parezca.
-   Zona: Las Dunas (rara), Fuerteventura (niveles 10-13)
-   Idea: Cigarrón: langosta que llega con el viento de África; la 2.ª, grande, hace sonar las alas.
+Pok55. Chestil, 1.ª forma de 2 · YA HECHA
 
 Pok56. Winstal, 2.ª forma de 2
    Tipo: Bicho (la línea: Bicho → Bicho)
@@ -157,33 +152,13 @@ Pok56. Winstal, 2.ª forma de 2
    Zona: Las Dunas (rara), Fuerteventura (niveles 10-13)
    Idea: Cigarrón: langosta que llega con el viento de África; la 2.ª, grande, hace sonar las alas.
 
-Pok57. Marach, 1.ª forma de 2
-   Tipo: Común (la línea: Común → Común)
-   Fuerza: quintil 2 de 5, floja. Papel: atacante físico.
-   Estadísticas como: Deerling (la línea: Deerling → Sawsbuck). Solo de referencia: que no se parezca.
-   Zona: Betancuria, Fuerteventura (niveles 12-14)
-   Idea: Dromedario majorero: cría torpe de patas largas; la 2.ª, dromedario adulto con alforjas.
+Pok57. Marach, 1.ª forma de 2 · YA HECHA
 
-Pok58. Camwee, 2.ª forma de 2
-   Tipo: Común (la línea: Común → Común)
-   Fuerza: quintil 3 de 5, media. Papel: atacante físico.
-   Estadísticas como: Sawsbuck (la línea: Deerling → Sawsbuck). Solo de referencia: que no se parezca.
-   Zona: Betancuria, Fuerteventura (niveles 12-14)
-   Idea: Dromedario majorero: cría torpe de patas largas; la 2.ª, dromedario adulto con alforjas.
+Pok58. Camwee, 2.ª forma de 2 · YA HECHA
 
-Pok59. Perstin, 1.ª forma de 3
-   Tipo: Común (la línea: Común → Común → Común)
-   Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante físico.
-   Estadísticas como: Lillipup (la línea: Lillipup → Herdier → Stoutland). Solo de referencia: que no se parezca.
-   Zona: Betancuria, Fuerteventura (niveles 12-14)
-   Idea: Presa canario: cachorro de manchas grises; la 2.ª, perro joven y fuerte; la 3.ª, gran presa canario musculoso, con las patas como de piedra.
+Pok59. Perstin, 1.ª forma de 3 · YA HECHA
 
-Pok60. Presin, 2.ª forma de 3
-   Tipo: Común (la línea: Común → Común → Común)
-   Fuerza: quintil 2 de 5, floja. Papel: atacante físico.
-   Estadísticas como: Herdier (la línea: Lillipup → Herdier → Stoutland). Solo de referencia: que no se parezca.
-   Zona: Betancuria, Fuerteventura (niveles 12-14)
-   Idea: Presa canario: cachorro de manchas grises; la 2.ª, perro joven y fuerte; la 3.ª, gran presa canario musculoso, con las patas como de piedra.
+Pok60. Presin, 2.ª forma de 3 · YA HECHA
 
 Pok61. Presarox, 3.ª forma de 3
    Tipo: Común (la línea: Común → Común → Común)
@@ -192,21 +167,21 @@ Pok61. Presarox, 3.ª forma de 3
    Zona: Betancuria, Fuerteventura (niveles 12-14)
    Idea: Presa canario: cachorro de manchas grises; la 2.ª, perro joven y fuerte; la 3.ª, gran presa canario musculoso, con las patas como de piedra.
 
-Pok62. Cernícalo, 1.ª forma de 3
+Pok62. Gare, 1.ª forma de 3
    Tipo: Aire (la línea: Aire → Aire → Aire)
    Fuerza: quintil 1 de 5, de las más flojas. Papel: atacante físico.
    Estadísticas como: Starly (la línea: Starly → Staravia → Staraptor). Solo de referencia: que no se parezca.
    Zona: Betancuria, Fuerteventura (niveles 12-14)
    Idea: Guirre: polluelo blanco; la 2.ª, joven de plumas pardas; la 3.ª, gran guirre de cara amarilla. Sustituye al guirre provisional del gimnasio de Aire.
 
-Pok63. Guirre, 2.ª forma de 3
+Pok63. Guirral, 2.ª forma de 3
    Tipo: Aire (la línea: Aire → Aire → Aire)
    Fuerza: quintil 2 de 5, floja. Papel: atacante físico.
    Estadísticas como: Staravia (la línea: Starly → Staravia → Staraptor). Solo de referencia: que no se parezca.
    Zona: Betancuria, Fuerteventura (niveles 12-14)
    Idea: Guirre: polluelo blanco; la 2.ª, joven de plumas pardas; la 3.ª, gran guirre de cara amarilla. Sustituye al guirre provisional del gimnasio de Aire.
 
-Pok64. Guirre, 3.ª forma de 3
+Pok64. Guirrenton, 3.ª forma de 3
    Tipo: Aire (la línea: Aire → Aire → Aire)
    Fuerza: quintil 3 de 5, media. Papel: atacante físico.
    Estadísticas como: Staraptor (la línea: Starly → Staravia → Staraptor). Solo de referencia: que no se parezca.
@@ -262,7 +237,7 @@ Pok71. Beetlex, 2.ª forma de 2
    Zona: Cueva de Ajuy, Fuerteventura (niveles 13-15)
    Idea: Geoda con forma de fósil; la 2.ª, escarabajo atlas o hércules cristalino, con geodas.
 
-Pok72. Escolopendra, sin evolución
+Pok72. Escolper, sin evolución
    Tipo: Veneno/Bicho
    Fuerza: quintil 3 de 5, media. Papel: atacante especial.
    Estadísticas como: Seviper. Solo de referencia: que no se parezca.
@@ -283,7 +258,7 @@ Pok74. Polisilla, 2.ª forma de 2
    Zona: Sotavento, Fuerteventura (niveles 15-17)
    Idea: Carabela: medusa con una vela azul que flota en la laguna; la 2.ª, colonia grande con vela de colores.
 
-Pok75. Piedra de Tindaya, sin evolución
+Pok75. Petrowstal, sin evolución
    Tipo: Roca/Mental
    Fuerza: quintil 3 de 5, media. Papel: atacante especial.
    Estadísticas como: Lunatone. Solo de referencia: que no se parezca.

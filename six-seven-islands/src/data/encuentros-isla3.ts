@@ -19,7 +19,7 @@ export const ENCUENTROS_ISLA3: TablaEncuentros = {
     { especie: 'c012-2', nivel: [20, 22], peso: 30 },
     { especie: 'c034-1', nivel: [20, 22], peso: 30 },
     { especie: 'c005-1', nivel: [20, 21], peso: 25 },
-    { especie: 'c062-1', nivel: [21, 22], peso: 15 },
+    { especie: 'c017-2', nivel: [21, 22], peso: 15 },
   ],
   cumbres: [
     { especie: 'c031-2', nivel: [21, 23], peso: 30 },
@@ -58,11 +58,11 @@ export const ENCUENTROS_ISLA3: TablaEncuentros = {
     { especie: 'c044-2', nivel: [25, 27], peso: 30 },
     { especie: 'c009-2', nivel: [25, 27], peso: 25 },
     { especie: 'c005-2', nivel: [25, 27], peso: 25 },
-    { especie: 'c013-2', nivel: [25, 27], peso: 20 },
+    { especie: 'c052-2', nivel: [25, 27], peso: 20 },
   ],
   agaete: [
     { especie: 'c018-1', nivel: [25, 27], peso: 35 },
     { especie: 'c035-2', nivel: [25, 27], peso: 35 },
-    { especie: 'c037-1', nivel: [25, 27], peso: 30 },
+    { especie: 'c051-2', nivel: [25, 27], peso: 30 },
   ],
 };
