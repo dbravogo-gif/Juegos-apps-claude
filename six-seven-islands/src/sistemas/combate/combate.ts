@@ -57,7 +57,7 @@ import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Entrada } from '../entrada/entrada';
 import type { Partida } from '../partida/partida';
 import type { Render } from '../render/render';
-import type { NombreEfecto } from '../sonido/sonido';
+import { sonidoDe, type NombreEfecto } from '../sonido/sonido';
 
 const DATOS = DATOS_COMBATE_PRUEBA;
 /** La arena, lejos de la isla y de los interiores. */
@@ -821,7 +821,7 @@ export class Combate implements Subsistema {
             // La salvaje ya está ahí: aparece de un salto, sin cubo.
             this.encolar({
               texto: `¡Un ${ev.ficha.nombre} salvaje te sale al paso!`,
-              sonido: 'salida',
+              sonido: sonidoDe('salida', ev.ficha.especie),
               duracion: 1.3,
               saltable: false,
               empezar: () => {
@@ -850,7 +850,8 @@ export class Combate implements Subsistema {
                   : lado === 1
                     ? `¡${this.entrenador?.startsWith('lider') ? 'La líder' : 'El entrenador'} saca a ${ev.ficha.nombre}!`
                     : `¡Adelante, ${ev.ficha.nombre}!`,
-            sonido: 'salida',
+            // Más épico cuanto mejor es la criatura (core/rango.ts).
+            sonido: sonidoDe('salida', ev.ficha.especie),
             duracion: 1.9,
             saltable: false,
             empezar: () => {

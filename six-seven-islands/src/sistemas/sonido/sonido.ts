@@ -10,6 +10,9 @@
 import type { Ctx, Subsistema } from '../../motor/motor';
 import type { Partida } from '../partida/partida';
 import { agrupar, elegirPista, listaPara, semillaDe } from './musica-grabada';
+import type { Criatura } from '../../core/modelo';
+import { rangoDe, type Rango } from '../../core/rango';
+import { DATOS_COMBATE_PRUEBA } from '../../data/combate-prueba';
 
 /** Un efecto: un tono que va de una frecuencia a otra, o un soplo de ruido, o varias notas. */
 export interface DefEfecto {
@@ -33,8 +36,10 @@ export interface DefEfecto {
   separacion?: number;
   /** Segundos de subida: 0,008 si no se dice (un golpe); más, un soplo. */
   ataque?: number;
-  /** Otro efecto que suena a la vez (una pisada debajo del crujido). */
-  con?: string;
+  /** Otros efectos que suenan a la vez (una pisada debajo del crujido). */
+  con?: string | readonly string[];
+  /** Segundos de espera antes de sonar (también para los que lleva con `con`). */
+  retraso?: number;
   /** Varios tonos a la vez, por cuánto multiplican a `desde` (un metal que vibra: parciales sueltos). */
   acorde?: number[];
 }
@@ -62,7 +67,12 @@ export const EFECTOS = {
   eficaz: { onda: 'square', desde: 660, hasta: 660, duracion: 0.07, volumen: 0.14, notas: [0, 7, 12] },
   pocoEficaz: { onda: 'triangle', desde: 260, hasta: 200, duracion: 0.2, volumen: 0.16 },
   debilitado: { onda: 'triangle', desde: 520, hasta: 90, duracion: 0.6, volumen: 0.22 },
-  lanzar: { onda: 'ruido', desde: 2000, hasta: 600, duracion: 0.25, volumen: 0.14 },
+  // Lanzar el cubo (autor, 2026-11-27: mejorarlo): un zumbido de aire que sube al salir de la mano
+  // y baja al llegar, y a los 0,55 s, cuando la animación lo mete en la salvaje, un chasquido y la
+  // criatura que se cuela dentro (lo contrario de salir: un tono que baja).
+  lanzar: { onda: 'ruido', desde: 700, hasta: 3200, duracion: 0.28, volumen: 0.12, filtro: 'bandpass', q: 2.5, ataque: 0.12, con: ['lanzarCae', 'cuboAbsorbe'] },
+  lanzarCae: { onda: 'ruido', desde: 3200, hasta: 1000, duracion: 0.3, volumen: 0.1, filtro: 'bandpass', q: 2.5, ataque: 0.03, retraso: 0.26 },
+  cuboAbsorbe: { onda: 'sine', desde: 1200, hasta: 350, duracion: 0.3, volumen: 0.14, retraso: 0.55, con: 'chasquido' },
   sacudida: { onda: 'square', desde: 300, hasta: 260, duracion: 0.05, volumen: 0.16 },
   captura: { onda: 'square', desde: 523, hasta: 523, duracion: 0.11, volumen: 0.16, notas: [0, 4, 7, 12, 7, 12] },
   escapa: { onda: 'triangle', desde: 440, hasta: 440, duracion: 0.12, volumen: 0.16, notas: [0, -5] },
@@ -86,9 +96,47 @@ export const EFECTOS = {
   // La de Eléctrico: el rayo, un restallido agudo con un retumbo debajo.
   rayo: { onda: 'ruido', desde: 3800, hasta: 900, duracion: 0.22, volumen: 0.16, filtro: 'bandpass', q: 0.6, granos: 3, separacion: 0.025, con: 'retumbo' },
   retumbo: { onda: 'ruido', desde: 180, hasta: 60, duracion: 0.7, volumen: 0.2, filtro: 'lowpass', q: 0.8, ataque: 0.04 },
+  // Por rango (autor, 2026-11-27: «más épico cuanto mejor sea, además de un sonido para
+  // legendarios»). Cada rango añade algo al anterior, todo en La: el 1, un barrido corto; el 2, el
+  // barrido de siempre; el 3, un arpegio mayor encima; el 4, un arpegio más alto y un redoble; el 5,
+  // un arpegio menor de dos octavas, redoble y retumbo. La legendaria, distinta: un acorde menor que
+  // crece despacio, retumbo, redoble y una llamada de metal.
+  encuentro1: { onda: 'sawtooth', desde: 260, hasta: 700, duracion: 0.28, volumen: 0.12 },
+  encuentro2: { onda: 'sawtooth', desde: 220, hasta: 880, duracion: 0.45, volumen: 0.15 },
+  encuentro3: { onda: 'square', desde: 440, hasta: 440, duracion: 0.09, volumen: 0.09, notas: [0, 4, 7, 12], con: 'encuentro2' },
+  encuentro4: { onda: 'sawtooth', desde: 220, hasta: 220, duracion: 0.1, volumen: 0.1, notas: [0, 7, 12, 16, 19], con: ['encuentro2', 'redoble'] },
+  encuentro5: { onda: 'sawtooth', desde: 220, hasta: 220, duracion: 0.08, volumen: 0.11, notas: [0, 3, 7, 12, 15, 19, 24, 27], con: ['encuentro2', 'redoble', 'retumbo'] },
+  encuentroLeyenda: { onda: 'sawtooth', desde: 220, hasta: 220, duracion: 1.8, volumen: 0.07, acorde: [1, 1.189, 1.498, 2], ataque: 0.6, con: ['retumbo', 'redoble', 'llamadaLeyenda'] },
+  // Salir del cubo (y la salvaje que aparece en el combate): el 1, el tono que sube de siempre; el 2 y
+  // el 3, con un brillo encima, más largo en el 3; el 4, además un acorde mayor; el 5, una fanfarria y
+  // un redoble. La legendaria: acorde menor, retumbo y una campana.
+  salida1: { onda: 'sine', desde: 400, hasta: 1200, duracion: 0.25, volumen: 0.18 },
+  salida2: { onda: 'sine', desde: 400, hasta: 1200, duracion: 0.25, volumen: 0.18, con: 'brillo' },
+  salida3: { onda: 'sine', desde: 400, hasta: 1200, duracion: 0.25, volumen: 0.18, con: 'brilloLargo' },
+  salida4: { onda: 'square', desde: 440, hasta: 440, duracion: 0.45, volumen: 0.06, acorde: [1, 1.26, 1.498, 2], con: 'salida3' },
+  salida5: { onda: 'square', desde: 440, hasta: 440, duracion: 0.09, volumen: 0.1, notas: [0, 4, 7, 12, 16], con: ['salida4', 'redoble'] },
+  salidaLeyenda: { onda: 'sawtooth', desde: 220, hasta: 220, duracion: 1.4, volumen: 0.07, acorde: [1, 1.189, 1.498, 2], ataque: 0.25, con: ['salida1', 'retumbo', 'campana'] },
+  // Piezas que solo suenan debajo de otras.
+  redoble: { onda: 'ruido', desde: 1000, hasta: 400, duracion: 0.07, volumen: 0.12, filtro: 'bandpass', q: 1.2, granos: 6, separacion: 0.055 },
+  llamadaLeyenda: { onda: 'square', desde: 440, hasta: 440, duracion: 0.12, volumen: 0.1, notas: [0, 7, 12, 15, 19, 24], retraso: 0.45 },
+  brillo: { onda: 'triangle', desde: 1319, hasta: 1319, duracion: 0.06, volumen: 0.06, notas: [0, 7] },
+  brilloLargo: { onda: 'triangle', desde: 1319, hasta: 1319, duracion: 0.06, volumen: 0.07, notas: [0, 4, 7, 12] },
+  campana: { onda: 'sine', desde: 440, hasta: 438, duracion: 1.6, volumen: 0.06, acorde: [1, 2, 3.01, 4.2, 5.4], retraso: 0.2 },
 } as const satisfies Record<string, DefEfecto>;
 
 export type NombreEfecto = keyof typeof EFECTOS;
+
+/** El efecto de cada rango al aparecer una salvaje y al salir una criatura (del cubo o de un salto). */
+export const SONIDO_RANGO: Record<'encuentro' | 'salida', Record<Rango, NombreEfecto>> = {
+  encuentro: { 1: 'encuentro1', 2: 'encuentro2', 3: 'encuentro3', 4: 'encuentro4', 5: 'encuentro5', leyenda: 'encuentroLeyenda' },
+  salida: { 1: 'salida1', 2: 'salida2', 3: 'salida3', 4: 'salida4', 5: 'salida5', leyenda: 'salidaLeyenda' },
+};
+
+/** El efecto que toca a una especie (por su id) al aparecer o al salir; si no se conoce, el de rango 1. */
+export function sonidoDe(momento: 'encuentro' | 'salida', especie: string): NombreEfecto {
+  const e = DATOS_COMBATE_PRUEBA.especies[especie];
+  return SONIDO_RANGO[momento][e ? rangoDe(e) : 1];
+}
 
 /**
  * Un tema en bucle, en semitonos sobre La 220 Hz (null = nada en ese paso). Un compás tiene
@@ -211,6 +259,8 @@ export class Sonido implements Subsistema {
   static readonly deps: readonly string[] = ['partida'];
 
   private partida!: Partida;
+  /** Los últimos efectos pedidos, para las pruebas (window.__JUEGO__.sonidos()): Claude no oye. */
+  readonly sonados: string[] = [];
   private audio: AudioContext | null = null;
   private general!: GainNode;
   private musica!: GainNode;
@@ -249,7 +299,11 @@ export class Sonido implements Subsistema {
         this.combates++;
         this.pistaCombate = undefined;
       }),
-      ev.on('encuentro:inicio', () => this.tocar('encuentro')),
+      // La evolución también empieza así: con el barrido de siempre.
+      ev.on('encuentro:inicio', ({ salvajes, tipoEvolucion }) => {
+        const s = salvajes[0] as Criatura | undefined;
+        this.tocar(tipoEvolucion || !s ? 'encuentro' : sonidoDe('encuentro', s.especie));
+      }),
       ev.on('entrenador:visto', () => this.tocar('exclamacion')),
       ev.on('objeto:recogido', () => this.tocar('objeto')),
       ev.on('medalla:ganada', () => this.tocar('medalla')),
@@ -300,12 +354,15 @@ export class Sonido implements Subsistema {
     if (this.audio) this.general.gain.setTargetAtTime(this.activo ? 0.6 : 0, this.audio.currentTime, 0.05);
   }
 
-  tocar(nombre: NombreEfecto): void {
+  tocar(nombre: NombreEfecto, espera = 0): void {
+    this.sonados.push(nombre);
+    if (this.sonados.length > 200) this.sonados.shift();
     const a = this.audio;
     const d: DefEfecto | undefined = EFECTOS[nombre];
     if (!a || !d || !this.activo) return;
-    if (d.con && d.con in EFECTOS) this.tocar(d.con as NombreEfecto);
-    const t0 = a.currentTime;
+    const retraso = espera + (d.retraso ?? 0);
+    for (const otro of typeof d.con === 'string' ? [d.con] : (d.con ?? [])) if (otro in EFECTOS) this.tocar(otro as NombreEfecto, retraso);
+    const t0 = a.currentTime + retraso;
     const v = 1 + (Math.random() * 2 - 1) * (d.variacion ?? 0);
     const ataque = d.ataque ?? 0.008;
     // Un golpe por nota; si es ruido con granos, varios golpecitos seguidos y algo desiguales.

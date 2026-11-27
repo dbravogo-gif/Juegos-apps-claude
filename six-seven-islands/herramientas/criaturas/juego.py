@@ -137,10 +137,13 @@ def especie_ts(f, siguiente):
     evo = ''
     if siguiente:
         evo = f", evoluciona: [{{ a: '{id_juego(siguiente)}', nivel: {EVOLUCION[n][i]} }}]"
+    # Las legendarias (forma única de quintil 5) llevan la marca: tienen sus propios sonidos
+    # (src/core/rango.ts, autor 2026-11-27).
+    leyenda = ', legendaria: true' if f['forma'] == 'única' and f['quintil'] == 'Q5' else ''
     return (f"  // Pok{f['orden']}: {f['ref']} ({f['quintil']}, {f['papel']}).\n"
             f"  {{ id: '{id_juego(f['archivo'])}', nombre: '{nombre}', tipos: [{tipos}], "
             f"base: base({vida}, {fuerza}, {escudo}, {magia}, {res}, {cel}), expBase: {exp}, ratioCaptura: {captura}, "
-            f"aprende: [{ataques}]{evo}, altura: {f['altura']}, descripcion: '' }},")
+            f"aprende: [{ataques}]{evo}, altura: {f['altura']}{leyenda}, descripcion: '' }},")
 
 
 def main():

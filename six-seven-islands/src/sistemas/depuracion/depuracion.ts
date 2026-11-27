@@ -33,6 +33,8 @@ export interface GanchosJuego {
   /** Empieza un combate contra una salvaje de esa especie y nivel. */
   salvaje(especie: string, nivel?: number): void;
   probarEvolucion(tipo: string): void;
+  /** Los últimos efectos de sonido pedidos, del más viejo al más nuevo. */
+  sonidos(): string[];
   contadores(): Contadores;
   calidad(nivel: NivelCalidad): void;
 }
@@ -96,6 +98,7 @@ export class Depuracion implements Subsistema {
         if (!ctx.tiene('partida')) throw new Error('En la vitrina no hay partida');
         ctx.get<Subsistema & { viajar(n: number): void }>('partida').viajar(isla);
       },
+      sonidos: () => (ctx.tiene('sonido') ? [...ctx.get<Subsistema & { sonados: string[] }>('sonido').sonados] : []),
       // Combate contra una salvaje cualquiera, para ver una criatura nueva y su tamaño.
       salvaje: (especie, nivel = 5) => {
         if (!DATOS_COMBATE_PRUEBA.especies[especie]) throw new Error(`Especie desconocida: «${especie}»`);
