@@ -70,6 +70,8 @@ export interface Especie {
   evoluciona?: Evolucion[];
   /** Altura en metros: el tamaño con que se ve (ARTE.md, «Escala de las criaturas»). */
   altura?: number;
+  /** Las legendarias (forma única de quintil 5): tienen sus propios sonidos (core/rango.ts). */
+  legendaria?: boolean;
   descripcion: string;
 }
 

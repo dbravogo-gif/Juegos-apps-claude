@@ -115,7 +115,8 @@ const NOMBRE_ESTADISTICA: Record<Estadistica, string> = {
 const NOMBRE_ESTADO: Record<string, string> = { quemado: 'Quemada', dormido: 'Dormida', paralizado: 'Paralizada', envenenado: 'Envenenada', intoxicado: 'Intoxicada' };
 const NOMBRE_CATEGORIA: Record<string, string> = { fisico: 'Física', magico: 'Mágica', estado: 'Estado' };
 /** Cómo se llama cada efecto de sonido en «Probar sonidos». */
-const NOMBRE_EFECTO: Record<NombreEfecto, string> = {
+// null: una pieza que solo suena debajo de otra; no sale en «Probar sonidos».
+const NOMBRE_EFECTO: Record<NombreEfecto, string | null> = {
   seleccion: 'Mover el cursor',
   confirmar: 'Aceptar',
   atras: 'Volver',
@@ -123,12 +124,12 @@ const NOMBRE_EFECTO: Record<NombreEfecto, string> = {
   puerta: 'Puerta',
   hierba: 'Pisar hierba alta',
   malpais: 'Pisar el malpaís',
-  pisada: 'Pisada (debajo del malpaís)',
+  pisada: null,
   arena: 'Pisar arena de duna',
   objeto: 'Encontrar un objeto',
-  encuentro: 'Sale una criatura',
+  encuentro: 'Empieza una evolución',
   exclamacion: 'Un entrenador te ve',
-  salida: 'Salir a combatir',
+  salida: 'Viajar, aspas y evolución',
   ataque: 'Ataque',
   golpe: 'Golpe',
   eficaz: 'Es eficaz',
@@ -146,9 +147,28 @@ const NOMBRE_EFECTO: Record<NombreEfecto, string> = {
   fallo: 'Fallar un ataque',
   medalla: 'Ganar una pintadera',
   metal: 'Metal contra metal (evolución de Acero)',
-  chasquido: 'Chasquido (debajo del metal)',
+  chasquido: null,
   rayo: 'Rayo (evolución de Eléctrico)',
-  retumbo: 'Retumbo (debajo del rayo)',
+  retumbo: null,
+  encuentro1: 'Aparece una salvaje (rango 1)',
+  encuentro2: 'Aparece una salvaje (rango 2)',
+  encuentro3: 'Aparece una salvaje (rango 3)',
+  encuentro4: 'Aparece una salvaje (rango 4)',
+  encuentro5: 'Aparece una salvaje (rango 5)',
+  encuentroLeyenda: 'Aparece una legendaria',
+  salida1: 'Sale del cubo (rango 1)',
+  salida2: 'Sale del cubo (rango 2)',
+  salida3: 'Sale del cubo (rango 3)',
+  salida4: 'Sale del cubo (rango 4)',
+  salida5: 'Sale del cubo (rango 5)',
+  salidaLeyenda: 'Sale una legendaria',
+  lanzarCae: null,
+  cuboAbsorbe: null,
+  redoble: null,
+  llamadaLeyenda: null,
+  brillo: null,
+  brilloLargo: null,
+  campana: null,
 };
 
 interface Opcion {
@@ -628,12 +648,11 @@ export class Menu implements Subsistema {
         break;
       case 'sonidos':
         this.titulo.textContent = 'Probar sonidos';
-        this.opciones = (Object.keys(EFECTOS) as NombreEfecto[]).map((n) => ({
-          texto: NOMBRE_EFECTO[n],
-          detalle: 'A: escuchar.',
-          activa: true,
-          elegir: () => this.ctx.eventos.emit('sonido:tocar', { nombre: n }),
-        }));
+        this.opciones = (Object.keys(EFECTOS) as NombreEfecto[]).flatMap((n) => {
+          const texto = NOMBRE_EFECTO[n];
+          if (texto === null) return [];
+          return [{ texto, detalle: 'A: escuchar.', activa: true, elegir: () => this.ctx.eventos.emit('sonido:tocar', { nombre: n }) }];
+        });
         break;
       case 'exportar':
         this.titulo.textContent = 'Exportar partida';

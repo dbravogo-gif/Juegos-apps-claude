@@ -200,6 +200,9 @@ Un evento nuevo se añade a esta tabla en el mismo commit.
 - `calidad(nivel)`: cambia el nivel de calidad en vivo.
 - `salvaje(especie, nivel)`: empieza un combate contra una salvaje, para ver una criatura nueva y su
   tamaño. Sin GPU, el combate tarda unos 10 segundos en verse.
+- `sonidos()`: los últimos efectos de sonido pedidos (hasta 200), con las capas que suenan debajo.
+  Claude no oye: así comprueba cuál suena. Las capas solo se apuntan con el audio ya creado, que
+  nace con la primera tecla.
 
 Los bots juegan con el estado, no con los píxeles (skill `juego-3d`).
 

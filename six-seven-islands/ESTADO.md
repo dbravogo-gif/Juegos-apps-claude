@@ -20,7 +20,9 @@ Marach, Camwee, Perstin y Presin (Pok55, Pok57-60) y, el 2026-11-27, Pok56 y Pok
 criaturas en el juego, en la hierba de Fuerteventura y Gran Canaria. Pok78-81, a la espera del tope de
 la clave de Meshy. Quedan por pasos: D7 tamaños, D5
 gimnasio de Aire, D8 miniaturas y D4 tiendas (cubos en su orden de siempre). Tenerife: recorrido
-del autor en dos ramas (`ISLA-4.md`); se construye cuando dé la salida. Tenerife, rehecha (`ISLA-4.md`), espera su aprobación.
+del autor en dos ramas (`ISLA-4.md`); se construye cuando dé la salida. Sonidos por rango
+(2026-11-27): aparecer y salir del cubo, más épicos del rango 1 al 5 y propios para legendarias
+(`core/rango.ts`); lanzar el cubo, rehecho.
 
 ## Hecho
 

@@ -136,6 +136,9 @@ Lista viva (2026-11-13). Lo de arriba son decisiones; esto es trabajo suyo:
   (lo que parece de prototipo).
 - **Pasar la escena de recibir la inicial** (D8): la abrazas o le acercas la mano para que la
   huela.
+- **Probar los sonidos por rango** (2026-11-27), puntuando de 1 a 5: en Opciones → Probar sonidos,
+  al final, «Aparece una salvaje» y «Sale del cubo» del rango 1 al 5 y las legendarias, y «Lanzar el
+  cubo». En el juego, una salvaje rara (de quintil alto) suena más que una común.
 - **Probar lo de la revisión** (2026-11-25, `REVISION.md`), puntuando de 1 a 5:
   - los tres sonidos nuevos en Opciones → Probar sonidos (choque, fallo y pintadera). El choque
     no se oía (2026-11-25: era demasiado grave para un portátil); ya está más agudo;
