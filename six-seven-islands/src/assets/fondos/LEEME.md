@@ -2,7 +2,8 @@
 
 Pintados por el autor (Nano Banana), en WebP, JPG o PNG, de 1920 × 1080 si se puede (los de
 Lanzarote miden 1024 × 572). El nombre del archivo es el de la lista, con cualquier extensión.
-Se suben aquí: https://github.com/dbravogo-gif/Juegos-apps-claude/upload/main/six-seven-islands/src/assets/fondos
+Desde el 2026-11-28 el autor los sube a `six-seven-islands/fondos/` (`fondos/LEEME.md`), con el nombre
+«Fondos Combate <paisaje>», y Claude los trae aquí con el nombre de la lista.
 
 **Un fondo por paisaje, no por zona** (autor, 2026-11-22: pintarlos cuesta). Qué zona usa cada uno
 está en `src/data/islas.ts` (`fondos`). Mientras falte uno, sale el de Lanzarote.
